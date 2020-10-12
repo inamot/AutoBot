@@ -1,0 +1,141 @@
+ single tab displayed entryeditor holding several fieldeditors  
+    
+   ugly hack pointer filelisteditor call autosetlinks following line makes sure focus cycles inside tab instead being lost parts frame  
+   use title scrollpane enables correct execution entryeditor setvisiblepanel string name   
+   bibtex edit fields defined here 
+   add autocompleter listener required field  
+   store editor later reference  
+   add edit field bibtex-key key field only field only one 
+               editor one set active initially  
+                
+     
+   only mark changed not already field indeed modified 
+    
+       only sets activefield variable not focus p want focus call   link #focus    afterwards  
+       
+        param fieldeditor 
+        
+    
+       reset fields data bibentry  
+        
+   trying preserve current edit position  fixes sf bug #1285  
+    
+       set up key bindings focus listener fieldeditor  
+       
+        param component 
+        
+   here add focus listeners component funny code need guarantee autocompletelistener used called before fieldlistener focus lost event autocompletelistener responsible removing any 
+   current suggestion focus lost must done before fieldlistener 
+   stores current edit  swing doesn't guarantee order execution event 
+   listeners handle only adding autocompletelistener telling call fieldlistener afterwards autocompletelistener used add fieldlistener normally  net sf jabref gui entryeditor entryeditortab jscrollpane scrollpane jscrollpane panel  
+            scrollpaneconstants vertical_scrollbar_as_needed  scrollpaneconstants horizontal_scrollbar_never filelisteditor filelisteditor entryeditortab jabrefframe frame  basepanel panel  list fields  entryeditor parent addkeyfield compressed tabtitle fields fields   collections emptylist fields   fields parent   parent tabtitle   tabtitle frame   frame basepanel   panel  
+ 
+        setuppanel frame  panel  addkeyfield  compressed  tabtitle   
+ 
+          
+        scrollpane setfocuscycleroot setuppanel jabrefframe frame  basepanel bpanel addkeyfield compressed title    
+ 
+        setupkeybindings panel getinputmap jcomponent when_focused   panel getactionmap     
+ 
+        panel setname title   
+          
+          
+        scrollpane setname title fieldsperrow   compressed ? 2   1 colspec   compressed ?  fill pref  1dlu  fill 10dlu grow  1dlu  fill pref    
+                   8dlu  fill pref  1dlu  fill 10dlu grow  1dlu  fill pref  
+                   fill pref  1dlu  fill pref grow  1dlu  fill pref   
+        stringbuilder stringbuilder stringbuilder rows math ceil fields size     fieldsperrow i   0  i   rows  i      
+            stringbuilder append  fill pref grow addkeyfield    
+            stringbuilder append  4dlu  fill pref stringbuilder length      2    
+            stringbuilder delete stringbuilder length   - 2  stringbuilder length rowspec   stringbuilder tostring    
+ 
+        defaultformbuilder builder defaultformbuilder formlayout colspec  rowspec   panel i   0  i   fields size    i field   fields get i   
+ 
+            fieldeditor fieldeditor defaultheight wheight 50 0   internalbibtexfields getfieldweight field internalbibtexfields getfieldproperties field  contains fieldproperty file_editor     
+                fieldeditor filelisteditor frame  bpanel getbibdatabasecontext    field parent   
+ 
+                filelisteditor    filelisteditor  fieldeditor  
+                guiutil correctrowheight filelisteditor   
+ 
+                defaultheight   0 internalbibtexfields getfieldproperties field  contains fieldproperty single_entry_link     
+                fieldeditor entrylinklisteditor frame  bpanel getbibdatabasecontext    field parent defaultheight   0 internalbibtexfields getfieldproperties field  contains fieldproperty multiple_entry_link     
+                fieldeditor entrylinklisteditor frame  bpanel getbibdatabasecontext    field parent defaultheight   0 fieldeditor textarea field getprompt field    
+                parent addsearchlistener  textarea  fieldeditor   
+                defaultheight   fieldeditor getpane   getpreferredsize   height  
+              
+ 
+            optional jcomponent  extra   parent getextra fieldeditor   
+ 
+              
+            autocompleter autocompleter   bpanel getautocompleters   get field   
+            autocompletelistener autocompletelistener autocompleter autocompletelistener autocompletelistener autocompleter   
+              
+            setupjtextcomponent fieldeditor gettextcomponent    autocompletelistener   
+            fieldeditor setautocompletelistener autocompletelistener   
+ 
+              
+            editors put field  fieldeditor i    0    
+                activefield   fieldeditor compressed    
+                fieldeditor getpane   setpreferredsize dimension 100  math max defaultheight  wheight     
+              
+            builder append fieldeditor getlabel extra ispresent      
+                builder append fieldeditor getpane     
+                jpanel pan jpanel    
+                pan setlayout borderlayout     
+                pan add extra get    borderlayout north   
+                builder append pan builder append fieldeditor getpane    3 i   1  % fieldsperrow     0    
+                builder nextline addkeyfield textfield textfield textfield bibentry key_field  
+                    parent getentry   getcitekeyoptional   orelse setupjtextcomponent textfield editors put bibentry key_field  textfield editors size      1    
+                activefield   textfield  
+              
+            builder nextline    
+            builder append textfield getlabel     
+            builder append textfield  3 getprompt field    
+ 
+        set fieldproperty  fieldproperties   internalbibtexfields getfieldproperties field fieldproperties contains fieldproperty person_names format  %1$s and %1$s and others   localization lang  firstname lastname fieldproperties contains fieldproperty doi 10 organisation id fieldproperties contains fieldproperty date yyyy-mm-dd field fieldname year yyyy fieldname month mm or #mmm fieldname url https bibentry getentry entry isfieldmodified fieldeditor fieldeditor text   fieldeditor gettext   trim text isempty getentry   hasfield fieldeditor getfieldname optional of text  equals getentry   getfield fieldeditor getfieldname markifmodified fieldeditor fieldeditor updating     basepanel ismodified      isfieldmodified fieldeditor     
+            markbasechanged markbasechanged     
+        basepanel markbasechanged setactive fieldeditor fieldeditor    
+        activefield   fieldeditor setactive fieldname editors containskey fieldname     
+            activefield   editors get fieldname fieldeditor getactive activefield list getfields fields focus activefield activefield gettextcomponent   requestfocus updateall     
+        setentry getentry setentry bibentry entry updating fieldeditor editor   editors values toset   entry getfield editor getfieldname    orelse toset equals editor gettext       
+                    editor settext toset entry   entry updating updatefield field content editors containskey field fieldeditor fieldeditor   editors get field fieldeditor gettext   equals content fieldeditor gettextcomponent jtextcomponent initialcaretposition     jtextcomponent  fieldeditor  getcaretposition    
+            fieldeditor settext content textlength   fieldeditor gettext   length initialcaretposition textlength    
+                  jtextcomponent  fieldeditor  setcaretposition initialcaretposition jtextcomponent  fieldeditor  setcaretposition textlength fieldeditor settext content setenabled enabled fieldeditor editor   editors values      
+            editor setenabled enabled component getpane scrollpane entryeditor getparent parent gettabtitle tabtitle setupkeybindings inputmap inputmap actionmap actionmap    
+        inputmap put globals getkeyprefs   getkey keybinding entry_editor_previous_entry    prev    
+        actionmap put  prev   parent getpreventryaction     
+        inputmap put globals getkeyprefs   getkey keybinding entry_editor_next_entry    next    
+        actionmap put  next   parent getnextentryaction     
+ 
+        inputmap put globals getkeyprefs   getkey keybinding entry_editor_store_field    store    
+        actionmap put  store   parent getstorefieldaction     
+        inputmap put globals getkeyprefs   getkey keybinding entry_editor_next_panel    right    
+        inputmap put globals getkeyprefs   getkey keybinding entry_editor_next_panel_2    right    
+        actionmap put  left   parent getswitchleftaction     
+        inputmap put globals getkeyprefs   getkey keybinding entry_editor_previous_panel    left    
+        inputmap put globals getkeyprefs   getkey keybinding entry_editor_previous_panel_2    left    
+        actionmap put  right   parent getswitchrightaction     
+        inputmap put globals getkeyprefs   getkey keybinding help    help    
+        actionmap put  help   parent gethelpaction     
+        inputmap put globals getkeyprefs   getkey keybinding save_database    save    
+        actionmap put  save   parent getsavedatabaseaction     
+        inputmap put globals getkeyprefs   getkey keybinding next_tab    nexttab    
+        actionmap put  nexttab frame nexttab   
+        inputmap put globals getkeyprefs   getkey keybinding previous_tab    prevtab    
+        actionmap put  prevtab frame prevtab setupjtextcomponent jcomponent component autocompletelistener autocompletelistener autocompletelistener component addfocuslistener fieldlistener component addkeylistener autocompletelistener   
+            component addfocuslistener autocompletelistener   
+            autocompletelistener setnextfocuslistener fieldlistener   
+          
+ 
+        setupkeybindings component getinputmap jcomponent when_focused   component getactionmap     
+ 
+        set awtkeystroke  keys hashset    
+                component getfocustraversalkeys keyboardfocusmanager forward_traversal_keys    
+        keys clear    
+        keys add awtkeystroke getawtkeystroke  pressed tab     
+        component setfocustraversalkeys keyboardfocusmanager forward_traversal_keys  keys   
+        keys hashset   component getfocustraversalkeys keyboardfocusmanager backward_traversal_keys    
+        keys clear    
+        keys add keystroke getkeystroke  shift pressed tab     
+        component setfocustraversalkeys keyboardfocusmanager backward_traversal_keys  keys   
+      
+ 

@@ -1,0 +1,87 @@
+ 
+    
+       writes given bibentry using given writer 
+       
+        param entry entry write 
+        param out writer use 
+        param bibdatabasemode database mode  bibtex biblatex  
+        param reformat entry any case  even change occurred entry not modified  write it entry not modified  write it write fields order requiredfields  optionalfields fields not sort fields  
+       
+        param entry 
+        param out 
+        throws ioexception 
+        
+   write header type bibtex-key  
+   write required fields first optional fields field appears both req opt  don't repeat write remaining fields alphabetic order  
+   finally  end entry  
+    
+       write single field any content  
+       
+        param entry entry write 
+        param out target write 
+        param name field name 
+        throws ioexception case io error 
+        
+   only write field is not empty 
+   field ifpresent not work ioexception may thrown display version entry field  
+        p  
+       bibtex case-insensitive therefore difference between  
+       howpublished  howpublished  howpublished  etc  
+        p long discussion jabref write fields  
+       see https   github com jabref jabref issues 116 
+        p team decided biblatex way use lower case field names  
+       
+        param field name field  
+        return display version field name  
+        
+   hard coded  unknown assigned field without any name net sf jabref logic bibtex bibentrywriter bibentrywriter latexfieldformatter fieldformatter write fieldformatter   fieldformatter write   write write bibentry entry  writer out  bibdatabasemode bibdatabasemode ioexception   
+        write entry  out  bibdatabasemode write bibentry entry  writer out  bibdatabasemode bibdatabasemode reformat ioexception reformat     entry haschanged      
+            out write entry getparsedserialization writeusercomments entry  out   
+        out write os newline   
+        writerequiredfieldsfirstremainingfieldssecond entry  out  bibdatabasemode   
+        out write os newline writeusercomments bibentry entry  writer out ioexception usercomments   entry getusercomments usercomments isempty      
+            out write usercomments   os newline writewithoutprependednewlines bibentry entry  writer out  bibdatabasemode bibdatabasemode ioexception entry haschanged      
+            out write entry getparsedserialization   trim writerequiredfieldsfirstremainingfieldssecond entry  out  bibdatabasemode writerequiredfieldsfirstremainingfieldssecond bibentry entry  writer out  
+                                                               bibdatabasemode bibdatabasemode ioexception   
+          
+        typedbibentry typedentry typedbibentry entry  bibdatabasemode   
+        out write ' '   typedentry gettypefordisplay     ' '   
+ 
+        writekeyfield entry  out   
+ 
+        set written hashset      
+        written add bibentry key_field indentation   getlengthoflongestfieldname entry   
+ 
+        entrytype type   entrytypes gettypeordefault entry gettype    bibdatabasemode   
+ 
+          
+        list fields   type getrequiredfieldsflat fields value   fields    
+                writefield entry  out  value  indentation   
+                written add value   
+              
+          
+          
+        fields   type getoptionalfields fields value   fields written contains value       
+                    writefield entry  out  value  indentation   
+                    written add value   
+                  
+              
+          
+          
+        set remainingfields treeset key   entry getfieldnames writeit   write ? internalbibtexfields iswriteablefield key    
+                    internalbibtexfields isdisplayablefield key written contains key     writeit    
+                remainingfields add key field   remainingfields    
+            writefield entry  out  field  indentation   
+          
+ 
+          
+        out write writekeyfield bibentry entry  writer out ioexception keyfield   stringutil shavestring entry getcitekeyoptional   orelse       
+        out write keyfield   ' '   os newline writefield bibentry entry  writer out name indentation ioexception   
+        optional field   entry getfield name field ispresent       field get   trim   isempty      
+            out write        getfielddisplayname name  indentation out write fieldformatter format field get    name    
+                out write ' '   os newline ioexception ex ioexception  error in field '    name    '      ex getmessage getlengthoflongestfieldname bibentry entry    
+        predicate isnotbibtexkey   field -   bibentry key_field equals field entry getfieldnames   stream   filter isnotbibtexkey  maptoint length  max   orelse 0 getfielddisplayname field intendation actualfield   field actualfield isempty      
+              
+            actualfield    unknown actualfield tolowercase     stringutil repeatspaces intendation - actualfield length             
+      
+ 

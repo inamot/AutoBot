@@ -1,0 +1,51 @@
+ 
+    
+   fetches data mathscinet  http   www ams org mathscinet use mr lookup  http   www ams org mrlookup  instead usual search tool available 
+       without subscription moreover optimized finding publication based partial information  
+        
+  www ams org mrlookup    
+  www ams org mathscinet search publications html    
+   search fields 
+   query 
+   start index return up 100 items  instead default 10  
+   bibtex format 
+   mathscinet returns bibtex result embedded html extract bibtex string pre bibtex  pre  tags pass content bibtex parser net sf jabref logic importer fetcher mathscinet searchbasedparserfetcher  entrybasedparserfetcher mathscinet importformatpreferences preferences preferences   objects requirenonnull preferences   
+      
+ 
+     override getname mathscinet   
+      
+ 
+      
+     override url geturlforentry bibentry entry urisyntaxexception  malformedurlexception  fetcherexception   
+        uribuilder uribuilder uribuilder  http   
+        uribuilder addparameter  format    bibtex    
+ 
+        entry getfieldoralias fieldname title  ifpresent title -  uribuilder addparameter  ti   title    
+        entry getfieldoralias fieldname author  ifpresent author -  uribuilder addparameter  au   author    
+        entry getfieldoralias fieldname journal  ifpresent journal -  uribuilder addparameter  jrnl   journal    
+        entry getfieldoralias fieldname year  ifpresent year -  uribuilder addparameter  year   year uribuilder build   tourl    
+      
+ 
+     override url geturlforquery query urisyntaxexception  malformedurlexception  fetcherexception   
+        uribuilder uribuilder uribuilder  http   
+        uribuilder addparameter  pg7    allf      
+        uribuilder addparameter  s7   query     
+        uribuilder addparameter  r    1      
+        uribuilder addparameter  extend    1      
+        uribuilder addparameter  fmt    bibtex uribuilder build   tourl    
+      
+ 
+     override parser getparser inputstream response bufferedreader inputstreamreader inputstream   lines   collect  
+                    collectors joining os newline    
+ 
+            list bibentry  entries arraylist      
+            bibtexparser bibtexparser bibtexparser preferences   
+            pattern pattern   pattern compile   pre  ?s       pre     
+            matcher matcher   pattern matcher response matcher find bibtexentrystring   matcher group    
+                entries addall bibtexparser parseentries bibtexentrystring entries  
+           
+      
+ 
+     override dopostcleanup bibentry entry movefieldcleanup  fjournal   fieldname journal  cleanup entry movefieldcleanup  mrclass   fieldname keywords  cleanup entry fieldformattercleanup fieldname url clearformatter    cleanup entry   
+      
+ 

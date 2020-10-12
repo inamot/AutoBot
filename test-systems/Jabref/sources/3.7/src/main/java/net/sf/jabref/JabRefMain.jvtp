@@ -1,0 +1,83 @@
+ 
+    
+   jabref mainclass 
+    
+   perform migrations 
+   perform checks changes users preference set older jabref version  
+   update handling special fields based preferences 
+   update name time stamp field based preferences 
+   update fields treated numeric  based preferences  
+   read list s journal names abbreviations 
+   build list import export formats    
+   initialize protected terms loader 
+   check running jabref not alone already server out try contact already running jabref successfully sent command line options through socket another jabref instance assume s taken care quit alone start server 
+   override used newline character one stored preferences preferences return system newline character sequence default 
+   process arguments 
+   see shut down now not  start gui net sf jabref jabrefmain main args    
+        swingutilities invokelater    -  start args start args    
+        fallbackexceptionhandler installexceptionhandler    
+ 
+        jabrefpreferences preferences   jabrefpreferences getinstance    
+ 
+        proxypreferences proxypreferences   preferences getproxypreferences    
+        proxyregisterer register proxypreferences proxypreferences isuseproxy      proxypreferences isuseauthentication      
+            authenticator setdefault proxyauthenticator     
+          
+ 
+        globals startbackgroundtasks    
+        globals prefs   preferences  
+        localization setlanguage preferences get jabrefpreferences language    
+        globals prefs setlanguagedependentdefaultvalues    
+ 
+          
+          
+        preferencesmigrations upgradesortorder    
+        preferencesmigrations upgradefaultyencodingstrings    
+        preferencesmigrations upgradelabelpatterntobibtexkeypattern    
+ 
+          
+        internalbibtexfields 
+                 updatespecialfields globals prefs getboolean jabrefpreferences serializespecialfields    
+          
+        internalbibtexfields updatetimestampfield globals prefs get jabrefpreferences time_stamp_field    
+          
+        internalbibtexfields setnumericfields globals prefs getstringlist jabrefpreferences numeric_fields    
+ 
+          
+        globals journalabbreviationloader journalabbreviationloader    
+ 
+          
+        globals import_format_reader resetimportformats globals prefs getimportformatpreferences    
+                globals prefs getxmppreferences     
+        customentrytypesmanager loadcustomentrytypes preferences   
+        map exportformat  customformats   globals prefs customexports getcustomexportformats globals prefs  
+                globals journalabbreviationloader   
+        layoutformatterpreferences layoutpreferences   globals prefs 
+                 getlayoutformatterpreferences globals journalabbreviationloader   
+        savepreferences savepreferences   savepreferences loadforexportfrompreferences globals prefs   
+        exportformats initallexports customformats  layoutpreferences  savepreferences   
+ 
+          
+        globals protectedtermsloader protectedtermsloader globals prefs getprotectedtermspreferences     
+        protecttermsformatter setprotectedtermsloader globals protectedtermsloader   
+ 
+          
+        remotepreferences remotepreferences   globals prefs getremotepreferences remotepreferences useremoteserver      
+            globals remote_listener open jabrefmessagehandler    remotepreferences getport globals remote_listener isopen remotelistenerclient sendtoactivejabrefinstance args  remotepreferences getport       
+                      
+                      
+                    logger info localization lang  arguments passed on to running jabref instance  shutting down      
+                    jabrefexecutorservice instance shutdowneverything globals remote_listener start    
+          
+ 
+          
+          
+        os newline   globals prefs get jabrefpreferences newline   
+ 
+          
+        argumentprocessor argumentprocessor argumentprocessor args  argumentprocessor mode initial_start argumentprocessor shouldshutdown      
+            jabrefexecutorservice instance shutdowneverything swingutilities 
+                 invokelater jabrefgui argumentprocessor getparserresults    
+                        argumentprocessor isblank      
+      
+ 

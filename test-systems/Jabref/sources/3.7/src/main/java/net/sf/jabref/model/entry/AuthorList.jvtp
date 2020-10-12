@@ -1,0 +1,356 @@
+ immutable class representing information either  code author  code code editor  code  field bibtex record  
+    p  
+   constructor performs parsing raw field text stores preformatted data  
+   various accessor methods return author editor field different formats  
+    p  
+   parsing algorithm designed satisfy two requirements author's 
+   name typed correctly result coincide one bibtex  
+    b erroneous names  output reasonable may differ bibtex output following rules used  
+    ol  
+    li  'author field sequence tokens  
+    ul  
+    li  tokens separated sequences whitespaces   code character iswhitespace c   true  code    
+   commas      dashes tildas  ~   
+    li  every comma separates tokens sequences separators equivalent single separator example b  consists 2 tokens b b  consists 3 tokens b   
+    li  anything enclosed braces belonges single token example  
+    abc x b -~ c x  consists 2 tokens abc xa b -~ cx  consists 4 
+   tokens   abc    xa   b cx    
+    li token followed immediately dash dash-terminated  token tokens space-terminated  tokens example b- c - d  
+   tokens b dash-terminated c d space-terminated  
+    li purposes splitting author name parts construction abbreviation first name  one needs definitions first 
+   latter token  case token abbreviation token  
+    ul  
+    li  'first letter token first letter character   code character isletter c   true  code not belong sequence letters immediately follows  \  
+   character one exception followed aa    aa    ae    ae   
+    l    l    o    o    oe    oe j  followed non-letter first letter token letter follows example x b  'first letter u  bel  'first letter u noopsort \ o  xyz  'first letter o ae x  'first letter aex\ijk\oe\j  'first letter j letter 
+   satisfying above rule  'first letter undefined  
+    li  token lower-case  token first letter id defined lower-case   code character islowercase c   true  code token upper-case  token otherwise  
+    li  'abbreviation token shortest prefix token contains 'first letter b braces-balanced first letter undefined  'abbreviation token itself above examples  
+   'abbreviation's u       \noopsort \ o       \ae    
+    \aex\ijk\oe\j   
+     ul  
+    li behavior based above definitions erroneous only one case first-name-token noopsort john abbreviate noopsort bibtex produces  j    fixing problem requires processing preabmle  
+     ul  
+    li  'author name's author field subsequences tokens separated token and case-insensitive author name empty 
+   sequence tokens ignored examle  both  john smith peter 
+   black and john smith and peter black  consists 2 'author 
+   name's  johm smith peter black erroneous situations bit 
+   different bibtex behavior   
+    li  'author name' consists first-part'  'von-part'  'last-part junior-part'  each sequence tokens sequence tokens splitted parts  depends number commas  
+    ul  
+    li commas tokens upper-case  'junior-part von-part empty  'last-part' consist last token  'first-part' consists tokens  'first-part empty author name' consists single 
+   token example john james smith   'last-part'  smith first-part'  john james   
+    li commas exists lower-case token  'junior-part empty  
+   'first-part' consists upper-case tokens before first lower-case 
+   token  'von-part' consists lower-case tokens starting first lower-case 
+   token ending lower-case token followed upper-case token  
+   'last-part' consists rest tokens  note both 'first-part latst-part' may empty last-part' may contain lower-case tokens example von der   'first-part' 'last-part'     'von-part'  von der charles louis xavier joseph de la vall \'e e la poussin   
+   'first-part'  charles louis xavier joseph   'von-part'  de la   
+   'last-part'  vall \'e e la poussin   
+    li  one comma  'junior-part empty  'first-part' consists tokens comma  'von-part' consists longest sequence lower-case tokens very beginning  'last-part' consists tokens von-part before comma  note any part empty example de la 
+   vall \'e e la poussin  charles louis xavier joseph   'first-part'  charles 
+   louis xavier joseph   'von-part'  de la   'last-part'  vall \'e e la 
+   poussin joseph de la vall \'e e la poussin  charles louis xavier   
+   'first-part'  charles louis xavier   'von-part'     'last-part'  joseph de la 
+   vall \'e e la poussin   
+    li  two commas  any comma second one ignored merely 
+   separates tokens   'junior-part' consists tokens between first second commas  'first-part' consists tokens second comma  
+   tokens before first comma splitted von-part last-part' 
+   similarly case one comma example de la vall \'e e 
+   poussin  jr   charles louis xavier joseph   'first-part'  charles louis 
+   xavier joseph   'von-part'  de la   'last-part'  vall \'e e la poussin junior-part'  jr    
+     ul  
+    li first-part'  'last-part'  'von-part junior-part reconstructed tokens  tokens part separated either space dash  depending whether token before separator space-terminated dash-terminated last token part not 
+   matter whether dash space-terminated  
+    li first-part abbreviated  each token replaced abbreviation followed period  separators same case non-abbreviated name example heinrich- \  u  bel kurt von minich   
+   'first-part'  heinrich- \  u  bel kurt abbreviation h - \  u    
+   k   
+     ol  
+    
+   variables storing computed strings only need created once  
+   avoid partition values contained 
+    
+       creates new list authors  
+        p  
+       don't call constructor directly use getauthorlist   
+       method caches results  
+       
+        param authors list authors underlie instance 
+        
+    
+       retrieve authorlist given string authors editors  
+        p function tries cache parsed authorlists string passed param authors string authors editors bibtex format parse  
+        return authorlist object representing given authors  
+        
+   handle case names order lastname  firstname separated e g   ali babar  m   dingsã¸yr  t   lago  p   van der vliet  h  
+   delete spaces correct case identification 
+   looking space between pre lastname hit comma name separator case 
+   usually getaslastfirstnameswithand method separate pre lastname separated not check spaces separate pre lastname 
+   looking name affixes avoid 
+   arraynamelist needs reduce count avoiding terms 
+   valuepartscount holds count name parts without avoided terms 
+   holds index each term needs avoided hit described special case name affix jr convenience method getauthorsfirstfirst   
+       
+        see authorlist#getasfirstlastnames convenience method getauthorsfirstfirstands   
+       
+        see authorlist#getasfirstlastnameswithand convenience method getauthorslastfirst   
+       
+        see authorlist#getaslastfirstnames convenience method getauthorslastfirstands true  
+       
+        see authorlist#getaslastfirstnameswithand convenience method getauthorslastfirstands   
+       
+        see authorlist#getaslastfirstnameswithand convenience method getauthorslastonly   
+       
+        see authorlist#getaslastnames convenience method getauthorsforalphabetization   
+       
+        see authorlist#getforalphabetization convenience method getauthorsnatbib   
+       
+        see authorlist#getasnatbib 
+        
+    
+       returns number author names object  
+       
+        return number author names object  
+        
+    
+       returns true authors list  
+       
+        return true authors list  
+        
+    
+       returns code author  code  object th author  
+       
+        param index author 0 code size  -1  code    
+        return code author  code  object  
+        
+    
+       returns list code author  code  objects  
+       
+        return code list author   code  object  
+        
+    
+       returns list authors natbib  format  
+        p  
+        ul  
+        li  john smith  -   smith   li  
+        li  john smith black brown  peter       smith black brown   li  
+        li  john von neumann john smith black brown  peter       von 
+       neumann et al     li  
+         ul  
+       
+        return formatted list authors  
+        
+   check ve computed before  
+    
+       returns list authors separated commas last name only list consists two authors inserted before last author's name  
+        p  
+        p  
+        ul  
+        li   john smith       smith   li  
+        li   john smith black brown  peter       smith black brown   li  
+        li   john von neumann john smith black brown  peter       von 
+       neumann  smith black brown    li  
+         ul  
+       
+        param oxfordcomma whether put comma before the end  
+        return formatted list authors  
+        see href  http   en wikipedia org wiki serial_comma  serial comma detailed explaination oxford comma check ve computed before  
+    
+       returns list authors separated commas first names last name  first names abbreviated not depending parameter list consists three authors inserted before last author's name  
+        p  
+        p  
+        ul  
+        li   john smith       smith  john smith  j    li  
+        li   john smith black brown  peter       smith  john black 
+       brown  peter smith  j black brown  p    li  
+        li   john von neumann john smith black brown  peter       von 
+       neumann  john  smith  john black brown  peter von neumann  j   
+       smith  j black brown  p     li  
+         ul  
+       
+        param abbreviate  whether abbreivate first names  
+        param oxfordcomma whether put comma before the end  
+        return formatted list authors  
+        see href  http   en wikipedia org wiki serial_comma  serial comma detailed explaination oxford comma check ve computed before  
+    
+       returns list authors separated s first names last name  first names not abbreviated  
+        p  
+        ul  
+        li  john smith       smith  john   li  
+        li  john smith black brown  peter       smith  john black 
+       brown  peter   li  
+        li  john von neumann john smith black brown  peter       von 
+       neumann  john smith  john black brown  peter    li  
+         ul  
+       
+        return formatted list authors  
+        
+   check ve computed before  
+   check ve computed before  
+    
+       returns list authors separated commas first names before 
+       last name  first names abbreviated not depending parameter list consists three authors inserted before last author's name  
+        p  
+        ul  
+        li  john smith       john smith j  smith   li  
+        li  john smith black brown  peter       john smith peter black 
+       brown j  smith p  black brown   li  
+        li   john von neumann john smith black brown  peter       john 
+       von neumann  john smith peter black brown j  von neumann  j  
+       smith p  black brown    li  
+         ul  
+       
+        param abbr        whether abbreivate first names  
+        param oxfordcomma whether put comma before the end  
+        return formatted list authors  
+        see href  http   en wikipedia org wiki serial_comma  serial comma detailed explaination oxford comma check ve computed before  
+    
+       compare object given one  
+        p return true iff object author fields identical string comparison  
+        
+    
+       returns list authors separated s first names before 
+       last name  first names not abbreviated  
+        p  
+        ul  
+        li  john smith       john smith   li  
+        li  john smith black brown  peter       john smith peter black 
+       brown   li  
+        li  john von neumann john smith black brown  peter       john 
+       von neumann john smith peter black brown    li  
+         li  
+       
+        return formatted list authors  
+        
+   check ve computed before  
+    
+       returns list authors form suitable alphabetization means last names come first  never preceded von  particles any braces removed  first names abbreviated same name treated similarly abbreviated one case not another form not intended suitable presentation  only sorting  
+        p  
+        p  
+        ul  
+        li  john smith       smith  j     li  
+       
+        return formatted list authors 
+        
+    
+       builds new array strings stringbuilder  
+       regarding name affixes  
+        return new string correct seperation 
+        
+   avoidedtimes needs increased count avoided terms correct odd even calculation hit name affix 
+   hit separation between last name firstname --  comma kept 
+   hit separation between full names  e g   ali babar  m dingsã¸yr  t   --  semicolon used treated correctly authorlist parse authors   net sf jabref model entry authorlist authorlist list author  authors authors   objects requirenonnull authors authorlist author author collections singletonlist author authorlist parse authors    
+        objects requirenonnull authors authors touppercase locale english  contains   and        authors contains          authors contains         
+            list arraynamelist   arrays aslist authors split        
+ 
+              
+            arraynamelist replaceall trim spaceinallparts   arraynamelist stream   filter name -  name contains       collect collectors 
+                     tolist    size      arraynamelist size spaceinallparts    
+                authors   authors replaceall        and valuepartscount   arraynamelist size    
+                  
+                collection integer  avoidindex hashset i   0  i   arraynamelist size    i avoidtermsinlowercase contains arraynamelist get i  tolowercase       
+                        avoidindex add i   
+                        valuepartscount valuepartscount % 2     0    
+                      
+                    authors   buildwithaffix avoidindex  arraynamelist  tostring    
+                  
+              
+          
+ 
+        authorlist authorlist   author_cache get authors authorlist authorlistparser parser authorlistparser    
+            authorlist   parser parse authors   
+            author_cache put authors  authorlist authorlist fixauthorfirstnamefirstcommas authors abbr oxfordcomma authorlist parse authors  getasfirstlastnames abbr  oxfordcomma fixauthorfirstnamefirst authors authorlist parse authors  getasfirstlastnameswithand fixauthorlastnamefirstcommas authors abbr oxfordcomma authorlist parse authors  getaslastfirstnames abbr  oxfordcomma fixauthorlastnamefirst authors authorlist parse authors  getaslastfirstnameswithand fixauthorlastnamefirst authors abbreviate authorlist parse authors  getaslastfirstnameswithand abbreviate fixauthorlastnameonlycommas authors oxfordcomma authorlist parse authors  getaslastnames oxfordcomma fixauthorforalphabetization authors authorlist parse authors  getforalphabetization fixauthornatbib authors authorlist parse authors  getasnatbib getnumberofauthors authors size isempty authors isempty author getauthor i authors get i list author  getauthors authors getasnatbib authorsnatbib authorsnatbib  
+          
+ 
+        stringbuilder res stringbuilder isempty      
+            res append getauthor 0  getlastonly getnumberofauthors      2    
+                res append   and     
+                res append getauthor 1  getlastonly getnumberofauthors     2    
+                res append   et al     
+              
+          
+        authorsnatbib   res tostring authorsnatbib getaslastnames oxfordcomma abbrint   oxfordcomma ? 0   1 authorslastonly abbrint authorslastonly abbrint   
+          
+ 
+        stringbuilder result stringbuilder isempty      
+            result append getauthor 0  getlastonly i   1 i    getnumberofauthors   - 1     
+                result append        
+                result append getauthor i  getlastonly     
+                i getnumberofauthors     2     oxfordcomma    
+                result append getnumberofauthors     1    
+                result append   and     
+                result append getauthor i  getlastonly     
+              
+          
+        authorslastonly abbrint    result tostring authorslastonly abbrint getaslastfirstnames abbreviate oxfordcomma abbrint   abbreviate ? 0   1  
+        abbrint    oxfordcomma ? 0   2 authorslastfirst abbrint authorslastfirst abbrint   
+          
+ 
+        stringbuilder result stringbuilder isempty      
+            result append getauthor 0  getlastfirst abbreviate i   1 i    getnumberofauthors   - 1     
+                result append        
+                result append getauthor i  getlastfirst abbreviate    
+                i getnumberofauthors     2     oxfordcomma    
+                result append getnumberofauthors     1    
+                result append   and     
+                result append getauthor i  getlastfirst abbreviate    
+              
+          
+        authorslastfirst abbrint    result tostring authorslastfirst abbrint   
+      
+ 
+     override tostring authors tostring getaslastfirstnameswithand abbreviate abbrint   abbreviate ? 0   1 authorlastfirstands abbrint authorlastfirstands abbrint   
+          
+ 
+ 
+        authorlastfirstands abbrint    getauthors   stream   map author -  author getlastfirst abbreviate   
+                 collect collectors joining   and authorlastfirstands abbrint getaslastfirstfirstlastnameswithand abbreviate abbrint   abbreviate ? 0   1 authorslastfirstfirstlast abbrint authorslastfirstfirstlast abbrint   
+          
+ 
+        stringbuilder result stringbuilder isempty      
+            result append getauthor 0  getlastfirst abbreviate i   1  i   getnumberofauthors    i      
+                result append   and     
+                result append getauthor i  getfirstlast abbreviate    
+              
+          
+ 
+        authorslastfirstfirstlast abbrint    result tostring authorslastfirstfirstlast abbrint getasfirstlastnames abbr oxfordcomma abbrint   abbr ? 0   1  
+        abbrint    oxfordcomma ? 0   2 authorsfirstfirst abbrint authorsfirstfirst abbrint   
+          
+ 
+        stringbuilder result stringbuilder isempty      
+            result append getauthor 0  getfirstlast abbr i   1 i    getnumberofauthors   - 1     
+                result append        
+                result append getauthor i  getfirstlast abbr    
+                i getnumberofauthors     2     oxfordcomma    
+                result append getnumberofauthors     1    
+                result append   and     
+                result append getauthor i  getfirstlast abbr    
+              
+          
+        authorsfirstfirst abbrint    result tostring authorsfirstfirst abbrint   
+      
+ 
+ 
+      
+     override equals object o o authorlist authorlist a    authorlist  o authors equals a authors   
+      
+ 
+     override hashcode objects hash authors getasfirstlastnameswithand authorsfirstfirstands authorsfirstfirstands  
+          
+ 
+        authorsfirstfirstands   getauthors   stream   map author -  author getfirstlast collect collectors joining   and authorsfirstfirstands getforalphabetization authorsalph authorsalph  
+          
+ 
+        authorsalph   getauthors   stream   map author  getnameforalphabetization  
+                 collect collectors joining   and authorsalph stringbuilder buildwithaffix collection integer  indexarray  list namelist    
+        stringbuilder stringbuilder stringbuilder avoidedtimes   0 i   0  i   namelist size    i indexarray contains i     
+                  
+                stringbuilder append namelist get i    
+                stringbuilder append ' '   
+                avoidedtimes stringbuilder append namelist get i i   avoidedtimes  % 2     0    
+                      
+                    stringbuilder append stringbuilder append stringbuilder  
+      
+ 
+ 

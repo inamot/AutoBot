@@ -1,0 +1,172 @@
+ 
+    
+   editor external file types  
+    
+    
+       update editor show current settings preferences  
+        
+    
+       store list external entry types preferences todefaults resets entire list default values  
+  int reply   joptionpane showconfirmdialog externalfiletypeeditor globals lang custom file types lost  proceed?    
+                    globals lang  reset file type definitions    joptionpane yes_no_option  
+                    joptionpane question_message reply    joptionpane yes_option    
+  globals prefs resetexternalfiletypestodefault    
+  setvalues    
+    
+   generate new file type  
+   show file type editor  
+   ok pressed  add new file type update table  
+   key bindings abstractaction opening external file types editor  
+        param frame jframe used parent window dialog  
+        return action opening editor abstractaction opening external file types editor  
+        param dialog jdialog used parent window dialog  
+        return action opening editor  
+        
+   five columns net sf jabref gui externalfiletype externalfiletypeeditor jdialog externalfiletypeeditor jframe frame frame  localization lang  manage external file types frame   frame  
+        init externalfiletypeeditor jdialog dialog dialog  localization lang  manage external file types dialog   dialog  
+        init setvalues     
+        filetypes clear    
+        collection externalfiletype  types   externalfiletypes getinstance   getexternalfiletypeselection externalfiletype type   types    
+            filetypes add type copy     
+          
+        collections sort filetypes storesettings     
+        externalfiletypes getinstance   setexternalfiletypes filetypes init     
+ 
+        ok addactionlistener e -    
+            storesettings    
+            dispose    
+            
+        action cancelaction abstractaction     
+ 
+             override actionperformed actionevent e    
+                dispose    
+              
+           
+        cancel addactionlistener cancelaction   
+          
+        todefaults addactionlistener e -    
+              
+              
+            list externalfiletype  list   externalfiletypes getdefaultexternalfiletypes    
+            filetypes clear    
+            filetypes addall list   
+            collections sort filetypes   
+              
+              
+            tablemodel firetabledatachanged    
+              
+            
+ 
+        add addactionlistener e -    
+              
+            externalfiletype type externalfiletype icontheme jabreficon file getsmallicon     
+              
+            geteditor type  setvisible entryeditor okpressed      
+                  
+                filetypes add type   
+                tablemodel firetabledatachanged    
+              
+            
+ 
+        remove addactionlistener e rows   table getselectedrows rows length    0 i   rows length - 1  i    0  i--    
+                filetypes remove rows i    
+              
+            tablemodel firetabledatachanged filetypes isempty row   math min rows 0   filetypes size   - 1   
+                table setrowselectioninterval row  row   
+              
+            
+ 
+        edit addactionlistener editlistener   
+        filetypes arraylist      
+        setvalues    
+ 
+        tablemodel filetypetablemodel    
+        table jtable tablemodel   
+        table setdefaultrenderer imageicon iconrenderer     
+        table addmouselistener tableclicklistener     
+ 
+        table getcolumnmodel   getcolumn 0  setmaxwidth 24   
+        table getcolumnmodel   getcolumn 0  setminwidth 24   
+        table getcolumnmodel   getcolumn 1  setminwidth 170   
+        table getcolumnmodel   getcolumn 2  setminwidth 60   
+        table getcolumnmodel   getcolumn 3  setminwidth 100   
+        table getcolumnmodel   getcolumn 0  setresizable guiutil correctrowheight table   
+ 
+        jscrollpane sp jscrollpane table   
+ 
+        jpanel upper jpanel    
+        upper setlayout borderlayout     
+        upper setborder borderfactory createemptyborder 5  5  5  5    
+        upper add sp  borderlayout center   
+        getcontentpane   add upper  borderlayout center   
+ 
+        buttonstackbuilder bs buttonstackbuilder    
+        bs addbutton add   
+        bs addbutton remove   
+        bs addbutton edit   
+        bs addrelatedgap    
+        bs addbutton todefaults   
+        upper add bs getpanel    borderlayout east   
+ 
+        buttonbarbuilder bb buttonbarbuilder    
+        bb addglue    
+        bb addbutton ok   
+        bb addbutton cancel   
+        bb addglue    
+        bb getpanel   setborder borderfactory createemptyborder 5  5  5  5    
+        getcontentpane   add bb getpanel    borderlayout south   
+        pack    
+ 
+          
+        actionmap am   upper getactionmap    
+        inputmap im   upper getinputmap jcomponent when_in_focused_window   
+        im put globals getkeyprefs   getkey keybinding close_dialog    close    
+        am put  close   cancelaction   
+        am   bb getpanel   getactionmap    
+        im   bb getpanel   getinputmap jcomponent when_in_focused_window   
+        im put globals getkeyprefs   getkey keybinding close_dialog    close    
+        am put  close   cancelaction frame setlocationrelativeto dialog setlocationrelativeto frame externalfiletypeentryeditor geteditor externalfiletype type entryeditor entryeditor externalfiletypeentryeditor externalfiletypeeditor type entryeditor setentry type entryeditor abstractaction getaction jabrefframe frame editexternalfiletypesaction frame abstractaction getaction jdialog dialog editexternalfiletypesaction dialog editlistener actionlistener   
+ 
+         override actionperformed actionevent e rows   table getselectedrows rows length    1 geteditor filetypes get rows 0    setvisible entryeditor okpressed      
+                tablemodel firetabledatachanged iconrenderer tablecellrenderer   
+ 
+  
+ 
+ 
+         override component gettablecellrenderercomponent jtable tab  object value isselected hasfocus row column    
+            lab settext lab seticon  icon  value lab filetypetablemodel abstracttablemodel   
+ 
+         override getcolumncount 5  
+          
+ 
+         override getrowcount filetypes size    
+          
+ 
+         override getcolumnname column column 0 1 localization lang  name 2 localization lang  extension 3 localization lang  mime type localization lang  application    
+              
+          
+ 
+         override getcolumnclass columnindex columnindex    0 imageicon override object getvalueat rowindex columnindex    
+            externalfiletype type   filetypes get rowindex columnindex 0 type geticon 1 type getname 2 type getextension 3 type getmimetype type getopenwithapplication tableclicklistener mouseadapter handleclick mouseevent e e getclickcount      2    
+                editlistener actionperformed override mouseclicked mouseevent e    
+            handleclick e   
+          
+ 
+         override mousepressed mouseevent e    
+            handleclick e   
+          
+ 
+         override mousereleased mouseevent e    
+            handleclick e editexternalfiletypesaction mnemonicawareaction editexternalfiletypesaction jabrefframe frame putvalue action name  localization menutitle  manage external file types frame   frame editexternalfiletypesaction jdialog dialog putvalue action name  localization menutitle  manage external file types dialog   dialog  
+          
+ 
+         override actionperformed actionevent e editor frame editor externalfiletypeeditor dialog editor externalfiletypeeditor frame   
+                  
+              
+            editor setvalues    
+            editor setvisible frame frame getcurrentbasepanel frame getcurrentbasepanel   getmaintable   repaint    
+              
+          
+      
+ 
+ 

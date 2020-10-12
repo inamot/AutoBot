@@ -1,0 +1,191 @@
+ 
+    
+   base class export formats based templates value set used override default encoding getcurrentbasepanel  
+    
+       initialize another export format based templates stored dir layoutfile lffilename  
+       
+        param displayname name display user  
+        param consolename name call format console  
+        param lffilename  name main layout file  
+        param directory   directory find layout file  
+        param extension contain instance  txt   
+        
+    
+       initialize another export format based templates stored dir layoutfile lffilename  
+       
+        param displayname name display user  
+        param consolename name call format console  
+        param lffilename  name main layout file  
+        param directory   directory find layout file  
+        param extension contain instance  txt   
+        param layoutpreferences preferences layout 
+        param savepreferences preferences saving 
+        
+    
+       empty default constructor subclasses 
+        
+   intentionally empty 
+    
+       indicate whether custom export custom export looks layout files using normal file path built export looks classpath  
+       
+        param custom true indicate custom export format  
+        
+    
+        see iexportformat#getconsolename   
+        
+    
+        see iexportformat#getdisplayname   
+        
+    
+       set encoding used preference default value 
+       obtained basepanel  
+       
+        param encoding name encoding use  
+        
+    
+        see iexportformat#getextension method return reader given layout file read  
+        p  
+        p  
+       subclasses exportformat free override provide implementation  
+       
+        param filename filename 
+        return newly created reader 
+        throws ioexception reader not created custom export use given filename  
+   attempt reader file path given  either loading resource within jar normal file unsuccessful  e g  file not found ioexception thrown  
+   try loading resource first works files inside jar not work  try loading normal file url  
+    
+       perform export code database   
+       
+        param databasecontext database export param file file write resulting export param encoding encoding database 
+        param entries    contains entries exported  
+        throws ioexception problem occurred trying write code writer read required resources  
+        throws exception any error occurred during export  
+        see net sf jabref logic exporter iexportformat#performexport bibdatabasecontext  string  charset  list not export entries export -- avoids exports only template text 
+   perhaps overriding encoding doesn't work fall back default encoding  
+   check export filter bundled name formatters  
+   add preferences layouts access custom name formatters  
+   print header exception cast  export filter doesn't begin 
+   file  
+   write header 
+   
+               write database entries  entries sorted appear screen sorted author  depending preferences supply set entries export only certain entries non-null used choose entries  otherwise null ignored  
+                
+   load default layout 
+   increment entry counter layout try type-specific layout entry exception indicates type-specific layout 
+   exists go default one  
+   write entry 
+   print footer 
+   changed section - begin  arudert exception thrown  export filter doesn't end 
+   file  
+   write footer 
+   clear custom name formatters  
+    
+       see name formatter file bundled export format read name formatters used filter layouts  
+       
+        
+   ok found opened file  read contents  
+   go through each line not deal empty lines  
+   todo  any need accept escaped colons here? 
+   todo  show error message here? net sf jabref logic exporter exportformat iexportformat exportformat displayname consolename lffilename directory extension displayname   displayname consolename   consolename lffilename   lffilename directory   directory extension   extension exportformat displayname consolename lffilename directory extension  
+            layoutformatterpreferences layoutpreferences  savepreferences savepreferences displayname  consolename  lffilename  directory  extension layoutpreferences   layoutpreferences savepreferences   savepreferences exportformat setcustomexport custom customexport   custom  
+      
+ 
+      
+     override getconsolename consolename  
+      
+ 
+      
+     override getdisplayname displayname setencoding charset encoding encoding   encoding  
+      
+ 
+      
+     override getextension extension reader getreader filename ioexception dir customexport    
+            dir dir   layout_prefix    directory directory name   dir   filename  
+        reader reader  
+          
+        url reso   jabrefmain getresource name reso file f file name   
+                reader filereader f reader inputstreamreader reso openstream filenotfoundexception ex ioexception  cannot find layout file  '    name reader  
+      
+ 
+      
+     override performexport bibdatabasecontext databasecontext file charset encoding  list bibentry  entries exception   
+        objects requirenonnull databasecontext   
+        objects requirenonnull entries entries isempty path outfile   paths get file   
+        savesession ss encoding ss filesavesession encoding saveexception ex    
+                  
+                  
+                logger warn  can not get save session    ex ss ss filesavesession encoding verifyingwriter ps   ss getwriter      
+ 
+            layout beginlayout readformatterfile    
+ 
+            list missingformatters arraylist   1 reader reader   getreader lffilename     begin layout      
+                layouthelper layouthelper layouthelper reader  layoutpreferences   
+                beginlayout   layouthelper getlayoutfromtext ioexception ex beginlayout ps write beginlayout dolayout databasecontext  encoding    
+                missingformatters addall beginlayout getmissingformatters     
+              
+ 
+              
+            list bibentry  sorted   bibdatabasewriter getsortedentries databasecontext  entries  savepreferences   
+ 
+              
+            layout deflayout  
+            layouthelper layouthelper reader reader   getreader lffilename     layout      
+                layouthelper layouthelper reader layoutpreferences   
+                deflayout   layouthelper getlayoutfromtext deflayout missingformatters addall deflayout getmissingformatters missingformatters isempty      
+                    logger warn missingformatters   
+                  
+              
+            map layout  layouts hashmap      
+            layout layout  
+ 
+            exportformats entrynumber   0 bibentry entry   sorted    
+                exportformats entrynumber type   entry gettype layouts containskey type     
+                    layout   layouts get type reader reader   getreader lffilename   ' '   type     layout      
+                          
+                        layouthelper layouthelper reader  layoutpreferences   
+                        layout   layouthelper getlayoutfromtext    
+                        layouts put type  layout layout missingformatters addall layout getmissingformatters ioexception ex    
+                          
+                          
+                          
+                        layout   deflayout layout ps write layout dolayout entry  databasecontext getdatabase      
+                  
+              
+ 
+              
+ 
+              
+            layout endlayout reader reader   getreader lffilename     end layout      
+                layouthelper layouthelper reader  layoutpreferences   
+                endlayout   layouthelper getlayoutfromtext ioexception ex endlayout ps write endlayout dolayout databasecontext encoding    
+                missingformatters addall endlayout getmissingformatters     
+              
+ 
+              
+            layoutpreferences clearcustomexportnameformatters missingformatters isempty      
+                stringbuilder sb stringbuilder  the following formatters could not be found      
+                sb append join       missingformatters    
+                logger warn sb   
+              
+            finalizesavesession ss  outfile   
+          
+ 
+      
+ 
+     override performexport bibdatabasecontext databasecontext  path file charset encoding  
+            list bibentry  entries exception   
+        performexport databasecontext  file getfilename   tostring    encoding  entries readformatterfile     
+        file formatterfile file lffilename     formatters formatterfile exists reader in filereader formatterfile     
+                  
+                stringbuilder sb stringbuilder c c   in read       -1    
+                    sb append c lines   sb tostring   split  \n line1   lines line   line1 trim line isempty index   line indexof index   0       index   1    line length formattername   line substring 0  index contents   line substring index   1   
+                        layoutpreferences putcustomexportnameformatter formattername  contents ioexception ex    
+                  
+                logger warn  problem opening formatter file    ex finalizesavesession savesession ss  path file saveexception  ioexception   
+        ss getwriter   flush    
+        ss getwriter   close ss getwriter   couldencodeall      
+            logger warn  could not encode       
+          
+        ss commit file   
+      
+ 

@@ -1,0 +1,152 @@
+ 
+    
+   importer medline plain format  
+   
+   check here details format 
+   http   www nlm nih gov bsd mms medlineelements html 
+   
+    author vegeziel strategy look pmid  -      pmc pmcr  -    line e   pubmed unique identifier  pubmed central identifier  pubmed central release  
+  use optional here exception thrown file empty 
+  store fields map 
+  add fields hm 
+   id assumes existing database don't 
+   remove empty fields  
+   create one here possible two issn  one electronic print two comes end brackets  electronic print search brackets 
+  adds copyright information comes end abstract 
+  remove copyright field name field copyright net sf jabref logic importer fileformat medlineplainimporter importer   
+ 
+  
+  
+  
+  
+  
+ 
+ 
+     override getname medlineplain   
+      
+ 
+     override fileextensions getextensions fileextensions medline_plain  
+      
+ 
+     override getdescription importer the medlineplain format    
+      
+ 
+     override isrecognizedformat bufferedreader reader ioexception str str   reader readline pmid_pattern matcher str  find      pmc_pattern matcher str  find   
+                       pmcr_pattern matcher str  find override parserresult importdatabase bufferedreader reader ioexception   
+        list bibentry  bibitems arraylist      
+ 
+          
+        optional optionallines   reader lines   reduce  line  nextline  -  line    \n    nextline linesasstring   optionallines ispresent   ? optionallines get entries   linesasstring replace  \u2013    -   replace  \u2014    --   replace  \u2015    --   
+                 split  \\n\\n entry1   entries entry1 trim   isempty       entry1 contains type   bibentry default_type author editor comment       
+            map string  fields hashmap lines   entry1 split  \n j   0  j   lines length  j      
+ 
+                stringbuilder current stringbuilder lines j done done     j    lines length - 1 lines j   1  length      4    
+                        j lines j   1  charat 4 current length     0      character iswhitespace current charat current length   - 1      
+                            current append ' '   
+                          
+                        current append lines j   1  trim     
+                        j done entry   current tostring checklinevalidity entry label   entry substring 0  entry indexof '-'   trim value   entry substring entry indexof '-'    1  trim pt  equals label     
+                    type   addsourcetype value  type   
+                  
+                adddates fields  label  value   
+                addabstract fields  label  value   
+                addtitles fields  label  value  type   
+                addids fields  label  value   
+                addstandardnumber fields  label  value fau  equals label equals author     
+                        author   value author      and     value fed  equals label equals editor     
+                        editor   value editor      and     value  
+                      
+                  
+ 
+                  
+                map string  hashmap hashmap      
+                hashmap put  pg   fieldname pages   
+                hashmap put  pl   fieldname address   
+                hashmap put  phst    history    
+                hashmap put  pst    publication-status    
+                hashmap put  vi   fieldname volume   
+                hashmap put  la   fieldname language   
+                hashmap put  pubm    model    
+                hashmap put  rn    registry-number    
+                hashmap put  nm    substance-name    
+                hashmap put  oci    copyright-owner    
+                hashmap put  cn    corporate    
+                hashmap put  ip   fieldname issue   
+                hashmap put  en   fieldname edition   
+                hashmap put  gs    gene-symbol    
+                hashmap put  gn   fieldname note   
+                hashmap put  gr    grantno    
+                hashmap put  so    source    
+                hashmap put  nr    number-of-references    
+                hashmap put  sfm    space-flight-mission    
+                hashmap put  stat    status    
+                hashmap put  sb    subset    
+                hashmap put  oto    termowner    
+                hashmap put  own   fieldname owner map entry string  mapentry   hashmap entryset medlinekey   mapentry getkey bibtexkey   mapentry getvalue medlinekey equals label     
+                        fields put bibtexkey  value irad  equals label      ir  equals label      fir  equals label oldinvestigator   fields get  investigator oldinvestigator fields put  investigator   value fields put  investigator   oldinvestigator          value mh  equals label      ot  equals label fields containskey fieldname keywords     
+                        fields put fieldname keywords  value kw   fields get fieldname keywords   
+                        fields put fieldname keywords  kw          value con  equals label      cin  equals label      ein  equals label      efr  equals label  
+                            cri  equals label      crf  equals label      prin  equals label      prof  equals label  
+                            rpi  equals label      rpf  equals label      rin  equals label      rof  equals label  
+                            uin  equals label      uof  equals label      spin  equals label      ori  equals label comment isempty      
+                        comment   comment    \n   
+                      
+                    comment   comment   value  
+                  
+              
+            fixauthors fields  author  fieldname author   
+            fixauthors fields  editor  fieldname editor comment isempty      
+                fields put  comment   comment   
+              
+ 
+            bibentry b bibentry default_bibtexentry_id  type     
+ 
+              
+            fields entryset   stream   filter n -  n getvalue   trim   isempty    foreach fields  remove   
+ 
+              
+            b setfield fields   
+            bibitems add b parserresult bibitems checklinevalidity line line length      5      line charat 4 addsourcetype value type val   value tolowercase locale english thetype   type val book   
+            thetype    book journal article classical article corrected and republished article historical article introductory journal article newspaper article   
+            thetype    article clinical conference consensus development conference consensus development conference  nih   
+            thetype    conference technical report   
+            thetype    techreport editorial   
+            thetype    inproceedings overall   
+            thetype    proceedings equals thetype     
+            thetype    other thetype addstandardnumber map string  hm lab value is  equals lab key   fieldname issn value indexof ' '    0 keystart   value indexof keyend   value indexof ' '   
+                key   value substring keystart   1  keyend     -    key numbervalue   value substring 0  keystart - 1   
+                hm put key  numbervalue hm put key  value isbn  equals lab     
+            hm put fieldname isbn  value fixauthors map string  hm author field author isempty fixedauthor   authorlist fixauthorlastnamefirst author   
+            hm put field  fixedauthor addids map string  hm lab value aid  equals lab key    article-id idvalue   value value startswith  doi       
+                idvalue   idvalue replaceall   ?i doi        trim    
+                key   fieldname doi value indexof ' '    0 startofidentifier   value indexof endofidentifier   value indexof ' '   
+                key    article-    value substring startofidentifier   1  endofidentifier   
+                idvalue   value substring 0  startofidentifier - 1   
+              
+            hm put key  idvalue lid  equals lab     
+            hm put  location-id   value mid  equals lab     
+            hm put  manuscript-id   value jid  equals lab     
+            hm put  nlm-unique-id   value oid  equals lab     
+            hm put  other-id   value si  equals lab     
+            hm put  second-id   value addtitles map string  hm lab val type ti  equals lab oldval   hm get fieldname title oldval hm put fieldname title  val oldval endswith         oldval endswith         oldval endswith  ?      
+                    hm put fieldname title  oldval         val hm put fieldname title  oldval          val bti  equals lab      cti  equals lab     
+            hm put fieldname booktitle  val jt  equals lab inproceedings  equals type     
+                hm put fieldname booktitle  val hm put fieldname journal  val cti  equals lab     
+            hm put  collection-title   val ta  equals lab     
+            hm put  title-abbreviation   val tt  equals lab     
+            hm put  transliterated-title   val vti  equals lab     
+            hm put  volume-title   val addabstract map string  hm lab value abstractvalue ab  equals lab value contains  copyright copyrightindex   value lastindexof  copyright copyrightinfo   value substring copyrightindex  value length    replaceall  copyright         
+                hm put  copyright   copyrightinfo   
+                abstractvalue   value substring 0  copyrightindex abstractvalue   value oldab   hm get fieldname oldab hm put fieldname abstractvalue hm put fieldname oldab   os newline   abstractvalue oab  equals lab      oabl  equals lab     
+            hm put  other value adddates map string  hm lab val crdt  equals lab     iscreatedateformat val     
+            hm put  create-date   val dep  equals lab     isdateformat val     
+            hm put  electronic-publication   val da  equals lab     isdateformat val     
+            hm put  date-created   val dcom  equals lab     isdateformat val     
+            hm put  completed   val lr  equals lab     isdateformat val     
+            hm put  revised   val dp  equals lab parts   val split       
+            hm put fieldname year  parts 0 parts length   1      parts 1  isempty      
+                hm put fieldname month  parts 1 edat  equals lab     iscreatedateformat val     
+            hm put  publication   val mhda  equals lab     iscreatedateformat val     
+            hm put  mesh-date   val iscreatedateformat value create_date_pattern matcher value  matches isdateformat value complete_date_pattern matcher value  matches    
+      
+ 

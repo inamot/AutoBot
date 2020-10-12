@@ -1,0 +1,117 @@
+ 
+   
+		   preprocess logs  
+		    
+   
+		   build log skeleton  
+		    
+   
+		   use log skeleton classify test traces  
+		    
+   
+		   return log containing assumed positive test traces  
+		    
+  					system out println   pdc2017testplugin  remaining traces 1      filteredtraininglog size positivetesttraces size      threshold    
+  							continue  
+  						  
+  						system out println   pdc2017testplugin  remaining traces 2      filteredtraininglog size positivetesttraces size      threshold    
+  								continue  
+  							  
+  						system out println   pdc2017testplugin  remaining traces 2      filteredtraininglog size positivetesttraces size      threshold    
+  								continue  
+  							  org processmining logskeleton algorithms logskeletonclassifieralgorithm xlog apply plugincontext context  xlog traininglog  xlog testlog  xeventclassifier classifier  logpreprocessoralgorithm preprocessor name   xconceptextension instance   extractname traininglog   
+ 
+		classificationproblem problem classificationproblem traininglog  testlog   
+ 
+		  
+		problem   preprocessor preprocess context  problem   
+		xlog filteredtraininglog   problem gettraininglog    
+		xlog filteredtestlog   problem gettestlog    
+		 
+ 
+		  
+		logskeletonbuilderplugin createplugin logskeletonbuilderplugin    
+		logskeleton model   createplugin run context  filteredtraininglog   
+		context getprovidedobjectmanager   createprovidedobject  model name  model  logskeleton context   
+ 
+		  
+		system out println   logskeletonclassifieralgorithm  classify     name               
+		xlog classifiedtestlog   classify context  model  filteredtraininglog  filteredtestlog  classifier  name   
+		context getprovidedobjectmanager   createprovidedobject  classified log     name  classifiedtestlog  
+				xlog context classifiedtestlog xlog classify plugincontext context  logskeleton trainingmodel  xlog traininglog  xlog testlog  
+			xeventclassifier classifier name    
+		logskeletonbuilderplugin createplugin logskeletonbuilderplugin    
+		logskeletoncheckerplugin checkplugin logskeletoncheckerplugin    
+		set messages hashset checks true xlog classifiedtestlog   checkplugin run context  trainingmodel  testlog  messages  checks   
+		set positivetesttraces hashset threshold   0 xtrace trace   classifiedtestlog    
+			positivetesttraces add xconceptextension instance   extractname trace message   messages    
+			system out println   logskeletonclassifieralgorithm      message i   0  i   3  i      
+			checks 0     i    0   
+			checks 1     i    1   
+			checks 2     i    2 activity   trainingmodel getactivities positivetesttraces size      threshold activity    logskeletoncount startevent    activity    logskeletoncount endevent trainingmodel getsamecounts activity  iterator   next   equals activity f   0  f   2  f positivetesttraces size      threshold set positivefilters hashset set negativefilters hashset f    0    
+						positivefilters add activity negativefilters add activity   
+					  
+										system out println   logskeletonclassifieralgorithm  positive       positivefilters      negative       negativefilters   
+					xlog filteredtraininglog   filter traininglog  classifier  positivefilters  negativefilters   
+					xlog filteredtestlog   filter testlog  classifier  positivefilters  negativefilters filteredtestlog isempty      filteredtraininglog isempty      filteredtraininglog size     16 logskeleton filteredtrainingmodel   createplugin run context  filteredtraininglog   
+					messages hashset xlog classifiedfilteredtestlog   checkplugin run context  filteredtrainingmodel  filteredtestlog  
+							messages  checks xtrace subtrace   filteredtestlog classifiedfilteredtestlog contains subtrace caseid   xconceptextension instance   extractname subtrace positivetesttraces remove caseid     
+								system out println   logskeletonclassifieralgoritmm xconceptextension instance   extractname subtrace  
+										    excluded by positive filter     positivefilters     and negative filter   
+										  negativefilters      support       filteredtraininglog size message   messages    
+									system out println   logskeletonclassifieralgoritmm      message activity   trainingmodel getactivities positivetesttraces size      threshold activity    logskeletoncount startevent    activity    logskeletoncount endevent trainingmodel getsamecounts activity  iterator   next   equals activity activity2   trainingmodel getactivities positivetesttraces size      threshold activity2    logskeletoncount startevent    activity2    logskeletoncount endevent trainingmodel getsamecounts activity2  iterator   next   equals activity2 trainingmodel getsamecounts activity  contains activity2 f   0  f   4  f positivetesttraces size      threshold set positivefilters hashset set negativefilters hashset f    0    f    1    
+							positivefilters add activity negativefilters add activity f    0    f    2    
+							positivefilters add activity2 negativefilters add activity2   
+						  
+												system out println   logskeletonclassifieralgorithm  positive       positivefilters      negative       negativefilters   
+						xlog filteredtraininglog   filter traininglog  classifier  positivefilters  negativefilters   
+						xlog filteredtestlog   filter testlog  classifier  positivefilters  negativefilters filteredtestlog isempty      filteredtraininglog isempty   
+								   filteredtraininglog size     16 logskeleton filteredtrainingmodel   createplugin run context  filteredtraininglog   
+						messages hashset xlog classifiedfilteredtestlog   checkplugin run context  filteredtrainingmodel  
+								filteredtestlog  messages  checks xtrace subtrace   filteredtestlog classifiedfilteredtestlog contains subtrace caseid   xconceptextension instance   extractname subtrace positivetesttraces remove caseid     
+									system out println   logskeletonclassifieralgoritmm xconceptextension instance   extractname subtrace  
+											    excluded by positive filter     positivefilters 
+											    and negative filter     negativefilters      support     
+											  filteredtraininglog size message   messages    
+										system out println   logskeletonclassifieralgoritmm      message activity   trainingmodel getactivities positivetesttraces size      threshold activity    logskeletoncount startevent    activity    logskeletoncount endevent trainingmodel getsamecounts activity  iterator   next   equals activity activity2   trainingmodel getactivities positivetesttraces size      threshold activity2    logskeletoncount startevent    activity2    logskeletoncount endevent trainingmodel getsamecounts activity2  iterator   next   equals activity2 trainingmodel getsamecounts activity  contains activity2 activity3   trainingmodel getactivities positivetesttraces size      threshold activity3    logskeletoncount startevent    activity3    logskeletoncount endevent trainingmodel getsamecounts activity3  iterator   next   equals activity3 trainingmodel getsamecounts activity  contains activity3 trainingmodel getsamecounts activity2  contains activity3 f   0  f   8  f positivetesttraces size      threshold set positivefilters hashset set negativefilters hashset f    0    f    1    f    2    f    3    
+								positivefilters add activity negativefilters add activity f    0    f    1    f    4    f    5    
+								positivefilters add activity2 negativefilters add activity2 f    0    f    2    f    4    f    6    
+								positivefilters add activity3 negativefilters add activity3   
+							  
+														system out println   logskeletonclassifieralgorithm  positive       positivefilters      negative       negativefilters   
+							xlog filteredtraininglog   filter traininglog  classifier  positivefilters  negativefilters   
+							xlog filteredtestlog   filter testlog  classifier  positivefilters  negativefilters filteredtestlog isempty      filteredtraininglog isempty   
+									   filteredtraininglog size     16 logskeleton filteredtrainingmodel   createplugin run context  filteredtraininglog   
+							messages hashset xlog classifiedfilteredtestlog   checkplugin run context  filteredtrainingmodel  
+									filteredtestlog  messages  checks xtrace subtrace   filteredtestlog classifiedfilteredtestlog contains subtrace caseid   xconceptextension instance   extractname subtrace positivetesttraces remove caseid     
+										system out println   logskeletonclassifieralgoritmm xconceptextension instance   extractname subtrace  
+												    excluded by positive filter     positivefilters 
+												    and negative filter     negativefilters      support     
+												  filteredtraininglog size message   messages    
+											system out println   logskeletonclassifieralgoritmm      message   
+										  
+									  
+								  
+							  
+						  
+ 
+					  
+				  
+			  
+		  
+		xlog newclassifiedtestlog   xfactoryregistry instance   currentdefault   createlog    
+		xconceptextension instance   assignname newclassifiedtestlog  name      classified xtrace trace   classifiedtestlog positivetesttraces contains xconceptextension instance   extractname trace      
+				newclassifiedtestlog add trace newclassifiedtestlog xlog filter xlog log  xeventclassifier classifier  set positivefilters  set negativefilters    
+		xlog filteredlog   xfactoryregistry instance   currentdefault   createlog xtrace trace   log ok set tomatch hashset positivefilters xevent event   trace activity   classifier getclassidentity event negativefilters contains activity     
+					ok tomatch remove activity ok    tomatch isempty      
+				filteredlog add trace filteredlog addtrace xlog log  list activities    
+		xfactory factory   xfactoryregistry instance   currentdefault    
+		xtrace trace   factory createtrace activity   activities    
+			xevent event   factory createevent    
+			xconceptextension instance   assignname event  activity   
+			trace add event   
+		  
+		log add trace   
+	  
+ 
+ 

@@ -1,0 +1,96 @@
+ 
+   only one radio buttons may selected  
+   fallback 
+   checkboxdonotshowagain handled local variable net sf jabref pdfimport importdialog jdialog nometa   0 xmp   1 content   2 onlyattach   4 importdialog targetisarow filename targetisarow1   targetisarow  
+        jpanel contentpane jpanel    
+        contentpane setlayout borderlayout     
+        setcontentpane contentpane   
+        jpanel panel3 jpanel    
+        panel3 setbackground color -1643275    
+        jlabel labelheadline jlabel localization lang metadata from      
+        labelheadline setfont font labelheadline getfont   getname    font bold  14    
+        jlabel labelsubheadline jlabel localization lang  choose the source the metadata labelsubheadline setfont font labelsubheadline getfont   getname    labelsubheadline getfont   getstyle    13    
+        jlabel labelfilename jlabel    
+        labelfilename setfont font labelheadline getfont   getname    font bold  14    
+        jpanel headlinepanel jpanel    
+        headlinepanel add labelheadline   
+        headlinepanel add labelfilename   
+        headlinepanel setbackground color -1643275    
+        gridlayout gl gridlayout 2  1   
+        gl setvgap 10   
+        gl sethgap 10   
+        panel3 setlayout gl   
+        panel3 setborder borderfactory createemptyborder 10  10  10  10    
+        panel3 add headlinepanel   
+        panel3 add labelsubheadline   
+        radiobuttonnometa jradiobutton localization lang  create blank entry linking the pdf     
+        radiobuttonxmp jradiobutton localization lang  create entry based on xmp data     
+        radiobuttonpdfcontent jradiobutton localization lang  create entry based on content     
+        radiobuttononlyattachpdf jradiobutton localization lang  only attach pdf     
+        jbutton buttonok jbutton localization lang  ok     
+        jbutton buttoncancel jbutton localization lang  cancel     
+        checkboxdonotshowagain jcheckbox localization lang not show box again usedefaultpdfimportstyle jcheckbox localization lang  always use pdf style  and not ask each defaultformbuilder b defaultformbuilder formlayout  left pref  5dlu  left pref grow         
+        list bibentry  foundentries   getentriesfromxmp filename   
+        jpanel entriespanel jpanel    
+        entriespanel setlayout boxlayout entriespanel  boxlayout y_axis    
+        foundentries foreach entry -    
+            jtextarea entryarea jtextarea entry tostring     
+            entryarea seteditable entriespanel add entryarea   
+            
+ 
+        b appendseparator localization lang  create entry     
+        b append radiobuttonnometa  3   
+        b append radiobuttonxmp  3   
+        b append radiobuttonpdfcontent  3   
+        b appendseparator localization lang  update existing entry     
+        b append radiobuttononlyattachpdf  3   
+        b nextline    
+        b append checkboxdonotshowagain   
+        b append usedefaultpdfimportstyle foundentries isempty      
+            b appendseparator localization lang  xmp-metadata     
+            b append entriespanel  3   
+          
+        b getpanel   setborder borderfactory createemptyborder 5  5  5  5    
+        buttonbarbuilder bb buttonbarbuilder    
+        bb addglue    
+        bb addbutton buttonok   
+        bb addbutton buttoncancel   
+        bb addglue    
+        bb getpanel   setborder borderfactory createemptyborder 5  5  5  5    
+ 
+        contentpane add panel3  borderlayout north   
+        contentpane add b getpanel    borderlayout center   
+        contentpane add bb getpanel    borderlayout south targetisarow1 radiobuttononlyattachpdf setenabled name file filename  getname    
+        labelfilename settext stringutil limitstringlength name  34 settitle localization lang metadata from pdf     
+ 
+        setmodal getrootpane   setdefaultbutton buttonok   
+ 
+          
+        buttongroup bg buttongroup    
+        bg add radiobuttonnometa   
+        bg add radiobuttonxmp   
+        bg add radiobuttonpdfcontent   
+        bg add radiobuttononlyattachpdf   
+ 
+        buttonok addactionlistener e -  onok     
+        buttoncancel addactionlistener e -  oncancel     
+ 
+        setdefaultcloseoperation windowconstants do_nothing_on_close   
+        addwindowlistener windowadapter     
+ 
+             override windowclosing windowevent e    
+                oncancel    
+              
+            
+ 
+        contentpane registerkeyboardaction e -  oncancel    keystroke getkeystroke keyevent vk_escape  0   
+                jcomponent when_ancestor_of_focused_component globals prefs getint jabrefpreferences import_default_pdf_import_style nometa  
+            radiobuttonnometa setselected xmp  
+            radiobuttonxmp setselected content  
+            radiobuttonpdfcontent setselected onlyattach  
+            radiobuttononlyattachpdf setselected radiobuttonpdfcontent setselected setsize 555  371 list bibentry  getentriesfromxmp filename    
+        list bibentry  foundentries arraylist foundentries    xmputil readxmp filename  globals prefs getxmppreferences ioexception e    
+            e printstacktrace foundentries onok result   joptionpane ok_option  
+        globals prefs putint jabrefpreferences import_default_pdf_import_style getchoice usedefaultpdfimportstyle isselected      
+            globals prefs putboolean jabrefpreferences import_alwaysuse dispose oncancel result   joptionpane cancel_option  
+        dispose showdialog pack setvisible getchoice radiobuttonxmp isselected importdialog xmp radiobuttonpdfcontent isselected importdialog content radiobuttonnometa isselected importdialog nometa radiobuttononlyattachpdf isselected importdialog onlyattach illegalstateexception isdonotshowagain checkboxdonotshowagain isselected getresult result disablexmpchoice radiobuttonxmp setenabled 

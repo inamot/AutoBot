@@ -1,0 +1,121 @@
+ class represents binding between method plugin set parameters semantics object follows  
+    
+   first code pluginparameterbinding factory trytobind used construct list pluginparameterbindings method called variable array parameter types each returned binding code invoke    code  method called variable array instantiations types order  
+    
+   any reordering needs done code trytobind    code called code orderedparameters    false  code handled binding pluginparameterbinding only guaranteed executable factory 
+   method called code mustbetotal  code  set true  
+    
+    author bfvdonge 
+    
+    
+    
+	   factory instantiating pluginparameterbindings binding plugins given input  
+	    
+	    author bfvdonge method instantiates binding objects binding method index 
+		    code methodindex  code given plugin given set parameter types possible binding possible empty 
+		   list returned total binding requested  indicated code mustbetotal    true  code returned binding assigns 
+		   objects given parameters inputparameters plugin method total binding required resulting bindings not 
+		   necessarily executable method bound might require input provided parametertypes bound parameter  
+		    
+		   using flag  code orderedparameters  code user request 
+		   bindings consider given parameters given order only e reordering done  any binding  code b  code  returned code orderedparameters    true  code satisfy property code b getbinding i  code code code   
+		    
+		    param plugin plugin try bind parameters 
+		    param mustbetotal 
+		              indicating whether resulting binding total 
+		    param orderedparameters 
+		              whether not parameters ordered  
+		    param parametertypes available types distributed over parameters  
+		              note one objects object array kept one  multiple objects type t  
+		              might end up array type s super t e bound one s passed single element plugin gettypes   
+		    return list length 0 binding exists list length 
+		           1 binding exists  note may change future lists length n  
+		    
+   quick check result empty total less provided parameters required  
+   quick check partial mapping one type not possible having assign parameters t parameters size match required params dealing multiple parameters sure parameters types mapping needs total ordered only 1 match single parameter matches required type partype isassignablefrom parameters partype isarray      partype getcomponenttype   isassignablefrom parameters first try match unused input parameter used not fully used parameter not assign parameter 
+     
+   binding represents index parameter object bound 
+    
+	   constructs binding given plugin  method binding  
+	    
+	    param plugin 
+	    param methodindex 
+	    param iscomplete 
+	    param binding 
+	    
+    
+	   invokes method plugin referenced binding given 
+	   parameterobjects noted number given parameter 
+	   object same number parameter types provided code trytobind    code  method factory  furthermore types parameters right e  each object right type code promfuture  code type method given parameters first re-ordered according given binding code getplugin   invoke getmethodindex    context        code called newly ordered parameters checks done plugin executable not given 
+	   input s up plugin handle param context 
+	              note plugin executable context plugincontext's kept uniformly typed 
+	              within one instance prom checks done here  
+	    param parameterobjects 
+	    return 
+	    
+    
+	   sorts parameters according ordering specified binding 
+	   array  produces arrays multiple objects bound same 
+	   parameter  
+	    
+	    param parameterobjects 
+	    return 
+	    
+   single parameter 
+   array parameter might added array   
+    
+	   returns plugin bound binding  
+	    
+	    return method returns array integers length corresponds length list parameters types provided pluginparameterbinding factory each parameter type array 
+	   indicates parameter plugin bound each element  code x  code array holds code 0    x   getplugin   getparameternames getmethodindex     code same parameter index provided different parameters e  
+	    code getbinding   x     getbinding   y   code code x    y  code impliest parameter array type multiple 
+	   objects connected words implies code getplugin   getparametertype getmethodindex   getbinding   x   isarray      true  code  
+	    
+	    return 
+	    
+    
+	   equality bindings based binding  plugin complete status  
+	    
+    
+	   returns hashcode based binding  plugin complete status 
+	    
+    
+	   returns method index method bound binding binding invoked method inside plugin provided getplugin invoked  
+	    
+	    return 
+	    org processmining framework plugin pluginparameterbinding comparable pluginparameterbinding factory factory list pluginparameterbinding  trytobind pluginmanager manager  plugindescriptor plugin methodindex mustbetotal orderedparameters parametertypes    
+ 
+			list pluginparameterbinding  result arraylist pluginparameterbinding mustbetotal     parametertypes length   plugin getparametertypes methodindex  size result mustbetotal     parametertypes length   0      plugin getparametertypes methodindex  size      1 result orderedparameters     parametertypes length    plugin getparametertypes methodindex  size result parametertypes length    plugin getparametertypes methodindex  size    
+					     parametertypes length    1     orderedparameters list parametertypes length i   0  i   parametertypes length  i partype   plugin getparametertypes methodindex  get i manager isparameterassignable parametertypes i   partype     
+						list i    i result  
+					  
+ 
+				  
+				pluginparameterbinding binding pluginparameterbinding plugin  methodindex list   
+				result add binding result fullyused plugin getparameternames methodindex  size used plugin getparameternames methodindex  size     
+			arrays fill fullyused arrays fill used list parametertypes length i   0  i   parametertypes length  i par   parametertypes i done matchingindex   -1 partype j   0   j   plugin getparameternames methodindex  size        done  j used j partype   plugin getparametertypes methodindex  get j match   manager isparameterassignable par  partype match    
+						matchingindex   j  
+						done j   0   j   plugin getparameternames methodindex  size        done  j fullyused j partype   plugin getparametertypes methodindex  get j match   manager isparameterassignable par  partype match    
+						matchingindex   j  
+						done done matchingindex    0      partype list i    matchingindex  
+					used matchingindex fullyused matchingindex     partype isarray result complete i   0   i   used length     complete  i      
+				complete    used i mustbetotal    complete    
+				pluginparameterbinding binding pluginparameterbinding plugin  methodindex  complete  list   
+				result add binding result pluginparameterbinding plugindescriptor plugin methodindex iscomplete binding plugin   plugin methodindex   methodindex iscomplete   iscomplete binding   binding pluginexecutionresult invoke plugincontext context  object    parameterobjects    
+		object   args   preparearguments parameterobjects plugin invoke methodindex  context  args object   preparearguments object    parameterobjects    
+		object   args object plugin getparameternames methodindex  size     
+		arrays fill args i   0  i   parameterobjects length  i index   binding i index   0 plugin getparametertypes methodindex  get index  isarray      
+				  
+				args index    parameterobjects i object   arg args index arg object 0 arg    object    args index   
+			  
+			object   newarg   arrayutils copyof arg  arg length   1   
+			newarg arg length    parameterobjects i   
+			args index    newarg args plugindescriptor getplugin plugin getbinding binding equals object o o pluginparameterbinding pluginparameterbinding b    pluginparameterbinding  o iscomplete    b iscomplete     plugin equals b plugin      methodindex    b methodindex  
+				   arrays equals b binding  binding hashcode hash   7  
+		hash   31   hash   arrays hashcode binding   
+		hash   31   hash   plugin hashcode    
+		hash   31   hash   methodindex 31   hash    iscomplete ? 13   17 getmethodindex methodindex compareto pluginparameterbinding other other 0 c   plugin compareto other plugin c    0    
+			c   methodindex - other methodindex c    0 arrays tostring binding  compareto arrays tostring other binding c  
+	  
+ 
+ 

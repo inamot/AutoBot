@@ -1,0 +1,83 @@
+ names use start end events  
+	    
+   
+	   counts many times activity occurred entire log activitycounts 4 activity occurred 4 times log  
+	    
+   
+	   counts minimal number times activity occurs any trace activitymincounts 1 occurs least once every trace log  
+	    
+   
+	   counts maximal number times activity occurs any trace activitymincounts 2 occurs most twice every trace log directly follows relation ab list containing first b transitioncounts ab     5 5 times directly followed b log  note lists ab always length 2   
+	    
+  		system out println   pdc2017countmodel  activity counts name   
+  			system out println   logskeletoncount      activity          activitycounts activity    
+  		system out println   pc2017countmodel  transitions counts name   
+  			system out println   logskeletoncount      transition          transitioncounts transition    org processmining logskeleton models logskeletoncount startevent endevent logskeletoncount     
+		activitycounts hashmap integer     
+		activitymincounts hashmap integer     
+		activitymaxcounts hashmap integer     
+		transitioncounts hashmap list integer checktransitioncounts logskeletoncount model  set messages caseid list transition   model transitioncounts keyset transitioncounts keyset   contains transition     
+				messages add   logskeletoncount caseid      next fails transition transitioncounts get transition    model transitioncounts get transition     
+				messages add   logskeletoncount caseid      next fails transition integer get activity activitycounts containskey activity  ? activitycounts get activity    0 integer getmin activity activitymincounts containskey activity  ? activitymincounts get activity    0 integer getmax activity activitymaxcounts containskey activity  ? activitymaxcounts get activity    0 integer get fromactivity toactivity    
+		list transition   gettransition fromactivity  toactivity transitioncounts containskey transition  ? transitioncounts get transition    0 collection getto fromactivity    
+		collection toactivities hashset list transition   transitioncounts keyset transition get 0  equals fromactivity     
+				toactivities add transition get 1 toactivities collection getfrom toactivity    
+		collection fromactivities hashset list transition   transitioncounts keyset transition get 1  equals toactivity     
+				fromactivities add transition get 0 fromactivities add activity  integer number activitycounts containskey activity     
+			activitycounts put activity  activitycounts get activity    number activitycounts put activity  number add fromactivity toactivity  integer number    
+		list transition   gettransition fromactivity  toactivity transitioncounts containskey transition     
+			transitioncounts put transition  transitioncounts get transition    number transitioncounts put transition  number updateminmax activitymincounts isempty activity   traceactivities keyset activitymincounts containskey activity     
+					activitymincounts put activity  0 activity   activitymincounts keyset traceactivities containskey activity     
+					activitymincounts put activity  0 activity   traceactivities keyset activitymincounts containskey activity     
+				activitymincounts put activity  
+						math min activitymincounts get activity   traceactivities get activity activitymincounts put activity  traceactivities get activity activitymaxcounts containskey activity     
+				activitymaxcounts put activity  
+						math max activitymaxcounts get activity   traceactivities get activity activitymaxcounts put activity  traceactivities get activity    
+ 
+			  
+		  
+		traceactivities clear inc activity    
+		add activity  1 traceactivities containskey activity     
+			traceactivities put activity  traceactivities get activity    1 traceactivities put activity  1 activity equals endevent     
+			updateminmax inc fromactivity toactivity    
+		add fromactivity  toactivity  1 collection getactivities     
+		list ordered arraylist activitycounts keyset     
+		collections sort ordered ordered list gettransition fromactivity toactivity    
+		list transition arraylist 2   
+		transition add 0  fromactivity   
+		transition add 1  toactivity transition print name activity   activitycounts keyset list transition   transitioncounts keyset exporttofile csvwriter writer ioexception   
+		writer write  activity counts    
+		writer write      activitycounts keyset   size     
+		writer endrecord activity   activitycounts keyset      
+			writer write activity   
+			writer write      activitycounts get activity    
+			writer write      activitymincounts get activity    
+			writer write      activitymaxcounts get activity    
+			writer endrecord    
+		  
+		writer write  transition counts    
+		writer write      transitioncounts keyset   size     
+		writer endrecord list transitionlist   transitioncounts keyset transition   transitionlist    
+				writer write transition   
+			  
+			writer write      transitioncounts get transitionlist    
+			writer endrecord importfromstream csvreader reader ioexception   
+		activitycounts hashmap integer reader readrecord reader get 0  equals  activity counts rows   integer valueof reader get 1 row   0  row   rows  row reader readrecord      
+						activitycounts put reader get 0   integer valueof reader get 1     
+						activitymincounts put reader get 0   integer valueof reader get 2     
+						activitymaxcounts put reader get 0   integer valueof reader get 3     
+					  
+				  
+			  
+		  
+		transitioncounts hashmap list integer reader readrecord reader get 0  equals  transition counts rows   integer valueof reader get 1 row   0  row   rows  row reader readrecord      
+						list transitions arraylist column   0  column   reader getcolumncount   - 1  column      
+							transitions add reader get column    
+						  
+						transitioncounts put transitions  integer valueof reader get reader getcolumncount   - 1     
+					  
+				  
+			  
+		  
+	  
+ 

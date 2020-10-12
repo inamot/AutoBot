@@ -1,0 +1,59 @@
+ 
+    
+   processes incoming outgoing bib data oracle database manages structure  
+    
+    
+       creates sets up needed tables columns according database type  
+       
+        throws sqlexception execution registers tables mentioned selectquery nothing oracle triggers notifications automatically  net sf jabref shared oracleprocessor dbmsprocessor oracleprocessor dbmsconnection connection connection   
+      
+ 
+      
+     override setup sqlexception   
+        connection createstatement   executeupdate  
+                 create table \ entry\       
+                 \ shared_id\  number not type\  varchar2 255 version\  number 1      
+                 constraint \ entry_pk\  primary key  \ shared_id\       
+ 
+        connection createstatement   executeupdate  create sequence \ entry_seq\     
+ 
+        connection createstatement   executeupdate  create trigger \ entry_t\  before insert on \ entry each row begin select \ entry_seq\  nextval into shared_id from dual  end     
+ 
+        connection createstatement   executeupdate  
+                 create table \ field\       
+                 \ entry_shared_id\  number not name\  varchar2 255  not value\  clob constraint \ entry_shared_id_fk\  foreign key  \ entry_shared_id\       
+                 references \ entry\  \ shared_id\   on delete cascade     
+ 
+        connection createstatement   executeupdate  
+                 create table \ metadata\       
+                 \ key\   varchar2 255 value\   clob not override escape expression expression    \    
+      
+ 
+     override startnotificationlistener dbmssynchronizer dbmssynchronizer listener oraclenotificationlistener dbmssynchronizer oracleconnection    oracleconnection  connection  
+ 
+            properties properties properties    
+            properties setproperty oracleconnection dcn_notify_rowids properties setproperty oracleconnection dcn_query_change_notification databasechangeregistration   oracleconnection registerdatabasechangenotification properties   
+            databasechangeregistration addlistener listener statement statement   oracleconnection createstatement      
+                  oraclestatement  statement  setdatabasechangeregistration databasechangeregistration   
+                stringbuilder selectquery stringbuilder   
+                         append  select 1 from    
+                         append escape  entry    
+                         append       
+                         append escape  metadata     
+                  
+                statement executequery selectquery tostring sqlexception e    
+            logger error  sql error     e   
+          
+ 
+      
+ 
+     override stopnotificationlistener oracleconnection unregisterdatabasechangenotification databasechangeregistration   
+            oracleconnection close sqlexception e    
+            logger error  sql error     e   
+          
+      
+ 
+     override notifyclients     
+          
+      
+ 

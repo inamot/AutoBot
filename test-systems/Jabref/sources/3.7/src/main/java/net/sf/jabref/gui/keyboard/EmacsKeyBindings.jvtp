@@ -1,0 +1,368 @@
+ 
+    
+   generic class activates emacs keybindings java input   link 
+   jtextcomponent s inner class actions used independently  
+    
+   ctrl v alt v disabled ctrl v paste  
+  		new jtextcomponent  
+  			keybinding keystroke getkeystroke keyevent vk_v  
+  											  inputevent ctrl_mask   
+  					   defaulteditorkit pagedownaction   
+  		new jtextcomponent  
+  			keybinding keystroke getkeystroke keyevent vk_v  
+  											  inputevent alt_mask   
+  					   defaulteditorkit pageupaction   
+   components modify 
+    
+       loads emacs keybindings common  code jtextcomponent  code s shared keymap instances concrete subclasses link jtextcomponent fed keybindings original keybindings stored backup array already backup not create new backup 
+    
+       restores original keybindings concrete subclasses link jtextcomponent   
+       
+        
+    
+       activates emacs keybindings text components extending   link 
+       jtextcomponent additionally rebind c c-f add shortcuts emacskeybindings emacs_key_bindings_base 
+   determine size new array position new key bindings array 
+   generate new array action kills next word removes next word right side cursor active 
+       text component adds clipboard action kills previous word removes previous word left side cursor active text component adds clipboard action copies marked region stores killring action kills marked region stores killring  
+        
+   user manually marked text without using ctrl w obey selection copy clear selection 
+   put cursor beginning text cut actin kills text up end current line stores killring  
+        
+   jtc replaceselection action matchers beginning mark selection action pastes text killring action pastes element killring cycling through manages killed  cut  text pieces ring accessible 
+       through   link yankpopaction   
+        p provides unmodifiable copy cut pieces  
+        
+    
+           adds text front kill ring  
+            p  
+           deviating emacs implementation make sure exact same text not somewhere ring  
+            
+   skip first entry one added 
+    
+           returns unmodifiable version ring list contains killed texts  
+            return content kill ring 
+            
+    
+           returns next text element yank-popped  
+            return  code null  code ring empty 
+            
+   guaranteed not throw exception ring not empty action capitalizes next word right side caret first same code link 
+           emacskeybindings downcasewordaction performed ensure word lower case first letter capialized  
+            
+   downcase code    
+   actual capitalize code first letter re end previous word 
+   ugly java workaround beginning word action renders characters next word lowercase action renders characters next word upppercase  
+        net sf jabref gui keyboard emacskeybindings jtextcomponent keybinding   emacs_key_bindings_base jtextcomponent  
+            keybinding keystroke getkeystroke keyevent vk_e  
+                    inputevent ctrl_mask   
+                    defaulteditorkit endlineaction jtextcomponent  
+            keybinding keystroke getkeystroke keyevent vk_d  
+                    inputevent ctrl_mask   
+                    defaulteditorkit deletenextcharaction jtextcomponent  
+            keybinding keystroke getkeystroke keyevent vk_n  
+                    inputevent ctrl_mask   
+                    defaulteditorkit downaction jtextcomponent  
+            keybinding keystroke getkeystroke keyevent vk_p  
+                    inputevent ctrl_mask   
+                    defaulteditorkit upaction jtextcomponent  
+            keybinding keystroke getkeystroke keyevent vk_b  
+                    inputevent alt_mask   
+                    defaulteditorkit previouswordaction jtextcomponent  
+            keybinding keystroke getkeystroke keyevent vk_less  
+                    inputevent alt_mask   
+                    defaulteditorkit beginaction jtextcomponent  
+            keybinding keystroke getkeystroke keyevent vk_less  
+                    inputevent alt_mask 
+                              inputevent shift_mask   
+                    defaulteditorkit endaction jtextcomponent  
+            keybinding keystroke getkeystroke keyevent vk_f  
+                    inputevent alt_mask   
+                    defaulteditorkit nextwordaction jtextcomponent  
+            keybinding keystroke getkeystroke keyevent vk_b  
+                    inputevent ctrl_mask   
+                    defaulteditorkit backwardaction jtextcomponent  
+            keybinding keystroke getkeystroke keyevent vk_d  
+                    inputevent alt_mask   
+                    emacskeybindings kill_word_action jtextcomponent  
+            keybinding keystroke getkeystroke keyevent vk_back_space  
+                    inputevent alt_mask   
+                    emacskeybindings backward_kill_word_action jtextcomponent  
+            keybinding keystroke getkeystroke keyevent vk_space  
+                    inputevent ctrl_mask   
+                    emacskeybindings set_mark_command_action jtextcomponent  
+            keybinding keystroke getkeystroke keyevent vk_w  
+                    inputevent alt_mask   
+                    emacskeybindings kill_ring_save_action jtextcomponent  
+            keybinding keystroke getkeystroke keyevent vk_w  
+                    inputevent ctrl_mask   
+                    emacskeybindings kill_region_action jtextcomponent  
+            keybinding keystroke getkeystroke keyevent vk_k  
+                    inputevent ctrl_mask   
+                    emacskeybindings kill_line_action jtextcomponent  
+            keybinding keystroke getkeystroke keyevent vk_y  
+                    inputevent ctrl_mask   
+                    emacskeybindings yank_action jtextcomponent  
+            keybinding keystroke getkeystroke keyevent vk_y  
+                    inputevent alt_mask   
+                    emacskeybindings yank_pop_action jtextcomponent  
+            keybinding keystroke getkeystroke keyevent vk_c  
+                    inputevent alt_mask   
+                    emacskeybindings capitalize_word_action jtextcomponent  
+            keybinding keystroke getkeystroke keyevent vk_l  
+                    inputevent alt_mask   
+                    emacskeybindings downcase_word_action jtextcomponent  
+            keybinding keystroke getkeystroke keyevent vk_u  
+                    inputevent alt_mask   
+                    emacskeybindings upcase_word_action jtextcomponent keybinding emacs_key_binding_c_a jtextcomponent keybinding keystroke getkeystroke keyevent vk_a  
+            inputevent ctrl_mask   
+            defaulteditorkit beginlineaction jtextcomponent keybinding emacs_key_binding_c_f jtextcomponent keybinding keystroke getkeystroke keyevent vk_f  
+            inputevent ctrl_mask   
+            defaulteditorkit forwardaction textaction   emacs_actions killwordaction emacskeybindings kill_word_action backwardkillwordaction emacskeybindings backward_kill_word_action setmarkcommandaction emacskeybindings set_mark_command_action killringsaveaction emacskeybindings kill_ring_save_action killregionaction emacskeybindings kill_region_action killlineaction emacskeybindings kill_line_action yankaction emacskeybindings yank_action yankpopaction emacskeybindings yank_pop_action capitalizewordaction emacskeybindings capitalize_word_action downcasewordaction emacskeybindings downcase_word_action upcasewordaction emacskeybindings upcase_word_action jtextcomponent   jtcs jtextcomponent jtextarea jtextpane jtextfield jeditorpane load   
+      
+        emacskeybindings createbackup    
+        emacskeybindings loademacskeybindings createbackup     
+        keymap oldbackup   jtextcomponent getkeymap emacskeybindings jtcs 0  getclass   getname oldbackup jtextcomponent jtc   emacskeybindings jtcs    
+            keymap orig   jtc getkeymap    
+            keymap backup   jtextcomponent addkeymap 
+                     jtc getclass   getname action   bound   orig getboundactions action abound   bound    
+                keystroke   strokes   orig getkeystrokesforaction abound keystroke stroke   strokes    
+                    backup addactionforkeystroke stroke  abound   
+                  
+              
+            backup setdefaultaction orig getdefaultaction unload i   0  i   emacskeybindings jtcs length  i      
+            keymap backup   jtextcomponent getkeymap 
+                     emacskeybindings jtcs i  getclass   getname backup keymap current   emacskeybindings jtcs i  getkeymap    
+                current removebindings    
+ 
+                action   bound   backup getboundactions action abound   bound    
+                    keystroke   strokes   
+                            backup getkeystrokesforaction bound i keystroke stroke   strokes    
+                        current addactionforkeystroke stroke  abound   
+                      
+                  
+                current setdefaultaction backup getdefaultaction loademacskeybindings   
+      
+        emacskeybindings logger debug  loading emacs keybindings jtextcomponent jtc   emacskeybindings jtcs    
+            action   origactions   jtc getactions    
+            action   actions action origactions length   emacskeybindings emacs_actions length   
+            system arraycopy origactions  0  actions  0  origactions length   
+            system arraycopy emacskeybindings emacs_actions  0  actions  origactions length  emacskeybindings emacs_actions length   
+ 
+            keymap k   jtc getkeymap    
+ 
+            jtextcomponent keybinding   keybindings rebindca   jabrefpreferences getinstance   getboolean jabrefpreferences editor_emacs_keybindings_rebind_ca rebindcf   jabrefpreferences getinstance   getboolean jabrefpreferences editor_emacs_keybindings_rebind_cf rebindca    rebindcf size   emacskeybindings emacs_key_bindings_base length posca   -1 poscf   -1 rebindca    
+                    posca   size  
+                    size rebindcf    
+                    poscf   size  
+                    size    
+                  
+ 
+                  
+                keybindings jtextcomponent keybinding size   
+                system arraycopy emacskeybindings emacs_key_bindings_base  0  keybindings  0  emacskeybindings emacs_key_bindings_base length rebindca    
+                    keybindings posca    emacskeybindings emacs_key_binding_c_a rebindcf    
+                    keybindings poscf    emacskeybindings emacs_key_binding_c_f keybindings   emacskeybindings emacs_key_bindings_base  
+              
+            jtextcomponent loadkeymap k  keybindings  actions   
+          
+      
+ 
+ 
+      
+     suppresswarnings  serial killwordaction textaction killwordaction nm nm   
+          
+ 
+         override actionperformed actionevent e  
+          
+            jtextcomponent jtc   gettextcomponent e jtc offs   jtc getcaretposition    
+                    jtc setselectionstart offs   
+                    offs   emacskeybindings getwordend jtc  offs   
+                    jtc setselectionend offs selectedtext   jtc getselectedtext selectedtext killring getinstance   add selectedtext   
+                      
+                    jtc cut badlocationexception ble    
+                    jtc gettoolkit   beep    
+                  
+              
+          
+      
+ 
+      
+     suppresswarnings  serial backwardkillwordaction textaction backwardkillwordaction nm nm   
+          
+ 
+         override actionperformed actionevent e  
+          
+            jtextcomponent jtc   gettextcomponent e jtc offs   jtc getcaretposition    
+                    jtc setselectionend offs   
+                    offs   utilities getpreviousword jtc  offs   
+                    jtc setselectionstart offs selectedtext   jtc getselectedtext selectedtext killring getinstance   add selectedtext   
+                      
+                    jtc cut badlocationexception ble    
+                    jtc gettoolkit   beep    
+                  
+              
+          
+      
+ 
+      
+     suppresswarnings  serial killringsaveaction textaction killringsaveaction nm nm   
+          
+ 
+         override actionperformed actionevent e  
+          
+            jtextcomponent jtc   gettextcomponent e   
+            emacskeybindings docopyorcut jtc suppresswarnings  serial killregionaction textaction killregionaction nm nm   
+          
+ 
+         override actionperformed actionevent e  
+          
+            jtextcomponent jtc   gettextcomponent e   
+            emacskeybindings docopyorcut jtc docopyorcut jtextcomponent jtc copy jtc caretposition   jtc getcaretposition text   jtc getselectedtext text setmarkcommandaction ismarked jtc beginpos   caretposition endpos   setmarkcommandaction getcaretposition beginpos   endpos tmp   endpos  
+                    endpos   beginpos  
+                    beginpos   tmp  
+                  
+                jtc select beginpos  endpos   
+                setmarkcommandaction reset    
+              
+            text   jtc getselectedtext text jtc gettoolkit   beep copy    
+                    jtc copy    
+                      
+                    jtc select caretposition  caretposition newcaretpos   jtc getselectionstart    
+                    jtc cut    
+                      
+                    jtc setcaretposition newcaretpos   
+                  
+                killring getinstance   add text   
+              
+          
+      
+ 
+ 
+      
+     suppresswarnings  serial killlineaction textaction killlineaction nm nm   
+          
+ 
+         override actionperformed actionevent e  
+          
+            jtextcomponent jtc   gettextcomponent e jtc start   jtc getcaretposition end   utilities getrowend jtc  start start    end     jtc iseditable      
+                        document doc   jtc getdocument    
+                        doc remove end  1 jtc setselectionstart start   
+                        jtc setselectionend end selectedtext   jtc getselectedtext selectedtext killring getinstance   add selectedtext   
+                          
+ 
+                        jtc cut badlocationexception ble    
+                    jtc gettoolkit   beep    
+                  
+              
+          
+      
+ 
+      
+     suppresswarnings  serial setmarkcommandaction textaction setmarkcommandaction nm nm   
+          
+ 
+         override actionperformed actionevent e  
+          
+            setmarkcommandaction jtc   gettextcomponent e setmarkcommandaction jtc setmarkcommandaction position   setmarkcommandaction jtc getcaretposition ismarked jtextcomponent jt setmarkcommandaction jtc    jt      setmarkcommandaction position    -1 reset   
+          
+            setmarkcommandaction jtc setmarkcommandaction position   -1 getcaretposition setmarkcommandaction position  
+          
+      
+ 
+      
+     suppresswarnings  serial yankaction textaction start   -1 end   -1 yankaction nm nm   
+          
+ 
+         override actionperformed actionevent event  
+          
+            jtextcomponent jtc   gettextcomponent event jtc yankaction start   jtc getcaretposition    
+                    jtc paste    
+                    yankaction end   jtc getcaretposition    
+                    killring getinstance   add jtc gettext yankaction start  yankaction end    
+                    killring getinstance   setcurrenttextcomponent jtc badlocationexception e    
+                    logger info  bad location when yanking   e   
+                  
+              
+          
+      
+ 
+      
+     suppresswarnings  serial yankpopaction textaction yankpopaction nm nm   
+          
+ 
+         override actionperformed actionevent event  
+          
+            jtextcomponent jtc   gettextcomponent event jtcnotnull   jtc jtciscurrenttextcomponent   killring getinstance   getcurrenttextcomponent      jtc caretpositionisendoflastyank   jtcnotnull     jtc getcaretposition      yankaction end killringnotempty    killring getinstance   isempty jtcnotnull    jtciscurrenttextcomponent    caretpositionisendoflastyank    killringnotempty    
+                jtc setselectionstart yankaction start   
+                jtc setselectionend yankaction end toyank   killring getinstance   next toyank jtc gettoolkit   beep jtc replaceselection toyank   
+                    yankaction end   jtc getcaretposition killring killring getinstance killring instance setcurrenttextcomponent jtextcomponent jtc jtc   jtc jtextcomponent getcurrenttextcomponent jtc add text text isempty ring remove text   
+            ring addfirst text ring size     60    
+                ring removelast    
+              
+            iter   ring iterator    
+              
+            iter next list getring collections unmodifiablelist ring isempty ring isempty next ring isempty iter hasnext iter next iter   ring iterator iter next    
+              
+          
+      
+ 
+      
+     suppresswarnings  serial capitalizewordaction textaction capitalizewordaction nm nm   
+          
+ 
+          
+         override actionperformed actionevent event  
+          
+            jtextcomponent jtc   gettextcomponent event jtc start   jtc getcaretposition end   emacskeybindings getwordend jtc  start   
+                    jtc setselectionstart start   
+                    jtc setselectionend end word   jtc gettext start  end - start   
+                    jtc replaceselection word tolowercase offs   utilities getwordstart jtc  start c   jtc gettext offs  1 equals c     
+                          
+                        offs   utilities getwordstart jtc    offs   
+                        c   jtc gettext offs  1 character isletter c charat 0      
+                        jtc setselectionstart offs   
+                        jtc setselectionend offs   1   
+                        jtc replaceselection c touppercase     
+                      
+                    end   utilities getwordend jtc  offs   
+                    jtc setcaretposition end badlocationexception ble    
+                    jtc gettoolkit   beep    
+                  
+              
+          
+      
+ 
+      
+     suppresswarnings  serial downcasewordaction textaction downcasewordaction nm nm   
+          
+ 
+         override actionperformed actionevent event  
+          
+            jtextcomponent jtc   gettextcomponent event jtc start   jtc getcaretposition end   emacskeybindings getwordend jtc  start   
+                    jtc setselectionstart start   
+                    jtc setselectionend end word   jtc gettext start  end - start   
+                    jtc replaceselection word tolowercase     
+                    jtc setcaretposition end badlocationexception ble    
+                    jtc gettoolkit   beep    
+                  
+              
+          
+      
+ 
+      
+     suppresswarnings  serial upcasewordaction textaction upcasewordaction nm nm   
+          
+ 
+         override actionperformed actionevent event  
+          
+            jtextcomponent jtc   gettextcomponent event jtc start   jtc getcaretposition end   emacskeybindings getwordend jtc  start   
+                    jtc setselectionstart start   
+                    jtc setselectionend end word   jtc gettext start  end - start   
+                    jtc replaceselection word touppercase     
+                    jtc setcaretposition end badlocationexception ble    
+                    jtc gettoolkit   beep getwordend jtextcomponent jtc start badlocationexception utilities getnextword jtc  start badlocationexception ble end   jtc gettext   length start   end end ble  
+              
+          
+      
+ 

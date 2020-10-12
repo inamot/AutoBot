@@ -1,0 +1,84 @@
+ 
+    
+   processes incoming outgoing bib data postgresql database manages structure  
+    
+    
+       creates sets up needed tables columns according database type  
+       
+        throws sqlexception 
+        
+   inserting entry table only method generated keys accepted mysql  postgresql oracle  
+   set generated id locally 
+   disable cleanup output threadedhousekeeper not use `new postgressqlnotificationlistener object exist continuously  
+   otherwise listener going deleted gc  net sf jabref shared postgresqlprocessor dbmsprocessor postgresqlprocessor dbmsconnection connection connection   
+      
+ 
+      
+     override setup sqlexception   
+        connection createstatement   executeupdate  
+                 create table not exists \ entry\       
+                 \ shared_id\  serial primary key      
+                 \ type\  varchar      
+                 \ version\  integer 1     
+ 
+        connection createstatement   executeupdate  
+                 create table not exists \ field\       
+                 \ entry_shared_id\  integer references \ entry\  \ shared_id\   on delete cascade      
+                 \ name\  varchar      
+                 \ value\  text     
+ 
+        connection createstatement   executeupdate  
+                 create table not exists \ metadata\     
+                   \ key\  varchar   
+                   \ value\  text     
+      
+ 
+     override insertintoentrytable bibentry bibentry    
+          
+        stringbuilder insertintoentryquery stringbuilder   
+                 append  insert into    
+                 append escape  entry    
+                 append      
+                 append escape  type    
+                 append    values preparedstatement preparedentrystatement   connection preparestatement insertintoentryquery tostring    
+                statement return_generated_keys     
+ 
+            preparedentrystatement setstring 1  bibentry gettype     
+            preparedentrystatement executeupdate resultset generatedkeys   preparedentrystatement getgeneratedkeys generatedkeys next      
+                    bibentry getsharedbibentrydata   setsharedid generatedkeys getint 1 sqlexception e    
+            logger error  sql error     e   
+          
+      
+ 
+     override escape expression expression    \    
+      
+ 
+ 
+     override startnotificationlistener dbmssynchronizer dbmssynchronizer    
+          
+        logger getlogger threadedhousekeeper getname    setlevel level severe listener postgressqlnotificationlistener dbmssynchronizer   
+ 
+        pgdatasource datasource pgdatasource    
+        datasource sethost connectionproperties gethost     
+        datasource setport connectionproperties getport     
+        datasource setdatabase connectionproperties getdatabase     
+        datasource setuser connectionproperties getuser     
+        datasource setpassword connectionproperties getpassword pgconnection    pgconnection  datasource getconnection    
+            pgconnection createstatement   execute  listen jabrefliveupdate    
+              
+              
+            pgconnection addnotificationlistener listener sqlexception e    
+            logger error  sql error     e   
+          
+      
+ 
+     override stopnotificationlistener pgconnection close sqlexception e    
+            logger error  sql error     e   
+          
+      
+ 
+     override notifyclients pgconnection createstatement   execute  notify jabrefliveupdate  '    processor_id sqlexception e    
+            logger error  sql error     e   
+          
+      
+ 

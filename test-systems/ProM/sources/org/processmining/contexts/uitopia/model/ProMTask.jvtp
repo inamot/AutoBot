@@ -1,0 +1,167 @@
+ constructor task set up context plugin 
+   carried action resources action values e action executable   
+  		assert  action getstatus parametervalues     actionstatus executable using resources attached input parameters action  possibly some input parameters need found example scanning connections up implementing classes plugin invoked task attach itself progress listener progress take care futures cancel futures might exist result  canceling first only work potentially faster  
+   happens task terminates before cancel children 
+  ignore 
+  		java util list collection promresource ?    list   new arraylist collection promresource collection promporesource  v   parametervalues    
+  			collection promresource ?   l   new arraylist promresource ?   v   
+  			list add l   
+  		  
+                  progresseventlistener interface                         
+ 
+	public void changeprogress int progress progress   progress  
+		lowbo   math min lowbo  progress   
+		upbo   math max upbo  progress   
+		listener updateprogress getprogress     
+	  
+ 
+	public void changeprogressbounds int lowbo  int upbo    
+		lowbo   lowbo  
+		upbo   upbo  
+		progress   0  
+		listener updateprogress math max math min lowbo  progress   upbo    
+	  
+ 
+	public void changeprogresscaption string newcaption    
+		   gracefully ignore  
+	  
+ 
+	public void changeprogressindeterminate boolean indeterminate indeterminate    
+			lowbo   0  
+			upbo   1  
+			progress   0  
+			listener updateprogress 0 5   
+		  
+	  
+ 
+	                  logger interface                         
+	public void log string message  plugincontextid contextid  messagelevel messagelevel    
+		switch  messagelevel    
+			case debug   
+				listener debug message   
+				break  
+			case normal   
+				listener info message   
+				break  
+			case error   
+				listener error message   
+				break  
+			case warning   
+				listener warning message   
+				break  
+			case test   
+				listener debug message   
+				break  
+		  
+	  
+ 
+	public void log throwable t  plugincontextid contextid    
+		listener error t getmessage    t   
+	  
+ 
+	public void plugincancelled plugincontext context    
+		   gracefully ignore  only completed interest 
+		listener completed    
+		active   false  
+		result   null  
+		changeprogress upbo   
+	  
+ 
+	public void plugincompleted plugincontext plugincontext    
+		promporesource   setresult   null  
+		int sig   action getmostsignificantresultindex sig   0    
+			   one inputs returned most significant result 
+			   find corresponding parameter plugin variant  
+			sig   action getplugin   getindexinmethod action getmethodindex    -sig - 1   
+ 
+			collection promporesource  par   parametervalues sig   
+			   visualize first resource parameter end  
+			setresult   par toarray new promporesource 0    
+			sig   -1 int 0 result getsize providedobjectid id   result getprovidedobjectid class ?  type  
+			try   
+				type   context getprovidedobjectmanager   getprovidedobjecttype id   
+			  catch  providedobjectdeletedexception e object deleted  try next one 
+				continue  
+			  
+			resourcetype restype   context getresourcemanager   getresourcetypefor type restype    null    
+				promporesource res   new promporesource context  action  restype  id  parametervalues   
+				res   context getresourcemanager   addresource id  res 1    sig    
+					res setfavorite true   
+					setresult   new promporesource     res    
+				  
+			  
+		  
+		listener completed setresult   
+		active   false  
+		result   null  
+		changeprogress upbo   
+	  
+ 
+	public void plugincreated plugincontext plugincontext    
+		   gracefully ignore  only completed interest 
+	  
+ 
+	public void plugindeleted plugincontext plugincontext    
+		   gracefully ignore  only completed interest 
+	  
+ 
+	public void pluginfuturecreated plugincontext plugincontext    
+		   gracefully ignore  only completed interest 
+	  
+ 
+	public void pluginresumed plugincontext plugincontext    
+		   gracefully ignore  only completed interest 
+	  
+ 
+	public void pluginstarted plugincontext plugincontext    
+		   gracefully ignore  only completed interest 
+	  
+ 
+	public void pluginsuspended plugincontext plugincontext    
+		   gracefully ignore  only completed interest 
+	  
+ 
+	public void pluginterminatedwitherror plugincontext plugincontext  throwable t    
+		   gracefully ignore  only completed interest 
+		listener completed    
+		active   false  
+		result   null  
+		changeprogress upbo   
+	  
+ 
+	public java util list providedobjectid  getprovidedobjectids     
+		return providedobjectids  
+	  
+ 
+	public string tostring     
+		return  active action tostring    
+	  
+ 
+  org processmining contexts uitopia model promtask task promporesource   progresseventlistener  logger  pluginlifecycleeventlistener promtask uicontext context  promaction action  java util list collection promporesource   parametervalues  
+			uiplugincontext plugincontext  tasklistener listener context   context action   action parametervalues   parametervalues plugincontext   plugincontext listener   listener  
+		changeprogressindeterminate plugincontext getprogresseventlisteners   add plugincontext getlogginglisteners   add plugincontext getpluginlifecycleeventlisteners   add object   args   unpackresourcecollections parametervalues   
+ 
+		  
+		  
+		plugincontext settask this    
+			active plugincontext getparentcontext   getpluginlifecycleeventlisteners   fireplugincreated plugincontext   
+			result   action getplugin   invoke action getmethodindex    plugincontext  args   
+			providedobjectids   context getprovidedobjectmanager   createprovidedobjects plugincontext destroy result plugincontext getprogress plugincontext getprogress   cancel i   0  i   result getsize    i      
+						object o   result getresult i o promfuture ?     
+							result  promfuture ?  getresult i  cancel  action handlescancel nullpointerexception _ providedobjectid id   getprovidedobjectids context getprovidedobjectmanager   deleteprovidedobject id providedobjectdeletedexception e    
+					  
+				  
+			  
+			result progress   upbo  
+		listener updateprogress 1 0 promaction getaction action getprogress progress upbo - lowbo interactionresult showconfiguration title  jcomponent configuration listener showconfiguration title  configuration interactionresult showwizard title first last  jcomponent configuration listener showwizard title  first  last  configuration java util list collection promporesource   getparametervalues parametervalues object   unpackresourcecollections java util list collection promporesource   parameters    
+		object   objects object parameters size i   0  i   parameters size    i action getinput   get i  getmaxcardinality      1    
+				objects i    parameters get i  iterator   next   getinstance object   list    object    array newinstance action getinput   get i  gettype   gettypeclass    
+						parameters get i  size     
+				iterator promporesource  it   parameters get i  iterator j   0 it hasnext      
+					list j      it next   getinstance    
+				  
+				objects i    list objects  
+ 
+	  
+ 
+	 

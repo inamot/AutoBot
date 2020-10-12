@@ -1,0 +1,144 @@
+ 
+    
+       tab create custom name formatters 
+       
+        
+   only two columns 
+   make sure vector long enough rows selected add one end  
+    
+       store changes table preferences method called user 
+       clicks ok  
+       
+        
+   now need make sense contents user made table setup table  
+   first remove rows empty names make lists 
+   finally store new preferences  net sf jabref gui preftabs nameformattertab jpanel prefstab tablerow tablerow tablerow name name  nameformatter default_format tablerow name format name   name format   format getname name setname name name   name getformat format setformat format format   format nameformattertab jabrefpreferences prefs prefs   objects requirenonnull prefs   
+        setlayout borderlayout     
+ 
+        tablemodel tablemodel abstracttablemodel     
+ 
+             override getrowcount rowcount  
+              
+ 
+             override getcolumncount 2  
+              
+ 
+             override object getvalueat row column row    tablerows size tablerow tr   tablerows get row tr column    0 tr getname tr getformat    
+                  
+              
+ 
+             override getcolumnname col col    0 ? localization lang  formatter name     
+                    localization lang  format override getcolumnclass column override iscelleditable row col override setvalueat object value row col    
+                tablechanged row    tablerows size      
+                    tablerows add tablerow     
+                  
+ 
+                tablerow rowcontent   tablerows get row col    0    
+                    rowcontent setname value tostring rowcontent setformat value tostring     
+                  
+              
+           
+ 
+        table jtable tablemodel   
+        guiutil correctrowheight table   
+ 
+        tablecolumnmodel columnmodel   table getcolumnmodel    
+        columnmodel getcolumn 0  setpreferredwidth 140   
+        columnmodel getcolumn 1  setpreferredwidth 400   
+ 
+        formlayout layout formlayout  1dlu  8dlu  left pref  4dlu  fill pref        
+ 
+        defaultformbuilder builder defaultformbuilder layout   
+ 
+        jpanel pan jpanel    
+ 
+        jpanel tabpanel jpanel    
+        tabpanel setlayout borderlayout     
+        jscrollpane scrollpane jscrollpane table  scrollpaneconstants vertical_scrollbar_as_needed  
+                scrollpaneconstants horizontal_scrollbar_never   
+        table setpreferredscrollableviewportsize dimension 250  200    
+        scrollpane setminimumsize dimension 250  300    
+        scrollpane setpreferredsize dimension 600  300    
+        tabpanel add scrollpane  borderlayout center   
+ 
+        jtoolbar toolbar osxcompatibletoolbar swingconstants vertical   
+        toolbar setfloatable toolbar setborder toolbar add addrowaction     
+        toolbar add deleterowaction     
+        toolbar add helpaction localization lang  help on name formatting    
+                helpfile custom_exports_name_formatter  gethelpbutton     
+ 
+        tabpanel add toolbar  borderlayout east   
+ 
+        builder appendseparator localization lang  special name formatters     
+        builder nextline    
+        builder append pan   
+        builder append tabpanel   
+        builder nextline    
+ 
+        pan   builder getpanel    
+        pan setborder borderfactory createemptyborder 5  5  5  5    
+        add pan  borderlayout center   
+      
+ 
+     override setvalues     
+        tablerows clear    
+        list names   prefs getstringlist jabrefpreferences name_formater_key   
+        list formats   prefs getstringlist jabrefpreferences name_formatter_value i   0  i   names size    i i   formats size      
+                tablerows add tablerow names get i   formats get i tablerows add tablerow names get i     
+              
+          
+        rowcount   tablerows size     5 deleterowaction abstractaction deleterowaction delete row   icontheme jabreficon remove_nobox geticon     
+            putvalue action short_description  localization lang  delete rows     
+          
+ 
+         override actionperformed actionevent e    
+            tablechanged selectedrows   table getselectedrows numberdeleted   0 i   selectedrows length - 1  i    0  i selectedrows i    tablerows size      
+                    tablerows remove selectedrows i    
+                    numberdeleted    
+                  
+              
+ 
+            rowcount -  numberdeleted selectedrows length   1    
+                table clearselection    
+              
+ 
+            table revalidate    
+            table repaint addrowaction abstractaction addrowaction add row   icontheme jabreficon add_nobox geticon     
+            putvalue action short_description  localization lang  insert rows     
+          
+ 
+         override actionperformed actionevent e rows   table getselectedrows rows length    0    
+                  
+                rowcount    
+                table revalidate    
+                table repaint i   0  i   rows length  i rows i    i  - 1    tablerows size      
+                    tablerows add math max 0   rows i    i  - 1 tablerow     
+                  
+              
+            rowcount    rows length rows length   1    
+                table clearselection    
+              
+            table revalidate    
+            table repaint    
+            tablechanged override storesettings table isediting col   table geteditingcolumn row   table geteditingrow    
+            table getcelleditor row  col  stopcellediting tablechanged i   0 i   tablerows size tablerows get i  getname   isempty      
+                    tablerows remove i i    
+                  
+              
+              
+ 
+            list names arraylist   tablerows size     
+            list formats arraylist   tablerows size tablerow tr   tablerows    
+                names add tr getname     
+                formats add tr getformat     
+              
+ 
+              
+            prefs putstringlist jabrefpreferences name_formater_key  names   
+            prefs putstringlist jabrefpreferences name_formatter_value  formats   
+          
+      
+ 
+     override validatesettings override gettabname localization lang  name formatter    
+      
+ 

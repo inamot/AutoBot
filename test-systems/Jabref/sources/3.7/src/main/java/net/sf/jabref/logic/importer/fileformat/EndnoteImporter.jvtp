@@ -1,0 +1,115 @@
+ 
+    
+   importer refer endnote format  
+   modified use article number pages pages missing  some 
+   journals  e g   physical review letters  don't use pages anymore  
+   
+   check here details format 
+   http   libguides csuchico edu c php?g 414245 p 2822898 strategy look line  
+   
+                   details refer format journal article book  
+                   
+                   generic ref journal article book code author author author year %d 
+                   year year title %t title title secondary author %e series editor 
+                   secondary title %b journal series title place published %c city 
+                   publisher publisher volume %v volume volume number volumes %6 
+                   number volumes number %n issue pages %p pages number pages 
+                   edition %7 edition subsidiary author %? translator alternate title %j 
+                   alternate journal label %f label label keywords %k keywords keywords 
+                   abstract %x abstract abstract notes %o notes notes 
+                    
+   
+    alternate journal s set only journal set b prefix stands journal journal entry series book entry  
+   type   inproceedings    
+   replace single dash page ranges  23-45 double dashes  23--45   
+   notes may contain article number edited book  endnote puts editors author field want editor field bibtex knows s edited book 
+  fixauthorscomma pages missing article number given  use article number 
+   id assumes existing database don't 
+   create one here must careful author names presented differently different sources  normally each tag brings one name authors 
+       separated correct behaviour  
+       one source lists names separated comma comma end detect format fix param s author string 
+        return fixed author string 
+        
+   look comma end  net sf jabref logic importer fileformat endnoteimporter importer endnoteimporter importformatpreferences preferences preferences   preferences  
+      
+ 
+     override getname refer endnote   
+      
+ 
+     override fileextensions getextensions fileextensions endnote  
+      
+ 
+     override getid refer   
+      
+ 
+     override getdescription importer the refer endnote format  modified to use article number pages pages are missing    
+      
+ 
+     override isrecognizedformat bufferedreader reader ioexception str str   reader readline a_pattern matcher str  matches      e_pattern matcher str  matches override parserresult importdatabase bufferedreader reader ioexception   
+        list bibentry  bibitems arraylist      
+        stringbuilder sb stringbuilder str first str   reader readline str   str trim str indexof  %0      0 first    
+                    first sb append endofrecord   
+                  
+                sb append str sb append str   
+              
+            sb append '\n entries   sb tostring   split endofrecord   
+        map string  hm hashmap author type editor artnum entry   entries    
+            hm clear    
+            author       
+            type   bibentry default_type  
+            editor       
+            artnum iseditedbook fields   entry trim   substring 1  split  \n field   fields field length     3 prefix   field substring 0  1 val   field substring 2 a  equals prefix equals author     
+                        author   val author      and     val e  equals prefix equals editor     
+                        editor   val editor      and     val t  equals prefix     
+                    hm put fieldname title  val 0  equals prefix val indexof  journal      0    
+                        type    article val indexof  book section      0    
+                        type    incollection val indexof  book      0    
+                        type    book val indexof  edited book      0    
+                        type    book   
+                        iseditedbook val indexof  conference      0    
+                        type    inproceedings val indexof  report      0    
+                        type    techreport val indexof  review      0    
+                        type    article val indexof  thesis      0    
+                        type    phdthesis type   bibentry default_type 7  equals prefix     
+                    hm put fieldname edition  val c  equals prefix     
+                    hm put fieldname address  val d  equals prefix     
+                    hm put fieldname year  val 8  equals prefix     
+                    hm put fieldname date  val j  equals prefix     
+                      
+                      
+                    hm putifabsent fieldname journal  val b  equals prefix article  equals type     
+                        hm put fieldname journal  val book  equals type      inbook  equals type     
+                        hm put fieldname series  val hm put fieldname booktitle  val i  equals prefix phdthesis  equals type     
+                        hm put fieldname school  val hm put fieldname publisher  val p  equals prefix     
+                    hm put fieldname pages  val replaceall    0-9    -    0-9      $1--$2 v  equals prefix     
+                    hm put fieldname volume  val n  equals prefix     
+                    hm put fieldname number  val u  equals prefix     
+                    hm put fieldname url  val r  equals prefix doi   val doi startswith  doi       
+                        doi   doi substring 4   
+                      
+                    hm put fieldname doi  doi o  equals prefix val startswith  artn tokens   val split  \\s    
+                        artnum   tokens 1 hm put fieldname note  val k  equals prefix     
+                    hm put fieldname keywords  val x  equals prefix     
+                    hm put fieldname val 9  equals prefix val indexof  ph d       0    
+                        type    phdthesis val indexof  masters      0    
+                        type    mastersthesis f  equals prefix     
+                    hm put bibentry key_field  bibtexkeypatternutil checklegalkey val  
+                            preferences getbibtexkeypatternpreferences   isenforcelegalkey iseditedbook       equals editor     
+                editor   author  
+                author equals author     
+                hm put fieldname author  fixauthor author equals editor     
+                hm put fieldname editor  fixauthor editor hm get fieldname pages equals hm get fieldname pages           equals artnum     
+                hm put fieldname pages  artnum   
+              
+ 
+            bibentry b bibentry default_bibtexentry_id  type     
+              
+            b setfield hm b getfieldnames   isempty      
+                bibitems add b parserresult bibitems fixauthor s index   s indexof   and index    0 authorlist fixauthorlastnamefirst s   
+          
+          
+        index   s lastindexof index     s length   - 1 mod   s substring 0  s length   - 1  replace         and authorlist fixauthorlastnamefirst mod authorlist fixauthorlastnamefirst s   
+          
+      
+ 
+ 

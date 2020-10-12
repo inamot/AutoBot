@@ -1,0 +1,53 @@
+ 
+    
+       writes data format  key  serialized data   
+        
+   first write meta data except groups 
+   write groups present  
+   skip only root node exists always allentriesgroup case save actions  add additional newline enabled flag 
+   only add non-empty values net sf jabref logic exporter metadataserializer map string  getserializedstringmap metadata metadata  
+            globalbibtexkeypattern globalcitekeypattern    
+ 
+          
+        map list stringymetadata hashmap      
+        metadata getsaveorderconfig   ifpresent  
+                saveorderconfig -  stringymetadata put metadata save_order_config  saveorderconfig getasstringlist      
+        metadata getsaveactions   ifpresent  
+                saveactions -  stringymetadata put metadata save_actions  saveactions getasstringlist os newline metadata isprotected      
+            stringymetadata put metadata protected_flag_meta  collections singletonlist stringymetadata putall serializecitekeypattern metadata  globalcitekeypattern    
+        metadata getmode   ifpresent  
+                mode -  stringymetadata put metadata database_type  collections singletonlist mode getasstring       
+        metadata getdefaultfiledirectory   ifpresent  
+                path -  stringymetadata put metadata file_directory  collections singletonlist path trim       
+        metadata getuserfiledirectories   foreach  user  path  -  stringymetadata 
+                 put metadata file_directory   '-'   user  collections singletonlist path trim       
+ 
+        map string  serializedmetadata   serializemetadata stringymetadata   
+ 
+          
+          
+        metadata getgroups   filter root -  root getnumberofchildren     0  ifpresent  
+                root -  serializedmetadata put metadata groupstree  serializegroups root serializedmetadata map string  serializemetadata map list stringymetadata    
+        map string  serializedmetadata treemap map entry list metaitem   stringymetadata entryset      
+            stringbuilder stringbuilder stringbuilder dataitem   metaitem getvalue      
+                stringbuilder append stringutil quote dataitem  metadata separator_string  metadata escape_character   append metadata separator_string metaitem getkey   equals metadata save_actions  
+                            fieldformattercleanups enabled equals dataitem  
+                                   fieldformattercleanups disabled equals dataitem      
+                    stringbuilder append os newline serializeditem   stringbuilder tostring serializeditem isempty       metadata separator_string equals serializeditem     
+                serializedmetadata put metaitem getkey    serializeditem serializedmetadata map list serializecitekeypattern metadata metadata  globalbibtexkeypattern globalcitekeypattern    
+        map list stringypattern hashmap      
+        abstractbibtexkeypattern citekeypattern   metadata getcitekeypattern globalcitekeypattern key   citekeypattern getallkeys citekeypattern isdefaultvalue key     
+                list data arraylist      
+                data add citekeypattern getvalue key  get 0 metadatakey   metadata prefix_keypattern   key  
+                stringypattern put metadatakey  data citekeypattern getdefaultvalue citekeypattern getdefaultvalue   isempty      
+            list data arraylist      
+            data add citekeypattern getdefaultvalue   get 0    
+            stringypattern put metadata keypatterndefault  data stringypattern serializegroups grouptreenode root    
+        stringbuilder stringbuilder stringbuilder    
+        stringbuilder append os newline groupnode   root gettreeasstring      
+            stringbuilder append stringutil quote groupnode  metadata separator_string  metadata escape_character    
+            stringbuilder append metadata separator_string   
+            stringbuilder append os newline stringbuilder tostring    
+      
+ 
+ 

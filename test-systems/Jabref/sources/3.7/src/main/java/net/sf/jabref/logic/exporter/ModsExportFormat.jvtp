@@ -1,0 +1,206 @@
+ 
+    
+   exportformat exporting mods xml format  
+    
+  www loc gov mods v3   
+   only export entries exist 
+  format output 
+   write file one location author contains indicates author forename family name 
+  now take care forenames indicates only family name one place split places add s possibility see bib entry whether code text bib entry assume text net sf jabref logic exporter modsexportformat exportformat mods_namespace_uri    http modsexportformat mods    mods null    xml    
+      
+ 
+     override performexport bibdatabasecontext databasecontext file charset encoding  
+            list bibentry  entries saveexception  ioexception   
+        objects requirenonnull databasecontext   
+        objects requirenonnull entries entries isempty modscollectiondefinition modscollection modscollectiondefinition bibentry bibentry   entries    
+                modsdefinition mods modsdefinition    
+                bibentry getcitekeyoptional   ifpresent citekey -  addidentifier  citekey   citekey  mods    
+ 
+                map string  fieldmap   bibentry getfieldmap    
+                addgenre bibentry  mods   
+ 
+                origininfodefinition origininfo origininfodefinition    
+                partdefinition partdefinition partdefinition    
+                relateditemdefinition relateditem relateditemdefinition map entry string  entry   fieldmap entryset key   entry getkey value   entry getvalue key fieldname author  
+                            handleauthors mods  value affiliation   
+                            addaffiliation mods  value fieldname addabstract mods  value fieldname title  
+                            addtitle mods  value fieldname language  
+                            addlanguage mods  value fieldname location  
+                            addlocation mods  value fieldname url  
+                            addurl mods  value fieldname note  
+                            addnote mods  value fieldname keywords  
+                            addkeywords mods  value fieldname volume  
+                            adddetail fieldname volume  value  partdefinition fieldname issue  
+                            adddetail fieldname issue  value  partdefinition fieldname pages  
+                            addpages partdefinition  value fieldname uri  
+                            addidentifier fieldname uri  value  mods fieldname isbn  
+                            addidentifier fieldname isbn  value  mods fieldname issn  
+                            addidentifier fieldname issn  value  mods fieldname doi  
+                            addidentifier fieldname doi  value  mods fieldname pmid  
+                            addidentifier fieldname pmid  value  mods fieldname journal  
+                            addjournal value  relateditem addorigininformation key  value  origininfo   
+                  
+                mods getmodsgroup   add origininfo   
+ 
+                addrelatedandorigininfotomodsgroup relateditem  partdefinition  mods   
+                modscollection getmods   add mods   
+              
+ 
+            jaxbelement modscollectiondefinition  jaxbelement jaxbelement qname mods_namespace_uri   modscollection    modscollectiondefinition modscollection   
+ 
+            createmarshallerandwritetofile file  jaxbelement jaxbexception ex saveexception ex createmarshallerandwritetofile file  jaxbelement modscollectiondefinition  jaxbelement jaxbexception context context   jaxbcontext newinstance modscollectiondefinition marshaller marshaller   context createmarshaller    
+          
+        marshaller setproperty marshaller jaxb_formatted_output marshaller setproperty marshaller jaxb_schema_location  mods_schema_location   
+ 
+          
+        marshaller marshal jaxbelement file file addrelatedandorigininfotomodsgroup relateditemdefinition relateditem  partdefinition partdefinition  
+            modsdefinition mods    
+ 
+        relateditem getmodsgroup   add partdefinition   
+        relateditem setattype  host    
+        mods getmodsgroup   add relateditem   
+        typeofresourcedefinition typeofresource typeofresourcedefinition    
+        typeofresource setvalue  text    
+        mods getmodsgroup   add typeofresource addgenre bibentry bibentry  modsdefinition mods    
+        genredefinition genre genredefinition    
+        genre setvalue bibentry gettype     
+        mods getmodsgroup   add genre addabstract modsdefinition mods value    
+        abstractdefinition abstractdefinition abstractdefinition    
+        abstractdefinition setvalue value   
+        mods getmodsgroup   add abstractdefinition addtitle modsdefinition mods value    
+        titleinfodefinition titleinfo titleinfodefinition    
+        stringpluslanguage title stringpluslanguage    
+        title setvalue value   
+        jaxbelement stringpluslanguage  element jaxbelement qname mods_namespace_uri   title    
+                stringpluslanguage title   
+        titleinfo gettitleorsubtitleorpartnumber   add element   
+        mods getmodsgroup   add titleinfo addaffiliation modsdefinition mods value    
+        namedefinition namedefinition namedefinition    
+        stringpluslanguage affiliation stringpluslanguage    
+        affiliation setvalue value   
+        jaxbelement stringpluslanguage  element jaxbelement qname mods_namespace_uri   affiliation    
+                stringpluslanguage affiliation   
+        namedefinition getaffiliationorroleordescription   add element   
+        mods getmodsgroup   add namedefinition addlocation modsdefinition mods value    
+        locationdefinition locationdefinition locationdefinition locations   value split location   locations    
+            physicallocationdefinition physicallocation physicallocationdefinition    
+            physicallocation setvalue location   
+            locationdefinition getphysicallocation   add physicallocation   
+          
+        mods getmodsgroup   add locationdefinition addnote modsdefinition mods value notes   value split note   notes    
+            notedefinition notedefinition notedefinition    
+            notedefinition setvalue note   
+            mods getmodsgroup   add notedefinition addurl modsdefinition mods value urls   value split        
+        locationdefinition location locationdefinition url   urls    
+            urldefinition urldefinition urldefinition    
+            urldefinition setvalue url   
+            location geturl   add urldefinition   
+            mods getmodsgroup   add location addjournal value  relateditemdefinition relateditem    
+        titleinfodefinition titleinfo titleinfodefinition    
+        stringpluslanguage title stringpluslanguage    
+        title setvalue value   
+        jaxbelement stringpluslanguage  element jaxbelement qname mods_namespace_uri   title    
+                stringpluslanguage title   
+        titleinfo gettitleorsubtitleorpartnumber   add element   
+        relateditem getmodsgroup   add titleinfo addlanguage modsdefinition mods value    
+        languagedefinition language languagedefinition    
+        languagetermdefinition languageterm languagetermdefinition    
+        languageterm setvalue value   
+        language getlanguageterm   add languageterm   
+        mods getmodsgroup   add language addpages partdefinition partdefinition value value contains double_minus     
+            addstartandendpage value  partdefinition  double_minus value contains minus     
+            addstartandendpage value  partdefinition  minus biginteger total biginteger value   
+            extentdefinition extent extentdefinition    
+            extent settotal total   
+            partdefinition getdetailorextentordate   add extent addkeywords modsdefinition mods value keywords   value split keyword   keywords    
+            subjectdefinition subject subjectdefinition    
+            stringpluslanguageplusauthority topic stringpluslanguageplusauthority    
+            topic setvalue keyword   
+            jaxbelement ?  element jaxbelement qname mods_namespace_uri   topic    
+                    stringpluslanguageplusauthority topic   
+            subject gettopicorgeographicortemporal   add element   
+            mods getmodsgroup   add subject handleauthors modsdefinition mods value authors   value split  and author   authors    
+            namedefinition name namedefinition    
+            name setattype  personal    
+            namepartdefinition namepart namepartdefinition author contains commaindex   author indexof familyname   author substring 0  commaindex   
+                namepart setattype  family    
+                namepart setvalue familyname   
+ 
+                jaxbelement namepartdefinition  element jaxbelement qname mods_namespace_uri   namepart    
+                        namepartdefinition namepart   
+                name getnamepartordisplayformoraffiliation   add element forename   author substring commaindex   1  author length forenames   forename split given   forenames given isempty      
+                        namepartdefinition namepartdefinition namepartdefinition    
+                        namepartdefinition setattype  given    
+                        namepartdefinition setvalue given   
+                        element jaxbelement qname mods_namespace_uri   namepart    namepartdefinition namepartdefinition   
+                        name getnamepartordisplayformoraffiliation   add element   
+                      
+                  
+                mods getmodsgroup   add name namepart setattype  family    
+                namepart setvalue author   
+                jaxbelement namepartdefinition  element jaxbelement qname mods_namespace_uri   namepart    
+                        namepartdefinition namepart   
+                name getnamepartordisplayformoraffiliation   add element   
+                mods getmodsgroup   add name addidentifier key value  modsdefinition mods citekey  equals key     
+            mods setid value   
+          
+        identifierdefinition identifier identifierdefinition    
+        identifier settype key   
+        identifier setvalue value   
+        mods getmodsgroup   add identifier addstartandendpage value  partdefinition partdefinition minus minusindex   value indexof minus startpage   value substring 0  minusindex endpage minus equals minus     
+            endpage   value substring minusindex   1 double_minus equals minus     
+            endpage   value substring minusindex   2   
+          
+ 
+        stringpluslanguage start stringpluslanguage    
+        start setvalue startpage   
+        stringpluslanguage end stringpluslanguage    
+        end setvalue endpage   
+        extentdefinition extent extentdefinition    
+        extent setstart start   
+        extent setend end   
+ 
+        partdefinition getdetailorextentordate   add extent adddetail detailname value  partdefinition partdefinition    
+        detaildefinition detail detaildefinition    
+        stringpluslanguage detailtype stringpluslanguage    
+        detailtype setvalue value   
+        detail settype detailname   
+        jaxbelement stringpluslanguage  element jaxbelement qname mods_namespace_uri   number    
+                stringpluslanguage detailtype   
+        detail getnumberorcaptionortitle   add element   
+        partdefinition getdetailorextentordate   add detail addorigininformation key value  origininfodefinition origininfo fieldname year equals key     
+            adddate  dateissued   value  origininfo created  equals key     
+            adddate  datecreated   value  origininfo modified  equals key     
+            adddate  datemodified   value  origininfo captured  equals key     
+            adddate  datecaptured   value  origininfo fieldname publisher equals key     
+            stringpluslanguageplussupplied publisher stringpluslanguageplussupplied    
+            publisher setvalue value   
+            jaxbelement stringpluslanguageplussupplied  element jaxbelement qname mods_namespace_uri   publisher    stringpluslanguageplussupplied publisher   
+            origininfo getplaceorpublisherordateissued   add element issuance  equals key     
+            issuancedefinition issuance   issuancedefinition fromvalue value   
+            jaxbelement issuancedefinition  element jaxbelement qname mods_namespace_uri   issuance    
+                    issuancedefinition issuance   
+            origininfo getplaceorpublisherordateissued   add element address  equals key     
+            placedefinition placedefinition placedefinition places   value split place   places    
+                placetermdefinition placeterm placetermdefinition    
+                  
+                  
+                placeterm settype codeortext text   
+                placeterm setvalue place   
+                placedefinition getplaceterm   add placeterm   
+              
+            jaxbelement placedefinition  element jaxbelement qname mods_namespace_uri   place    
+                    placedefinition placedefinition   
+            origininfo getplaceorpublisherordateissued   add element edition  equals key     
+            stringpluslanguageplussupplied edition stringpluslanguageplussupplied    
+            edition setvalue value   
+            jaxbelement stringpluslanguageplussupplied  element jaxbelement qname mods_namespace_uri   edition    stringpluslanguageplussupplied edition   
+            origininfo getplaceorpublisherordateissued   add element adddate datename value  origininfodefinition origininfo    
+        datedefinition dateissued datedefinition    
+        dateissued setkeydate  yes    
+        dateissued setvalue value   
+        jaxbelement datedefinition  element jaxbelement qname mods_namespace_uri  datename   
+                datedefinition dateissued   
+        origininfo getplaceorpublisherordateissued   add element   
+      
+ 

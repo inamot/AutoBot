@@ -1,0 +1,92 @@
+ 
+    
+       create abstractaction performing export operation  
+       
+        param frame jabrefframe jabref instance  
+        param selectedonly 
+                  true indicates only selected entries exported  
+                  false indicates entries exported  
+        return action  
+        
+   warn file exists  
+   selected entries entries 
+   set global variable database's file directory before exporting formatters resolve linked files correctly ugly hack   
+   make sure remember filter used set default next time error message  report success show error dialog  
+   need warn user saving failed  
+   run export action background thread  
+   run update method  net sf jabref gui exporter exportaction abstractaction getexportaction jabrefframe frame selectedonly internalexportaction mnemonicawareaction internalexportaction jabrefframe frame selectedonly frame   frame selectedonly   selectedonly  
+                putvalue action name  selectedonly ? localization menutitle  export selected entries     localization 
+                         menutitle  export     
+              
+ 
+             override actionperformed actionevent e    
+                map exportformat  customformats   globals prefs customexports getcustomexportformats globals prefs  
+                        globals journalabbreviationloader   
+                layoutformatterpreferences layoutpreferences   globals prefs 
+                         getlayoutformatterpreferences globals journalabbreviationloader   
+                savepreferences savepreferences   savepreferences loadforexportfrompreferences globals prefs   
+                exportformats initallexports customformats  layoutpreferences  savepreferences   
+                jfilechooser fc   exportaction 
+                         createexportfilechooser globals prefs get jabrefpreferences export_working_directory    
+                fc showsavedialog frame   
+                file file   fc getselectedfile file filefilter ff   fc getfilefilter ff exportfilefilter    
+ 
+                    exportfilefilter eff    exportfilefilter  ff path   file getpath path endswith eff getextension       
+                        path   path   eff getextension    
+                      
+                    file file path file exists joptionpane showconfirmdialog frame  
+                                localization lang  '%0' exists  overwrite file?   file getname     
+                                localization lang  export    joptionpane ok_cancel_option     joptionpane ok_option iexportformat format   eff getexportformat    
+                    list bibentry  entries selectedonly    
+                          
+                        entries   frame getcurrentbasepanel   getselectedentries entries   frame getcurrentbasepanel   getdatabase   getentries    
+                      
+ 
+                      
+                      
+                      
+                    globals prefs filedirfordatabase   frame getcurrentbasepanel   getbibdatabasecontext   
+                             getfiledirectory globals prefs getfiledirectorypreferences     
+ 
+                      
+                      
+                    globals prefs put jabrefpreferences last_used_export  format getconsolename     
+                    globals prefs put jabrefpreferences export_working_directory  file getparent file finfile   file list bibentry  finentries   entries  
+                    abstractworker exportworker abstractworker errormessage  
+ 
+ 
+                         override run format performexport frame getcurrentbasepanel   getbibdatabasecontext    
+                                        finfile getpath    
+                                        frame getcurrentbasepanel   getbibdatabasecontext   getmetadata   getencoding   
+                                                 orelse globals prefs getdefaultencoding     
+                                        finentries exception ex    
+                                logger warn  problem exporting   ex ex getmessage errormessage   ex tostring errormessage   ex getmessage    
+                                  
+                              
+                          
+ 
+                         override update errormessage frame output localization lang  %0 export successful   format getdisplayname frame output localization lang  could not save file        -     errormessage   
+                                  
+                                joptionpane showmessagedialog frame  
+                                        localization lang  could not save file       \n    errormessage  
+                                        localization lang  save database    joptionpane error_message   
+                              
+                          
+                       
+ 
+                      
+                    exportworker getworker   run    
+                      
+                    exportworker update internalexportaction frame  selectedonly jfilechooser createexportfilechooser currentdir lastusedformat   globals prefs get jabrefpreferences last_used_export   
+        filefilter defaultfilter jfilechooser fc jfilechooser currentdir   
+        set filefilter  filters treeset map entry iexportformat  e   exportformats getexportformats   entryset formatname   e getkey    
+            iexportformat format   e getvalue    
+            exportfilefilter exportfilefilter exportfilefilter format   
+            filters add exportfilefilter formatname equals lastusedformat     
+                defaultfilter   exportfilefilter filefilter ff   filters    
+            fc addchoosablefilefilter ff   
+          
+        fc setacceptallfilefilterused defaultfilter fc setfilefilter defaultfilter fc  
+      
+ 
+ 

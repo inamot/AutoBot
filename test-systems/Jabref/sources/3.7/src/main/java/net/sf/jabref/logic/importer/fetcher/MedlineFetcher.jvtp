@@ -1,0 +1,87 @@
+ 
+    
+   fetch search pubmed href  http   www ncbi nlm nih gov sites entrez   www ncbi nlm nih gov medlinefetcher fetches entries pubmed database  
+   see href  http   help jabref org en medlineris  help jabref org detailed documentation available fields  
+    
+    
+       replaces commas given string param query input remove commas 
+        return input without commas using 'esearch fcgi?db  database  term  query list ids matching query  
+       input  any text query   term  
+       output  list uids matching query 
+       
+        see href  https   www ncbi nlm nih gov books nbk25500   www ncbi nlm nih gov books nbk25500 everything relevant listed before idlist break loop right idlist tag closes  
+  searching pubmed ids matching query 
+  pass list ids fetchmedline download id fetcher mutliple ids 
+    
+       fetch parse medline item eutils ncbi nlm nih gov e-utilities generate huge xml file containing entries ids 
+       
+        param ids list ids search return return empty list error  
+        
+  separate ids comma search multiple entries net sf jabref logic importer fetcher medlinefetcher idbasedparserfetcher  searchbasedfetcher replacecommawithand query query replaceall         and    replaceall        and list getpubmedidsfromquery query fetcherexception fetchids firstoccurrenceofcount list idlist arraylist url ncbi   createsearchurl query   
+ 
+            xmlinputfactory inputfactory   xmlinputfactory newfactory    
+            xmlstreamreader streamreader   inputfactory createxmlstreamreader ncbi openstream     
+ 
+            fetchloop streamreader hasnext event   streamreader geteventtype event xmlstreamconstants start_element streamreader getname   tostring   equals  count      
+                        firstoccurrenceofcount streamreader getname   tostring   equals  idlist      
+                        fetchids xmlstreamconstants characters firstoccurrenceofcount    
+                        numberofresultsfound   integer parseint streamreader gettext     
+                        firstoccurrenceofcount fetchids    
+                        idlist add streamreader gettext xmlstreamconstants end_element streamreader getname   tostring   equals  idlist fetchloop  
+                      
+                  
+                streamreader next    
+              
+            streamreader close idlist ioexception   urisyntaxexception e fetcherexception  unable to get pubmed ids   localization lang  unable to get pubmed ids    e xmlstreamexception e fetcherexception  error parsing id list   localization lang  error parsing id list    
+                    e   
+          
+      
+ 
+     override getname medline   
+      
+ 
+     override helpfile gethelppage helpfile fetcher_medline  
+      
+ 
+     override url geturlforid identifier urisyntaxexception  malformedurlexception  fetcherexception   
+        uribuilder uribuilder uribuilder id_url   
+        uribuilder addparameter  db    pubmed    
+        uribuilder addparameter  retmode    xml    
+        uribuilder addparameter  id   identifier uribuilder build   tourl    
+      
+ 
+     override parser getparser medlineimporter    
+      
+ 
+     override dopostcleanup bibentry entry    
+        entry clearfield  journal-abbreviation    
+        entry clearfield  status    
+        entry clearfield  copyright    
+      
+ 
+     override list bibentry  performsearch query fetcherexception   
+        list bibentry  entrylist linkedlist query isempty collections emptylist searchterm   replacecommawithand query   
+ 
+              
+            list idlist   getpubmedidsfromquery searchterm idlist isempty      
+                logger info  no results found collections emptylist numberofresultsfound   number_to_fetch    
+                logger info  
+                        numberofresultsfound     results found  only 50 relevant results will be fetched by entrylist   fetchmedline idlist entrylist url createsearchurl term urisyntaxexception  malformedurlexception   
+        term   replacecommawithand term   
+        uribuilder uribuilder uribuilder search_url   
+        uribuilder addparameter  db    pubmed    
+        uribuilder addparameter  sort    relevance    
+        uribuilder addparameter  retmax valueof number_to_fetch    
+        uribuilder addparameter  term   term uribuilder build   tourl list bibentry  fetchmedline list ids fetcherexception url fetchurl   geturlforid join      ids    
+            urlconnection data   fetchurl openconnection    
+            parserresult result medlineimporter   importdatabase bufferedreader inputstreamreader data getinputstream    standardcharsets utf_8 result haswarnings      
+                logger warn result geterrormessage     
+              
+            list bibentry  resultlist   result getdatabase   getentries    
+            resultlist foreach dopostcleanup resultlist urisyntaxexception   malformedurlexception e fetcherexception  error generating fetch url   
+                    localization lang  error generating fetch url    e ioexception e fetcherexception  error fetching from medline   
+                    localization lang  error fetching from %0    medline    e   
+          
+      
+ 
+ 

@@ -1,0 +1,68 @@
+ 
+    
+       global variable count unsuccessful renames 
+        
+   none selected  inform user select entries first  
+   undo granularity entry level 
+  rename failed least one entry 
+    
+       runs cleanup entry records change  
+        
+   create run cleaner 
+   register undo action net sf jabref gui actions cleanupaction abstractworker cleanupaction basepanel panel  jabrefpreferences preferences panel   panel frame   panel frame preferences   objects requirenonnull preferences   
+      
+ 
+     override init     
+        canceled modifiedentriescount   0 panel getselectedentries   isempty        
+            joptionpane showmessagedialog frame  localization lang  first select entries to clean up     
+                    localization lang  cleanup entry    joptionpane information_message   
+            canceled frame block    
+        panel output localization lang  doing a cleanup 0 entries      
+                integer tostring panel getselectedentries   size       
+      
+ 
+     override run canceled cleanuppresetpanel presetpanel cleanuppresetpanel panel getbibdatabasecontext    
+                cleanuppreset loadfrompreferences preferences choice   showdialog presetpanel choice    joptionpane ok_option    
+            canceled cleanuppreset cleanuppreset   presetpanel getcleanuppreset    
+        cleanuppreset storeinpreferences preferences cleanuppreset isrenamepdf      globals prefs getboolean jabrefpreferences ask_auto_naming_pdfs_again     
+            checkboxmessage cbm checkboxmessage  
+                    localization lang  auto-generating pdf-names does not support undo localization lang  disable confirmation dialog answer   joptionpane showconfirmdialog frame  cbm  localization lang  autogenerate pdf names    
+                    joptionpane yes_no_option cbm isselected      
+                globals prefs putboolean jabrefpreferences ask_auto_naming_pdfs_again answer    joptionpane no_option    
+                canceled bibentry entry   panel getselectedentries      
+              
+            namedcompound ce namedcompound localization lang  cleanup entry     
+ 
+            docleanup cleanuppreset  entry  ce   
+ 
+            ce end ce hasedits      
+                modifiedentriescount    
+                panel getundomanager   addedit ce   
+              
+          
+      
+ 
+     override update canceled    
+            frame unblock unsuccessfulrenames   0      
+            joptionpane showmessagedialog frame  
+                    localization lang  file rename failed 0 entries    integer tostring unsuccessfulrenames    
+                    localization lang  autogenerate pdf names    joptionpane information_message modifiedentriescount   0    
+            panel updateentryeditorifshowing    
+            panel markbasechanged message modifiedentriescount 0  
+            message   localization lang  no entry needed a clean up 1  
+            message   localization lang  one entry needed a clean up message   localization lang  %0 entries needed a clean up   integer tostring modifiedentriescount panel output message   
+        frame unblock showdialog cleanuppresetpanel presetpanel dialogtitle   localization lang  cleanup entries    
+ 
+        object   messages    localization lang  what would you like to clean up?    presetpanel getpanel joptionpane showconfirmdialog frame  messages  dialogtitle  joptionpane ok_cancel_option  
+                joptionpane question_message docleanup cleanuppreset preset  bibentry entry  namedcompound ce    
+          
+        cleanupworker cleaner cleanupworker panel getbibdatabasecontext    preferences getcleanuppreferences  
+                globals journalabbreviationloader    
+        list fieldchange  changes   cleaner cleanup preset  entry   
+ 
+        unsuccessfulrenames   cleaner getunsuccessfulrenames changes isempty fieldchange change   changes    
+            ce addedit undoablefieldchange change    
+          
+      
+ 
+ 

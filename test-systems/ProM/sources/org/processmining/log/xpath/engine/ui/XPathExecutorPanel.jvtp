@@ -1,0 +1,183 @@
+ 
+    
+	    
+	    
+  trace solution 
+  populate result table attr    null  
+  	return null return xidentityextension instance   extractid attr   org processmining log xpath engine ui xpathexecutorpanel jpanel xpathexecutorpanel plugincontext context xlog log identitiesmissingexception  ioexception   
+		_log   log  
+		_context   context  
+ 
+		_engine xpathengine _context  _log   
+ 
+		logging   logger getlogger  xpathexecutor    
+		logging setlevel level finest   
+ 
+		initializeui xlog getlog _log plugincontext getcontext _context xpathengine getengine _engine initializeui setlayout borderlayout     
+ 
+		settoppanel    
+		setbottompanel    
+		setsplitter settoppanel     
+		toppanel jpanel borderlayout     
+ 
+		setquerypanel    
+		toppanel add querypanel  borderlayout center   
+ 
+		buttonpanel jpanel    
+		querybutton   slickerfactory instance   createbutton  query    
+		querybutton addactionlistener actionlistener actionperformed actionevent e    
+				executequery querytext gettext    relquerytext gettext     
+			  
+		    
+ 
+		clearbutton   slickerfactory instance   createbutton  clear    
+		clearbutton addactionlistener actionlistener actionperformed actionevent e    
+				executeclear    
+			  
+		    
+ 
+		resultcounter   slickerfactory instance   createlabel      
+ 
+		buttonpanel add querybutton   
+		buttonpanel add clearbutton   
+		buttonpanel add resultcounter   
+		toppanel add buttonpanel  borderlayout south setbottompanel     
+ 
+		bottompanel jpanel borderlayout     
+ 
+		bottomright jpanel borderlayout     
+		errortext promtextarea bottomsplitter promsplitpane promsplitpane horizontal_split   
+		bottomsplitter setleftcomponent errortext   
+		bottomsplitter setrightcomponent bottomright   
+ 
+		bottompanel add bottomsplitter setsplitter     
+ 
+		splitter promsplitpane promsplitpane vertical_split   
+		splitter settopcomponent toppanel   
+		splitter setbottomcomponent bottompanel   
+		add splitter  borderlayout center setquerypanel     
+		querypanel jpanel borderlayout     
+ 
+		jpanel qr jpanel borderlayout     
+ 
+		querytext promtextfield    
+		querytext settext    
+		relquerytext promtextfield    
+ 
+		inputmethodlistener l inputmethodlistener inputmethodtextchanged inputmethodevent event event getcommittedcharactercount     0    
+					resetqueryfuture caretpositionchanged inputmethodevent event    
+			  
+		   
+ 
+		querytext addinputmethodlistener l   
+		relquerytext addinputmethodlistener l   
+ 
+		qr add querytext  borderlayout north   
+		qr add relquerytext  borderlayout south   
+ 
+		querypanel add qr  borderlayout center   
+ 
+		queryhistory jpanel borderlayout     
+ 
+		prevquery   slickerfactory instance   createbutton       
+		prevquery addactionlistener actionlistener actionperformed actionevent e    
+				setprevquery    
+			  
+		    
+ 
+		nextquery   slickerfactory instance   createbutton       
+		nextquery setenabled nextquery addactionlistener actionlistener actionperformed actionevent e    
+				setnextquery    
+			  
+		    
+ 
+		queryhistory add prevquery  borderlayout north   
+		queryhistory add nextquery  borderlayout south   
+ 
+		querypanel add queryhistory  borderlayout east isquerychanged querychanged setprevquery querypast isempty      
+			queryfuture push pair string  querytext gettext    relquerytext gettext      
+ 
+			pair string  pop   querypast pop    
+			querytext settext pop getfirst     
+			relquerytext settext pop getsecond     
+		  
+ 
+		prevquery setenabled   querypast isempty      
+		nextquery setenabled querychanged setnextquery queryfuture isempty      
+			querypast push pair string  querytext gettext    relquerytext gettext      
+ 
+			pair string  pop   queryfuture pop    
+			querytext settext pop getfirst     
+			relquerytext settext pop getsecond     
+		  
+ 
+		nextquery setenabled   queryfuture isempty      
+		prevquery setenabled querychanged resetqueryfuture     
+		queryfuture clear    
+		nextquery setenabled executeclear     
+		querytext settext      
+		relquerytext settext      
+		errortext settext      
+		resultcounter settext      
+		bottomsplitter setleftcomponent errortext   
+		bottomsplitter setrightcomponent bottomright   
+ 
+		repaint executequery query relquery    
+		querypast add pair string  query  relquery start   calendar getinstance   gettimeinmillis    
+		logging log level info   start query '    query    '    
+ 
+		  
+		solutiontable soltable error relquery equals        
+			list xattributable  solution solution   getengine   query query saxonapiexception e    
+				error   e getmessage solution soltable solutiontable soltable setsinglesolution solution list pair xattributable  xattributable   solution solution   getengine   query query  relquery saxonapiexception e    
+				error   e getmessage solution soltable solutiontable soltable setpairsolution solution end   calendar getinstance   gettimeinmillis    
+		logging log level info   end query  duration  '     end - start      ms soltable errortext settext error   
+			resultcounter settext  errors found    
+			bottomsplitter setleftcomponent errortext   
+			bottomsplitter setrightcomponent bottomright table promtable soltable   
+			table gettable   setdefaultrenderer xattributable xattributablerenderer     
+ 
+			table gettable   addmouselistener mouselistener mousereleased mouseevent e mousepressed mouseevent e mouseexited mouseevent e mouseentered mouseevent e mouseclicked mouseevent e row   table gettable   rowatpoint e getpoint col   table gettable   columnatpoint e getpoint row    0    row    table gettable   getrowcount    
+							    col    0    col    table gettable   getcolumncount       
+						setpropertiestable table getvalueat row  col    
+					  
+				  
+			    
+ 
+			bottomsplitter setleftcomponent table   
+			bottomsplitter setrightcomponent bottomright   
+			resultcounter settext  solutions found      soltable getrowcount     
+		  
+ 
+		repaint setpropertiestable object value value xattributable    
+			xattributable parent    xattributable  value  
+ 
+			promheaderpanel php value xattribute    
+				xattribute attr    xattribute  parent  
+				php promheaderpanel  attribute      attr getkey        value      attr tostring php promheaderpanel value getclass   getsimplename     
+			  
+ 
+			promtable proptable promtable propertiestable parent    
+			proptable gettable   setdefaultrenderer xattribute xattributerender     
+			php add proptable   
+			bottomsplitter setrightcomponent php propertiestable tablemodel propertiestable xattributable parent    
+ 
+			attrmap   parent getattributes    
+			keys arraylist attrmap keyset getrowcount keys size getcolumncount 2 getcolumnname columnindex columnindex 0 attribute 1 value error field getcolumnclass columnindex columnindex 0 1 xattribute iscelleditable rowindex columnindex object getvalueat rowindex columnindex columnindex 0 keys get rowindex 1 attrmap get keys get rowindex setvalueat object avalue rowindex columnindex addtablemodellistener tablemodellistener l removetablemodellistener tablemodellistener l xattributerender defaulttablecellrenderer setvalue object value value setvalue  not set value xattribute setvalue value setvalue value xattributablerenderer defaulttablecellrenderer setvalue object value value xattributable setvalue xidentityextension instance   extractid  xattributable  value setvalue value solutiontable tablemodel   
+ 
+  
+ 
+  
+ 
+		list xattributable  sol solutiontable pairs pairs   pairs setpairsolution list pair xattributable  xattributable   solution    
+			pairsolution   solution setsinglesolution list xattributable  solution    
+			sol   solution getrowcount pairs pairsolution size sol size getcolumncount pairs 2 1 getcolumnname columnindex columnindex 0 first 1 second wrong getcolumnclass columnindex xattributable iscelleditable rowindex columnindex object getvalueat rowindex columnindex    
+			xattributable attr pairs    
+				pair xattributable  xattributable  item   pairsolution get rowindex item null columnindex 0   
+						attr   item getfirst 1   
+						attr   item getsecond attr   sol get rowindex attr setvalueat object avalue rowindex columnindex addtablemodellistener tablemodellistener l removetablemodellistener tablemodellistener l    
+		  
+ 
+	  
+ 
+ 

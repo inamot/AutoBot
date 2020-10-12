@@ -1,0 +1,198 @@
+ 
+    
+   importer mods format  br details format found here href  http   www loc gov standards mods   http   www loc gov standards mods br newest xml schema found here href  www loc gov standards mods mods-schemas html   www loc gov standards mods mods-schemas html unmarshalled object jaxbelement element  only one elements not empty optional  
+  now parse information element present element subject appear one time s keywords put out loop 
+  same goes authors notes 
+  put identifiers  doi  issn  isbn      except local citekey 
+    
+       returns optional contains instance given class given element cast class element not cast given class empty optional returned  
+       
+        param groupelement element cast 
+        param clazz class groupelement cast 
+        return optional contains groupelement instance clazz groupelement cast clazz empty optional groupelement not cast clazz 
+        
+    
+       puts information relatedmodsgroup same elements modsgroup informations volume  issue pages appear here instead modsgroup appears title field indicates name journal article belongs loop only value element belongs detail not null 
+  put details volume  issue end appears start page appeared put together end page first 4 digits dateissued year year date issued take year date created 
+  family come first family appears set author comes before check forename family name not empty case s first author 
+  now set add old author 
+  remove old forenames 
+  last author not added here net sf jabref logic importer fileformat modsimporter importer keyword_separator   jabrefpreferences getinstance   getimportformatpreferences   
+             getkeywordseparator          
+ 
+  
+  
+ 
+ 
+     override isrecognizedformat bufferedreader input ioexception input lines   anymatch line -  mods_pattern matcher line  find     
+      
+ 
+     override parserresult importdatabase bufferedreader input ioexception   
+        objects requirenonnull input   
+ 
+        list bibentry  bibitems arraylist context context   jaxbcontext newinstance  net sf jabref logic importer fileformat mods    
+              
+            unmarshaller unmarshaller   context createunmarshaller    
+ 
+              
+            jaxbelement ?  unmarshalledobject    jaxbelement ?   unmarshaller unmarshal input   
+ 
+            optional modscollectiondefinition  collection   getelement unmarshalledobject getvalue    
+                    modscollectiondefinition optional modsdefinition  mods   getelement unmarshalledobject getvalue    modsdefinition collection ispresent      
+                list modsdefinition  modsdefinitions   collection get   getmods    
+                parsemodscollection bibitems  modsdefinitions mods ispresent      
+                modsdefinition modsdefinition   mods get    
+                parsemods bibitems  modsdefinition logger warn  not expected root element found jaxbexception e    
+            logger debug  could not parse document   e parserresult fromerrormessage e getlocalizedmessage parserresult bibitems parsemodscollection list bibentry  bibitems  list modsdefinition  mods modsdefinition modsdefinition   mods    
+            parsemods bibitems  modsdefinition parsemods list bibentry  bibitems  modsdefinition modsdefinition    
+        bibentry entry bibentry    
+        map string  fields hashmap modsdefinition getid entry setcitekey modsdefinition getid modsdefinition getmodsgroup parsemodsgroup fields  modsdefinition getmodsgroup    entry   
+          
+        entry setfield fields   
+        bibitems add entry parsemodsgroup map string  fields  list object  modsgroup  bibentry entry    
+        list keywords arraylist      
+        list authors arraylist      
+        list notes arraylist object groupelement   modsgroup    
+ 
+              
+            optional abstractdefinition  abstractdefinition   getelement groupelement  abstractdefinition optional genredefinition  genredefinition   getelement groupelement  genredefinition optional languagedefinition  languagedefinition   getelement groupelement  languagedefinition optional locationdefinition  locationdefinition   getelement groupelement  locationdefinition optional namedefinition  namedefinition   getelement groupelement  namedefinition optional origininfodefinition  origininfodefinition   getelement groupelement  origininfodefinition optional recordinfodefinition  recordinfodefinition   getelement groupelement  recordinfodefinition optional notedefinition  notedefinition   getelement groupelement  notedefinition optional relateditemdefinition  relateditemdefinition   getelement groupelement  
+                    relateditemdefinition optional subjectdefinition  subjectdefinition   getelement groupelement  subjectdefinition optional identifierdefinition  identifierdefinition   getelement groupelement  identifierdefinition optional titleinfodefinition  titleinfodefinition   getelement groupelement  titleinfodefinition abstractdefinition 
+                     ifpresent abstractdef -  putifvaluenotnull fields  fieldname abstractdef getvalue      
+ 
+            genredefinition ifpresent genre -  entry settype genre getvalue      
+ 
+            languagedefinition ifpresent  
+                    languagedef -  languagedef getlanguageterm   stream   map languagetermdefinition  getvalue  
+                             foreach language -  putifvaluenotnull fields  fieldname language  language     
+ 
+            locationdefinition ifpresent location -  parselocationandurl fields  location    
+ 
+            namedefinition ifpresent name -  handleauthorsinnamepart name  authors  fields    
+ 
+            origininfodefinition ifpresent origininfo -  origininfo getplaceorpublisherordateissued   stream   
+                     foreach element -  putplaceorpublisherordate fields  element getname   getlocalpart    
+                            element getvalue       
+ 
+            recordinfodefinition ifpresent recordinfo -  parserecordinfo fields  recordinfo    
+ 
+            notedefinition ifpresent note -  notes add note getvalue      
+ 
+            relateditemdefinition ifpresent relateditem -  parserelatedmodsgroup fields  relateditem getmodsgroup      
+ 
+            subjectdefinition 
+                     ifpresent subject -  parsetopic fields  subject gettopicorgeographicortemporal    keywords    
+ 
+            identifierdefinition ifpresent identifier -  parseidentifier fields  identifier  entry    
+ 
+            titleinfodefinition ifpresent titleinfo -  parsetitle fields  titleinfo gettitleorsubtitleorpartnumber      
+ 
+          
+ 
+          
+        putiflistisnotempty fields  keywords  fieldname keywords  keyword_separator   
+          
+        putiflistisnotempty fields  authors  fieldname author    and     
+        putiflistisnotempty fields  notes  fieldname note parsetitle map string  fields  list object  titleorsubtitleorpartnumber object object   titleorsubtitleorpartnumber object jaxbelement    
+                jaxbelement stringpluslanguage  element    jaxbelement stringpluslanguage   object title  equals element getname   getlocalpart       
+                    stringpluslanguage title   element getvalue    
+                    fields put fieldname title  title getvalue parseidentifier map string  fields  identifierdefinition identifier  bibentry entry type   identifier gettype citekey  equals type      entry getcitekeyoptional   ispresent      
+            entry setcitekey identifier getvalue local  equals type       citekey  equals type     
+              
+            putifvaluenotnull fields  identifier gettype    identifier getvalue parsetopic map string  fields  list jaxbelement ?   topicorgeographicortemporal  
+                            list keywords jaxbelement ?  jaxbelement   topicorgeographicortemporal    
+            object value   jaxbelement getvalue elementname   jaxbelement getname   getlocalpart value hierarchicalgeographicdefinition    
+                hierarchicalgeographicdefinition hierarchichalgeographic    hierarchicalgeographicdefinition  value  
+                parsegeographicinformation fields  hierarchichalgeographic value stringpluslanguageplusauthority      topic  equals elementname     
+                stringpluslanguageplusauthority topic    stringpluslanguageplusauthority  value  
+                keywords add topic getvalue   trim t  optional t  getelement object groupelement t  clazz clazz isassignablefrom groupelement getclass optional of clazz cast groupelement optional empty parsegeographicinformation map string  fields  
+                                            hierarchicalgeographicdefinition hierarchichalgeographic    
+        list jaxbelement stringpluslanguage   areaorcontinentorcountry   hierarchichalgeographic 
+                 getextraterrestrialareaorcontinentorcountry jaxbelement stringpluslanguage  element   areaorcontinentorcountry localname   element getname   getlocalpart city  equals localname     
+                stringpluslanguage city   element getvalue    
+                putifvaluenotnull fields   city   city getvalue country  equals localname     
+                stringpluslanguage country   element getvalue    
+                putifvaluenotnull fields   country   country getvalue parselocationandurl map string  fields  locationdefinition locationdefinition    
+        list locations   locationdefinition getphysicallocation   stream   
+                 map physicallocationdefinition  getvalue  collect collectors tolist     
+        putiflistisnotempty fields  locations  fieldname location         
+ 
+        list urls   locationdefinition geturl   stream   map urldefinition  getvalue  
+                 collect collectors tolist     
+        putiflistisnotempty fields  urls  fieldname url parserecordinfo map string  fields  recordinfodefinition recordinfo    
+        list jaxbelement ?   recordcontent   recordinfo getrecordcontentsourceorrecordcreationdateorrecordchangedate jaxbelement ?  jaxbelement   recordcontent    
+            object value   jaxbelement getvalue value stringpluslanguageplusauthority    
+                stringpluslanguageplusauthority source    stringpluslanguageplusauthority  value  
+                putifvaluenotnull fields   source   source getvalue value languagedefinition    
+                languagedefinition language    languagedefinition  value  
+                list languagetermdefinition  languageterms   language getlanguageterm    
+                list languages   languageterms stream   map languagetermdefinition  getvalue  
+                         collect collectors tolist     
+                putiflistisnotempty fields  languages  fieldname language parserelatedmodsgroup map string  fields  list object  relatedmodsgroup object groupelement   relatedmodsgroup groupelement partdefinition    
+                partdefinition part    partdefinition  groupelement  
+                list object  detailorextentordate   part getdetailorextentordate object object   detailorextentordate object detaildefinition    
+                        detaildefinition detail    detaildefinition  object  
+                        list jaxbelement stringpluslanguage   numberorcaptionortitle   detail 
+                                 getnumberorcaptionortitle jaxbelement stringpluslanguage  jaxbelement   numberorcaptionortitle    
+                            stringpluslanguage value   jaxbelement getvalue    
+                              
+                            putifvaluenotnull fields  detail gettype    value getvalue object extentdefinition    
+                        extentdefinition extentdefinition    extentdefinition  object  
+                        putpageinformation extentdefinition  fields groupelement titleinfodefinition    
+                titleinfodefinition titleinfo    titleinfodefinition  groupelement  
+                list object  titleorsubtitleorpartnumber   titleinfo gettitleorsubtitleorpartnumber object object   titleorsubtitleorpartnumber object jaxbelement    
+                        jaxbelement stringpluslanguage  element    jaxbelement stringpluslanguage   object title  equals element getname   getlocalpart       
+                            stringpluslanguage journal   element getvalue    
+                            fields put fieldname journal  journal getvalue putpageinformation extentdefinition extentdefinition  map string  fields extentdefinition gettotal putifvaluenotnull fields  fieldname pages valueof extentdefinition gettotal extentdefinition getstart putifvaluenotnull fields  fieldname pages  extentdefinition getstart   getvalue extentdefinition getend endpage   extentdefinition getend   getvalue startpage   fields get fieldname pages   
+                fields put fieldname pages  startpage    -    endpage putplaceorpublisherordate map string  fields elementname  object object    
+        optional issuancedefinition  issuancedefinition   getelement object  issuancedefinition optional placedefinition  placedefinition   getelement object  placedefinition optional datedefinition  datedefinition   getelement object  datedefinition optional stringpluslanguageplussupplied  publisheroredition   getelement object  
+                stringpluslanguageplussupplied issuancedefinition ifpresent issuance -  putifvaluenotnull fields   issuance   issuance value      
+ 
+        list places arraylist      
+        placedefinition 
+                 ifpresent place -  place getplaceterm   stream   filter placeterm -  placeterm getvalue map placetermdefinition  getvalue  foreach element -  places add element     
+        putiflistisnotempty fields  places  fieldname address         
+ 
+        datedefinition ifpresent date -  putdate fields  elementname  date    
+ 
+        publisheroredition ifpresent pubored -  putpublisheroredition fields  elementname  pubored putpublisheroredition map string  fields elementname  
+                                       stringpluslanguageplussupplied pubored publisher  equals elementname     
+            putifvaluenotnull fields  fieldname publisher  pubored getvalue edition  equals elementname     
+            putifvaluenotnull fields  fieldname edition  pubored getvalue putdate map string  fields elementname  datedefinition date date getvalue elementname dateissued   
+                      
+                    fields put fieldname year  date getvalue   substring 0  4 datecreated fields get fieldname year fields put fieldname year  date getvalue   substring 0  4    
+                      
+                    fields put  created   date getvalue datecaptured   
+                    fields put  captured   date getvalue datemodified   
+                    fields put  modified   date getvalue putiflistisnotempty map string  fields  list list key separator list isempty      
+            fields put key  joiner on separator  join list handleauthorsinnamepart namedefinition name  list authors  map string  fields    
+        list jaxbelement ?   namepartordisplayformoraffiliation   name getnamepartordisplayformoraffiliation    
+        list forename arraylist familyname author jaxbelement ?  element   namepartordisplayformoraffiliation    
+            object value   element getvalue elementname   element getname   getlocalpart value namepartdefinition    
+                namepartdefinition namepart    namepartdefinition  value type   namepart getattype type namepart getvalue authors add namepart getvalue family  equals type      namepart getvalue forename isempty       familyname isempty      
+                          
+                        author   familyname          joiner on      join forename   
+                        authors add author   
+                          
+                        forename clear forename isempty       familyname isempty      
+                        authors add familyname   
+                      
+                    familyname   namepart getvalue given  equals type      namepart getvalue forename add namepart getvalue value stringpluslanguage      affiliation  equals elementname     
+                stringpluslanguage affiliation    stringpluslanguage  value  
+                putifvaluenotnull fields   affiliation   affiliation getvalue forename isempty       familyname isempty      
+            author   familyname          joiner on      join forename   
+            authors add author trim     
+            forename clear forename isempty       familyname isempty      
+            authors add familyname trim putifvaluenotnull map string  fields modskey value value fields put modskey  value   
+          
+      
+ 
+     override getname mods   
+      
+ 
+     override fileextensions getextensions fileextensions mods  
+      
+ 
+     override getdescription importer the mods format   
+      
+ 
+ 

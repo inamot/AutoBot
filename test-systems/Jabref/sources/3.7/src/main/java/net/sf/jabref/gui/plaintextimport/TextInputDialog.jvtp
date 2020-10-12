@@ -1,0 +1,351 @@
+ 
+    
+   import plain text    simple mark copy paste bibtex entry 
+    p  
+   todo 
+   - change colors fonts 
+   - delete selected text 
+   - make textarea editable 
+   - create several bibtex entries dialog dialog works existing entry  right click menu item cancel option doesn't work well 
+    
+   content inputpane 
+   panel layout 
+   key bindings  
+   panel text import functionality 
+   textarea 
+   setup fields  required done before setting up popup menu call getallfields 
+  add listener components bring up popup menus  
+   parse freecite button not want super method handle entries panel layout 
+   border 
+   insert buttons 
+   radio buttons 
+  group radio buttons  
+   insert sub components 
+   copy paste menu 
+   right-click append override 
+   toolbar 
+   panel bibtex source code 
+  initialize some styles  
+   unselect text 
+   mark selected text used  
+   override existing entry 
+   erase old text selection 
+   delete previous styles 
+   insert new selection style 
+   memorize selection text highlighting old text bibtex tag 
+   merge old selected text 
+   insert new name additional add keyword 
+    null   txt  strings forbidden 
+   make new data bibtex source code visible 
+    
+       tries parse pasted reference freecite 
+       
+        return true successful  false otherwise remove line breaks keep empty lines  
+   otherwise result broken 
+   possible url line breaks removed completely  
+   update bibtex source view available list 
+   simple jlist renderer 
+   based advanced jlist programming developers sun com only method defined listcellrenderer reconfigure jlabel each time re called  
+            
+   value display 
+   cell index cell selected list cell focus defaultlistcellrenderer class take care jlabels text property s foreground background 
+               colors additionally set jlabels icon property here enable correct marking used values net sf jabref gui plaintextimport textinputdialog jdialog textinputdialog jabrefframe frame  bibentry bibentry frame frame   objects requirenonnull frame   
+ 
+        entry   objects requirenonnull bibentry   
+        markedtextstore tagtomarkedtextstore    
+ 
+        jbinit    
+        pack    
+        updatesourceview jbinit     
+        getcontentpane   setlayout borderlayout     
+        stringbuilder typestr stringbuilder  plain text entry gettype typestr append ' '  append localization lang append ' '  append entry gettype settitle typestr tostring     
+        getcontentpane   add panel1  borderlayout center   
+ 
+        initrawpanel    
+        initbuttonpanel    
+        initsourcepanel    
+ 
+        jtabbedpane tabbed jtabbedpane    
+ 
+        tabbed add rawpanel  localization lang  raw source     
+        tabbed add sourcepanel  localization lang  %0 source   frame getcurrentbasepanel   getbibdatabasecontext   getmode   getformattedname      
+ 
+          
+        panel1 setlayout borderlayout     
+        panel1 add tabbed  borderlayout center   
+        panel1 add buttons  borderlayout south   
+ 
+          
+        actionmap am   buttons getactionmap    
+        inputmap im   buttons getinputmap jcomponent when_in_focused_window   
+        im put globals getkeyprefs   getkey keybinding close_dialog    close    
+        am put  close abstractaction     
+ 
+             override actionperformed actionevent e    
+                dispose initrawpanel     
+        rawpanel setlayout borderlayout     
+ 
+          
+        textpane seteditable document   textpane getstyleddocument    
+        addstylestodocument document insertstring 0      document getstyle  regular badlocationexception ex    
+            logger warn  problem setting style   ex   
+ 
+          
+ 
+        overlaypanel testpanel overlaypanel textpane  localization lang  paste text here     
+ 
+        testpanel setpreferredsize dimension 450  255    
+        testpanel setmaximumsize dimension 450  integer max_value    
+ 
+          
+        fieldlist jlist   getallfields     
+        fieldlist setcellrenderer simplecellrenderer fieldlist getfont      
+        listselectionmodel listselectionmodel   fieldlist getselectionmodel    
+        listselectionmodel setselectionmode listselectionmodel single_selection   
+        listselectionmodel addlistselectionlistener fieldlistselectionhandler     
+        fieldlist addmouselistener fieldlistmouselistener     
+ 
+          
+        initpopupmenuandtoolbar    
+ 
+          
+        mouselistener popuplistener popuplistener inputmenu   
+        textpane addmouselistener popuplistener   
+        testpanel addmouselistener popuplistener   
+ 
+        jpanel leftpanel jpanel borderlayout     
+ 
+        leftpanel add toolbar  borderlayout north   
+        leftpanel add testpanel  borderlayout center   
+ 
+        jpanel inputpanel   setupfieldlistpanel    
+ 
+          
+        parsewithfreecitebutton addactionlistener event parsewithfreeciteandaddentries      
+                okpressed dispose    
+              
+            
+ 
+        rawpanel add leftpanel  borderlayout center   
+        rawpanel add inputpanel  borderlayout east   
+ 
+        jlabel desc jlabel   html  h3     localization lang  plain text h3  p   
+                  localization lang is a simple copy and paste dialog  first load or paste some text into   
+                   the text input area  br after that  you can mark text and assign it to a bibtex field    
+                     p   html     
+        desc setborder borderfactory createemptyborder 5  5  5  5    
+ 
+        rawpanel add desc  borderlayout south jpanel setupfieldlistpanel     
+        jpanel inputpanel jpanel    
+ 
+          
+        gridbaglayout gbl gridbaglayout    
+        gridbagconstraints con gridbagconstraints    
+        con weightx   0  
+        con insets insets 5  5  0  5   
+        con fill   gridbagconstraints horizontal  
+ 
+        inputpanel setlayout gbl   
+ 
+          
+        titledborder titledborder1 titledborder borderfactory createlineborder color 153  153  153   2   
+                localization lang  work options     
+        inputpanel setborder titledborder1   
+        inputpanel setminimumsize dimension 10  10    
+ 
+        jscrollpane fieldscroller jscrollpane fieldlist   
+        fieldscroller setverticalscrollbarpolicy scrollpaneconstants vertical_scrollbar_as_needed   
+ 
+          
+        insertbutton addactionlistener event -  inserttextfortag override isselected      
+ 
+          
+        append settooltiptext localization lang  append the selected text to bibtex field     
+        append setmnemonic keyevent vk_a   
+        append setselected override settooltiptext localization lang  override the bibtex field by the selected text     
+        override setmnemonic keyevent vk_o   
+        override setselected buttongroup group buttongroup    
+        group add append   
+        group add override   
+ 
+        jpanel radiopanel jpanel gridlayout 0  1    
+        radiopanel add append   
+        radiopanel add override   
+ 
+          
+        jlabel label1 jlabel localization lang  available bibtex fields     
+        con gridwidth   gridbagconstraints remainder  
+        gbl setconstraints label1  con   
+        inputpanel add label1   
+ 
+        con gridwidth   gridbagconstraints remainder  
+        con gridheight   8  
+        con weighty   1  
+        con fill   gridbagconstraints both  
+        gbl setconstraints fieldscroller  con   
+        inputpanel add fieldscroller   
+ 
+        con fill   gridbagconstraints horizontal  
+        con weighty   0  
+        con gridwidth   2  
+        gbl setconstraints radiopanel  con   
+        inputpanel add radiopanel   
+ 
+        con gridwidth   gridbagconstraints remainder  
+        gbl setconstraints insertbutton  con   
+        inputpanel add insertbutton inputpanel initpopupmenuandtoolbar     
+          
+        pasteaction pasteaction pasteaction    
+        clearaction clearaction clearaction    
+        jmenuitem pastemi jmenuitem pasteaction   
+ 
+        inputmenu add clearaction   
+        inputmenu addseparator    
+        inputmenu add pastemi   
+        inputmenu addseparator    
+ 
+          
+        jmenu appendmenu jmenu localization lang  append     
+        appendmenu settooltiptext localization lang  append the selected text to bibtex field     
+        jmenu overridemenu jmenu localization lang  override     
+        overridemenu settooltiptext localization lang  override the bibtex field by the selected text field   allfields    
+            appendmenu add jmenuitem menutextfortagaction field overridemenu add jmenuitem menutextfortagaction field inputmenu add appendmenu   
+        inputmenu add overridemenu   
+ 
+          
+ 
+        toolbar add clearaction   
+        toolbar setborderpainted toolbar addseparator    
+        toolbar add pasteaction   
+        toolbar add loadaction initbuttonpanel     
+        okbutton addactionlistener event -    
+            okpressed dispose    
+            
+        cancelbutton addactionlistener event -  dispose     
+ 
+        buttonbarbuilder bb buttonbarbuilder buttons   
+        buttons setborder borderfactory createemptyborder 2  2  2  2    
+        bb addglue    
+        bb addbutton okbutton   
+        bb addbutton parsewithfreecitebutton   
+        bb addbutton cancelbutton   
+        bb addglue initsourcepanel     
+        sourcepreview seteditable sourcepreview setfont font  monospaced   font plain  globals prefs getint jabrefpreferences font_size     
+        jscrollpane panescrollpane jscrollpane sourcepreview   
+        panescrollpane setverticalscrollbarpolicy scrollpaneconstants vertical_scrollbar_always   
+        panescrollpane setpreferredsize dimension 500  255    
+        panescrollpane setminimumsize dimension 10  10    
+ 
+        sourcepanel setlayout borderlayout     
+        sourcepanel add panescrollpane  borderlayout center addstylestodocument     
+          
+        style defaultstyle   stylecontext getdefaultstylecontext   getstyle stylecontext default_style   
+ 
+        style regularstyle   document addstyle  regular   defaultstyle   
+        styleconstants setfontfamily defaultstyle   sansserif    
+        styleconstants setfontsize defaultstyle  globals prefs getint jabrefpreferences font_size    
+ 
+        style s   document addstyle  used   regularstyle   
+        styleconstants setbold s styleconstants setforeground s  color blue   
+ 
+        s   document addstyle  marked   regularstyle   
+        styleconstants setbold s styleconstants setforeground s  color red inserttextfortag overridefield fieldname   fieldlist getselectedvalue fieldname txt   textpane getselectedtext txt selectionstart   textpane getselectionstart selectionend   textpane getselectionend    
+ 
+                  
+                textpane setselectionend selectionstart   
+ 
+                  
+                document setcharacterattributes selectionstart  selectionend - selectionstart  
+                        document getstyle  marked overridefield    
+                    entry setfield fieldname  txt   
+                      
+                    markedtextstore setstylefortag fieldname   regular   document     
+                    markedtextstore insertposition fieldname  selectionstart  selectionend markedtextstore appendposition fieldname  selectionstart  selectionend   
+ 
+                      
+                    optional old   entry getfield fieldname old ispresent internalbibtexfields getfieldproperties fieldname  contains fieldproperty person_names     
+                            entry setfield fieldname  old get       and     txt fieldname keywords equals fieldname     
+                              
+                            entry addkeyword txt  globals prefs getkeyworddelimiter entry setfield fieldname  old get     txt entry setfield fieldname  txt   
+                      
+                  
+                  
+                updatesourceview okpressed okpressed parsewithfreeciteandaddentries     
+        freeciteimporter fimp freeciteimporter globals prefs getimportformatpreferences text   textpane gettext    
+ 
+          
+          
+        text   text replace os newline concat os newline    ##newline##    
+          
+        text   text replace     concat os newline         
+        text   text replace os newline        
+        text   text replace  ##newline##   os newline   
+ 
+        parserresult importerresult   fimp importentries text importerresult haswarnings      
+            frame showmessage importerresult geterrormessage     
+          
+        list bibentry  importedentries   importerresult getdatabase   getentries importedentries isempty updatefield setautomaticfields importedentries false  globals prefs getupdatefieldpreferences markentries   entrymarker shouldmarkentries bibentry e   importedentries markentries    
+                    entrymarker markentry entry  entrymarker import_mark_level namedcompound       
+                  
+ 
+                frame getcurrentbasepanel   insertentry e updatesourceview     
+        stringwriter sw stringwriter 200 bibentrywriter latexfieldformatter globals prefs getlatexfieldformatterpreferences write entry  sw  frame getcurrentbasepanel   getbibdatabasecontext   getmode     
+            sourcepreview settext sw getbuffer   tostring ioexception ex    
+            logger error  error in entry           ex getmessage    ex   
+          
+ 
+        fieldlist clearselection getallfields     
+        optional entrytype  type   entrytypes gettype entry gettype    
+                frame getcurrentbasepanel   getbibdatabasecontext   getmode type ispresent      
+            allfields addall type get   getallfields     
+            requiredfields addall type get   getrequiredfieldsflat     
+            optionalfields addall type get   getprimaryoptionalfields field   internalbibtexfields getallpublicfieldnames allfields contains field     
+                allfields add field allfields toarray allfields size pasteaction basicaction pasteaction localization lang  paste    localization lang  paste from clipboard    
+                    icontheme jabreficon paste geticon     
+          
+ 
+         override actionperformed actionevent e data clipboardmanager   getclipboardcontents selstart   textpane getselectionstart selend   textpane getselectionend selend - selstart    0    
+                textpane replaceselection cpos   textpane getcaretposition document insertstring cpos  data  document getstyle  regular badlocationexception ex    
+                logger warn  could not paste text   ex loadaction basicaction loadaction localization lang  open    localization lang  open file    icontheme jabreficon open geticon     
+          
+ 
+         override actionperformed actionevent e filedialog dialog filedialog frame  withextension fileextensions txt   
+                dialog setdefaultextension fileextensions txt   
+                optional path  path   dialog showdialogandgetselectedfile path ispresent      
+                    file newfile   path get   tofile    
+                    document remove 0  document getlength     
+                    editorkit ekit   textpane geteditorkit ekit fileinputstream fis fileinputstream newfile     
+                            ekit read fis  document  0   
+                            document setlogicalstyle 0  document getstyle  regular badlocationexception   ioexception ex    
+                logger warn  problem reading or inserting file   ex clearaction basicaction clearaction localization lang  clear    localization lang  clear inputarea    icontheme jabreficon geticon     
+          
+ 
+         override actionperformed actionevent e    
+            textpane settext fieldlistselectionhandler listselectionlistener   
+ 
+  
+ 
+ 
+         override valuechanged listselectionevent e    
+            listselectionmodel lsm    listselectionmodel  e getsource index   lsm getanchorselectionindex index    lastindex isadjusting   e getvalueisadjusting isadjusting lastindex   -1 tag1   fieldlist getmodel   getelementat lastindex   
+                        markedtextstore setstylefortag tag1   used   document tag2   fieldlist getmodel   getelementat index   
+                    markedtextstore setstylefortag tag2   marked   document   
+ 
+                    lastindex   index simplecellrenderer defaultlistcellrenderer simplecellrenderer font normfont    
+            basefont   normfont  
+            usedfont   basefont derivefont font italic   
+          
+ 
+          
+         override component getlistcellrenderercomponent jlist ?  list  object value index iss chf getlistcellrenderercomponent list  value  index  iss  chf s   value tostring entry hasfield s setforeground color gray setfont usedfont seticon okicon settooltiptext localization lang  filled seticon needicon settooltiptext localization lang  field is missing requiredfields contains s setbackground requiredcolor optionalfields contains s setbackground optionalcolor fieldlistmouselistener mouseadapter   
+ 
+         override mouseclicked mouseevent e e getclickcount      2    
+                inserttextfortag override isselected menutextfortagaction abstractaction menutextfortagaction field overridefield field field   field overridefield   overridefield  
+          
+ 
+         override actionperformed actionevent e    
+              
+            fieldlist setselectedvalue field inserttextfortag overridefield   
+          
+      
+ 

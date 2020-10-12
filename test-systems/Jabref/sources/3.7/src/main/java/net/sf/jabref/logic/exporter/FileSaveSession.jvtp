@@ -1,0 +1,40 @@
+ 
+    
+   class used handle safe storage disk  
+    p  
+   usage  create savesession giving file save encoding whether make backup savesession provide writer store actually goes temporary file writer keeps track whether characters saved not characters not encodable  
+    p saving finished client close writer save put effect  call commit    
+   otherwise call cancel canceling temporary file simply deleted target file remains unchanged committing temporary file copied target file making backup requested target 
+   file already existed finally temporary file deleted  
+    p committing fails temporary file not deleted  
+    
+   filenames  
+   always use lock file 
+   oops lock file already existed  try wait out  
+   try save file permissions restore later default  allow everything  
+   restore file permissions net sf jabref logic exporter filesavesession savesession filesavesession charset encoding backup saveexception encoding  backup  createtemporaryfile filesavesession charset encoding backup  path temporaryfile saveexception encoding  backup  getwriterforfile encoding  temporaryfile temporaryfile   temporaryfile verifyingwriter getwriterforfile charset encoding  path file saveexception verifyingwriter files newoutputstream file   encoding ioexception e saveexception e path createtemporaryfile saveexception files createtempfile filesavesession temp_prefix  filesavesession temp_suffix ioexception e saveexception e   
+          
+      
+ 
+     override commit path file saveexception file backup    files exists file     
+            path backupfile   fileutil addextension file  backup_extension   
+            fileutil copyfile file  backupfile try filebasedlock createlockfile file filebasedlock waitforfilelock file saveexception file_locked ioexception ex    
+                logger error  error when creating lock file    ex   
+              
+ 
+              
+            set posixfilepermission  oldfilepermissions   enumset allof posixfilepermission fileutil isposixcompilant    files exists file oldfilepermissions   files getposixfilepermissions file ioexception exception    
+                    logger warn  error getting file permissions    exception   
+                  
+              
+ 
+            fileutil copyfile temporaryfile  file fileutil isposixcompilant files setposixfilepermissions file  oldfilepermissions ioexception exception saveexception exception filebasedlock deletelockfile file files deleteifexists temporaryfile ioexception e    
+            logger warn  cannot delete temporary file   e   
+          
+      
+ 
+     override cancel files deleteifexists temporaryfile ioexception e    
+            logger warn  cannot delete temporary file   e   
+          
+      
+ 

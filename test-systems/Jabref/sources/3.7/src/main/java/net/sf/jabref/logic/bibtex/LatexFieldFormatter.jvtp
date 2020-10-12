@@ -1,0 +1,107 @@
+ 
+    
+   currently only implementation net sf jabref exporter fieldformatter 
+    p  
+   obeys following settings  
+     jabrefpreferences resolve_strings_all_fields 
+     jabrefpreferences do_not_resolve_strings_for 
+     jabrefpreferences writefield_wrapfield 
+    
+    fieldname indicate field treated bibtex string  used writing database file  
+    
+       formats content field  
+       
+        param content content field 
+        param fieldname name field - used trigger different serializations  e g   turning resolution some strings 
+        return formatted string suitable output 
+        throws illegalargumentexception s not correct bibtex string  e g improperly balanced braces using # not paired 
+        
+   normalize newlines don't real new lines pseudo newlines replace win 8 1 always true multiline fields field non-standard append braces  
+   wrap write  
+   trim whitespace 
+   here assume user encloses any bibtex strings e g   
+   #jan# - #feb written file jan #   -   # feb 
+   ends loop occurrences found write out rest text throw exception check string label not empty means occurrence simply ignored instead 
+   cause error message tell     10  system exit 0   
+   resolve strings fields except some  
+   default operation only resolve strings standard fields  
+   track whether latex command some sort  
+   whitespace means command name ended  
+   perhaps beginning argument end argument simply end command altogether command body  see ended add backslash before any ampersand characters one exception inside url      command write it maybe  
+   first collect occurrences throw exception error criteria met  net sf jabref logic bibtex latexfieldformatter bibtex_string    __string latexfieldformatter latexfieldformatterpreferences prefs prefs latexfieldformatter neverfailonhashes  latexfieldformatterpreferences prefs neverfailonhashes   neverfailonhashes prefs   prefs  
+ 
+        parser fieldcontentparser prefs getfieldcontentparserpreferences latexfieldformatter buildignorehashes latexfieldformatterpreferences prefs latexfieldformatter prefs format content fieldname illegalargumentexception content field_start valueof field_end result   content shouldnormalizenewlines    result contains os newline     result contains  \n shouldnormalizenewlines    
+              
+              
+            result   result replace  \n   os newline resolvestrings   shouldresolvestrings fieldname resolvestrings formatwithoutresolvingstrings result  fieldname   
+          
+ 
+          
+        result   result trim formatandresolvestrings result  fieldname formatandresolvestrings content fieldname    
+        stringbuilder stringbuilder pivot   0 pos1 pos2  
+          
+          
+          
+          
+        checkbraces content pivot   content length gofrom   pivot  
+            pos1   pivot gofrom    pos1    
+                pos1   content indexof '#'  gofrom pos1   0      content charat pos1 - 1     '\\'     
+                    gofrom   pos1   1  
+                    pos1 gofrom   pos1 - 1 pos1    -1    
+                pos1   content length      
+                pos2   -1 pos2   content indexof '#'  pos1   1 pos2    -1 neverfailonhashes    
+                        pos1   content length illegalargumentexception  
+                                 the # character is not allowed in bibtex strings unless escaped as in '\\#' \n  
+                                           in jabref  use pairs of # characters to indicate a n  
+                                           note that the entry causing the problem has been selected pos1   pivot    
+                writetext content  pivot  pos1 pos1   content length         pos2 - 1    pos1     
+                  
+                  
+                  
+                writestringlabel content  pos1   1  pos2  pos1    pivot  
+                         pos2   1     content length pos2   -1    
+                pivot   pos2   1 pivot   pos1   1 parser format stringbuilder  fieldname shouldresolvestrings fieldname resolvestrings prefs isresolvestringsallfields exception   prefs getdonotresolvestringsfor exception equals fieldname     
+                    resolvestrings resolvestrings   internalbibtexfields isstandardfield fieldname  
+                       bibtex_string equals fieldname resolvestrings formatwithoutresolvingstrings content fieldname    
+        checkbraces content   
+ 
+        stringbuilder stringbuilder valueof field_start    
+ 
+        stringbuilder append parser format content  fieldname    
+ 
+        stringbuilder append field_end stringbuilder tostring writetext text startpos endpos    
+ 
+        stringbuilder append field_start escape incommandname incommand incommandoption nestedenvironments   0  
+        stringbuilder commandname stringbuilder c i   startpos  i   endpos  i      
+            c   text charat i character isletter c      escape    incommandname     
+                incommandname incommandoption    
+                    commandname append c character iswhitespace c      incommand    incommandoption incommandname c    ' '    
+                    incommandoption incommandoption     c    ' '     
+                      
+                    incommandoption incommandoption     c    ' '     
+                    incommandname incommand commandname delete 0  commandname length     
+                    incommandname incommand     c begin  equals commandname tostring       
+                    nestedenvironments nestedenvironments   0      end  equals commandname tostring       
+                    nestedenvironments--  
+                  
+ 
+                commandname delete 0  commandname length     
+                incommand c    ' '      escape      incommand     url  equals commandname tostring     
+                        nestedenvironments    0     
+                stringbuilder append stringbuilder append c   
+              
+            escape   c    '\\'  
+          
+        stringbuilder append field_end writestringlabel text startpos endpos first last    
+        putin  first ?        #      text substring startpos  endpos  
+                   last putin s    
+        stringbuilder append stringutil wrap s  prefs getlinelength    os newline checkbraces text illegalargumentexception   
+        list integer  left arraylist   5   
+        list integer  right arraylist   5 current   -1 current   text indexof ' '  current   1      -1    
+            left add current current   text indexof ' '  current   1      -1    
+            right add current right isempty      left isempty illegalargumentexception  ' ' character ends prematurely right isempty       right get 0    left get 0 illegalargumentexception  ' ' character ends prematurely left size      right size illegalargumentexception  braces don't match     
+          
+ 
+      
+ 
+ 

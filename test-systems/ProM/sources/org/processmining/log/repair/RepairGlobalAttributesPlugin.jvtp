@@ -1,0 +1,87 @@
+ 
+   
+   
+   
+   
+   
+   org processmining log repair repairglobalattributesplugin function xattribute  xattribute  prototype_transformer function xattribute  xattribute xattribute apply xattribute firstattr xattributeutils deriveprototype firstattr globalinfo   
+		 
+		collection xattribute  geteventattributes    
+ 
+		collection xattribute  gettraceattributes    
+		 
+	  
+ 
+	 plugin name    repair log  globals  classifiers  extensions  in place    level   pluginlevel regular  parameterlabels      event log      
+			returnlabels       returntypes       useraccessible mostsignificantresult   -1  categories     plugincategory enhancement      
+	help    repairs the event log by detecting which attributes are global  updating the information about global attributes  adding possible classifiers  and adding correct extensions to certain attributes  time timestamp  etc plug-ins changes the input event log to be able to deal with large event logs    
+	 uitopiavariant affiliation   uitopiavariant ehv  author    f  mannhardt   email    f mannhardt tue nl repairloginplace plugincontext context  xlog log    
+ 
+		context getprogress   setminimum 0   
+		context getprogress   setmaximum log size     
+		dorepairlog log   
+	  
+ 
+	 plugin name    repair log  globals  classifiers  extensions   level   pluginlevel peerreviewed  parameterlabels      event log       
+			returnlabels      repaired log with globals     returntypes     xlog useraccessible mostsignificantresult   1  categories     plugincategory enhancement      
+	help    repairs the event log by detecting which attributes are global  updating the information about global attributes  adding possible classifiers  and adding correct extensions to certain attributes  time timestamp  etc     
+	 uitopiavariant affiliation   uitopiavariant ehv  author    f  mannhardt   email    f mannhardt tue nl xlog repairlog plugincontext context  xlog log    
+ 
+		context getprogress   setminimum 0   
+		context getprogress   setmaximum log size     
+ 
+		xlog newlog    xlog  log clone    
+ 
+		dorepairlog newlog newlog  
+	  
+ 
+	 plugin name    repair log  globals  classifiers  extensions  in place    level   pluginlevel regular  parameterlabels      event log     returnlabels       returntypes       useraccessible mostsignificantresult   -1  categories     plugincategory enhancement      
+	help    repairs the event log by detecting which attributes are global  updating the information about global attributes  adding possible classifiers  and adding correct extensions to certain attributes  time timestamp  etc plug-ins changes the input event log to be able to deal with large event logs    
+	 uitopiavariant affiliation   uitopiavariant ehv  author    f  mannhardt   email    f mannhardt tue nl repairloginplaceui uiplugincontext context  xlog log    
+ 
+		context getprogress   setminimum 0   
+		context getprogress   setmaximum log size dorepairlogui context  log usercancelledexception e    
+			context getfutureresult 0  cancel plugin name    repair log  globals  classifiers  extensions   level   pluginlevel peerreviewed  parameterlabels      event log     returnlabels      repaired log with globals     returntypes     xlog useraccessible mostsignificantresult   1  categories     plugincategory enhancement      
+	help    repairs the event log by detecting which attributes are global  updating the information about global attributes  adding possible classifiers  and adding correct extensions to certain attributes  time timestamp  etc     
+	 uitopiavariant affiliation   uitopiavariant ehv  author    f  mannhardt   email    f mannhardt tue nl xlog repairlogui uiplugincontext context  xlog log    
+ 
+		context getprogress   setminimum 0   
+		context getprogress   setmaximum log size     
+ 
+		xlog newlog    xlog  log clone dorepairlogui context  newlog usercancelledexception e    
+			context getfutureresult 0  cancel newlog dorepairlogui uiplugincontext context  xlog log usercancelledexception   
+ 
+		globalinfo globals   detectglobals log set classifierattribute   immutableset 
+				 copyof promuihelper queryforobjects context  
+						 which of the following global attributes should be added as classifier?   
+						iterables transform globals geteventattributes function xattribute string apply xattribute a a getkey    
+							  
+						      
+ 
+		dorepairlog log  globals predicate xattribute apply xattribute a classifierattribute contains a getkey dorepairlog xlog log    
+		dorepairlog log  detectglobals log predicate xattribute apply xattribute a isclassifierattribute a dorepairlog xlog log  globalinfo info  predicate xattribute  useforclassifier xattribute attr   info geteventattributes useforclassifier apply attr hasclassifier attr  log getclassifiers       
+					log getclassifiers   add xeventattributeclassifier attr getkey    attr getkey attr getkey xconceptextension key_name xconceptextension key_instance log getextensions   contains xconceptextension instance       
+						log getextensions   add xconceptextension instance xtimeextension key_timestamp log getextensions   contains xtimeextension instance       
+						log getextensions   add xtimeextension instance xlifecycleextension key_model xlifecycleextension key_transition log getextensions   contains xlifecycleextension instance       
+						log getextensions   add xlifecycleextension instance xorganizationalextension key_group xorganizationalextension key_resource xorganizationalextension key_role log getextensions   contains xorganizationalextension instance       
+						log getextensions   add xorganizationalextension instance xcostextension key_amount xcostextension key_currency xcostextension key_driver xcostextension key_total xcostextension key_type log getextensions   contains xcostextension instance       
+						log getextensions   add xcostextension instance hasglobalattribute attr  log getglobaleventattributes       
+				log getglobaleventattributes   add attr xattribute attr   info gettraceattributes hasglobalattribute attr  log getglobaltraceattributes       
+				log getglobaltraceattributes   add attr hasglobalattribute xattribute attribute  list xattribute  globalattributes xattribute globalattribute   globalattributes globalattribute getkey   equals attribute getkey hasclassifier xattribute attrribute  list xeventclassifier  classifierlist xeventclassifier classifier   classifierlist key   classifier getdefiningattributekeys key equals attrribute getkey isclassifierattribute xattribute attribute attribute getkey xconceptextension key_instance xtimeextension key_timestamp xlifecycleextension key_model xlifecycleextension key_transition xcostextension key_amount xcostextension key_currency xcostextension key_driver xcostextension key_total xcostextension key_type globalinfo detectglobals xlog log    
+ 
+		set xattribute  eventattributes hashset      
+		set xattribute  traceattributes hashset listiterator xtrace  logiter   log listiterator    logiter hasnext traceindex   logiter nextindex    
+			xtrace trace   logiter next traceindex    0    
+				traceattributes addall trace getattributes   values iterator xattribute  it   traceattributes iterator it hasnext trace getattributes   containskey it next   getkey       
+						it remove listiterator xevent  eventiter   trace listiterator    eventiter hasnext eventindex   eventiter nextindex    
+				xevent event   eventiter next traceindex    0    eventindex    0    
+					eventattributes addall event getattributes   values iterator xattribute  it   eventattributes iterator it hasnext event getattributes   containskey it next   getkey       
+							it remove collection xattribute  defaulteventattributes   collections2 transform eventattributes  
+				prototype_transformer collection xattribute  defaulttraceattributes   collections2 transform traceattributes  
+				prototype_transformer globalinfo collection xattribute  geteventattributes defaulteventattributes collection xattribute  gettraceattributes defaulttraceattributes  
+			  
+ 
+		   
+	  
+ 
+ 

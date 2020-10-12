@@ -1,0 +1,111 @@
+ 
+    
+   dialog creating modifying groups  operates directly vector containing group information  
+    
+    
+        param groupsroot original set groups required undo information groups cleared  
+        
+   editors isselected radio button group change always occurs 
+   key bindings  net sf jabref gui groups autogroupdialog jdialog caretlistener jradiobutton keywords jradiobutton  
+            localization lang  generate groups from keywords in a bibtex field jcheckbox usecustomdelimiter jcheckbox  
+            localization lang  use the following delimiter character s autogroupdialog jabrefframe jabrefframe  basepanel basepanel  
+            grouptreenodeviewmodel groupsroot defaultfield defaultremove defaultdeliminator jabrefframe  localization lang  automatically create groups frame   jabrefframe  
+        panel   basepanel  
+        m_groupsroot   groupsroot  
+        field settext defaultfield   
+        remove settext defaultremove   
+        deliminator settext defaultdeliminator   
+        usecustomdelimiter setselected actionlistener oklistener   e -    
+            dispose grouptreenode autogroupsroot   grouptreenode fromgroup explicitgroup localization lang  automatically created groups    
+                                grouphierarchytype including  
+                                globals prefs getkeyworddelimiter      
+                set keywords fieldtext   field gettext   tolowercase   trim keywords isselected usecustomdelimiter isselected      
+                        keywords   groupsutil finddeliminatedwordsinfield panel getdatabase    fieldtext  
+                                deliminator gettext keywords   groupsutil findallwordsinfield panel getdatabase    fieldtext  remove gettext authors isselected      
+                    list fields arraylist   2   
+                    fields add fieldname author   
+                    keywords   groupsutil findauthorlastnames panel getdatabase    fields   
+                    fieldtext   fieldname author list fields arraylist   2   
+                    fields add fieldname editor   
+                    keywords   groupsutil findauthorlastnames panel getdatabase    fields   
+                    fieldtext   fieldname editor  
+                  
+ 
+                latextounicodeformatter formatter latextounicodeformatter keyword   keywords    
+                    keywordgroup group keywordgroup formatter format keyword   fieldtext  keyword false  
+                            grouphierarchytype independent  globals prefs getkeyworddelimiter     
+                    autogroupsroot addchild grouptreenode fromgroup group    
+                  
+ 
+                autogroupsroot moveto m_groupsroot getnode     
+                namedcompound ce namedcompound localization lang  automatically create groups     
+                undoableaddorremovegroup undo undoableaddorremovegroup m_groupsroot grouptreenodeviewmodel autogroupsroot   undoableaddorremovegroup add_node   
+                ce addedit undo   
+ 
+                panel markbasechanged      
+                frame output localization lang  created groups      
+                ce end    
+                panel getundomanager   addedit ce illegalargumentexception exception    
+                frame showmessage exception getlocalizedmessage     
+              
+           
+        remove addactionlistener oklistener   
+        field addactionlistener oklistener   
+        field addcaretlistener abstractaction cancelaction abstractaction     
+ 
+             override actionperformed actionevent e    
+                dispose    
+              
+           
+        jbutton cancel jbutton localization lang  cancel     
+        cancel addactionlistener cancelaction   
+        ok addactionlistener oklistener   
+          
+        jpanel main jpanel    
+        actionmap am   main getactionmap    
+        inputmap im   main getinputmap jcomponent when_in_focused_window   
+        im put globals getkeyprefs   getkey keybinding close_dialog    close    
+        am put  close   cancelaction   
+ 
+        buttongroup bg buttongroup    
+        bg add keywords   
+        bg add authors   
+        bg add editors   
+        keywords setselected formbuilder b   formbuilder create    
+        b layout formlayout  left 20dlu  4dlu  left pref  4dlu  fill 60dlu   
+                 p  2dlu  p  2dlu  p  2dlu  p  2dlu  p  2dlu  p     
+        b add keywords  xyw 1  1  5   
+        b add localization lang  field to group by          xy 3  3   
+        b add field  xy 5  3   
+        b add localization lang  characters to ignore          xy 3  5   
+        b add remove  xy 5  5   
+        b add usecustomdelimiter  xy 3  7   
+        b add deliminator  xy 5  7   
+        b add authors  xyw 1  9  5   
+        b add editors  xyw 1  11  5   
+        b build    
+        b border borderfactory createemptyborder 5  5  5  5    
+ 
+        jpanel opt jpanel    
+        buttonbarbuilder bb buttonbarbuilder opt   
+        bb addglue    
+        bb addbutton ok   
+        bb addbutton cancel   
+        bb addglue    
+ 
+        main setborder borderfactory createemptyborder 5  5  5  5    
+        opt setborder borderfactory createemptyborder 5  5  5  5    
+        getcontentpane   add main  borderlayout center   
+        getcontentpane   add b getpanel    borderlayout center   
+        getcontentpane   add opt  borderlayout south   
+ 
+        updatecomponents    
+        pack    
+        setlocationrelativeto frame   
+      
+ 
+     override caretupdate caretevent e    
+        updatecomponents updatecomponents groupfield   field gettext   trim    
+        ok setenabled groupfield matches  \\w      
+      
+ 

@@ -1,0 +1,62 @@
+ 
+   dispose before synchronizing avoid multiple merge windows case new conflict  net sf jabref gui shared mergesharedentrydialog mergesharedentrydialog jabrefframe jabrefframe  dbmssynchronizer dbmssynchronizer  bibentry localbibentry  
+            bibentry sharedbibentry  bibdatabasemode bibdatabasemode jabrefframe   jabrefframe dbmssynchronizer   dbmssynchronizer localbibentry   localbibentry sharedbibentry   sharedbibentry mergedialog jdialog jabrefframe  localization lang  update refused mergeentries mergeentries sharedbibentry  localbibentry  localization lang  shared entry    
+                localization lang  local entry    bibdatabasemode showmergedialog     
+ 
+        mergedialog setminimumsize dimension 600  600    
+ 
+        stringbuilder message stringbuilder    
+        message append   html     
+        message append   b     
+        message append localization lang  update could not be performed due to existing change conflicts      
+        message append    b     
+        message append   br   br      
+        message append localization lang  you are not working on the newest version of bibentry      
+        message append   br   br      
+        message append localization lang  shared version  %0 valueof sharedbibentry getsharedbibentrydata   getversion       
+        message append   br      
+        message append localization lang  local version  %0 valueof localbibentry getsharedbibentrydata   getversion       
+        message append   br   br      
+        message append localization lang  please merge the shared entry with yours and press \ merge entries\  to resolve problem      
+        message append   br      
+ 
+        jlabel mergeinnformation jlabel message tostring     
+        mergeinnformation setborder emptyborder 9  9  9  9    
+ 
+        mergedialog add mergeinnformation  borderlayout north   
+        mergedialog add mergeentries getmergeentrypanel    borderlayout center   
+ 
+        jbutton mergebutton jbutton localization lang  merge entries     
+        mergebutton addactionlistener e -  mergeentries     
+ 
+        jbutton cancelbutton jbutton localization lang  cancel     
+        cancelbutton addactionlistener e -  showconfirmationdialog     
+ 
+        jpanel buttonpanel jpanel    
+        buttonpanel add mergebutton  borderlayout west   
+        buttonpanel add cancelbutton  borderlayout east   
+ 
+        mergedialog add buttonpanel  borderlayout south   
+        mergedialog setdefaultcloseoperation windowconstants do_nothing_on_close   
+        mergedialog addwindowlistener windowadapter     
+             override windowclosing windowevent e    
+                showconfirmationdialog    
+              
+            
+ 
+        mergedialog setlocationrelativeto jabrefframe   
+        mergedialog pack    
+        mergedialog setvisible showconfirmationdialog answer   joptionpane showconfirmdialog mergedialog  
+                localization lang  canceling operation will leave your changes unsynchronized  cancel anyway?    
+                localization lang  warning    joptionpane yes_no_option answer    0    
+            mergedialog dispose mergeentries     
+        bibentry mergedbibentry   mergeentries getmergeentry    
+        mergedbibentry getsharedbibentrydata   setsharedid sharedbibentry getsharedbibentrydata   getsharedid     
+        mergedbibentry getsharedbibentrydata   setversion sharedbibentry getsharedbibentrydata   getversion     
+ 
+        mergedialog dispose      
+ 
+        dbmssynchronizer synchronizesharedentry mergedbibentry   
+        dbmssynchronizer synchronizelocaldatabase    
+      
+ 

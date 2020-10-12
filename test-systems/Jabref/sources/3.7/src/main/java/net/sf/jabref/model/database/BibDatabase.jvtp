@@ -1,0 +1,218 @@
+ bibliography database  
+    
+    
+       state attributes file contents below last entry file kept sync database  upon adding removing entry updated well  
+        
+    
+       contains entry getid current database 
+        
+    
+       returns number entries  
+        
+    
+       checks database contains entries  
+        
+    
+       returns entrysorter sorted entries base  
+       sorted given comparator  
+        
+    
+       returns whether entry given id exists  -  entry_type   hashcode   
+        
+    
+       returns set strings contains field names visible means fields not internal fields  internal fields fields starting _   
+       
+        return set fieldnames visible 
+        
+    
+       returns entry given bibtex key  
+        
+    
+       collects entries having specified bibtex key returns entries list order entries order appear database  
+       
+        param key 
+        return list entries contains given key 
+        
+    
+       inserts entry  given id not already use  
+       use util createid make up unique id entry  
+       
+        param entry bibentry insert database 
+        return false insert done without duplicate warning 
+        throws keycollisionexception thrown entry id    link bibentry#getid already  present database 
+        
+    
+       inserts entry  given id not already use  
+       use util createid make up unique id entry  
+       
+        param entry bibentry insert 
+        param eventsource source event sent return false insert done without duplicate warning 
+        
+    
+       removes given entry entry removed based id   link bibentry#id  
+        param tobedeleted entry delete 
+        
+    
+       removes given entry entry removed based id   link bibentry#id  
+       
+        param tobedeleted entry delete 
+        param eventsource source event sent sets database's preamble  
+        
+    
+       returns database's preamble preamble text consists only whitespace empty optional returned  
+        
+    
+       inserts bibtex string  
+        
+    
+       removes string given id  
+        
+    
+       returns set keys bibtexstring objects database sorted order  
+        
+    
+       returns collection bibtexstring objects database particular order  
+        
+    
+       returns string given id  
+        
+    
+       returns number strings  
+        
+    
+       check strings  
+        
+    
+       copies preamble another bibdatabase  
+       
+        param database another bibdatabase 
+        
+    
+       copies strings another bibdatabase  
+       
+        param database another bibdatabase 
+        
+    
+       returns true string given label already exists  
+        
+    
+       resolves any references strings contained field content possible  
+        
+    
+       take given collection bibentry resolve any string 
+       references  
+       
+        param entriestoresolve collection bibtexentries strings form 
+                      #xxx resolved against hash map string 
+                      references stored database  
+        param inplace inplace true given bibtexentries modified false copies bibtexentries made before resolving strings  
+        return list bibtexentries strings resolved dependent value inplace whether copies made given bibtexentries modified  
+        
+    
+       take given bibentry resolve any string references  
+       
+        param entry bibentry strings form #xxx resolved against hash map string references stored database  
+        param inplace inplace true given bibentry modified false copy made using close made before 
+                      resolving strings  
+        return bibentry string references resolved dependent value inplace whether copy made given bibtexentries modified label represents string contained database  returns string's content  resolves references strings  taking 
+       care not follow circular reference pattern string undefined  returns null  
+        
+   first check string label resolved 
+   earlier recursion circular reference stop avoid 
+   infinite recursion not  log string's id now  
+   ok found string  now must make sure resolve any references strings one  
+   finished recursing branch remove id again point string obviously not defined locally  
+   check one standard bibtex month strings used found next string ref  append text 
+   up found boundaries string ref  
+   now resolve one not resolve string  display characters removing string resolved display meaning only  
+   stripping characters signifying string label not find boundaries string ref makes impossible interpret string label append rest text finish  
+    
+        deprecated use    link bibdatabase#resolveforstrings string   
+       
+       returns text references resolved according optionally given database  
+       
+        param toresolve maybenull text resolve  
+        param database  maybenull database use resolving text  
+        return resolved text original text either text database null 
+        
+    
+       registers listener object  subscriber internal event bus following events posted  
+       
+         -   link entryaddedevent  
+         -   link entrychangedevent  
+         -   link entryremovedevent  
+       
+        param listener listener  subscriber add 
+        
+    
+       unregisters listener object  
+        param listener listener  subscriber remove 
+        
+    
+       generates sets random id globally unique  
+       
+        return generated shareddatabaseid 
+        net sf jabref model database bibdatabase bibdatabase eventbus register duplicationchecker registerlistener keychangelistener getentrycount entries size hasentries entries isempty entrysorter getsorter comparator bibentry  comp entrysorter arraylist   getentries     comp containsentrywithid id internalids contains id list bibentry  getentries collections unmodifiablelist entries set getallvisiblefields     
+        set allfields treeset bibentry e   getentries      
+            allfields addall e getfieldnames allfields stream   filter field -   internalbibtexfields isinternalfield field   
+                 collect collectors toset optional bibentry  getentrybykey key bibentry entry   entries key equals entry getcitekeyoptional   orelse optional of entry optional empty list bibentry  getentriesbykey key    
+        list bibentry  result arraylist bibentry entry   entries    
+            entry getcitekeyoptional   ifpresent entrykey key equals entrykey     
+                    result add entry result insertentry bibentry entry keycollisionexception insertentry entry  entryeventsource local insertentry bibentry entry  entryeventsource eventsource keycollisionexception   
+        objects requirenonnull entry id   entry getid containsentrywithid id keycollisionexception  id is already in use  please choose another    
+          
+ 
+        internalids add id   
+        entries add entry   
+        entry registerlistener eventbus post entryaddedevent entry  eventsource duplicationchecker isduplicatecitekeyexisting entry removeentry bibentry tobedeleted    
+        removeentry tobedeleted  entryeventsource local removeentry bibentry tobedeleted  entryeventsource eventsource    
+        objects requirenonnull tobedeleted anyremoved   entries removeif entry -  entry getid   equals tobedeleted getid anyremoved    
+            internalids remove tobedeleted getid     
+            eventbus post entryremovedevent tobedeleted  eventsource setpreamble preamble preamble   preamble optional getpreamble stringutil isblank preamble optional empty optional of preamble addstring bibtexstring keycollisionexception hasstringlabel getname keycollisionexception  a with that label already exists bibtexstrings containskey getid keycollisionexception  duplicate bibtex id     
+          
+ 
+        bibtexstrings put getid removestring id    
+        bibtexstrings remove id set getstringkeyset bibtexstrings keyset collection bibtexstring  getstringvalues bibtexstrings values bibtexstring getstring id bibtexstrings get id getstringcount bibtexstrings size hasnostrings bibtexstrings isempty copypreamble bibdatabase database    
+        setpreamble database getpreamble   orelse copystrings bibdatabase database key   database getstringkeyset      
+            bibtexstring database getstring key   
+            addstring hasstringlabel label bibtexstring value   bibtexstrings values value getname   equals label resolveforstrings content    
+        objects requirenonnull content   content resolveforstrings must not be resolvecontent content hashset list bibentry  resolveforstrings collection bibentry  entriestoresolve inplace    
+        objects requirenonnull entriestoresolve   entries must not be list bibentry  results arraylist   entriestoresolve size bibentry entry   entriestoresolve    
+            results add resolveforstrings entry  inplace results bibentry resolveforstrings bibentry entry inplace    
+ 
+        bibentry resultingentry inplace    
+            resultingentry   entry resultingentry    bibentry  entry clone map entry string  field   resultingentry getfieldmap   entryset      
+            resultingentry setfield field getkey resolveforstrings field getvalue resultingentry resolvestring label  set usedids bibtexstring bibtexstrings values getname   equalsignorecase label usedids contains getid       
+                    logger info  stopped due to circular reference in strings      label label  
+                  
+                  
+                usedids add getid result getcontent    
+                result   resolvecontent result  usedids   
+ 
+                  
+                  
+                usedids remove getid result  
+              
+          
+ 
+          
+          
+        monthutil month month   monthutil getmonthbyshortname label month isvalid month fullname resolvecontent result  set usedids res   result resolve_content_pattern matcher res  matches      
+            stringbuilder newres stringbuilder piv   0 next next   res indexof '#'  piv      0 next   0    
+                    newres append res substring piv  next stringend   res indexof '#'  next   1 stringend    0 reflabel   res substring next   1  stringend resolved   resolvestring reflabel  usedids resolved newres append res substring next  stringend   1 newres append resolved   
+                      
+                    piv   stringend   1 newres append res substring next    
+                    piv   res length piv    res length   - 1     
+                newres append res substring piv    
+              
+            res   newres tostring res  
+      
+ 
+      
+     deprecated gettext toresolve  bibdatabase database toresolve database database resolveforstrings toresolve toresolve setepilog epilog epilog   epilog getepilog epilog registerlistener object listener eventbus register listener unregisterlistener object listener eventbus unregister listener   
+      
+ 
+     subscribe relayentrychangeevent fieldchangedevent event    
+        eventbus post event optional bibentry  getreferencedentry bibentry entry entry getfield fieldname crossref  flatmap getentrybykey optional getshareddatabaseid optional ofnullable shareddatabaseid isshared getshareddatabaseid   ispresent setshareddatabaseid shareddatabaseid shareddatabaseid   shareddatabaseid clearshareddatabaseid shareddatabaseid generateshareddatabaseid shareddatabaseid biginteger 128 securerandom    tostring 32 shareddatabaseid duplicationchecker getduplicationchecker duplicationchecker  
+      
+ 

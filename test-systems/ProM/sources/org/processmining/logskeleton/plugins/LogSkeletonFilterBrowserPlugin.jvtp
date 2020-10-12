@@ -1,0 +1,184 @@
+ org processmining logskeleton plugins  
+ 
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+ 
+  
+  
+  
+  
+  
+  
+  
+  
+ 
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+ 
+  
+  
+ 
+  
+  
+ 
+ plugin name    log skeleton filter and browser   parameterlabels      event log     returnlabels      log skeleton filter and browser     returntypes     jcomponent useraccessible help    log skeleton filter and browser   
+ visualizer logskeletonfilterbrowserplugin   
+ 
+  
+  
+  
+  
+  
+  
+  
+	 
+	 uitopiavariant affiliation   uitopiavariant ehv  author    h m w  verbeek   email    h m w verbeek tue nl   
+	 pluginvariant variantlabel requiredparameterlabels     0 jcomponent run uiplugincontext context  xlog log run context  log logskeletonclassifier jcomponent run uiplugincontext context  xlog log  xeventclassifier classifier context   context log   log  
+		 
+		mainpanel jpanel size           250  tablelayoutconstants fill      tablelayoutconstants fill      
+		mainpanel setlayout tablelayout size    
+		mainpanel setopaque splitters arraylist list positivefilters hashset negativefilters hashset mainpanel add getcontrolpanel classifier    0  0    
+ 
+		update classifier   
+ 
+		provideinfo log  classifier mainpanel provideinfo xlog log  xeventclassifier classifier    
+		map set scores hashmap set double maxscore   0 xtrace trace   log    
+			set score hashset xevent event   trace    
+				score add classifier getclassidentity event scores containskey score     
+				scores put score  1 0    trace size     1 scores put score  scores get score     1 0    trace size     1 scores get score    maxscore    
+				maxscore   scores get score set count   scores keyset scores get count     maxscore    
+				system out println   logskeletonfilterbrowserplugin      maxscore          count update xeventclassifier classifier    
+		splitteralgorithm splitteralgorithm splitteralgorithm    
+		splitterparameters splitterparameters splitterparameters    
+		xlog filteredlog   log positivefilters isempty       negativefilters isempty      
+			filteredlog   filter filteredlog  classifier  positivefilters  negativefilters list splitter   splitters    
+			splitterparameters setduplicateactivity splitter get 0    
+			splitterparameters getmilestoneactivities   clear i   1  i   splitter size    i      
+				splitterparameters getmilestoneactivities   add splitter get i    
+			  
+			filteredlog   splitteralgorithm apply filteredlog  classifier  splitterparameters   
+		  
+		logskeletonbuilderalgorithm discoveryalgorithm logskeletonbuilderalgorithm    
+		context getprovidedobjectmanager   createprovidedobject xconceptextension instance   extractname filteredlog      split   filteredlog  xlog context   
+		logskeleton model   discoveryalgorithm apply filteredlog  classifier   
+		model setrequired positivefilters   
+		model setforbidden negativefilters   
+		model setsplitters splitters   
+		logskeletonbrowserplugin visualizerplugin logskeletonbrowserplugin rightpanel mainpanel remove rightpanel   
+		  
+		rightpanel   visualizerplugin run context  model   
+		mainpanel add rightpanel   1  0    
+		mainpanel validate    
+		mainpanel repaint xlog filter xlog log  xeventclassifier classifier  set positivefilters  set negativefilters    
+		xlog filteredlog   xfactoryregistry instance   currentdefault   createlog log getattributes     
+		xlog discardedlog   xfactoryregistry instance   currentdefault   createlog log getattributes xtrace trace   log ok set tomatch hashset positivefilters xevent event   trace activity   classifier getclassidentity event negativefilters contains activity     
+					ok tomatch remove activity ok    tomatch isempty      
+				filteredlog add trace discardedlog add trace   
+			  
+		  
+		context getprovidedobjectmanager   createprovidedobject xconceptextension instance   extractname filteredlog      in   filteredlog  xlog context   
+		context getprovidedobjectmanager   createprovidedobject xconceptextension instance   extractname discardedlog      out   discardedlog  xlog context filteredlog list getactivities xlog log  xeventclassifier classifier    
+		set activities hashset xtrace trace   log xevent event   trace activity   classifier getclassidentity event   
+				activities add activity   
+			  
+		  
+		list activitylist arraylist activities   
+		collections sort activitylist activitylist jcomponent getcontrolpanel xeventclassifier classifier    
+		jpanel controlpanel jpanel    
+		list activities   getactivities log  classifier size           tablelayoutconstants fill    
+				  tablelayoutconstants fill  tablelayoutconstants fill  tablelayoutconstants fill  30      
+		controlpanel setlayout tablelayout size    
+		controlpanel setopaque controlpanel setbackground widgetcolors color_list_bg   
+		controlpanel setforeground widgetcolors color_list_fg   
+ 
+		defaultlistmodel requiredactivitymodel defaultlistmodel string activity   activities    
+			requiredactivitymodel addelement activity promlist requiredactivitylist promlist required activities filter   requiredactivitymodel   
+		requiredactivitylist setselectionmode listselectionmodel multiple_interval_selection   
+		requiredactivitylist addlistselectionlistener listselectionlistener valuechanged listselectionevent e    
+				list selectedactivities   requiredactivitylist getselectedvalueslist    
+				positivefilters clear    
+				positivefilters addall selectedactivities   
+			  
+		    
+		requiredactivitylist setpreferredsize dimension 100  100    
+		controlpanel add requiredactivitylist   0  0    
+ 
+		defaultlistmodel forbiddenactivitymodel defaultlistmodel string activity   activities    
+			forbiddenactivitymodel addelement activity promlist forbiddenactivitylist promlist forbidden activities filter   
+				forbiddenactivitymodel   
+		forbiddenactivitylist setselectionmode listselectionmodel multiple_interval_selection   
+		forbiddenactivitylist addlistselectionlistener listselectionlistener valuechanged listselectionevent e    
+				list selectedactivities   forbiddenactivitylist getselectedvalueslist    
+				negativefilters clear    
+				negativefilters addall selectedactivities   
+			  
+		    
+		forbiddenactivitylist setpreferredsize dimension 100  100    
+		controlpanel add forbiddenactivitylist   0  1    
+ 
+		roundedpanel splitterpanel roundedpanel 10  5  0   
+		splitterpanel setpreferredsize dimension 100  100 splittersize         
+				  tablelayoutconstants fill  tablelayoutconstants fill    
+				  30  tablelayoutconstants fill  tablelayoutconstants fill  
+						tablelayoutconstants fill  tablelayoutconstants fill  tablelayoutconstants fill  
+						tablelayoutconstants fill  tablelayoutconstants fill  tablelayoutconstants fill  
+						tablelayoutconstants fill  tablelayoutconstants fill      
+		splitterpanel setlayout tablelayout splittersize    
+		splitterpanel setbackground widgetcolors color_enclosure_bg   
+		splitterpanel setforeground widgetcolors color_list_fg   
+ 
+		splitterpanel setopaque jlabel splitterlabel jlabel  activity splitters    
+		splitterlabel setopaque splitterlabel setforeground widgetcolors color_list_selection_fg   
+		splitterlabel setfont splitterlabel getfont   derivefont 13f    
+		splitterlabel setalignmentx component center_alignment   
+		splitterlabel sethorizontalalignment swingconstants center   
+		splitterlabel sethorizontaltextposition swingconstants center   
+ 
+		splitterpanel add splitterlabel   0  0  1  0 promtextfield inputs promtextfield 2  10 row   0  row   10  row col   0  col   2  col      
+				inputs col  row promtextfield      col    0 ?  split activity      over activity       1   col   2 row    
+				splitterpanel add inputs col  row        col           row   1    
+			  
+		  
+		controlpanel add splitterpanel   0  2 slickerbutton button slickerbutton  apply settings    
+		button addactionlistener actionlistener actionperformed actionevent e    
+				splitters arraylist list row   0  row   10  row      
+					list filter arraylist col   0  col   2  col      
+						filter add inputs col  row  gettext filter get 0  isempty       filter get 1  isempty      
+						system out println   logskeletonfilterbrowserplugin  filter added      filter   
+						splitters add filter   
+					  
+				  
+				update classifier   
+			  
+ 
+		    
+		controlpanel add button   0  3 controlpanel  
+	  
+ 
+ 

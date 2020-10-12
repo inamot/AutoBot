@@ -1,0 +1,282 @@
+ 
+   
+	    non-javadoc  
+	    
+	    see 
+	   org processmining framework plugin pluginmanager#adderrorlistener org 
+	    processmining framework plugin pluginmanagerimpl errorlistener  
+	    
+   
+	    non-javadoc  
+	    
+	    see 
+	   org processmining framework plugin pluginmanager#removeerrorlistener  
+	   org processmining framework plugin pluginmanagerimpl errorlistener  
+	    
+   
+	    non-javadoc  
+	    
+	    see 
+	   org processmining framework plugin pluginmanager#register java net url file getabsolutepath   endswith pluginmanager mcr_extension     
+  					try   
+  						loadclassfrommacro url touri    pack   
+  					  catch  dependsonunknownexception e t add url f getabsolutepath   endswith mcr_extension     
+  							try   
+  								loadclassfrommacro f touri    pack   
+  							  catch  dependsonunknownexception e    
+  								todo add dir re not going load inner classes 
+  	private string loadclassfrommacro uri macrofile  packagedescriptor pack  throws dependsonunknownexception   
+  		macroplugindescriptorimpl plugin   null  
+  		try   
+  			plugin   new macroplugindescriptorimpl new file macrofile pack   
+  			addplugin plugin   
+  		  catch  domexception e    
+  			e printstacktrace    
+  		  catch  ioexception e    
+  			e printstacktrace    
+  		  catch  saxexception e    
+  			e printstacktrace    
+  		  catch  parserconfigurationexception e    
+  			e printstacktrace    
+  		  catch  classnotfoundexception e    
+  			e printstacktrace    
+  		  catch  dependsonunknownexception e    
+  			throw e  
+  		  
+  		return plugin    null ? null   plugin getfilename    
+  	  
+    
+	   returns name class annotated any methods carries plugin annotation  
+	    
+	    param loader 
+	    param url 
+	    param classname 
+	    return 
+	    
+  isannotated    pluginclass getannotations   length   0   
+   register annotated classes 
+   check plugin annotation present 
+  t printstacktrace    
+   
+		   hv 20181130 
+		   sometimes  prom seems freeze started having updated installed packages instead freezing seems busy wait due endless loop related annotation2plunis variable  somehow loops endlessly over set map  
+		   apparently set corrupted somehow  possibly code below not reentrant  
+		   therefore ve added synchronized variable  
+		    
+  	private void addplugin macroplugindescriptorimpl pl    
+  		plugindescriptor old   plugins put pl getid    pl old    null boot verbose    level system out println  found new version plugin      pl getname           overwriting     
+  			  
+  			annotation2plugins plugin class  remove old   
+  		  
+   
+  		set plugindescriptor  pls   annotation2plugins plugin class pls    null    
+  			pls   new treeset plugindescriptor     
+  			annotation2plugins put plugin class  pls   
+  		  
+  		pls add pl   
+   
+  		checktypesafteradd pl   
+  	  
+   check least one method annotated pluginvariant 
+   check methods requiredtypes set correctly 
+   check corresponding contexts first indes 
+   required class not classpath  cannot load plugin void class equals method getreturntype       
+  			system err println  method     method togenericstring not added plugin resulttype void     
+  			return false  
+  		  
+   required class not classpath  cannot load plugin 
+   
+				   plug not meet some required threshold ignore check returned subtypes requested type 
+   check context types 
+  							   quit loop only one binding found  
+  							j   plugin getparametertypes   size    
+   
+				   plug not meet some required threshold ignore check return type index r right type 
+   check context types 
+  							   quit loop only one binding found  
+  							j   plugin getparametertypes   size    
+   
+				   plug user visible end up gui not meet some required threshold  ignore not include mustbeuservisible not visible visible not canbeuservisible org processmining framework plugin impl pluginmanagerimpl pluginmanager pluginmanagerimpl plugincontext  plugincontexttype plugincontexttype   plugincontexttype addlistener pluginmanagerlistener listener    
+		pluginmanagerlisteners add pluginmanagerlistener listener set getknownclassesannotatedwith annotation  annotationtype    
+		set set   annotatedclasses get annotationtype set collections emptyset collections unmodifiableset set removelistener pluginmanagerlistener listener    
+		pluginmanagerlisteners remove pluginmanagerlistener listener fireerror url url  throwable t classname pluginmanagerlistener listener   pluginmanagerlisteners getlisteners pluginmanagerlistener listener error url  t  classname firepluginadded plugindescriptor plugin  collection types pluginmanagerlistener listener   pluginmanagerlisteners getlisteners pluginmanagerlistener listener newplugin plugin  types initialize plugincontext  plugincontexttype pluginmanager pluginmanager pluginmanagerimpl plugincontexttype pluginmanager getinstance pluginmanager register url url  packagedescriptor pack    
+		urlclassloader loader urlclassloader url     url     
+		register url  pack  loader register url url  packagedescriptor pack  classloader loader url getprotocol   equals file_protocol file file file url touri file isdirectory      
+					scandirectory file  pack  loader file getabsolutepath   endswith jar_extension     
+					scanurl url  pack  loader urisyntaxexception e    
+				fireerror url  e scanurl url  pack  loader scandirectory file file  packagedescriptor pack  classloader loader url url   file touri   tourl    
+ 
+			queue file  todo linkedlist file     
+			filefilter filter filefilter accept file pathname pathname isdirectory      pathname getpath   endswith class_extension  
+							   pathname getpath   endswith mcr_extension     pathname getpath   endswith jar_extension   
+ 
+				  
+			   
+ 
+			todo add file todo isempty      
+				file dir   todo remove file f   dir listfiles filter f isdirectory      
+						todo add f f getabsolutepath   endswith class_extension     
+							loadclassfromfile loader  url  
+									makerelativepath file getabsolutepath    f getabsolutepath     pack f getabsolutepath   endswith jar_extension     
+							scanurl f touri   tourl    pack  loader malformedurlexception e    
+			fireerror e makerelativepath root absolutepath relative   absolutepath relative startswith root     
+			relative   relative substring root length relative startswith file separator     
+				relative   relative substring file separator length relative scanurl url url  packagedescriptor pack  classloader loader    
+ 
+		plugincacheentry cached plugincacheentry url  boot verbose  pack cached isincache classname   cached getcachedclassnames      
+				loadclass loader  url  classname  pack inputstream is   url openstream    
+				jarinputstream jis jarinputstream is   
+				jarentry je  
+				list loadedclasses arraylist je   jis getnextjarentry je isdirectory      je getname   endswith class_extension loadedclass   loadclassfromfile loader  url  je getname    pack loadedclass loadedclasses add loadedclass   
+						  
+					  
+				  
+				jis close    
+				is close    
+ 
+				cached update loadedclasses ioexception e    
+				fireerror url  e loadclassfromfile classloader loader  url url classfilename  packagedescriptor pack classfilename indexof inner_class_marker     0 loadclass loader  url  
+				classfilename substring 0  classfilename length   - class_extension length    
+						 replace url_separator  package_separator  replace file separatorchar  package_separator   
+				pack loadclass classloader loader  url url classname  packagedescriptor pack isannotated classname classname trim   equals        classname startswith  bin-test-instrument      classname equals loader getclass   getname classname   classname trim pluginclass forname classname loader pluginclass isannotationpresent keepinpromcache modifier isabstract pluginclass getmodifiers       
+				annotation   annotations   pluginclass getannotations    
+				isannotated i   0  i   annotations length  i      
+					set set   annotatedclasses get annotations i  annotationtype set set hashset annotatedclasses put annotations i  annotationtype    set   
+					  
+					set add pluginclass   
+				  
+			  
+ 
+			method   methods   pluginclass getmethods pluginclass isannotationpresent plugin isgoodplugin pluginclass  methods     
+				plugindescriptorimpl pl plugindescriptorimpl pluginclass  plugincontexttype  pack   
+				addplugin pl   
+				isannotated method method   methods method isannotationpresent plugin isgoodplugin method plugindescriptorimpl pl plugindescriptorimpl method  pack   
+						addplugin pl   
+						isannotated exception e    
+						fireerror url  e  classname boot verbose    level none    
+							system err println  error adding plugin      url         e getmessage throwable t    
+			fireerror url  t  classname boot verbose    level none    
+				system err println  error scanning plugins at      url         
+				system err println     in file      classname   
+				system err println         t getmessage isannotated     classname startswith  org processmining       
+			system err println  info classname     contains plug-ins isannotated ? classname addplugin plugindescriptorimpl pl    
+		plugindescriptorimpl old    plugindescriptorimpl  plugins put pl getid    pl annotation2plugins old boot verbose    level all    
+					system out println  found version of plugin      pl getname           overwriting annotation annotation   old getannotatedelement   getannotations      
+					annotation2plugins get annotation annotationtype    remove old annotation annotation   pl getannotatedelement   getannotations      
+				set plugindescriptor  pls   annotation2plugins get annotation annotationtype pls pls treeset plugindescriptor     
+					annotation2plugins put annotation annotationtype    pls   
+				  
+				pls add pl   
+ 
+			  
+		  
+		checktypesafteradd pl checktypesafteradd plugindescriptor pl    
+		hashset newtypes hashset list partypes   pl getparametertypes      
+			newtypes addall addknownobjecttypes partypes    
+		  
+		newtypes addall addknownobjecttypes pl getreturntypes      
+ 
+		firepluginadded pl  newtypes collection addknownobjecttypes collection types    
+		list newtypes arraylist type   types type isarray knownobjecttypes add type getcomponenttype       
+					newtypes add type getcomponenttype knownobjecttypes add type     
+				newtypes add type newtypes isgoodplugin type  method   methods isrightlyannotated type names   type getannotation plugin parameterlabels returntypes   type getannotation plugin returntypes    
+ 
+			  
+			list method  pluginmethods arraylist method  methods length method m   methods m isannotationpresent pluginvariant pluginmethods add m   
+				  
+			  
+ 
+			  
+			iterator method  it   pluginmethods iterator    
+			loop it hasnext      
+				method m   it next required   m getannotation pluginvariant requiredparameterlabels    
+				set integer  set hashset integer i   required    
+					set add i i   0      i    names length boot verbose    level none    
+							system err println  method     m tostring   
+									    could not be added as a plugin  at least one required parameter is not a valid index   
+									   there is no parameterlabel at index     i   
+						  
+						it remove loop set size      required length boot verbose    level none    
+						system err println  method     m tostring   
+								    could not be added as a plugin  some required indices are duplicated     
+					  
+					it remove    
+				  
+			  
+ 
+			  
+			it   pluginmethods iterator    
+			loop it hasnext      
+				method m   it next iscorrectplugincontexttype m boot verbose    level none    
+						system err println  method     m tostring   
+								    could not be added as a plugin  the context should be asked as first parameter and should be a the same  or a superclass of   
+								  plugincontexttype getname           
+					  
+					it remove loop  
+				  
+			  
+ 
+			it   pluginmethods iterator    
+			loop it hasnext      
+				method m   it next returntypes length   1      object isassignablefrom m getreturntype    
+						    object equals m getreturntype boot verbose    level none    
+						system err println  method     m tostring   
+								    could not be added as a plugin  the plugin should an array of objects as specified in the context     
+					  
+					it remove loop pluginmethods isempty boot verbose    level none    
+					system err println  plugin     type tostring   
+							    could not be added as a plugin  at least one variant has to be specified noclassdeffounderror e iscorrectplugincontexttype method method method getparametertypes   length    0 plugincontext isassignablefrom method getparametertypes   0 method getparametertypes   0  isassignablefrom plugincontexttype isrightlyannotated annotatedelement element element getannotation plugin returnlabels   length    element getannotation plugin returntypes   length boot verbose    level none    
+				system err println  plugin     element tostring       could not be added as a plugin  the number of types and labels not match isgoodplugin method method noclassdeffounderror isrightlyannotated method method getannotation plugin parameterlabels   length    0  
+					    method getannotation plugin parameterlabels   length    method getparametertypes   length 
+							- 1 boot verbose    level none    
+					system err println  plugin     method tostring       could not be added as a plugin  the number of  
+							    parameter labels does not match the number of parameters returntypes   method getannotation plugin returntypes returntypes length   1      object isassignablefrom method getreturntype    
+					    object equals method getreturntype boot verbose    level none    
+					system err println  method     method tostring   
+							    could not be added as a plugin  the plugin should an   
+							   array of objects as specified in the context pars   method getparametertypes iscorrectplugincontexttype method method isannotationpresent bootable boot verbose    level none    
+						system err println  method     method togenericstring   
+								    could not be added as a plugin  the first parameter has to be a   
+								   plugincontext and assignable from     plugincontexttype getname i   1  i   pars length  i type   pars i plugincontext isassignablefrom type boot verbose    level none    
+						system err println  method     method togenericstring   
+								    could not be added as a plugin  only one context can be requested i   0  i   pars length  i pars i  gettypeparameters   length   0 boot verbose    level none    
+						system err println  method     method togenericstring   
+								    could not be added as a plugin  as one of the parameters   
+								   is derived from a type using generics noclassdeffounderror e set pair integer  pluginparameterbinding   find annotation  annotation resulttype plugincontext  contexttype totalmatch orderedparameters mustbeuservisible parameters    
+ 
+		set pair integer  pluginparameterbinding   result treeset pair integer  pluginparameterbinding      
+		set plugindescriptor  pls   annotation2plugins get annotation pls result plugindescriptor plugin   pls mustbeuservisible      plugin meetsqualitythreshold       plugin meetslevelthreshold mustbeuservisible    plugin isuseraccessible i    resulttype 0   plugin getreturntypes   indexof resulttype i   0    
+					  
+					i   checkifrequestedreturntypeispresent plugin  resulttype i    0 j   0  j   plugin getparametertypes   size    j plugin getcontexttype j  isassignablefrom contexttype list pluginparameterbinding  list   pluginparameterbinding factory trytobind plugin  j  
+								totalmatch  orderedparameters  parameters pluginparameterbinding binding   list    
+ 
+							result add comparablepair integer  pluginparameterbinding  i  binding result set pair integer  pluginparameterbinding   find annotation  annotation resulttypes plugincontext  contexttype totalmatch orderedparameters mustbeuservisible parameters resulttypes resulttypes length    0 unsupportedoperationexception  
+					 cannot find plugins with empty or list of types using the find method with list input     
+		  
+ 
+		set pair integer  pluginparameterbinding   result treeset pair integer  pluginparameterbinding      
+		set plugindescriptor  pls   annotation2plugins get annotation pls result plugindescriptor plugin   pls mustbeuservisible      plugin meetsqualitythreshold       plugin meetslevelthreshold mustbeuservisible    plugin isuseraccessible      
+				list returntypes   plugin getreturntypes indices resulttypes length ok   returntypes size      indices length r   0  ok    r   resulttypes length  r resulttype   resulttypes r   
+					  
+					ok    isparameterassignable returntypes get r   resulttypes r ok j   0  j   plugin getparametertypes   size    j plugin getcontexttype j  isassignablefrom contexttype list pluginparameterbinding  list   pluginparameterbinding factory trytobind plugin  j  
+								totalmatch  orderedparameters  parameters pluginparameterbinding binding   list r   0  r   resulttypes length  r      
+								result add comparablepair integer  pluginparameterbinding  r  binding result checkifrequestedreturntypeispresent plugindescriptor plugin resulttype i   0  i   plugin getreturntypes   size    i isparameterassignable plugin getreturntypes   get i   resulttype i 1 collection plugindescriptor  find pluginname    
+		list plugindescriptor  result arraylist plugindescriptor plugindescriptor plugin   plugins values plugin getname   equals pluginname     
+				result add plugin result plugindescriptor getplugin plugindescriptorid id plugins get id plugindescriptor getplugin id map entry plugindescriptorid  plugindescriptor  entry   plugins entryset entry getkey   tostring   equals id entry getvalue set pluginparameterbinding  getpluginsacceptingatleast plugincontext  contexttype mustbeuservisible parameters    
+		set pluginparameterbinding  result treeset pluginparameterbinding pair integer  pluginparameterbinding  pair   find plugin class contexttype false  
+				mustbeuservisible  parameters     
+			result add pair getsecond result set pluginparameterbinding  getpluginsacceptinginanyorder plugincontext  contexttype mustbeuservisible parameters    
+		set pluginparameterbinding  result treeset pluginparameterbinding pair integer  pluginparameterbinding  pair   find plugin class contexttype mustbeuservisible  parameters     
+			result add pair getsecond result set pluginparameterbinding  getpluginsacceptingordered plugincontext  contexttype mustbeuservisible parameters    
+		set pluginparameterbinding  result treeset pluginparameterbinding pair integer  pluginparameterbinding  pair   find plugin class contexttype true  
+				mustbeuservisible  parameters     
+			result add pair getsecond result set pair integer  plugindescriptor   getpluginsresultingin resulttype plugincontext  contexttype mustbeuservisible    
+		set pair integer  plugindescriptor   result treeset pair integer  plugindescriptor pair integer  pluginparameterbinding  pair   find plugin resulttype  contexttype false  
+				mustbeuservisible     
+			result add comparablepair integer  plugindescriptor  pair getfirst    pair getsecond   getplugin pair integer  pluginparameterbinding  pair   find plugin resulttype  contexttype mustbeuservisible     
+			result add comparablepair integer  plugindescriptor  pair getfirst    pair getsecond   getplugin result sortedset plugindescriptor  getallpluginssorted canbeuservisible mustbeuservisible    
+		sortedset plugindescriptor  result treeset plugindescriptor plugindescriptor plugin   plugins values visible   plugin isuseraccessible mustbeuservisible      plugin meetsqualitythreshold       plugin meetslevelthreshold mustbeuservisible     visible       canbeuservisible    visible      
+				result add plugin collections unmodifiablesortedset result sortedset plugindescriptor  getallplugins getallpluginssorted sortedset plugindescriptor  getallplugins mustbevisible getallpluginssorted mustbevisible  mustbevisible isparameterassignable instancetype requestedtype requestedtype isassignablefrom instancetype requestedtype isarray      requestedtype getcomponenttype   isassignablefrom instancetype set getknownobjecttypes collections unmodifiableset knownobjecttypes   
+	  
+ 
+ 

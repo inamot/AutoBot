@@ -1,0 +1,212 @@
+ 
+    
+   ui configuration actual conversion 
+    
+    author f  mannhardt 
+   
+    
+   use originally guess format  
+   use originally guess format  
+   update content 
+   
+	    non-javadoc  
+	    
+	    see javax swing jcomponent#addnotify   
+	    
+   
+	    non-javadoc  
+	    
+	    see javax swing jcomponent#removenotify   
+	    
+   
+	    non-javadoc  
+	    
+	    see java lang autocloseable#close   
+	    org processmining log csvimport ui conversionconfigui csvconfigurationpanel autocloseable changelistenerimpl actionlistener actionperformed actionevent e    
+			updatesettings updatesettings conversionconfig setcasecolumns casecombobox getelements     
+				conversionconfig seteventnamecolumns eventcombobox getelements     
+				conversionconfig setstarttimecolumn starttimecolumncbx getselecteditem   tostring     
+				conversionconfig setcompletiontimecolumn completiontimecolumncbx getselecteditem   tostring conversionconfig getstarttimecolumn   isempty      
+					starttimeformat settext      
+					starttimeformat setenabled starttimeformat setenabled hasmanipulatedstarttime    
+						csvmapping mapping   conversionconfig getconversionmap   
+								 get conversionconfig getstarttimecolumn     
+						mapping setpattern starttimeformat gettext starttimeformat settext conversionconfig getconversionmap   
+								 get conversionconfig getstarttimecolumn    getpattern conversionconfig getcompletiontimecolumn   isempty      
+					completiontimeformat settext      
+					completiontimeformat setenabled completiontimeformat setenabled hasmanipulatedcompletiontime    
+						csvmapping mapping   conversionconfig getconversionmap   
+								 get conversionconfig getcompletiontimecolumn     
+						mapping setpattern completiontimeformat gettext completiontimeformat settext conversionconfig getconversionmap   
+								 get conversionconfig getcompletiontimecolumn    getpattern runtimeexception e    
+				promuihelper showerrormessage previewframe  e getmessage e getmessage     e tostring     error updating configuration   e   
+			  
+ 
+			previewframe refresh loadcsvrecordsworker swingworker void doinbackground exception oldline nextline i   0 nextline   reader readnext i   maxload oldline oldline length    nextline length illegalargumentexception  
+								 csv file has inconsistent number of columns  please check csv config     
+					  
+				  
+				publish nextline   
+				oldline   nextline  
+				i process list chunks    
+			previewframe addrows chunks   
+			previewframe settitle format  csv preview  %s rows - scroll down to load more    
+					previewframe getpreviewtable   getmodel   getrowcount conversionconfigui csvfile csv csvconfig importconfig  csvconversionconfig conversionconfig ioexception conversionconfig   conversionconfig  
+ 
+		reader   csv createreader importconfig   
+		headers   reader readnext    
+		headersinclempty   lists aslist     headers  toarray headers length   1    
+		changelistener changelistenerimpl    
+		updatetimer timer action_delay actionlistener actionperformed actionevent e    
+				changelistener updatesettings    
+			  
+		    
+		updatetimer setrepeats grouplayout layout grouplayout setlayout layout   
+		setmaximumsize dimension column_width   2 max_value    
+		layout setautocreatecontainergaps layout setautocreategaps jlabel standardattributeslabel   slickerfactory instance   
+				 createlabel   html  h2 mapping to standard xes attributes  h2   html     
+		jbutton showpreviewbutton slickerbutton  show expert configuration    
+		showpreviewbutton addactionlistener actionlistener actionperformed actionevent e    
+				togglepreviewframe    
+			  
+		    
+ 
+		casecombobox promlistsortablewithcombobox defaultcomboboxmodel   headers    
+		jlabel caselabel   createlabel column  optional    
+				 groups events into traces  and is mapped to 'concept name' of the trace  select one or more columns  re-order by drag   drop casecolumn   conversionconfig getcasecolumns      
+			casecombobox addelement casecolumn   
+		  
+		casecombobox getselecteditemstext   settext  selected columns     
+		casecombobox getlistmodel   addlistdatalistener listdatalistener intervalremoved listdataevent e    
+				changelistener updatesettings intervaladded listdataevent e    
+				changelistener updatesettings contentschanged listdataevent e    
+				changelistener updatesettings    
+			  
+		    
+ 
+		eventcombobox promlistsortablewithcombobox defaultcomboboxmodel   headers    
+		jlabel eventlabel   createlabel  event column  optional    
+				 mapped to 'concept name' of the event  select one or more columns  re-order by drag   drop eventcolumn   conversionconfig geteventnamecolumns      
+			eventcombobox addelement eventcolumn   
+		  
+		eventcombobox getselecteditemstext   settext  selected event columns     
+		eventcombobox getlistmodel   addlistdatalistener listdatalistener intervalremoved listdataevent e    
+				changelistener updatesettings intervaladded listdataevent e    
+				changelistener updatesettings contentschanged listdataevent e    
+				changelistener updatesettings    
+			  
+		    
+ 
+		completiontimecolumncbx promcombobox   headersinclempty   
+		completiontimecolumncbx settooltiptext  
+				 mapped to 'time timestamp' of the main event that is created each row in the csv file     
+		jlabel completiontimelabel   createlabel  completion time  optional     mapped to 'time timestamp conversionconfig getcompletiontimecolumn completiontimecolumncbx setselecteditem conversionconfig getcompletiontimecolumn completiontimecolumncbx setselecteditem      
+		  
+		completiontimecolumncbx addactionlistener actionlistener actionperformed actionevent e    
+				hasmanipulatedcompletiontime changelistener updatesettings    
+			  
+		    
+ 
+		completiontimeformat promtextfield     
+				 could not auto-detect the used date format  please provide a simpledateformat pattern conversionconfig getcompletiontimecolumn conversionconfig getcompletiontimecolumn   isempty      
+			completiontimeformat settext  
+					conversionconfig getconversionmap   get conversionconfig getcompletiontimecolumn    getpattern     
+		  
+		completiontimeformat addkeylistener keyadapter keypressed keyevent e    
+				hasmanipulatedcompletiontime update update simpledateformat completiontimeformat gettext     
+					updatetimer restart    
+					completiontimeformat gettextfield   setforeground color white illegalargumentexception e    
+					completiontimeformat gettextfield   setforeground color red   
+				  
+			  
+ 
+		    
+ 
+		starttimecolumncbx promcombobox   headersinclempty   
+		starttimecolumncbx settooltiptext  
+				  html mapped to 'time timestamp' of an extra 'start' event that is created each row in the csv file    
+						    br  in your lifecycle events such as 'start' are already separate row in the csv file  please leave empty and use the 'expert mode' to configure an appropriate mapping   html     
+		jlabel starttimelabel   createlabel  start time  optional    
+				 mapped to 'time timestamp' of a separate start event conversionconfig getstarttimecolumn starttimecolumncbx setselecteditem conversionconfig getstarttimecolumn starttimecolumncbx setselecteditem      
+		  
+		starttimecolumncbx addactionlistener actionlistener actionperformed actionevent e    
+				hasmanipulatedstarttime changelistener updatesettings    
+			  
+		    
+ 
+		starttimeformat promtextfield     
+				 could not auto-detect the used date format  please provide a simpledateformat pattern conversionconfig getstarttimecolumn conversionconfig getstarttimecolumn   isempty      
+			starttimeformat settext  
+					conversionconfig getconversionmap   get conversionconfig getstarttimecolumn    getpattern     
+		  
+ 
+		starttimeformat addkeylistener keyadapter keypressed keyevent e    
+				hasmanipulatedstarttime update update simpledateformat starttimeformat gettext     
+					updatetimer restart    
+					starttimeformat gettextfield   setforeground color white illegalargumentexception e    
+					starttimeformat gettextfield   setforeground color red   
+				  
+			  
+ 
+		    
+ 
+		sequentialgroup verticalgroup   layout createsequentialgroup    
+		verticalgroup addgroup layout createparallelgroup alignment center  addcomponent standardattributeslabel  
+				 addcomponent showpreviewbutton    
+		verticalgroup addgroup layout createparallelgroup   
+				 addgroup layout createsequentialgroup   addcomponent caselabel  addcomponent casecombobox   
+				 addgroup layout createsequentialgroup   addcomponent eventlabel  addcomponent eventcombobox     
+		verticalgroup addgroup layout createparallelgroup   
+				 addgroup layout createsequentialgroup   addcomponent starttimelabel  addcomponent starttimecolumncbx  
+						 addcomponent starttimeformat   
+				 addgroup layout createsequentialgroup   addcomponent completiontimelabel  
+						 addcomponent completiontimecolumncbx  addcomponent completiontimeformat     
+ 
+		parallelgroup horizontalgroup   layout createparallelgroup    
+		horizontalgroup addgroup  
+				layout createsequentialgroup   addcomponent standardattributeslabel  addcomponent showpreviewbutton    
+		horizontalgroup addgroup layout createsequentialgroup   
+				 addgroup layout createparallelgroup   addcomponent caselabel  column_width  column_width  column_width  
+						 addcomponent casecombobox  column_width  column_width  column_width   
+				 addgroup  
+						layout createparallelgroup   addcomponent eventlabel  column_width  column_width  column_width  
+								 addcomponent eventcombobox  column_width  column_width  column_width     
+		horizontalgroup addgroup layout createsequentialgroup   
+				 addgroup layout createparallelgroup   
+						 addcomponent starttimelabel  column_width  column_width  column_width  
+						 addcomponent starttimecolumncbx  column_width  column_width  column_width  
+						 addcomponent starttimeformat  column_width  column_width  column_width   
+				 addgroup layout createparallelgroup   
+						 addcomponent completiontimelabel  column_width  column_width  column_width  
+						 addcomponent completiontimecolumncbx  column_width  column_width  column_width  
+						 addcomponent completiontimeformat  column_width  column_width  column_width     
+ 
+		layout linksize eventlabel  caselabel   
+		layout linksize completiontimelabel  starttimelabel   
+ 
+		layout setautocreatecontainergaps layout setautocreategaps layout setverticalgroup verticalgroup   
+		layout sethorizontalgroup horizontalgroup   
+ 
+		previewframe csvpreviewframe headers  conversionconfig   
+		previewframe settitle  expert configuration   preview - scroll down to load more rows    
+		previewframe getmainscrollpane   getverticalscrollbar   addadjustmentlistener adjustmentlistener adjustmentvaluechanged adjustmentevent e maximum   e getadjustable   getmaximum current   e getvalue math abs maximum - current    1000     e getvalueisadjusting loadcsvrecordsworker   execute    
+				  
+			  
+		    
+ 
+		changelistener updatesettings togglepreviewframe previewframe isvisible      
+			previewframe showframe loadcsvrecordsworker   execute exception e    
+				joptionpane showmessagedialog error parsing csv     e getmessage     csv parsing error   
+						joptionpane error_message previewframe setvisible override addnotify addnotify    
+	  
+ 
+	  
+	 override removenotify removenotify    
+		changelistener updatesettings    
+		previewframe save    
+		previewframe setvisible csvconversionconfig getconversionconfig conversionconfig close reader close ioexception e    
+			joptionpane showmessagedialog e tostring     
+		  
+	  
+ 
+ 

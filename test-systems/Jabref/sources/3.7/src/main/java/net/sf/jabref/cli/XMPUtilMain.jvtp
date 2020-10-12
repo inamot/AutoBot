@@ -1,0 +1,83 @@
+ 
+    
+       command-line tool working xmp-data  
+       
+       read write xmp-metadata pdf file  
+       
+       usage  
+        dl  
+        dd read pdf print bibtex   dd  
+        dt xmputil pdf  dt  
+        dd read pdf print raw xmp   dd  
+        dt xmputil -x pdf  dt  
+        dd write entry bib given key pdf   dd  
+        dt xmputil key bib pdf  dt  
+        dd write entries bib pdf   dd  
+        dt xmputil bib pdf  dt  
+         dl  
+       
+        param args 
+                  command line strings passed utility  
+        throws ioexception any given files not read written  
+        throws transformerexception given bibentry malformed  
+        
+   don't forget initialize preferences 
+   read pdf write bibtex 
+   read bib write xmp 
+   read pdf write bibtex need parserresult access result getdatabase   later 
+    
+       print usage information command line tool xmputil  
+       
+        see xmputilmain#main string    
+        
+  jabref sourceforge net    net sf jabref cli xmputilmain main args ioexception  transformerexception globals prefs globals prefs   jabrefpreferences getinstance    
+          
+ 
+        xmppreferences xmppreferences   globals prefs getxmppreferences    
+        importformatpreferences importformatpreferences   globals prefs getimportformatpreferences args length 0  
+            usage 1 args 0  endswith   pdf      
+                  
+                list bibentry  l   xmputil readxmp file args 0    xmppreferences   
+ 
+                bibentrywriter bibtexentrywriter bibentrywriter latexfieldformatter globals prefs getlatexfieldformatterpreferences bibentry entry   l    
+                    stringwriter sw stringwriter    
+                    bibtexentrywriter write entry  sw  bibdatabasemode bibtex   
+                    system out println sw getbuffer args 0  endswith   bib filereader fr filereader args 0      
+                    parserresult result   bibtexparser parse fr  importformatpreferences   
+                    collection bibentry  entries   result getdatabase   getentries entries isempty      
+                        system err println  could not find bibentry in     args 0 system out println xmputil toxmp entries  result getdatabase    xmppreferences usage 2 x  equals args 0      args 1  endswith   pdf      
+                  
+                optional xmpmetadata  meta   xmputil readrawxmp file args 1 meta ispresent      
+                    xmlutil save meta get   getxmpdocument    system out  standardcharsets utf_8 name system err println  the given pdf does not contain any xmp-metadata args 0  endswith   bib      args 1  endswith   pdf      
+ 
+                bufferedreader reader bufferedreader inputstreamreader fileinputstream args 0    standardcharsets utf_8    
+                  
+                parserresult result bibtexparser importformatpreferences  parse reader   
+ 
+                collection bibentry  entries   result getdatabase   getentries entries isempty      
+                    system err println  could not find bibentry in     args 0 xmputil writexmp file args 1    entries  result getdatabase xmppreferences   
+                    system out println  xmp written usage 3 args 1  endswith   bib       args 2  endswith   pdf      
+                usage parserresult result   bibtexparser parse filereader args 1    importformatpreferences   
+ 
+            optional bibentry  bibentry   result getdatabase   getentrybykey args 0 bibentry ispresent      
+                xmputil writexmp file args 2    bibentry get    result getdatabase    xmppreferences   
+ 
+                system out println  xmp written system err println  could not find bibentry     args 0      in     args 0 usage usage     
+        system out println  read or write xmp-metadata from or to pdf file     
+        system out println      
+        system out println  usage     
+        system out println  read from pdf and print as bibtex     
+        system out println    xmputil  pdf     
+        system out println  read from pdf and print raw xmp     
+        system out println    xmputil -x  pdf     
+        system out 
+         println  write the entry in  bib  given by  key  to the pdf     
+        system out println    xmputil  key   bib   pdf     
+        system out println  write all entries in  bib  to the pdf     
+        system out println    xmputil  bib   pdf     
+        system out println      
+        system out 
+         println  to report bugs visit http   
+      
+ 
+ 

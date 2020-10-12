@@ -1,0 +1,1131 @@
+ main window application  
+    
+   frame titles sidepane manager takes care populating sidepane  
+   initialized constructor 
+   here instantiate menu toolbar actions  actions regarding currently open database defined generalaction unique command string causes appropriate 
+   basepanel's runcommand   method called command  
+   note  generalaction's constructor automatically gets translations name message strings  
+   references toggle buttons toolbar    
+  jabref org   
+  www facebook com jabref    
+  blog jabref org    
+  builds jabref org master    
+  github com jabref jabref blob master changelog md   localization menutitle  view change log    
+  github com jabref jabref   
+  github com jabref jabref wiki donations   
+  discourse jabref org action adding new entry unspecified type action closing current database leaving window open action opening preferences dialog  
+   lists containing different subsets actions different purposes 
+   update elements current base panel 
+   only bibtex 
+   close actions 
+   show toolbar visible last shutdown following state listener makes sure focus registered correct database user switches tabs  without cut paste copy operations some times occur wrong tab  
+            
+   update search autocompleter information correct database  
+   set correct enabled state back forward actions  
+  note registration apple event end initialization events happen early  ie window not initialized opened  double-clicked  documents not displayed  
+    
+       sets title main window database open macadapter calls method bib  file double-clicked finder logic done openit  even raising existing panel 
+   general info dialog macadapter calls method selected application menu  
+   reuse normal action 
+   null parameter ok code actionperformed not rely data sent event  
+   general preferences dialog macadapter calls method preferences selected application menu  
+    
+       tears down things started jabref 
+        p  
+       fixme  currently some threads remain therefore hinder jabref closed properly 
+       
+        param filenames filenames currently opened files - used storing prefs openlastedited set true 
+        
+   store divider location side pane  
+   here store names current files current file remove any 
+   previously stored filename  
+   dispose windows  even not displayed anymore 
+    
+       general info dialog macadapter calls method quit selected application menu  cmd-q pressed quit selected dock function returns boolean indicating quitting ok not  
+        p  
+       non-osx jabref calls choosing  quit menu 
+        p  
+       side effect  tears down jabref 
+       
+        return true user chose quit  false otherwise 
+        
+   ask here user really close base not saved last save user save  
+  getcurrentbasepanel   runcommand  save action either canceled unsuccessful  
+   break  
+   something prevented file being saved  break database still being saved need wait method won't return until canceled save operation done user clicked cancel  
+   drag drop tabbedpane  
+    
+       returns indexed basepanel  
+       
+        param index base 
+        
+    
+       returns list basepanel  
+       
+        
+    
+       returns currently viewed basepanel  
+        
+    
+        return basepanel count  
+        
+    
+       handle color active inactive jtabbedpane tabs 
+        
+   toggle only works correctly selected_key set false true explicitly upon start 
+   add entries open tab open tab add create new tab  
+   only add tab db not already open 
+    
+       displays string status line visible bottom jabref mainframe 
+        
+    
+       takes list object calls method setenabled depending whether action component  
+       
+        param list    list contain actions components  
+        param enabled 
+        
+    
+       enable disable actions based number open tabs  
+        p action affected set initactions method causes open basepanels set up tables 
+       anew called prefsdialog3 updates new 
+       settings action invoked without open database check one before trying invoke 
+   methods execute changes preferences want notify tabs changes avoid problems changing column set  
+   update tables  
+   db file exists 
+   remove filename 
+   set original filename  again  
+   add tab 
+   update tab titles 
+   register undo redo listener 
+    
+       creates icons disabled state jmenuitems fontbasedicons given menuelement necessary swing not generate default disabled icons font based icons  
+       
+        param menuelement menuelement disabled icons generated 
+        
+  setsize 300 500 action concerned closing window method job adding imported entries active 
+       database new one shows importinspectiondialog preferences indicate used  otherwise imports directly  
+       
+        param panel basepanel add param entries entries add  
+        param openinnew entries imported new database method shows wait cursor blocks input jframe's contents method reverts cursor normal stops blocking input jframe's contents adverse effects calling method redundantly actual blocking unblocking 
+       
+        param blocked true input blocked 
+        
+    
+       set visibility progress bar right end status line bottom frame  
+        p not called event dispatch thread method uses 
+       swingutilities invokelater actual operation edt  
+        
+    
+       sets current value progress bar  
+        p not called event dispatch thread method uses 
+       swingutilities invokelater actual operation edt  
+        
+    
+       sets indeterminate status progress bar  
+        p not called event dispatch thread method uses 
+       swingutilities invokelater actual operation edt  
+        
+    
+       sets maximum value progress bar  always call method 
+       before using progress bar set maximum value appropriate task hand  
+        p not called event dispatch thread method uses 
+       swingutilities invokelater actual operation edt  
+        
+    
+       return boolean selected entry file 
+        param selectentrylist selected entries list current base pane 
+        return true selected entry contains file  
+       false multiple entries selected selected entry doesn't contains file 
+        
+    
+       return boolean selected entry url doi 
+        param selectentrylist selected entries list current base pane 
+        return true selected entry contains url doi  
+       false multiple entries selected selected entry doesn't contains url doi 
+        
+    
+       class handling general actions  cut  copy paste focused component kept track globals focuslistener call action stored under relevant name action map instance bibtexkeypatterndialog exists  create new one 
+   bibtexkeypatterndialog allows updating content based currently selected panel 
+   nothing 
+   nothing 
+    infolabel setforeground new color 255  100  100  124    
+ 
+              setlayout new borderlayout     
+              add infolabel  borderlayout center     
+   override isopaque prevent glasspane hiding window contents  
+   empty tab without database 
+   ask user really close base not saved user save not close 
+   discard changes 
+   update tab titles 
+   create disabled icon fontbasedicons swing not automatically create one net sf jabref gui jabrefframe jframe outputprinter jlabel statuslabel jlabel  
+            localization lang  status   
+                      ' '  swingconstants left abstractaction jabrefwebpageaction openbrowseraction  https   
+            localization menutitle  website    localization lang  opens jabref's website    
+            icontheme getimage  about    icontheme getimage  about abstractaction jabreffacebookaction openbrowseraction  https   
+             facebook   localization lang  opens jabref's facebook page    
+            icontheme jabreficon facebook getsmallicon    icontheme jabreficon facebook geticon abstractaction jabrefblogaction openbrowseraction  https   
+            localization menutitle  blog    localization lang  opens jabref's blog    
+            icontheme jabreficon blog getsmallicon    icontheme jabreficon blog geticon abstractaction developmentversionaction openbrowseraction  https   
+            localization menutitle  development version    
+            localization lang  opens a link where the current development version can be downloaded abstractaction changelogaction openbrowseraction  
+             https   
+            localization lang  see what has been changed in the jabref versions abstractaction forkmeongithubaction openbrowseraction  https   
+            localization menutitle  fork me on github    localization lang  opens jabref's github page    icontheme jabreficon github getsmallicon    icontheme jabreficon github geticon abstractaction donationaction openbrowseraction  https   
+            localization menutitle  donate to jabref    localization lang  donate to jabref    icontheme jabreficon donate getsmallicon    icontheme jabreficon donate geticon abstractaction openforumaction openbrowseraction  http   
+            localization menutitle  online help forum    localization lang  online help forum    icontheme jabreficon forum getsmallicon    icontheme jabreficon forum geticon abstractaction help helpaction localization menutitle  online help    localization lang  online help    
+            helpfile contents  globals getkeyprefs   getkey keybinding help abstractaction about aboutaction localization menutitle  about jabref localization lang  about jabref    icontheme getimage  about abstractaction editentry generalaction actions edit  localization menutitle  edit entry    
+            localization lang  edit entry    globals getkeyprefs   getkey keybinding edit_entry   icontheme jabreficon edit_entry geticon abstractaction focustable generalaction actions focus_table  
+            localization menutitle  focus entry table    
+            localization lang  move the keyboard focus to the entry table    globals getkeyprefs   getkey keybinding focus_entry_table abstractaction save generalaction actions save  localization menutitle  save database    
+            localization lang  save database    globals getkeyprefs   getkey keybinding save_database   icontheme jabreficon save geticon abstractaction saveas generalaction actions save_as  
+            localization menutitle  save database as       localization lang  save database as       
+            globals getkeyprefs   getkey keybinding save_database_as abstractaction saveselectedas generalaction actions save_selected_as  
+            localization menutitle  save selected as       localization lang  save selected as abstractaction saveselectedasplain generalaction actions save_selected_as_plain  
+            localization menutitle  save selected as plain bibtex       
+            localization lang  save selected as plain bibtex abstractaction nexttab changetabaction abstractaction prevtab changetabaction abstractaction undo generalaction actions undo  localization menutitle  undo    
+            localization lang  undo    globals getkeyprefs   getkey keybinding undo   icontheme jabreficon undo geticon abstractaction redo generalaction actions redo  localization menutitle  redo    
+            localization lang  redo    globals getkeyprefs   getkey keybinding redo   icontheme jabreficon redo geticon abstractaction forward generalaction actions forward  localization menutitle  forward    
+            localization lang  forward    globals getkeyprefs   getkey keybinding forward   icontheme jabreficon right geticon abstractaction back generalaction actions back  localization menutitle  back    
+            localization lang  back    globals getkeyprefs   getkey keybinding back   icontheme jabreficon left geticon abstractaction deleteentry generalaction actions delete  localization menutitle  delete entry    
+            localization lang  delete entry    globals getkeyprefs   getkey keybinding delete_entry   icontheme jabreficon delete_entry geticon abstractaction copy editaction actions copy  localization menutitle  copy    
+            localization lang  copy    globals getkeyprefs   getkey keybinding copy   icontheme jabreficon copy geticon abstractaction paste editaction actions paste  localization menutitle  paste    
+            localization lang  paste    globals getkeyprefs   getkey keybinding paste   icontheme jabreficon paste geticon abstractaction cut editaction actions cut  localization menutitle  cut    
+            localization lang  cut    globals getkeyprefs   getkey keybinding cut   icontheme jabreficon cut geticon abstractaction openconsole generalaction actions open_console  
+            localization menutitle  open terminal here    
+            localization lang  open terminal here    
+            globals getkeyprefs   getkey keybinding open_console   
+            icontheme jabreficon console geticon abstractaction pullchangesfromshareddatabase generalaction actions pull_changes_from_shared_database  
+            localization menutitle  pull_changes_from_shared_database    
+            localization lang  pull_changes_from_shared_database    
+            globals getkeyprefs   getkey keybinding pull_changes_from_shared_database   
+            icontheme jabreficon pull geticon abstractaction mark generalaction actions mark_entries  localization menutitle  mark entries    
+            localization lang  mark entries    globals getkeyprefs   getkey keybinding mark_entries   icontheme jabreficon mark_entries geticon abstractaction unmark generalaction actions unmark_entries  
+            localization menutitle  unmark entries    localization lang  unmark entries    
+            globals getkeyprefs   getkey keybinding unmark_entries   icontheme jabreficon unmark_entries geticon abstractaction togglerelevance generalaction specialfieldvalueviewmodel specialfield relevance getvalues   get 0   getactionname specialfieldvalueviewmodel specialfield relevance getvalues   get 0   getmenustring specialfieldvalueviewmodel specialfield relevance getvalues   get 0   gettooltiptext    
+            icontheme jabreficon relevance geticon abstractaction togglequalityassured generalaction specialfieldvalueviewmodel specialfield quality getvalues   get 0   getactionname specialfieldvalueviewmodel specialfield quality getvalues   get 0   getmenustring specialfieldvalueviewmodel specialfield quality getvalues   get 0   gettooltiptext    
+            icontheme jabreficon quality_assured geticon abstractaction toggleprinted generalaction specialfieldvalueviewmodel specialfield printed getvalues   get 0   getactionname specialfieldvalueviewmodel specialfield printed getvalues   get 0   getmenustring specialfieldvalueviewmodel specialfield printed getvalues   get 0   gettooltiptext    
+            icontheme jabreficon printed geticon abstractaction normalsearch generalaction actions search  localization menutitle  search    
+            localization lang  search    globals getkeyprefs   getkey keybinding search   icontheme jabreficon search geticon abstractaction copykey generalaction actions copy_key  localization menutitle  copy bibtex key    
+            globals getkeyprefs   getkey keybinding copy_bibtex_key abstractaction copycitekey generalaction actions copy_cite_key  localization menutitle  
+             copy \\cite bibtex key     
+            globals getkeyprefs   getkey keybinding copy_cite_bibtex_key abstractaction copykeyandtitle generalaction actions copy_key_and_title  
+            localization menutitle  copy bibtex key and title    
+            globals getkeyprefs   getkey keybinding copy_bibtex_key_and_title abstractaction copykeyandlink generalaction actions copy_key_and_link  
+            localization menutitle  copy bibtex key and link    
+            globals getkeyprefs   getkey keybinding copy_bibtex_key_and_link abstractaction mergedatabaseaction generalaction actions merge_database  
+            localization menutitle  append database    
+            localization lang  append contents from a bibtex database into the currently viewed database abstractaction selectall generalaction actions select_all  localization menutitle  select all    
+            globals getkeyprefs   getkey keybinding select_all abstractaction replaceall generalaction actions replace_all  
+            localization menutitle  replace ellipses  globals getkeyprefs   getkey keybinding replace_string abstractaction editpreamble generalaction actions edit_preamble  
+            localization menutitle  edit preamble    
+            localization lang  edit preamble abstractaction editstrings generalaction actions edit_strings  
+            localization menutitle  edit strings    
+            localization lang  edit strings    
+            globals getkeyprefs   getkey keybinding edit_strings   
+            icontheme jabreficon edit_strings geticon action toggletoolbar   enabletoggle abstractaction localization menutitle  hide show toolbar      
+ 
+          
+            putvalue action short_description  localization lang  hide show toolbar     
+          
+ 
+         override actionperformed actionevent e    
+            tlb setvisible  tlb isvisible abstractaction removefromgroup generalaction actions remove_from_group  
+            localization lang  remove from group     ellipses action togglepreview   enabletoggle generalaction actions toggle_preview  
+            localization menutitle  toggle entry preview    
+            localization lang  toggle entry preview    
+            globals getkeyprefs   getkey keybinding toggle_entry_preview   
+            icontheme jabreficon toggle_entry_preview geticon action togglehighlightany   enabletoggle generalaction actions toggle_highlights_groups_matching_any  
+            localization menutitle  highlight groups matching any selected entry    
+            localization lang  highlight groups matching any selected entry action togglehighlightall   enabletoggle generalaction actions toggle_highlights_groups_matching_all  
+            localization menutitle  highlight groups matching all selected entries    
+            localization lang  highlight groups matching all selected entries action togglehighlightdisable   enabletoggle generalaction actions toggle_highlights_groups_matching_disable  
+            localization menutitle  disable highlight groups matching entries    
+            localization lang  disable highlight groups matching entries abstractaction nextpreviewstyle generalaction actions next_preview_style  
+            localization menutitle  next preview layout    
+            globals getkeyprefs   getkey keybinding next_preview_layout abstractaction previouspreviewstyle generalaction actions previous_preview_style  
+            localization menutitle  previous preview layout    
+            globals getkeyprefs   getkey keybinding previous_preview_layout abstractaction makekeyaction generalaction actions make_key  
+            localization menutitle  autogenerate bibtex keys    
+            localization lang  autogenerate bibtex keys    
+            globals getkeyprefs   getkey keybinding autogenerate_bibtex_keys   
+            icontheme jabreficon make_key geticon abstractaction writexmpaction generalaction actions write_xmp  
+            localization menutitle  write xmp-metadata to pdfs    
+            localization lang  will write xmp-metadata to the pdfs linked from selected entries     
+            globals getkeyprefs   getkey keybinding write_xmp abstractaction openfolder generalaction actions open_folder  
+            localization menutitle  open folder    localization lang  open folder    
+            globals getkeyprefs   getkey keybinding open_folder abstractaction openfile generalaction actions open_external_file  
+            localization menutitle  open file    
+            localization lang  open file    
+            globals getkeyprefs   getkey keybinding open_file   
+            icontheme jabreficon file geticon abstractaction openurl generalaction actions open_url  
+            localization menutitle  open url or doi    
+            localization lang  open url or doi    
+            globals getkeyprefs   getkey keybinding open_url_or_doi   
+            icontheme jabreficon www geticon abstractaction duplicheck generalaction actions dupli_check  
+            localization menutitle  find duplicates    icontheme jabreficon find_duplicates geticon abstractaction plaintextimport generalaction actions plain_text_import  
+            localization menutitle entry from plain text     ellipses  
+            globals getkeyprefs   getkey keybinding new_from_plain_text abstractaction exporttoclipboard generalaction actions export_to_clipboard  
+            localization menutitle  export selected entries to clipboard    
+            icontheme jabreficon export_to_clipboard geticon abstractaction autosetfile generalaction actions auto_set_file  
+            localization lang  synchronize file links     ellipses  
+            globals getkeyprefs   getkey keybinding synchronize_files abstractaction abbreviatemedline generalaction actions abbreviate_medline  
+            localization menutitle  abbreviate journal names  medline     
+            localization lang  abbreviate journal names of the selected entries  medline abbreviation abstractaction abbreviateiso generalaction actions abbreviate_iso  
+            localization menutitle  abbreviate journal names  iso     
+            localization lang  abbreviate journal names of the selected entries  iso abbreviation     
+            globals getkeyprefs   getkey keybinding abbreviate abstractaction unabbreviate generalaction actions unabbreviate  
+            localization menutitle  unabbreviate journal names    
+            localization lang  unabbreviate journal names of the selected entries    
+            globals getkeyprefs   getkey keybinding unabbreviate abstractaction cleanupentries generalaction actions cleanup  
+            localization menutitle  cleanup entries     ellipses  
+            localization lang  cleanup entries    
+            globals getkeyprefs   getkey keybinding cleanup   
+            icontheme jabreficon cleanup_entries geticon abstractaction mergeentries generalaction actions merge_entries  
+            localization menutitle  merge entries     ellipses  
+            localization lang  merge entries    
+            icontheme jabreficon merge_entries geticon abstractaction downloadfulltext generalaction actions download_full_text  
+            localization menutitle  look up full text document    
+            localization lang  follow doi or url link and to locate pdf full text document abstractaction resolveduplicatekeys generalaction actions resolve_duplicate_keys  
+            localization menutitle  resolve duplicate bibtex keys    
+            localization lang  find and remove duplicate bibtex keys    
+            globals getkeyprefs   getkey keybinding resolve_duplicate_bibtex_keys abstractaction sendasemail generalaction actions send_as_email  
+            localization lang  send as email    icontheme jabreficon email geticon generalaction findunlinkedfiles generalaction  
+            findunlinkedfilesdialog action_command  
+            findunlinkedfilesdialog action_menu_title  findunlinkedfilesdialog action_short_description  
+            globals getkeyprefs   getkey keybinding find_unlinked_files editmodeaction abstractaction editmodeaction     
+            initname initname jabrefframe getcurrentbasepanel putvalue action name  localization menutitle to %0 mode    bibtex biblatex bibdatabasemode mode   jabrefframe getcurrentbasepanel   getbibdatabasecontext   getmode modename   mode getoppositemode   getformattedname    
+                putvalue action name  localization menutitle to %0 mode   modename    
+              
+          
+ 
+         override actionperformed actionevent evt jabrefframe getcurrentbasepanel bibdatabasemode newmode   jabrefframe getcurrentbasepanel   getbibdatabasecontext   getmode   
+                     getoppositemode    
+            jabrefframe getcurrentbasepanel   getbibdatabasecontext   setmode newmode   
+            jabrefframe refreshtitleandtabs    
+ 
+            initname    
+ 
+              
+            jabrefframe getcurrentbasepanel   hidebottomcomponent    
+            jabrefframe getcurrentbasepanel   updateentryeditorifshowing jabrefframe     
+        init    
+        updateenabledstate list newentryaction  getnewentryactions     
+          
+        list newentryaction  actions arraylist entrytype type   bibtexentrytypes all    
+            keystroke keystroke changeentrytypemenu   entryshortcuts get type getname keystroke actions add newentryaction type getname actions add newentryaction type getname    keystroke actions jpopupmenu tabpopupmenu     
+        jpopupmenu popupmenu jpopupmenu    
+ 
+          
+        jmenuitem close jmenuitem localization lang  close     
+        jmenuitem closeothers jmenuitem localization lang  close others     
+        jmenuitem closeall jmenuitem localization lang  close all     
+        close addactionlistener closedatabaseaction   
+        closeothers addactionlistener closeotherdatabasesaction   
+        closeall addactionlistener closealldatabasesaction   
+        popupmenu add close   
+        popupmenu add closeothers   
+        popupmenu add closeall   
+ 
+        popupmenu addseparator    
+ 
+        jmenuitem databasepropertiesmenu jmenuitem localization lang  database properties     
+        databasepropertiesmenu addactionlistener databaseproperties   
+        popupmenu add databasepropertiesmenu   
+ 
+        jmenuitem bibtexkeypatternbtn jmenuitem localization lang  bibtex key patterns     
+        bibtexkeypatternbtn addactionlistener bibtexkeypattern   
+        popupmenu add bibtexkeypatternbtn popupmenu init     
+        tabbedpane dragdroppopuppane tabpopupmenu     
+ 
+        myglasspane glasspane myglasspane    
+        setglasspane glasspane   
+ 
+        settitle frame_title   
+        seticonimage imageicon icontheme geticonurl  jabreficon48    getimage     
+        setdefaultcloseoperation windowconstants do_nothing_on_close   
+        addwindowlistener windowadapter     
+ 
+             override windowclosing windowevent e os os_x    
+                    jabrefframe setvisible closeaction   actionperformed initsidepane    
+ 
+        initlayout    
+ 
+        initactions    
+ 
+          
+        tlb setvisible globals prefs getboolean jabrefpreferences toolbar_visible    
+ 
+        setbounds graphicsenvironment getlocalgraphicsenvironment   getmaximumwindowbounds     
+        windowlocation pw windowlocation jabrefpreferences pos_x  jabrefpreferences pos_y  jabrefpreferences size_x  
+                jabrefpreferences size_y   
+        pw displaywindowatstoredlocation    
+ 
+        tabbedpane setborder tabbedpane setforeground guiglobals inactive_tabbed_color   
+ 
+          
+        tabbedpane addchangelistener e -    
+            markactivebasepanel    
+ 
+            basepanel currentbasepanel   getcurrentbasepanel currentbasepanel searchpreferences globals prefs  isglobalsearch      
+                globalsearchbar performsearch content       
+                searchquery currentsearchquery   currentbasepanel getcurrentsearchquery currentsearchquery currentsearchquery getquery   trim   isempty      
+                    content   currentsearchquery getquery    
+                  
+                globalsearchbar setsearchterm content currentbasepanel getpreviewpanel   updatelayout    
+ 
+            groupselector gettoggleaction   setselected sidepanemanager iscomponentvisible groupselector previewtoggle setselected globals prefs getpreviewpreferences   ispreviewpanelenabled     
+            generalfetcher gettoggleaction   setselected sidepanemanager iscomponentvisible generalfetcher openofficepanel gettoggleaction   setselected sidepanemanager iscomponentvisible openofficesidepanel globals getfocuslistener   setfocused currentbasepanel getmaintable     
+            setwindowtitle    
+            editmodeaction initname    
+              
+            currentbasepanel updatesearchmanager    
+              
+            currentbasepanel setbackandforwardenabledstate    
+            currentbasepanel getundomanager   postundoredoevent    
+            currentbasepanel getmaintable   requestfocus os os_x macadapter   registermacevents exception e    
+                logger fatal  could not with mac os x methods    e refreshtitleandtabs     
+        setwindowtitle    
+        updatealltabtitles setwindowtitle     
+        basepanel panel   getcurrentbasepanel panel settitle frame_title mode   panel getbibdatabasecontext   getmode   getformattedname modeinfo format    %s    localization lang  %0 mode   mode isautosaveenabled   globals prefs getboolean jabrefpreferences local_auto_save panel getbibdatabasecontext   getlocation      databaselocation local changeflag   panel ismodified       isautosaveenabled databasefile   panel getbibdatabasecontext   getdatabasefile   map file  getpath  
+                     orelse guiglobals untitled_title   
+                settitle frame_title     -     databasefile   changeflag   modeinfo panel getbibdatabasecontext   getlocation      databaselocation shared    
+            settitle frame_title     -     panel getbibdatabasecontext   getdbmssynchronizer   getdbname          
+                      localization lang  shared           modeinfo initsidepane     
+        sidepanemanager sidepanemanager groupselector groupselector sidepanemanager   
+        openofficepanel openofficepanel sidepanemanager   
+        generalfetcher generalfetcher sidepanemanager   
+ 
+        sidepanemanager register groupselector openaction filepath    
+        file file file filepath   
+          
+        getopendatabaseaction   openfile file about     
+          
+          
+        about actionperformed showpreferencesdialog     
+        output localization lang  opening preferences prefsdialog prefsdialog preferencesdialog jabrefframe prefsdialog setlocationrelativeto jabrefframe prefsdialog setvalues    
+          
+ 
+        prefsdialog setvisible output jabrefpreferences prefs prefs teardownjabref list filenames    
+        jabrefexecutorservice instance shutdowneverything    
+ 
+        dispose    
+ 
+        prefs putboolean jabrefpreferences window_maximised  getextendedstate      frame maximized_both   
+ 
+        prefs putboolean jabrefpreferences toolbar_visible  tlb isvisible width   splitpane getdividerlocation width   0    
+            prefs putint jabrefpreferences side_pane_width  width prefs getboolean jabrefpreferences open_last_edited filenames isempty      
+                prefs remove jabrefpreferences last_edited prefs putstringlist jabrefpreferences last_edited  filenames   
+                file focuseddatabase   getcurrentbasepanel   getbibdatabasecontext   getdatabasefile   orelse lastfocusedtabpreferences prefs  setlastfocusedtab focuseddatabase   
+              
+ 
+          
+ 
+        filehistory storehistory    
+        prefs customexports store globals prefs   
+        prefs customimports store    
+        customentrytypesmanager savecustomentrytypes prefs   
+ 
+        prefs flush window window   window getwindows      
+            window dispose quit close list filenames arraylist tabbedpane gettabcount     0 i   0  i   tabbedpane gettabcount    i      
+                bibdatabasecontext context   getbasepanelat i  getbibdatabasecontext getbasepanelat i  ismodified       context getlocation      databaselocation local     
+                    tabbedpane setselectedindex i filename   context getdatabasefile   map file  getabsolutepath  orelse guiglobals untitled_title answer   showsavedialog filename answer    joptionpane cancel_option     
+                             answer    joptionpane closed_option answer    joptionpane yes_option savedatabaseaction saveaction savedatabaseaction getcurrentbasepanel     
+                            saveaction runcommand saveaction iscanceled       saveaction issuccess      
+                                  
+                                  
+                                output localization lang  unable to save database     
+                                close throwable ex    
+                              
+                              
+                            close context getlocation      databaselocation shared    
+                    context converttolocaldatabase    
+                    context getdbmssynchronizer   closeshareddatabase    
+                    context cleardbmssynchronizer    
+                  
+                autosavemanager shutdown context   
+                backupmanager shutdown context   
+                context getdatabasefile   map file  getabsolutepath  ifpresent filenames  add close i   0  i   tabbedpane gettabcount    i getbasepanelat i  issaving      
+                      
+                    waitforsaveoperation w waitforsaveoperation w show w canceled teardownjabref filenames initlayout     
+        tabbedpane putclientproperty options no_content_border_key setprogressbarvisible pushapplications pushtoapplications    
+        pushexternalbutton pushtoapplicationbutton pushapplications getapplications     
+        fillmenu    
+        createtoolbar    
+        setjmenubar mb   
+        getcontentpane   setlayout borderlayout     
+ 
+        jpanel toolbarpanel jpanel wraplayout flowlayout left    
+        toolbarpanel add tlb   
+        toolbarpanel add globalsearchbar   
+        getcontentpane   add toolbarpanel  borderlayout page_start   
+ 
+        splitpane setdividersize 2   
+        splitpane setborder splitpane setrightcomponent tabbedpane   
+        splitpane setleftcomponent sidepanemanager getpanel     
+        getcontentpane   add splitpane  borderlayout center   
+ 
+        uimanager put  tabbedpane contentborderinsets insets 0  0  0  0    
+        sidepanemanager updateview    
+ 
+        gridbaglayout gbl gridbaglayout    
+        gridbagconstraints con gridbagconstraints    
+        con fill   gridbagconstraints both  
+        con anchor   gridbagconstraints west  
+        jpanel status jpanel    
+        status setlayout gbl   
+        con weighty   0  
+        con weightx   0  
+        con gridwidth   1  
+        con insets insets 0  2  0  0   
+        gbl setconstraints statuslabel  con   
+        status add statuslabel   
+        con weightx   1  
+        con insets insets 0  4  0  0   
+        con gridwidth   1  
+        gbl setconstraints statusline  con   
+        status add statusline   
+        con weightx   0  
+        con gridwidth   gridbagconstraints remainder  
+        con insets insets 2  4  2  2   
+        gbl setconstraints progressbar  con   
+        status add progressbar   
+        statuslabel setforeground guiglobals entry_editor_label_color darker     
+        getcontentpane   add status  borderlayout page_end   
+ 
+          
+        transferhandler xfer entrytabletransferhandler null   
+        tabbedpane settransferhandler xfer   
+        tlb settransferhandler xfer   
+        mb settransferhandler xfer   
+        sidepanemanager getpanel   settransferhandler xfer basepanel getbasepanelat i basepanel  tabbedpane getcomponentat i list basepanel  getbasepanellist     
+        list basepanel  returnlist arraylist i 0  i  getbasepanelcount    i      
+            returnlist add  basepanel  tabbedpane getcomponentat i returnlist showbasepanelat i    
+        tabbedpane setselectedindex i showbasepanel basepanel bp    
+        tabbedpane setselectedcomponent bp basepanel getcurrentbasepanel tabbedpane null basepanel  tabbedpane getselectedcomponent getbasepanelcount tabbedpane getcomponentcount markactivebasepanel now   tabbedpane getselectedindex len   tabbedpane gettabcount lasttabbedpanelselectionindex   -1      lasttabbedpanelselectionindex   len     
+            tabbedpane setforegroundat lasttabbedpanelselectionindex  guiglobals inactive_tabbed_color now   -1      now   len     
+            tabbedpane setforegroundat now  guiglobals active_tabbed_color   
+          
+        lasttabbedpanelselectionindex   now gettabindex jcomponent comp i   0  i   tabbedpane gettabcount    i tabbedpane getcomponentat i     comp i 1 jtabbedpane gettabbedpane tabbedpane settabtitle jcomponent comp title tooltip index   gettabindex comp   
+        tabbedpane settitleat index  title   
+        tabbedpane settooltiptextat index  tooltip action enabletoggle action a initialvalue    
+          
+        a putvalue action selected_key valueof initialvalue a action enabletoggle action a enabletoggle a generalaction mnemonicawareaction generalaction command text command   command  
+            putvalue action name  text generalaction command text description command   command  
+            putvalue action name  text   
+            putvalue action short_description  description generalaction command text  icon icon icon command   command  
+            putvalue action name  text generalaction command text description  icon icon icon command   command  
+            putvalue action name  text   
+            putvalue action short_description  description generalaction command text  keystroke key command   command  
+            putvalue action name  text   
+            putvalue action accelerator_key  key generalaction command text description  keystroke key command   command  
+            putvalue action name  text   
+            putvalue action short_description  description   
+            putvalue action accelerator_key  key generalaction command text description  keystroke key  icon icon icon command   command  
+            putvalue action name  text   
+            putvalue action short_description  description   
+            putvalue action accelerator_key  key   
+          
+ 
+         override actionperformed actionevent e tabbedpane gettabcount     0 basepanel  tabbedpane getselectedcomponent    runcommand command throwable ex    
+                    logger error  problem with executing command      command  ex logger info  action '    command    ' must be disabled when no database is open fillmenu     
+        mb setborder jmenu file   jabrefframe submenu localization menutitle  file     
+        jmenu edit   jabrefframe submenu localization menutitle  edit     
+        jmenu search   jabrefframe submenu localization menutitle  search     
+        jmenu groups   jabrefframe submenu localization menutitle  groups     
+        jmenu bibtex   jabrefframe submenu   bibtex    
+        jmenu quality   jabrefframe submenu localization menutitle  quality     
+        jmenu view   jabrefframe submenu localization menutitle  view     
+        jmenu tools   jabrefframe submenu localization menutitle  tools     
+        jmenu options   jabrefframe submenu localization menutitle  options     
+        newspec   jabrefframe submenu localization menutitle entry by type        
+        jmenu helpmenu   jabrefframe submenu localization menutitle  help     
+ 
+        file add newbibtexdatabaseaction   
+        file add newbiblatexdatabaseaction   
+        file add getopendatabaseaction     
+        file add mergedatabaseaction   
+        file add save   
+        file add saveas   
+        file add saveall   
+        file add saveselectedas   
+        file add saveselectedasplain   
+        file addseparator    
+        file add importnew   
+        file add importcurrent   
+        file add exportall   
+        file add exportselected   
+        file addseparator    
+        file add connecttoshareddatabaseaction   
+        file add pullchangesfromshareddatabase   
+ 
+        file addseparator    
+        file add databaseproperties   
+        file add editmodeaction   
+        file addseparator    
+ 
+        file add filehistory   
+        file addseparator    
+        file add closedatabaseaction   
+        file add quit   
+        mb add file   
+ 
+        edit add undo   
+        edit add redo   
+ 
+        edit addseparator    
+ 
+        edit add cut   
+        edit add copy   
+        edit add paste   
+ 
+        edit addseparator    
+ 
+        edit add copykey   
+        edit add copycitekey   
+        edit add copykeyandtitle   
+        edit add copykeyandlink   
+        edit add exporttoclipboard   
+        edit add sendasemail   
+ 
+        edit addseparator    
+        edit add mark i   0  i   entrymarker max_marking_level  i      
+            markspecific add markentriesaction i  getmenuitem     
+          
+        edit add markspecific   
+        edit add unmark   
+        edit add unmarkall   
+        edit addseparator globals prefs getboolean jabrefpreferences specialfieldsenabled menuitem globals prefs getboolean jabrefpreferences showcolumn_ranking     
+                ranksubmenu jmenu    
+                rightclickmenu populatespecialfieldmenu ranksubmenu  specialfield ranking edit add ranksubmenu   
+                menuitem globals prefs getboolean jabrefpreferences showcolumn_relevance     
+                edit add togglerelevance   
+                menuitem globals prefs getboolean jabrefpreferences showcolumn_quality     
+                edit add togglequalityassured   
+                menuitem globals prefs getboolean jabrefpreferences showcolumn_priority     
+                ranksubmenu jmenu    
+                rightclickmenu populatespecialfieldmenu ranksubmenu  specialfield priority edit add ranksubmenu   
+                menuitem globals prefs getboolean jabrefpreferences showcolumn_printed     
+                edit add toggleprinted   
+                menuitem globals prefs getboolean jabrefpreferences showcolumn_read     
+                ranksubmenu jmenu    
+                rightclickmenu populatespecialfieldmenu ranksubmenu  specialfield read_status edit add ranksubmenu   
+                menuitem menuitem    
+                edit addseparator    
+              
+          
+ 
+        edit add getmanagekeywords     
+        edit add getmasssetfield     
+        edit addseparator    
+        edit add selectall   
+        mb add edit   
+ 
+        search add normalsearch   
+        search add replaceall   
+        search addseparator    
+        search add jcheckboxmenuitem generalfetcher gettoggleaction prefs getboolean jabrefpreferences web_search_visible     
+            sidepanemanager register generalfetcher   
+            sidepanemanager show generalfetcher mb add search   
+ 
+        groups add jcheckboxmenuitem groupselector gettoggleaction prefs getboolean jabrefpreferences group_sidepane_visible     
+            sidepanemanager register groupselector   
+            sidepanemanager show groupselector groups addseparator    
+        groups add addtogroup   
+        groups add removefromgroup   
+        groups add movetogroup   
+        groups addseparator    
+        jradiobuttonmenuitem togglehighlightanyitem jradiobuttonmenuitem togglehighlightany   
+        groups add togglehighlightanyitem   
+        jradiobuttonmenuitem togglehighlightallitem jradiobuttonmenuitem togglehighlightall   
+        groups add togglehighlightallitem   
+        jradiobuttonmenuitem togglehighlightdisableitem jradiobuttonmenuitem togglehighlightdisable   
+        groups add togglehighlightdisableitem   
+        buttongroup highlightbuttongroup buttongroup    
+        highlightbuttongroup add togglehighlightdisableitem   
+        highlightbuttongroup add togglehighlightanyitem   
+        highlightbuttongroup add togglehighlightallitem   
+ 
+        highlightmatchinggrouppreferences highlightmatchinggrouppreferences highlightmatchinggrouppreferences  
+                globals prefs highlightmatchinggrouppreferences isall      
+            togglehighlightallitem setselected highlightmatchinggrouppreferences isany      
+            togglehighlightanyitem setselected togglehighlightdisableitem setselected mb add groups   
+ 
+        view add getbackaction     
+        view add getforwardaction     
+        view add focustable   
+        view add nexttab   
+        view add prevtab   
+        view add sorttabs   
+        view addseparator    
+        view add increasefontsize   
+        view add decresefontsize   
+        view addseparator    
+        view add jcheckboxmenuitem toggletoolbar    
+        view add jcheckboxmenuitem enabletoggle generalfetcher gettoggleaction       
+        view add jcheckboxmenuitem groupselector gettoggleaction      
+        view add jcheckboxmenuitem togglepreview    
+        view add getnextpreviewstyleaction     
+        view add getpreviouspreviewstyleaction     
+ 
+        mb add view   
+ 
+        bibtex add newentryaction newentryaction a   newspecificentryaction    
+            newspec add a   
+          
+        bibtex add newspec   
+ 
+        bibtex add plaintextimport   
+        bibtex addseparator    
+        bibtex add editentry   
+        bibtex add editpreamble   
+        bibtex add editstrings   
+        bibtex addseparator    
+        bibtex add customizeaction   
+        bibtex addseparator    
+        bibtex add deleteentry   
+        mb add bibtex   
+ 
+        quality add duplicheck   
+        quality add mergeentries   
+        quality addseparator    
+        quality add resolveduplicatekeys   
+        quality add checkintegrity   
+        quality add cleanupentries   
+        quality add masssetfield   
+        quality add makekeyaction   
+        quality addseparator    
+        quality add autosetfile   
+        quality add findunlinkedfiles   
+        quality add autolinkfile   
+        quality add downloadfulltext   
+        mb add quality   
+ 
+        tools add newsubdatabaseaction   
+        tools add writexmpaction   
+        tools add jcheckboxmenuitem openofficepanel gettoggleaction      
+        tools add pushexternalbutton getmenuaction     
+        tools addseparator    
+        tools add openfolder   
+        tools add openfile   
+        tools add openurl   
+        tools add openconsole   
+        tools addseparator    
+        tools add abbreviateiso   
+        tools add abbreviatemedline   
+        tools add unabbreviate   
+        mb add tools   
+ 
+        options add showprefs   
+ 
+        abstractaction genfieldscustomization genfieldscustomizationaction    
+        abstractaction protectterms protectedtermsaction    
+        options add genfieldscustomization   
+        options add customexpaction   
+        options add customimpaction   
+        options add customfiletypesaction   
+        options add managejournals   
+        options add protectterms   
+        options add selectkeys   
+        mb add options   
+ 
+        helpmenu add help   
+        helpmenu add openforumaction   
+        helpmenu addseparator    
+        helpmenu add errorconsole   
+        helpmenu addseparator    
+        helpmenu add searchforupdateaction     
+        jmenu webmenu   jabrefframe submenu localization menutitle  jabref resources     
+        webmenu add jabrefwebpageaction   
+        webmenu add jabrefblogaction   
+        webmenu add jabreffacebookaction   
+        webmenu addseparator    
+        webmenu add forkmeongithubaction   
+        webmenu add developmentversionaction   
+        webmenu add changelogaction   
+        webmenu addseparator    
+        webmenu add donationaction   
+        helpmenu add webmenu   
+        helpmenu add about   
+        mb add helpmenu   
+ 
+        createdisablediconsformenuentries mb jmenu submenu name i   name indexof ' '   
+        jmenu res i    0    
+            res jmenu name substring 0  i    name substring i   1 mnemonic   character touppercase name charat i   1    
+            res setmnemonic mnemonic res jmenu name res addparserresult parserresult pr focuspanel pr toopentab      
+              
+            basepanel panel   getcurrentbasepanel panel addtab pr getdatabasecontext    focuspanel list bibentry  entries arraylist   pr getdatabase   getentries     
+                addimportedentries panel  entries optional basepanel  panel   getbasepanellist   stream   
+                     filter p -  p getbibdatabasecontext   getdatabasefile   equals pr getfile     findfirst panel ispresent      
+                tabbedpane setselectedcomponent panel get addtab pr getdatabasecontext    focuspanel createtoolbar     
+        tlb putclientproperty options header_style_key  headerstyle both   
+        tlb setborder tlb setrollover tlb setfloatable globals prefs getboolean jabrefpreferences biblatex_default_mode     
+            tlb addaction newbiblatexdatabaseaction tlb addaction newbibtexdatabaseaction   
+          
+        tlb addaction getopendatabaseaction     
+        tlb addaction save   
+        tlb addaction saveall   
+ 
+        tlb addseparator    
+        tlb addaction cut   
+        tlb addaction copy   
+        tlb addaction paste   
+        tlb addaction undo   
+        tlb addaction redo   
+ 
+        tlb addseparator    
+        tlb addaction getbackaction     
+        tlb addaction getforwardaction     
+        tlb addseparator    
+        tlb addaction newentryaction   
+        tlb addaction editentry   
+        tlb addaction editstrings   
+        tlb addaction deleteentry   
+        tlb addseparator    
+        tlb addaction makekeyaction   
+        tlb addaction cleanupentries   
+        tlb addaction mergeentries   
+        tlb addaction pullchangesfromshareddatabase   
+        tlb addaction openconsole   
+ 
+        tlb addseparator    
+        tlb addaction mark   
+        tlb addaction unmark globals prefs getboolean jabrefpreferences specialfieldsenabled globals prefs getboolean jabrefpreferences showcolumn_ranking     
+                jbutton button   specialfielddropdown 
+                         generatespecialfieldbuttonwithdropdown specialfield ranking tlb add button   
+                specialfieldbuttons add button globals prefs getboolean jabrefpreferences showcolumn_relevance     
+                tlb addaction togglerelevance globals prefs getboolean jabrefpreferences showcolumn_quality     
+                tlb addaction togglequalityassured globals prefs getboolean jabrefpreferences showcolumn_priority     
+                jbutton button   specialfielddropdown 
+                         generatespecialfieldbuttonwithdropdown specialfield priority tlb add button   
+                specialfieldbuttons add button globals prefs getboolean jabrefpreferences showcolumn_printed     
+                tlb addaction toggleprinted globals prefs getboolean jabrefpreferences showcolumn_read     
+                jbutton button   specialfielddropdown 
+                         generatespecialfieldbuttonwithdropdown specialfield read_status tlb add button   
+                specialfieldbuttons add button   
+              
+          
+        tlb addseparator    
+ 
+        tlb addjtogglebutton jtogglebutton generalfetcher gettoggleaction      
+ 
+        previewtoggle jtogglebutton togglepreview   
+        tlb addjtogglebutton previewtoggle   
+ 
+        tlb addjtogglebutton jtogglebutton groupselector gettoggleaction      
+ 
+        tlb addseparator    
+ 
+        tlb add pushexternalbutton getcomponent     
+        tlb addseparator    
+        tlb add donationaction   
+        tlb add forkmeongithubaction   
+ 
+        createdisablediconsforbuttons tlb output s    
+        swingutilities invokelater    -    
+            statusline settext s   
+            statusline repaint initactions     
+        opendatabaseonlyactions clear    
+        opendatabaseonlyactions addall arrays aslist mergedatabaseaction  newsubdatabaseaction  save  
+                saveas  saveselectedas  saveselectedasplain  editmodeaction  undo  redo  cut  deleteentry  copy  paste  mark  markspecific  unmark  
+                unmarkall  ranksubmenu  editentry  selectall  copykey  copycitekey  copykeyandtitle  copykeyandlink  editpreamble  editstrings  
+                groupselector gettoggleaction    makekeyaction  normalsearch  generalfetcher gettoggleaction    mergeentries  cleanupentries  exporttoclipboard  replaceall  
+                sendasemail  downloadfulltext  writexmpaction  openofficepanel gettoggleaction    findunlinkedfiles  addtogroup  removefromgroup  
+                movetogroup  autolinkfile  resolveduplicatekeys  openurl  openfolder  openfile  togglepreview  
+                duplicheck  autosetfile  newentryaction  newspec  customizeaction  plaintextimport  getmasssetfield    getmanagekeywords    
+                pushexternalbutton getmenuaction    closedatabaseaction  getnextpreviewstyleaction    getpreviouspreviewstyleaction    checkintegrity  
+                togglehighlightany  togglehighlightall  togglehighlightdisable  databaseproperties  abbreviateiso  abbreviatemedline  
+                unabbreviate  exportall  exportselected  importcurrent  saveall  focustable  increasefontsize  decresefontsize  
+                togglerelevance  togglequalityassured  toggleprinted  pushexternalbutton getcomponent      
+ 
+        opendatabaseonlyactions addall newspecificentryaction   
+ 
+        opendatabaseonlyactions addall specialfieldbuttons   
+ 
+        severaldatabasesonlyactions clear    
+        severaldatabasesonlyactions addall arrays 
+                 aslist nexttab  prevtab  sorttabs    
+ 
+        openandsaveddatabasesonlyactions addall collections singletonlist openconsole    
+        shareddatabaseonlyactions addall collections singletonlist pullchangesfromshareddatabase    
+        noshareddatabaseactions addall arrays aslist save  saveall    
+ 
+        oneentryonlyactions clear    
+        oneentryonlyactions addall arrays aslist editentry    
+ 
+        oneentrywithfileonlyactions clear    
+        oneentrywithfileonlyactions addall arrays aslist openfolder  openfile    
+ 
+        oneentrywithurlordoionlyactions clear    
+        oneentrywithurlordoionlyactions addall arrays aslist openurl    
+ 
+        twoentriesonlyactions clear    
+        twoentriesonlyactions addall arrays aslist mergeentries    
+ 
+        tabbedpane addchangelistener event -  updateenabledstate setenabled list object  list enabled object actionorcomponent   list actionorcomponent action    
+                  action  actionorcomponent  setenabled enabled actionorcomponent component    
+                  component  actionorcomponent  setenabled enabled actionorcomponent jpanel    
+                    jpanel root    jpanel  actionorcomponent index   0  index   root getcomponentcount    index      
+                        root getcomponent index  setenabled enabled updateenabledstate tabcount   tabbedpane gettabcount tabcount    previoustabcount    
+            previoustabcount   tabcount  
+            setenabled opendatabaseonlyactions  tabcount   0   
+            setenabled severaldatabasesonlyactions  tabcount   1 tabcount    0    
+            getbackaction   setenabled getforwardaction   setenabled setenabled openandsaveddatabasesonlyactions setenabled shareddatabaseonlyactions tabcount   0    
+            basepanel current   getcurrentbasepanel saved   current getbibdatabasecontext   getdatabasefile   ispresent    
+            setenabled openandsaveddatabasesonlyactions  saved isshared   current getbibdatabasecontext   getlocation      databaselocation shared  
+            setenabled shareddatabaseonlyactions  isshared   
+            setenabled noshareddatabaseactions   isshared oneentryselected   current getselectedentries   size      1  
+            setenabled oneentryonlyactions  oneentryselected   
+            setenabled oneentrywithfileonlyactions  isexistfile current getselectedentries      
+            setenabled oneentrywithurlordoionlyactions  isexisturlordoi current getselectedentries twoentriesselected   current getselectedentries   size      2  
+            setenabled twoentriesonlyactions  twoentriesselected setupalltables i   0  i   tabbedpane gettabcount    i      
+            basepanel bf   getbasepanelat i bf getdatabase bf setupmainpanel list collectdatabasefilepaths     
+        list dbpaths arraylist   getbasepanelcount basepanel basepanel   getbasepanellist basepanel getbibdatabasecontext   getdatabasefile   ispresent      
+                    dbpaths add basepanel getbibdatabasecontext   getdatabasefile   get   getcanonicalpath dbpaths add ioexception ex    
+                logger error  invalid database file path      ex getmessage dbpaths list getuniquepathparts     
+        list dbpaths   collectdatabasefilepaths fileutil uniquepathsubstrings dbpaths updatealltabtitles     
+        list paths   getuniquepathparts i   0  i   getbasepanelcount    i uniqpath   paths get i   
+            optional file  file   getbasepanelat i  getbibdatabasecontext   getdatabasefile file ispresent uniqpath equals file get   getname       
+                      
+                    uniqpath   uniqpath substring 0  uniqpath lastindexof file separator    
+                    tabbedpane settitleat i  getbasepanelat i  gettabtitle       \u2014     uniqpath tabbedpane settitleat i  getbasepanelat i  gettabtitle tabbedpane settitleat i  getbasepanelat i  gettabtitle     
+              
+            tabbedpane settooltiptextat i  file map file  getabsolutepath  orelse addtab basepanel basepanel raisepanel    
+          
+        tabbedpane add basepanel gettabtitle    basepanel   
+ 
+          
+        updatealltabtitles raisepanel    
+            tabbedpane setselectedcomponent basepanel   
+          
+ 
+          
+        basepanel getundomanager   registerlistener undoredoeventmanager     
+ 
+        bibdatabasecontext context   basepanel getbibdatabasecontext readyforautosave context     
+            autosavemanager autosaver   autosavemanager start context   
+            autosaver registerlistener autosaveuimanager basepanel readyforbackup context     
+            backupmanager start context basepanel addtab bibdatabasecontext databasecontext raisepanel    
+        objects requirenonnull databasecontext   
+        basepanel bp basepanel jabrefframe databasecontext   
+        addtab bp  raisepanel bp readyforautosave bibdatabasecontext context context getlocation      databaselocation shared    
+                  context getlocation      databaselocation local     globals prefs getboolean jabrefpreferences local_auto_save       
+                context getdatabasefile   ispresent readyforbackup bibdatabasecontext context context getlocation      databaselocation local    context getdatabasefile   ispresent createdisablediconsformenuentries menuelement menuelement menuelement subelement   menuelement getsubelements subelement jmenu      subelement jpopupmenu     
+                createdisablediconsformenuentries subelement subelement jmenuitem    
+                jmenuitem item    jmenuitem  subelement item geticon icontheme fontbasedicon    
+                    item setdisabledicon   icontheme fontbasedicon  item geticon    createdisabledicon createdisablediconsforbuttons container container index   0  index   container getcomponentcount    index      
+            component component   container getcomponent index component jbutton    
+                jbutton button    jbutton  component button geticon icontheme fontbasedicon    
+                    button setdisabledicon   icontheme fontbasedicon  button geticon    createdisabledicon component jpanel    
+                createdisablediconsforbuttons  jpanel  component selectkeysaction abstractaction selectkeysaction localization lang  customize key bindings putvalue action small_icon  icontheme jabreficon key_bindings getsmallicon     
+          
+ 
+         override actionperformed actionevent e    
+            keybindingsdialog d keybindingsdialog keybindingrepository globals getkeyprefs   getkeybindings      
+            d setdefaultcloseoperation windowconstants dispose_on_close   
+            d pack      
+            d setlocationrelativeto jabrefframe d setvisible closeaction mnemonicawareaction closeaction     
+            putvalue action name  localization menutitle  quit     
+            putvalue action short_description  localization lang  quit jabref     
+            putvalue action accelerator_key  globals getkeyprefs   getkey keybinding quit_jabref    
+          
+ 
+         override actionperformed actionevent e    
+            quit showprefsaction mnemonicawareaction showprefsaction icontheme jabreficon preferences geticon     
+            putvalue action name  localization menutitle  preferences     
+            putvalue action short_description  localization lang  preferences     
+          
+ 
+         override actionperformed actionevent e    
+            showpreferencesdialog addimportedentries basepanel panel list bibentry  entries openinnew    
+        swingutilities invokelater    -    
+            importinspectiondialog diag importinspectiondialog jabrefframe panel  
+                    localization lang openinnew   
+            diag addentries entries   
+            diag entrylistcomplete    
+            diag setlocationrelativeto jabrefframe diag setvisible diag tofront filehistorymenu getfilehistory filehistory block     
+        changeblocking unblock     
+        changeblocking changeblocking blocked swingutilities iseventdispatchthread      
+            getglasspane   setvisible blocked swingutilities invokeandwait    -  getglasspane   setvisible blocked invocationtargetexception   interruptedexception e    
+                logger error  problem      blocked ?       un      blocking ui   e setprogressbarvisible visible swingutilities iseventdispatchthread      
+            progressbar setvisible visible swingutilities invokelater    -  progressbar setvisible visible setprogressbarvalue value swingutilities iseventdispatchthread      
+            progressbar setvalue value swingutilities invokelater    -  progressbar setvalue value setprogressbarindeterminate value swingutilities iseventdispatchthread      
+            progressbar setindeterminate value swingutilities invokelater    -  progressbar setindeterminate value setprogressbarmaximum value swingutilities iseventdispatchthread      
+            progressbar setmaximum value swingutilities invokelater    -  progressbar setmaximum value isexistfile list bibentry  selectentrylist selectentrylist size      1    
+            bibentry selectedentry   selectentrylist get 0 selectedentry getfield fieldname file  ispresent isexisturlordoi list bibentry  selectentrylist selectentrylist size      1    
+            bibentry selectedentry   selectentrylist get 0 selectedentry getfield fieldname url  ispresent      selectedentry getfield fieldname doi  ispresent changetabaction mnemonicawareaction changetabaction next    
+            putvalue action name  next ? localization menutitle  next tab     
+                    localization menutitle  previous tab next   next  
+            putvalue action accelerator_key  
+                    next ? globals getkeyprefs   getkey keybinding next_tab    globals getkeyprefs   getkey keybinding previous_tab    
+          
+ 
+         override actionperformed actionevent e i   tabbedpane getselectedindex newi   next ? i   1   i - 1 newi   0    
+                newi   tabbedpane gettabcount   - 1 newi    tabbedpane gettabcount      
+                newi   0  
+              
+            tabbedpane setselectedindex newi editaction mnemonicawareaction editaction command menutitle description  keystroke key  icon icon icon command   command  
+            putvalue action name  menutitle   
+            putvalue action accelerator_key  key   
+            putvalue action short_description  description   
+          
+ 
+         override actionperformed actionevent e    
+ 
+            logger debug globals getfocuslistener   getfocused   tostring     
+            jcomponent source   globals getfocuslistener   getfocused    
+            action action   source getactionmap   get command action action actionperformed actionevent source  0  command customizeexportsaction mnemonicawareaction customizeexportsaction     
+            putvalue action name  localization menutitle  manage custom exports     
+          
+ 
+         override actionperformed actionevent e    
+            exportcustomizationdialog ecd exportcustomizationdialog jabrefframe ecd setvisible customizeimportsaction mnemonicawareaction customizeimportsaction     
+            putvalue action name  localization menutitle  manage custom imports     
+          
+ 
+         override actionperformed actionevent e    
+            importcustomizationdialog ecd importcustomizationdialog jabrefframe ecd setvisible customizeentrytypeaction mnemonicawareaction customizeentrytypeaction     
+            putvalue action name  localization menutitle  customize entry types     
+          
+ 
+         override actionperformed actionevent e    
+            jdialog dl entrycustomizationdialog jabrefframe dl setlocationrelativeto jabrefframe dl setvisible genfieldscustomizationaction mnemonicawareaction genfieldscustomizationaction     
+            putvalue action name  localization menutitle  set up general fields     
+          
+ 
+         override actionperformed actionevent e    
+            genfieldscustomizer gf genfieldscustomizer jabrefframe gf setlocationrelativeto jabrefframe gf setvisible protectedtermsaction mnemonicawareaction protectedtermsaction     
+            putvalue action name  localization menutitle  manage terms     
+          
+ 
+         override actionperformed actionevent e    
+            protectedtermsdialog protecttermsdialog protectedtermsdialog jabrefframe globals protectedtermsloader   
+            protecttermsdialog setvisible databasepropertiesaction mnemonicawareaction databasepropertiesaction     
+            putvalue action name  localization menutitle  database properties     
+          
+ 
+         override actionperformed actionevent e propertiesdialog propertiesdialog databasepropertiesdialog jabrefframe propertiesdialog setpanel getcurrentbasepanel     
+            propertiesdialog updateenablestatus    
+            propertiesdialog setlocationrelativeto jabrefframe propertiesdialog setvisible bibtexkeypatternaction mnemonicawareaction bibtexkeypatternaction     
+            putvalue action name  localization lang  bibtex key patterns     
+          
+ 
+         override actionperformed actionevent e    
+            jabrefpreferences getinstance bibtexkeypatterndialog bibtexkeypatterndialog bibtexkeypatterndialog jabrefframe getcurrentbasepanel bibtexkeypatterndialog setpanel getcurrentbasepanel     
+              
+            bibtexkeypatterndialog setlocationrelativeto jabrefframe bibtexkeypatterndialog setvisible increasetablefontsizeaction mnemonicawareaction increasetablefontsizeaction     
+            putvalue action name  localization menutitle  increase table font size     
+            putvalue action accelerator_key  globals getkeyprefs   getkey keybinding increase_table_font_size    
+          
+ 
+         override actionperformed actionevent event currentsize   guiglobals currentfont getsize    
+            guiglobals currentfont font guiglobals currentfont getfamily    guiglobals currentfont getstyle    
+                    currentsize   1   
+            globals prefs putint jabrefpreferences font_size  currentsize   1 basepanel basepanel   getbasepanellist      
+                basepanel updatetablefont    
+              
+            setstatus localization lang  table font size is %0 valueof guiglobals currentfont getsize decreasetablefontsizeaction mnemonicawareaction decreasetablefontsizeaction     
+            putvalue action name  localization menutitle  decrease table font size     
+            putvalue action accelerator_key  globals getkeyprefs   getkey keybinding decrease_table_font_size    
+          
+ 
+         override actionperformed actionevent event currentsize   guiglobals currentfont getsize currentsize   2 guiglobals currentfont font guiglobals currentfont getfamily    guiglobals currentfont getstyle    
+                    currentsize - 1   
+            globals prefs putint jabrefpreferences font_size  currentsize - 1 basepanel basepanel   getbasepanellist      
+                basepanel updatetablefont    
+              
+            setstatus localization lang  table font size is %0 valueof guiglobals currentfont getsize myglasspane jpanel myglasspane     
+            addkeylistener keyadapter     
+                  
+                
+            addmouselistener mouseadapter setcursor  
+                    cursor getpredefinedcursor cursor wait_cursor    
+          
+ 
+          
+         override isopaque override showmessage message title msgtype    
+        joptionpane showmessagedialog message  title  msgtype   
+      
+ 
+     override setstatus s    
+        output s   
+      
+ 
+     override showmessage message    
+        joptionpane showmessagedialog message showsavedialog filename    
+        object   options    localization lang  save changes    
+                localization lang  discard changes    
+                localization lang to jabref joptionpane showoptiondialog jabrefframe localization lang  database '%0' has changed    filename   
+                localization lang  save before closing    joptionpane yes_no_cancel_option  
+                joptionpane warning_message options  options 2 closetab basepanel panel panel bibdatabasecontext context   panel getbibdatabasecontext panel ismodified       context getlocation      databaselocation local confirmclose panel     
+                removetab panel context getlocation      databaselocation shared    
+            context converttolocaldatabase    
+            context getdbmssynchronizer   closeshareddatabase    
+            context cleardbmssynchronizer    
+            removetab panel removetab panel   
+          
+        autosavemanager shutdown context   
+        backupmanager shutdown context confirmclose basepanel panel close filename  
+ 
+        filename   panel getbibdatabasecontext   getdatabasefile   map file  getabsolutepath  
+                 orelse guiglobals untitled_title answer   showsavedialog filename answer    joptionpane yes_option savedatabaseaction saveaction savedatabaseaction panel   
+                saveaction runcommand saveaction issuccess      
+                    close throwable ex answer    joptionpane no_option    
+              
+            close close removetab basepanel panel    
+        panel cleanup    
+        tabbedpane remove panel tabbedpane gettabcount     0    
+            markactivebasepanel    
+          
+        setwindowtitle    
+        updateenabledstate    
+        output localization lang  closed database     ' '   
+          
+        updatealltabtitles closecurrenttab     
+        removetab getcurrentbasepanel managekeywordsaction getmanagekeywords managekeywords masssetfieldaction getmasssetfield masssetfield opendatabaseaction getopendatabaseaction open closedatabaseaction mnemonicawareaction closedatabaseaction icontheme jabreficon close getsmallicon     
+            putvalue action name  localization menutitle  close database     
+            putvalue action short_description  localization lang  close the current database     
+            putvalue action accelerator_key  globals getkeyprefs   getkey keybinding close_database    
+          
+ 
+         override actionperformed actionevent e    
+            closetab getcurrentbasepanel closealldatabasesaction mnemonicawareaction   
+ 
+         override actionperformed actionevent e component   panels   tabbedpane getcomponents component p   panels    
+                closetab  basepanel  p closeotherdatabasesaction mnemonicawareaction   
+ 
+         override actionperformed actionevent e basepanel active   getcurrentbasepanel component   panels   tabbedpane getcomponents component p   panels objects equals p  active     
+                    closetab  basepanel  p toolbar osxcompatibletoolbar addaction action a    
+            jbutton b jbutton a   
+            b settext os os_x    
+                b setmargin marg   
+              
+              
+            object obj   a getvalue action large_icon_key obj icontheme fontbasedicon    
+                b setdisabledicon   icontheme fontbasedicon  obj  createdisabledicon     
+              
+            add b addjtogglebutton jtogglebutton button    
+            button settext os os_x    
+                button setmargin marg   
+              
+            object obj   button getaction   getvalue action large_icon_key obj icontheme fontbasedicon    
+                button setdisabledicon   icontheme fontbasedicon  obj  createdisabledicon     
+              
+            add button getstatuslinetext statusline gettext abstractaction getforwardaction forward abstractaction getbackaction back abstractaction getnextpreviewstyleaction nextpreviewstyle abstractaction getpreviouspreviewstyleaction previouspreviewstyle jsplitpane getsplitpane splitpane sidepanemanager getsidepanemanager sidepanemanager groupselector getgroupselector groupselector setpreviewtoggle enabled    
+        previewtoggle setselected enabled pushtoapplications getpushapplications pushapplications globalsearchbar getglobalsearchbar globalsearchbar undoredoeventmanager   
+ 
+         subscribe listen undoredoevent event    
+            updatetexts event   
+            jabrefframe getcurrentbasepanel   updateentryeditorifshowing    
+          
+ 
+         subscribe listen addundoableactionevent event    
+            updatetexts event updatetexts undochangeevent event    
+            swingutilities invokelater    -    
+                undo putvalue action short_description  event getundodescription     
+                undo setenabled event iscanundo     
+                redo putvalue action short_description  event getredodescription     
+                redo setenabled event iscanredo     
+                
+          
+      
+ 

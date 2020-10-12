@@ -1,0 +1,170 @@
+ 
+    
+   preferences tab file options options moved out generaltab resolve space issue sort quick hack 
+   left pref  4dlu  fill pref 
+   fallback  windows standard change globals variable globals not getter constant net sf jabref gui preftabs filetab jpanel prefstab filetab jabrefframe frame  jabrefpreferences prefs prefs   prefs frame   frame  
+ 
+        filedir jtextfield 25   
+        biblocasprimarydir jcheckbox localization lang  use the bib file location as primary file directory     
+        biblocasprimarydir settooltiptext localization lang  when downloading files  or moving linked files to the   
+                   file directory  prefer the bib file location rather than the file directory set above     
+        runautofilesearch jcheckbox localization lang  when opening file link  search matching file no link is defined     
+        allowfileautoopenbrowse jcheckbox localization lang  automatically open browse dialog when creating file link     
+        regexptextfield jtextfield 25   
+        useregexpcombobox jradiobutton localization lang  use regular expression search     
+        itemlistener regexplistener   e -  regexptextfield seteditable useregexpcombobox isselected     
+        useregexpcombobox additemlistener regexplistener   
+        buttongroup buttongroup buttongroup    
+        buttongroup add matchexactkeyonly   
+        buttongroup add matchstartswithkey   
+        buttongroup add useregexpcombobox   
+ 
+        openlast jcheckbox localization lang  open last edited databases at startup     
+        backup jcheckbox localization lang  backup old file when saving     
+        localautosave jcheckbox localization lang  autosave local databases     
+        resolvestringsall jradiobutton localization lang  resolve strings all fields except           
+        resolvestringsstandard jradiobutton localization lang  resolve strings standard bibtex fields only     
+        buttongroup bg buttongroup    
+        bg add resolvestringsall   
+        bg add resolvestringsstandard   
+ 
+          
+        newlineseparator jcombobox cr    cr lf    lf     
+ 
+        reformatfileonsaveandexport jcheckbox localization lang  always reformat bib file on save and export     
+ 
+        nonwrappablefields jtextfield 25   
+        donotresolvestringsfor jtextfield 30   
+ 
+        formlayout layout formlayout  left pref  4dlu  fill 150dlu  4dlu  fill pref          
+        defaultformbuilder builder defaultformbuilder layout   
+ 
+        builder appendseparator localization lang  general     
+        builder nextline    
+        builder append openlast  3   
+        builder nextline    
+        builder append backup  3   
+        builder nextline    
+ 
+        jlabel label jlabel localization lang not wrap the following fields when saving           
+        builder append label   
+        builder append nonwrappablefields   
+        builder nextline    
+        builder append resolvestringsstandard  3   
+        builder nextline    
+        builder append resolvestringsall   
+        builder append donotresolvestringsfor   
+        builder nextline    
+ 
+        jlabel lab jlabel localization lang  newline separator           
+        builder append lab   
+        builder append newlineseparator   
+        builder nextline    
+ 
+        builder append reformatfileonsaveandexport  3   
+        builder nextline    
+ 
+        builder appendseparator localization lang  external file links     
+        builder nextline    
+        lab jlabel localization lang  main file directory     ' '   
+        builder append lab   
+        builder append filedir   
+ 
+        jbutton browse jbutton localization lang  browse     
+        browse addactionlistener e filedialog frame  showdialogandgetselecteddirectory   
+                         ifpresent f -  filedir settext f toabsolutepath   tostring     
+           
+        builder append browse   
+ 
+        builder nextline    
+        builder append biblocasprimarydir  3   
+        builder nextline    
+        builder append matchstartswithkey  3   
+        builder nextline    
+        builder append matchexactkeyonly  3   
+        builder nextline    
+        builder append useregexpcombobox   
+        builder append regexptextfield   
+ 
+        builder append helpaction localization lang  help on regular expression search    
+                helpfile regex_search  
+                 gethelpbutton     
+        builder nextline    
+        builder append runautofilesearch  3   
+        builder nextline    
+        builder append allowfileautoopenbrowse   
+        builder nextline    
+ 
+        builder appendseparator localization lang  autosave     
+        builder append localautosave  1   
+        jbutton help helpaction helpfile autosave  gethelpbutton    
+        help setpreferredsize dimension 24  24    
+        jpanel hpan jpanel    
+        hpan setlayout borderlayout     
+        hpan add help  borderlayout east   
+        builder append hpan   
+        builder nextline    
+ 
+        jpanel pan   builder getpanel    
+        pan setborder borderfactory createemptyborder 5  5  5  5    
+        setlayout borderlayout     
+        add pan  borderlayout center   
+      
+ 
+ 
+     override setvalues     
+        filedir settext prefs get fieldname file   filedirectorypreferences dir_suffix    
+        biblocasprimarydir setselected prefs getboolean jabrefpreferences bib_loc_as_primary_dir    
+        runautofilesearch setselected prefs getboolean jabrefpreferences run_automatic_file_search    
+        allowfileautoopenbrowse setselected prefs getboolean jabrefpreferences allow_file_auto_open_browse    
+        regexptextfield settext prefs get jabrefpreferences reg_exp_search_expression_key prefs getboolean jabrefpreferences autolink_use_reg_exp_search_key     
+            useregexpcombobox setselected prefs getboolean jabrefpreferences autolink_exact_key_only     
+            matchexactkeyonly setselected matchstartswithkey setselected openlast setselected prefs getboolean jabrefpreferences open_last_edited    
+        backup setselected prefs getboolean jabrefpreferences backup newline   prefs get jabrefpreferences newline r  equals newline     
+            newlineseparator setselectedindex 0 n  equals newline     
+            newlineseparator setselectedindex 2 newlineseparator setselectedindex 1   
+          
+        reformatfileonsaveandexport setselected prefs getboolean jabrefpreferences reformat_file_on_save_and_export    
+ 
+        resolvestringsall setselected prefs getboolean jabrefpreferences resolve_strings_all_fields    
+        resolvestringsstandard setselected  resolvestringsall isselected     
+        donotresolvestringsfor settext prefs get jabrefpreferences do_not_resolve_strings_for    
+        nonwrappablefields settext prefs get jabrefpreferences non_wrappable_fields    
+ 
+        localautosave setselected prefs getboolean jabrefpreferences local_auto_save    
+      
+ 
+     override storesettings     
+        prefs put fieldname file   filedirectorypreferences dir_suffix  filedir gettext     
+        prefs putboolean jabrefpreferences bib_loc_as_primary_dir  biblocasprimarydir isselected     
+        prefs putboolean jabrefpreferences run_automatic_file_search  runautofilesearch isselected     
+        prefs putboolean jabrefpreferences allow_file_auto_open_browse  allowfileautoopenbrowse isselected     
+        prefs putboolean jabrefpreferences autolink_use_reg_exp_search_key  useregexpcombobox isselected     
+        prefs putboolean jabrefpreferences autolink_exact_key_only  matchexactkeyonly isselected useregexpcombobox isselected      
+            prefs put jabrefpreferences reg_exp_search_expression_key  regexptextfield gettext newline newlineseparator getselectedindex 0  
+            newline    \r 2  
+            newline    \n newline    \r\n prefs put jabrefpreferences newline  newline   
+          
+        os newline   newline  
+ 
+        prefs putboolean jabrefpreferences reformat_file_on_save_and_export  reformatfileonsaveandexport isselected     
+        prefs putboolean jabrefpreferences open_last_edited  openlast isselected     
+        prefs putboolean jabrefpreferences resolve_strings_all_fields  resolvestringsall isselected     
+        prefs put jabrefpreferences do_not_resolve_strings_for  donotresolvestringsfor gettext   trim     
+        donotresolvestringsfor settext prefs get jabrefpreferences do_not_resolve_strings_for nonwrappablefields gettext   trim   equals prefs get jabrefpreferences non_wrappable_fields      
+            prefs put jabrefpreferences non_wrappable_fields  nonwrappablefields gettext     
+          
+ 
+        prefs putboolean jabrefpreferences local_auto_save  localautosave isselected     
+      
+ 
+     override validatesettings     
+        path path   paths get filedir gettext valid   files exists path     files isdirectory path valid content format  %s -  %s %n %n %s  %n %s   localization lang  file    
+                    localization lang  main file directory    localization lang  directory not found    path   
+            joptionpane showmessagedialog frame  content  localization lang  error    joptionpane error_message valid  
+      
+ 
+     override gettabname localization lang  file    
+      
+ 
+ 

@@ -1,0 +1,126 @@
+ importer parses text format citations using online api freecite - 
+   open source citation parser http   freecite library brown edu  
+    
+   todo don't know recognize text files  therefore return  false  
+   urlencode string transmission 
+   send request 
+  freecite library brown edu citations create    
+   write parameters 
+   output conn getinputstream    
+   new inputstreamreader conn getinputstream    
+   fallback type 
+   author directly nested below authors 
+   first author 
+   current tag either begin author end authors guess entry journal alternative way parse 
+   ctx context-objects   ctx context-object   ctx referent   ctx metadata val   ctx metadata   journal   rft genre drawback ctx context-objects not nested citation separate element change whole parser parse format content tech  field seems contain number technical report 
+   special treatment parsing proceedings references 
+   raw input string ignored tags stored note 
+    note set during parsing freecite returns  note  
+   type derived genre done before label generation label generation dependent entry type 
+   autogenerate label  bibtex key  net sf jabref logic importer fileformat freeciteimporter importer freeciteimporter importformatpreferences importformatpreferences importformatpreferences   importformatpreferences  
+      
+ 
+     override isrecognizedformat bufferedreader reader ioexception   
+        objects requirenonnull reader override parserresult importdatabase bufferedreader reader ioexception scanner scan scanner reader text   scan usedelimiter  \\a   next importentries text parserresult importentries text urlencodedcitation urlencodedcitation   urlencoder encode text  standardcharsets utf_8 name unsupportedencodingexception e    
+            logger warn  unsupported encoding   e   
+          
+ 
+          
+        url url  
+        urlconnection conn url url  http   
+            conn   url openconnection malformedurlexception e    
+            logger warn  bad url   e parserresult ioexception e    
+            logger warn  could not download   e parserresult conn setrequestproperty  accept    text xml    
+            conn setdooutput outputstreamwriter writer outputstreamwriter conn getoutputstream data    citation     urlencodedcitation  
+              
+            writer write data   
+            writer flush illegalstateexception e    
+            logger warn  already connected    e ioexception e    
+            logger warn  unable to connect to freecite online service    e parserresult fromerrormessage localization lang  unable to connect to freecite online service      
+          
+          
+          
+        list bibentry  res arraylist      
+ 
+        xmlinputfactory factory   xmlinputfactory newinstance xmlstreamreader parser   factory createxmlstreamreader conn getinputstream parser hasnext parser geteventtype      xmlstreamconstants start_element  
+                            citation  equals parser getlocalname       
+                    parser nexttag    
+ 
+                    stringbuilder notesb stringbuilder    
+ 
+                    bibentry e bibentry    
+                      
+                    entrytype type   bibtexentrytypes inproceedings parser geteventtype      xmlstreamconstants end_element  
+                                citation  equals parser getlocalname parser geteventtype      xmlstreamconstants start_element ln   parser getlocalname authors  equals ln     
+                                stringbuilder sb stringbuilder    
+                                parser nexttag parser geteventtype      xmlstreamconstants start_element author  equals parser getlocalname author   parser getelementtext sb length      0    
+                                          
+                                        sb append author sb append   and     
+                                        sb append author parser geteventtype      xmlstreamconstants end_element author  equals parser getlocalname     
+                                    parser nexttag    
+                                      
+                                      
+                                  
+                                e setfield fieldname author  sb tostring fieldname journal equals ln     
+                                  
+                                  
+                                  
+                                  
+                                  
+                                type   bibtexentrytypes article  
+                                e setfield ln  parser getelementtext tech  equals ln     
+                                type   bibtexentrytypes techreport  
+                                  
+                                e setfield fieldname number  parser getelementtext fieldname doi equals ln     fieldname institution equals ln  
+                                       fieldname location equals ln     fieldname number equals ln  
+                                       fieldname note equals ln     fieldname title equals ln  
+                                       fieldname pages equals ln     fieldname publisher equals ln  
+                                       fieldname volume equals ln     fieldname year equals ln     
+                                e setfield ln  parser getelementtext fieldname booktitle equals ln booktitle   parser getelementtext booktitle startswith  in       
+                                      
+                                      
+                                    booktitle   booktitle substring 3   
+                                  
+                                e setfield fieldname booktitle  booktitle raw_string  equals ln notesb append ln   
+                                notesb append ' '   
+                                notesb append parser getelementtext     
+                                notesb append os newline   
+                              
+                          
+                        parser next notesb length     0 note e hasfield fieldname note     
+                              
+                            note   e getfield fieldname note  get   concat os newline  
+                                     concat notesb tostring note   notesb tostring    
+                          
+                        e setfield fieldname note  note   
+                      
+ 
+                      
+                      
+                    e settype type   
+ 
+                      
+                    bibtexkeypatternutil makelabel  
+                            jabrefgui getmainframe   getcurrentbasepanel   getbibdatabasecontext   getmetadata   
+                                     getcitekeypattern importformatpreferences getbibtexkeypatternpreferences   getkeypattern     
+                            jabrefgui getmainframe   getcurrentbasepanel   getdatabase    e  
+  
+ 
+                    res add e   
+                  
+                parser next    
+              
+            parser close ioexception   xmlstreamexception ex    
+            logger warn  could not parse   ex parserresult parserresult res   
+      
+ 
+     override getname text citations   
+      
+ 
+     override fileextensions getextensions fileextensions freecite  
+      
+ 
+     override getdescription importer parses text format citations using the online api of freecite    
+      
+ 
+ 

@@ -1,0 +1,170 @@
+ 
+    
+       construct transfer handler  
+       
+        param entrytable table transfer handler operate argument allowed equal null case transfer handler assume works jabref instance databases open  
+                  attached empty tabbed pane  
+        param frame jabrefframe instance  
+        param panel basepanel transferhandler works overridden indicate types drags supported  only link method called dragging stuff table  
+        
+   gettransferable assume never called entrytable  null method called stuff drag component  
+       
+       imports dropped url plain text new entry current database drop target main table want record row item dropped identify entry needed flavor used dragged file links windows  
+   joptionpane showmessagedialog null   received 
+   javafilelistflavor supported flavors failed method called query whether transfer imported return true urls  strings  javafilelists 
+        
+   accept any input flavor matches any supported flavors 
+   system out println  drop type forbidden    
+   nope  never heard type 
+   default implementation ok 
+   default implementation ok 
+   add-ons appears dragged file link not reference 
+   format  check map set files not  handle normal way way url links received os x kde  gnome?   
+   joptionpane showmessagedialog null   making url  
+     url tostring     
+   system out println  importing tmpfile getabsolutepath     
+    
+       translate string describing set files urls dragged jabref list file objects  taking care url special characters  
+       
+        param s string describing set files urls dragged jabref 
+        return list file  containing individual file objects  
+       
+        
+   split lines  
+   try use url touri translate url specific sequences 20 standard characters  
+   unless exception thrown sanitized path  
+   under gnome link given file need strip extra slashes  
+        
+    
+       handle string describing set files urls dragged jabref  
+       
+        param s string describing set files urls dragged jabref 
+        param droprow row table files dragged  
+        return success status operation 
+       
+        
+    
+       handle list containing file objects set files import  
+       
+        param files list containing file instances pointing files  
+        param droprow  param droprow row table files dragged  
+        return success status operation 
+        
+   try load bib files normally import rest current 
+   database process must spun background thread  
+    
+       take set filenames  those names indicating bib files opened possible files attempt import current database  
+       
+        param filenames names files open  
+        param droprow success status operation 
+        
+   find file's extension any assume bibtex file user import something file extension  bib not bibtex file use  file -  import linkable file user dropped entry offer options autolinking files  
+               
+               todo offer option highlight row user todo  make instance variable? 
+                    
+   import new entrytable  null  otherwise current 
+   database  
+   system out println  import url      droplink tostring     
+   system out println  temp file    tmpfile getabsolutepath     
+   import new entrytable  null  otherwise current database  net sf jabref gui groups entrytabletransferhandler transferhandler entrytabletransferhandler maintable entrytable  jabrefframe frame  basepanel panel entrytable   entrytable frame   frame panel   panel  
+        stringflavor   dataflavor stringflavor urlflavor dataflavor  application x-java-url java net url classnotfoundexception e    
+            logger info  unable to configure drag and drop main table   e   
+          
+      
+ 
+      
+     override getsourceactions jcomponent c dndconstants action_link  
+      
+ 
+      
+     override transferable createtransferable jcomponent c draggingfile    
+            draggingfile transferablefilelinkselection panel  entrytable getselectedentries transferableentryselection entrytable getselectedentries     
+          
+      
+ 
+      
+     override importdata jcomponent comp  transferable t droprow   -1 comp jtable    
+            droprow     jtable  comp  getselectedrow t isdataflavorsupported dataflavor javafilelistflavor     
+                  
+                  
+                 suppresswarnings  unchecked   
+                list file  l    list file   t gettransferdata dataflavor javafilelistflavor handledraggedfiles l  droprow t isdataflavorsupported urlflavor     
+                url droplink    url  t gettransferdata urlflavor handledroptransfer droplink t isdataflavorsupported stringflavor dropstr t gettransferdata stringflavor   
+                logger debug  received stringflavor      dropstr handledroptransfer dropstr  droprow ioexception ioe    
+            logger error  failed to read dropped data   ioe unsupportedflavorexception   classcastexception ufe    
+            logger error  drop type error   ufe   
+          
+ 
+          
+        logger info  can't transfer input      
+        dataflavor   inflavs   t gettransferdataflavors dataflavor inflav   inflavs    
+            logger info        inflav override canimport jcomponent comp  dataflavor   transferflavors entrytabletransferhandler drop_allowed dataflavor inflav   transferflavors inflav match urlflavor     inflav match stringflavor     inflav match dataflavor javafilelistflavor override exportasdrag jcomponent comp  inputevent e action e mouseevent columnindex   entrytable columnatpoint   mouseevent  e  getpoint modelindex   entrytable getcolumnmodel   getcolumn columnindex  getmodelindex entrytable isfilecolumn modelindex     
+                logger info  dragging file    
+                draggingfile exportasdrag comp  e  dndconstants action_link   
+      
+ 
+     override exportdone jcomponent source  transferable data action exportdone source  data  action   
+      
+ 
+     override exporttoclipboard jcomponent comp  clipboard clip action exporttoclipboard comp  clip  action handledroptransfer dropstr droprow ioexception dropstr startswith  file handledraggedfilenames dropstr  droprow dropstr startswith  http       
+              
+            url url url dropstr handledroptransfer url   
+          
+        file tmpfile   file createtempfile  jabrefimport        
+        tmpfile deleteonexit filewriter fw filewriter tmpfile     
+            fw write dropstr   
+          
+ 
+          
+ 
+        importmenuitem importer importmenuitem frame list file  getfilesfromdraggedfilesstring s lines   s replace  \r       split  \n    
+        list file  files arraylist line1   lines line   line1  
+ 
+              
+              
+            file fl url url url line   
+                fl file url touri malformedurlexception   urisyntaxexception e    
+                logger warn  could not get file   e fl line   fl getpath line startswith  file       
+                line   line substring 5 line startswith    
+                line   line substring 2   
+              
+ 
+            file f file line f exists      
+                files add f files handledraggedfilenames s droprow handledraggedfiles entrytabletransferhandler getfilesfromdraggedfilesstring s   droprow handledraggedfiles list file  files droprow list filenames arraylist file file   files    
+            filenames add file getabsolutepath     
+          
+          
+          
+          
+        jabrefexecutorservice instance execute importpdffilesresult importres pdfimporter frame  panel  entrytable  droprow  
+                     importpdffiles filenames importres getnopdffiles   isempty      
+                loadorimportfiles importres getnopdffiles    droprow loadorimportfiles list filenames droprow    
+ 
+        opendatabaseaction openaction opendatabaseaction frame list notbibfiles arraylist      
+        list bibfiles arraylist filename   filenames    
+              
+            optional extension   fileutil getfileextension filename   
+            optional externalfiletype  filetype extension ispresent       bib  equals extension get       
+                  
+                  
+                bibfiles add filename filetype   externalfiletypes getinstance   getexternalfiletypebyext extension orelse filetype ispresent        droprow    0     
+ 
+                  
+                droppedfilehandler dfh droppedfilehandler frame  panel   
+                dfh handledroppedfile filename  filetype get    entrytable  droprow notbibfiles add filename   
+          
+ 
+        openaction openfilesasstringlist bibfiles notbibfiles isempty      
+              
+              
+            importmenuitem importer importmenuitem frame  entrytable handledroptransfer url droplink ioexception   
+        file tmpfile   file createtempfile  jabrefimport        
+        tmpfile deleteonexit    
+ 
+          
+          
+ 
+        monitoredurldownload buildmonitoreddownload entrytable  droplink  downloadtofile tmpfile   
+ 
+          
+        importmenuitem importer importmenuitem frame  entrytable 

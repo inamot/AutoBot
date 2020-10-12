@@ -1,0 +1,688 @@
+ 
+    
+   gui dialog feature  find unlinked files   
+   
+    author nosh dan 
+    version 25 11 2008   23 13 29 
+   
+    
+    
+       keys used referencing action  
+        
+   panels    
+   options treeview unit-testing only don't remove br  
+       used via reflection link net sf jabref importer databasefilelookup construct class  
+        
+  intended 
+    
+       close dialog pressing escape 
+        
+    
+       stores current size dialog persistently  
+        
+    
+       restores location size dialog persistent storage  
+        
+    
+       initializes components layout data structure actions dialog  
+        
+    
+       initializes action objects   br not assign actions components non-javadoc  
+                see java awt event componentadapter#componentresized java awt event componentevent  
+                
+    non-javadoc  
+                see java awt event componentadapter#componentmoved java awt event componentevent  
+                
+    
+       stores working directory path view global 
+       preferences  
+       
+        param lastselecteddir 
+                  directory used working directory view  
+        
+    
+       loads working directory path persistantly stored view returns link file -object   br  
+        br working directory path stored general working 
+       directory consulted  
+       
+        return persistently stored working directory path view  
+        
+    
+       disables enables visible elements dialog   br  
+        br removes link mouselistener tree-view prevent receiving mouse events disabled-state  
+       
+        param enable 
+                   code true  code elements shall enabled  
+                   code false  code shall disabled  
+        
+    
+       recursively disables enables swing awt components dialog  starting not including container 
+        code startcontainer  code   
+       
+        param startcontainer gui element start param enable 
+                   code true  code elements enabled  
+                   code false  code elements disabled  
+        
+    
+       expands collapses specified tree according code expand  code -parameter  
+        
+    
+       starts search unlinked files according current dialog 
+       state   br  
+        br state made br  
+        li value directory -input-textfield li file type 
+       selection   br search process seperate thread progress bar behind search  button displayed   br  
+        br search completed link #searchfinishedhandler checkabletreenode   handler method invoked addtional statement needed lamdba variable must effetively final start import file selected nodes dialogs tree view   br  
+        br import itself run seperate thread  whilst dialog showing progress bar  until thread finished work   br  
+        br import finished link #importfinishedhandler java util list invoked  
+        
+    
+       
+        param errors called thread unlinked files search processed result search root node determined 
+       file structure passed  
+       
+        param rootnode root file structure result search  
+        
+    
+       sets up actions components  
+        
+    
+           stores selected directory  
+            
+    
+           action button  import       br  
+            br  
+           actions button start import file selected nodes dialogs tree view   br  
+            
+    
+       creates list link file s leaf nodes tree structure 
+        code node  code marked selected br  
+        br  
+        code selected  code  nodes correspond those entries tree  
+       whose checkbox code checked  code   
+       
+       side effect checked nodes removed tree  
+       
+        param node root node representing tree structure  
+        return list files checked leaf nodes  
+        
+   remove imported files tree 
+   remove empty parent node 
+   todo  update counter   see  gettreecellrenderercomponent label generation 
+    
+       initializes visible components dialog  
+        
+   interrupts searchthread setting state-array 0    
+   options treeview    
+    
+       initializes layout visible components menu link gridbaglayout used  
+        
+   		x  y  w  h  wx wy ix iy 
+    
+       adds component container  using specified gridbag-layout supplied parameters   br  
+        br method simply used ged rid thousands lines code inevitably rise layouts gridbag-layout being 
+       used  
+       
+        param layout layout used  
+        param container link container component added  
+        param component awt   link component added container  
+        param fill constant describing fill behaviour  see 
+                    link gridbagconstraints code null  code filling specified  
+        param anchor constant describing anchor element parent 
+                  container  see   link gridbagconstraints code null  code specification needed  
+        param gridx relative grid-x coordinate  
+        param gridy relative grid-y coordinate  
+        param width relative width component  
+        param height relative height component  
+        param weightx value horizontal weight  
+        param weighty value vertical weight  
+        param insets 
+                  insets component code null  code   
+        
+    
+       creates tree view holds data structure   br  
+        br  
+       initially root node b not  b  visible tree appears empty beginning  
+        
+    
+           mouse listener listen mouse events tree   br mark selected tree entry selected unselected cause nodes checkbox appear either  checked unchecked   
+            
+    
+       initialises combobox contains available file types bibtex entries created non-javadoc  
+                see javax swing defaultlistcellrenderer#getlistcellrenderercomponent javax swing jlist  java lang object  int  boolean  boolean  
+                
+    
+       creates combobox-view listbox holds bibtex entry 
+       types  
+        
+    
+       wrapper displaying type   link bibtexentrytype combobox  
+       
+        author nosh dan 
+        version 12 11 2008   01 02 30 
+       
+        
+    
+            return checkbox 
+            
+   ignored 
+    
+            param adirectory 
+            param filecount 
+            
+   
+            non-javadoc  
+           
+            see java lang object#tostring   
+            net sf jabref gui findunlinkedfilesdialog jdialog action_command    findunlinkedfiles action_menu_title   localization menutitle  find unlinked files action_short_description   localization 
+             lang  searches unlinked pdf files on the file system    
+  
+ 
+  
+  
+  
+  
+ 
+  
+  
+ 
+  
+      
+  
+  
+  
+  
+  
+  
+ 
+  
+  
+  
+  
+ 
+  
+      
+  
+  
+  
+  
+ 
+  
+  
+  
+  
+  
+  
+  
+ 
+  
+  
+  
+  
+ 
+  
+  
+  
+ 
+  
+  
+  
+  
+ 
+  
+ 
+  
+  
+ 
+  
+ 
+ 
+      
+     suppresswarnings  unused findunlinkedfilesdialog findunlinkedfilesdialog frame owner  jabrefframe frame  basepanel panel owner  localization lang  find unlinked files frame   frame  
+ 
+        restoresizeofdialog    
+ 
+        databasecontext   panel getdatabasecontext    
+        creatormanager entryfromfilecreatormanager    
+        crawler unlinkedfilescrawler databasecontext   
+ 
+        lastselecteddirectory   loadlastselecteddirectory    
+ 
+        initialize    
+        buttonapply setenabled override jrootpane createrootpane     
+        actionlistener actionlistener   actionevent -  setvisible jrootpane rpane jrootpane    
+        keystroke stroke   keystroke getkeystroke keyevent vk_escape  0   
+        rpane registerkeyboardaction actionlistener  stroke  jcomponent when_in_focused_window rpane storesizeofdialog     
+        dimension dim   getsize store   dim width         dim height  
+        globals prefs put findunlinkedfilesdialog global_prefs_dialog_size_key  store restoresizeofdialog store   globals prefs get findunlinkedfilesdialog global_prefs_dialog_size_key   
+ 
+        dimension dimension store dim   store split       
+                dimension dimension integer valueof dim 0    integer valueof dim 1 numberformatexception ignoredex    
+                logger debug  restoresizedialog exception    ignoredex dimension setpreferredsize dimension initialize     
+ 
+        initializeactions    
+        initcomponents    
+        createtree    
+        createfiletypescombobox    
+        createentrytypescombobox    
+        initlayout    
+        setupactions    
+        pack initializeactions     
+ 
+        actionselectall abstractaction localization lang  select all      
+ 
+             override actionperformed actionevent e    
+                checkabletreenode rootnode    checkabletreenode  tree getmodel   getroot    
+                rootnode setselected tree invalidate    
+                tree repaint    
+              
+           
+ 
+        actionunselectall abstractaction localization lang  unselect all      
+ 
+             override actionperformed actionevent e    
+                checkabletreenode rootnode    checkabletreenode  tree getmodel   getroot    
+                rootnode setselected tree invalidate    
+                tree repaint    
+              
+           
+ 
+        actionexpandtree abstractaction localization lang  expand all      
+ 
+             override actionperformed actionevent e    
+                checkabletreenode rootnode    checkabletreenode  tree getmodel   getroot    
+                expandtree tree treepath rootnode actioncollapsetree abstractaction localization lang  collapse all      
+ 
+             override actionperformed actionevent e    
+                checkabletreenode rootnode    checkabletreenode  tree getmodel   getroot    
+                expandtree tree treepath rootnode dialogpositionlistener componentadapter     
+ 
+              
+             override componentresized componentevent e    
+                storesizeofdialog    
+              
+ 
+              
+             override componentmoved componentevent e    
+                storesizeofdialog storelastselecteddirectory path lastselecteddir    
+        lastselecteddirectory   lastselecteddir lastselecteddirectory globals prefs put findunlinkedfilesdialog global_prefs_working_directory_key  
+                    lastselecteddirectory toabsolutepath   tostring path loadlastselecteddirectory workingdirectory   globals prefs get findunlinkedfilesdialog global_prefs_working_directory_key workingdirectory workingdirectory   globals prefs get jabrefpreferences working_directory   
+          
+        lastselecteddirectory   paths get workingdirectory lastselecteddirectory disorenabledialog enable enable    
+            tree addmouselistener treemouselistener tree removemouselistener treemouselistener   
+          
+        disorenableallelements findunlinkedfilesdialog enable disorenableallelements container startcontainer enable    
+        component   children   startcontainer getcomponents component child   children child container    
+                disorenableallelements  container  child  enable   
+              
+            child setenabled enable expandtree jtree currenttree  treepath parent expand    
+        treenode node    treenode  parent getlastpathcomponent node getchildcount      0 enumeration treenode  e   node children    e hasmoreelements       
+                treepath path   parent pathbyaddingchild e nextelement     
+                expandtree currenttree  path  expand expand    
+            currenttree expandpath parent currenttree collapsepath parent startsearch     
+ 
+        path directory   paths get textfielddirectorypath gettext files notexists directory     
+            directory   paths get system getproperty  user dir files isdirectory directory     
+            directory   directory getparent    
+          
+ 
+          
+        path dir   directory  
+ 
+        storelastselecteddirectory directory   
+ 
+        progressbarsearching setminimumsize dimension buttonscan getsize   width  progressbarsearching getminimumsize   height    
+        progressbarsearching setvisible progressbarsearching setstring      
+ 
+        labelsearchingdirectoryinfo setvisible buttonscan setvisible disorenabledialog labelsearchingdirectoryinfo setenabled filefilter selectedfilefilter    filefilter  comboboxfiletypeselection getselecteditem    
+ 
+        threadstate set jabrefexecutorservice instance execute    -    
+            unlinkedpdffilefilter unlinkedpdffilefilter unlinkedpdffilefilter selectedfilefilter  
+                    databasecontext   
+            checkabletreenode rootnode   crawler searchdirectory dir tofile    unlinkedpdffilefilter  threadstate changelistener counter  
+ 
+ 
+                         override statechanged changeevent e    
+                            counter message counter    1    
+                                message   localization lang  one file found message   localization lang  %0 files found   integer tostring counter    
+                              
+                            swingutilities invokelater    -  progressbarsearching setstring message    
+                          
+                        
+            swingutilities invokelater    -  searchfinishedhandler rootnode startimport treemodel setdefaultcloseoperation windowconstants do_nothing_on_close   
+ 
+        checkabletreenode root    checkabletreenode  treemodel getroot list file  filelist   getfilelistfromnode root filelist filelist isempty progressbarimporting setvisible labelimportinginfo setvisible buttonapply setvisible buttonclose setvisible disorenabledialog labelimportinginfo setenabled progressbarimporting setminimum 0   
+        progressbarimporting setmaximum filelist size     
+        progressbarimporting setvalue 0   
+        progressbarimporting setstring entrytype entrytype     bibtexentrytypewrapper  comboboxentrytypeselection getselecteditem    
+                 getentrytype    
+ 
+        threadstate set jabrefexecutorservice instance execute    -    
+            list errors linkedlist      
+            creatormanager addentriesfromfiles filelist  databasecontext getdatabase    frame getcurrentbasepanel    
+                    entrytype  checkboxwhyistherenogetselectedstupidswing changelistener counter  
+ 
+                         override statechanged changeevent e    
+                            counter    
+                            swingutilities invokelater    -    
+                                progressbarimporting setvalue counter   
+                                progressbarimporting setstring localization lang  %0 of %1   integer tostring counter   
+                                        integer tostring progressbarimporting getmaximum       
+                                
+                          
+                       errors   
+            swingutilities invokelater    -  importfinishedhandler errors importfinishedhandler list errors errors errors isempty message errors size      1    
+                message   localization lang  there was one file that could not be imported message   localization lang  there were %0 files which could not be imported    
+                        integer tostring errors size      
+              
+            joptionpane showmessagedialog localization lang  the finished with warnings       \n    message  
+                    localization lang  warning    joptionpane warning_message   
+          
+ 
+        progressbarimporting setvisible labelimportinginfo setvisible buttonapply setvisible buttonclose setvisible disorenabledialog setdefaultcloseoperation windowconstants dispose_on_close   
+        frame getcurrentbasepanel   markbasechanged searchfinishedhandler checkabletreenode rootnode    
+        treemodel defaulttreemodel rootnode   
+        tree setmodel treemodel   
+        tree setrootvisible rootnode getchildcount     0   
+ 
+        tree invalidate    
+        tree repaint    
+ 
+        progressbarsearching setvisible labelsearchingdirectoryinfo setvisible buttonscan setvisible actionselectall actionperformed disorenabledialog buttonapply setenabled setupactions     
+ 
+          
+        buttonbrowse addactionlistener e -    
+            optional path  selecteddirectory filedialog frame  showdialogandgetselecteddirectory    
+            selecteddirectory ifpresent d -    
+                textfielddirectorypath settext d toabsolutepath   tostring     
+                storelastselecteddirectory d   
+                
+            
+ 
+        buttonscan addactionlistener e -  startsearch     
+ 
+          
+        actionlistener actionlistenerimportentrys   e -  startimport    
+        buttonapply addactionlistener actionlistenerimportentrys   
+        buttonclose addactionlistener e -  dispose list file  getfilelistfromnode checkabletreenode node    
+        list file  fileslist arraylist      
+        enumeration checkabletreenode  children   node depthfirstenumeration    
+        list checkabletreenode  nodestoremove arraylist checkabletreenode child   collections list children child isleaf      child isselected      
+                file nodefile     filenodewrapper  child getuserobject    file nodefile nodefile isfile      
+                    fileslist add nodefile   
+                    nodestoremove add child   
+                  
+              
+          
+ 
+          
+        defaulttreemodel model    defaulttreemodel  tree getmodel checkabletreenode nodetoremove   nodestoremove    
+            defaultmutabletreenode parent    defaultmutabletreenode  nodetoremove getparent    
+            model removenodefromparent nodetoremove parent parent isleaf      
+                defaultmutabletreenode pp    defaultmutabletreenode  parent getparent pp model removenodefromparent parent   
+                  
+                parent   pp  
+              
+              
+          
+        tree invalidate    
+        tree repaint fileslist initcomponents addcomponentlistener dialogpositionlistener addwindowlistener windowadapter     
+ 
+             override windowclosing windowevent e    
+                threadstate set paneldirectory jpanel    
+        panelsearcharea jpanel    
+        panelfiles jpanel    
+        paneloptions jpanel    
+        panelentrytypesselection jpanel    
+        panelbuttons jpanel    
+        panelimportarea jpanel    
+ 
+        buttonbrowse jbutton localization lang  browse     
+        buttonbrowse setmnemonic 'b'   
+        buttonbrowse settooltiptext localization lang  opens the file browser      
+        buttonscan jbutton localization lang  scan directory     
+        buttonscan setmnemonic 's'   
+        buttonscan settooltiptext localization lang  searches the selected directory unlinked files      
+        buttonapply jbutton localization lang  apply     
+        buttonapply setmnemonic 'i'   
+        buttonapply settooltiptext localization lang  starts the of bibtex entries      
+        buttonclose jbutton localization lang  close     
+        buttonclose settooltiptext localization lang  leave dialog      
+        buttonclose setmnemonic 'c'   
+ 
+          
+        buttonoptionselectall jbutton    
+        buttonoptionselectall setmnemonic 'a'   
+        buttonoptionselectall setaction actionselectall   
+        buttonoptionunselectall jbutton    
+        buttonoptionunselectall setmnemonic 'u'   
+        buttonoptionunselectall setaction actionunselectall   
+        buttonoptionexpandall jbutton    
+        buttonoptionexpandall setmnemonic 'e'   
+        buttonoptionexpandall setaction actionexpandtree   
+        buttonoptioncollapseall jbutton    
+        buttonoptioncollapseall setmnemonic 'l'   
+        buttonoptioncollapseall setaction actioncollapsetree   
+ 
+        checkboxcreatekeywords jcheckbox localization lang  create directory based keywords     
+        checkboxcreatekeywords 
+                 settooltiptext localization lang  creates keywords in created entrys with directory pathnames     
+        checkboxcreatekeywords setselected checkboxwhyistherenogetselectedstupidswing   
+        checkboxcreatekeywords additemlistener  
+                e -  checkboxwhyistherenogetselectedstupidswing    checkboxwhyistherenogetselectedstupidswing   
+ 
+        textfielddirectorypath jtextfield    
+        textfielddirectorypath 
+                 settext lastselecteddirectory lastselecteddirectory toabsolutepath   tostring     
+ 
+        labeldirectorydescription jlabel localization lang  select a directory where the search shall start      
+        labelfiletypesdescription jlabel localization lang  select file type      
+        labelfilesdescription jlabel localization lang  these files are not linked in the active database      
+        labelentrytypedescription jlabel localization lang  entry type to be created      
+        labelsearchingdirectoryinfo jlabel localization lang  searching file system        
+        labelsearchingdirectoryinfo sethorizontalalignment swingconstants center   
+        labelsearchingdirectoryinfo setvisible labelimportinginfo jlabel localization lang  importing into database        
+        labelimportinginfo sethorizontalalignment swingconstants center   
+        labelimportinginfo setvisible tree jtree    
+        guiutil correctrowheight tree   
+ 
+        scrollpanetree jscrollpane tree   
+        scrollpanetree setwheelscrollingenabled progressbarsearching jprogressbar    
+        progressbarsearching setindeterminate progressbarsearching setvisible progressbarsearching setstringpainted progressbarimporting jprogressbar    
+        progressbarimporting setindeterminate progressbarimporting setvisible progressbarimporting setstringpainted initlayout     
+ 
+        gridbaglayout gbl gridbaglayout    
+ 
+        paneldirectory setborder borderfactory createtitledborder borderfactory createetchedborder    
+                localization lang  select directory      
+        panelfiles setborder borderfactory createtitledborder borderfactory createetchedborder    
+                localization lang  select files      
+        panelentrytypesselection setborder borderfactory createtitledborder borderfactory createetchedborder    
+                localization lang  bibtex entry creation      
+ 
+        insets basicinsets insets 6  6  6  6   
+        insets smallinsets insets 3  2  3  1   
+        insets noinsets insets 0  0  0  0   
+ 
+          
+        findunlinkedfilesdialog addcomponent gbl  panelsearcharea  buttonscan  gridbagconstraints horizontal  
+                gridbagconstraints east  noinsets  0  1  1  1  1  1  40  10   
+        findunlinkedfilesdialog addcomponent gbl  panelsearcharea  labelsearchingdirectoryinfo  
+                gridbagconstraints horizontal  gridbagconstraints east  noinsets  0  2  1  1  0  0  0  0   
+        findunlinkedfilesdialog addcomponent gbl  panelsearcharea  progressbarsearching  gridbagconstraints horizontal  
+                gridbagconstraints east  noinsets  0  3  1  1  0  0  0  0   
+ 
+        findunlinkedfilesdialog addcomponent gbl  paneldirectory  labeldirectorydescription gridbagconstraints west insets 6  6  0  6   0  0  3  1  0  0  0  0   
+        findunlinkedfilesdialog addcomponent gbl  paneldirectory  textfielddirectorypath  gridbagconstraints horizontal basicinsets  0  1  2  1  1  1  0  0   
+        findunlinkedfilesdialog addcomponent gbl  paneldirectory  buttonbrowse  gridbagconstraints horizontal  
+                gridbagconstraints east  basicinsets  2  1  1  1  0  0  0  0   
+        findunlinkedfilesdialog addcomponent gbl  paneldirectory  labelfiletypesdescription  gridbagconstraints none  
+                gridbagconstraints west insets 18  6  18  3   0  3  1  1  0  0  0  0   
+        findunlinkedfilesdialog addcomponent gbl  paneldirectory  comboboxfiletypeselection  
+                gridbagconstraints horizontal  gridbagconstraints west insets 18  3  18  6   1  3  1  1  1  0  0  
+                0   
+        findunlinkedfilesdialog addcomponent gbl  paneldirectory  panelsearcharea  gridbagconstraints horizontal  
+                gridbagconstraints east insets 18  6  18  6   2  3  1  1  0  0  0  0   
+ 
+        findunlinkedfilesdialog addcomponent gbl  panelfiles  labelfilesdescription  gridbagconstraints horizontal  
+                gridbagconstraints west insets 6  6  0  6   0  0  1  1  0  0  0  0   
+        findunlinkedfilesdialog addcomponent gbl  panelfiles  scrollpanetree  gridbagconstraints both  
+                gridbagconstraints center  basicinsets  0  1  1  1  1  1  0  0   
+        findunlinkedfilesdialog addcomponent gbl  panelfiles  paneloptions  gridbagconstraints none  
+                gridbagconstraints northeast  basicinsets  1  1  1  1  0  0  0  0   
+        findunlinkedfilesdialog addcomponent gbl  paneloptions  buttonoptionselectall  gridbagconstraints horizontal  
+                gridbagconstraints north  noinsets  0  0  1  1  1  0  0  0   
+        findunlinkedfilesdialog addcomponent gbl  paneloptions  buttonoptionunselectall  gridbagconstraints horizontal  
+                gridbagconstraints north  noinsets  0  1  1  1  0  0  0  0   
+        findunlinkedfilesdialog addcomponent gbl  paneloptions  buttonoptionexpandall  gridbagconstraints horizontal  
+                gridbagconstraints north insets 6  0  0  0   0  2  1  1  0  0  0  0   
+        findunlinkedfilesdialog addcomponent gbl  paneloptions  buttonoptioncollapseall  gridbagconstraints horizontal  
+                gridbagconstraints north  noinsets  0  3  1  1  0  0  0  0   
+ 
+        findunlinkedfilesdialog addcomponent gbl  panelentrytypesselection  labelentrytypedescription  
+                gridbagconstraints none  gridbagconstraints west  basicinsets  0  0  1  1  0  0  0  0   
+        findunlinkedfilesdialog addcomponent gbl  panelentrytypesselection  comboboxentrytypeselection  
+                gridbagconstraints none  gridbagconstraints west  basicinsets  1  0  1  1  1  0  0  0   
+        findunlinkedfilesdialog addcomponent gbl  panelentrytypesselection  checkboxcreatekeywords  
+                gridbagconstraints horizontal  gridbagconstraints west  basicinsets  0  1  2  1  0  0  0  0   
+        findunlinkedfilesdialog addcomponent gbl  panelimportarea  labelimportinginfo  gridbagconstraints horizontal  
+                gridbagconstraints center insets 6  6  0  6   0  1  1  1  1  0  0  0   
+        findunlinkedfilesdialog addcomponent gbl  panelimportarea  progressbarimporting  gridbagconstraints horizontal  
+                gridbagconstraints center insets 0  6  6  6   0  2  1  1  1  0  0  0   
+        findunlinkedfilesdialog addcomponent gbl  panelbuttons  panelimportarea  gridbagconstraints none  
+                gridbagconstraints east  smallinsets  1  0  1  1  0  0  0  0   
+ 
+        findunlinkedfilesdialog addcomponent gbl  getcontentpane    paneldirectory  gridbagconstraints horizontal  
+                gridbagconstraints center  basicinsets  0  0  1  1  0  0  0  0   
+        findunlinkedfilesdialog addcomponent gbl  getcontentpane    panelfiles  gridbagconstraints both  
+                gridbagconstraints northwest insets 12  6  2  2   0  1  1  1  1  1  0  0   
+        findunlinkedfilesdialog addcomponent gbl  getcontentpane    panelentrytypesselection  
+                gridbagconstraints horizontal  gridbagconstraints southwest insets 12  6  2  2   0  2  1  1  0  0  
+                0  0   
+        findunlinkedfilesdialog addcomponent gbl  getcontentpane    panelbuttons  gridbagconstraints horizontal  
+                gridbagconstraints center insets 10  6  10  6   0  3  1  1  0  0  0  0   
+ 
+        buttonbarbuilder bb buttonbarbuilder    
+        bb addglue    
+        bb addbutton buttonapply   
+        bb addbutton buttonclose   
+        bb addglue    
+ 
+        bb getpanel   setborder borderfactory createemptyborder 5  5  5  5    
+        panelimportarea add bb getpanel    gridbagconstraints none   
+        pack addcomponent gridbaglayout layout  container container  component component  integer fill  
+            integer anchor  insets insets gridx gridy width height weightx weighty ipadx ipady    
+        container setlayout layout   
+        gridbagconstraints constraints gridbagconstraints    
+        constraints gridx   gridx  
+        constraints gridy   gridy  
+        constraints gridwidth   width  
+        constraints gridheight   height  
+        constraints weightx   weightx  
+        constraints weighty   weighty  
+        constraints ipadx   ipadx  
+        constraints ipady   ipady fill constraints fill   fill insets constraints insets   insets anchor constraints anchor   anchor  
+          
+        layout setconstraints component  constraints   
+        container add component createtree     
+ 
+          
+        treemouselistener mouseadapter     
+ 
+             override mousepressed mouseevent e x   e getx y   e gety row   tree getrowforlocation x  y   
+ 
+                treepath path   tree getpathforrow row path checkabletreenode node    checkabletreenode  path getlastpathcomponent e getclickcount      2    
+                        object userobject   node getuserobject userobject filenodewrapper     node isleaf      
+                            filenodewrapper fnw    filenodewrapper  userobject jabrefdesktop openexternalviewer  
+                                        jabrefgui getmainframe   getcurrentbasepanel   getbibdatabasecontext    
+                                        fnw file getabsolutepath    fieldname pdf ioexception e1    
+                                logger info  error opening file   e1 node check    
+                        tree invalidate    
+                        tree repaint    
+                      
+                  
+              
+ 
+           
+ 
+        checkabletreenode startnode checkabletreenode  root    
+        defaulttreemodel model defaulttreemodel startnode   
+ 
+        tree setmodel model   
+        tree setrootvisible defaulttreecellrenderer renderer checkboxtreecellrenderer    
+        tree setcellrenderer renderer   
+ 
+        tree addmouselistener treemouselistener createfiletypescombobox     
+ 
+        list filefilter  filefilterlist   creatormanager getfilefilterlist    
+ 
+        vector filefilter  vector vector filefilter filefilter   filefilterlist    
+            vector add filefilter   
+          
+        comboboxfiletypeselection jcombobox   vector   
+ 
+        comboboxfiletypeselection setrenderer defaultlistcellrenderer     
+ 
+              
+             override component getlistcellrenderercomponent jlist ?  list  object value index isselected cellhasfocus    
+                jlabel label    jlabel getlistcellrenderercomponent list  value  index  isselected  
+                        cellhasfocus value entryfromfilecreator    
+                    entryfromfilecreator creator    entryfromfilecreator  value creator getexternalfiletype label seticon creator getexternalfiletype   geticon label createentrytypescombobox     
+ 
+        iterator entrytype  iterator   entrytypes 
+                 getallvalues frame getcurrentbasepanel   getbibdatabasecontext   getmode    iterator    
+        vector bibtexentrytypewrapper  list vector      
+        list add bibtexentrytypewrapper iterator hasnext      
+            list add bibtexentrytypewrapper iterator next      
+          
+        comboboxentrytypeselection jcombobox   list bibtexentrytypewrapper   
+ 
+  
+ 
+ 
+        bibtexentrytypewrapper entrytype bibtextype entrytype   bibtextype  
+          
+ 
+         override tostring entrytype localization lang   no selection entrytype getname entrytype getentrytype entrytype checkabletreenode defaultmutabletreenode checkabletreenode object userobject userobject   
+            checkbox jcheckbox jcheckbox getcheckbox checkbox check     
+            setselected  isselected setselected bselected    
+            isselected   bselected  
+            enumeration checkabletreenode  tmpchildren children checkabletreenode child   collections list tmpchildren     
+                child setselected bselected isselected isselected checkboxtreecellrenderer defaulttreecellrenderer   
+ 
+  
+ 
+ 
+         override component gettreecellrenderercomponent jtree tree  object value sel expanded leaf row hasfocus    
+ 
+            component nodecomponent gettreecellrenderercomponent tree  value  sel  expanded  leaf  row  
+                    hasfocus   
+            checkabletreenode node    checkabletreenode  value  
+ 
+            filenodewrapper userobject    filenodewrapper  node getuserobject    
+ 
+            jpanel newpanel jpanel    
+ 
+            jcheckbox checkbox   node getcheckbox    
+            checkbox setselected node isselected seticon fsv getsystemicon userobject file exception ignored    
+                  
+              
+ 
+            newpanel setbackground nodecomponent getbackground     
+            checkbox setbackground nodecomponent getbackground     
+ 
+            gridbaglayout gbl gridbaglayout    
+            findunlinkedfilesdialog addcomponent gbl  newpanel  checkbox null 0  0  1  1  0  0  0  0   
+            findunlinkedfilesdialog addcomponent gbl  newpanel  nodecomponent  gridbagconstraints horizontal insets 1  2  0  0   1  0  1  1  1  0  0  0 userobject filecount   0    
+                jlabel label jlabel  
+                              userobject filecount     file     userobject filecount   1 ?  s                
+                findunlinkedfilesdialog addcomponent gbl  newpanel  label null insets 1  2  0  0   2  0  1  
+                        1  0  0  0  0 newpanel filenodewrapper file file filecount filenodewrapper file afile afile  0 filenodewrapper file adirectory filecount file   adirectory filecount   filecount  
+          
+ 
+          
+         override tostring file getname    
+          
+      
+ 
+ 

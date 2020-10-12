@@ -1,0 +1,83 @@
+ 
+   key bindings  
+   report error exit  
+   report error exit  net sf jabref gui genfieldscustomizer jdialog genfieldscustomizer jabrefframe frame frame  localization lang  set general fields helpbut helpaction helpfile general_fields  gethelpbutton    
+        jbinit    
+        setsize dimension 650  300 jbinit     
+        ok settext localization lang  ok     
+        ok addactionlistener e -  okactionperformed     
+        cancel settext localization lang  cancel     
+        cancel addactionlistener e -  dispose     
+        jlabel1 settext localization lang  delimit fields with semicolon  ex         url pdf note    
+        jpanel3 setlayout gridbaglayout2   
+        jpanel4 setborder borderfactory createetchedborder     
+        jpanel4 setlayout gridbaglayout1   
+        jlabel2 settext localization lang  general fields     
+ 
+        setfieldstext    
+ 
+        revert settext localization lang revert addactionlistener e -  revertactionperformed getcontentpane   add buttons  borderlayout south   
+        buttonbarbuilder bb buttonbarbuilder buttons   
+        buttons setborder borderfactory createemptyborder 2  2  2  2    
+        bb addglue    
+        bb addbutton ok   
+        bb addbutton revert   
+        bb addbutton cancel   
+        bb addstrut sizes dlux5   
+        bb addbutton helpbut   
+        bb addglue getcontentpane   add jpanel3  borderlayout center   
+        jpanel3 add jlabel1 gridbagconstraints 0  1  1  1  1 0  0 0 
+                  gridbagconstraints west  gridbagconstraints none insets 5  5  5  5   0  0    
+        jpanel3 add jpanel4 gridbagconstraints 0  0  1  1  1 0  1 0 
+                  gridbagconstraints center  gridbagconstraints both insets 5  5  5  5   318  193    
+        jpanel4 add jscrollpane1 gridbagconstraints 0  1  1  1  1 0  1 0 
+                  gridbagconstraints center  gridbagconstraints both insets 5  5  5  5   0  0    
+        jscrollpane1 getviewport   add fieldsarea jpanel4 add jlabel2 gridbagconstraints 0  0  1  1  0 0  0 0 
+                  gridbagconstraints west  gridbagconstraints none insets 5  5  5  5   0  0    
+ 
+          
+        actionmap am   buttons getactionmap    
+        inputmap im   buttons getinputmap jcomponent when_in_focused_window   
+        im put globals getkeyprefs   getkey keybinding close_dialog    close    
+        am put  close abstractaction     
+ 
+             override actionperformed actionevent e    
+                dispose okactionperformed lines   fieldsarea gettext   split  \n i   0 i   lines length  i parts   lines i  split parts length    2 field   localization lang  field    
+                joptionpane showmessagedialog localization lang  each line must be on the following form       '    
+                        localization lang  tabname     ' '   field    1     field    2         field    n'   
+                        localization lang  error    joptionpane error_message teststring   bibtexkeypatternutil checklegalkey parts 1   
+                    globals prefs getboolean jabrefpreferences enforce_legal_bibtex_key teststring equals parts 1       parts 1  indexof ' '     0     
+                  
+                joptionpane showmessagedialog localization lang  field names are not allowed to contain white space or the following   
+                                   characters        #     ~   ^     
+                        localization lang  error    joptionpane error_message globals prefs put  jabrefpreferences custom_tab_name   i   parts 0    
+            globals prefs put  jabrefpreferences custom_tab_fields   i   parts 1  tolowercase     
+          
+        globals prefs purgeseries jabrefpreferences custom_tab_name  i   
+        globals prefs purgeseries jabrefpreferences custom_tab_fields  i   
+        globals prefs updateentryeditortablist    
+ 
+        dispose setfieldstext     
+        stringbuilder sb stringbuilder    
+ 
+        entryeditortablist tablist   globals prefs getentryeditortablist i   0  i   tablist gettabcount    i      
+            sb append tablist gettabname i    
+            sb append ' '   
+            sb append join      tablist gettabfields i     
+            sb append '\n'   
+          
+ 
+        fieldsarea settext sb tostring revertactionperformed     
+        stringbuilder sb stringbuilder name fields i   0 name globals prefs defaults get 
+                 jabrefpreferences custom_tab_name    _def    i sb append name   
+            fields globals prefs defaults get 
+                     jabrefpreferences custom_tab_fields    _def    i   
+            sb append ' '   
+            sb append fields   
+            sb append '\n'   
+            i    
+          
+        fieldsarea settext sb tostring     
+ 
+      
+ 

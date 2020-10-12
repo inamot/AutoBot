@@ -1,0 +1,601 @@
+ 
+    
+   gui component allows editing fields bibentry e one shows up double click entry table  
+    p hosts tabs  required  general  optional buttons left  
+    p  
+   entryeditor registers itself event bus  receiving 
+   events whenever field entry changes  enabling text fields update themselves change made somewhere reference entry object works currently displayed type action concerned closing window action deletes current entry closes editor action switching next entry action switching previous entry action concerned storing field value action switching next tab action switching previous tab action generates bibtex key entry     
+   ugly hack pointer filelisteditor call autosetlinks set false stop source text area getting updated used cases source couldn't parsed user given option edit indicates go next previous entry indicates whether last attempt parsing source successful used determine whether dialog close stay open user received error message source  
+        whatever chose used prevent double updates editing source index source panel tabbed     
+   required fields 
+   optional fields list optional fields entry aliases optional fields deprecated deprecated fields 
+   add tabs fields 
+   general fields preferences 
+   source tab 
+    
+        return reference currently edited entry toolbar carries key bindings valid whole window  
+   add actions thus buttons  
+   create type-label 
+    
+       getextra checks field name against internalbibtexfields getfieldextras name name entry proper component shown created returned  otherwise  null returned addition  e g  listeners added field editor  even component returned  
+       
+        param editor field editor 
+        return component show null none  
+        
+   timestamp field datepicker command 
+   double click datefield    insert current date  today  
+   add controls switching between abbreviated full journal names field fieldcontentselector need combine add global focus listener menu item see field focused action called  
+   set current entry selected  
+   fixes bug losing selection e g autogeneration bibtex key  
+    
+       note method only used source panel  not tabs  look entryeditortab setup text components tabs  
+        
+   set up key bindings focus listener fieldeditor  
+    
+       reports enabled status editor set setenabled   
+        
+    
+       sets enabled status text fields entry editor  
+        
+    
+       makes sure current edit stored  
+        
+    
+       returns name currently selected component  
+        
+   put warning exception text displayed user 
+   first  remove fields user removed set fields set user  
+   test field legally set  
+   see user changed entry type  
+   update ui 
+   todo need repaint entryeditor fields not displayed added 
+   todo updating work properly source stored source couldn't parsed user given error message choice keep revert contents source text field  
+    
+       sets text areas according shown entry  
+        
+    
+       update jtextarea field changed  
+        
+   add mouse listener user right-click type label change entry type  
+    
+       focus listener fires storefieldaction textarea loses focus tell editor tab update fields makes sure updated even tab left contained one same fields one  
+   show confirmation dialog not disabled  
+   storage bibtex key field change  
+   make sure key legal  
+   add undoablekeychange baseframe's undomanager  
+   trim whitespace value check field changed don't want mark base changed unless real change set field label color following statement attempts write new contents stringwriter cause ioexception field not properly formatted happens field not stored textarea turns red  
+   see need update autocompleter instance  
+   add undoablefieldchange baseframe's undomanager  
+   make sure scroll entry moved table only done editor currently showing  
+   1 bibentry selected index  already 2  update label 
+   store current edit case action called during editing field partial clone net sf jabref gui basepanel setupactions   new abstractworker         run updates table automatically close not within tab 
+   ok  break operation  
+   store undo information  
+   cite key always set here 
+   here update field 
+   normal panel  
+   source panel  
+    
+       updates timestamp given entry returns fieldchange 
+        net sf jabref gui entryeditor entryeditor jpanel entrycontainer entryeditor jabrefframe frame  basepanel panel  bibentry entry frame   frame panel   panel entry   entry  
+ 
+        entry registerlistener entry registerlistener specialfieldupdatelistener getinstance     
+ 
+        displayedbibentrytype   entry gettype    
+ 
+        writexmp writexmpentryeditoraction panel borderlayout borderlayout borderlayout    
+        setlayout borderlayout   
+        setuptoolbar    
+        setupfieldpanels    
+        setupsourcepanel    
+        add tabbed  borderlayout center   
+        tabbed addchangelistener tablistener globals prefs getboolean jabrefpreferences default_show_source     
+            tabbed setselectedindex sourceindex   
+          
+ 
+        updateallfields filelisteditor filelisteditor adjustcolumnwidth setupfieldpanels     
+        tabbed removeall    
+        tabs clear    
+ 
+        entrytype type   entrytypes gettypeordefault entry gettype frame getcurrentbasepanel   getbibdatabasecontext   getmode     
+ 
+          
+        addrequiredtab type   
+ 
+          
+        set deprecatedfields hashset   entryconverter field_aliases_tex_to_ltx keyset     
+        set usedoptionalfieldsdeprecated hashset   deprecatedfields type getoptionalfields type getoptionalfields   isempty frame getcurrentbasepanel   getbibdatabasecontext   isbiblatexmode      
+                addoptionaltab type addoptionaltab type   
+ 
+                deprecatedfields add fieldname year   
+                deprecatedfields add fieldname month   
+                list secondaryoptionalfields   type getsecondaryoptionalfields    
+                list optionalfieldsnotprimaryordeprecated arraylist   secondaryoptionalfields   
+                optionalfieldsnotprimaryordeprecated removeall deprecatedfields   
+ 
+                  
+                set optionalfieldsandaliases hashset field   type getoptionalfields      
+                    optionalfieldsandaliases add field entryconverter field_aliases_ltx_to_tex containskey field     
+                        optionalfieldsandaliases add entryconverter field_aliases_ltx_to_tex get field    
+                      
+                  
+ 
+                  
+                usedoptionalfieldsdeprecated retainall optionalfieldsandaliases   
+ 
+                  
+                usedoptionalfieldsdeprecated add fieldname month   
+ 
+                  
+                entryeditortab optpan2 entryeditortab frame  panel  optionalfieldsnotprimaryordeprecated localization lang  optional fields 2 optpan2 filelisteditor filelisteditor   optpan2 filelisteditor  
+                  
+                tabbed addtab localization lang  optional fields 2    icontheme jabreficon optional getsmallicon    
+                        optpan2 getpane    localization lang  show optional fields     
+                tabs add optpan2 usedoptionalfieldsdeprecated isempty      
+                    entryeditortab optpan3  
+                    optpan3 entryeditortab frame  panel arraylist   usedoptionalfieldsdeprecated localization lang  deprecated fields optpan3 filelisteditor filelisteditor   optpan3 filelisteditor  
+                      
+                    tabbed addtab localization lang  deprecated fields    icontheme jabreficon optional getsmallicon    
+                            optpan3 getpane    localization lang  show deprecated bibtex fields     
+                    tabs add optpan3   
+                  
+              
+          
+ 
+          
+        list displayedfields   type getallfields   stream   map tolowercase  
+                 collect collectors tolist     
+        list otherfields   entry getfieldnames   stream   map tolowercase  
+                 filter f -   displayedfields contains f   collect collectors tolist usedoptionalfieldsdeprecated isempty      
+            otherfields removeall usedoptionalfieldsdeprecated   
+          
+        otherfields remove bibentry key_field   
+        otherfields removeall globals prefs getcustomtabfieldnames otherfields isempty      
+            addothertab otherfields   
+          
+ 
+          
+        addgeneraltabs    
+          
+        addsourcetab addgeneraltabs     
+        entryeditortablist tablist   globals prefs getentryeditortablist i   0  i   tablist gettabcount    i      
+            entryeditortab newtab entryeditortab frame  panel  tablist gettabfields i false  tablist gettabname i newtab filelisteditor filelisteditor   newtab filelisteditor  
+              
+            tabbed addtab tablist gettabname i   newtab getpane     
+            tabs add newtab addsourcetab panelname   localization lang  %0 source   panel getbibdatabasecontext   getmode   getformattedname tooltip   localization lang  show edit %0 source   panel getbibdatabasecontext   getmode   getformattedname     
+        srcpanel setname panelname   
+        tabbed addtab panelname  icontheme jabreficon source getsmallicon    srcpanel  tooltip   
+        tabs add srcpanel   
+        sourceindex   tabs size   - 1  
+        srcpanel setfocuscycleroot addothertab list otherfields    
+        entryeditortab otherpanel entryeditortab frame  panel  otherfields false  localization lang  other fields otherpanel filelisteditor filelisteditor   otherpanel filelisteditor  
+          
+        tabbed addtab localization lang  other fields    icontheme jabreficon optional getsmallicon    otherpanel 
+                 getpane    localization lang  show remaining fields     
+        tabs add otherpanel list addrequiredtab entrytype type    
+        list requiredfields   type getrequiredfieldsflat    
+ 
+        entryeditortab requiredpanel entryeditortab frame  panel  requiredfields localization lang  required fields requiredpanel filelisteditor filelisteditor   requiredpanel filelisteditor  
+          
+        tabbed addtab localization lang  required fields    icontheme jabreficon required getsmallicon    requiredpanel 
+                 getpane    localization lang  show required fields     
+        tabs add requiredpanel requiredfields addoptionaltab entrytype type    
+        entryeditortab optionalpanel entryeditortab frame  panel  type getprimaryoptionalfields localization lang  optional fields optionalpanel filelisteditor filelisteditor   optionalpanel filelisteditor  
+          
+        tabbed addtab localization lang  optional fields    icontheme jabreficon optional getsmallicon    optionalpanel 
+                 getpane    localization lang  show optional fields     
+        tabs add optionalpanel getdisplayedbibentrytype displayedbibentrytype  
+      
+ 
+      
+     override bibentry getentry entry bibdatabase getdatabase panel getdatabase setuptoolbar     
+        jpanel leftpan jpanel    
+        leftpan setlayout borderlayout     
+        jtoolbar toolbar osxcompatibletoolbar swingconstants vertical   
+ 
+        toolbar setborder toolbar setrollover toolbar setmargin insets 0  0  0  2    
+ 
+          
+        actionmap actionmap   toolbar getactionmap    
+        inputmap inputmap   toolbar getinputmap jcomponent when_in_focused_window   
+ 
+        inputmap put globals getkeyprefs   getkey keybinding close_entry_editor    close    
+        actionmap put  close   closeaction   
+        inputmap put globals getkeyprefs   getkey keybinding entry_editor_store_field    store    
+        actionmap put  store   getstorefieldaction     
+        inputmap put globals getkeyprefs   getkey keybinding autogenerate_bibtex_keys    generatekey    
+        actionmap put  generatekey   getgeneratekeyaction     
+        inputmap put globals getkeyprefs   getkey keybinding automatically_link_files    autolink    
+        actionmap put  autolink   autolinkaction   
+        inputmap put globals getkeyprefs   getkey keybinding entry_editor_previous_entry    prev    
+        actionmap put  prev   getpreventryaction     
+        inputmap put globals getkeyprefs   getkey keybinding entry_editor_next_entry    next    
+        actionmap put  next   getnextentryaction     
+        inputmap put globals getkeyprefs   getkey keybinding undo    undo    
+        actionmap put  undo   undoaction   
+        inputmap put globals getkeyprefs   getkey keybinding redo    redo    
+        actionmap put  redo   redoaction   
+        inputmap put globals getkeyprefs   getkey keybinding help    help    
+        actionmap put  help   gethelpaction     
+ 
+        toolbar setfloatable jbutton closebut jbutton closeaction   
+        closebut settext closebut setborder closebut setmargin insets 8  0  8  0    
+        leftpan add closebut  borderlayout north   
+ 
+          
+        typedbibentry typedentry typedbibentry entry  panel getbibdatabasecontext   getmode     
+        leftpan add typelabel typedentry gettypefordisplay     borderlayout center   
+        typebutton typebutton typebutton    
+ 
+        toolbar add typebutton   
+        toolbar add getgeneratekeyaction     
+        toolbar add autolinkaction   
+ 
+        toolbar add writexmp   
+ 
+        toolbar addseparator    
+ 
+        toolbar add deleteaction   
+        toolbar add getpreventryaction     
+        toolbar add getnextentryaction     
+ 
+        toolbar addseparator    
+ 
+        toolbar add gethelpaction     
+ 
+        component   comps   toolbar getcomponents component comp   comps    
+              jcomponent  comp  setopaque leftpan add toolbar  borderlayout south   
+        add leftpan  borderlayout west optional jcomponent  getextra fieldeditor editor fieldname   editor getfieldname set fieldproperty  fieldextras   internalbibtexfields getfieldproperties fieldname globals prefs get jabrefpreferences time_stamp_field  equals fieldname  
+                   fieldextras contains fieldproperty date fieldextracomponents getdatetimeextracomponent editor  
+                    fieldextras contains fieldproperty date   fieldextras contains fieldproperty iso_date fieldextras contains fieldproperty external fieldextracomponents getexternalextracomponent panel  editor fieldextras contains fieldproperty journal_name fieldextracomponents getjournalextracomponent panel  editor  entry  getstorefieldaction fieldextras contains fieldproperty doi fieldextracomponents getdoiextracomponent panel editor fieldextras contains fieldproperty eprint fieldextracomponents geteprintextracomponent panel editor fieldextras contains fieldproperty isbn fieldextracomponents getisbnextracomponent panel editor fieldextras contains fieldproperty owner fieldextracomponents getsetownerextracomponent editor  getstorefieldaction fieldextras contains fieldproperty yes_no fieldextracomponents getyesnoextracomponent editor fieldextras contains fieldproperty month fieldextracomponents getmonthextracomponent editor frame getcurrentbasepanel   getbibdatabasecontext   getmode fieldextras contains fieldproperty gender fieldextracomponents getgenderextracomponent editor fieldextras contains fieldproperty editor_type fieldextracomponents geteditortypeextracomponent editor fieldextras contains fieldproperty pagination fieldextracomponents getpaginationextracomponent editor fieldextras contains fieldproperty type fieldextracomponents gettypeextracomponent editor patent  equalsignorecase entry gettype optional empty setupsourcepanel     
+        source jtextareawithhighlighting    
+        addsearchlistener  searchqueryhighlightlistener  source   
+ 
+        source seteditable source setlinewrap source addfocuslistener fieldeditorfocuslistener     
+          
+        source addfocuslistener globals getfocuslistener     
+        source setfont font  monospaced   font plain  globals prefs getint jabrefpreferences font_size     
+        setupjtextcomponent source   
+        updatesource    
+ 
+        jscrollpane scrollpane jscrollpane source  scrollpaneconstants vertical_scrollbar_as_needed  
+                scrollpaneconstants horizontal_scrollbar_never   
+ 
+        srcpanel setlayout borderlayout     
+        srcpanel add scrollpane  borderlayout center addsearchlistener searchqueryhighlightlistener listener    
+        searchlisteners add listener   
+        panel frame   getglobalsearchbar   getsearchqueryhighlightobservable   addsearchlistener listener removesearchlisteners searchqueryhighlightlistener listener   searchlisteners    
+            panel frame   getglobalsearchbar   getsearchqueryhighlightobservable   removesearchlistener listener updatesource updatesource srcstring   getsourcestring entry  panel getbibdatabasecontext   getmode     
+                source settext srcstring   
+                lastsourcestringaccepted   srcstring  
+ 
+                  
+                  
+                panel highlightentry entry ioexception ex    
+                source settext ex getmessage      \n\n    
+                        localization lang  correct the entry  and reopen editor to display edit source      
+                source seteditable logger debug  incorrect entry   ex getsourcestring bibentry entry  bibdatabasemode type ioexception   
+        stringwriter stringwriter stringwriter 200   
+        latexfieldformatter formatter   latexfieldformatter 
+                 buildignorehashes globals prefs getlatexfieldformatterpreferences bibentrywriter formatter writewithoutprependednewlines entry  stringwriter  type stringwriter getbuffer   tostring setupjtextcomponent jtextcomponent textcomponent    
+          
+        inputmap inputmap   textcomponent getinputmap jcomponent when_focused   
+        actionmap actionmap   textcomponent getactionmap    
+ 
+        inputmap put globals getkeyprefs   getkey keybinding entry_editor_store_field    store    
+        actionmap put  store   getstorefieldaction     
+ 
+        inputmap put globals getkeyprefs   getkey keybinding entry_editor_next_panel    right    
+        inputmap put globals getkeyprefs   getkey keybinding entry_editor_next_panel_2    right    
+        actionmap put  right   getswitchrightaction     
+ 
+        inputmap put globals getkeyprefs   getkey keybinding entry_editor_previous_panel    left    
+        inputmap put globals getkeyprefs   getkey keybinding entry_editor_previous_panel_2    left    
+        actionmap put  left   getswitchleftaction     
+ 
+        inputmap put globals getkeyprefs   getkey keybinding help    help    
+        actionmap put  help   gethelpaction     
+ 
+        inputmap put globals getkeyprefs   getkey keybinding next_tab    nexttab    
+        actionmap put  nexttab   frame nexttab   
+        inputmap put globals getkeyprefs   getkey keybinding previous_tab    prevtab    
+        actionmap put  prevtab   frame prevtab   
+ 
+        set awtkeystroke  keys hashset    
+                textcomponent getfocustraversalkeys keyboardfocusmanager forward_traversal_keys    
+        keys clear    
+        keys add awtkeystroke getawtkeystroke  pressed tab     
+        textcomponent setfocustraversalkeys keyboardfocusmanager forward_traversal_keys  keys   
+        keys hashset   textcomponent 
+                 getfocustraversalkeys keyboardfocusmanager backward_traversal_keys    
+        keys clear    
+        keys add keystroke getkeystroke  shift pressed tab     
+        textcomponent setfocustraversalkeys keyboardfocusmanager backward_traversal_keys  keys   
+ 
+        textcomponent addfocuslistener fieldlistener     
+      
+ 
+     override requestfocus     
+        activatevisible activatevisible     
+        object activetab   tabs get tabbed getselectedindex activetab entryeditortab    
+              entryeditortab  activetab  focus source requestfocus    
+          
+      
+ 
+      
+     override isenabled source isenabled    
+      
+ 
+      
+     override setenabled enabled object tab   tabs tab entryeditortab    
+                  entryeditortab  tab  setenabled enabled   
+              
+          
+        source setenabled enabled storecurrentedit     
+        component comp   globals getfocuslistener   getfocused objects equals comp  source       comp fieldeditor isancestorof comp comp fieldeditor    
+                  fieldeditor  comp  clearautocompletesuggestion    
+              
+            getstorefieldaction   actionperformed actionevent comp  0 getvisiblepanelname tabbed getselectedcomponent   getname setvisiblepanel name i   0  i   tabbed gettabcount      i tabbed getcomponent i  getname tabbed getcomponent i  getname   equals name     
+                tabbed setselectedindex i tabbed gettabcount     0    
+            tabbed setselectedindex 0 setfocustofield fieldname object tab   tabs tab entryeditortab       entryeditortab  tab  getfields   contains fieldname     
+                entryeditortab entryeditortab    entryeditortab  tab  
+                setvisiblepanel entryeditortab gettabtitle     
+                entryeditortab setactive fieldname   
+                entryeditortab focus storesource     
+        bibtexparser bibtexparser bibtexparser globals prefs getimportformatpreferences parserresult parserresult   bibtexparser parse stringreader source gettext      
+            bibdatabase database   parserresult getdatabase database getentrycount     1 illegalstateexception  more than one entry found database hasentries parserresult haswarnings illegalstateexception parserresult warnings   get 0 illegalstateexception  no entries found     
+                  
+              
+ 
+            namedcompound compound namedcompound localization lang  source edit     
+            bibentry newentry   database getentries   get 0 newkey   newentry getcitekeyoptional   orelse entrychanged emptywarning    newkey newkey isempty newkey entry setcitekey newkey entry clearcitekey entry string  field   entry getfieldmap   entryset fieldname   field getkey fieldvalue   field getvalue internalbibtexfields isdisplayablefield fieldname      newentry hasfield fieldname     
+                    compound addedit undoablefieldchange entry  fieldname  fieldvalue entry clearfield fieldname   
+                    entrychanged entry string  field   newentry getfieldmap   entryset fieldname   field getkey oldvalue   entry getfield fieldname  orelse newvalue   field getvalue objects equals oldvalue  newvalue latexfieldformatter globals prefs getlatexfieldformatterpreferences    
+                             format newvalue  fieldname   
+ 
+                    compound addedit undoablefieldchange entry  fieldname  oldvalue  newvalue    
+                    entry setfield fieldname  newvalue   
+                    entrychanged objects equals newentry gettype    entry gettype       
+                compound addedit undoablechangetype entry  entry gettype    newentry gettype      
+                entry settype newentry gettype     
+                entrychanged compound end entrychanged panel getundomanager   addedit compound panel getdatabase   getduplicationchecker   isduplicatecitekeyexisting entry     
+                warnduplicatebibtexkey emptywarning    
+                warnemptybibtexkey panel output localization lang  stored entry     ' '   
+              
+ 
+            lastsourcestringaccepted   source gettext    
+              
+              
+            panel updateentryeditorifshowing    
+            lastsourceaccepted updatesource panel markbasechanged    
+ 
+            panel highlightentry entry illegalstateexception   ioexception ex    
+              
+              
+              
+            updatesource lastsourceaccepted tabbed setselectedcomponent srcpanel   
+ 
+            object   options    localization lang  edit    localization lang  revert to original source swingutilities iseventdispatchthread answer   joptionpane showoptiondialog frame  localization lang  error            ex getmessage    
+                        localization lang  problem with parsing entry    joptionpane yes_no_option  
+                        joptionpane error_message options  options 0 answer    0    
+                    updatesource lastsourceaccepted updatesource    
+                  
+              
+ 
+            logger debug  incorrect source   ex setfield fieldname newfielddata object tab   tabs tab entryeditortab    
+                  entryeditortab  tab  updatefield fieldname  newfielddata updateallfields object tab   tabs tab entryeditortab    
+                  entryeditortab  tab  setentry entry   
+              
+          
+      
+ 
+      
+     subscribe 
+     suppresswarnings  unused listen fieldchangedevent fieldchangedevent newvalue   fieldchangedevent getnewvalue fieldchangedevent getnewvalue swingutilities iseventdispatchthread      
+            setfield fieldchangedevent getfieldname    newvalue swingutilities invokelater    -  setfield fieldchangedevent getfieldname    newvalue updatefield object sourceobject    
+        getstorefieldaction   actionperformed actionevent sourceobject  0 setmovingtodifferententry     
+        movingtodifferententry unregisterlisteners unregisterlisteners     
+        entry unregisterlistener removesearchlisteners typebutton jbutton typebutton icontheme jabreficon edit geticon     
+            settooltiptext localization lang  change entry type     
+            addactionlistener e -  showchangeentrytypepopupmenu showchangeentrytypepopupmenu     
+        jpopupmenu typemenu changeentrytypemenu   getchangeentrytypepopupmenu panel   
+        typemenu show 0  0 typelabel jlabel typelabel type type   
+            setui verticallabelui setforeground guiglobals entry_editor_label_color   
+            sethorizontalalignment swingconstants right   
+            setfont font  dialog   font italic   font bold  18    
+ 
+              
+            addmouselistener mouseadapter     
+ 
+                 override mousereleased mouseevent e e ispopuptrigger       e getbutton      mouseevent button3     
+                        handletypechange    
+                      
+                  
+ 
+                 override mouseclicked mouseevent e e ispopuptrigger       e getbutton      mouseevent button3     
+                        handletypechange handletypechange     
+                    showchangeentrytypepopupmenu    
+                  
+                
+          
+ 
+         override paintcomponent graphics g    
+            graphics2d g2    graphics2d  g  
+            g2 setrenderinghint renderinghints key_antialiasing  renderinghints value_antialias_on paintcomponent g2 fieldlistener focusadapter   
+         override focuslost focusevent event event istemporary      
+                updatefield event getsource tablistener changelistener   
+         override statechanged changeevent event    
+              
+              
+            swingutilities invokelater    -    
+                object activetab   tabs get tabbed getselectedindex activetab entryeditortab    
+                      entryeditortab  activetab  updateall    
+                    activatevisible deleteaction abstractaction deleteaction localization lang  delete    icontheme jabreficon delete_entry geticon     
+            putvalue action short_description  localization lang  delete entry     
+          
+ 
+         override actionperformed actionevent e goon   panel showdeleteconfirmationdialog 1 goon panel entryeditorclosing entryeditor panel getdatabase   removeentry entry   
+            panel markbasechanged    
+            panel getundomanager   addedit undoableremoveentry panel getdatabase    entry  panel    
+            panel output localization lang  deleted entry close tabbed getselectedcomponent      srcpanel    
+            updatefield source lastsourceaccepted    
+                panel entryeditorclosing entryeditor panel runcommand actions save   
+                lastsourceaccepted lastfieldaccepted    
+                panel entryeditorclosing entryeditor panel runcommand actions save   
+                lastfieldaccepted closeaction abstractaction closeaction localization lang  close window    icontheme jabreficon close getsmallicon     
+            putvalue action short_description  localization lang  close window     
+          
+ 
+         override actionperformed actionevent e    
+            close storefieldaction abstractaction storefieldaction store field value    
+            putvalue action short_description   store field value    
+          
+ 
+         override actionperformed actionevent event movingaway   movingtodifferententry  
+            movingtodifferententry event getsource textfield    
+                  
+                textfield textfield    textfield  event getsource oldvalue   entry getcitekeyoptional   orelse newvalue   textfield gettext newvalue isempty      
+                    newvalue oldvalue newvalue objects equals oldvalue  newvalue cleaned   bibtexkeypatternutil checklegalkey newvalue  
+                        globals prefs getboolean jabrefpreferences enforce_legal_bibtex_key cleaned cleaned equals newvalue     
+                    textfield setvalidbackgroundcolor lastfieldaccepted textfield setinvalidbackgroundcolor swingutilities iseventdispatchthread      
+                        joptionpane showmessagedialog frame  localization lang  invalid bibtex key    
+                                localization lang  error setting field    joptionpane error_message   
+                        requestfocus newvalue entry clearcitekey    
+                    warnemptybibtexkey entry setcitekey newvalue isduplicate   panel getdatabase   getduplicationchecker   isduplicatecitekeyexisting entry isduplicate    
+                        warnduplicatebibtexkey panel output localization lang  bibtex key is unique      
+                      
+                  
+ 
+                  
+                undoablekeychange undoablekeychange undoablekeychange entry  oldvalue  newvalue updatetimestampisset      
+                    namedcompound ce namedcompound undoablekeychange getpresentationname     
+                    ce addedit undoablekeychange   
+                    doupdatetimestamp   ifpresent fieldchange -  ce addedit undoablefieldchange fieldchange     
+                    ce end    
+                    panel getundomanager   addedit ce panel getundomanager   addedit undoablekeychange   
+                  
+ 
+                textfield setvalidbackgroundcolor textfield gettextcomponent   hasfocus      
+                    textfield setactivebackgroundcolor    
+                  
+                updatesource    
+                panel markbasechanged event getsource fieldeditor toset fieldeditor fieldeditor    fieldeditor  event getsource set currenttext   fieldeditor gettext   trim currenttext isempty      
+                    toset   currenttext toset set   entry hasfield fieldeditor getfieldname set      entry hasfield fieldeditor getfieldname     
+                               toset equals entry getfield fieldeditor getfieldname    orelse set    
+                      
+                    fieldeditor setvalidbackgroundcolor toset latexfieldformatter globals prefs getlatexfieldformatterpreferences    format toset  
+                                    fieldeditor getfieldname oldvalue   entry getfield fieldeditor getfieldname    orelse toset entry clearfield fieldeditor getfieldname entry setfield fieldeditor getfieldname    toset   
+                          
+ 
+                        fieldeditor setvalidbackgroundcolor    
+ 
+                          
+                        autocompleter acomp   panel getautocompleters   get fieldeditor getfieldname acomp acomp addbibtexentry entry   
+                          
+ 
+                          
+                        undoablefieldchange undoablefieldchange undoablefieldchange entry  
+                                fieldeditor getfieldname    oldvalue  toset updatetimestampisset      
+                            namedcompound ce namedcompound undoablefieldchange getpresentationname     
+                            ce addedit undoablefieldchange   
+ 
+                            doupdatetimestamp   
+                                     ifpresent fieldchange -  ce addedit undoablefieldchange fieldchange     
+                            ce end    
+ 
+                            panel getundomanager   addedit ce panel getundomanager   addedit undoablefieldchange   
+                          
+                        updatesource    
+                        panel markbasechanged illegalargumentexception ex    
+                        lastfieldaccepted fieldeditor setinvalidbackgroundcolor swingutilities iseventdispatchthread      
+                            joptionpane showmessagedialog frame  localization lang  error            ex getmessage    
+                                    localization lang  error setting field    joptionpane error_message   
+                            logger debug  error setting field   ex   
+                            requestfocus fieldeditor gettextcomponent   hasfocus      
+                    fieldeditor setbackground guiglobals active_editor_color source iseditable       source gettext   equals lastsourcestringaccepted     
+                validentry   storesource movingaway    isshowing      
+                panel highlightentry entry switchleftaction abstractaction switchleftaction to the panel to the left    
+          
+ 
+         override actionperformed actionevent e i   tabbed getselectedindex    
+            tabbed setselectedindex i   0 ? i - 1   tabbed gettabcount   - 1   
+ 
+            activatevisible switchrightaction abstractaction switchrightaction to the panel to the right    
+          
+ 
+         override actionperformed actionevent e i   tabbed getselectedindex    
+            tabbed setselectedindex i    tabbed gettabcount   - 1  ? i   1   0   
+            activatevisible nextentryaction abstractaction nextentryaction localization lang  next entry    icontheme jabreficon down geticon     
+ 
+            putvalue action short_description  localization lang  next entry     
+          
+ 
+         override actionperformed actionevent e    
+            panel selectnextentry preventryaction abstractaction preventryaction localization lang  previous entry    icontheme jabreficon up geticon     
+ 
+            putvalue action short_description  localization lang  previous entry     
+          
+ 
+         override actionperformed actionevent e    
+            panel selectpreviousentry generatekeyaction abstractaction generatekeyaction localization lang  generate bibtex key    icontheme jabreficon make_key geticon     
+ 
+            putvalue action short_description  localization lang  generate bibtex key     
+ 
+          
+ 
+         override actionperformed actionevent e    
+              
+              
+ 
+              
+            storecurrentedit    
+ 
+              
+ 
+              
+            optional oldvalue   entry getcitekeyoptional oldvalue ispresent globals prefs getboolean jabrefpreferences avoid_overwriting_key     
+                    panel output localization lang  not overwriting existing key  to change setting  open options -  prefererences -  bibtex key generator globals prefs getboolean jabrefpreferences warn_before_overwriting_key     
+                    checkboxmessage cbm checkboxmessage localization lang  the current bibtex key will be overwritten localization lang  disable confirmation dialog answer   joptionpane showconfirmdialog frame  cbm  localization lang  overwrite key    
+                            joptionpane yes_no_option cbm isselected      
+                        globals prefs putboolean jabrefpreferences warn_before_overwriting_key answer    joptionpane no_option bibtexkeypatternutil makelabel panel getbibdatabasecontext   getmetadata   
+                     getcitekeypattern globals prefs getbibtexkeypatternpreferences   getkeypattern     panel getdatabase    entry  
+                    globals prefs getbibtexkeypatternpreferences     
+ 
+              
+            panel getundomanager   addedit undoablekeychange entry  oldvalue orelse entry getcitekeyoptional   get bibtexkeydata   entry getcitekeyoptional   get    
+            setfield bibentry key_field  bibtexkeydata   
+            updatesource    
+            panel markbasechanged undoaction abstractaction undoaction undo   icontheme jabreficon undo geticon     
+            putvalue action short_description   undo    
+          
+ 
+         override actionperformed actionevent e    
+            panel runcommand actions undo redoaction abstractaction redoaction redo   icontheme jabreficon redo geticon     
+            putvalue action short_description   redo    
+          
+ 
+         override actionperformed actionevent e    
+            panel runcommand actions redo savedatabaseaction abstractaction savedatabaseaction save database    
+          
+ 
+         override actionperformed actionevent e    
+            object activetab   tabs get tabbed getselectedindex activetab entryeditortab    
+                  
+                entryeditortab tab    entryeditortab  activetab  
+                fieldeditor fieldeditor   tab getactive    
+                fieldeditor clearautocompletesuggestion    
+                updatefield fieldeditor updatefield activetab validentry    
+                panel runcommand actions save warnduplicatebibtexkey     
+        panel output localization lang  duplicate bibtex key          
+                  localization lang  grouping may not work entry warnemptybibtexkey     
+        panel output localization lang  empty bibtex key            localization lang  grouping may not work entry abstractaction getnextentryaction nextentryaction abstractaction getpreventryaction preventryaction switchleftaction getswitchleftaction switchleftaction switchrightaction getswitchrightaction switchrightaction savedatabaseaction getsavedatabaseaction savedatabaseaction helpaction gethelpaction helpaction generatekeyaction getgeneratekeyaction generatekeyaction storefieldaction getstorefieldaction storefieldaction autolinkaction abstractaction autolinkaction     
+            putvalue action small_icon  icontheme jabreficon auto_file_link geticon     
+            putvalue action short_description  localization lang  automatically set file links entry        alt-f     
+          
+ 
+         override actionperformed actionevent event    
+            filelisteditor localfilelisteditor   entryeditor filelisteditor localfilelisteditor logger warn  no file list editor found localfilelisteditor autosetlinks updatetimestampisset globals prefs getboolean jabrefpreferences use_time_stamp  
+                   globals prefs getboolean jabrefpreferences update_timestamp optional fieldchange  doupdatetimestamp timestampfield   globals prefs get jabrefpreferences time_stamp_field timestampformat   globals prefs get jabrefpreferences time_stamp_format timestamp   easydateformat fromtimestampformat timestampformat  getcurrentdate updatefield updatefield entry  timestampfield  timestamp   
+      
+ 
+ 

@@ -1,0 +1,123 @@
+ class handles download external file  typically called user clicks download  button filelisteditor shown entryeditor  
+    p filelisteditor constructs downloadexternalfile instance calls download   
+   method passing reference itself callback download   method asks url starts download download completed calls downloadcompleted   
+   method callback filelisteditor needs take care linking file local filename passed argument downloadcompleted   method  
+    p download canceled failed user informed callback never called  
+    
+    
+       start download  
+       
+        param callback object filename reported download complete  
+        
+    
+       start download  
+       
+        param callback object filename reported download complete  
+        
+   first start download itself background temporary file  
+   todo takes long time? 
+   todo  stop editor dialog results error  
+   read mime type 
+   download finished  call method stops progress bar etc download proceeding user choose details file not find file type mime type  try based extension  
+   editor closed  go oops file exists local file below main file directory  change path relative  
+   canceled delete temp file  
+    
+       construct file object pointing file linked  whether link absolute relative main directory  
+       
+        param directory main directory  
+        param link absolute relative link  
+        return expanded file relative link perhaps append directory called download thread download completed  
+        
+   
+            1548875   download pdf produces unsupported filename 
+          
+          http   sourceforge net tracker index php?func detail aid 1548875 group_id 92314 atid 600306 
+          fixme  rework allow alphanumeric stuff https   msdn microsoft com en library windows desktop aa365247 v vs 85  aspx#naming_conventions 
+          http   superuser com questions 358855 characters safe cross-platform-file-names linux-windows os 
+          https   support apple com en ht202808 
+           
+    
+       look last link return following characters gives extension most reasonably named links  
+       
+        param link link 
+        return suffix  excluding dot  e g   pdf   
+        
+   try strip query string any correct suffix  
+   don't report error getting suffix non-critical 
+   operation error triggered reported elsewhere  
+   first see stripped link gives reasonable suffix suffix doesn't seem give any reasonable file type  try non-stripped link occurrence end 
+   check path separators suffix definitely 
+   not proper suffix give up  
+   return first one found  anyway  
+   check path separators suffix definitely 
+   not proper suffix give up  
+    
+       callback interface users class must implement order receive 
+       notification download complete  
+        net sf jabref gui externalfiles downloadexternalfile downloadexternalfile jabrefframe frame  bibdatabasecontext databasecontext  bibentry entry frame   frame databasecontext   databasecontext entry   entry download downloadcallback callback ioexception   
+        dontshowdialog res   joptionpane showinputdialog frame  localization lang  enter url to download res res trim   isempty url url url url res malformedurlexception ex1    
+            joptionpane showmessagedialog frame  localization lang  invalid url    
+                    localization lang  download file    joptionpane error_message download url  callback download url url downloadcallback callback ioexception res   url tostring mimetype file tmp   file createtempfile  jabref_download    tmp    
+        tmp deleteonexit    
+ 
+        urldownload udl   monitoredurldownload buildmonitoreddownload frame  url mimetype   udl determinemimetype ioexception ex    
+            joptionpane showmessagedialog frame  localization lang  invalid url          
+                      ex getmessage    localization lang  download file    
+                    joptionpane error_message   
+            logger info  error downloading      '    res    '   ex url urlf   url urldownload udlf   udl  
+ 
+        jabrefexecutorservice instance execute udlf downloadtofile tmp ioexception e2    
+                dontshowdialog editor editor isvisible      
+                    editor setvisible false   
+                  
+                joptionpane showmessagedialog frame  localization lang  invalid url            e2 getmessage    
+                        localization lang  download file    joptionpane error_message   
+                logger info  error downloading      '    urlf    '   e2 swingutilities invokelater downloadexternalfile downloadfinished   
+            
+ 
+        optional externalfiletype  suggestedtype   optional empty mimetype logger debug  mime type suggested      mimetype   
+            suggestedtype   externalfiletypes getinstance   getexternalfiletypebymimetype mimetype suffix suggestedtype ispresent      
+            suffix   suggestedtype get   getextension suffix   getsuffix res suffix suffix       
+              
+            suggestedtype   externalfiletypes getinstance   getexternalfiletypebyext suffix suggestedname   getsuggestedfilename suffix   
+        list fdirectory   databasecontext getfiledirectory globals prefs getfiledirectorypreferences directory fdirectory isempty      
+            directory directory   fdirectory get 0 suggestdir   directory system getproperty  user home     directory  
+        file file file file suggestdir   suggestedname   
+        filelistentry filelistentry filelistentry     file getcanonicalpath    suggestedtype   
+        editor filelistentryeditor frame  filelistentry databasecontext   
+        editor getprogressbar   setindeterminate editor setokenabled editor setexternalconfirm closeentry -    
+            file f   directory file closeentry link    expandfilename directory  closeentry link f isdirectory      
+                joptionpane showmessagedialog frame  localization lang  target file cannot be a directory     
+                        localization lang  download file    joptionpane error_message f exists joptionpane showconfirmdialog frame  
+                        localization lang  '%0' exists  overwrite file?   f getname     
+                        localization lang  download file    joptionpane ok_cancel_option     joptionpane ok_option dontshowdialog editor setvisible editor okpressed      
+            file tofile   directory file filelistentry link    expandfilename directory  
+                    filelistentry link dirprefix directory dirprefix directory endswith os file_separator     
+                    dirprefix   directory dirprefix   directory   os file_separator success   fileutil copyfile paths get tmp touri     paths get tofile touri success    
+                  
+                logger error  file already exists  downloadexternalfile download dirprefix filelistentry link startswith directory  
+                        filelistentry link length     dirprefix length       
+                filelistentry filelistentry filelistentry description  
+                        filelistentry link substring dirprefix length     filelistentry type   
+              
+            callback downloadcomplete filelistentry tmp delete      
+                logger info  cannot delete temporary file downloadfinished     tmp delete      
+                logger info  cannot delete temporary file file expandfilename directory link    
+        file tofile file link dirprefix   directory   os file_separator tofile isabsolute      
+            tofile file dirprefix   link tofile downloadfinished     
+        downloadfinished editor getprogressbar   setvisible editor getprogressbarlabel   setvisible editor setokenabled editor getprogressbar   setvalue editor getprogressbar   getmaximum getsuggestedfilename suffix plannedname   fileutil createfilenamefrompattern databasecontext getdatabase    entry  
+                globals prefs get jabrefpreferences import_filenamepattern   
+                globals prefs getlayoutformatterpreferences globals journalabbreviationloader suffix isempty      
+            plannedname          suffix os windows    
+            plannedname   plannedname replaceall os os_x    
+            plannedname   plannedname replace plannedname getsuffix link strippedlink   link url url url link url getquery url getquery   length      link length   - 1      
+                strippedlink   link substring 0  link length   - url getquery   length   - 1 malformedurlexception e suffix strippedlinkindex   strippedlink lastindexof strippedlinkindex    0      strippedlinkindex     strippedlink length   - 1      
+            suffix suffix   strippedlink substring strippedlinkindex   1 externalfiletypes getinstance   isexternalfiletypebyext suffix index   link lastindexof index    0      index     link length   - 1 strippedlink substring strippedlinkindex   1  indexof ' '     1 return suffix link substring index   1  indexof ' '     1 return link substring index   1 suffix  
+          
+ 
+      
+ 
+      
+     functionalinterface downloadcallback downloadcomplete filelistentry file   
+      
+ 

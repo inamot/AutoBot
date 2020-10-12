@@ -1,0 +1,86 @@
+ 
+    
+   dialog merging bibtex entry data fetched doi 
+    
+   start setting up dialog 
+    
+       sets up dialog 
+        
+   create undo-compound 
+   create buttons 
+   add some margin around layout 
+   updated original entry new fields 
+   entry type 
+   fields 
+   mergedstring always present 
+   remove fields not merged entry  unless internal fields 
+   originalstring always present net sf jabref gui mergeentries mergefetchedentrydialog jdialog mergefetchedentrydialog basepanel panel  bibentry originalentry  bibentry fetchedentry type panel frame    localization lang  merge entry with %0 information   type panel   panel originalentry   originalentry fetchedentry   fetchedentry type   type  
+ 
+          
+        init init     
+        mergeentries mergeentries originalentry fetchedentry  localization lang  original entry    
+                localization lang  entry from %0   type   panel getbibdatabasecontext   getmode     
+ 
+          
+        ce namedcompound localization lang  merge entry with %0 information   type    
+ 
+        formlayout layout formlayout  fill 700px grow    fill 400px grow  4px  p  5px  p setlayout layout add mergeentries getmergeentrypanel    cc xy 1  1 add jseparator    cc xy 1  3    
+ 
+          
+        buttonbarbuilder bb buttonbarbuilder    
+        bb addglue    
+ 
+        jbutton cancel jbutton cancelaction     
+        jbutton replaceentry jbutton replaceaction     
+ 
+        bb addbutton replaceentry  cancel add bb getpanel    cc xy 1  5    
+ 
+          
+        layout appendrow rowspec decode margin    
+        layout appendcolumn columnspec decode margin    
+        layout insertrow 1  rowspec decode margin    
+        layout insertcolumn 1  columnspec decode margin    
+ 
+        windowlocation pw windowlocation jabrefpreferences mergeentries_pos_x  
+                jabrefpreferences mergeentries_pos_y  jabrefpreferences mergeentries_size_x  
+                jabrefpreferences mergeentries_size_y   
+        pw displaywindowatstoredlocation cancelaction abstractaction   
+        cancelaction    
+            putvalue action name  localization lang  cancel     
+          
+ 
+         override actionperformed actionevent e    
+            panel output localization lang  canceled merging entries     
+            dispose replaceaction abstractaction   
+        replaceaction    
+            putvalue action name  localization lang  replace original entry     
+          
+ 
+         override actionperformed actionevent e    
+            bibentry mergedentry   mergeentries getmergeentry    
+ 
+              
+            set jointfields treeset   mergedentry getfieldnames     
+            set originalfields treeset   originalentry getfieldnames edited oldtype   originalentry gettype newtype   mergedentry gettype oldtype equalsignorecase newtype     
+                originalentry settype newtype   
+                ce addedit undoablechangetype originalentry  oldtype  newtype    
+                edited field   jointfields    
+                optional originalstring   originalentry getfield field   
+                optional mergedstring   mergedentry getfield field originalstring ispresent       originalstring equals mergedstring     
+                    originalentry setfield field  mergedstring get       
+                    ce addedit undoablefieldchange originalentry  field  originalstring orelse mergedstring get      
+                    edited field   originalfields jointfields contains field      internalbibtexfields isinternalfield field     
+                    optional originalstring   originalentry getfield field   
+                    originalentry clearfield field   
+                    ce addedit undoablefieldchange originalentry  field  originalstring get edited edited    
+                ce end    
+                panel getundomanager   addedit ce   
+                panel output localization lang  updated entry with info from %0   type    
+                panel updateentryeditorifshowing    
+                panel markbasechanged panel output localization lang  no information added     
+              
+ 
+            dispose    
+          
+      
+ 

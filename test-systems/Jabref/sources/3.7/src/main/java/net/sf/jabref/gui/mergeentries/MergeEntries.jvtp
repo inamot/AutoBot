@@ -1,0 +1,227 @@
+ 
+    
+    author oscar gustafsson 
+   
+           class dealing merging entries 
+    
+   headings 
+    
+       constructor taking two entries 
+       
+        param entryleft left entry 
+        param entryright right entry 
+        param type bib database mode 
+        
+    
+       constructor optional column captions two entries 
+       
+        param entryleft left entry 
+        param entryright right entry 
+        param headingleft heading left entry 
+        param headingright heading right entry 
+        param type bib database mode 
+        
+    
+       main function building merge entry jpanel 
+        
+   create main layout 
+   create add scrollpane 
+   setup previewpanel bibtex source box merged entry 
+   add some margin around layout 
+   everything done  allow any action actually update merged entry 
+   show ve fields joint add row possibly radio buttons 
+   left text pane 
+   add radio buttons two entries not identical fields only happen both entries field content identical 
+   right text pane 
+   start entry type 
+   set headings 
+   fill diff mode combo box 
+   synchronize column widths 
+   remove internal fields 
+   plain text 
+   latexdiff style - word 
+   latexdiff style - character 
+   symmetric style - word 
+   symmetric style - character 
+   shouldn't happen 
+    
+        return merged bibentry 
+        
+    
+        return merge entry jpanel 
+        
+    
+       update merged bibentry source preview panel every time something changed not done adding everything not anything    
+   check type changed 
+   check potentially different fields only happen field exists only happen field exists 
+   update previewpanel 
+   update bibtex source view net sf jabref gui mergeentries mergeentries list columnheadings   arrays aslist localization lang  field    
+            localization lang  left entry    
+            localization lang  left    
+            localization lang  none    
+            localization lang  right    
+            localization lang  right entry diff_modes    localization lang  plain text    
+            localization lang  show diff       -     localization lang  word    
+            localization lang  show diff       -     localization lang  character    
+            localization lang  show symmetric diff       -     localization lang  word    
+            localization lang  show symmetric diff       -     localization lang  character mergeentries bibentry entryleft  bibentry entryright  bibdatabasemode type    
+        leftentry   entryleft  
+        rightentry   entryright databasetype   type  
+        initialize mergeentries bibentry entryleft  bibentry entryright headingleft headingright  bibdatabasemode type    
+        columnheadings set 1  headingleft   
+        columnheadings set 5  headingright leftentry   entryleft rightentry   entryright databasetype   type  
+ 
+        initialize initialize     
+        donebuilding setupfields    
+ 
+        filldiffmodes colspecmain    left pref  5px  center 3cm grow  5px  center pref  3px  center pref  3px  center pref  5px  center 3cm grow colspecmerge    left pref  5px  fill 3cm grow  5px  center pref  3px  center pref  3px  center pref  5px  fill 3cm grow rowspec    pref  pref  10px  fill 5cm grow  10px  pref  10px  fill 3cm grow   
+        stringbuilder rowbuilder stringbuilder i   0  i   allfields size    i      
+            rowbuilder append  pref  2dlu      
+          
+        rowbuilder append  pref    
+ 
+        jpanel mergepanel jpanel    
+        formlayout mainlayout formlayout colspecmain  rowspec   
+        formlayout mergelayout formlayout colspecmerge  rowbuilder tostring     
+        mainpanel setlayout mainlayout   
+        mergepanel setlayout mergelayout   
+ 
+        setupheadingrows    
+ 
+        mainpanel add jseparator    cell_constraints xyw 1  3  11    
+ 
+        setupentrytyperow mergepanel maxlabelwidth   setupfieldrows mergepanel   
+ 
+ 
+          
+        scrollpane jscrollpane mergepanel  scrollpaneconstants vertical_scrollbar_as_needed  
+                scrollpaneconstants horizontal_scrollbar_never   
+        scrollpane setborder borderfactory createemptyborder     
+        updatetextpanes allfields   
+        mainpanel add scrollpane  cell_constraints xyw 1  4  11    
+        mainpanel add jseparator    cell_constraints xyw 1  5  11    
+ 
+        synchronizecolumnwidths mainlayout  mergelayout  maxlabelwidth   
+ 
+          
+        mainpanel add boldfontlabel localization lang  merged entry     cell_constraints xyw 1  6  6    
+ 
+        entrypreview previewpanel mergedentry mainpanel add entrypreview  cell_constraints xyw 1  8  6    
+ 
+        mainpanel add boldfontlabel localization lang  merged bibtex source code     cell_constraints xyw 8  6  4    
+ 
+        sourceview jtextarea    
+        sourceview setlinewrap sourceview setfont font  monospaced   font plain  globals prefs getint jabrefpreferences font_size     
+        mainpanel add jscrollpane sourceview   cell_constraints xyw 8  8  4    
+        sourceview seteditable mainlayout appendrow rowspec decode margin    
+        mainlayout appendcolumn columnspec decode margin    
+        mainlayout insertrow 1  rowspec decode margin    
+        mainlayout insertcolumn 1  columnspec decode margin    
+ 
+          
+        donebuilding updateall    
+ 
+          
+        mainpanel setvisible swingutilities invokelater    -  scrollpane getverticalscrollbar   setvalue 0 setupfieldrows jpanel mergepanel row   2 maxlabelwidth   -1 field   allfields    
+            jlabel label   boldfontlabel sentencecaseformatter   format field    
+            mergepanel add label  cell_constraints xy 1   2   row  - 1   left  top     
+            optional leftstring   leftentry getfield field   
+            optional rightstring   rightentry getfield field leftstring equals rightstring     
+                identicalfields add field differentfields add field   
+              
+ 
+            maxlabelwidth   math max maxlabelwidth  label getpreferredsize   width leftstring ispresent      
+                jtextpane tf diffhighlightingtextpane    
+                mergepanel add tf  cell_constraints xy 3   2   row  - 1   f  f     
+                lefttextpanes put field  tf identicalfields contains field     
+                mergedentry setfield field  leftstring get buttongroup group buttongroup    
+                list jradiobutton  list arraylist   3 k   0  k   3  k      
+                    jradiobutton button jradiobutton    
+                    group add button   
+                    mergepanel add button  cell_constraints xy 5    k   2    2   row  - 1    
+                    button addchangelistener e -  updateall     
+                    list add button   
+                  
+                radiobuttons put field  list leftstring ispresent      
+                    list get 0  setselected rightstring ispresent      
+                        list get 2  setenabled list get 0  setenabled list get 2  setselected rightstring ispresent      
+                jtextpane tf diffhighlightingtextpane    
+                mergepanel add tf  cell_constraints xy 11   2   row  - 1   f  f     
+                righttextpanes put field  tf   
+              
+            row maxlabelwidth setupentrytyperow jpanel mergepanel    
+          
+        mergepanel add boldfontlabel localization lang  entry type     cell_constraints xy 1  1    
+ 
+        jtextpane lefttypedisplay diffhighlightingtextpane    
+        lefttypedisplay settext diffhighlighting html_start   leftentry gettype     diffhighlighting html_end   
+        mergepanel add lefttypedisplay  cell_constraints xy 3  1 leftentry gettype   equals rightentry gettype       
+            identicaltypes identicaltypes buttongroup group buttongroup    
+            typeradiobuttons arraylist   2 k   0  k   3  k    2    
+                jradiobutton button jradiobutton    
+                typeradiobuttons add button   
+                group add button   
+                mergepanel add button  cell_constraints xy 5    k   2   1    
+                button addchangelistener e -  updateall     
+              
+            typeradiobuttons get 0  setselected jtextpane righttypedisplay diffhighlightingtextpane    
+        righttypedisplay settext diffhighlighting html_start   rightentry gettype     diffhighlighting html_end   
+        mergepanel add righttypedisplay  cell_constraints xy 11  1 setupheadingrows     
+        mainpanel add boldfontlabel localization lang  use     cell_constraints xyw 4  1  7   center  bottom     
+        mainpanel add diffmode  cell_constraints xy 11  1   right  bottom i   0  i   6  i      
+            heading_labels add boldfontlabel columnheadings get i     
+            mainpanel add heading_labels get i   cell_constraints xy 1    i   2   2 filldiffmodes difftext   diff_modes    
+            diffmode additem difftext   
+          
+        diffmode setselectedindex  
+                math min globals prefs getint jabrefpreferences merge_entries_diff_mode   diffmode getitemcount   - 1    
+        diffmode addactionlistener e -    
+            updatetextpanes differentfields   
+            storepreference synchronizecolumnwidths formlayout mainlayout  formlayout mergelayout maxlabelwidth rbalign     right    center    left    
+        mainlayout setcolumnspec 1  columnspec decode integer tostring maxlabelwidth     px     
+        integer maxrbwidth   -1 k   2  k   5  k      
+            maxrbwidth   math max maxrbwidth  heading_labels get k  getpreferredsize   width k   0  k   3  k      
+            mergelayout setcolumnspec 5    k   2   columnspec decode rbalign k          maxrbwidth    px jlabel boldfontlabel text    
+        jlabel label jlabel text   
+        font font   label getfont    
+        label setfont font derivefont font getstyle     font bold label storepreference     
+        globals prefs putint jabrefpreferences merge_entries_diff_mode  diffmode getselectedindex setupfields     
+        allfields addall leftentry getfieldnames     
+        allfields addall rightentry getfieldnames     
+ 
+          
+        set toberemoved treeset field   allfields internalbibtexfields isinternalfield field     
+                toberemoved add field   
+              
+          
+        allfields removeall toberemoved updatetextpanes collection fields oldscrollpanevalue   scrollpane getverticalscrollbar   getvalue field   fields leftstring   leftentry getfield field  orelse rightstring   rightentry getfield field  orelse diffmode getselectedindex 0 1    
+                rightstring   diffhighlighting generatediffhighlighting leftstring  rightstring 2    
+                rightstring   diffhighlighting generatediffhighlighting leftstring  rightstring 3 tmpleftstring   diffhighlighting generatesymmetrichighlighting leftstring  rightstring        
+                rightstring   diffhighlighting generatesymmetrichighlighting rightstring  leftstring        
+                leftstring   tmpleftstring 4    
+                tmpleftstring   diffhighlighting generatesymmetrichighlighting leftstring  rightstring       
+                rightstring   diffhighlighting generatesymmetrichighlighting rightstring  leftstring       
+                leftstring   tmpleftstring leftstring lefttextpanes containskey field     
+                lefttextpanes get field  settext diffhighlighting html_start   leftstring   diffhighlighting html_end rightstring righttextpanes containskey field     
+                righttextpanes get field  settext diffhighlighting html_start   rightstring   diffhighlighting html_end   
+              
+          
+        swingutilities invokelater    -  scrollpane getverticalscrollbar   
+                 setvalue math min scrollpane getverticalscrollbar   getmaximum    oldscrollpanevalue bibentry getmergeentry mergedentry jpanel getmergeentrypanel mainpanel updateall donebuilding identicaltypes    typeradiobuttons get 0  isselected      
+            mergedentry settype leftentry gettype mergedentry settype rightentry gettype field   differentfields radiobuttons get field  get 0  isselected      
+                mergedentry setfield field  leftentry getfield field  get radiobuttons get field  get 2  isselected      
+                mergedentry setfield field  rightentry getfield field  get mergedentry clearfield field   
+              
+          
+ 
+          
+        entrypreview setentry mergedentry   
+ 
+          
+        stringwriter writer stringwriter bibentrywriter latexfieldformatter globals prefs getlatexfieldformatterpreferences write mergedentry  writer  databasetype ioexception ex    
+            logger error  error in entry   ex   
+          
+        sourceview settext writer getbuffer   tostring     
+        sourceview setcaretposition 0   
+      
+ 

@@ -1,0 +1,75 @@
+ 
+    
+   created intellij idea  
+   user  alver 
+   date  dec 12  2006 
+   time  6 22 25 pm change template use file   settings   file templates  
+    
+    
+       written run read update   
+        
+   set global variable database's file directory before exporting formatters resolve linked files correctly ugly hack simplify exporter api simply normal export temporary 
+   file read contents afterwards  
+   write file  
+   read file put contents clipboard nothing change body catch statement use file   settings   file templates  
+   clean up  net sf jabref gui exporter exporttoclipboardaction abstractworker exporttoclipboardaction jabrefframe frame frame   objects requirenonnull frame   
+      
+ 
+     override run     
+        basepanel panel   frame getcurrentbasepanel panel panel getselectedentries   isempty      
+            message   localization lang operation requires one or more entries to be selected     
+            getcallback   update list iexportformat  exportformats linkedlist   exportformats getexportformats   values     
+        collections sort exportformats   e1  e2  -  e1 getdisplayname   compareto e2 getdisplayname exportformatdisplaynames exportformats size i   0  i   exportformats size    i      
+            iexportformat exportformat   exportformats get i   
+            exportformatdisplaynames i    exportformat getdisplayname    
+          
+ 
+        jlist list jlist   exportformatdisplaynames   
+        list setborder borderfactory createetchedborder     
+        list setselectioninterval 0  0   
+        list setselectionmode listselectionmodel single_selection answer   joptionpane showoptiondialog frame  list  localization lang  select export format    
+                joptionpane yes_no_option  joptionpane question_message localization lang  export    
+                        localization lang  cancel     
+                localization lang  export answer    joptionpane no_option iexportformat format   exportformats get list getselectedindex     
+ 
+          
+          
+          
+        globals prefs filedirfordatabase   frame getcurrentbasepanel   getbibdatabasecontext   
+                 getfiledirectory globals prefs getfiledirectorypreferences     
+ 
+        file tmp tmp   file createtempfile  jabrefcb     tmp    
+            tmp deleteonexit    
+            list bibentry  entries   panel getselectedentries    
+ 
+              
+            format performexport panel getbibdatabasecontext    tmp getpath    
+                    panel getbibdatabasecontext   getmetadata   getencoding   
+                             orelse globals prefs getdefaultencoding     
+                    entries   
+              
+            stringbuilder sb stringbuilder reader reader inputstreamreader fileinputstream tmp   
+                    panel getbibdatabasecontext   getmetadata   getencoding   
+                             orelse globals prefs getdefaultencoding s s   reader read       -1    
+                    sb append s   
+                  
+              
+            clipboardowner owner    clipboard  content  -    
+                  
+               
+            rtfselection rs rtfselection sb tostring     
+            toolkit getdefaulttoolkit   getsystemclipboard   
+                     setcontents rs  owner   
+            message   localization lang  entries exported to clipboard            entries size exception e    
+            logger error  error exporting to clipboard   e     
+            message   localization lang  error exporting to clipboard tmp tmp delete      
+                logger info  cannot delete temporary clipboard file    
+              
+          
+      
+ 
+     override update     
+        frame output message   
+      
+ 
+ 

@@ -1,0 +1,105 @@
+ 
+    
+   created intellij idea  
+   user  alver 
+   date  1 22 13 
+   time  6 24 pm change template use file   settings   file templates  
+    
+          tree setpreferredsize new dimension 200  tree getpreferredsize   height scrollbar appears preferred size component greater size viewport one hard coded preferred size never change according expansion collapse  thus scrollbar cannot appear accordingly  
+  tree setselectionmodel new vetoabletreeselectionmodel     
+  sta add expand collapse buttons 
+  end add expand collapse buttons 
+   key bindings expand true nodes tree area expanded 
+   otherwise nodes tree collapsed  
+   walk through tree  beginning root  
+   walk through children  
+    expand     collapse  occurs bottom top  
+    
+       check perform action group  determines whether group shown enabled state selecting leave ok button enabled  
+        param node group check 
+        return true dialog's action performed group 
+        net sf jabref gui groups groupaddremovedialog baseaction groupaddremovedialog basepanel panel add move panel   panel add   add move   move  
+      
+ 
+     override action exception   
+        optional grouptreenode  groups   panel getbibdatabasecontext   getmetadata   getgroups groups ispresent selection   panel getselectedentries jdialog diag jdialog panel frame    
+                 add ?  move ? localization lang  move to group     localization lang  add to group      localization 
+                         lang  remove from group jbutton ok jbutton localization lang  ok     
+        jbutton cancel jbutton localization lang  cancel     
+        tree jtree grouptreenodeviewmodel groups get      
+        tree setcellrenderer addremovegrouptreecellrenderer     
+        tree setvisiblerowcount 22   
+ 
+          
+          
+          
+        tree getselectionmodel   setselectionmode treeselectionmodel single_tree_selection   
+        tree addtreeselectionlistener e -    
+            grouptreenodeviewmodel node    grouptreenodeviewmodel  e getnewleadselectionpath   getlastpathcomponent    
+            ok setenabled checkgroupenable node    
+            
+ 
+          
+        jbutton jbexpandall jbutton  expand all    
+ 
+        jbexpandall addactionlistener e -  expandall tree jbutton jbcollapseall jbutton  collapse all    
+        jbcollapseall addactionlistener e -  expandall tree buttonbarbuilder bb buttonbarbuilder    
+        bb addglue    
+        bb addbutton ok   
+        bb addbutton cancel   
+ 
+        bb addbutton jbexpandall   
+        bb addbutton jbcollapseall   
+ 
+        bb addglue    
+        bb getpanel   setborder borderfactory createemptyborder 5  5  5  5    
+ 
+        ok addactionlistener actionevent doaddorremove      
+                diag dispose    
+              
+            
+        cancel addactionlistener actionevent -  diag dispose     
+        ok setenabled jscrollpane sp jscrollpane tree   
+ 
+          
+        actionmap am   sp getactionmap    
+        inputmap im   sp getinputmap jcomponent when_in_focused_window   
+        im put globals getkeyprefs   getkey keybinding close_dialog    close    
+        am put  close abstractaction     
+ 
+             override actionperformed actionevent e    
+                diag dispose    
+              
+            
+ 
+        diag getcontentpane   add sp  borderlayout center   
+ 
+        diag getcontentpane   add bb getpanel    borderlayout south   
+        diag pack    
+        diag setlocationrelativeto panel frame     
+        diag setvisible expandall jtree tree expand    
+        swingutilities invokelater    -    
+            treenode root     treenode  tree getmodel   getroot     
+              
+            expandall tree treepath   defaulttreemodel  tree getmodel    getpathtoroot root    expand   
+            tree requestfocusinwindow expandall jtree tree treepath parent expand    
+          
+        treenode node    treenode  parent getlastpathcomponent node getchildcount      0 enumeration ?  e   node children    e hasmoreelements       
+                treenode n    treenode  e nextelement    
+                treepath path   parent pathbyaddingchild n   
+                expandall tree  path  expand expand    
+            tree expandpath parent tree collapsepath parent doaddorremove     
+        treepath path   tree getselectionpath path grouptreenodeviewmodel node    grouptreenodeviewmodel  path getlastpathcomponent checkgroupenable node add    
+                    addtogroupaction action addtogroupaction node  move  panel   
+                    action actionperformed actionevent node  0   add removefromgroupaction action removefromgroupaction node  panel   
+                    action actionperformed actionevent node  0   remove checkgroupenable grouptreenodeviewmodel node add ? node canaddentries selection    node canremoveentries selection addremovegrouptreecellrenderer grouptreecellrenderer   
+ 
+         override component gettreecellrenderercomponent jtree tree  object value selected expanded leaf row hasfocus    
+            component c gettreecellrenderercomponent tree  value  selected  expanded  leaf  row  hasfocus   
+ 
+            grouptreenodeviewmodel node    grouptreenodeviewmodel  value checkgroupenable node     
+                c setforeground color black c setforeground color gray c  
+          
+      
+ 
+ 

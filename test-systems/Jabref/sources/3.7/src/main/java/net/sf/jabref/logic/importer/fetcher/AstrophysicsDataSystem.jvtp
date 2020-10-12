@@ -1,0 +1,81 @@
+ 
+    
+   fetches data sao nasa astrophysics data system  http   www adsabs harvard edu   
+   
+   search query-based  http   adsabs harvard edu basic_search html 
+   entry -based  http   adsabs harvard edu abstract_service html new api  https   github com adsabs adsabs-dev-api returns json least needs multiple calls bibtex  status  september 2016  
+    
+   search astronomy   physics   arxiv db 
+   add title search 
+   synonym replacement 
+   weight 
+   consider weight 
+   add author search 
+   synonym replacement 
+   weight 
+   consider weight 
+   post-cleanup 
+   remove url ads page net sf jabref logic importer fetcher astrophysicsdatasystem idbasedparserfetcher  searchbasedparserfetcher  entrybasedparserfetcher astrophysicsdatasystem importformatpreferences preferences preferences   objects requirenonnull preferences   
+      
+ 
+     override getname sao nasa astrophysics data system uribuilder getbaseurl apiurl urisyntaxexception   
+        uribuilder uribuilder uribuilder apiurl   
+        uribuilder addparameter  data_type    bibtexplus    
+        uribuilder addparameter  start_nr valueof 1    
+        uribuilder addparameter  nr_to_return valueof 200 uribuilder  
+      
+ 
+     override url geturlforquery query urisyntaxexception  malformedurlexception  fetcherexception   
+        uribuilder uribuilder   getbaseurl api_query_url   
+        uribuilder addparameter  qsearch   query uribuilder build   tourl    
+      
+ 
+     override url geturlforentry bibentry entry urisyntaxexception  malformedurlexception  fetcherexception   
+        uribuilder uribuilder   getbaseurl api_entry_url   
+ 
+          
+        uribuilder addparameter  db_key    ast    
+        uribuilder addparameter  db_key    phy    
+        uribuilder addparameter  db_key    pre    
+ 
+          
+        entry getfieldoralias fieldname title  ifpresent title -    
+            uribuilder addparameter  ttl_logic    or    
+            uribuilder addparameter  title   title   
+            uribuilder addparameter  ttl_syn    yes      
+            uribuilder addparameter  ttl_wt    0 3      
+            uribuilder addparameter  ttl_wgt    yes      
+            
+ 
+          
+        entry getfieldoralias fieldname author  ifpresent author -    
+            uribuilder addparameter  aut_logic    or    
+            uribuilder addparameter  author   author   
+            uribuilder addparameter  aut_syn    yes      
+            uribuilder addparameter  aut_wt    1 0      
+            uribuilder addparameter  aut_wgt    yes uribuilder build   tourl    
+      
+ 
+     override url geturlforid identifier urisyntaxexception  malformedurlexception  fetcherexception key   identifier replaceall patternremovedoi       
+        uribuilder uribuilder uribuilder api_doi_url   key   
+        uribuilder addparameter  data_type    bibtexplus uribuilder build   tourl    
+      
+ 
+     override helpfile gethelppage helpfile fetcher_ads  
+      
+ 
+     override parser getparser bibtexparser preferences   
+      
+ 
+     override list bibentry  performsearch query fetcherexception stringutil isblank query collections emptylist urlconnection connection   geturlforquery query  openconnection    
+            connection setrequestproperty  user-agent    mozilla 5 0  windows nt 5 1  rv 31 0  gecko 20100101 firefox 31 0 inputstream stream   connection getinputstream      
+                list bibentry  fetchedentries   getparser   parseentries stream   
+ 
+                  
+                fetchedentries foreach dopostcleanup fetchedentries ioexception e fetcherexception  an i o exception occurred   e urisyntaxexception   malformedurlexception e fetcherexception  search uri is malformed   e ioexception e fetcherexception  an i o exception occurred   e parseexception e fetcherexception  error occurred when parsing entry   localization lang  error occurred when parsing entry    e   
+          
+      
+ 
+     override dopostcleanup bibentry entry fieldformattercleanup fieldname removebracesformatter    cleanup entry fieldformattercleanup fieldname title removebracesformatter    cleanup entry fieldformattercleanup fieldname author normalizenamesformatter    cleanup entry fieldformattercleanup  adsnote clearformatter    cleanup entry fieldformattercleanup  adsurl clearformatter    cleanup entry   
+      
+ 

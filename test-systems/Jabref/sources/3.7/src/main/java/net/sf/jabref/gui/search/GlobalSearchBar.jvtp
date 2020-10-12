@@ -1,0 +1,172 @@
+ flag set searchbar won't selected next search 
+        
+   fits standard  found x entries -message thus hinders searchbar jump around searching frame width small 
+   default action performed toggling globalsearch 
+   additional action global search shortcut 
+    
+       focuses search field not focused empty search field cause search cleared hinder autocomplete window popup net sf jabref gui search globalsearchbar jpanel globalsearchbar jabrefframe frame frame   objects requirenonnull frame   
+        searchpreferences searchpreferences searchpreferences globals prefs   
+        searchdisplaymode   searchpreferences getsearchmode    
+ 
+          
+        currentresults setpreferredsize dimension 150  5    
+        currentresults setfont currentresults getfont   derivefont font bold    
+        searchfield setcolumns 30   
+ 
+        jtogglebutton globalsearch jtogglebutton icontheme jabreficon global_search getsmallicon    searchpreferences isglobalsearch     
+        globalsearch settooltiptext localization lang  search in all open databases     
+ 
+          
+        abstractaction globalsearchstandardaction abstractaction     
+             override actionperformed actionevent e    
+                searchpreferences setglobalsearch globalsearch isselected     
+                updateopencurrentresultstooltip globalsearch isselected     
+              
+           
+ 
+          
+        abstractaction globalsearchshortcutaction abstractaction     
+             override actionperformed actionevent e    
+                globalsearch setselected globalsearchstandardaction actionperformed actionevent 0   fire standard action     
+                focus searchglobalbykey    searchglobalbykey   
+        globalsearch getinputmap jcomponent when_in_focused_window  put globals getkeyprefs   getkey keybinding global_search   searchglobalbykey   
+        globalsearch getactionmap   put searchglobalbykey  globalsearchshortcutaction   
+ 
+        globalsearch addactionlistener globalsearchstandardaction   
+ 
+        opencurrentresultsindialog setdisabledicon icontheme jabreficon open_in_new_window getsmallicon   createdisabledicon     
+        opencurrentresultsindialog addactionlistener event globalsearch isselected      
+                performglobalsearch openlocalfindingsinexternalpanel    
+              
+            
+        opencurrentresultsindialog setenabled updateopencurrentresultstooltip globalsearch isselected     
+ 
+        regularexp jtogglebutton icontheme jabreficon reg_ex getsmallicon    
+                searchpreferences isregularexpression     
+        regularexp settooltiptext localization lang  regular expression     
+        regularexp addactionlistener event -    
+            searchpreferences setregularexpression regularexp isselected     
+            performsearch    
+            
+ 
+        casesensitive jtogglebutton icontheme jabreficon case_sensitive getsmallicon    
+                searchpreferences iscasesensitive     
+        casesensitive settooltiptext localization lang sensitive     
+        casesensitive addactionlistener event -    
+            searchpreferences setcasesensitive casesensitive isselected     
+            performsearch    
+            
+ 
+        updatesearchmodebuttontext    
+        searchmodebutton addactionlistener event -  togglesearchmodeandsearch     
+ 
+        jbutton clearsearchbutton jbutton icontheme jabreficon close getsmallicon     
+        clearsearchbutton settooltiptext localization lang  clear     
+        clearsearchbutton addactionlistener event -  endsearch     
+ 
+        searchfield addfocuslistener globals getfocuslistener     
+        searchfield addactionlistener event -  performsearch     
+        jtextfieldchangelistenerutil addchangelistener searchfield  e -  performsearch endsearch    endsearch   
+        searchfield getinputmap   put globals getkeyprefs   getkey keybinding clear_search   endsearch   
+        searchfield getactionmap   put endsearch abstractaction     
+             override actionperformed actionevent event autocompletesupport isvisible      
+                    autocompletesupport setvisible endsearch    
+                  
+              
+            
+ 
+        autocompletesupport install acceptsearch    acceptsearch   
+        searchfield getinputmap   put globals getkeyprefs   getkey keybinding accept   acceptsearch   
+        searchfield getactionmap   put acceptsearch abstractaction     
+             override actionperformed actionevent e    
+                autocompletesupport setvisible basepanel currentbasepanel   frame getcurrentbasepanel    
+                globals getfocuslistener   setfocused currentbasepanel getmaintable     
+                currentbasepanel getmaintable   requestfocus    
+              
+            
+ 
+        setlayout flowlayout flowlayout right    
+        jtoolbar toolbar osxcompatibletoolbar    
+        toolbar setfloatable os os_x    
+            searchfield putclientproperty  jtextfield variant    search    
+            toolbar add searchfield toolbar add searchicon   
+            toolbar add searchfield   
+            toolbar add clearsearchbutton   
+          
+        toolbar addseparator    
+        toolbar add opencurrentresultsindialog   
+        toolbar addseparator    
+        toolbar add globalsearch   
+        toolbar add regularexp   
+        toolbar add casesensitive   
+        toolbar add searchmodebutton   
+        toolbar addseparator    
+        toolbar add helpaction helpfile search    
+        toolbar addseparator    
+        toolbar add currentresults add toolbar performglobalsearch     
+        basepanel currentbasepanel   frame getcurrentbasepanel currentbasepanel validatesearchresultframe globalsearchworker globalsearchworker cancel searchfield gettext   isempty      
+            focus globalsearchworker globalsearchworker currentbasepanel frame    getsearchquery     
+        globalsearchworker execute openlocalfindingsinexternalpanel     
+        basepanel currentbasepanel   frame getcurrentbasepanel currentbasepanel validatesearchresultframe searchfield gettext   isempty      
+            focus searchresultframe searchdialog searchresultframe currentbasepanel frame    
+                localization lang  search results in database %0 1   currentbasepanel getbibdatabasecontext   
+                                 getdatabasefile   map file  getname  orelse guiglobals untitled_title getsearchquery   localize     
+                getsearchquery list bibentry  entries   currentbasepanel getdatabase   getentries   stream   
+                 filter bibentry  issearchhit  
+                 collect collectors tolist     
+        searchdialog addentries entries  currentbasepanel   
+        searchdialog selectfirstentry    
+        searchdialog setvisible validatesearchresultframe globalsearch searchresultframe searchresultframe isglobalsearch      globalsearch    isstillvalidquery searchresultframe getsearchquery       
+                searchresultframe focus searchresultframe dispose false togglesearchmodeandsearch nextsearchmode    searchdisplaymode ordinal     1  % searchdisplaymode values   length  
+        searchdisplaymode   searchdisplaymode values   nextsearchmode searchpreferences globals prefs  setsearchmode searchdisplaymode   
+        updatesearchmodebuttontext    
+        performsearch updatesearchmodebuttontext     
+        searchmodebutton settext searchdisplaymode getdisplayname     
+        searchmodebutton settooltiptext searchdisplaymode gettooltiptext endsearch     
+        basepanel currentbasepanel   frame getcurrentbasepanel currentbasepanel clearsearch currentbasepanel   
+            maintable maintable   frame getcurrentbasepanel   getmaintable    
+            globals getfocuslistener   setfocused maintable   
+            maintable requestfocus    
+            swingutilities invokelater    -  maintable ensurevisible maintable getselectedrow focus searchfield hasfocus      
+            searchfield requestfocus    
+            searchfield selectall clearsearch basepanel currentbasepanel    
+        currentresults settext      
+        searchfield settext      
+        searchfield setbackground neutral_color   
+        searchicon seticon icontheme jabreficon search getsmallicon     
+        searchqueryhighlightobservable reset    
+        opencurrentresultsindialog setenabled currentbasepanel currentbasepanel getmaintable   gettablemodel   updatesearchstate maintabledatamodel displayoption disabled dontselectsearchbar   
+            dontselectsearchbar focus performsearch     
+        basepanel currentbasepanel   frame getcurrentbasepanel currentbasepanel searchworker searchworker cancel searchfield gettext   isempty      
+            clearsearch currentbasepanel searchquery searchquery   getsearchquery searchquery isvalid      
+            informuseraboutinvalidsearchquery searchworker searchworker currentbasepanel  searchquery  searchdisplaymode   
+        searchworker execute informuseraboutinvalidsearchquery     
+        searchfield setbackground no_results_color   
+ 
+        searchqueryhighlightobservable reset    
+ 
+        basepanel currentbasepanel   frame getcurrentbasepanel    
+        currentbasepanel getmaintable   gettablemodel   updatesearchstate maintabledatamodel displayoption disabled   
+ 
+        searchicon seticon icontheme jabreficon search getsmallicon   createwithnewcolor no_results_color illegalsearch   localization lang  search failed  illegal search expression    
+        searchicon settooltiptext illegalsearch   
+        currentresults settext illegalsearch   
+        opencurrentresultsindialog setenabled setautocompleter autocompleter searchcompleter autocompletesupport setautocompleter searchcompleter searchqueryhighlightobservable getsearchqueryhighlightobservable searchqueryhighlightobservable isstillvalidquery searchquery query query getquery   equals searchfield gettext    
+                    query isregularexpression      regularexp isselected    
+                    query iscasesensitive      casesensitive isselected searchquery getsearchquery     
+        searchquery searchquery searchquery searchfield gettext casesensitive isselected regularexp isselected frame getcurrentbasepanel   setcurrentsearchquery searchquery searchquery updateresults matched description grammarbasedsearch matched    0    
+            currentresults settext localization lang  no results found searchfield setbackground no_results_color currentresults settext localization lang  found %0 results valueof matched searchfield setbackground results_found_color searchfield settooltiptext   html     description      html grammarbasedsearch    
+            searchicon seticon icontheme jabreficon search getsmallicon   createwithnewcolor advanced_search_color    
+            searchicon settooltiptext localization lang  advanced search active searchicon seticon icontheme jabreficon search getsmallicon     
+            searchicon settooltiptext localization lang  normal search active      
+          
+ 
+        opencurrentresultsindialog setenabled setsearchresultframe searchresultframe searchresultframe searchresultframe   searchresultframe setsearchterm searchterm dontselectsearchbar searchterm equals searchfield gettext setdontselectsearchbar dontselectsearchbar   
+        searchfield settext searchterm   
+          
+        autocompletesupport setvisible setdontselectsearchbar dontselectsearchbar dontselectsearchbar   dontselectsearchbar updateopencurrentresultstooltip globalsearchenabled globalsearchenabled    
+            opencurrentresultsindialog settooltiptext localization lang  show global search results in a window opencurrentresultsindialog settooltiptext localization lang  show search results in a window     
+          
+      
+ 
+ 

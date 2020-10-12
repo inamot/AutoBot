@@ -1,0 +1,160 @@
+ 
+    
+   importer isi web science  inspec medline format  
+    p  
+   documentation isi wos format  
+    p  
+    ul  
+    li http   wos isitrial com help helpprn html  li  
+     ul  
+    p  
+    ul  
+    li check compatibility isi2bib tools http   www-lab imr tohoku ac jp ~t-nissie computer software isi http   www tug org tex-archive biblio bibtex utils isi2bibtex isi2bibtex http   web mit edu emilio www utils html  li  
+    li deal capitalization correctly  li  
+     ul  
+    
+   2006 09 05  modified pattern avoid false positives files due extra end following line gives false positives ris files not uncommented hypen characteristic ris format  
+               
+               str   str replace   -        
+                
+   escaping 
+   insanity  
+    -  
+   pattern fieldpattern   pattern compile  ^au  ^ti dt  ^c1  ^ab 
+    ^id  ^bp  ^py  ^se  ^py  ^vl beginning new item used fieldpattern regular expression instead seems quick dirty works  
+   mark beginning each field 
+   mark end each line 
+   remove initial spaces 
+   skip first entry either empty document header 
+   empty field don't anything 
+   make pt already someone append tweak ieee explore 
+   set  review note comment? 
+   preserve entries except 
+   skip empty entries 
+   id assumes existing database don't 
+   remove empty fields  
+   polish entries 
+   try two digit month 
+   ignored expand isi first names  
+        p  
+       fixed bug http   sourceforge net tracker index php?func detail aid 1542552 group_id 92314 atid 600306 only uppercase chars? net sf jabref logic importer fileformat isiimporter importer   
+ 
+  
+ 
+      
+      
+  
+ 
+ 
+     override getname isi   
+      
+ 
+     override fileextensions getextensions fileextensions isi  
+      
+ 
+     override getid isi   
+      
+ 
+     override getdescription importer the isi web of science  inspec and medline format    
+      
+ 
+     override isrecognizedformat bufferedreader reader ioexception str i   0 str   reader readline i   50 isiimporter isi_pattern matcher str  find i processsubsup map string  map subsup    fieldname title  fieldname fieldname review   notes asubsup   subsup map containskey asubsup     
+ 
+                matcher m   isiimporter sub_sup_pattern matcher map get asubsup    
+                stringbuffer sb stringbuffer m find group2   m group 2   
+                    group2   group2 replaceall group2 length     1    
+                        group2         group2 sub  equals m group 1      
+                        m appendreplacement sb   \\$_    group2 m appendreplacement sb   \\$^    group2    \\$    
+                      
+                  
+                m appendtail sb   
+                map put asubsup  sb tostring processcapitalization map string  map subsup    fieldname title  fieldname journal  fieldname publisher asubsup   subsup map containskey asubsup s   map get asubsup s touppercase   equals s     
+                    s titlecaseformatter   format s   
+                    map put asubsup  s   
+                  
+              
+          
+      
+ 
+     override parserresult importdatabase bufferedreader reader ioexception   
+        objects requirenonnull reader   
+ 
+        list bibentry  bibitems arraylist      
+        stringbuilder sb stringbuilder str str   reader readline str length     3 pt   equals str substring 0  3      
+                sb append       append str beg   str substring 0  3  trim beg length      2    
+                    sb append   ##       
+                    sb append str sb append  eoleol      
+                    sb append str trim entries   sb tostring   split        
+ 
+        map string  hm hashmap entry   entries fields   entry split fields length    0    
+                fields   entry split  \n type pt pages       
+            hm clear field   fields field length      2 beg   field substring 0  2 value   field substring 3 value startswith   -       
+                    value   value substring 3   
+                  
+                value   value trim pt  equals beg value startswith  j      
+                        pt    article pt   value  
+                      
+                    type    article ty  equals beg jour  equals value     
+                        type    article conf  equals value     
+                        type    inproceedings jo  equals beg     
+                    hm put fieldname booktitle  value au  equals beg author   isiimporter isiauthorsconvert value replace  eoleol     and hm get fieldname author author   hm get fieldname author      and     author  
+                      
+ 
+                    hm put fieldname author  author ti  equals beg     
+                    hm put fieldname title  value replace  eoleol so  equals beg      ja  equals beg     
+                    hm put fieldname journal  value replace  eoleol id  equals beg      kw  equals beg     
+ 
+                    value   value replace  eoleol existingkeywords   hm get fieldname keywords existingkeywords existingkeywords contains value     
+                        existingkeywords   value existingkeywords           value  
+                      
+                    hm put fieldname keywords  existingkeywords ab  equals beg     
+                    hm put fieldname value replace  eoleol bp  equals beg      br  equals beg      sp  equals beg     
+                    pages   value ep  equals beg detpos   value indexof detpos    -1      value substring 0  detpos  trim   isempty      
+                        value   value substring 0  detpos   
+                      
+ 
+                    pages   pages    --    value ps  equals beg     
+                    pages   isiimporter parsepages value ar  equals beg     
+                    pages   value is  equals beg     
+                    hm put fieldname number  value py  equals beg     
+                    hm put fieldname year  value vl  equals beg     
+                    hm put fieldname volume  value pu  equals beg     
+                    hm put fieldname publisher  value di  equals beg     
+                    hm put fieldname doi  value pd  equals beg month   isiimporter parsemonth value month hm put fieldname month  month dt  equals beg     
+                    type   value review  equals type     
+                        type    article type startswith  article      type startswith  journal       article  equals pt     
+                        type    article type   bibentry default_type cr  equals beg     
+                    hm put  citedreferences   value replace  eoleol          trim er  equals beg      ef  equals beg      vr  equals beg      fn  equals beg hm put beg tolowercase    value equals pages     
+                hm put fieldname pages  pages hm isempty bibentry b bibentry default_bibtexentry_id  type   
+              
+ 
+              
+            list object  toremove arraylist map entry string  field   hm entryset content   field getvalue content content trim   isempty      
+                    toremove add field getkey object atoremove   toremove    
+                hm remove atoremove   
+ 
+              
+ 
+              
+            isiimporter processsubsup hm   
+            isiimporter processcapitalization hm   
+ 
+            b setfield hm   
+ 
+            bibitems add b parserresult bibitems parsepages value lastdash   value lastindexof value substring 0  lastdash     --    value substring lastdash   1 parsemonth value parts   value split  \\s part1   parts    
+            monthutil month month   monthutil getmonthbyshortname part1 tolowercase month isvalid month bibtexformat part   parts number   integer parseint part   
+                monthutil month month   monthutil getmonthbynumber number month isvalid month bibtexformat numberformatexception ignored isiauthorconvert author s   author split s length    2 author  
+          
+ 
+        stringbuilder sb stringbuilder last   s 0  trim    
+        sb append last  append first   s 1  trim firstparts   first split  \\s i   0  i   firstparts length  i      
+ 
+            first   firstparts i first touppercase   equals first     
+                first   first replace j   0  j   first length    j      
+                    sb append first charat j   append j    first length   - 1     
+                        sb append sb append first i    firstparts length - 1     
+                sb append sb tostring isiauthorsconvert authors result authors length i   0  i   result length  i      
+            result i    isiimporter isiauthorconvert authors i result isiauthorsconvert authors s   isiimporter isiauthorsconvert authors split   and join   and    s   
+      
+ 
+ 

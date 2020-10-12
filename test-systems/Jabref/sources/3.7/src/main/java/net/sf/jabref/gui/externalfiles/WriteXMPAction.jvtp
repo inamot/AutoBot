@@ -1,0 +1,132 @@
+ action goes through selected entries basepanel attempts write xmp data external pdf entries check makes sense perform operation 
+   make list pdfs linked entry  
+   first check legacy   pdf  field check file  field  
+   progressarea setpreferredsize new dimension 300  300    net sf jabref gui externalfiles writexmpaction abstractworker writexmpaction basepanel panel panel   panel  
+      
+ 
+     override init     
+ 
+        database   panel getdatabase    
+          
+        entries   panel getselectedentries entries isempty      
+ 
+            entries   database getentries entries isempty      
+ 
+                joptionpane showmessagedialog panel  
+                        localization lang operation requires one or more entries to be selected     
+                        localization lang  write xmp-metadata    joptionpane error_message   
+                goon response   joptionpane showconfirmdialog panel  localization lang  write xmp-metadata all pdfs in current database?    
+                        localization lang  write xmp-metadata    joptionpane yes_no_cancel_option  
+                        joptionpane question_message response    joptionpane yes_option    
+                    goon errors   entrieschanged   skipped   0 optdiag optdiag optionsdialog panel frame     
+          
+        optdiag open    
+ 
+        panel output localization lang  writing xmp-metadata        
+      
+ 
+     override run goon bibentry entry   entries    
+ 
+              
+            list file  files arraylist      
+ 
+              
+            entry getfield fieldname pdf  
+                     ifpresent  
+                            pdf -  fileutil 
+                                     expandfilename pdf  
+                                            panel getbibdatabasecontext   getfiledirectory fieldname pdf  
+                                                    globals prefs getfiledirectorypreferences     
+                             ifpresent files  add    
+              
+            list dirs   panel getbibdatabasecontext   
+                     getfiledirectory globals prefs getfiledirectorypreferences entry hasfield fieldname file     
+                filelisttablemodel tm filelisttablemodel    
+                entry getfield fieldname file  ifpresent tm  setcontent j   0  j   tm getrowcount    j      
+                    filelistentry flentry   tm getentry j flentry type ispresent        pdf  equalsignorecase flentry type get   getname       
+                        fileutil expandfilename flentry link  dirs  ifpresent files  add   
+                      
+                  
+              
+ 
+            swingutilities invokelater    -  optdiag getprogressarea   
+                     append entry getcitekeyoptional   orelse localization lang  undefined       \n files isempty      
+                skipped    
+                swingutilities invokelater    -  optdiag getprogressarea   
+                         append        localization lang  skipped - no pdf linked       \n file file   files file exists xmputil writexmp file  entry  database  globals prefs getxmppreferences     
+                            swingutilities invokelater  
+                                       -  optdiag getprogressarea   append        localization lang  ok       \n     
+                            entrieschanged exception e    
+                            swingutilities invokelater    -    
+                                optdiag getprogressarea   append        localization lang  error writing       '  
+                                          file getpath      ' \n    
+                                optdiag getprogressarea   append          e getlocalizedmessage      \n    
+                                
+                            errors skipped    
+                        swingutilities invokelater    -    
+                            optdiag getprogressarea   
+                                     append        localization lang  skipped - pdf does not exist       \n    
+                            optdiag getprogressarea   append          file getpath      \n optdiag iscanceled      
+                swingutilities invokelater  
+                           -  optdiag getprogressarea   append  \n    localization lang  operation canceled       \n swingutilities invokelater    -    
+            optdiag getprogressarea   
+                 append  \n  
+                  localization lang  finished writing xmp 0 file  %1 skipped  %2 errors valueof entrieschanged valueof skipped valueof errors     
+            optdiag done    
+            
+      
+ 
+     override update goon panel output localization lang  finished writing xmp 0 file  %1 skipped  %2 errors valueof entrieschanged valueof skipped valueof errors optionsdialog jdialog optionsdialog jframe parent parent  localization lang  writing xmp-metadata selected entries okbutton setenabled okbutton addactionlistener e -  dispose     
+ 
+            abstractaction cancel abstractaction     
+                 override actionperformed actionevent e    
+                    canceled cancelbutton addactionlistener cancel   
+ 
+            inputmap im   cancelbutton getinputmap jcomponent when_in_focused_window   
+            actionmap am   cancelbutton getactionmap    
+            im put globals getkeyprefs   getkey keybinding close_dialog    close    
+            am put  close   cancel   
+ 
+            progressarea jtextarea 15  60   
+ 
+            jscrollpane scrollpane jscrollpane progressarea  
+                    scrollpaneconstants vertical_scrollbar_always  scrollpaneconstants horizontal_scrollbar_never   
+            dimension d   progressarea getpreferredsize    
+            d height    scrollpane gethorizontalscrollbar   getheight     15  
+            d width    scrollpane getverticalscrollbar   getwidth     15  
+ 
+            panel setsize d   
+ 
+            progressarea setbackground color white   
+            progressarea seteditable progressarea setborder borderfactory createemptyborder 3  3  3  
+                    3    
+            progressarea settext      
+ 
+            jpanel tmppanel jpanel    
+            tmppanel setborder borderfactory createemptyborder 3  2  3  2    
+            tmppanel add scrollpane   
+ 
+              
+ 
+            buttonbarbuilder bb buttonbarbuilder    
+            bb addglue    
+            bb addbutton okbutton   
+            bb addrelatedgap    
+            bb addbutton cancelbutton   
+            bb addglue    
+            jpanel bbpanel   bb getpanel    
+            bbpanel setborder borderfactory createemptyborder 0  3  3  3    
+            getcontentpane   add tmppanel  borderlayout center   
+            getcontentpane   add bbpanel  borderlayout south   
+ 
+            pack setresizable done     
+            okbutton setenabled cancelbutton setenabled open     
+            progressarea settext      
+            canceled optdiag setlocationrelativeto panel frame     
+ 
+            okbutton setenabled cancelbutton setenabled okbutton requestfocus    
+ 
+            optdiag setvisible iscanceled canceled jtextarea getprogressarea progressarea  
+          
+      
+ 

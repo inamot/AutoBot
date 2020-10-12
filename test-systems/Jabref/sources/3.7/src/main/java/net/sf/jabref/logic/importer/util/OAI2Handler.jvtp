@@ -1,0 +1,56 @@
+ 
+    
+   sax-handler parse oai2-xml files  
+   
+    author ulrich st auml rk 
+    author christian kopf 
+    author christopher oezbek 
+    net sf jabref logic importer util oai2handler defaulthandler oai2handler bibentry be entry   be  
+      
+ 
+     override startdocument saxexception   
+        authors stringbuffer    
+      
+ 
+     override characters ch start length saxexception   
+        characters append ch  start  length   
+      
+ 
+     override startelement uri localname qualifiedname  
+            attributes attributes saxexception   
+ 
+        characters stringbuffer    
+      
+ 
+     override endelement uri localname qualifiedname saxexception content   characters tostring error  equals qualifiedname runtimeexception content id  equals qualifiedname     
+            entry setfield fieldname eprint  content keyname  equals qualifiedname     
+            keyname   content forenames  equals qualifiedname     
+            forenames   content journal-ref  equals qualifiedname journal   content replacefirst   0-9           
+            entry setfield fieldname journal  journal volume   content replacefirst journal       
+            volume   volume replacefirst             
+            entry setfield fieldname volume  volume year   content replacefirst    ?\\         
+            year   year replacefirst  \\           
+            entry setfield fieldname year  year pages   content replacefirst journal       
+            pages   pages replacefirst volume       
+            pages   pages replacefirst  \\     year    \\         
+            pages   pages replace           
+            entry setfield fieldname pages  pages datestamp  equals qualifiedname     
+            optional year   entry getfield fieldname year year ispresent      year get   isempty      
+                entry setfield fieldname year  content replacefirst title  equals qualifiedname     
+            entry setfield fieldname title  content equals qualifiedname     
+            entry setfield fieldname content comments  equals qualifiedname     
+            entry setfield fieldname comments  content report-no  equals qualifiedname     
+            entry setfield fieldname reportno  content doi  equals qualifiedname     
+          entry setfield fieldname doi  content author  equals qualifiedname author   forenames         keyname authors length     0    
+                authors append   and     
+              
+            authors append author   
+          
+      
+ 
+     override enddocument saxexception   
+        entry setfield fieldname author  authors tostring correctlinebreaks s result   s replaceall  \\n ? \\s \\n          
+        result   result replaceall  \\s \\n\\s     \n result replaceall    2          replaceall   ^\\s  \\s $         
+      
+ 
+ 

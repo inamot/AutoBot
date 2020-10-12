@@ -1,0 +1,145 @@
+ 
+    
+   displays bibentry using given layout format bibtex entry currently shown database set preview attempt resolve strings previewed entry using database  
+        
+    
+        param databasecontext 
+                   may null  optionally used resolve strings resolving pdf directories links  
+        param entry 
+                   may null given entry shown otherwise call setentry make something visible  
+        param panel 
+                   may null not given toolbar shown right 
+                  hand side  
+        
+    
+       
+        param panel 
+                   may null not given toolbar shown right 
+                  hand side  
+        param databasecontext 
+                   may null  used resolving pdf directories links  
+        
+   dropped files handler only created main window 
+   not windows search results window 
+   set up scroll pane preview pane effect only custom transfer handler registered keep statement transfer handler removed  
+    
+      listener changedfieldevent  
+       
+   set entry number case included preview layout fixes layout user cannot change anymore  useful testing styles settings 
+        param parameter either link string old previewstyle link citationstyle   
+        
+   background takes inform user don't know  net sf jabref gui previewpanel jpanel searchqueryhighlightlistener  entrycontainer previewpanel bibdatabasecontext databasecontext  bibentry entry  basepanel panel panel  databasecontext   
+        setentry entry previewpanel basepanel panel  bibdatabasecontext databasecontext borderlayout databasecontext   optional ofnullable databasecontext basepanel   optional ofnullable panel   
+ 
+        createpreviewpane basepanel ispresent previewpane settransferhandler previewpaneltransferhandler panel frame this previewpane gettransferhandler      
+          
+ 
+          
+        scrollpane jscrollpane previewpane  
+                scrollpaneconstants vertical_scrollbar_as_needed  
+                scrollpaneconstants horizontal_scrollbar_never   
+        scrollpane setborder add scrollpane  borderlayout center createkeybindings    
+        updatelayout createkeybindings    
+        actionmap actionmap getactionmap    
+        inputmap inputmap getinputmap jcomponent when_in_focused_window close    close   
+        inputmap put globals getkeyprefs   getkey keybinding close_dialog   close   
+        actionmap put close closeaction copy    copy   
+        inputmap put globals getkeyprefs   getkey keybinding copy_preview   copy   
+        actionmap put copy copypreviewaction jpopupmenu createpopupmenu     
+        jpopupmenu menu jpopupmenu    
+        menu add printaction   
+        menu add copypreviewaction basepanel ifpresent p -  menu add p frame   getnextpreviewstyleaction basepanel ifpresent p -  menu add p frame   getpreviouspreviewstyleaction menu createpreviewpane     
+        previewpane jeditorpanewithhighlighting     
+             override dimension getpreferredscrollableviewportsize getpreferredsize    
+              
+ 
+           
+        previewpane setmargin insets 3  3  3  3    
+ 
+        previewpane setcomponentpopupmenu createpopupmenu     
+ 
+        previewpane seteditable previewpane setdragenabled previewpane setcontenttype  text html    
+        previewpane addhyperlinklistener hyperlinkevent hyperlinkevent geteventtype      hyperlinkevent eventtype activated     previewpanel databasecontext 
+                     ispresent address   hyperlinkevent geturl   tostring    
+                    jabrefdesktop openexternalviewer previewpanel databasecontext get    address  fieldname url ioexception e    
+                    logger warn  could not open external viewer   e setdatabasecontext bibdatabasecontext databasecontext databasecontext   optional ofnullable databasecontext optional basepanel  getbasepanel basepanel setbasepanel basepanel basepanel basepanel   optional ofnullable basepanel updatelayout fixedlayout    
+            logger debug  cannot change the layout because the layout is fixed previewpreferences previewpreferences   globals prefs getpreviewpreferences style   previewpreferences getpreviewcycle   get previewpreferences getpreviewcycleposition citationstyle iscitationstylefile style basepanel ispresent      
+                layout   optional empty    
+                citationstyle citationstyle   citationstyle createcitationstylefromfile style citationstyle basepanel get   getcitationstylecache   setcitationstyle citationstyle   
+                    basepanel get   output localization lang  preview style changed to  %0   citationstyle gettitle updatepreviewlayout previewpreferences getpreviewstyle basepanel ispresent      
+                basepanel get   output localization lang  preview style changed to  %0   localization lang  preview      
+              
+          
+ 
+        update updatepreviewlayout layoutfile   
+        stringreader sr stringreader layoutfile replace  __newline__    \n layout   optional of layouthelper sr  globals prefs getlayoutformatterpreferences globals journalabbreviationloader   
+                             getlayoutfromtext ioexception e    
+            layout   optional empty    
+            logger debug  no layout could be set   e setlayout layout layout layout   optional ofnullable layout setentry bibentry newentry    
+ 
+        bibentry filter e -  e    newentry  ifpresent e -  e unregisterlistener bibentry   optional ofnullable newentry   
+        bibentry ifpresent e -  e registerlistener update    
+      
+ 
+ 
+      
+     suppresswarnings  unused   
+     subscribe listen fieldchangedevent fieldchangedevent    
+        update    
+      
+ 
+     override bibentry getentry bibentry orelse update     
+        exportformats entrynumber   1 citationstyleworker ispresent     
+            citationstyleworker get   cancel citationstyleworker   optional empty layout ispresent     
+            stringbuilder sb stringbuilder    
+            bibentry ifpresent entry -  sb append layout get   
+                     dolayout entry  databasecontext map bibdatabasecontext  getdatabase  orelse setpreviewlabel sb tostring     
+            markhighlights basepanel ispresent     
+            citationstyleworker   optional of citationstyleworker previewpane    
+            citationstyleworker get   execute markhighlights     
+        previewpane highlightpattern highlightpattern setpreviewlabel text swingutilities iseventdispatchthread      
+            previewpane settext text   
+            previewpane revalidate swingutilities invokelater    -    
+                previewpane settext text   
+                previewpane revalidate scrolltotop scrolltotop     
+        swingutilities invokelater    -  scrollpane getverticalscrollbar   setvalue 0    
+      
+ 
+     override highlightpattern optional pattern  newpattern highlightpattern   newpattern  
+        update optional pattern  gethighlightpattern highlightpattern previewpanel setfixedlayout object parameter fixedlayout parameter updatepreviewlayout parameter parameter citationstyle    
+            layout   optional empty basepanel ispresent     
+                basepanel get   getcitationstylecache   setcitationstyle  citationstyle  parameter logger error  unknown style type    
+          
+        update printaction abstractaction printaction localization lang  print entry preview    icontheme jabreficon printed geticon     
+ 
+            putvalue action short_description  localization lang  print entry preview     
+          
+ 
+ 
+         override actionperformed actionevent arg0    
+ 
+              
+            jabrefexecutorservice instance execute printrequestattributeset pras hashprintrequestattributeset    
+                    pras add jobname bibentry flatmap bibentry  getcitekeyoptional  orelse  no entry previewpane print null pras printerexception e    
+                      
+                    joptionpane showmessagedialog previewpanel localization lang  could not print preview       \n    e getmessage    
+                            localization lang  print entry preview    joptionpane error_message   
+                    logger info  could not print preview   e close     
+        basepanel ifpresent basepanel  hidebottomcomponent closeaction abstractaction closeaction localization lang  close window    icontheme jabreficon close getsmallicon     
+            putvalue action short_description  localization lang  close window     
+          
+ 
+         override actionperformed actionevent e    
+            close copypreviewaction abstractaction copypreviewaction localization lang  copy preview    icontheme jabreficon copy getsmallicon     
+            putvalue action short_description  localization lang  copy preview     
+            putvalue action accelerator_key  globals getkeyprefs   getkey keybinding copy_preview    
+          
+ 
+         override actionperformed actionevent e    
+            previewpane selectall    
+            previewpane copy    
+            previewpane select 0  -1 printaction getprintaction printaction  
+      
+ 
+ 
+ 

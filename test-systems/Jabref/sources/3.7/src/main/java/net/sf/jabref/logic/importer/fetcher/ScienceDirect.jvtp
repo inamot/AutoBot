@@ -1,0 +1,37 @@
+ 
+    
+   fulltextfetcher implementation attempts find pdf url sciencedirect  
+   
+    see http   dev elsevier com  
+    
+   try unique doi first 
+   available catalog? 
+   retrieve pdf link net sf jabref logic importer fetcher sciencedirect fulltextfetcher   
+  
+ 
+  
+  
+     override optional url  findfulltext bibentry entry ioexception   
+        objects requirenonnull entry   
+        optional url  pdflink   optional empty    
+ 
+          
+        optional doi  doi   entry getfield fieldname doi  flatmap doi  build doi ispresent scilink   geturlbydoi doi get   getdoi scilink isempty      
+                      
+                    document html   jsoup connect scilink  ignorehttperrors get    
+                    element link   html getelementbyid  pdflink link logger info  fulltext pdf found   sciencedirect     
+                        pdflink   optional of url link attr  pdfurl unirestexception e    
+                logger warn  sciencedirect api request failed   e pdflink geturlbydoi doi unirestexception scilink request   api_url   doi  
+            httpresponse jsonnode  jsonresponse   unirest get request  
+                     header  x-els-apikey   api_key  
+                     querystring  httpaccept    application json   
+                     asjson    
+ 
+            jsonobject json   jsonresponse getbody   getobject    
+            jsonarray links   json getjsonobject  full-text-retrieval-response   getjsonobject  coredata   getjsonarray  link i 0  i   links length    i      
+                jsonobject link   links getjsonobject i link getstring   rel   equals  scidir      
+                    scilink   link getstring   href scilink jsonexception e    
+            logger debug  no sciencedirect link found in api request   e scilink  
+          
+      
+ 

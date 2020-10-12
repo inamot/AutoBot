@@ -1,0 +1,341 @@
+ 
+    
+   processes incoming outgoing bib data external sql database manages structure  
+    
+    
+       scans database required tables  
+       
+        return  code true  code structure matches requirements   code false  code not  
+        throws sqlexception 
+        
+    
+       determines whether database using pre-3 6 structure  
+       
+        return  code true  code structure old code false  code   
+        
+   old tables 
+    
+       checks whether given table names   b case insensitive  b   exist database  
+       
+        param tablenames table names checked 
+        return  code true  code b b  given tables present code false  code   
+        
+      gettables null restrictions 
+   remove matching tables check requiredtables emptiness 
+    
+       creates sets up needed tables columns according database type performs check whether needed tables present  
+       
+        throws sqlexception only happen users direct intervention shared database 
+    
+       creates sets up needed tables columns according database type  
+       
+        throws sqlexception 
+        
+    
+       escapes parts sql expressions table field name match conventions database system using current dbmstype method package private dbmsprocessortest 
+       
+        param expression table field name 
+        return correctly escaped expression 
+        
+    
+       inserts given bibentry shared database  
+       
+        param bibentry   link bibentry inserted 
+        
+    
+       inserts given bibentry entry table  
+       
+        param bibentry   link bibentry inserted 
+        
+   inserting entry table only method generated keys accepted mysql  postgresql oracle  
+   set generated id locally 
+    
+       checks whether given bibentry already exists shared database  
+        param bibentry   link bibentry checked 
+        return  code true  code existent code false  code  
+        
+   check already exists 
+    
+       inserts given bibentry field table  
+       
+        param bibentry   link bibentry inserted 
+        
+   inserting field table 
+   columnindex starts 1 
+    
+       updates whole   link bibentry shared database  
+       
+        param localbibentry   link bibentry  affected changes 
+        throws sqlexception 
+        
+   disable auto commit due transaction 
+   remove shared fields not exist locally 
+   update only local version higher entries equal 
+   updating entry type 
+   apply changes current transaction 
+   undo changes made current transaction 
+   enable auto commit mode again 
+    
+       helping method  removes shared fields not exist locally 
+        
+    
+       helping method  inserts key-value pair field table every field not existing  otherwise only update performed  
+        
+   avoiding use deprecated bibentry getfield   method  null values accepted preparedstatement  
+   check field already exists 
+    
+       removes shared bibentry  
+       
+        param bibentry   link bibentry deleted 
+        
+    
+        param sharedid entry id 
+        return instance link bibentry  
+        
+    
+        param sharedid entry id 0 entries going fetched  
+        return list link bibentry  instances 
+        
+   setting base attributes once 
+    
+       retrieves mapping between columns shared_id version  
+        
+    
+       fetches returns shared meta data  
+        
+    
+       clears sets shared meta data  
+       
+        param metadata jabref meta data  
+        throws sqlexception 
+        
+   delete data data table 
+    
+        returns new instance abstract type   link dbmsprocessor never happen except new types added without updating method  
+    
+       listens notifications dbms  
+       needs implemented liveupdate supported dbms 
+       
+        param dbmssynchronizer   link dbmssynchronizer handles notification  
+        
+   nothing terminates notification listener  
+       needs implemented liveupdate supported dbms 
+        
+   nothing notifies clients    link dbmssynchronizer connected same dbms  
+       needs implemented liveupdate supported dbms 
+        
+   nothing do net sf jabref shared dbmsprocessor log logger   logfactory getlog dbmsprocessor connection connection dbmsconnectionproperties connectionproperties processor_id   uuid randomuuid   tostring dbmsprocessor dbmsconnection dbmsconnection connection   dbmsconnection getconnection connectionproperties   dbmsconnection getproperties checkbaseintegrity sqlexception checktableavailibility  entry    field    metadata checkforpre3dot6intergrity sqlexception checktableavailibility  
+                 entries   
+                 entry_group   
+                 entry_types   
+                 groups   
+                 group_types   
+                 jabref_database   
+                 strings checktableavailibility tablenames sqlexception   
+        list requiredtables arraylist name   tablenames    
+            requiredtables add name touppercase locale english    
+          
+ 
+        databasemetadata databasemetadata   connection getmetadata resultset databasemetadataresultset   databasemetadata gettables null null databasemetadataresultset next tablename   databasemetadataresultset getstring  table_name   touppercase    
+                requiredtables remove tablename requiredtables isempty setupshareddatabase sqlexception   
+        setup checkbaseintegrity      
+              
+            logger error  corrupt_shared_database_structure setup sqlexception escape expression insertentry bibentry bibentry checkforbibentryexistence bibentry     
+            insertintoentrytable bibentry   
+            insertintofieldtable bibentry insertintoentrytable bibentry bibentry    
+          
+        stringbuilder insertintoentryquery stringbuilder   
+                 append  insert into    
+                 append escape  entry    
+                 append      
+                 append escape  type    
+                 append    values preparedstatement preparedentrystatement   connection preparestatement insertintoentryquery tostring shared_id       
+ 
+            preparedentrystatement setstring 1  bibentry gettype     
+            preparedentrystatement executeupdate resultset generatedkeys   preparedentrystatement getgeneratedkeys generatedkeys next      
+                    bibentry getsharedbibentrydata   setsharedid generatedkeys getint 1 sqlexception e    
+            logger error  sql error     e checkforbibentryexistence bibentry bibentry sharedid   bibentry getsharedbibentrydata   getsharedid sharedid    -1    
+                stringbuilder selectquery stringbuilder   
+                         append  select   from    
+                         append escape  entry    
+                         append   where    
+                         append escape  shared_id    
+                         append preparedstatement preparedselectstatement   connection preparestatement selectquery tostring       
+                    preparedselectstatement setint 1  sharedid resultset resultset   preparedselectstatement executequery resultset next sqlexception e    
+            logger error  sql error     e insertintofieldtable bibentry bibentry fieldname   bibentry getfieldnames      
+                stringbuilder insertfieldquery stringbuilder   
+                     append  insert into    
+                     append escape  field    
+                     append      
+                     append escape  entry_shared_id    
+                     append       
+                     append escape  name    
+                     append       
+                     append escape  value    
+                     append    values preparedstatement preparedfieldstatement   connection preparestatement insertfieldquery tostring       
+                      
+                    preparedfieldstatement setint 1  bibentry getsharedbibentrydata   getsharedid     
+                    preparedfieldstatement setstring 2  fieldname   
+                    preparedfieldstatement setstring 3  bibentry getfield fieldname  get     
+                    preparedfieldstatement executeupdate sqlexception e    
+            logger error  sql error     e updateentry bibentry localbibentry offlinelockexception  sqlexception   
+        connection setautocommit optional bibentry  sharedentryoptional   getsharedentry localbibentry getsharedbibentrydata   getsharedid sharedentryoptional ispresent bibentry sharedbibentry   sharedentryoptional get    
+ 
+              
+            removesharedfieldsbydifference localbibentry  sharedbibentry localbibentry getsharedbibentrydata   getversion      sharedbibentry getsharedbibentrydata   
+                     getversion       localbibentry equals sharedbibentry     
+ 
+                insertorupdatefields localbibentry   
+ 
+                  
+                stringbuilder updateentrytypequery stringbuilder   
+                     append  update    
+                     append escape  entry    
+                     append   set    
+                     append escape  type    
+                     append     ?     
+                     append escape  version    
+                     append        
+                     append escape  version    
+                     append     1 where    
+                     append escape  shared_id    
+                     append preparedstatement preparedupdateentrytypestatement   connection preparestatement updateentrytypequery tostring       
+                    preparedupdateentrytypestatement setstring 1  localbibentry gettype     
+                    preparedupdateentrytypestatement setint 2  localbibentry getsharedbibentrydata   getsharedid     
+                    preparedupdateentrytypestatement executeupdate    
+                  
+ 
+                connection commit offlinelockexception localbibentry  sharedbibentry sqlexception e    
+            logger error  sql error     e   
+            connection rollback connection setautocommit removesharedfieldsbydifference bibentry localbibentry  bibentry sharedbibentry sqlexception   
+        set nullfields hashset   sharedbibentry getfieldnames     
+        nullfields removeall localbibentry getfieldnames nullfield   nullfields    
+            stringbuilder deletefieldquery stringbuilder   
+                 append  delete from    
+                 append escape  field    
+                 append   where    
+                 append escape  name    
+                 append     ? and    
+                 append escape  entry_shared_id    
+                 append preparedstatement prepareddeletefieldstatement   connection 
+                     preparestatement deletefieldquery tostring       
+                prepareddeletefieldstatement setstring 1  nullfield   
+                prepareddeletefieldstatement setint 2  localbibentry getsharedbibentrydata   getsharedid     
+                prepareddeletefieldstatement executeupdate insertorupdatefields bibentry localbibentry sqlexception fieldname   localbibentry getfieldnames      
+              
+            optional valueoptional   localbibentry getfield fieldname value valueoptional ispresent      
+                value   valueoptional get    
+              
+ 
+            stringbuilder selectfieldquery stringbuilder   
+                     append  select   from    
+                     append escape  field    
+                     append   where    
+                     append escape  name    
+                     append     ? and    
+                     append escape  entry_shared_id    
+                     append preparedstatement preparedselectfieldstatement   connection 
+                     preparestatement selectfieldquery tostring       
+                preparedselectfieldstatement setstring 1  fieldname   
+                preparedselectfieldstatement setint 2  localbibentry getsharedbibentrydata   getsharedid resultset selectfieldresultset   preparedselectfieldstatement executequery selectfieldresultset next        
+                        stringbuilder updatefieldquery stringbuilder   
+                                 append  update    
+                                 append escape  field    
+                                 append   set    
+                                 append escape  value    
+                                 append     ? where    
+                                 append escape  name    
+                                 append     ? and    
+                                 append escape  entry_shared_id    
+                                 append preparedstatement preparedupdatefieldstatement   connection 
+                                 preparestatement updatefieldquery tostring       
+                            preparedupdatefieldstatement setstring 1  value   
+                            preparedupdatefieldstatement setstring 2  fieldname   
+                            preparedupdatefieldstatement setint 3  localbibentry getsharedbibentrydata   getsharedid     
+                            preparedupdatefieldstatement executeupdate stringbuilder insertfieldquery stringbuilder   
+                                 append  insert into    
+                                 append escape  field    
+                                 append      
+                                 append escape  entry_shared_id    
+                                 append       
+                                 append escape  name    
+                                 append       
+                                 append escape  value    
+                                 append    values preparedstatement preparedfieldstatement   connection 
+                                 preparestatement insertfieldquery tostring       
+                            preparedfieldstatement setint 1  localbibentry getsharedbibentrydata   getsharedid     
+                            preparedfieldstatement setstring 2  fieldname   
+                            preparedfieldstatement setstring 3  value   
+                            preparedfieldstatement executeupdate removeentry bibentry bibentry    
+        stringbuilder query stringbuilder   
+                 append  delete from    
+                 append escape  entry    
+                 append   where    
+                 append escape  shared_id    
+                 append preparedstatement preparedstatement   connection preparestatement query tostring       
+            preparedstatement setint 1  bibentry getsharedbibentrydata   getsharedid     
+            preparedstatement executeupdate sqlexception e    
+            logger error  sql error     e optional bibentry  getsharedentry sharedid    
+        list bibentry  sharedentries   getsharedentrylist sharedid sharedentries isempty optional of sharedentries get 0 optional empty list bibentry  getsharedentries getsharedentrylist 0 list bibentry  getsharedentrylist sharedid    
+        list bibentry  sharedentries arraylist      
+ 
+        stringbuilder selectentryquery stringbuilder    
+        selectentryquery append  select   from     
+        selectentryquery append escape  entry sharedid    0    
+            selectentryquery append   where     
+            selectentryquery append escape  shared_id     
+            selectentryquery append         
+            selectentryquery append sharedid   
+          
+ 
+        selectentryquery append   order by     
+        selectentryquery append escape  shared_id resultset selectentryresultset   connection createstatement   executequery selectentryquery tostring selectentryresultset next      
+                bibentry bibentry bibentry    
+                  
+                bibentry getsharedbibentrydata   setsharedid selectentryresultset getint  shared_id     
+                bibentry settype selectentryresultset getstring  type     
+                bibentry getsharedbibentrydata   setversion selectentryresultset getint  version     
+ 
+                stringbuilder selectfieldquery stringbuilder   
+                     append  select   from    
+                     append escape  field    
+                     append   where    
+                     append escape  entry_shared_id    
+                     append preparedstatement preparedselectfieldstatement   connection preparestatement selectfieldquery tostring       
+                    preparedselectfieldstatement setint 1  selectentryresultset getint  shared_id resultset selectfieldresultset   preparedselectfieldstatement executequery selectfieldresultset next      
+                            bibentry setfield selectfieldresultset getstring  name    
+                                    optional ofnullable selectfieldresultset getstring  value     entryeventsource shared   
+                          
+                      
+                  
+                sharedentries add bibentry sqlexception e    
+            logger error  sql error   e sharedentries map integer  integer  getsharedidversionmapping     
+        map integer  integer  sharedidversionmapping hashmap      
+        stringbuilder selectentryquery stringbuilder   
+             append  select   from    
+             append escape  entry    
+             append   order by    
+             append escape  shared_id resultset selectentryresultset   connection createstatement   executequery selectentryquery tostring selectentryresultset next      
+                sharedidversionmapping put selectentryresultset getint  shared_id    selectentryresultset getint  version sqlexception e    
+            logger error  sql error   e sharedidversionmapping map string  getsharedmetadata     
+        map string  data hashmap resultset resultset   connection createstatement   executequery  select   from     escape  metadata resultset next      
+                data put resultset getstring  key    resultset getstring  value sqlexception e    
+            logger error  sql error   e data setsharedmetadata map string  data sqlexception   
+        connection createstatement   executeupdate  truncate table     escape  metadata map entry string  metaentry   data entryset      
+ 
+            stringbuilder query stringbuilder   
+                 append  insert into    
+                 append escape  metadata    
+                 append      
+                 append escape  key    
+                 append       
+                 append escape  value    
+                 append    values preparedstatement preparedstatement   connection preparestatement query tostring       
+                preparedstatement setstring 1  metaentry getkey     
+                preparedstatement setstring 2  metaentry getvalue     
+                preparedstatement executeupdate sqlexception e    
+                logger error  sql error     e dbmsprocessor getprocessorinstance dbmsconnection connection    
+        dbmstype type   connection getproperties   gettype type    dbmstype mysql mysqlprocessor connection type    dbmstype postgresql postgresqlprocessor connection type    dbmstype oracle oracleprocessor connection dbmsconnectionproperties getdbmsconnectionproperties connectionproperties startnotificationlistener  suppresswarnings  unused   dbmssynchronizer dbmssynchronizer stopnotificationlistener notifyclients     
+          
+      
+ 

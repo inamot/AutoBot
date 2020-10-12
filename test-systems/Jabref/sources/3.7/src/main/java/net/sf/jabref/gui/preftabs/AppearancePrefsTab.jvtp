@@ -1,0 +1,188 @@
+ 
+   look feel 
+   try find l f 
+   ignored 
+    
+       customization appearance parameters  
+       
+        param prefs code jabrefpreferences  code  value 
+        
+   font sizes  
+   row padding size  
+   only list l f available 
+   only default l f shows the osx specific first dropdownmenu 
+   l f 
+   l f 
+   test field value number  
+   test font size number  
+   test row padding number  net sf jabref gui preftabs appearanceprefstab jpanel prefstab lookandfeel list looks   arrays aslist  
+                uimanager getsystemlookandfeelclassname    
+                uimanager getcrossplatformlookandfeelclassname    
+                 com jgoodies looks plastic plastic3dlookandfeel   
+                 com jgoodies looks windows windowslookandfeel list getavailablelookandfeels     
+            list lookandfeels arraylist l   looks forname l   
+                    lookandfeels add l classnotfoundexception ignored lookandfeels appearanceprefstab jabrefpreferences prefs prefs   prefs  
+        setlayout borderlayout     
+ 
+          
+        fontsize jtextfield 5   
+ 
+          
+        rowpadding jtextfield 5   
+ 
+        colorcodes jcheckbox  
+                localization lang  color codes required and optional fields     
+ 
+        resolvedcolorcodes jcheckbox localization lang  color code resolved fields     
+ 
+        overridefonts jcheckbox localization lang  override font settings     
+ 
+        showgrid jcheckbox localization lang  show gridlines     
+ 
+        formlayout layout formlayout  1dlu  8dlu  left pref  4dlu  fill pref  4dlu  fill 60dlu  4dlu  fill pref        
+        defaultformbuilder builder defaultformbuilder layout   
+ 
+        customlaf jcheckbox localization lang  use other look and feel     
+          
+        list lookandfeels   lookandfeel getavailablelookandfeels    
+        classnameslaf jcombobox   lookandfeels toarray lookandfeels size       
+        classnameslaf seteditable jcombobox clname   classnameslaf  
+        customlaf addchangelistener e -  clname setenabled   jcheckbox  e getsource    isselected      
+ 
+        colorpanel colorsetuppanel colorcodes  resolvedcolorcodes  showgrid os os_x    
+            jpanel pan jpanel    
+            builder appendseparator localization lang  look and feel     
+            jlabel lab jlabel  
+                    localization lang look and feel            uimanager getsystemlookandfeelclassname     
+            builder nextline    
+            builder append pan   
+            builder append lab   
+            builder nextline    
+            builder append pan   
+            builder append customlaf   
+            builder nextline    
+            builder append pan   
+            jpanel pan2 jpanel    
+            lab jlabel localization lang name     ' '   
+            pan2 add lab   
+            pan2 add classnameslaf   
+            builder append pan2   
+            builder nextline    
+            builder append pan   
+            lab jlabel localization 
+                     lang  note that you must specify the fully qualified name the look and feel      
+            builder append lab   
+            builder nextline    
+            builder append pan   
+            lab jlabel  
+                    localization lang  and the must be available in your classpath next time you start jabref      
+            builder append lab   
+            builder nextline    
+          
+ 
+        builder leadingcolumnoffset 2   
+        jlabel lab  
+        builder appendseparator localization lang  general     
+        jpanel p1 jpanel    
+        lab jlabel localization lang  menu and label font size           
+        p1 add lab   
+        p1 add fontsize   
+        builder append p1   
+        builder nextline    
+        builder append overridefonts   
+        builder nextline    
+        builder appendseparator localization lang  table appearance     
+        jpanel p2 jpanel    
+        p2 add jlabel localization lang  table row height padding            
+        p2 add rowpadding   
+        builder append p2   
+        builder nextline    
+        builder append colorcodes   
+        builder nextline    
+        builder append resolvedcolorcodes   
+        builder nextline    
+        builder append showgrid   
+        builder nextline    
+        jbutton fontbutton jbutton localization lang  set table font     
+        builder append fontbutton   
+        builder nextline    
+        builder appendseparator localization lang  table and entry editor colors     
+        builder append colorpanel   
+ 
+        jpanel upper jpanel    
+        jpanel sort jpanel    
+        jpanel namesp jpanel    
+        jpanel iconcol jpanel    
+        gridbaglayout gbl gridbaglayout    
+        upper setlayout gbl   
+        sort setlayout gbl   
+        namesp setlayout gbl   
+        iconcol setlayout gbl   
+ 
+        overridefonts addactionlistener e -  fontsize setenabled overridefonts isselected      
+ 
+        fontbutton addactionlistener  
+                e fontselectordialog usedfont  getselectedfont   ifpresent x -  usedfont   x    
+ 
+        jpanel pan   builder getpanel    
+        pan setborder borderfactory createemptyborder 5  5  5  5    
+        add pan  borderlayout center   
+      
+ 
+     override setvalues     
+          
+        usedefaultlaf   prefs getboolean jabrefpreferences use_default_look_and_feel   
+        currentlaf   prefs get jabrefpreferences win_look_and_feel   
+        customlaf setselected  usedefaultlaf   
+        classnameslaf setselecteditem currentlaf   
+        classnameslaf setenabled  usedefaultlaf   
+ 
+        colorcodes setselected prefs getboolean jabrefpreferences table_color_codes_on    
+        resolvedcolorcodes setselected prefs getboolean jabrefpreferences table_resolved_color_codes_on    
+        fontsize settext valueof prefs getint jabrefpreferences menu_font_size     
+        rowpadding settext valueof prefs getint jabrefpreferences table_row_padding     
+        oldmenufontsize   prefs getint jabrefpreferences menu_font_size   
+        overridefonts setselected prefs getboolean jabrefpreferences override_default_fonts    
+        oldoverridefontsize   overridefonts isselected    
+        fontsize setenabled overridefonts isselected     
+        showgrid setselected prefs getboolean jabrefpreferences table_show_grid    
+        colorpanel setvalues    
+      
+ 
+     override storesettings     
+          
+        prefs putboolean jabrefpreferences use_default_look_and_feel   customlaf isselected     
+        prefs put jabrefpreferences win_look_and_feel  classnameslaf getselecteditem   tostring customlaf isselected      usedefaultlaf      currentlaf equals classnameslaf getselecteditem   tostring       
+            joptionpane showmessagedialog localization lang  you have changed the look and feel setting    concat      
+                             concat localization lang  you must restart jabref to come into effect      
+                    localization lang  changed look and feel settings    joptionpane warning_message   
+          
+ 
+        prefs putboolean jabrefpreferences table_color_codes_on  colorcodes isselected     
+        prefs putboolean jabrefpreferences table_resolved_color_codes_on  resolvedcolorcodes isselected     
+        prefs put jabrefpreferences font_family  usedfont getfamily     
+        prefs putint jabrefpreferences font_style  usedfont getstyle     
+        prefs putint jabrefpreferences font_size  usedfont getsize     
+        prefs putboolean jabrefpreferences override_default_fonts  overridefonts isselected     
+        guiglobals currentfont   usedfont  
+        colorpanel storesettings    
+        prefs putboolean jabrefpreferences table_show_grid  showgrid isselected size   integer parseint fontsize gettext overridefonts isselected      oldoverridefontsize     
+                     size    oldmenufontsize     
+                prefs putint jabrefpreferences menu_font_size  size   
+                joptionpane showmessagedialog localization lang  you have changed the menu and label font size    
+                                 concat      
+                                 concat localization lang  you must restart jabref to come into effect      
+                        localization lang  changed font settings    
+                        joptionpane warning_message numberformatexception ex    
+            logger info  invalid font size   ex padding   integer parseint rowpadding gettext     
+            prefs putint jabrefpreferences table_row_padding  padding numberformatexception ex    
+            logger info  invalid row padding   ex validateintegerfield fieldname fieldvalue errortitle integer parseint fieldvalue numberformatexception ex    
+            joptionpane showmessagedialog localization lang  you must enter an integer value in the text field fieldname    '   
+                    errortitle  joptionpane error_message override validatesettings validateintegerfield localization lang  menu and label font size    fontsize gettext    
+                localization lang  invalid setting validateintegerfield localization lang  table row height padding    rowpadding gettext    
+                localization lang  invalid setting     
+      
+ 
+     override gettabname localization lang  appearance    
+      
+ 

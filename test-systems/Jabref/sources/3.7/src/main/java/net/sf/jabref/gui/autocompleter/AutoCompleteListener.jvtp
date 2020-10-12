@@ -1,0 +1,219 @@
+ 
+    
+   created morten o  alver  16 feb  2007 
+    
+  todo logging behavior class probably fine-grained only understandable original author variables keep track situation time time  
+   null indicates completions available letters user typed until know field set focus listener call another focus listener finishing needed autocomplete listener must 
+   run before focus listener responsible storing current edit logger gethandlers   length    0    
+  	    	logger setlevel level finest   
+  	    	consolehandler ch   new consolehandler    
+  	    	ch setlevel level finest   
+  	    	logger addhandler ch method used focus listener call another focus listener finishing needed autocomplete listener must run before focus listener responsible storing current edit  
+       
+        param listener listener call setting determines whether autocomplete listener consume enter key stroke leads accepting completion set false jtextcomponent receive enter key press completion done default value true  
+       
+        param t true indicate enter key consumed  false forwarded 
+        
+   replace typed characters characters completion 
+   cycle through alternative completions user presses pgup pgdn e getkeycode      keyevent vk_back_space     
+          	stringbuffer currentword   getcurrentword  jtextcomponent  e getsource     
+          	   delete last char obey semantics back space 
+          	currentword deletecharat currentword length  -1   
+          	docompletion currentword  e   
+            
+   shift ok  everything leads reset 
+   replace prefix new prefix 
+   replace suffix new suffix 
+  int cp   oldselectionend - deletedchars  
+  comp setcaretposition cp tosetin length  -1   
+   position not end input user cancels autocompletion entering another letter completed word auto 
+       completion  b  space casing letters kept 
+       
+       global variable  lastbeginning  keeps track typed letters rely variable reconstruct text 
+       
+        param wordseperatortyped indicates whether user typed white space character previous input user typed word autocompletion available  
+   thus nothing replace selection user typed complete word possibly different casing need replacement user not press white space character  space not anything 
+   remove completion suggestion current letter not contained comp gettext lastbeginning 
+   thus lastbeginning length one large current letter not contained comp gettext   
+   thus  cursor position not updated 
+    
+       start new completion attempt  instead treating continuation existing word interrupt current word use first word array completions two lines obey user's input 
+  tosetin   character tostring ch   
+  tosetin   tosetin concat sno substring cword length obey completion case handled keypressed e  
+   don't auto completion inside words 
+   plain key shift   key pressed handling ctrl key   meta key case-insensitive system bit tricky here keyword todo user types treated continue o  matches o keyword todo user types treated discont o not match o   
+   user continues word suggested  
+  comp setcaretposition cp 1-tosetin    
+   user typed last character autocompleted word replace automcompletion word typed word helps user presses  space completion 
+    space  indicates user not want autocompletion typed word selected text  therefore not updating selection 
+   user discontinues word suggested  
+   tosetin   string used autocompletion last time string removed 
+   lastcaretposition position caret tosetin not use tosetin want obey casing sno  
+   only  real characters  end up here 
+   start new search end field reached 
+   replace displayed letters typed letters 
+   replace displayed letters typed letters 
+    
+       resets auto completion data way leftovers now text start field up caret position most fields only interested currently edited word seek caret backward closest space  
+   caret middle text current character whitespace means new word started current word 
+   piv points whitespace char piv 1 
+   copy everything next char up end uptocaret fields journal reasonable try complete entire 
+   text field content skip searching keep entire part up caret  
+   ignored net sf jabref gui autocompleter autocompletelistener keyadapter focuslistener autocompletelistener autocompleter completer completer   completer setnextfocuslistener focuslistener listener nextfocuslistener   listener setconsumeenterkey t consumeenterkey   t  
+      
+ 
+     override keypressed keyevent e tosetin e getkeycode      keyevent vk_enter     
+            jtextcomponent comp    jtextcomponent  e getsource    
+ 
+              
+            lastbeginning   lastcompletions get lastshowncompletion end   comp getselectionend    
+            comp select end  end   
+            tosetin consumeenterkey    
+                e consume e getkeycode      keyevent vk_page_down      tosetin cycle  jtextcomponent  e getsource    1   
+            e consume e getkeycode      keyevent vk_page_up      tosetin cycle  jtextcomponent  e getsource    -1   
+            e consume e getkeychar      keyevent char_undefined e getkeycode      keyevent vk_shift    
+                  
+                logger debug  special shift pressed  no action resetautocompletion logger debug  special defined character  but not caught above cycle jtextcomponent comp increment lastcompletions lastcompletions isempty     
+        lastshowncompletion    increment lastshowncompletion    lastcompletions size      
+            lastshowncompletion   0 lastshowncompletion   0    
+            lastshowncompletion   lastcompletions size   - 1 sno   lastcompletions get lastshowncompletion   
+        tosetin   sno substring lastbeginning length   - 1   
+ 
+        stringbuilder alltext stringbuilder comp gettext oldselectionstart   comp getselectionstart oldselectionend   comp getselectionend startpos   comp getselectionstart   - lastbeginning length    
+        alltext delete startpos  oldselectionstart   
+        alltext insert startpos  sno subsequence 0  lastbeginning length      
+ 
+          
+        alltext delete oldselectionstart  oldselectionend   
+          
+        alltext insert oldselectionstart  tosetin substring 1    
+ 
+        logger debug alltext tostring     
+        comp settext alltext tostring     
+          
+        comp select oldselectionstart   oldselectionstart   tosetin length    - 1   
+        lastcaretposition   comp getcaretposition    
+        logger debug  tosetin  '    tosetin atendofword jtextcomponent textfield nextcharposition   textfield getcaretposition nextcharposition   textfield gettext   length nextchar   textfield gettext   charat nextcharposition character iswhitespace nextchar setunmodifiedtypedletters jtextcomponent comp lastbeginningcontainstypedcharacter wordseperatortyped lastbeginning logger debug  no last beginning found logger debug  lastbeginning       lastbeginning comp getselectedtext wordseperatortyped    
+                logger debug  replacing complete word logger debug  selected text     comp getselectedtext       will be removed    
+              
+            comp replaceselection      
+          
+ 
+        lastcaretposition   comp getcaretposition endindex   lastcaretposition - lastbeginning length lastbeginningcontainstypedcharacter    
+              
+              
+            endindex text   comp gettext    
+        comp settext text substring 0  endindex  concat lastbeginning  concat text substring lastcaretposition lastbeginningcontainstypedcharacter    
+              
+              
+            lastcaretposition    
+          
+        comp setcaretposition lastcaretposition   
+        lastbeginning startcompletion stringbuffer currentword  keyevent e    
+        jtextcomponent comp    jtextcomponent  e getsource    
+ 
+        list completed   findcompletions currentword tostring prefix   completer getprefix cword    prefix prefix isempty    ? currentword tostring   
+                 substring prefix length      currentword tostring    
+ 
+        logger debug  startcompletion currentword       currentword    ' ' prefix       prefix    ' ' cword       cword no   0 completed completed isempty       
+            lastshowncompletion   0  
+            lastcompletions   completed sno   completed get no   
+ 
+              
+              
+              
+              
+            tosetin   sno substring cword length   - 1   
+ 
+            logger debug  tosetin       tosetin   ' '   
+ 
+            stringbuilder alltext stringbuilder comp gettext cp   comp getcaretposition    
+            alltext insert cp  tosetin   
+            comp settext alltext tostring     
+            comp setcaretposition cp   
+            comp select cp   1   cp   1   sno length    - cword length     
+            e consume    
+            lastcaretposition   comp getcaretposition ch   e getkeychar    
+ 
+            logger debug  appending      ch cword length      1    
+                lastbeginning   character tostring ch lastbeginning   cword substring 0  cword length   - 1  concat character tostring ch    
+              
+          
+ 
+      
+ 
+     override keytyped keyevent e    
+        logger debug  key typed event caught     e getkeycode ch   e getkeychar ch    '\n atendofword  jtextcomponent  e getsource e getmodifiers     inputevent shift_mask     inputevent shift_mask character isletter ch     character isdigit ch  
+                        character iswhitespace ch     completer issingleunitfield       
+                jtextcomponent comp    jtextcomponent  e getsource tosetin logger debug  tosetin is logger debug  tosetin       tosetin tosetin tosetin length     1      ch    tosetin charat 1      
+                      
+                    logger debug  cont    
+ 
+                    tosetin   tosetin substring 1 tosetin isempty cp   comp getcaretposition    
+                          
+                        comp select  cp   1  - tosetin length    cp   
+                        lastbeginning   lastbeginning   ch  
+ 
+                        e consume    
+                        lastcaretposition   comp getcaretposition    
+ 
+                        lastcompletions   findcompletions lastbeginning   
+                        lastshowncompletion   0 i   0  i   lastcompletions size    i lastcompletion   lastcompletions get i lastcompletion endswith tosetin     
+                                lastshowncompletion   i tosetin length     2 text   comp gettext    
+                            comp settext text substring 0  lastcaretposition - lastbeginning length      lastbeginning 
+                                      text substring lastcaretposition    
+                              
+                            tosetin tosetin tosetin length      1      ch    tosetin charat 1       
+                      
+                    lastbeginning   lastbeginning   ch  
+ 
+                    logger debug  discont tosetin       tosetin    ' ' lastbeginning       lastbeginning   ' '   
+ 
+                    list completed   findcompletions lastbeginning completed completed isempty       
+                        lastshowncompletion   0  
+                        lastcompletions   completed sno   completed get 0 lastlen   tosetin length   - 1  
+                        tosetin   sno substring lastbeginning length   - 1 text   comp gettext    
+                          
+                        comp settext text substring 0   lastcaretposition - lastlen - lastbeginning length      1    sno 
+                                  text substring lastcaretposition startselect    lastcaretposition   1  - lastlen endselect    lastcaretposition   tosetin length    - lastlen  
+                        comp select startselect  endselect   
+ 
+                        lastcaretposition   comp getcaretposition    
+                        e consume setunmodifiedtypedletters comp e consume    
+                        tosetin logger debug comp replaceselection      
+ 
+                stringbuffer currentword   getcurrentword comp character isisocontrol ch    
+                currentword append ch   
+                startcompletion currentword  e character iswhitespace ch completer issingleunitfield     
+                    logger debug  whitespace     singleunitfield    
+                      
+ 
+                      
+                    setunmodifiedtypedletters  jtextcomponent  e getsource resetautocompletion logger debug  no letter digit whitespace or char_undefined    
+                  
+                setunmodifiedtypedletters  jtextcomponent  e getsource character isisocontrol ch    
+                resetautocompletion resetautocompletion resetautocompletion     
+        logger debug  resetting autocompletion    
+        tosetin lastbeginning list findcompletions beginning completer complete beginning stringbuffer getcurrentword jtextcomponent comp    
+        stringbuffer res stringbuffer uptocaret uptocaret   comp gettext 0  comp getcaretposition completer issingleunitfield comp getcaretposition     comp gettext   length    
+                           character iswhitespace comp gettext   charat comp getcaretposition stringbuffer piv   uptocaret length   - 1 piv    0      character iswhitespace uptocaret charat piv      
+                    piv--  
+                  
+                  
+                  
+                res append uptocaret substring piv   1 res append uptocaret   
+              
+            logger debug  autocomplistener      res badlocationexception ignore res  
+      
+ 
+     override focusgained focusevent event nextfocuslistener nextfocuslistener focusgained event   
+          
+      
+ 
+     override focuslost focusevent event tosetin jtextcomponent comp    jtextcomponent  event getsource    
+            clearcurrentsuggestion comp nextfocuslistener nextfocuslistener focuslost event clearcurrentsuggestion jtextcomponent comp tosetin selstart   comp getselectionstart text   comp gettext    
+            comp settext text substring 0  selstart    text substring comp getselectionend      
+            comp setcaretposition selstart   
+            lastcompletions lastshowncompletion   0  
+            lastcaretposition   -1  
+            tosetin 

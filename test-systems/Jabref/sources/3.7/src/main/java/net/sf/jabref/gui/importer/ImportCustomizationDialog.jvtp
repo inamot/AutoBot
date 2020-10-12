@@ -1,0 +1,176 @@
+ 
+    
+   dialog manage custom importers  
+    
+   column widths import customization dialog table  
+   key bindings  
+   
+        non-javadoc  
+       see java awt component#getsize   
+       
+    
+       converts path relative base-path class name  
+       
+        param basepath  base path 
+        param path  path includes base-path prefix 
+        return  class name 
+        
+   remove leading basepath path 
+    
+       adds importer model underlies custom importers  
+       
+        param importer  importer 
+        
+    
+       table model custom importer table  
+        net sf jabref gui importer importcustomizationdialog jdialog importcustomizationdialog jabrefframe frame frame  localization lang  manage custom imports importtablemodel tablemodel importtablemodel    
+        customimportertable jtable tablemodel   
+        tablecolumnmodel cm   customimportertable getcolumnmodel    
+        cm getcolumn 0  setpreferredwidth col_0_width   
+        cm getcolumn 1  setpreferredwidth col_1_width   
+        cm getcolumn 2  setpreferredwidth col_2_width   
+        cm getcolumn 3  setpreferredwidth col_3_width   
+        jscrollpane sp jscrollpane customimportertable  scrollpaneconstants vertical_scrollbar_as_needed  
+                scrollpaneconstants horizontal_scrollbar_never   
+        customimportertable setselectionmode listselectionmodel single_selection   
+        customimportertable setpreferredscrollableviewportsize getsize customimportertable getrowcount     0    
+            customimportertable setrowselectioninterval 0  0   
+          
+ 
+        guiutil correctrowheight customimportertable   
+ 
+        jbutton addfromfolderbutton jbutton localization lang  add from folder     
+        addfromfolderbutton addactionlistener e -    
+ 
+            filedialog dialog filedialog frame  withextension fileextensions dialog setdefaultextension fileextensions optional path  selectedfile   dialog showdialogandgetselectedfile selectedfile ispresent       selectedfile get   getparent chosenfilestr   selectedfile get   tostring basepath   selectedfile get   getparent   tostring classname   pathtoclass basepath file chosenfilestr    
+                    customimporter importer customimporter basepath  classname   
+ 
+                    addorreplaceimporter importer   
+                    customimportertable revalidate    
+                    customimportertable repaint exception exc    
+                    joptionpane showmessagedialog frame  localization lang  could not instantiate %0   chosenfilestr noclassdeffounderror exc    
+                    joptionpane showmessagedialog frame  localization lang  
+                             could not instantiate %0  have you chosen the correct path?   chosenfilestr    
+                  
+ 
+              
+            
+        addfromfolderbutton 
+                 settooltiptext localization lang  add a  compiled  custom importer from a path    
+                           \n    localization lang  the path need not be on the classpath of jabref      
+ 
+        jbutton addfromjarbutton jbutton localization lang  add from jar     
+        addfromjarbutton addactionlistener e -    
+            filedialog dialog filedialog frame  withextensions enumset of fileextensions zip  fileextensions jar    
+            dialog setdefaultextension fileextensions jar   
+            optional path  jarzipfile   dialog showdialogandgetselectedfile jarzipfile ispresent zipfile zipfile zipfile jarzipfile get   tofile    zipfile open_read     
+                    zipfilechooser zipfilechooser zipfilechooser zipfile   
+                    zipfilechooser setvisible customimportertable revalidate    
+                    customimportertable repaint 10 ioexception exc    
+                    logger info  could not open zip-archive    exc   
+                    joptionpane showmessagedialog frame  
+                            localization lang  could not open %0   jarzipfile get   tostring       \n  
+                                      localization lang  have you chosen the correct path noclassdeffounderror exc    
+                    logger info  could not instantiate zip-archive reader    exc   
+                    joptionpane showmessagedialog frame  
+                            localization lang  could not instantiate %0   jarzipfile get   tostring       \n  
+                                      localization lang  have you chosen the correct path?     
+                  
+              
+            
+        addfromjarbutton 
+                 settooltiptext localization lang  add a  compiled  custom importer from a zip-archive    
+                           \n    localization lang  the zip-archive need not be on the classpath of jabref      
+ 
+        jbutton showdescbutton jbutton localization lang  show description     
+        showdescbutton addactionlistener e row   customimportertable getselectedrow row    -1    
+                joptionpane showmessagedialog frame  localization lang  please select an importer customimporter importer     importtablemodel  customimportertable getmodel    getimporter row   
+                joptionpane showmessagedialog frame  importer getdescription     
+              
+            
+ 
+        jbutton removebutton jbutton localization lang  remove     
+        removebutton addactionlistener e row   customimportertable getselectedrow row    -1    
+                joptionpane showmessagedialog frame  localization lang  please select an importer customimportertable removerowselectioninterval row  row   
+                globals prefs customimports 
+                         remove   importtablemodel  customimportertable getmodel    getimporter row    
+                globals import_format_reader resetimportformats globals prefs getimportformatpreferences    
+                        globals prefs getxmppreferences     
+                customimportertable revalidate    
+                customimportertable repaint    
+              
+            
+ 
+        action closeaction abstractaction     
+ 
+             override actionperformed actionevent e    
+                dispose    
+              
+           
+ 
+        jbutton closebutton jbutton localization lang  close     
+        closebutton addactionlistener closeaction   
+ 
+        jbutton helpbutton helpaction helpfile custom_imports  gethelpbutton    
+ 
+          
+        jpanel mainpanel jpanel    
+        actionmap am   mainpanel getactionmap    
+        inputmap im   mainpanel getinputmap jcomponent when_in_focused_window   
+        im put globals getkeyprefs   getkey keybinding close_dialog    close    
+        am put  close   closeaction   
+        mainpanel setlayout borderlayout     
+        mainpanel add sp  borderlayout center   
+        jpanel buttons jpanel    
+        buttonbarbuilder bb buttonbarbuilder buttons   
+        buttons setborder borderfactory createemptyborder 2  2  2  2    
+        bb addglue    
+        bb addbutton addfromfolderbutton   
+        bb addbutton addfromjarbutton   
+        bb addbutton showdescbutton   
+        bb addbutton removebutton   
+        bb addbutton closebutton   
+        bb addunrelatedgap    
+        bb addbutton helpbutton   
+        bb addglue    
+ 
+        getcontentpane   add mainpanel  borderlayout center   
+        getcontentpane   add buttons  borderlayout south setsize getsize     
+        pack setlocationrelativeto frame   
+        customimportertable requestfocus    
+      
+ 
+      
+     override dimension getsize width   col_0_width   col_1_width   col_2_width   col_3_width dimension width  width   2 pathtoclass basepath  file path classname file actualpath   path actualpath equals file basepath      
+            classname   actualpath getname      classname classname   
+            actualpath   actualpath getparentfile classname lastdot   classname lastindexof lastdot   0 classname  
+              
+            classname   classname substring 0  lastdot classname addorreplaceimporter customimporter importer    
+        globals prefs customimports replaceimporter importer   
+        globals import_format_reader resetimportformats globals prefs getimportformatpreferences    
+                globals prefs getxmppreferences     
+          importtablemodel  customimportertable getmodel    firetabledatachanged importtablemodel abstracttablemodel columnnames localization lang name    
+                localization lang  command line id    localization lang  importer localization lang  contained in     
+ 
+ 
+         override object getvalueat rowindex columnindex    
+            object value customimporter importer   getimporter rowindex columnindex    0    
+                value   importer getname columnindex    1    
+                value   importer getname columnindex    2    
+                value   importer getclassname columnindex    3    
+                value   importer getbasepath value  
+          
+ 
+         override getcolumncount columnnames length  
+          
+ 
+         override getrowcount globals prefs customimports size    
+          
+ 
+         override getcolumnname col columnnames col customimporter getimporter rowindex    
+            customimporter   importers   globals prefs customimports 
+                     toarray customimporter globals prefs customimports size importers rowindex   
+          
+      
+ 
+ 

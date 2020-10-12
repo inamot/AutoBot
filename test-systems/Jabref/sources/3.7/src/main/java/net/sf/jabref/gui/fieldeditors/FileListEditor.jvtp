@@ -1,0 +1,307 @@
+ 
+   add input action pair deleting entries  
+   add input action pair inserting entry  
+   add input action pair moving entry up  
+   add input action pair moving entry down  
+   absolute path 
+   relative file folder selection 
+   null file not exist 
+   transactional delete unlink 
+   
+        returns component added container  might jscrollpane component itself  
+       
+   
+       returns text component itself nothing nothing nothing 
+    
+       open editor entry  
+       
+        param entry entry edit  
+        param openbrowse true indicate browse dialog immediately opened  
+        return true edit accepted  false canceled  
+        
+   filesystem lookup 
+   auto download file file found before 
+   reset 
+    
+       run file download operation callback method downloadexternalfile class uses report result download operation call may never come user canceled operation  
+       
+        param file filelistentry linking resulting local file nothing nothing nothing nothing nothing nothing nothing nothing net sf jabref gui fieldeditors filelisteditor jtable fieldeditor  downloadexternalfile downloadcallback filelisteditor jabrefframe frame  bibdatabasecontext databasecontext fieldname content  
+                          entryeditor entryeditor frame   frame databasecontext   databasecontext fieldname   fieldname entryeditor   entryeditor  
+        label fieldnamelabel fieldname   
+        tablemodel filelisttablemodel    
+        settext content   
+        setmodel tablemodel   
+        jscrollpane spane jscrollpane settableheader addmouselistener tableclicklistener     
+ 
+        guiutil correctrowheight jbutton add jbutton icontheme jabreficon add_nobox getsmallicon     
+        add settooltiptext localization lang file link  insert      
+        jbutton remove jbutton icontheme jabreficon remove_nobox getsmallicon     
+        remove settooltiptext localization lang  remove file link  delete      
+        jbutton up jbutton icontheme jabreficon up getsmallicon     
+ 
+        jbutton down jbutton icontheme jabreficon down getsmallicon     
+        auto jbutton localization lang  get fulltext     
+        jbutton download jbutton localization lang  download from url     
+        add setmargin insets 0  0  0  0    
+        remove setmargin insets 0  0  0  0    
+        up setmargin insets 0  0  0  0    
+        down setmargin insets 0  0  0  0    
+        add addactionlistener e -  addentry     
+        remove addactionlistener e -  removeentries     
+        up addactionlistener e -  moveentry -1    
+        down addactionlistener e -  moveentry 1    
+        auto addactionlistener e -  autosetlinks     
+        download addactionlistener e -  downloadfile     
+ 
+        formbuilder builder   formbuilder create   
+                 layout formlayout 
+                  fill pref 1dlu fill pref 1dlu fill pref    fill pref fill pref     
+        builder add up  xy 1  1   
+        builder add add  xy 3  1   
+        builder add auto  xy 5  1   
+        builder add down  xy 1  2   
+        builder add remove  xy 3  2   
+        builder add download  xy 5  2   
+        panel jpanel    
+        panel setlayout borderlayout     
+        panel add spane  borderlayout center   
+        panel add builder getpanel    borderlayout east   
+ 
+        transferhandler transferhandler filelisteditortransferhandler frame  entryeditor settransferhandler transferhandler   
+        panel settransferhandler transferhandler   
+ 
+          
+        getinputmap   put keystroke getkeystroke  delete     delete    
+        getactionmap   put  delete abstractaction     
+ 
+             override actionperformed actionevent actionevent row   getselectedrow    
+                removeentries    
+                row   math min row  getrowcount   - 1 row    0    
+                    setrowselectioninterval row  row   
+                  
+              
+            
+ 
+          
+        getinputmap   put keystroke getkeystroke  insert     insert    
+        getactionmap   put  insert abstractaction     
+ 
+             override actionperformed actionevent actionevent    
+                addentry    
+              
+            
+ 
+          
+        getinputmap   put globals getkeyprefs   getkey keybinding file_list_editor_move_entry_up    move up    
+        getactionmap   put  move up abstractaction     
+ 
+             override actionperformed actionevent actionevent    
+                moveentry -1   
+              
+            
+ 
+          
+        getinputmap   put globals getkeyprefs   getkey keybinding file_list_editor_move_entry_down    move down    
+        getactionmap   put  move down abstractaction     
+ 
+             override actionperformed actionevent actionevent    
+                moveentry 1   
+              
+            
+ 
+        jmenuitem openlink jmenuitem localization lang  open     
+        menu add openlink   
+        openlink addactionlistener e -  openselectedfile     
+ 
+        jmenuitem openfolder jmenuitem localization lang  open folder     
+        menu add openfolder   
+        openfolder addactionlistener e row   getselectedrow row    0    
+                filelistentry entry   tablemodel getentry row path paths get entry link  isabsolute      
+                        path   paths get entry link  tostring folder   databasecontext 
+                                 getfiledirectory globals prefs getfiledirectorypreferences       
+                            path file   paths get folder  entry link files exists file     
+                                path   file tostring path isempty      
+                        jabrefdesktop openfolderandselectfile path joptionpane showmessagedialog frame  
+                                localization lang  file not found    
+                                localization lang  error    
+                                joptionpane error_message ioexception ex    
+                    logger debug  cannot open folder   ex   
+                  
+              
+            
+ 
+        jmenuitem rename jmenuitem localization lang  move rename file     
+        menu add rename   
+        rename addactionlistener movefileaction frame  entryeditor jmenuitem movetofiledir jmenuitem localization lang  move file to file directory     
+        menu add movetofiledir   
+        movetofiledir addactionlistener movefileaction frame  entryeditor jmenuitem deletefile jmenuitem localization lang  delete local file     
+        menu add deletefile   
+        deletefile addactionlistener e row   getselectedrow row    -1    
+ 
+                filelistentry entry   tablemodel getentry row   
+                  
+                optional file  file   fileutil expandfilename databasecontext  entry link  
+                        globals prefs getfiledirectorypreferences file ispresent      
+                        files delete file get   topath     
+                      
+                    removeentries ioexception ex    
+                    joptionpane showmessagedialog frame  localization lang  file permission error    
+                            localization lang  cannot delete file    joptionpane error_message   
+                    logger warn  file permission error deleting      entry link  ex   
+                  
+              
+            
+        adjustcolumnwidth adjustcolumnwidth column   0  column getcolumncount    column width   0 row   0  row getrowcount    row      
+                tablecellrenderer renderer getcellrenderer row  column   
+                component comp preparerenderer renderer  row  column   
+                width   math max comp getpreferredsize   width  width columnmodel getcolumn column  setpreferredwidth width openselectedfile row   getselectedrow row    0    
+            filelistentry entry   tablemodel getentry row optional externalfiletype  type   externalfiletypes getinstance   
+                         getexternalfiletypebyname entry type get   getname     
+                jabrefdesktop openexternalfileanyformat databasecontext  entry link  type ispresent   ? type   entry type ioexception e    
+                logger warn  cannot open selected file    e filelisttablemodel gettablemodel tablemodel  
+      
+ 
+     override getfieldname fieldname  
+      
+ 
+      
+     override jcomponent getpane panel  
+      
+ 
+      
+     override jcomponent gettextcomponent override jlabel getlabel label  
+      
+ 
+     override setlabelcolor color color    
+        label setforeground color   
+      
+ 
+     override gettext tablemodel getstringrepresentation    
+      
+ 
+     override settext newtext    
+        tablemodel setcontent newtext   
+      
+ 
+     override append text    
+          
+      
+ 
+     override updatefont     
+          
+      
+ 
+     override paste texttoinsert    
+          
+      
+ 
+     override getselectedtext addentry initiallink row   getselectedrow row    -1    
+            row   0  
+          
+        filelistentry entry filelistentry     initiallink editlistentry entry tablemodel addentry row  entry   
+          
+        entryeditor updatefield adjustcolumnwidth addentry     
+        list defaultdirectory   databasecontext getfiledirectory globals prefs getfiledirectorypreferences defaultdirectory isempty       defaultdirectory get 0 addentry addentry defaultdirectory get 0 removeentries rows   getselectedrows rows i   rows length - 1  i    0  i--    
+                tablemodel removeentry rows i    
+              
+          
+        entryeditor updatefield adjustcolumnwidth moveentry i sel   getselectedrows sel length    1      tablemodel getrowcount     2 toidx   sel 0    i toidx    tablemodel getrowcount      
+            toidx -  tablemodel getrowcount toidx   0    
+            toidx    tablemodel getrowcount    
+          
+        filelistentry entry   tablemodel getentry sel 0    
+        tablemodel removeentry sel 0    
+        tablemodel addentry toidx  entry   
+        entryeditor updatefield setrowselectioninterval toidx  toidx   
+        adjustcolumnwidth editlistentry filelistentry entry openbrowse editor editor filelistentryeditor frame  entry databasecontext editor setentry entry   
+          
+        editor setvisible openbrowse editor okpressed      
+            tablemodel firetabledatachanged    
+          
+        entryeditor updatefield adjustcolumnwidth editor okpressed autosetlinks     
+        auto setenabled list bibentry  entries arraylist   frame getcurrentbasepanel   getselectedentries     
+ 
+          
+        jdialog dialog jdialog frame jabrefexecutorservice instance 
+                 execute autosetlinks autosetlinks entries null  tablemodel  databasecontext  e -    
+                    auto setenabled e getid     0    
+                        entryeditor updatefield adjustcolumnwidth    
+                        frame output localization lang  finished automatically setting external links frame output localization lang  finished automatically setting external links          
+                                  localization lang  no files found      
+ 
+                          
+                        frame getcurrentbasepanel   runcommand actions download_full_text   
+                      
+                      
+                    auto setenabled dialog downloadfile     
+        optional bibtexkey   entryeditor getentry   getcitekeyoptional bibtexkey ispresent answer   joptionpane showconfirmdialog frame  
+                    localization lang entry has no bibtex key  generate key now?    
+                    localization lang  download file    joptionpane ok_cancel_option  
+                    joptionpane question_message answer    joptionpane ok_option    
+                actionlistener l   entryeditor getgeneratekeyaction    
+                l actionperformed bibtexkey   entryeditor getentry   getcitekeyoptional    
+              
+          
+        downloadexternalfile def downloadexternalfile frame  
+                frame getcurrentbasepanel   getbibdatabasecontext    entryeditor getentry def download ioexception ex    
+            logger warn  cannot download    ex   
+          
+      
+ 
+      
+     override downloadcomplete filelistentry file    
+        tablemodel addentry tablemodel getrowcount    file   
+        entryeditor updatefield adjustcolumnwidth tableclicklistener mouseadapter   
+ 
+         override mouseclicked mouseevent e e getbutton      mouseevent button1      e getclickcount      2 row   rowatpoint e getpoint row    0    
+                    filelistentry entry   tablemodel getentry row   
+                    editlistentry entry e ispopuptrigger      
+                processpopuptrigger e   
+              
+          
+ 
+         override mousepressed mouseevent e e ispopuptrigger      
+                processpopuptrigger e   
+              
+          
+ 
+         override mousereleased mouseevent e e ispopuptrigger      
+                processpopuptrigger e processpopuptrigger mouseevent e row   rowatpoint e getpoint row    0    
+                setrowselectioninterval row  row   
+                menu show filelisteditor e getx    e gety     
+              
+          
+      
+ 
+     override undo     
+          
+      
+ 
+     override redo     
+          
+      
+ 
+     override setautocompletelistener autocompletelistener listener    
+          
+      
+ 
+     override clearautocompletesuggestion     
+          
+      
+ 
+     override setactivebackgroundcolor     
+          
+      
+ 
+     override setvalidbackgroundcolor     
+          
+      
+ 
+     override setinvalidbackgroundcolor     
+          
+      
+ 
+     override updatefontcolor     
+          
+      
+ 

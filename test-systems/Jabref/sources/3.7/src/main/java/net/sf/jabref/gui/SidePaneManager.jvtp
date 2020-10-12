@@ -1,0 +1,103 @@
+ 
+    
+   manages visibility sideshowcomponents given newly constructed 
+   sidepane  
+    
+   
+           change morten alver 2005 12 04 postponing updating side pane components rid annoying latency switching tabs panel visible hidden way around panel hidden shown focused panel visible not focused focused panel visible focused hidden 
+        
+   put new component top group 
+   sort visible components preferred position 
+   update preferred positions visible components 
+   split map pair parallel string lists suitable storage 
+    
+       helper class sorting visible components based preferred position 
+        
+    
+       update side pane components show information given 
+       basepanel  
+       
+        param panel 
+        net sf jabref gui sidepanemanager sidepanemanager jabrefframe frame frame   frame  
+          
+        frame gettabbedpane   addchangelistener event -  swingutilities invokelater  
+                   -  setactivebasepanel sidepanemanager frame getcurrentbasepanel       
+        sidep sidepane    
+        sidep setvisible sidepane getpanel sidep t sidepanecomponent hascomponent t  sidepanecomponent components containskey sidepanecomponent t sidepanecomponent iscomponentvisible t  sidepanecomponent    
+        sidepanecomponent component   components get sidepanecomponent component visible contains component t sidepanecomponent toggle t  sidepanecomponent iscomponentvisible sidepanecomponent     
+            hide sidepanecomponent show sidepanecomponent t sidepanecomponent togglethreeway t  sidepanecomponent ispanelfocused   globals getfocuslistener   getfocused      components get sidepanecomponent iscomponentvisible sidepanecomponent     ispanelfocused    
+            hide sidepanecomponent show sidepanecomponent t sidepanecomponent show t  sidepanecomponent    
+        sidepanecomponent component   components get sidepanecomponent component logger warn  side pane component '    sidepanecomponent    ' unknown show component t sidepanecomponent hide t  sidepanecomponent    
+        sidepanecomponent component   components get sidepanecomponent component logger warn  side pane component '    sidepanecomponent    ' unknown hidecomponent component frame getcurrentbasepanel maintable maintable   frame getcurrentbasepanel   getmaintable    
+                maintable setselected maintable getselectedrow     
+                maintable requestfocus register sidepanecomponent comp    
+        components put comp getclass    comp show sidepanecomponent component visible contains component     
+              
+            visible add 0  component   
+ 
+              
+            collections sort visible preferredindexsort     
+ 
+            updateview    
+            component componentopening    
+          
+        globals getfocuslistener   setfocused component   
+        component grabfocus t sidepanecomponent  sidepanecomponent getcomponent t  sidepanecomponent components get sidepanecomponent hidecomponent sidepanecomponent comp visible contains comp     
+            comp componentclosing    
+            visible remove comp   
+            updateview t sidepanecomponent hidecomponent t  sidepanecomponent    
+        sidepanecomponent component   components get sidepanecomponent component visible contains component     
+            component componentclosing    
+            visible remove component   
+            updateview map sidepanecomponent   integer  getpreferredpositions     
+        map sidepanecomponent   integer  preferredpositions hashmap      
+ 
+        list componentnames   globals prefs getstringlist jabrefpreferences side_pane_component_names   
+        list componentpositions   globals prefs 
+                 getstringlist jabrefpreferences side_pane_component_preferred_positions i   0  i   componentnames size      i componentname   componentnames get i sidepanecomponent  componentclass sidepanecomponent forname componentname   
+                preferredpositions put componentclass  integer parseint componentpositions get i classnotfoundexception e    
+                logger error  following side pane could not be found      componentname  e classcastexception e    
+                logger error  following is no side pane  '    componentname  e numberformatexception e    
+                logger info  invalid number format side pane component '    componentname    '    e preferredpositions updatepreferredpositions     
+        map sidepanecomponent   integer  preferredpositions   getpreferredpositions index   0 sidepanecomponent comp   visible    
+            preferredpositions put comp getclass    index   
+            index    
+          
+ 
+          
+        list tmpcomponentnames   preferredpositions keyset   parallelstream   
+                 map getname  
+                 collect collectors tolist     
+ 
+        list componentpositions   preferredpositions values   stream   map object  tostring  
+                 collect collectors tolist     
+ 
+        globals prefs putstringlist jabrefpreferences side_pane_component_names  tmpcomponentnames   
+        globals prefs putstringlist jabrefpreferences side_pane_component_preferred_positions  componentpositions preferredindexsort comparator sidepanecomponent preferredindexsort     
+            preferredpositions   getpreferredpositions    
+          
+ 
+         override compare sidepanecomponent comp1  sidepanecomponent comp2 pos1   preferredpositions getordefault comp1 getclass    0 pos2   preferredpositions getordefault comp2 getclass    0 integer valueof pos1  compareto pos2 moveup sidepanecomponent comp visible contains comp currindex   visible indexof comp currindex   0 newindex   currindex - 1  
+                visible remove currindex   
+                visible add newindex  comp   
+ 
+                updatepreferredpositions    
+                updateview movedown sidepanecomponent comp visible contains comp currindex   visible indexof comp currindex    visible size   - 1 newindex   currindex   1  
+                visible remove currindex   
+                visible add newindex  comp   
+ 
+                updatepreferredpositions    
+                updateview t sidepanecomponent unregistercomponent t  sidepanecomponent    
+        components remove sidepanecomponent setactivebasepanel basepanel panel sidepanecomponent component   components values      
+            component setactivebasepanel panel updateview     
+        sidep setcomponents visible visible isempty sidep isvisible      
+                globals prefs putint jabrefpreferences side_pane_width  frame getsplitpane   getdividerlocation     
+              
+            sidep setvisible wasvisible   sidep isvisible    
+            sidep setvisible wasvisible width   globals prefs getint jabrefpreferences side_pane_width width   0    
+                    frame getsplitpane   setdividerlocation width frame getsplitpane   setdividerlocation getpanel   getpreferredsize   width   
+                  
+              
+          
+      
+ 

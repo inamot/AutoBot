@@ -1,0 +1,79 @@
+ 
+    
+   export format bibtexml format  
+    
+   only export entries exist 
+    
+       contains same logic link parse    method inbook needs special treatment contents inbook stored list jaxbelements first need create jaxbelement every field add content list  
+        
+  set entrytype entry 
+    
+       generic method gets instance entry type  article  book  booklet gets one bibentry method checks fields entry fields method 
+       uses set method entry type fieldname example bib entry field 
+       author value max mustermann given type article method invoke  code article setauthor  max mustermann    code    br  
+        br second part method entry type set entry e g type article code entry setarticle article   code invoked  
+       
+        param entrytype type parameterized type entry  
+        param bibentry bib entry fields set entrytype  
+        param entry bibtexml entry entrytype set entry  
+        
+  set entrytype entry net sf jabref logic exporter bibtexmlexportformat exportformat bibtexmlexportformat bibtexml    bibtexml null    xml    
+      
+ 
+     override performexport bibdatabasecontext databasecontext resultfile charset encoding  
+            list bibentry  entries saveexception   
+        objects requirenonnull databasecontext   
+        objects requirenonnull entries entries isempty file file file bibentry bibentry   entries    
+            entry entry entry    
+ 
+            bibentry getcitekeyoptional   ifpresent citekey -  entry setid citekey type   bibentry gettype   tolowercase english type article   
+                    parse article    bibentry  entry book   
+                    parse book    bibentry  entry booklet   
+                    parse booklet    bibentry  entry conference   
+                    parse conference    bibentry  entry inbook   
+                    parseinbook inbook    bibentry  entry incollection   
+                    parse incollection    bibentry  entry inproceedings   
+                    parse inproceedings    bibentry  entry mastersthesis   
+                    parse mastersthesis    bibentry  entry manual   
+                    parse manual    bibentry  entry misc   
+                    parse misc    bibentry  entry phdthesis   
+                    parse phdthesis    bibentry  entry proceedings   
+                    parse proceedings    bibentry  entry techreport   
+                    parse techreport    bibentry  entry unpublished   
+                    parse unpublished    bibentry  entry logger warn  unexpected type appeared file getentry   add entry   
+          
+        createmarshallerandwritetofile file  resultfile createmarshallerandwritetofile file file resultfile saveexception context context   jaxbcontext newinstance file marshaller marshaller   context createmarshaller    
+            marshaller setproperty marshaller jaxb_formatted_output marshaller marshal file java io file resultfile jaxbexception e saveexception e parseinbook inbook inbook  bibentry bibentry  entry entry    
+        map string  fieldmap   bibentry getfieldmap map entry string  entryfield   fieldmap entryset value   entryfield getvalue key   entryfield getkey year  equals key     
+                xmlgregoriancalendar calendar calendar   datatypefactory newinstance   newxmlgregoriancalendar value   
+ 
+                    jaxbelement xmlgregoriancalendar  year jaxbelement qname bibtexml_namespace_uri   year    xmlgregoriancalendar calendar   
+                    inbook getcontent   add year datatypeconfigurationexception e    
+                    logger error  a configuration error occured number  equals key     
+                jaxbelement biginteger  number jaxbelement qname bibtexml_namespace_uri   number    
+                        biginteger biginteger value    
+                inbook getcontent   add number jaxbelement element jaxbelement qname bibtexml_namespace_uri  key value   
+                inbook getcontent   add element   
+              
+          
+ 
+          
+        entry setinbook inbook t parse t entrytype  bibentry bibentry  entry entry    
+        list method  declaredsetmethods   getlistofsetmethods entrytype   
+        map string  fieldmap   bibentry getfieldmap map entry string  entryfield   fieldmap entryset value   entryfield getvalue key   entryfield getkey method method   declaredsetmethods methodnamewithoutset   method getname   replace  set       tolowercase english year  equals key     key equals methodnamewithoutset xmlgregoriancalendar calendar   datatypefactory newinstance   
+                                     newxmlgregoriancalendar value   
+                            method invoke entrytype  calendar datatypeconfigurationexception e    
+                            logger error  a configuration error occured number  equals key     key equals methodnamewithoutset     
+                        method invoke entrytype biginteger value key equals methodnamewithoutset     
+                        method invoke entrytype  value illegalaccessexception   illegalargumentexception   invocationtargetexception e    
+                    logger error  could not invoke method   e   
+                  
+              
+ 
+              
+            list method  entrymethods   getlistofsetmethods entry method method   entrymethods methodwithoutset   method getname   replace  set simpleclassname   entrytype getclass   getsimplename methodwithoutset equals simpleclassname method invoke entry  entrytype illegalaccessexception   illegalargumentexception   invocationtargetexception e    
+                        logger warn  could not set the type to the entry t  list method  getlistofsetmethods t entrytype arrays aslist entrytype getclass   getdeclaredmethods    stream   
+                 filter method -  method getname   startswith  set    collect collectors tolist     
+      
+ 
+ 

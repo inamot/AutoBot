@@ -1,0 +1,104 @@
+ class used access any archive offering oai2 interface default access arxiv org 
+   
+    see href  http   arxiv org help oa index author ulrich st auml rk 
+    author christian kopf 
+    
+    
+       
+       
+        param oai2host host query without leading http without trailing   
+        param oai2script relative location oai2 interface without leading trailing   
+        param oai2metadataprefix urlencoded metadataprefix 
+        param oai2prefixidentifier urlencoded prefix identifier 
+        param waittimems 
+                  time wait milliseconds between query-requests  
+        
+    
+       default constructor archive queried arxiv org 
+       
+        
+    
+       construct query url 
+       
+        param key key oai2 entry url point return string denoting query url 
+        
+      oai2host         oai2script    ?     verb getrecord      identifier     oai2prefixidentifier 
+    
+       some archives arxiv org - might expect wait some time 
+        
+    
+       strip subcategories arxiv key  
+       
+        param key key fix  
+        return fixed key  
+        
+    
+       import entry oai2 archive bibentry provided field oai2_identifier_field set search string  
+       
+        param key oai2 key fetch arxiv  
+        return imported bibentry null none  
+        
+    
+           fix problem reported mailing-list  
+             https   sourceforge net forum message php?msg_id 4087158 
+            
+   create empty bibentry set oai2identifier field    
+   parse result    
+   correct line breaks spacing additional options 
+   multiple keys delimited space    
+   
+                   some archives arxive org - might expect wait 
+                   some time cancel button hit    
+   query archive load results bibentry    
+   add entry inspection dialog    
+   update dialogs progress bar    net sf jabref gui importer fetcher oai2fetcher entryfetcher oai2fetcher oai2host oai2script oai2metadataprefix oai2prefixidentifier oai2archivename waittimems oai2host   oai2host oai2script   oai2script oai2metadataprefix   oai2metadataprefix oai2prefixidentifier   oai2prefixidentifier oai2archivename   oai2archivename waittime   waittimems saxparserfactory parserfactory   saxparserfactory newinstance    
+            saxparser   parserfactory newsaxparser parserconfigurationexception   saxexception e    
+            logger error  error creating saxparser oai2fetcher   e oai2fetcher oai2fetcher oai2_arxiv_host  oai2fetcher oai2_arxiv_script  oai2fetcher oai2_arxiv_metadataprefix  
+                oai2fetcher oai2_arxiv_prefixidentifier  oai2fetcher oai2_arxiv_archivename  20000l constructurl key identifier identifier   urlencoder encode key  standardcharsets utf_8 name unsupportedencodingexception e return  http   
+                  identifier     metadataprefix     oai2metadataprefix shouldwait waittime   0 fixkey key resultingkey   key resultingkey tolowercase locale english  startswith  arxiv       
+            resultingkey   resultingkey substring 6 dot   resultingkey indexof slash   resultingkey indexof dot   -1      dot   slash     
+            resultingkey   resultingkey substring 0  dot    resultingkey substring slash  resultingkey length resultingkey bibentry importoai2entry key ioexception  saxexception fixedkey   oai2fetcher fixkey key url   constructurl fixedkey   
+        url oai2url url url   
+        httpurlconnection oai2connection    httpurlconnection  oai2url openconnection    
+        oai2connection setrequestproperty  user-agent    jabref    
+ 
+          
+        bibentry entry bibentry idgenerator next     article    
+        entry setfield oai2fetcher oai2_identifier_field  fixedkey   
+        defaulthandler handlerbase oai2handler entry inputstream inputstream   oai2connection getinputstream      
+              
+            saxparser parse inputstream  handlerbase name   entry getfieldnames      
+                entry getfield name  
+                         ifpresent content -  entry setfield name  oai2handler correctlinebreaks content fixedkey matches  \\d\\d\\d\\d\\         
+                entry setfield fieldname year   20    fixedkey substring 0  2 monthnumber   integer parseint fixedkey substring 2  4    
+                monthutil month month   monthutil getmonthbynumber monthnumber month isvalid      
+                    entry setfield fieldname month  month bibtexformat entry  
+      
+ 
+     override helpfile gethelppage helpfile fetcher_oai2_arxiv  
+      
+ 
+     override jpanel getoptionspanel override gettitle arxiv org   
+      
+ 
+     override processquery query  importinspector dialog  outputprinter status shouldcontinue keys   query replace           split i   0  i   keys length  i key   keys i shouldwait       lastcall elapsed date   gettime   - lastcall gettime elapsed   waittime    
+                        status setstatus  
+                                localization lang  waiting arxiv          waittime - elapsed    1000      s    
+                        thread sleep 1000   
+                        elapsed date   gettime   - lastcall gettime    
+                      
+                  
+ 
+                status setstatus localization lang  processing %0   key shouldcontinue bibentry be be   importoai2entry key saxexception e url   constructurl oai2fetcher fixkey key    
+                    logger error  error fetching from     gettitle    e   
+                      importinspectiondialog dialog  showmessage localization lang  error fetching from %0   gettitle      \n   
+                                    localization lang  a sax exception occurred parsing '%0'    url   
+                            localization lang  search %0   gettitle     joptionpane error_message shouldwait      
+                    lastcall date be dialog addentry be   
+                  
+ 
+                  
+                dialog setprogress i   1  keys length ioexception   interruptedexception e    
+            logger error  error fetching from     gettitle    e   
+              importinspectiondialog dialog  showerrormessage gettitle    e getlocalizedmessage override stopfetching     
+        shouldcontinue 

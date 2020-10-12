@@ -1,0 +1,463 @@
+ 
+   
+   package manager goals  - packages completely independent plugins simply distribution mechanism - easy provide package single 
+   zip jar file xml description file - easy addition custom 
+   repositories - transparent caching packages - transparent use development possible depend resolve packages ant 
+   script easy develop package eclipse - versions need managed version conflicts need resolved - handles  possibly 
+   transitive circular  dependencies - cleaning out files package directory packages de-installed 
+    
+    author peter 
+    
+   
+	   maps every package descriptor whether still available map 
+	   acts cache prevent access url over over 
+	   again map used packageconfigpersiter writing packages local repo again result  packages known unavailable not written back local repo  
+	    
+    
+	   checks whether package still available prevents user installing updating package cannot installed anymore  
+	    
+	    param descriptor descriptor package  
+	    return whether url package descriptor opened 
+	           successfully  
+	    
+   
+		   first check cache cache  return cached result  
+			    
+   
+		   not cache  check whether url still exists  
+		    
+  					httpcon connect    
+   
+			   something's wrong url  mark unavailable  
+			    
+  		system out println  package available     descriptor fine  still available  mark todo auto-generated catch block 
+  					httpcon connect not find file some package 
+  	public void addrepository repository repository    
+  		repositories add repository   
+  		save    
+  	  
+   
+		   during every iteration add least one package result set  hence need most many iterations packages add number iterations some 
+		   packages not added cyclic dependency 
+		   somewhere between remaining packages  
+		    
+		   initialize number iterations still left  
+		    
+   
+		   iterate long needed  
+		    
+   remember packages required iteration check whether any chance resolve remaining dependencies not  throw exception 
+   
+			   one less iteration left  
+			    
+   continue known repositories 
+   todo allow clients monitor progress report errors repository repository   repositories canceller    null     canceller iscancelled      
+  				return  
+  			  
+  			system out println  updating      repository   
+  			try   
+  				inputstream repository geturl   openstream    
+   
+  				try   
+  					packs addall packageconfigperister listrepository canceller    
+  				  catch  parserconfigurationexception e    
+  					listeners fireexception e   
+  					throw new cancelledexception    
+  				  catch  cancelledexception e    
+  					throw e  
+  				  catch  saxexception e    
+  					listeners fireexception e   
+  					throw new cancelledexception    
+  				  finally close    
+  				  
+  			  catch  ioexception e    
+  				listeners fireexception e   
+  				throw new cancelledexception    
+  			  
+  			system out println  done updating      repository   
+  		  
+   
+  		available clear    
+  		available addall packs   
+   package already installed new version available  
+   old version remains case required some 
+   existing plugins  
+   install available packages carry plugins  
+   execute save need twice  
+   first  consider available packages 
+   check each package might installed package available name  names use first available package name sorted version  latest version first  
+   see any versions installed not  
+   install latest 
+   install some packages available not installed 
+   todo  rewrite statements take care versions need added 
+  			toadd removeall getinstalledpackages need install packages need removed anyway 
+  			toadd removeall toremove   
+   package required not available  break  
+   resolved dependencies  now check multiple versions  
+   before propagating error  make sure signal listeners error packages now broken dependencies uninstalled 
+   check whether most one version each package installed 
+   check whether dependencies satisfied 
+   check whether conflicts satisfied 
+   
+	   private set packagedescriptor  
+	   findreversedependenciesininstalled packagedescriptor pack    return 
+	   findreversedependencies pack  installed     
+	    
+	   private set packagedescriptor  
+	   finddependenciesinavailable packagedescriptor pack  
+	   set packageversionrange  missing    return finddependencies pack  
+	   missing  available     
+	    
+	   private static set packagedescriptor  finddependencies packagedescriptor 
+	   pack  set packageversionrange  missing  set packagedescriptor  packages  
+	     set packagedescriptor  result   new hashset packagedescriptor     
+	   set packageversionrange  todo   new hashset packageversionrange     
+	   set packageversionrange  done   new hashset packageversionrange todo isempty      packageversionrange dep   
+	   todo iterator   next    boolean found   false  
+	    
+	   todo remove dep   done add dep packagedescriptor p   packages dep issatisfiedby p     
+	   result add p   found   true packageversionrange r   
+	   p getdependencies done contains r     todo add r       break found    missing add dep       return result    
+	    
+	   private static set packagedescriptor  
+	   findreversedependencies packagedescriptor pack  set packagedescriptor  
+	   packages    set packagedescriptor  result   new 
+	   hashset packagedescriptor packagedescriptor p   packages    set packageversionrange  missing   
+	   new hashset packageversionrange     set packagedescriptor  deps   
+	   finddependencies p  missing  packages deps contains pack     result add p       return result    
+	    
+   download zip file 
+   extract zip file 
+  only non-windows operating systems  check executable bit set zip-archive set file system only checks sets owner executable bit   
+    
+	   cleans package cache registry automatically done prom-lite first time new version prom-lite booted  
+	    
+	    throws backingstoreexception 
+	    org processmining framework packages packagemanager canceller iscancelled isavailable packagedescriptor descriptor boot check_packages availability containskey descriptor availability get descriptor   
+		  
+		  
+		inputstream is url url url descriptor geturl     
+			urlconnection conn   url openconnection conn httpurlconnection    
+				httpurlconnection httpcon    httpurlconnection  conn boot connect_timeout   0    
+					httpcon setconnecttimeout boot connect_timeout boot read_timeout   0    
+					httpcon setreadtimeout boot read_timeout   
+				  
+				  
+			  
+ 
+			is   conn getinputstream exception e    
+			  
+			system err println found in local repository  but not in global repository      descriptor   
+			availability put descriptor false is close exception e    
+			  
+		  
+		  
+		  
+		availability put descriptor true packagemanager     
+		availability hashmap packagedescriptor packagemanager getinstance instance instance packagemanager instance main args    
+		system exit commandlineinterface getinstance    run args file getconfigfile file osutil getprompackagedirectory    config_xml addlistener packagemanagerlistener listener    
+		listeners add listener removelistener packagemanagerlistener listener    
+		listeners remove listener file getpackagesdirectory file boot package_folder initialize boot level verbose    
+ 
+		doautoupdate parseboolean preferences get do_auto_updates tostring liteversion   preferences get lite_version_installed   unknown boot prom_version startswith boot lite_prefix      liteversion equals boot prom_version     
+			preferences put lite_version_installed  boot prom_version verbose    level all    
+				system out println prom-lite installation found     
+				system out println      clearing cache cleanpackagecache backingstoreexception e    
+				  
+				e printstacktrace    
+			  
+		  
+ 
+		getpackagesdirectory   mkdirs    
+		file config   getconfigfile verbose    level all    
+			system out println      loading packages from     config getabsolutepath writedefaultconfigifneeded config   
+ 
+			repositories clear    
+			available clear    
+			installed clear    
+			packageconfigperister read config  repositories  available  installed  canceller   
+			resolveallconflicts verbose exception e    
+			listeners fireexception e scanrepositories boot level verbose parserconfigurationexception  saxexception  ioexception comparator repository  comp comparator repository compare repository o1  repository o2 o1 geturl   tostring   compareto o2 geturl   tostring     
+			  
+		   
+ 
+		set repository  read treeset repository  comp   
+		set repository  toread treeset repository  comp   
+		toread addall repositories   
+ 
+		toread add repository boot default_repository toread isempty repository rep   toread    
+				url packages   rep geturl verbose    level all    
+					system out println      loading packages from     packages   
+				  
+				urlconnection conn   packages openconnection conn httpurlconnection    
+					httpurlconnection httpcon    httpurlconnection  conn boot connect_timeout   0    
+						httpcon setconnecttimeout boot connect_timeout boot read_timeout   0    
+						httpcon setreadtimeout boot read_timeout time   -system currenttimemillis packageconfigperister read conn getinputstream    repositories  available  installed  canceller   
+					time    system currenttimemillis boot verbose    level all    
+						system out println  read in     time     milliseconds filenotfoundexception e    
+					  
+					time    system currenttimemillis boot verbose    level none    
+						system err println  failed to read file not found ioexception e    
+					time    system currenttimemillis boot verbose    level none    
+						system err println  failed to read in     time     milliseconds     
+					  
+				  
+			  
+			read addall toread   
+			toread clear    
+			toread addall repositories   
+			toread removeall read writedefaultconfigifneeded file config ioexception   
+		config createnewfile config length      0    
+			packageconfigperister 
+					 write config hashset repository  arrays aslist repository repository  
+									boot default_repository hashset packagedescriptor hashset packagedescriptor resolveallconflicts boot level verbose unknownpackageexception ok ok map packagedescriptor  enabled hashmap packagedescriptor packagedescriptor pack   getenabledpackages      
+				enabled put pack getname    pack packagedescriptor pack   enabled values dep   pack getdependencies      
+					packagedescriptor p   enabled get dep p pack sethasbrokendependencies    
+						ok verbose    level all    
+							system out println       deactivating      pack      missing at least     dep conf   pack getconflicts      
+					packagedescriptor p   enabled get conf p pack sethasbrokendependencies    
+						ok verbose    level all    
+							system out 
+									 println       deactivating      pack      conflicts with at least     conf ok tostring     
+		stringbuffer result stringbuffer    
+		set packagedescriptor  allpackages hashset packagedescriptor repository repo   repositories    
+			result append  repository      repo geturl     nl   
+		  
+ 
+		allpackages addall installed   
+		allpackages addall available packagedescriptor pack   allpackages status installed contains pack pack hasbrokendependencies      
+					status    i status    m hasupgrade available contains pack packagedescriptor p   available p equals pack     
+							hasupgrade   pack getversion   lessthan p getversion status    hasupgrade status    a    
+			  
+			result append status         pack   
+			result append nl pack getdependencies   isempty      
+				result append         depends on      pack getdependencies           nl pack getconflicts   isempty      
+				result append         conflicts with      pack getconflicts           nl result tostring set repository  getrepositories collections unmodifiableset repositories removerepository repository repository    
+		repositories remove repository   
+		save set packagedescriptor  getinstalledpackages collections unmodifiableset installed set packagedescriptor  getavailablepackages collections unmodifiableset available collection packagedescriptor  getenabledpackages unknownpackageexception   
+		list packagedescriptor  result arraylist packagedescriptor     
+ 
+		set packagedescriptor  broken hashset packagedescriptor     
+ 
+		set packagedescriptor  installed hashset packagedescriptor installed iterationsleft   installed size installed isempty      iterationsleft   0    
+			set requiredpackages hashset iterator packagedescriptor  it   installed iterator it hasnext      
+				packagedescriptor pack   it next pack hasbrokendependencies      
+					broken add pack   
+					it remove getpackagemap result  keyset   containsall pack getdependencies       
+						result add pack   
+						it remove requiredpackages addall pack getdependencies     
+					  
+				  
+			  
+ 
+			  
+			  
+			set listedpackages hashset getpackagemap installed  keyset     
+			requiredpackages removeall listedpackages requiredpackages isempty required   requiredpackages    
+					system out println  cannot find required required unknownpackageexception requiredpackages tostring     
+			  
+			  
+			iterationsleft installed isempty boot verbose    level all    
+				system out println      all dependencies have been resolved boot verbose    level none    
+				system err println      the dependencies the following packages have not been resolved packagedescriptor pack   installed    
+					system err println              pack         pack getdependencies result save packageconfigperister write getconfigfile    repositories  available  installed ioexception e    
+			listeners fireexception e update autoinstall  boot level verbose cancelledexception  unknownpackagetypeexception scanrepositories verbose exception e    
+			  
+			e printstacktrace    
+		  
+		map sortedset packagedescriptor   map   packagemanager getpackagemap available   
+ 
+		set packagedescriptor  packs hashset packagedescriptor autoinstall    
+			list packagedescriptor  toremove arraylist packagedescriptor     
+			list packagedescriptor  toinstall arraylist packagedescriptor packagedescriptor pack   packs    
+				packagedescriptor inst   findinstalledversion pack inst inst getversion   lessthan pack getversion       
+					  
+					  
+					  
+					system out println  found version of installed pack getname     
+					toinstall add pack   
+					toremove add inst inst pack hasplugins      
+					  
+					system out println  found which contains plugins      pack getname     
+					toinstall add pack dep   pack getdependencies containspackage installed  dep     
+							sortedset packagedescriptor  packages   map get dep packages packages isempty      
+								toinstall remove pack found packagedescriptor p   packages    
+								toinstall add p   
+								found found    
+								toinstall remove pack toinstall isempty      
+				system out println  installing packages      toinstall tostring     
+				install toinstall   
+				uninstall toremove save save packagedescriptor findinstalledversion packagedescriptor pack packagedescriptor p   installed p getname   equals pack getname p packagedescriptor   findorinstallpackages packagenames unknownpackagetypeexception  
+			unknownpackageexception  cancelledexception doautoupdate    
+			update level none   
+		  
+ 
+		packagedescriptor   result packagedescriptor packagenames length   
+		list packagedescriptor  toinstall arraylist packagedescriptor  result length   
+ 
+		  
+		map sortedset packagedescriptor   map   packagemanager getpackagemap available i   0  i   packagenames length  i      
+			sortedset packagedescriptor  packages   map get packagenames i packages packages isempty unknownpackageexception packagenames i    
+			  
+ 
+			  
+			  
+			  
+			result i    packages first doautoupdate packagedescriptor d   packages installed contains d     
+						result i    d installed contains result i      
+				toinstall add result i toinstall isempty      
+			  
+			install toinstall result install list packagedescriptor  toinstall unknownpackagetypeexception  cancelledexception canceller canceller iscancelled cancelledexception exception listeners firesessionstart    
+			set packagedescriptor  toadd hashset packagedescriptor  toinstall   
+ 
+			map sortedset packagedescriptor   map   packagemanager getpackagemap available   
+ 
+			  
+			  
+			  
+			  
+			  
+ 
+			set packagedescriptor  newstate hashset packagedescriptor  getinstalledpackages     
+			newstate addall toadd   
+ 
+			checkconsistency newstate error hashset extra hashset map entry packagedescriptor  set item   report getmissingdependencies   entryset      
+					extra addall item getvalue extra isempty s   extra map containskey s     map get s error system err println   packagemanager s     is not available packagedescriptor first   map get s  first    
+							toadd add first   
+							newstate add first   
+						  
+					  
+					checkconsistency newstate error     report getmissingdependencies   isempty     
+ 
+			hashset packagedescriptor  toremove hashset packagedescriptor error     report getpackageswithmultipleversions   isempty map entry sortedset packagedescriptor   item   report getpackageswithmultipleversions   
+						 entryset      
+					iterator packagedescriptor  it   item getvalue   iterator    
+					it next it hasnext      
+						packagedescriptor p   it next    
+						newstate remove p   
+						toremove add p   
+					  
+				  
+				checkconsistency newstate report haserrors packagedescriptor pack   toadd    
+					installpackage pack   
+				  
+ 
+				installed clear    
+				installed addall newstate   
+ 
+				uninstall toremove   
+ 
+				save unknownpackagetypeexception e    
+			exception e cancelledexception e    
+			exception e listeners firesessioncomplete exception uninstall collection packagedescriptor  toremove cancelledexception canceller canceller iscancelled cancelledexception    
+		  
+ 
+		set packagedescriptor  newstate hashset packagedescriptor  getinstalledpackages     
+		newstate removeall toremove   
+ 
+		checkconsistency newstate error newstate removeall report getmissingdependencies   keyset     
+			checkconsistency newstate error     report getmissingdependencies   isempty report haserrors      
+ 
+			removepackages newstate   
+ 
+			installed clear    
+			installed addall newstate   
+ 
+			save setcanceller canceller canceller canceller   canceller packagestatereport getlatestreport report report checkconsistency     
+		checkconsistency getinstalledpackages checkconsistency set packagedescriptor  packages    
+		map sortedset packagedescriptor   multipleversions hashmap sortedset packagedescriptor      
+		map packagedescriptor  set missing hashmap packagedescriptor  set map packagedescriptor  set conflicts hashmap packagedescriptor  set map entry sortedset packagedescriptor   item   getpackagemap packages  entryset item getvalue   size     1    
+				sortedset packagedescriptor  versions   multipleversions get item getkey versions versions treeset packagedescriptor     
+					multipleversions put item getkey    versions   
+				  
+				versions addall item getvalue packagedescriptor pack   packages dep   pack getdependencies containspackage packages  dep     
+					set misses   missing get pack misses misses hashset missing put pack  misses   
+					  
+					misses add dep packagedescriptor pack   packages conf   pack getconflicts containspackage packages  conf     
+					set conflictswith   conflicts get pack conflictswith conflictswith hashset conflicts put pack  conflictswith   
+					  
+					conflictswith add conf   
+				  
+			  
+		  
+ 
+		report packagestatereport multipleversions  missing  conflicts containspackage set packagedescriptor  packages dep packagedescriptor pack   packages dep equals pack getname map sortedset packagedescriptor   getpackagemap collection packagedescriptor  packages    
+		map sortedset packagedescriptor   result hashmap sortedset packagedescriptor packagedescriptor pack   packages    
+			sortedset packagedescriptor  list   result get pack getname list list treeset packagedescriptor     
+				result put pack getname    list   
+			  
+			list add pack result installpackage packagedescriptor pack unknownpackagetypeexception  cancelledexception   
+		file packagedir   pack getlocalpackagedirectory    
+		file tempdir file packagedir getabsolutepath     temp_install_dir_postfix   
+		url url url url pack geturl malformedurlexception e    
+			listeners fireexception e recursivelydeletedir tempdir   
+		recursivelydeletedir packagedir   
+ 
+		tempdir mkdirs    
+		packagedir mkdirs url tostring   tolowercase   endswith   jar      
+			installjar url  packagedir  pack getname      -    pack getversion    pack url tostring   tolowercase   endswith   zip      
+			installzip url  tempdir  packagedir  pack getname      -    pack getversion    pack unknownpackagetypeexception pack pluginmanagerimpl getinstance boot addjarsforpackage pack  level all  pluginmanagerimpl getinstance     
+		  
+		recursivelydeletedir tempdir removepackages collection packagedescriptor  tokeep cancelledexception canceller canceller iscancelled cancelledexception    
+		  
+		file packagedir   getpackagesdirectory    
+		file   files   packagedir listfiles    
+		set file  installations hashset file packagedescriptor pack   tokeep canceller canceller iscancelled cancelledexception    
+			  
+			installations add pack getlocalpackagedirectory files file file   files file isdirectory      
+					file delete installations contains file     
+					recursivelydeletedir file installzip url source  file temp  file unzipto name  packagedescriptor pack cancelledexception   
+		file sourcezipfile file temp zip    
+ 
+		  
+ 
+		listeners firestartdownload name  source  pack   
+		outputstream out out bufferedoutputstream fileoutputstream sourcezipfile    
+			copyinputstream source openstream    out exception e    
+			listeners fireexception e cancelledexception out out close ioexception e cancelledexception    
+				  
+			  
+ 
+		  
+ 
+		listeners firestartinstall name  unzipto  pack zipfile zipfile zipfile sourcezipfile   
+			enumeration ?  zipfileentries   zipfile getentries zipfileentries hasmoreelements      
+				ziparchiveentry entry    ziparchiveentry  zipfileentries nextelement    
+				file destfile file unzipto  entry getname entry isdirectory      
+					destfile mkdirs destfile getparentfile   mkdirs    
+ 
+					outputstream o fileoutputstream destfile copyinputstream zipfile getinputstream entry   o o close osutil isrunningwindows   
+							    entry getunixmode     unix_owner_executable_bit     unix_owner_executable_bit    
+						destfile setexecutable zipfile close exception e    
+			listeners fireexception e cancelledexception    
+		  
+		listeners firefinishedinstall name  unzipto  pack installjar url source  file dest name  packagedescriptor pack cancelledexception   
+		inputstream in in   source openstream    
+ 
+			outputstream out file outfile file dest  name     jar out fileoutputstream outfile filenotfoundexception e    
+				listeners fireexception e out out close    
+				  
+			  
+			listeners firestartdownload name  source  pack   
+			copyinputstream in  out   
+			listeners firestartinstall name  outfile  pack   
+ 
+			in close    
+			listeners firefinishedinstall name  outfile  pack ioexception e    
+			listeners fireexception e cancelledexception recursivelydeletedir file dir dir isdirectory child   dir list      
+				recursivelydeletedir file dir  child    
+			  
+		  
+		dir delete copyinputstream inputstream in  outputstream out ioexception  cancelledexception buffer 1024 len len   in read buffer      0 canceller canceller iscancelled cancelledexception    
+				  
+				out write buffer  0  len in close out close packagemanagerlistener listenerlist getlisteners listeners  
+	  
+ 
+	 deprecated doautoupdate doautoupdate  
+	  
+ 
+	 deprecated setautoupdate doautoupdate doautoupdate   doautoupdate preferences put do_auto_updates tostring doautoupdate cleanpackagecache backingstoreexception   
+		plugincacheentry clearsettingscache    
+ 
+	  
+ 

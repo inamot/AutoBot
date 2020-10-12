@@ -1,0 +1,108 @@
+ 
+    
+   xes serialization csv including trace event attributes names trace attributes prefixed trace_   those event attributes prefixed event_   
+   
+    author f  mannhardt 
+   
+    
+   
+	    non-javadoc  
+	   
+	    see org deckfour xes out xesserializer#getdescription   
+	    
+   
+	    non-javadoc  
+	   
+	    see org deckfour xes out xesserializer#getname   
+	    
+   
+	    non-javadoc  
+	   
+	    see org deckfour xes out xesserializer#getauthor   
+	    
+   
+	    non-javadoc  
+	   
+	    see org deckfour xes out xesserializer#getsuffices   
+	    
+   
+	    non-javadoc  
+	   
+	    see 
+	   org deckfour xes out xesserializer#serialize org deckfour xes model xlog  
+	   java io outputstream  
+	    
+   treat complete 
+  xevent startevent   null  
+  massimiliano  not sure aim lifecycle  complete block  hence  lifecycle cannot start  therefore never enter loop below lifecycle    standardmodel start    
+						startevent   lookup trace listiterator iterator nextindex     event  standardmodel start   
+					    
+  massimiliano ve removed following part feeling re trying map some 
+  start event following complete mean end event might larger start event  
+  convertedevents add event startevent    null    
+						convertedevents add startevent     
+    
+   ignore only export start complete 
+    
+	   helper method  returns string representation attribute 
+	   
+	    param attribute attributes convert 
+	    
+    
+	   tostring   defaults getname    
+	    org processmining log csvexport xescsvserializer xserializer xescsvserializer dateformatstring dateformat   fastdateformat getinstance dateformatstring getdescription xes csv serialization getname xes csv getauthor f  mannhardt getsuffices csv serialize xlog log  outputstream out ioexception   
+		xlogging log  start serializing log to  csv   xlogging importance debug start   system currenttimemillis    
+ 
+		csvwriter writer csvwriter outputstreamwriter out   utf-8     
+		map integer  columnmap hashmap integer header   compileheader log  columnmap   
+		writer writenext header xtrace trace   log    
+			writer writeall compiletrace trace  columnmap  header length    
+		  
+ 
+		writer close duration           system currenttimemillis   - start      msec     
+		xlogging log  finished serializing log    duration  xlogging importance debug list compiletrace xtrace trace  map integer  columnmap rowlength    
+		list tracelist arraylist string   currentrow set xevent  convertedevents hashset listiterator xevent  iterator   trace listiterator    iterator hasnext       
+			xevent event   iterator next convertedevents contains event     
+				standardmodel lifecycle   xlifecycleextension instance   extractstandardtransition event lifecycle currentrow   compileevent trace event  columnmap  rowlength  currentrow   
+					convertedevents add event lifecycle    standardmodel start    
+					xevent completionevent lifecycle    standardmodel start    
+						completionevent   lookup trace listiterator iterator nextindex     event  
+								standardmodel complete   
+					  
+					currentrow   compileevent trace  event  completionevent  columnmap  rowlength  currentrow   
+					convertedevents add event completionevent convertedevents add completionevent lifecycle    standardmodel complete    
+					  
+					  
+					  
+					  
+					currentrow   compileevent trace event  columnmap  rowlength  currentrow   
+					convertedevents add event tracelist add currentrow tracelist xevent lookup listiterator xevent  listiterator  xevent event  standardmodel model    
+		xconceptextension concept   xconceptextension instance eventinstance   concept extractinstance event listiterator hasnext      
+			xevent e   listiterator next eventinstance eventinstance equals concept extractinstance e      
+				standardmodel lifecycle   xlifecycleextension instance   extractstandardtransition e lifecycle    model e compileevent xtrace trace  xevent startevent  xevent completionevent  
+			map integer  columnmap rowlength lastrow    
+		xevent mainevent   completionevent completionevent   startevent row rowlength   
+		row 0    xconceptextension instance   extractname trace   
+		row 1    xconceptextension instance   extractname mainevent startevent date date   xtimeextension instance   extracttimestamp startevent date row 2    dateformat format date date date   xtimeextension instance   extracttimestamp completionevent date row 2    dateformat format date completionevent date date   xtimeextension instance   extracttimestamp completionevent date row 3    dateformat format date date date   xtimeextension instance   extracttimestamp startevent date row 3    dateformat format date xattribute attr   trace getattributes   values xutils isstandardextensionattribute attr     attr getkey   startswith  org columnmap containskey  trace_    attr getkey       column unkown     attr getkey    
+				row columnmap get  trace_    attr getkey       convertattribute attr xattribute attr   mainevent getattributes   values xutils isstandardextensionattribute attr     attr getkey   startswith  org columnmap containskey  event_    attr getkey       column unkown     attr getkey    
+				row columnmap get  event_    attr getkey       convertattribute attr lastrow i   0  i   row length  i row i row i    lastrow i row compileheader xlog log  map integer  columnmap    
+		xloginfo loginfo   xloginfofactory createloginfo log   
+ 
+		list headerlist arraylist headerlist add headerlist add  event    
+		headerlist add  starttime    
+		headerlist add  completetime i   headerlist size   - 1  
+		xattributeinfo traceattributeinfo   loginfo gettraceattributeinfo xattribute attr   traceattributeinfo getattributes xutils isstandardextensionattribute attr     attr getkey   startswith  org       
+				i    
+				headerlist add attr getkey     
+				columnmap put  trace_    attr getkey    i   
+			  
+		  
+		xattributeinfo eventattributeinfo   loginfo geteventattributeinfo xattribute attr   eventattributeinfo getattributes xutils isstandardextensionattribute attr     attr getkey   startswith  org       
+				i headerlist contains attr getkey       
+					headerlist add  event_    attr getkey     
+					columnmap put  event_    attr getkey    i headerlist add attr getkey     
+					columnmap put  event_    attr getkey    i headerlist toarray headerlist size convertattribute xattribute attribute attribute xattributetimestamp    
+			date timestamp     xattributetimestamp  attribute  getvalue dateformat format timestamp attribute tostring tostring getname    
+	  
+ 
+ 

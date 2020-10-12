@@ -1,0 +1,178 @@
+ create arraylist hold changes find added form undoedit objects instantiate changes found file disk reproduced memory calling redo redo  not undo  
+        
+    namedcompound edit   new namedcompound  merged external changes   
+   parse temporary file  
+   parse modified file  
+   sort both databases according common sort key  
+   start looking changes  
+   overwrite temp database  
+   create pointers incremented entries each base used successive order beginning  entries  further down disk  base matched  
+   create hashset put references entry numbers disk  
+   database matched avoid matching twice  
+   loop through entries tmp  database  looking exact matches disk  one must finish scanning exact matches before looking near matches avoid exact 
+   match being  stolen another entry  
+   first check similarly placed entry base matches exactly not any entries left disk  database  comp stay 1 entry marked nonmatched check another entry matches exactly add entry list nonmatched entries  
+   now ve found exact matches  look through remaining entries  looking close matches two variables keep track entry most closely matches one re looking case none matches completely  
+   finally  look still untouched entries disk database may added  
+   see identical dupe mem database  
+    
+       finds entry neu best fitting specified entry old entries score 
+       above zero entry still returned  
+       
+        param oldsorter   entrysorter 
+        param newsorter   entrysorter 
+        param index int 
+        return bibentry 
+        
+   first try match string names found string matching name nonmatching contents ve found change here match string  
+   see detect name change those entries couldn't match point found string matching name  see find one matching content found string same content cannot same 
+   name found above  
+   try find matching one memory  
+   still one non-matched strings must removed removed string not removed mem version  
+   finally  see remaining strings disk database must added method only detects whether change took place not not determine type change possible difficult properly only report change  
+        
+   both present here net sf jabref collab changescanner runnable changescanner jabrefframe frame  basepanel bp  file file panel   bp frame   frame databaseinmemory   bp getdatabase metadatainmemory   bp getbibdatabasecontext   getmetadata file   file  
+      
+ 
+     override run path tempfile   globals getfileupdatemonitor   gettempfile panel filemonitorhandle     
+            importformatpreferences importformatpreferences   globals prefs getimportformatpreferences    
+            parserresult result   opendatabase loaddatabase tempfile tofile    importformatpreferences   
+            databaseintemp   result getdatabase    
+            metadataintemp   result getmetadata    
+ 
+              
+            result   opendatabase loaddatabase file  importformatpreferences   
+            bibdatabase databaseondisk   result getdatabase    
+            metadata metadataondisk   result getmetadata    
+ 
+              
+            entrycomparator comparator entrycomparator sort_by 2    
+            comparator entrycomparator sort_by 1   comparator   
+            comparator entrycomparator sort_by 0   comparator   
+            entrysorter sorterintemp   databaseintemp getsorter comparator   
+            comparator entrycomparator sort_by 2    
+            comparator entrycomparator sort_by 1   comparator   
+            comparator entrycomparator sort_by 0   comparator   
+            entrysorter sorterondisk   databaseondisk getsorter comparator   
+            comparator entrycomparator sort_by 2    
+            comparator entrycomparator sort_by 1   comparator   
+            comparator entrycomparator sort_by 0   comparator   
+            entrysorter sorterinmem   databaseinmemory getsorter comparator   
+ 
+              
+            scanmetadata metadatainmemory  metadataintemp  metadataondisk   
+            scanpreamble databaseinmemory  databaseintemp  databaseondisk   
+            scanstrings databaseinmemory  databaseintemp  databaseondisk   
+ 
+            scanentries sorterinmem  sorterintemp  sorterondisk   
+ 
+            scangroups metadataintemp  metadataondisk ioexception ex    
+            logger warn  problem running   ex changesfound changes getchildcount     0 displayresult displayresultcallback fup changes getchildcount     0    
+            swingutilities invokelater    -    
+                changedisplaydialog changedialog changedisplaydialog frame  panel  databaseintemp  changes   
+                changedialog setlocationrelativeto frame   
+                changedialog setvisible fup scanresultsresolved changedialog isokpressed changedialog isokpressed      
+                      
+                    storetempdatabase joptionpane showmessagedialog frame  localization lang  no actual changes found     
+                    localization lang  external changes    joptionpane information_message   
+            fup scanresultsresolved storetempdatabase     
+        jabrefexecutorservice instance execute savepreferences prefs   savepreferences loadforsavefrompreferences globals prefs  withmakebackup withencoding panel getbibdatabasecontext   getmetadata   getencoding   
+                                 orelse globals prefs getdefaultencoding      
+ 
+                defaults defaults defaults bibdatabasemode 
+                         frompreference globals prefs getboolean jabrefpreferences biblatex_default_mode     
+                bibdatabasewriter savesession  databasewriter bibtexdatabasewriter   filesavesession savesession ss   databasewriter savedatabase bibdatabasecontext databaseintemp  metadataintemp  defaults   prefs   
+                ss commit globals getfileupdatemonitor   gettempfile panel filemonitorhandle saveexception ex    
+                logger warn  problem updating tmp file after accepting external changes   ex scanmetadata metadata inmemory  metadata ontmp  metadata ondisk ontmp isempty inmemory equals ondisk     
+                changes add metadatachange inmemory  ondisk ondisk isempty       ontmp equals ondisk     
+                changes add metadatachange inmemory  ondisk scanentries entrysorter memorysorter  entrysorter tmpsorter  entrysorter disksorter piv1 piv2   0  
+ 
+          
+          
+        set used hashset   disksorter getentrycount     
+        set integer  notmatched hashset   tmpsorter getentrycount     
+ 
+          
+          
+          
+        mainloop piv1   0  piv1   tmpsorter getentrycount    piv1 comp   -1 used contains valueof piv2       piv2   disksorter getentrycount       
+                comp   duplicatecheck compareentriesstrictly tmpsorter getentryat piv1   disksorter getentryat piv2 comp   1    
+                used add valueof piv2    
+                piv2 piv2    disksorter getentrycount   - 1 i   piv2   1  i   disksorter getentrycount    i used contains valueof i      
+                        comp   -1 comp   duplicatecheck compareentriesstrictly tmpsorter getentryat piv1   disksorter getentryat i comp   1    
+                        used add valueof i mainloop  
+                      
+                  
+              
+ 
+              
+            notmatched add piv1 notmatched isempty iterator integer  it   notmatched iterator    it hasnext        
+ 
+                piv1   it next bestmatchi   -1 bestmatch   0 comp piv2    disksorter getentrycount   - 1 i   piv2  i   disksorter getentrycount    i used contains valueof i      
+                            comp   -1 comp   duplicatecheck compareentriesstrictly tmpsorter getentryat piv1   disksorter getentryat i comp   bestmatch    
+                            bestmatch   comp  
+                            bestmatchi   i bestmatch   match_threshold    
+                    used add valueof bestmatchi    
+                    it remove    
+ 
+                    changes add entrychange bestfit tmpsorter  memorysorter  piv1   tmpsorter getentryat piv1   
+                            disksorter getentryat bestmatchi changes add entrydeletechange bestfit tmpsorter  memorysorter  piv1   tmpsorter getentryat piv1 used size     disksorter getentrycount i   0  i   disksorter getentrycount    i used contains valueof i hasalready j   0  j   memorysorter getentrycount    j duplicatecheck compareentriesstrictly memorysorter getentryat j   disksorter getentryat i      1    
+                            hasalready hasalready    
+                        changes add entryaddchange disksorter getentryat i bibentry bestfit entrysorter oldsorter  entrysorter newsorter index comp   -1 found   0 i   0  i   newsorter getentrycount    i res   duplicatecheck compareentriesstrictly oldsorter getentryat index   newsorter getentryat i res   comp    
+                comp   res  
+                found   i comp   1 newsorter getentryat found scanpreamble bibdatabase inmemory  bibdatabase ontmp  bibdatabase ondisk mem   inmemory getpreamble   orelse optional tmp   ontmp getpreamble    
+        optional disk   ondisk getpreamble tmp ispresent      
+            disk ifpresent diskcontent -  changes add preamblechange mem  diskcontent disk ispresent       tmp equals disk     
+                changes add preamblechange mem  disk orelse scanstrings bibdatabase inmem1  bibdatabase intmp  bibdatabase ondisk intmp hasnostrings      ondisk hasnostrings set object  used hashset      
+        set object  usedinmem hashset      
+        set notmatched hashset   intmp getstringcount     
+ 
+          
+        mainloop key   intmp getstringkeyset      
+            bibtexstring tmp   intmp getstring key diskid   ondisk getstringkeyset used contains diskid     
+                    bibtexstring disk   ondisk getstring diskid disk getname   equals tmp getname objects equals tmp getcontent    disk getcontent       
+                              
+                            optional bibtexstring  mem   findstring inmem1  tmp getname    usedinmem mem ispresent      
+                                changes add stringchange mem get    tmp  tmp getname    mem get   getcontent    
+                                        disk getcontent changes add stringchange tmp  tmp getname disk getcontent      
+                              
+                          
+                        used add diskid mainloop  
+                      
+ 
+                  
+              
+              
+            notmatched add tmp getid notmatched isempty iterator i   notmatched iterator    i hasnext        
+                bibtexstring tmp   intmp getstring i next diskid   ondisk getstringkeyset used contains diskid     
+                        bibtexstring disk   ondisk getstring diskid disk getcontent   equals tmp getcontent       
+                              
+                              
+ 
+                              
+                            bibtexstring bsmem memid   inmem1 getstringkeyset      
+                                bibtexstring bsmemcandidate   inmem1 getstring memid bsmemcandidate getcontent   equals disk getcontent    
+                                            usedinmem contains memid     
+                                    usedinmem add memid   
+                                    bsmem   bsmemcandidate bsmem changes add stringnamechange bsmem  tmp  bsmem getname    tmp getname    
+                                        disk getname    tmp getcontent      
+                                i remove    
+                                used add diskid notmatched isempty notmatchedid   notmatched    
+                bibtexstring tmp   intmp getstring notmatchedid   
+                  
+                findstring inmem1  tmp getname    usedinmem  ifpresent  
+                        x -  changes add stringremovechange tmp  tmp  x diskid   ondisk getstringkeyset used contains diskid     
+                bibtexstring disk   ondisk getstring diskid   
+                used add diskid   
+                changes add stringaddchange disk optional bibtexstring  findstring bibdatabase base name  set object  used base hasstringlabel name optional empty key   base getstringkeyset      
+            bibtexstring bs   base getstring key bs getname   equals name      used contains key     
+                used add key optional of bs optional empty scangroups metadata intemp  metadata ondisk optional grouptreenode  groupstmp   intemp getgroups optional grouptreenode  groupsdisk   ondisk getgroups groupstmp ispresent       groupsdisk ispresent groupstmp ispresent       groupsdisk ispresent        groupstmp ispresent      
+            changes add groupchange groupsdisk orelse groupstmp orelse groupstmp equals groupsdisk     
+            changes add groupchange groupsdisk get    groupstmp get      
+          
+      
+ 
+ 
+     functionalinterface displayresultcallback scanresultsresolved resolved   
+      
+ 

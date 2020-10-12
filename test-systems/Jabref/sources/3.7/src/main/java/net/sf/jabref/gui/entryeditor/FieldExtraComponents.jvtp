@@ -1,0 +1,306 @@
+ 
+    
+       add controls switching between abbreviated full journal names field fieldcontentselector need combine param panel 
+        param editor 
+        param entry 
+        param storefieldaction 
+        return 
+        
+   button toggle abbreviated full journal names 
+    
+       set up mouse listener opening external viewer with extra_external 
+       
+        param fieldeditor 
+        param panel 
+        return 
+        
+   enable disable button 
+    
+       set up mouse listener opening external viewer fetching doi 
+       
+        param fieldeditor 
+        param panel 
+        return 
+        
+   open doi link 
+   lookup doi 
+   fetch bibtex data 
+   enable disable button 
+    
+       add button fetching isbn 
+       
+        param fieldeditor 
+        param panel 
+        return 
+        
+   fetch bibtex data 
+   enable disable button 
+    
+       add button fetching isbn 
+       
+        param fieldeditor 
+        param panel 
+        return 
+        
+   fetch bibtex data 
+   enable disable button 
+    
+       return dropdown list containing yes fields extra_yes_no 
+       
+        param fieldeditor 
+        param entryeditor 
+        return 
+        
+    
+       return dropdown list month names fields extra_month 
+       
+        param fieldeditor 
+        param entryeditor 
+        param type 
+        return 
+        
+    
+       return button sets owner field fields extra_set_owner 
+        param fieldeditor 
+        param storefieldaction 
+        return 
+        
+    
+       set up field double click inserts current date isdatapicker true button data picker returned 
+       
+        param editor 
+        param isdatepicker 
+        return 
+        
+   double click 
+   insert datepicker extras field contains command 
+    
+       return dropdown list alternatives editor type fields 
+       
+        param fieldeditor 
+        param entryeditor 
+        return 
+        
+    
+       return dropdown list alternatives pagination type fields 
+       
+        param fieldeditor 
+        param entryeditor 
+        return 
+        
+    
+       return dropdown list alternatives pagination type fields 
+       
+        param fieldeditor 
+        param entryeditor 
+        return 
+        
+    
+       return dropdown list gender alternatives fields gender 
+       
+        param fieldeditor 
+        param entryeditor 
+        return 
+        net sf jabref gui entryeditor fieldextracomponents abbreviation_tooltip_text     html   
+              localization lang  switches between full and abbreviated journal name the journal name is known    
+                br     localization lang  to set up  go to        b     localization lang  options       -    
+              localization lang  manage journal abbreviations        b   html optional jcomponent  getjournalextracomponent basepanel panel  fieldeditor editor  bibentry entry  
+            storefieldaction storefieldaction    
+        jpanel controls jpanel    
+        controls setlayout borderlayout     
+ 
+          
+        jbutton button jbutton localization lang  toggle abbreviation     
+        button settooltiptext abbreviation_tooltip_text   
+        button addactionlistener actionevent text   editor gettext    
+            journalabbreviationrepository abbreviationrepository   globals journalabbreviationloader 
+                     getrepository globals prefs getjournalabbreviationpreferences abbreviationrepository isknownname text s   abbreviationrepository getnextabbreviation text  orelse text s editor settext s   
+                    storefieldaction actionperformed actionevent editor  0        
+                    panel getundomanager   addedit undoablefieldchange entry  editor getfieldname    text  s    
+                  
+              
+            
+ 
+        controls add button  borderlayout south optional of controls optional jcomponent  getexternalextracomponent basepanel panel  fieldeditor fieldeditor    
+        jpanel controls jpanel    
+        controls setlayout borderlayout     
+        jbutton button jbutton localization lang  open     
+        button setenabled button addactionlistener actionevent jabrefdesktop openexternalviewer panel getbibdatabasecontext    fieldeditor gettext    fieldeditor getfieldname ioexception ex    
+                panel output localization lang  unable to open link      
+              
+            
+ 
+        controls add button  borderlayout south   
+ 
+          
+        jtextcomponent url    jtextcomponent  fieldeditor  
+ 
+        url getdocument   adddocumentlistener documentlistener     
+             override changedupdate documentevent documentevent    
+                checkurl    
+              
+ 
+             override insertupdate documentevent documentevent    
+                checkurl    
+              
+ 
+             override removeupdate documentevent documentevent    
+                checkurl checkurl urlutil isurl url gettext       
+                    button setenabled button setenabled optional of controls optional jcomponent  getdoiextracomponent basepanel panel  entryeditor entryeditor  fieldeditor fieldeditor    
+        jpanel controls jpanel    
+        controls setlayout borderlayout     
+          
+        jbutton button jbutton localization lang  open     
+        button setenabled button addactionlistener actionevent jabrefdesktop openexternalviewer panel getbibdatabasecontext    fieldeditor gettext    fieldeditor getfieldname ioexception ex    
+                panel output localization lang  unable to open link      
+              
+            
+          
+        jbutton doibutton jbutton localization lang  lookup doi     
+        doibutton addactionlistener actionevent -    
+            optional doi  doi   doi frombibentry entryeditor getentry doi ispresent      
+                entryeditor getentry   setfield fieldname doi  doi get   getdoi panel frame   setstatus localization lang  no %0 found   fieldname getdisplayname fieldname doi     
+              
+            
+          
+        jbutton fetchbutton jbutton  
+                localization lang  get bibtex data from %0   fieldname getdisplayname fieldname doi     
+        fetchbutton setenabled fetchbutton addactionlistener actionevent -    
+            bibentry entry   entryeditor getentry fetchandmergeentry entry  panel  fieldname doi   
+            
+ 
+        controls add button  borderlayout north   
+        controls add doibutton  borderlayout center   
+        controls add fetchbutton  borderlayout south   
+ 
+          
+        jtextcomponent doi    jtextcomponent  fieldeditor  
+ 
+        doi getdocument   adddocumentlistener documentlistener     
+             override changedupdate documentevent documentevent    
+                checkdoi    
+              
+ 
+             override insertupdate documentevent documentevent    
+                checkdoi    
+              
+ 
+             override removeupdate documentevent documentevent    
+                checkdoi checkdoi     
+                optional doi  doiurl   doi build doi gettext doiurl ispresent      
+                    button setenabled fetchbutton setenabled button setenabled fetchbutton setenabled optional of controls optional jcomponent  getisbnextracomponent basepanel panel  entryeditor entryeditor  
+            fieldeditor fieldeditor    
+          
+        jbutton fetchbutton jbutton  
+                localization lang  get bibtex data from %0   fieldname getdisplayname fieldname isbn     
+        fetchbutton setenabled fetchbutton addactionlistener actionevent -    
+            bibentry entry   entryeditor getentry fetchandmergeentry entry  panel  fieldname isbn   
+            
+ 
+          
+        jtextcomponent isbn    jtextcomponent  fieldeditor  
+ 
+        isbn getdocument   adddocumentlistener documentlistener     
+ 
+             override changedupdate documentevent documentevent    
+                checkisbn    
+              
+ 
+             override insertupdate documentevent documentevent    
+                checkisbn    
+              
+ 
+             override removeupdate documentevent documentevent    
+                checkisbn checkisbn     
+                isbn isbnstring isbn isbn gettext isbnstring isvalidformat      
+                    fetchbutton setenabled fetchbutton setenabled optional of fetchbutton optional jcomponent  geteprintextracomponent basepanel panel  entryeditor entryeditor  
+            fieldeditor fieldeditor    
+          
+        jbutton fetchbutton jbutton  
+                localization lang  get bibtex data from %0   fieldname getdisplayname fieldname eprint     
+        fetchbutton setenabled fetchbutton addactionlistener actionevent -    
+            bibentry entry   entryeditor getentry fetchandmergeentry entry  panel  fieldname eprint   
+            
+ 
+          
+        jtextcomponent eprint    jtextcomponent  fieldeditor  
+ 
+        eprint getdocument   adddocumentlistener documentlistener     
+ 
+             override changedupdate documentevent documentevent    
+                checkeprint    
+              
+ 
+             override insertupdate documentevent documentevent    
+                checkeprint    
+              
+ 
+             override removeupdate documentevent documentevent    
+                checkeprint checkeprint eprint gettext eprint gettext   trim   isempty      
+                    fetchbutton setenabled fetchbutton setenabled optional of fetchbutton optional jcomponent  getyesnoextracomponent fieldeditor fieldeditor  entryeditor entryeditor options         yes    no    
+        jcombobox yesno jcombobox   options   
+        yesno addactionlistener actionevent -    
+            fieldeditor settext yesno getselecteditem    tolowercase     
+            entryeditor updatefield fieldeditor optional of yesno optional jcomponent  getmonthextracomponent fieldeditor fieldeditor  entryeditor entryeditor  bibdatabasemode type options 13   
+        options 0    localization lang  select i   1  i    12  i      
+            options i    monthutil getmonthbynumber i  fullname  
+          
+        jcombobox month jcombobox   options   
+        month addactionlistener actionevent monthnumber   month getselectedindex monthnumber    1 type    bibdatabasemode biblatex    
+                    fieldeditor settext valueof monthnumber fieldeditor settext monthutil getmonthbynumber monthnumber  bibtexformat fieldeditor settext      
+              
+            entryeditor updatefield fieldeditor   
+            month setselectedindex 0 optional of month optional jcomponent  getsetownerextracomponent fieldeditor fieldeditor  
+            storefieldaction storefieldaction    
+        jbutton button jbutton localization lang  auto     
+        button addactionlistener actionevent -    
+            fieldeditor settext globals prefs get jabrefpreferences default_owner    
+            storefieldaction actionperformed actionevent fieldeditor  0 optional of button optional jcomponent  getdatetimeextracomponent fieldeditor editor isdatepicker isoformat    
+          jtextarea  editor  addmouselistener mouseadapter     
+ 
+             override mouseclicked mouseevent e e getclickcount      2 date   easydateformat isodateformat   getcurrentdate    
+                    editor settext date isdatepicker    
+            datepickerbutton datepicker datepickerbutton editor  isoformat optional of datepicker getdatepicker optional empty optional jcomponent  geteditortypeextracomponent fieldeditor fieldeditor  entryeditor entryeditor optionvalues         editor    compiler    founder    continuator    redactor    reviser   
+                 collaborator optiondescriptions    localization lang  select    localization lang  editor    
+                localization lang  compiler    localization lang  founder    localization lang  continuator    
+                localization lang  redactor    localization lang  reviser    localization lang  collaborator     
+        jcombobox editortype jcombobox   optiondescriptions   
+        editortype addactionlistener actionevent -    
+            fieldeditor settext optionvalues editortype getselectedindex      
+            entryeditor updatefield fieldeditor optional of editortype optional jcomponent  getpaginationextracomponent fieldeditor fieldeditor  entryeditor entryeditor optionvalues         page    column    line    verse    section    paragraph    none optiondescriptions    localization lang  select    localization lang  page    
+                localization lang  column    localization lang  line    localization lang  verse    
+                localization lang  section    localization lang  paragraph    localization lang  none     
+        jcombobox pagination jcombobox   optiondescriptions   
+        pagination addactionlistener actionevent -    
+            fieldeditor settext optionvalues pagination getselectedindex      
+            entryeditor updatefield fieldeditor optional of pagination optional jcomponent  gettypeextracomponent fieldeditor fieldeditor  entryeditor entryeditor ispatent optionvalues optiondescriptions ispatent    
+            optionvalues patent    patentde    patenteu    patentfr    patentuk    patentus   
+                     patreq    patreqde    patreqeu    patreqfr    patrequk    patrequs    
+            optiondescriptions localization lang  select    localization lang  patent    
+                    localization lang  german patent    localization lang  european patent    
+                    localization lang  french patent    localization lang  british patent    
+                    localization lang  u s  patent    localization lang  patent request    
+                    localization lang  german patent request    localization lang  european patent request    
+                    localization lang  french patent request    localization lang  british patent request    
+                    localization lang  u s  patent request optionvalues mathesis    phdthesis    candthesis    techreport    resreport   
+                     software    datacd    audiocd    
+            optiondescriptions localization lang  select    localization lang  master's thesis    
+                    localization lang  phd thesis    localization lang  candidate thesis    
+                    localization lang  technical report    localization lang  research report    
+                    localization lang  software    localization lang  data cd    localization lang  audio cd     
+          
+        jcombobox type jcombobox   optiondescriptions   
+        type addactionlistener actionevent -    
+            fieldeditor settext optionvalues type getselectedindex      
+            entryeditor updatefield fieldeditor optional of type optional jcomponent  getgenderextracomponent fieldeditor fieldeditor  entryeditor entryeditor optionvalues         sf    sm    sp    pf    pm    pn    pp optiondescriptions    localization lang  select    localization lang  female name    
+                localization lang  male name    
+                localization lang  neuter name    localization lang  female names    localization lang  male names    
+                localization lang  neuter names    localization lang  mixed names     
+        jcombobox gender jcombobox   optiondescriptions   
+        gender addactionlistener actionevent -    
+            fieldeditor settext optionvalues gender getselectedindex      
+            entryeditor updatefield fieldeditor optional of gender   
+ 
+      
+ 
+ 

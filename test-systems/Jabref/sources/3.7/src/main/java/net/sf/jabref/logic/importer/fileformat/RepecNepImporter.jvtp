@@ -1,0 +1,235 @@
+ 
+    
+   imports new economics papers-message repec-nep service  
+    p  
+    p href  http   www repec org  repec  research papers economics collaborative effort over 100 volunteers 49 countries enhance dissemination research economics heart project decentralized database working papers  journal 
+   articles software components repec material freely available   p time writing repec holds over 300 000 items   p  
+    p  
+    p href  http   nep repec org  nep  new economic papers announcement 
+   service filters information new additions repec edited 
+   reports goal provide subscribers up date information research literature   p  
+    p  
+    p importer capable importing nep messages jabref   p  
+    p  
+    p officially defined message format nep  nep messages assumed always form given following semi-formal grammar  
+    pre  
+   nepmessage  
+         messagesection nepmessage 
+         messagesection 
+   
+   messagesection  
+         overviewmessagesection 
+         othermessagesection skip overview 
+   overviewmessagesection issue sectionseparator otherstuff 
+   
+   othermessagesection  
+         sectionseparator  othermessagesectioncontent skip stuff read only full working paper references 
+   othermessagesectioncontent  
+         workingpaper emptyline othermessagesectioncontent 
+         otherstuff emptyline othermessagesectioncontent 
+         '' 
+   
+   otherstuff  
+         nonemptyline otherstuff 
+         nonemptyline 
+   
+   nonemptyline non-empty string not start number followed working papers recognized number followed non-overview section 
+   workingpaper  
+         number' ' whitespace titlestring emptyline authors emptyline abstract additionalfields 
+         number' ' whitespace titlestring additionalfields abstract additionalfields 
+   
+   titlestring string may span several lines joined must least one author 
+   authors  
+         author '\n' authors 
+         author '\n' 
+   
+   # optionally institution given author 
+   author  
+         authorname 
+         authorname ' ' institution rules name may firstname lastname lastname  firstname anything authorname non-empty string without characters  not spanning one line 
+   
+   institution non-empty string may span several lines 
+   
+   abstract possibly empty  string may span several lines 
+   
+   additionalfields  
+         additionalfield '\n' additionalfields 
+         emptyline additionalfields 
+         '' 
+   
+   additionalfield  
+         'keywords ' keywordlist 
+         'url ' non-empty string 
+         'date ' datestring 
+         'jel ' jelclassificationlist authors 
+   
+   keywordlist  
+          keyword ' ' keywordlist 
+          keyword ' ' keywordlist 
+          keyword 
+   
+   keyword  
+          non-empty string not contain ' '  may contain whitespace date given current year given system clock assumed 
+   datestring  
+          'yyyy-mm-dd' 
+          'yyyy-mm' 
+          'yyyy' 
+   
+   jelclassificationlist  
+          jelclassification jelclassificationlist 
+          jelclassification jel classifications set new bibtex-field 'jel appear add field one bibtex entry sections 
+   jelclassification  
+          one allowed classes  see http   ideas repec org j  
+   
+   sectionseparator  
+         '\n-----------------------------' 
+     pre  
+     p  
+   
+    author andreas_sf rudert-home dot de 
+    see href  http   nep repec org  nep read first couple lines 
+   nep message usually contain string 'nep  new economics papers nep repec org 
+    
+       read multiple lines  
+        p  
+        p reads multiple lines until either 
+        ul  
+        li empty line  li  
+        li end file  li  
+        li next working paper li  
+        li keyword  li  
+         ul found  whitespace start end lines trimmed except one blank character   p  
+       
+        return result 
+        
+    
+       implements grammar rule  titlestring   
+       
+        param throws ioexception 
+        
+   skip article number 
+    
+       implements grammar rule  authors  
+       
+        param throws ioexception 
+        
+   read authors institutions 
+   read single author 
+    
+       implements grammar rule  abstract   
+       
+        param throws ioexception 
+        
+    
+       implements grammar rule  additionalfields   
+       
+        param throws ioexception 
+        
+   one empty line possible before fields start 
+   read fields multiple lines field allowed field consists multiple lines  join skip keyword 
+   parse keywords field 
+   parse jel field 
+   parse date field 
+   wrong format 
+   parse url field 
+   authors field 
+   parse authors line starts string form 'x not overview 
+       section working paper entry interested skip header editor information 
+   skip empty line 
+   skip empty line net sf jabref logic importer fileformat repecnepimporter importer repecnepimporter importformatpreferences importformatpreferences importformatpreferences   importformatpreferences  
+      
+ 
+     override getname repec economic papers  nep    
+      
+ 
+     override getid repecnep   
+      
+ 
+     override fileextensions getextensions fileextensions repec  
+      
+ 
+     override getdescription imports a economics papers-message from the repec-nep service    
+      
+ 
+     override isrecognizedformat bufferedreader reader ioexception   
+          
+          
+          
+        stringbuilder startofmessage stringbuilder tmpline   reader readline i   0   i   25      tmpline i      
+            startofmessage append tmpline   
+            tmpline   reader readline startofmessage tostring   contains  nep economics papers      startofmessage tostring   contains  
+                 nep repec org startswithkeyword collection keywords result lastline indexof ' '     1 result possiblekeyword lastline substring 0 lastline indexof ' '    
+            result   keywords contains possiblekeyword result readline bufferedreader in ioexception line preline lastline lastline   in readline readmultiplelines bufferedreader in ioexception   
+        stringbuilder result stringbuilder lastline trim     
+        readline in lastline equals lastline trim        startswithkeyword repecnepimporter recognized_fields      isstartofworkingpaper      
+            result append lastline isempty lastline trim lastline trim     
+            readline in result tostring parsetitlestring bibentry be  bufferedreader in ioexception lastline lastline substring lastline indexof ' '    1 lastline length     
+        be setfield fieldname title  readmultiplelines in parseauthors bibentry be  bufferedreader in ioexception   
+          
+        list authors arraylist      
+        stringbuilder institutions stringbuilder lastline equals lastline      startswithkeyword repecnepimporter recognized_fields author  
+            stringbuilder institution stringbuilder institutiondone lastline indexof ' '     0    
+                author lastline substring 0 lastline indexof ' '   trim    
+                institutiondone lastline indexof ' '     1  
+                institution 
+                         append lastline substring lastline indexof ' '    1  
+                                institutiondone lastline 
+                                         indexof lastline indexof ' '    1 lastline 
+                                         indexof lastline length    
+                                 trim author lastline substring 0 lastline length    trim    
+                institutiondone readline in institutiondone lastline institutiondone lastline indexof ' '     1  
+                institution append lastline 
+                         substring 0  institutiondone lastline indexof lastline length    trim     
+                readline in   
+              
+ 
+            authors add author institution length     0    
+                institutions append  
+                         institutions length      0  ? institution tostring       and     institution tostring authors isempty      
+            be setfield fieldname author join   and    authors institutions length     0    
+            be setfield fieldname institution  institutions tostring parseabstract bibentry be  bufferedreader in ioexception theabstract   readmultiplelines in equals theabstract     
+            be setfield fieldname theabstract parseadditionalfields bibentry be multilineurlfieldallowed  bufferedreader in ioexception lastline equals lastline trim       
+            readline in lastline isstartofworkingpaper       startswithkeyword repecnepimporter recognized_fields        equals lastline keyword      equals lastline lastline substring 0 lastline indexof ' '   trim lastline      equals lastline lastline substring lastline indexof ' '    1 lastline length    trim keywords  equals keyword content   readmultiplelines in keywords   content split          
+                be addkeywords arrays aslist keywords jel  equals keyword     
+                be setfield  jel   readmultiplelines in keyword startswith  date      
+                date date content   readmultiplelines in recognizeddateformats yyyy-mm-dd    yyyy-mm    yyyy i   0 i   recognizeddateformats length      date i date simpledateformat recognizeddateformats i   parse content parseexception e    
+                          
+                      
+                  
+ 
+                calendar cal gregoriancalendar    
+                cal settime date date     date   
+                be setfield fieldname year valueof cal get calendar year date recognizeddateformats i - 1  contains  mm      
+                    be setfield fieldname month valueof cal get calendar month    1 date recognizeddateformats i - 1  contains  dd      
+                    be setfield fieldname day valueof cal get calendar day_of_month keyword startswith  url content multilineurlfieldallowed    
+                    content   readmultiplelines in content lastline  
+                    readline in   
+                  
+                be setfield fieldname url  content keyword startswith  by      
+                  
+                parseauthors be  in readline in isstartofworkingpaper lastline matches  \\d \\ \\s inoverviewsection       equals preline trim     
+      
+ 
+     override parserresult importdatabase bufferedreader reader ioexception   
+        objects requirenonnull reader   
+ 
+        list bibentry  bibitems arraylist papernostr line   0 readline reader lastline lastline startswith inoverviewsection preline startswith  in issue we have isstartofworkingpaper      
+                    bibentry be bibentry idgenerator next     
+                    be settype  techreport    
+                    papernostr lastline substring 0 lastline indexof ' '    
+                    parsetitlestring be  reader startswithkeyword repecnepimporter recognized_fields     
+                        parseadditionalfields be reader readline reader     
+                        parseauthors be  reader   
+                        readline reader startswithkeyword repecnepimporter recognized_fields     
+                        parseabstract be  reader   
+                      
+                    parseadditionalfields be reader   
+ 
+                    bibitems add be   
+                    papernostr preline lastline  
+                    readline reader exception e message    error in repec-nep on line line papernostr message       paper no      papernostr         
+              
+            message    e getlocalizedmessage    
+            logger error message  e parserresult fromerrormessage message parserresult bibitems   
+      
+ 

@@ -1,0 +1,64 @@
+ 
+    
+   fulltextfetcher implementation attempts find pdf url googlescholar  
+    
+   search title 
+   don't identify crawler 
+   check results pdf link 
+   todo  link always first result none? 
+   link present? 
+   todo  check title inside pdf   length? 
+   todo  report error function needed?  query -  result much requests same ip adress google answering 503 redirecting captcha challenge caught ioexception looks example java io ioexception  server returned http response code  503 url  https   ipv4 google com sorry index?continue https   scholar google com scholar%3fhl%3den%26btng%3dsearch%26q%3dbpmn hl en q cgmsbi0nbdkyuqy9wauigqdxp4nlqcwbiey1hjph5zfjhv4anpgdwj0 
+  scholar google com    
+   append  cf 4 represents  citation format bibtex  net sf jabref logic importer fetcher googlescholar fulltextfetcher  searchbasedfetcher googlescholar importformatpreferences importformatpreferences    
+        objects requirenonnull importformatpreferences importformatpreferences   importformatpreferences  
+      
+ 
+     override optional url  findfulltext bibentry entry ioexception  fetcherexception   
+        objects requirenonnull entry   
+        optional url  pdflink   optional empty entry hasfield fieldname title pdflink uribuilder uribuilder uribuilder search_in_title_url   
+            uribuilder addparameter  as_q        
+            uribuilder addparameter  as_epq   entry getfield fieldname title  orelse uribuilder addparameter  as_occt    title    
+ 
+            document doc   jsoup connect uribuilder tostring    useragent  
+                     mozilla 5 0  windows nt 5 1  rv 31 0  gecko 20100101 firefox 31 0     
+                     get i   0  i   num_results  i      
+                elements link   doc select format  #gs_ggsw%s a   i link first s   link first   attr  href equals s     
+                          
+                          
+                        logger info  fulltext pdf found   google      s   
+                        pdflink   optional of url s urisyntaxexception e fetcherexception  building uri failed    e pdflink  
+      
+ 
+     override getname google scholar   
+      
+ 
+     override helpfile gethelppage helpfile fetcher_google_scholar  
+      
+ 
+     override list bibentry  performsearch query fetcherexception obtainandmodifycookie    
+            list bibentry  foundentries arraylist   10   
+ 
+            uribuilder uribuilder uribuilder basic_search_url   
+            uribuilder addparameter  hl    en    
+            uribuilder addparameter  btng    search    
+            uribuilder addparameter  q   query   
+ 
+            addhitsfromquery foundentries  uribuilder tostring foundentries size    10    
+                uribuilder addparameter  start    10    
+                addhitsfromquery foundentries  uribuilder tostring foundentries urisyntaxexception e fetcherexception  error fetching from   getname    e ioexception e e getmessage   contains  server returned http response code  503 url fetcherexception  fetching from google scholar failed    
+                        localization lang might be caused by reaching the traffic limitation of google scholar  see 'help details      e fetcherexception  error fetching from   getname    e addhitsfromquery list bibentry  entrylist queryurl ioexception  fetcherexception content   urldownload createurldownloadwithbrowseruseragent queryurl  
+                 downloadtostring standardcharsets utf_8   
+ 
+        matcher matcher   link_to_bib_pattern matcher content matcher find citationspageurl   matcher group   replace   amp          
+            bibentry newentry   downloadentry citationspageurl   
+            entrylist add newentry bibentry downloadentry link ioexception  fetcherexception downloadedcontent   urldownload createurldownloadwithbrowseruseragent link  downloadtostring standardcharsets utf_8   
+        bibtexparser parser bibtexparser importformatpreferences   
+        parserresult result   parser parse stringreader downloadedcontent result result getdatabase fetcherexception  parsing entries from google scholar bib file failed collection bibentry  entries   result getdatabase   getentries entries size      1    
+                logger debug entries size       entries found       link fetcherexception  parsing entries from google scholar bib file failed bibentry entry   entries iterator   next entry obtainandmodifycookie fetcherexception urldownload downloader   urldownload createurldownloadwithbrowseruseragent  https   
+            list httpcookie  cookies   downloader getcookiefromurl httpcookie cookie   cookies    
+                  
+                cookie setvalue cookie getvalue       cf 4 ioexception e fetcherexception  cookie configuration google scholar failed    e   
+          
+      
+ 

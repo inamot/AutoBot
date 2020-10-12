@@ -1,0 +1,203 @@
+ reference entry object works action concerned closing window replace default focustraversalpolicy subclass only allows stringtable gain keyboard focus  
+   rebuild sorted set strings  
+   change name string  
+   store undo information  
+   change content string  
+   store undo information pure integer number cannot used string label bibtex read number  
+   store undo information  
+   make sure cell being edited caused keystroke makes content hang screen  
+   delete strings backwards avoid moving indexes  
+   store undo information  net sf jabref gui stringdialog jdialog stringdialog jabrefframe frame  basepanel panel  bibdatabase base frame panel   panel base   base  
+ 
+        sortstrings    
+ 
+        helpaction helpaction localization lang  help    helpfile string_editor   
+ 
+        addwindowlistener windowadapter     
+ 
+             override windowclosing windowevent e    
+                closeaction actionperformed setfocustraversalpolicy layoutfocustraversalpolicy     
+ 
+             override accept component c accept c      c stringtable   
+              
+            
+ 
+        jpanel pan jpanel    
+        gridbaglayout gbl gridbaglayout    
+        pan setlayout gbl   
+        gridbagconstraints con gridbagconstraints    
+        con fill   gridbagconstraints both  
+        con weighty   1  
+        con weightx   1  
+ 
+        stringtablemodel stm stringtablemodel base   
+        table stringtable stm base hasnostrings      
+            table setrowselectioninterval 0  0   
+          
+        guiutil correctrowheight table   
+ 
+        gbl setconstraints table getpane    con   
+        pan add table getpane     
+ 
+        jtoolbar tlb osxcompatibletoolbar    
+        inputmap im   tlb getinputmap jcomponent when_in_focused_window   
+        actionmap am   tlb getactionmap    
+        im put globals getkeyprefs   getkey keybinding string_dialog_add_string    add    
+        newstringaction newstringaction newstringaction am put  add   newstringaction   
+        im put globals getkeyprefs   getkey keybinding string_dialog_remove_string    remove    
+        removestringaction removestringaction removestringaction am put  remove   removestringaction   
+        im put globals getkeyprefs   getkey keybinding save_database    save    
+        am put  save   saveaction   
+        im put globals getkeyprefs   getkey keybinding close_dialog    close    
+        am put  close   closeaction   
+        im put globals getkeyprefs   getkey keybinding help    help    
+        am put  help   helpaction   
+        im put globals getkeyprefs   getkey keybinding undo    undo    
+        undoaction undoaction undoaction    
+        am put  undo   undoaction   
+        im put globals getkeyprefs   getkey keybinding redo    redo    
+        redoaction redoaction redoaction    
+        am put  redo   redoaction   
+ 
+        tlb add newstringaction   
+        tlb add removestringaction   
+        tlb addseparator    
+        tlb add helpaction   
+        container conpane   getcontentpane    
+        conpane add tlb  borderlayout north   
+        conpane add pan  borderlayout center   
+ 
+        settitle strings_title        
+                  panel getbibdatabasecontext   getdatabasefile   map file  getname  orelse guiglobals untitled_title    
+        windowlocation pw windowlocation jabrefpreferences strings_pos_x  jabrefpreferences strings_pos_y  
+                jabrefpreferences strings_size_x  jabrefpreferences strings_size_y   
+        pw displaywindowatstoredlocation stringtable jtable stringtable stringtablemodel stm stm   
+            setshowverticallines setshowhorizontallines setcolumnselectionallowed defaultcelleditor dce defaultcelleditor jtextfield     
+            dce setclickcounttostart 2   
+            setdefaulteditor dce   
+            tablecolumnmodel cm   getcolumnmodel    
+            cm getcolumn 0  setpreferredwidth 800   
+            cm getcolumn 1  setpreferredwidth 2000   
+            sp getviewport   setbackground globals prefs getcolor jabrefpreferences table_background    
+            getinputmap   put globals getkeyprefs   getkey keybinding close_dialog    close    
+            getactionmap   put  close   closeaction   
+            getinputmap   put globals getkeyprefs   getkey keybinding help    help    
+            getactionmap   put  help   helpaction jcomponent getpane sp sortstrings     
+          
+        strings arraylist s   base getstringkeyset      
+            strings add base getstring s    
+          
+        collections sort strings bibtexstringcomparator refreshtable     
+        sortstrings    
+        table revalidate    
+        table clearselection    
+        table repaint savedatabase     
+        panel runcommand actions save stringtablemodel abstracttablemodel stringtablemodel stringdialog parent  bibdatabase base parent   parent tbase   base  
+          
+ 
+         override object getvalueat row col col    0 ? strings get row  getname     strings get row  getcontent    
+          
+ 
+         override setvalueat object value row col col    0 value equals strings get row  getname tbase hasstringlabel value     
+                        joptionpane showmessagedialog parent  localization lang  a with that label already exists    
+                                localization lang  label    joptionpane error_message value  contains         
+                        joptionpane showmessagedialog parent  localization lang  the label of the cannot contain spaces     
+                                localization lang  label    joptionpane error_message value  contains  #      
+                        joptionpane showmessagedialog parent  localization lang  the label of the cannot contain the '#' character     
+                                localization lang  label    joptionpane error_message isnumber value     
+                        joptionpane showmessagedialog parent  localization lang  the label of the cannot be a number     
+                                localization lang  label    joptionpane error_message bibtexstring subject   strings get row   
+                        panel getundomanager   addedit undoablestringchange panel  subject subject getname value    
+                        subject setname value   
+                        panel markbasechanged    
+                        refreshtable bibtexstring subject   strings get row value equals subject getcontent latexfieldformatter globals prefs getlatexfieldformatterpreferences    
+                                 format value   __dummy illegalargumentexception ex panel getundomanager   addedit undoablestringchange panel  subject subject getcontent value    
+ 
+                    subject setcontent value   
+                    panel markbasechanged    
+                  
+              
+          
+ 
+         override getcolumncount 2  
+          
+ 
+         override getrowcount strings size    
+          
+ 
+         override getcolumnname col col    0 ? localization lang  label     
+                localization lang  content    
+          
+ 
+         override iscelleditable row col isnumber name integer parseint name numberformatexception ex assurenotediting table isediting col   table geteditingcolumn row   table geteditingrow    
+            table getcelleditor row  col  stopcellediting closeaction abstractaction closeaction close window    
+            putvalue action short_description  localization lang  close dialog     
+          
+ 
+         override actionperformed actionevent e    
+            panel stringsclosing    
+            dispose newstringaction abstractaction newstringaction stringdialog parent icontheme jabreficon add geticon     
+            putvalue action short_description  localization lang parent   parent  
+          
+ 
+         override actionperformed actionevent e name   joptionpane showinputdialog parent  localization lang  please enter the s label name isnumber name     
+                joptionpane showmessagedialog parent  localization lang  the label of the cannot be a number     
+                        localization lang  label    joptionpane error_message name contains  #      
+                joptionpane showmessagedialog parent  localization lang  the label of the cannot contain the '#' character     
+                        localization lang  label    joptionpane error_message name contains         
+                joptionpane showmessagedialog parent  localization lang  the label of the cannot contain spaces     
+                        localization lang  label    joptionpane error_message newid   idgenerator next    
+                bibtexstring bs bibtexstring newid  name       
+ 
+                  
+                panel getundomanager   addedit undoableinsertstring panel  panel getdatabase    bs    
+ 
+                base addstring bs   
+                refreshtable    
+                panel markbasechanged keycollisionexception ex    
+                joptionpane showmessagedialog parent  
+                        localization lang  a with that label already exists    
+                        localization lang  label    joptionpane error_message savedatabaseaction abstractaction savedatabaseaction stringdialog parent save database   icontheme jabreficon save geticon     
+            putvalue action short_description  localization lang  save database parent   parent  
+          
+ 
+         override actionperformed actionevent e    
+            parent savedatabase removestringaction abstractaction removestringaction stringdialog parent remove selected strings   icontheme jabreficon remove geticon     
+            putvalue action short_description  localization lang  remove selected strings parent   parent  
+          
+ 
+         override actionperformed actionevent e sel   table getselectedrows sel length   0    
+ 
+                  
+                  
+                assurenotediting msg    sel length   1 ? localization lang  really delete the %0 selected entries?   
+                        integer tostring sel length     localization lang  really delete the selected entry answer   joptionpane showconfirmdialog parent  msg  localization lang  delete strings    
+                        joptionpane yes_no_option  joptionpane question_message answer    joptionpane yes_option    
+                    compoundedit ce compoundedit i   sel length - 1  i    0  i--    
+                          
+ 
+                        bibtexstring subject   strings get sel i    
+ 
+                          
+                        ce addedit undoableremovestring panel  base  subject    
+ 
+                        base removestring subject getid     
+                      
+                    ce end    
+                    panel getundomanager   addedit ce   
+ 
+                    refreshtable base hasnostrings      
+                        table setrowselectioninterval 0  0 undoaction abstractaction undoaction undo   icontheme jabreficon undo geticon     
+            putvalue action short_description  localization lang  undo     
+          
+ 
+         override actionperformed actionevent e    
+            panel runcommand actions undo redoaction abstractaction redoaction redo   icontheme jabreficon redo geticon     
+            putvalue action short_description  localization lang  redo     
+          
+ 
+         override actionperformed actionevent e    
+            panel runcommand actions redo   
+          
+      
+ 

@@ -1,0 +1,255 @@
+ class produces dialog box choosing style file  
+    
+   create preview panel previewing styles 
+   must done before creating table avoid npes 
+   use test entry preview settings tab preferences  
+   build dialog 
+   add action listener edit  menu item supposed open style file external editor  
+   add action listener show  menu item supposed open style file dialog  
+   create action listener removing style used remove button 
+   add remove menu item 
+   add action listener reload  menu item supposed reload external style file 
+    
+       read style files directories style files indicated current 
+       settings add styles list styles method scans current list styles looks styles last used found style selected not found first style selected provided 0 styles  
+        
+   set initial selection table currently selected style  
+        return selected style empty style selected  
+        
+   make dialog box display contents listener glazed list monitoring current selection selection changes need update preview panel  
+        
+   enable disable popup menu items buttons 
+   set new preview layout 
+   update preview's entry  
+   build content panel 
+   buttons 
+   key bindings  net sf jabref gui openoffice styleselectdialog styleselectdialog jabrefframe frame  openofficepreferences preferences  styleloader loader frame   objects requirenonnull frame preferences   objects requirenonnull preferences loader   objects requirenonnull loader   
+        preventry   testentry gettestentry    
+        init init     
+        setuppopupmenu    
+ 
+        addbutton addactionlistener actionevent -    
+            addfiledialog adddialog addfiledialog    
+            adddialog setdirectorypath preferences getcurrentstyle     
+            adddialog setvisible adddialog getfilename   ifpresent filename loader addstyleifvalid filename     
+                    preferences setcurrentstyle filename   
+                  
+                
+            updatestyles    
+ 
+            
+        addbutton settooltiptext localization lang  add style file     
+ 
+        removebutton addactionlistener removeaction   
+        removebutton settooltiptext localization lang  remove style     
+ 
+          
+          
+        preview previewpanel null   
+          
+        preview setentry preventry   
+ 
+        setuptable    
+        updatestyles    
+ 
+          
+        diag jdialog frame  localization lang  select style formbuilder builder   formbuilder create    
+        builder layout formlayout  fill pref grow  4dlu  left pref  4dlu  left pref   
+                 pref  4dlu  100dlu grow  4dlu  pref  4dlu  fill 100dlu     
+        builder add localization lang  select one of the available styles or add a style file from disk     xyw 1  1  
+                5   
+        builder add jscrollpane table   xyw 1  3  5   
+        builder add addbutton  xy 3  5   
+        builder add removebutton  xy 5  5   
+        builder add preview  xyw 1  7  5   
+        builder padding  5dlu  5dlu  5dlu  5dlu    
+ 
+        diag add builder getpanel    borderlayout center   
+ 
+        abstractaction oklistener abstractaction     
+ 
+             override actionperformed actionevent event table getrowcount      0      table getselectedrowcount      0     
+                    joptionpane showmessagedialog diag  localization lang  you must select a valid style file     
+                            localization lang  style selection    joptionpane error_message okpressed storesettings    
+                diag dispose    
+              
+           
+        ok addactionlistener oklistener   
+ 
+        action cancellistener abstractaction     
+ 
+             override actionperformed actionevent event    
+                diag dispose    
+              
+           
+        cancel addactionlistener cancellistener   
+ 
+        buttonbarbuilder bb buttonbarbuilder    
+        bb addglue    
+        bb addbutton ok   
+        bb addbutton cancel   
+        bb addglue    
+        bb getpanel   setborder borderfactory createemptyborder 5  5  5  5    
+        diag add bb getpanel    borderlayout south   
+ 
+        actionmap am   bb getpanel   getactionmap    
+        inputmap im   bb getpanel   getinputmap jcomponent when_in_focused_window   
+        im put globals getkeyprefs   getkey keybinding close_dialog    close    
+        am put  close   cancellistener   
+        im put keystroke getkeystroke  enter     enterok    
+        am put  enterok   oklistener   
+ 
+        diag pack    
+ 
+        windowlocation pw windowlocation diag  jabrefpreferences styles_pos_x  jabrefpreferences styles_pos_y  
+                jabrefpreferences styles_size_x  jabrefpreferences styles_size_y   
+        pw displaywindowatstoredlocation setuptable     
+        styles basiceventlist      
+        eventlist oobibstyle  sortedstyles sortedlist   styles   
+ 
+        tablemodel    defaulteventtablemodel oobibstyle   glazedlistsswing 
+                 eventtablemodelwiththreadproxylist sortedstyles styletableformat     
+        table jtable tablemodel   
+        tablecolumnmodel cm   table getcolumnmodel    
+        cm getcolumn 0  setpreferredwidth 100   
+        cm getcolumn 1  setpreferredwidth 200   
+        cm getcolumn 2  setpreferredwidth 80   
+        guiutil correctrowheight table   
+ 
+        selectionmodel    defaulteventselectionmodel oobibstyle   glazedlistsswing 
+                 eventselectionmodelwiththreadproxylist sortedstyles   
+        table setselectionmodel selectionmodel   
+        table getselectionmodel   setselectionmode listselectionmodel single_selection   
+        table addmouselistener mouseadapter     
+ 
+             override mousepressed mouseevent mouseevent mouseevent ispopuptrigger      
+                    tablepopup mouseevent   
+                  
+              
+ 
+             override mousereleased mouseevent mouseevent mouseevent ispopuptrigger      
+                    tablepopup mouseevent   
+                  
+              
+            
+ 
+        selectionmodel getselected   addlisteventlistener entryselectionlistener setuppopupmenu     
+        popup add edit   
+        popup add show   
+        popup add remove   
+        popup add reload   
+ 
+          
+        edit addactionlistener actionevent -  getselectedstyle   ifpresent style -    
+            optional externalfiletype  type   externalfiletypes getinstance   getexternalfiletypebyext  jstyle link   style getpath type ispresent      
+                    jabrefdesktop openexternalfileanyformat bibdatabasecontext    link  type jabrefdesktop openexternalfileunknown frame bibentry bibdatabasecontext    link unknownexternalfiletype  jstyle ioexception e    
+                logger warn  problem open style file editor   e   
+              
+             
+ 
+          
+        show addactionlistener actionevent -  getselectedstyle   ifpresent displaystyle    
+ 
+          
+        removeaction   actionevent -  getselectedstyle   ifpresent style style isfromresource       joptionpane showconfirmdialog diag  
+                    localization lang  are you sure you want to remove the style?    localization lang  remove style    
+                    joptionpane yes_no_option     joptionpane yes_option loader removestyle style     
+                    logger info  problem removing style    
+                  
+                updatestyles    
+              
+            
+          
+        remove addactionlistener removeaction   
+ 
+          
+        reload addactionlistener actionevent -  getselectedstyle   ifpresent style style ensureuptodate ioexception e    
+                logger warn  problem with style file '    style getpath      '   e setvisible visible    
+        okpressed diag setvisible visible updatestyles     
+ 
+        table clearselection    
+        styles getreadwritelock   writelock   lock    
+        styles clear    
+        styles addall loader getstyles     
+        styles getreadwritelock   writelock   unlock    
+ 
+        selectlastused selectlastused usedstylefile   preferences getcurrentstyle usedstylefile table getrowcount     0    
+                table setrowselectioninterval 0  0 found i   0  i   table getrowcount    i usedstylefile equals tablemodel getelementat i  getpath       
+                    table setrowselectioninterval i  i   
+                    found found     table getrowcount     0     
+                table setrowselectioninterval 0  0 storesettings     
+        getselectedstyle   ifpresent style -  preferences setcurrentstyle style getpath optional oobibstyle  getstyle okpressed getselectedstyle optional empty optional oobibstyle  getselectedstyle selectionmodel getselected   isempty optional of selectionmodel getselected   get 0 optional empty styletableformat tableformat oobibstyle    
+ 
+         override getcolumncount 3  
+          
+ 
+         override getcolumnname i i 0 localization lang  name 1 localization lang  journals 2 localization lang  file override object getcolumnvalue oobibstyle style i i 0 style getname 1 join       style getjournals 2 style isfromresource   ? localization lang  internal style     style getfile   getname isokpressed okpressed tablepopup mouseevent e    
+        popup show e getcomponent    e getx    e gety displaystyle oobibstyle style jdialog dd jdialog diag  style getname jtextarea ta jtextarea style getlocalcopy     
+        ta seteditable jscrollpane sp jscrollpane ta   
+        sp setpreferredsize dimension 700  500    
+        dd getcontentpane   add sp  borderlayout center   
+        jbutton okbutton jbutton localization lang  ok     
+        buttonbarbuilder bb buttonbarbuilder    
+        bb addglue    
+        bb addbutton okbutton   
+        bb addglue    
+        bb getpanel   setborder borderfactory createemptyborder 5  5  5  5    
+        dd getcontentpane   add bb getpanel    borderlayout south   
+        okbutton addactionlistener actionevent -  dd dispose     
+        dd pack    
+        dd setlocationrelativeto diag   
+        dd setvisible entryselectionlistener listeventlistener oobibstyle    
+ 
+         override listchanged listevent oobibstyle  listevent listevent getsourcelist   size      1    
+                oobibstyle style   listevent getsourcelist   get 0 style isfromresource      
+                    remove setenabled edit setenabled reload setenabled removebutton setenabled remove setenabled edit setenabled reload setenabled removebutton setenabled preview setlayout style getreferenceformat swingutilities invokelater    -    
+                    preview update    
+                    preview scrollrecttovisible torect addfiledialog jdialog addfiledialog diag  localization lang  add style file jbutton browse jbutton localization lang  browse     
+            filedialog dialog filedialog frame  withextension fileextensions jstyle   
+            dialog setdefaultextension fileextensions jstyle   
+            browse addactionlistener e -    
+                optional path  file   dialog showdialogandgetselectedfile    
+                file ifpresent f -  newfile settext f toabsolutepath   tostring      
+                
+ 
+              
+            formbuilder builder   formbuilder create    
+            builder layout formlayout  left pref  4dlu  fill 100dlu grow  4dlu  pref    p     
+            builder add localization lang  file    xy 1  1   
+            builder add newfile  xy 3  1   
+            builder add browse  xy 5  1   
+            builder padding  10dlu  10dlu  10dlu  10dlu    
+            getcontentpane   add builder build    borderlayout center   
+ 
+              
+            buttonbarbuilder bb buttonbarbuilder    
+            jbutton addokbutton jbutton localization lang  ok     
+            jbutton addcancelbutton jbutton localization lang  cancel     
+            bb addglue    
+            bb addbutton addokbutton   
+            bb addbutton addcancelbutton   
+            bb addglue    
+            bb getpanel   setborder borderfactory createemptyborder 5  5  5  5    
+            getcontentpane   add bb getpanel    borderlayout south   
+            addokbutton addactionlistener e -    
+                addokpressed dispose    
+                
+ 
+            action cancelaction abstractaction     
+ 
+                 override actionperformed actionevent e    
+                    addokpressed dispose    
+                  
+               
+            addcancelbutton addactionlistener cancelaction   
+ 
+              
+            bb getpanel   getinputmap jcomponent when_in_focused_window  
+                     put globals getkeyprefs   getkey keybinding close_dialog    close    
+            bb getpanel   getactionmap   put  close   cancelaction   
+            pack    
+            setlocationrelativeto diag optional getfilename addokpressed     newfile gettext newfile gettext   isempty optional of newfile gettext optional empty setdirectorypath path newfile settext path   
+          
+ 
+      
+ 

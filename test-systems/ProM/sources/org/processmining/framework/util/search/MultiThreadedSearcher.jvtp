@@ -1,0 +1,141 @@
+ class implements multi-threaded search algorithm  
+    
+   internally  each instance class keeps stack objects type n  
+   representing nodes tree  each thread pops element stack asks registered nodeexpander n expand node turns out leaf expander asked process leaf use class follows pseudo-code   
+    
+    code  
+   collection n  initialsearchnodes  
+   collection n  resultcollection  
+   nodeexpander n  expander   new nodeexpander n     
+   multithreadedsearcher n  searcher   new multithreadedsearcher n  expander  breadthfirst   
+   searcher addinitialnodes initialsearchnodes   
+    
+   searcher startsearch executor  progress  resultcollection    
+     code  
+    
+   note use code plugin use  
+    
+    code  
+   searcher startsearch context getexecutor    context getprogress    resultcollection   
+     code progress object given startsearch method only used cancellation checks e  progress never incremented  
+    
+    author bfvdonge 
+    
+    param  n  
+    
+    
+	   constant representing depth-first search  
+	    
+    
+	   constant representing breadth-first search  
+	    
+    
+	   instantiates searcher searcher use many threads specified  furthermore given expander used expansion search nodes processing leaf nodes searchtype either depthfirst breadthfirst first 
+	   case  new nodes produced expand method expander added bottom stack  whereas latter case new nodes pushed top stack  
+	    
+	    param numberofthreads 
+	              specifies number threads use unsure set value  use constructor without parameter 
+	    param expander expander used expand each search node process leafs search tree 
+	    param searchtype type search  either depthfirst breadthfirst 
+	    
+    
+	   instantiates searcher searcher use many threads virtual machine reports cpus  furthermore given expander used expansion search nodes processing leaf nodes searchtype either depthfirst breadthfirst first 
+	   case  new nodes produced expand method expander added bottom stack  whereas latter case new nodes pushed top stack default many threads used cpus reported code runtime getruntime   availableprocessors    code  
+	    
+	    param expander expander used expand each search node process leafs search tree 
+	    param searchtype type search  either depthfirst breadthfirst 
+	    
+    
+	   instantiates searcher searcher use many threads specified  furthermore given expander used expansion search nodes processing leaf nodes given 
+	   expandcollection store nodes need expanded further  
+	    
+	    param numberofthreads 
+	              specifies number threads use unsure set value  use constructor without parameter 
+	    param expander expander used expand each search node process leafs search tree 
+	    param expandcollection collection store nodes need expanded 
+	    
+    
+	   instantiates searcher searcher use many threads specified  furthermore given expander used expansion search nodes processing leaf nodes given 
+	   expandcollection store nodes need expanded further default many threads used cpus reported code runtime getruntime   availableprocessors    code  
+	    
+	    param expander expander used expand each search node process leafs search tree 
+	    param expandcollection collection store nodes need expanded 
+	    
+    
+	   sets initial nodes search tree  note provide empty collection case search returns immediately  without 
+	   calling any methods expander  
+	    
+	    param initialnodes collection initial nodes  
+	    
+    
+	   sets initial nodes search tree  note don't provide any nodes case search returns immediately  without 
+	   calling any methods expander  
+	    
+	    param initialnodes 
+	              zero initial nodes call method initiates search calling thread suspended until search completed progress canceled resultcollection given method passes through processleaf method nodeexpander e changes collection made searcher  
+	    
+	    param executor executor searcher schedule s threads called plugin  use context getexector pass method  
+	    param progress progress polled cancellation  note changes made progress changes necessary handled nodeexpander called plugin  use context getprogress pass method  
+	    param resultcollection collection final result stored processleaf method node expander  note searcher not change collection any way handle any necessary synchronization  
+	    throws interruptedexception one threads interupted  
+	    throws executionexception one threads threw exception  
+	    
+   set number waiting threads 0  
+   syncrhonize object  waiting make sure first workers registered map  before any accesses synchronize last worker stops only workers finished  
+   first node expand 
+   cancellation occurred search finished  
+   stop execution ask expander new nodes  note call not  
+   synchronize stack  hence multiple calls processed parallel searcher process newly found nodes  note synchronized requires change stack threads done quit  
+   notify searcher enter waiting state threads waiting stack last start waiting  hence nothing anymore  
+   stop execution returning null s sleep until stack filled again  
+   notify searcher leave waiting state node expand case cancellation  throw exception tuples need expanded further  
+   notify threads waiting stack org processmining framework util search multithreadedsearcher n depthfirst   0 breadthfirst   1 multithreadedsearcher numberofthreads  nodeexpander n  expander searchtype threads   numberofthreads expander   expander searchtype    depthfirst stack depthfirstexpandcollection n searchtype    breadthfirst stack breadthfirstexpandcollection n illegalargumentexception  wrong search type specified multithreadedsearcher nodeexpander n  expander searchtype runtime getruntime   availableprocessors    expander  searchtype multithreadedsearcher numberofthreads  nodeexpander n  expander  expandcollection n  expandcollection threads   numberofthreads expander   expander stack   expandcollection multithreadedsearcher nodeexpander n  expander  expandcollection n  expandcollection runtime getruntime   availableprocessors    expander  expandcollection addinitialnodes collection n  initialnodes stack    
+			stack add initialnodes addinitialnodes n    initialnodes stack    
+			stack add arrays aslist initialnodes startsearch executor executor progress progress collection n  resultcollection interruptedexception  executionexception   
+ 
+		  
+		waiting hashmap multithreadedsearchworker n multithreadedsearchworker n  worker waiting i   0  i   threads  i      
+				worker multithreadedsearchworker n progress  resultcollection   
+				waiting put worker multithreadedsearchworker n  w   waiting keyset      
+			executor execute w   
+		  
+ 
+		  
+		worker get    
+ 
+	  
+ 
+	nodeexpander n  getexpander expander  
+	  
+ 
+	expandcollection n  getstack stack setwaiting multithreadedsearchworker n  worker state waiting    
+			waiting put worker  state waiting containsvalue multithreadedsearchworker n swingworker object multithreadedsearchworker multithreadedsearcher n  owner  progress progress  collection n  resultcollection owner   owner progress   progress resultcollection   resultcollection stack   owner getstack hashcode id hashcode    
+	  
+ 
+	 suppresswarnings  unchecked equals object o o multithreadedsearchworker id equals   multithreadedsearchworker  o  id override object doinbackground exception progress iscancelled      
+			  
+			n toexpand   getnodetoexpand progress toexpand stack    
+					stack notifyall collection n  expandfurther   owner getexpander   expandnode toexpand  progress  resultcollection   
+ 
+			  
+			  
+			processnewnodes toexpand  expandfurther  resultcollection  progress n getnodetoexpand progress progress interruptedexception stack progress iscancelled stack isempty owner setwaiting stack wait owner setwaiting n toexpand   stack pop    
+					stack notifyall toexpand  
+				  
+			  
+		  
+		  
+		owner setwaiting processnewnodes n toexpand  collection n  expandfurther collection n  resultcollection  
+			progress progress stack expandfurther isempty      
+				  
+				stack add expandfurther resultcollection    
+					owner getexpander   processleaf toexpand  progress  resultcollection   
+				  
+			  
+			  
+			stack notifyall    
+		  
+ 
+	  
+ 
+ 

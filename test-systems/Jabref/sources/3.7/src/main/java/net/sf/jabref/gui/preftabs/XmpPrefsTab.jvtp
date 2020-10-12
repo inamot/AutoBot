@@ -1,0 +1,144 @@
+ 
+    
+   preference tab xmp  
+   
+   allows user enable configure xmp privacy filter  
+    
+    
+       customization external program paths  
+        
+   build prefs tabs rows selected add one end  
+    
+       load settings preferences initialize table  
+        
+    
+       store changes table preferences method called user 
+       clicks ok  
+       
+        
+   now need make sense contents user made table setup table needs done either changes made checkbox checked field values stored previously  
+   first remove rows empty names  
+   finally store new preferences  net sf jabref gui preftabs xmpprefstab jpanel prefstab jcheckbox privacyfiltercheckbox jcheckbox  
+            localization lang not write the following fields to xmp metadata xmpprefstab jabrefpreferences prefs prefs   objects requirenonnull prefs   
+        setlayout borderlayout     
+ 
+        tablemodel tablemodel abstracttablemodel     
+ 
+             override getrowcount rowcount  
+              
+ 
+             override getcolumncount 1  
+              
+ 
+             override object getvalueat row column row    tablerows size object rowcontent   tablerows get row rowcontent return rowcontent  
+              
+ 
+             override getcolumnname col localization lang  field to filter    
+              
+ 
+             override getcolumnclass column override iscelleditable row col override setvalueat object value row col    
+                tablechanged tablerows size      row    
+                      arraylist object   tablerows  ensurecapacity row   1   
+                  
+ 
+                tablerows set row  value   
+              
+ 
+           
+ 
+        table jtable tablemodel   
+        guiutil correctrowheight table   
+ 
+        tablecolumnmodel columnmodel   table getcolumnmodel    
+        columnmodel getcolumn 0  setpreferredwidth 140   
+ 
+        formlayout layout formlayout  1dlu  8dlu  left pref  4dlu  fill pref        
+        defaultformbuilder builder defaultformbuilder layout   
+        jpanel pan jpanel    
+ 
+        jpanel tablepanel jpanel    
+        tablepanel setlayout borderlayout     
+        jscrollpane scrollpane jscrollpane table  scrollpaneconstants vertical_scrollbar_as_needed  
+                scrollpaneconstants horizontal_scrollbar_never   
+        table setpreferredscrollableviewportsize dimension 250  200    
+        scrollpane setminimumsize dimension 250  300    
+        tablepanel add scrollpane  borderlayout center   
+ 
+        jtoolbar toolbar osxcompatibletoolbar swingconstants vertical   
+        toolbar setfloatable toolbar setborder toolbar add addrowaction     
+        toolbar add deleterowaction     
+ 
+        tablepanel add toolbar  borderlayout east   
+ 
+          
+        builder appendseparator localization lang  xmp export privacy settings     
+        builder nextline    
+ 
+        builder append pan   
+        builder append privacyfiltercheckbox   
+        builder nextline    
+ 
+        builder append pan   
+        builder append tablepanel   
+        builder nextline    
+ 
+        pan   builder getpanel    
+        pan setborder borderfactory createemptyborder 5  5  5  5    
+        add pan  borderlayout center deleterowaction abstractaction deleterowaction delete row   icontheme jabreficon remove_nobox geticon     
+            putvalue action short_description  localization lang  delete rows     
+          
+ 
+         override actionperformed actionevent e rows   table getselectedrows rows length    0 i   rows length - 1  i    0  i rows i    tablerows size      
+                    tablerows remove rows i    
+                  
+              
+            rowcount -  rows length rows length   1    
+                table clearselection    
+              
+            table revalidate    
+            table repaint    
+            tablechanged addrowaction abstractaction addrowaction add row   icontheme jabreficon add_nobox geticon     
+            putvalue action short_description  localization lang  insert rows     
+          
+ 
+         override actionperformed actionevent e rows   table getselectedrows rows length    0    
+                  
+                rowcount    
+                table revalidate    
+                table repaint i   0  i   rows length  i rows i    i    tablerows size      
+                    tablerows add rows i    i       
+                  
+              
+            rowcount    rows length rows length   1    
+                table clearselection    
+              
+            table revalidate    
+            table repaint    
+            tablechanged override setvalues     
+        tablerows clear    
+        list names   jabrefpreferences getinstance   getstringlist jabrefpreferences xmp_privacy_filters   
+        tablerows addall names   
+        rowcount   tablerows size     5  
+ 
+        privacyfiltercheckbox setselected jabrefpreferences getinstance   getboolean  
+                jabrefpreferences use_xmp_privacy_filter    
+      
+ 
+      
+     override storesettings table isediting col   table geteditingcolumn row   table geteditingrow    
+            table getcelleditor row  col  stopcellediting tablechanged    
+                 privacyfiltercheckbox isselected       prefs haskey jabrefpreferences xmp_privacy_filters i   tablerows size   - 1  i    0  i tablerows get i tablerows get i  tostring   isempty      
+                    tablerows remove i   
+                  
+              
+              
+            jabrefpreferences getinstance   putstringlist jabrefpreferences xmp_privacy_filters  
+                    tablerows stream   map object  tostring  collect collectors tolist      
+          
+ 
+        jabrefpreferences getinstance   putboolean jabrefpreferences use_xmp_privacy_filter  privacyfiltercheckbox isselected     
+      
+ 
+     override validatesettings override gettabname localization lang  xmp-metadata    
+      
+ 

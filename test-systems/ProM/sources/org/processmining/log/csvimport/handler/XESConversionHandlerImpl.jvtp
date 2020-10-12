@@ -1,0 +1,133 @@
+ 
+    
+   handler creates xlog csv 
+    
+    author f  mannhardt 
+   
+    
+   assumes stable sorting start events always before complete events 
+   use date built comparator 
+   null aware some events might not times 
+   skip entire trace 
+   include events trace 
+   both times unknown only create event assuming completion event 
+   both start complete present 
+   assign attribute complete event  currentevent 			 
+   add additional start event 
+   either start complete present 
+   only create complete 
+   only create start op not include event 
+   add start event before complete event guarantee order events same time-stamp org processmining log csvimport handler xesconversionhandlerimpl csvconversionhandler xlog comparator xevent  time_comparator comparator xevent compare xevent o1  xevent o2    
+			  
+			date time1   xutils gettimestamp o1   
+			date time2   xutils gettimestamp o2 ordering natural     
+					 nullsfirst     
+					 compare time1  time2 xesconversionhandlerimpl csvconfig importconfig  csvconversionconfig conversionconfig conversionconfig   conversionconfig factory   conversionconfig getfactory conversionerrors stringbuilder    
+	  
+ 
+	 override getconversionerrors conversionerrors length      max_error_length conversionerrors tostring   
+					 concat       multiple error messages have been omitted to avoid running out of memory conversionerrors tostring    
+		  
+	  
+ 
+	 override hasconversionerrors conversionerrors length      0  
+	  
+ 
+	 override startlog csvfile inputfile    
+		log   factory createlog conversionconfig geteventnamecolumns log getextensions   add xconceptextension instance     
+			log getclassifiers   add xloginfoimpl name_classifier conversionconfig getcompletiontimecolumn conversionconfig getstarttimecolumn log getextensions   add xtimeextension instance     
+			log getextensions   add xlifecycleextension instance     
+			log getclassifiers   add xutils standardclassifier   
+		  
+		assignname factory  log  inputfile getfilename     
+	  
+ 
+	 override starttrace caseid    
+		currentevents clear    
+		errordetected currenttrace   factory createtrace    
+		assignname factory  currenttrace  caseid   
+	  
+ 
+	 override endtrace caseid errordetected    conversionconfig geterrorhandlingmode      csverrorhandlingmode omit_trace_on_error sorteventsbytimestamp    
+		currenttrace addall currentevents   
+		log add currenttrace sorteventsbytimestamp     
+		collections sort currentevents  time_comparator   
+	  
+ 
+	 override startevent eventclass  date completiontime  date starttime conversionconfig geterrorhandlingmode      csverrorhandlingmode omit_event_on_error    
+			  
+			errordetected currentevent   factory createevent eventclass assignname factory  currentevent  eventclass starttime completiontime assignlifecycletransition factory  currentevent  xlifecycleextension standardmodel complete starttime completiontime instance valueof  instancecounter      
+ 
+			  
+			assigntimestamp factory  currentevent  completiontime   
+			assigninstance factory  currentevent assignlifecycletransition factory  currentevent  xlifecycleextension standardmodel complete   
+ 
+			  
+			currentstartevent   factory createevent eventclass assignname factory  currentstartevent  eventclass   
+			  
+			assigntimestamp factory  currentstartevent  starttime   
+			assigninstance factory  currentstartevent assignlifecycletransition factory  currentstartevent  xlifecycleextension standardmodel start completiontime assigntimestamp factory  currentevent  completiontime   
+				assignlifecycletransition factory  currentevent  xlifecycleextension standardmodel complete starttime assigntimestamp factory  currentevent  starttime   
+				assignlifecycletransition factory  currentevent  xlifecycleextension standardmodel start illegalstateexception  
+						 both start and complete time are should never be the here     
+			  
+		  
+	  
+ 
+	 override startattribute name value specialcolumn name     
+			assignattribute currentevent  createliteral name  value isshouldaddstarteventattributes      currentstartevent assignattribute currentstartevent  createliteral name  value xattributeliteral createliteral name value factory createattributeliteral getnamefromconfig name   value  getextensionfromconfig name    
+	  
+ 
+	 override startattribute name value specialcolumn name     
+			assignattribute currentevent  creatediscrete name  value isshouldaddstarteventattributes      currentstartevent assignattribute currentstartevent  creatediscrete name  value xattributediscrete creatediscrete name value factory createattributediscrete getnamefromconfig name   value  getextensionfromconfig name    
+	  
+ 
+	 override startattribute name value specialcolumn name     
+			assignattribute currentevent  createcontinuous name  value isshouldaddstarteventattributes      currentstartevent assignattribute currentstartevent  createcontinuous name  value xattributecontinuous createcontinuous name value factory createattributecontinuous getnamefromconfig name   value  getextensionfromconfig name    
+	  
+ 
+	 override startattribute name  date value specialcolumn name     
+			assignattribute currentevent  createdate name  value isshouldaddstarteventattributes      currentstartevent assignattribute currentstartevent  createdate name  value xattributetimestamp createdate name  date value factory createattributetimestamp getnamefromconfig name   value  getextensionfromconfig name    
+	  
+ 
+	 override startattribute name value specialcolumn name     
+			assignattribute currentevent  createboolean name  value isshouldaddstarteventattributes      currentstartevent assignattribute currentstartevent  createboolean name  value xattributeboolean createboolean name value factory createattributeboolean getnamefromconfig name   value  getextensionfromconfig name xextension getextensionfromconfig name    
+		extensionattribute extensionattribute   getextensionattribute name extensionattribute null   extensionattribute extension getnamefromconfig columnname    
+		csvmapping csvmapping   getmapping columnname csvmapping geteventextensionattribute csvmapping geteventextensionattribute      csvconversionconfig no_extension_attribute csvmapping geteventextensionattribute   key csvmapping geteventattributename csvmapping geteventattributename   isempty csvmapping geteventattributename columnname extensionattribute getextensionattribute name getmapping name  geteventextensionattribute csvmapping getmapping name conversionconfig getconversionmap   get name   
+	  
+ 
+	 override endattribute     
+		  
+	  
+ 
+	 override endevent errordetected    conversionconfig geterrorhandlingmode      csverrorhandlingmode omit_event_on_error currentstartevent currentevents add currentstartevent   
+			currentstartevent currentevents add currentevent   
+		currentevent xlog getresult log assignattribute xattributable a  xattribute value    
+		xutils putattribute a  value assignlifecycletransition xfactory factory  xattributable a  standardmodel lifecycle    
+		assignattribute a  factory createattributeliteral xlifecycleextension key_transition  lifecycle getencoding    
+				xlifecycleextension instance assigninstance xfactory factory  xattributable a value    
+		assignattribute a  
+				factory createattributeliteral xconceptextension key_instance  value  xconceptextension instance assigntimestamp xfactory factory  xattributable a  date value    
+		assignattribute a  
+				factory createattributetimestamp xtimeextension key_timestamp  value  xtimeextension instance assignname xfactory factory  xattributable a value    
+		assignattribute a  
+				factory createattributeliteral xconceptextension key_name  value  xconceptextension instance      
+	  
+ 
+	 override errordetected linenumber columnindex attributename  object content  exception e csvconversionexception   
+		csverrorhandlingmode errormode   conversionconfig geterrorhandlingmode    
+		errordetected columninfo format  attribute '%s' with column index %s    attributename  columnindex errormode best_effort conversionerrors length     max_error_length    
+					conversionerrors append  line      linenumber          columninfo    \n     skipping attribute   
+							  nullsafetostring content     \nerror      e    \n\n omit_event_on_error conversionerrors length     max_error_length    
+					conversionerrors append  
+							 line      linenumber          columninfo    \n     skipping event  could not convert   
+									  nullsafetostring content     \nerror      e    \n\n omit_trace_on_error conversionerrors length     max_error_length    
+					conversionerrors append  line      linenumber          columninfo    \n     skipping trace   
+							  xutils getconceptname currenttrace       could not convert     nullsafetostring content  
+							   \nerror      e    \n\n abort_on_error csvconversionexception  
+						 error converting     content     at line     linenumber    and column     columnindex  e nullsafetostring object obj obj null obj getclass   isarray arrays tostring  object    obj obj tostring specialcolumn columnname columnname xconceptextension key_name equals columnname      conversionconfig geteventnamecolumns   isempty    
+				    xtimeextension key_timestamp equals columnname  
+						   conversionconfig getcompletiontimecolumn xconceptextension key_instance equals columnname     conversionconfig getstarttimecolumn isshouldaddstarteventattributes conversionconfig isshouldaddstarteventattributes    
+	  
+ 
+ 

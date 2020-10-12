@@ -1,0 +1,67 @@
+ 
+    
+   latex aux bibtex parser 
+    p  
+   extracts subset bibtex entries bibdatabase included aux file supports nested aux files  latex \\include exists specification aux file  
+   every package  class document write aux file aux file consists latex macros read begin document again end document   
+   
+   bibtex citation  \citation x y z  
+   biblatex citation  \abx aux cite x y z  
+   nested aux files  \ input x  
+    
+    
+       generates database based given aux file bibtex database 
+       
+        param auxfile  path latex aux file 
+        param database bibtex database 
+        
+    
+       executes parsing logic returns result containing information generated bibdatabase  
+       
+        return auxparserresult containing generated bibdatabase parsing statistics 
+        
+   nested aux files 
+   
+       try find equivalent bibtex entry inside reference database keys inside aux file  
+        
+   copy database definitions 
+   
+       resolves adds crossref entries 
+        
+   
+       insert clone given entry clone given new unique id  
+        net sf jabref logic auxparser auxparser auxparser auxfile  bibdatabase database auxfile   auxfile  
+        masterdatabase   database auxparserresult parse parseauxfile auxparserresult parseauxfile     
+        auxparserresult result auxparserresult masterdatabase   
+ 
+          
+        list filelist arraylist   1   
+        filelist add auxfile fileindex   0 fileindex   filelist size file   filelist get fileindex bufferedreader br bufferedreader filereader file line line   br readline matchcitation result  line   
+                    matchnestedaux result  filelist  line filenotfoundexception e    
+                logger info  cannot locate input file   e ioexception e    
+                logger warn  problem opening file   e   
+              
+ 
+            fileindex    
+          
+        resolvetags result result matchnestedaux auxparserresult result  list filelist line    
+        matcher inputmatch   input_pattern matcher line inputmatch find inputstring   inputmatch group 1 inputfile   inputstring  
+            path rootpath file auxfile  topath   getparent rootpath inputfile   rootpath resolve inputstring  tostring filelist contains inputfile     
+                filelist add inputfile   
+                result increasenestedauxfilescounter matchcitation auxparserresult result line    
+        matcher citematch   cite_pattern matcher line citematch find keystring   citematch group 2 keys   keystring split key   keys    
+                result getuniquekeys   add key trim resolvetags auxparserresult result key   result getuniquekeys      
+            optional bibentry  entry   masterdatabase getentrybykey key entry ispresent      
+                insertentry entry get    result   
+                resolvecrossreferences entry get    result result getunresolvedkeys   add key result getgeneratedbibdatabase   hasentries      
+            result getgeneratedbibdatabase   copypreamble masterdatabase   
+            result getgeneratedbibdatabase   copystrings masterdatabase resolvecrossreferences bibentry entry  auxparserresult result    
+        entry getfield fieldname crossref  ifpresent crossref result getgeneratedbibdatabase   getentrybykey crossref  ispresent      
+                optional bibentry  refentry   masterdatabase getentrybykey crossref refentry ispresent      
+                    insertentry refentry get    result   
+                    result increasecrossrefentriescounter result getunresolvedkeys   add crossref insertentry bibentry entry  auxparserresult result    
+        bibentry clonedentry    bibentry  entry clone    
+        clonedentry setid idgenerator next     
+        result getgeneratedbibdatabase   insertentry clonedentry   
+      
+ 

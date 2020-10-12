@@ -1,0 +1,199 @@
+ contents file subject terms common development distribution license license may not use file except compliance license obtain copy license glassfish bootstrap legal cddlv1 0 txt https   glassfish dev java net public cddlv1 0 html  see license specific language governing permissions limitations under license distributing covered code  include cddl header each file include license file glassfish bootstrap legal cddlv1 0 txt applicable  add following below cddl header fields 
+   enclosed brackets      replaced identifying information  
+   portions copyright  yyyy   name copyright owner  
+    
+   
+   copyright 2005 apache software foundation  
+    
+   licensed under apache license  version 2 0 license may not 
+   use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+    
+   unless required applicable law agreed writing  software 
+   distributed under license distributed basis  without 
+   warranties conditions any kind  either express implied  see license specific language governing permissions limitations under license weakvaluehashmap implemented hashmap maps keys weakvalues don't access innards hashmap wrap unwrap value objects weakvalues every operation  fortunately 
+   weakvalues small  short-lived objects added allocation overhead tolerable implementaton directly extends java util hashmap  
+    
+    author markus fuchs 
+    see java util hashmap 
+    see java lang ref weakreference 
+    
+   reference queue cleared weakvalues    
+    
+	   returns number key-value mappings map  
+	    p  
+	    
+	    return number key-value mappings map  
+	    
+   delegate entryset super size counts weakvalues 
+    
+	   returns  tt true  tt map contains key-value mappings  
+	    p  
+	    
+	    return  tt true  tt map contains key-value mappings  
+	    
+    
+	   returns  tt true  tt map contains mapping specified 
+	   key  
+	    p  
+	    
+	    param key 
+	              key whose presence map tested 
+	    return  tt true  tt map contains mapping specified 
+	           key  
+	    
+   need clean up gc'ed values before invoking super method 
+    
+	   returns  tt true  tt map maps one keys specified 
+	   value  
+	    p  
+	    
+	    param value 
+	              value whose presence map tested 
+	    return  tt true  tt map maps one keys value  
+	    
+    
+	   gets value given key  
+	    p  
+	    
+	    param key 
+	              key whose associated value any returned 
+	    return value map maps specified key don't need remove garbage collected values here garbage collected method returns null next put   call same key removes old value 
+   automatically completely garbage collected 
+    
+	   puts new  key value map  
+	    p  
+	    
+	    param key 
+	              key specified value associated  
+	    param value 
+	              value associated specified key  
+	    return previous value associated specified key null mapping key value garbage collected garbage collector map already contains equivalent key new key key  value  pair not stored map new 
+   value only key strongly referenced map not removed garbage collector  even key becomes weakly reachable due old 
+   value isn't necessary remove garbage 
+   collected values keys map before new entry made only clean up here distribute 
+   clean up calls different operations  
+    
+	   removes key value given key  
+	    p  
+	    
+	    param key 
+	              key whose mapping removed map  
+	    return previous value associated specified key null mapping key value garbage collected garbage collector convenience method return object held weak reference code null  code not exist  
+	    
+    
+	   removes garbage collected values keys map don't know much referencequeue poll   operation costs not call every map operation  
+	    
+    super not really necessary use safe side 
+   -- helper classes need special class keep backward reference value key remove key value garbage 
+	   collected s same key map need key remove value garbage collected  
+		    
+    
+		   creates new weak reference without adding referencequeue  
+		    
+    
+		   creates new weak reference adds given queue weakvalue equal another weakvalue iff both refer objects turn  equal according equals 
+		   methods  
+		    
+    
+           
+            
+    
+	   internal class entries class wraps unwraps values entry objects returned underlying map  
+	    
+   
+							   strong reference value gc leave alone long entry exists call changes map  please see comment put method correctness remark  
+    
+	   internal class entry sets unwrap wrap weakvalues stored map  
+	    
+   remove garbage collected elements removed garbage collected elements simply return next entry map's value null check entry's value null map contains key 
+   otherwise  simply compare values 
+   internal helper variable t access 
+   entryset superclass inside entryset class 
+   stores entryset instance 
+    
+	   returns code set  code  view mappings map  
+	    p  
+	    
+	    return code set  code  view mappings map  
+	    
+   stores value collection 
+    
+	   returns code collection  code  view values contained map  
+	    p  
+	    
+	    return code collection  code  view values contained map  
+	    
+   delegates entryset super method returns 
+   weakvalues instead value objects org processmining framework util  
+ 
+  
+ 
+  
+ 
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+ 
+  
+ 
+ suppresswarnings    rawtypes    unchecked weakvaluehashmap hashmap size entryset   size isempty size      0 containskey object key    
+		  
+		processqueue containskey key containsvalue object value containsvalue weakvalue create value object get object key getreferenceobject  weakreference get key object put object key  object value    
+		  
+		  
+		  
+		  
+		  
+		  
+		  
+		  
+		  
+		processqueue    
+ 
+		weakvalue oldvalue    weakvalue put key  weakvalue create key  value  queue getreferenceobject oldvalue object remove object key getreferenceobject  weakreference remove key object getreferenceobject weakreference ref ref null   ref get processqueue     
+		weakvalue wv wv    weakvalue queue poll remove wv key weakvalue weakreference weakvalue object value value weakvalue create object value value null weakvalue value weakvalue object key  object value  referencequeue queue value  queue key   key weakvalue create object key  object value  referencequeue queue value null weakvalue key  value  queue equals object obj obj obj weakvalue object ref1 get    
+			object ref2     weakvalue  obj  get ref1    ref2 ref1 ref2 ref1 equals ref2 hashcode     
+			object ref get ref 0   ref hashcode entry map entry   
+  
+    
+ 
+		entry map entry ent  object value ent   ent value   value object getkey ent getkey object getvalue value object setvalue object value    
+			  
+			  
+			object oldvalue value value   value  
+			ent setvalue weakvalue create getkey    value  queue oldvalue valequals object o1  object o2 o1 o2 o1 equals o2 equals object o o map entry map entry e    map entry  o valequals ent getkey    e getkey       valequals value  e getvalue hashcode     
+			object k k   ent getkey 0   k hashcode    ^   value 0   value hashcode entryset abstractset iterator iterator     
+			  
+			processqueue iterator     
+				iterator hashiterator   hashentryset iterator    
+				entry next hasnext hashiterator hasnext      
+						  
+						  
+						map entry ent    map entry  hashiterator next    
+						weakvalue wv    weakvalue  ent getvalue    
+						object v    wv null   wv get    
+						next entry ent  v object next next hasnext nosuchelementexception    
+					entry e   next  
+					next e remove     
+					hashiterator remove isempty iterator   hasnext size j   0 iterator i   iterator    i hasnext    i next    
+				j j remove object o o map entry map entry e    map entry  o  
+			object ek   e getkey    
+			object ev   e getvalue    
+			object hv   weakvaluehashmap get ek hv ev weakvaluehashmap containskey ek     
+					weakvaluehashmap remove ek hv equals ev     
+				weakvaluehashmap remove ek hashcode h   0 iterator i   hashentryset iterator    i hasnext       
+				map entry ent    map entry  i next    
+				object k  
+				weakvalue wv    weakvalue  ent getvalue wv h        k   ent getkey 0   k hashcode    ^ wv hashcode h set entryset entryset hashentryset entryset    
+			entryset entryset entryset collection values values values abstractcollection iterator iterator iterator hasnext i hasnext object next entry  i next    getvalue remove     
+							i remove size weakvaluehashmap size contains object v weakvaluehashmap containsvalue v values  
+	  
+ 
+ 

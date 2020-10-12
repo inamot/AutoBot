@@ -1,0 +1,163 @@
+ immutable class keeps information regarding single 
+   author container information very simple 
+   methods access p  
+   current usage  only methods  code getlastonly  code   
+    code getfirstlast  code code getlastfirst  code used methods provided completeness  
+    
+    
+       creates author object any part name absent   code null  code  
+       must passed  otherwise methods may return erroneous results  
+       
+        param first first name author  may consist several 
+                        tokens charles louis xavier joseph charles 
+                        louis xavier joseph de la vall \'e e poussin   
+        param firstabbr abbreviated first name author  may consist several tokens c  l  x  j charles louis 
+                        xavier joseph de la vall \'e e poussin responsibility caller create reasonable 
+                        abbreviation first name  
+        param von von part author's name  may consist several 
+                        tokens de la charles louis xavier joseph de la 
+                        vall \'e e poussin   
+        param last last name author  may consist several 
+                        tokens vall \'e e poussin charles louis xavier 
+                        joseph de la vall \'e e poussin   
+        param jr junior part author's name  may consist several tokens jr  iii smith  jr  iii  john   
+        
+   avoid arrayindexoutof only one character  uppercase letter   add dot return immediately a a uppercase letter  hence nothing previous character lowercase  probably acronym jabref  -  don't change anything 
+   current character last character input append dot a a  
+   dot already nothing aa a  
+   only append rest word uppercase 
+   end word 
+    
+       compare object given one  
+        p return true iff object author fields identical string comparison  
+        
+    
+        return true brackets s properly paired 
+        
+   nested construct check proper  nesting 
+   improper nesting 
+    
+       removes start end brace string 
+        p  
+       e g   
+          vall \'e e poussin  -  vall \'e e poussin 
+          vall \'e e   poussin  -  vall \'e e poussin 
+         vall \'e e poussin -  vall \'e e poussin 
+        
+   quick solution don't remove first last might s bbb c braces may not removed 
+   inner inner curly brackets found check needed  inner used s 
+   delete last 
+   now inner words cleared 
+   case  word word word  remains above aware w ord word wor d w ord word word  
+    
+       returns first name author stored object   first    
+       
+        return first name author  may consist several tokens  
+        
+    
+       returns abbreviated first name author stored object   f     
+       
+        return abbreviated first name author  may consist several 
+       tokens  
+        
+    
+       returns von part author's name stored object 
+         von    
+       
+        return von part author's name  may consist several tokens  
+        
+    
+       returns last name author stored object   last    
+       
+        return last name author  may consist several tokens  
+        
+    
+       returns junior part author's name stored object 
+         jr    
+       
+        return junior part author's name  may consist several 
+       tokens null author not jr  part 
+        
+    
+       returns von-part followed last name   von last both fields specified code null  code empty string  code     code returned  
+       
+        return 'von last' 
+        
+    
+       returns author's name form 'von last  jr   first first name full abbreviated depending parameter  
+       
+        param abbr  code true  code  - abbreviate first name   code false  code not abbreviate 
+        return 'von last  jr   first code abbr  false  code von last  jr   f code abbr  true  code   
+        
+    
+       returns author's name form 'first von last  jr first name full abbreviated depending parameter  
+       
+        param abbr  code true  code  - abbreviate first name   code false  code not abbreviate 
+        return 'first von last  jr code abbr  false  code f  
+       von last  jr code abbr  true  code   
+        
+    
+       returns name last  jr  f   omitting von-part removing 
+       starting braces  
+       
+        return  last  jr  f described above parts empty  
+        net sf jabref model entry author author first firstabbr von last jr    
+        firstpart   adddotifabbreviation removestartandendbraces first    
+        firstabbr   removestartandendbraces firstabbr   
+        vonpart   removestartandendbraces von   
+        lastpart   removestartandendbraces last   
+        jrpart   removestartandendbraces jr adddotifabbreviation name name name isempty name name length      1     character isletter name charat 0      
+                character isuppercase name charat 0 name        
+          
+ 
+        stringbuilder sb stringbuilder lastchar   name charat 0 i   0  i   name length    i i   0    
+                lastchar   name charat i - 1 currentchar   name charat i   
+            sb append currentchar currentchar i   1    name length       character isuppercase name charat i   1      
+                    sb append currentisuppercaseletter   character isletter currentchar     character isuppercase currentchar currentisuppercaseletter lastislowercaseletter   character isletter lastchar     character islowercase lastchar lastislowercaseletter i   1     name length      
+                  
+                sb append nextchar   name charat i   1 nextchar    
+                  
+                sb append nextchar nextwordisuppercase j   i   1  j   name length    j furtherchar   name charat j character iswhitespace furtherchar      furtherchar    '-'      furtherchar    '~'      furtherchar furtherisuppercaseletter   character isletter furtherchar     character isuppercase furtherchar furtherisuppercaseletter    
+                    nextwordisuppercase nextwordisuppercase    
+                sb append sb tostring   trim    
+      
+ 
+     override hashcode objects hash firstabbr  firstpart  jrpart  lastpart  vonpart   
+      
+ 
+      
+     override equals object o o o net sf jabref model entry author    
+            net sf jabref model entry author a    net sf jabref model entry author  o objects equals firstpart  a firstpart     objects equals firstabbr  a firstabbr     objects equals  
+                    vonpart  a vonpart     objects equals lastpart  a lastpart     objects equals jrpart  a jrpart properbrackets s i   0 level   0 i   s length c   s charat i c level level level    -1 i level    0 removestartandendbraces name name null name contains name split   name split       
+        stringbuilder b stringbuilder s   split s length     2     s startswith         s endswith inner   s substring 1  s length   - 1 inner contains properbrackets inner     
+                        s   inner s   inner  
+                  
+              
+            b append s  append ' '   
+          
+          
+        b deletecharat b length   - 1 newname   b tostring newname startswith         newname endswith inner   newname substring 1  newname length   - 1 properbrackets inner inner newname newname optional getfirst optional ofnullable firstpart optional getfirstabbr optional ofnullable firstabbr optional getvon optional ofnullable vonpart optional getlast optional ofnullable lastpart optional getjr optional ofnullable jrpart getlastonly vonpart getlast   orelse lastpart vonpart   vonpart   ' '   lastpart getlastfirst abbr    
+        stringbuilder res stringbuilder getlastonly     
+        getjr   ifpresent jr -  res append       append jr abbr    
+            getfirstabbr   ifpresent firsta -  res append       append firsta getfirst   ifpresent first -  res append       append first res tostring getfirstlast abbr    
+        stringbuilder res stringbuilder abbr    
+            getfirstabbr   map firsta -  firsta   ' '  ifpresent res  append getfirst   map first -  first   ' '  ifpresent res  append   
+          
+        res append getlastonly     
+        getjr   ifpresent jr -  res append       append jr res tostring    
+      
+ 
+     override tostring stringbuilder sb stringbuilder  author     
+        sb append  firstpart '   append firstpart  append '\''   
+        sb append    firstabbr '   append firstabbr  append '\''   
+        sb append    vonpart '   append vonpart  append '\''   
+        sb append    lastpart '   append lastpart  append '\''   
+        sb append    jrpart '   append jrpart  append '\''   
+        sb append sb tostring getnameforalphabetization     
+        stringbuilder res stringbuilder    
+        getlast   ifpresent res  append   
+        getjr   ifpresent jr -  res append       append jr    
+        getfirstabbr   ifpresent firsta -  res append       append firsta res length     0      res charat 0     ' '     
+            res deletecharat 0 res tostring    
+      
+ 

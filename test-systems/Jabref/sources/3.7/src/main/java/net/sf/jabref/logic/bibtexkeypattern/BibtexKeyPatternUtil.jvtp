@@ -1,0 +1,550 @@
+ utility class labelpattern package single characters use extending key make unique  
+    
+       required labelpatternutiltest 
+       
+        param db db use global database 
+        
+   avoid lots calls remove diacritics content  
+       
+       replaces umlaut  \ x xe  e g  \ o -  oe  \ u -  ue  etc  
+       removes diacritics  \?x -  x  e g a  etc  
+       
+        param content content  
+        return content without diacritics  
+        
+   replace umlaut e' 
+   remove diacritics 
+    
+       unifies umlauts  
+       
+       replaces  $\ddot \mathrm x alternative umlaut x  
+       replaces  \? x x x diacritic symbol 
+       
+        param content content  
+        return content unified diacritics  
+        
+    
+       check value institution usable distinguishing between persons institutions author editor fields person  
+         -  john doe  
+         -  doe  john institution big company institution inc big company institution inc   bci    
+       
+        param author author editor  
+        return true author editor institution  
+        
+    
+        p author editor may institution not person case key generator builds very long keys  e g ldquo attributed 
+       graph grammar system  agg  rdquo  -  
+        ldquo theattributedgraphgrammarsystemagg rdquo   
+         p  
+       
+        p institution name inside  code     code  brackets institution name includes abbreviation abbreviation code     code  brackets previous example value look code attributed graph grammar system   agg     code   
+         p  
+       
+        p institution includes abbreviation e        xyz     first abbreviation used key value part author  
+         p  
+       
+        p institution not include abbreviation key generated form name following way  
+         p  
+       
+        p institution value contain  institution name  part institution  address  etc  those information separated comma  name institution possible part institution beginning address secondary information end  
+         p  
+       
+       each part examined separately  
+        ol  
+        li remove tokens part one defined ignore 
+       words press end dot  ltd   co first 
+       character lowercase di         li  
+        li detect type part  university  technology institute  
+       department  school  rest 
+        ul  
+        li university   code  uni nameoftheuniversity    code   li  
+        li department abbreviation words beginning uppercase letter except words   code d ei p    code   school  
+       faculty  li  
+        li school  same department  li  
+        li rest less 3 tokens part result concatenating those tokens  otherwise result build first letters words starting uppercase letter   li  
+         ul  
+         ol  
+       
+       parts concatenated together following way  
+        ul  
+        li university part use otherwise use rest part   li  
+        li school part append li  
+        li department part not same school part 
+       append li  
+         ul  
+       
+       rest part only first part not match any type parts  address ignored  
+       
+        param content institution generate bibtex key return  ul  
+                li institution key  li  
+                li case failure  li  
+                li null content null  li  
+                 ul  
+        
+   key parts 
+   cleanup  remove unnecessary words  
+   remove empty 
+   remove ignored words 
+   university 
+   technology institute 
+   departments 
+   schools 
+   deciding part type    
+   starts uni  case locale independent 
+   starts tech  case locale independent 
+   starts dep   dip   lab   case locale independent 
+   technology institute isn't university  -  
+   university part looks uni nameoftheuniversity university detected previous part suggested department 
+   school abbreviation words beginning capital letter excluding  department  school faculty words  
+   
+   explicitly defined department part build same way school part not matching university  department school  
+   less 3 parts -  concatenate those 3 parts -  use 1st letter abbreviation 
+   putting parts together  
+    
+       generates bibtex label according pattern given entry type saves unique label code bibtexentry  code given database used avoid duplicate keys  
+       
+        param citekeypattern 
+        param dbase code bibdatabase  code  
+        param entry code bibentry  code  
+        return modified bibentry type entry arraylist corresponding type 
+   check whether modifier end lower  
+   apply modifier present 
+   remove illegal characters key  
+   remove regular expressions generating keys change accept one dupe key already use must modify only happens getaddition buggy 
+    
+       applies modifiers label generated based field marker  
+        param label generated label  
+        param parts string array containing modifiers  
+        param offset number initial items modifiers array skip  
+        return modified label  
+        
+   abbreviate alternate text modifier parentheses inserted label empty label code  auth author editor s   e g edited book   use editor s  
+                   instead   saw27 mrao cam ac uk most people 
+                   want case somebody really needs field expands nothing author  e g  someone uses both 
+                    auth ed same label provide alternative 
+                   form  pureauth not fallback 
+                   substitution editor  
+                    
+   remove pure  prefix remaining 
+   code section functions correctly 
+   gather author-related checks don't check time  
+   last author's last name 
+   authn  first n chars first author's last 
+   name auth  business dead end use literally  
+   gather markers starting ed  here don't check time  
+   last author's last name 
+   authn  first n chars first author's last 
+   name ed  business dead end use literally press preparation submitted 
+   according labelpattern php returns keyword number n 
+   not enough keywords 
+   num counts 1 n index arraylist count 0 n-1 
+   return keywords  not separated 
+   remove spaces haven't seen any special demands 
+    
+       computes appendix bibtex key make unique use z numbers 0-25 aa-az  ba-bz  etc  
+       
+        param number appendix number  
+        return string append  
+        
+    
+       determines  number  words out title  field given bibtex entry 
+        
+   sorry being english-centric guess words really editable preference next word  
+   check ok here word accepted  
+    
+       gets last name first author editor 
+       
+        param authorfield code string  code  
+        return surname author editor author found method guaranteed never return null  
+       
+        throws nullpointerexception authorfield    null 
+        
+    
+       gets first name initials first author editor 
+       
+        param authorfield code string  code  
+        return first name initial author editor author found method guaranteed never return null  
+       
+        throws nullpointerexception authorfield    null 
+        
+    
+       gets von part last name first author editor spaces returned 
+       
+        param authorfield code string  code  
+        return von part surname author editor author found method guaranteed never return null  
+       
+        throws nullpointerexception authorfield    null 
+        
+    
+       gets last name last author editor 
+        param authorfield code string  code  
+        return surname author editor author empty 
+    
+       gets forename initials last author editor 
+       
+        param authorfield code string  code  
+        return forename initial author editor author found method guaranteed never return null  
+       
+        throws nullpointerexception authorfield    null 
+        
+    
+       gets last name authors editors 
+        param authorfield code string  code  
+        return sur name authors editors 
+        
+   quick hack use nauthors avoid code duplication 
+    
+       returns authors according bibtex-alpha-style 
+        param authorfield string containing value author field 
+        return initials authornames 
+        
+   drop before last author 
+   -  makes processing easier 
+   take first letter any  prefixes   e g  van der aalst -  vd  
+   append last part last name completely 
+   replace whitespaces split lastname use first character each part lastname 
+    
+       gets surnames first n authors appends etal n authors 
+        param authorfield code string  code  
+        param n number desired authors 
+        return gets surnames first n authors appends etal n authors 
+        
+    
+       gets first part last name first 
+       author editor appends last name initial remaining authors editors  
+       maximum 5 characters 
+        param authorfield code string  code  
+        return surname authors editors 
+        
+   convert lastname  firstname firstname lastname 
+    
+       auth auth ea format  
+       isaac newton james maxwell albert einstein  1960  
+       isaac newton james maxwell  1960  
+        give  
+       newton maxwell ea 
+       newton maxwell 
+        
+   append first author 
+   append second author 
+   append   ea 2 authors 
+    
+       auth etal  authetal      format  
+       isaac newton james maxwell albert einstein  1960  
+       isaac newton james maxwell  1960  
+       
+        auth etal give  delim      append   etal    
+       newton etal 
+       newton maxwell 
+       
+        authetal give  delim     append  etal    
+       newtonetal 
+       newtonmaxwell 
+       
+       note authetal  equals  authors2 first n characters mth author editor  
+       m starts counting 1 m counting 0 
+    
+       authshort format  
+       added kolja brix  kbx users sourceforge net 
+       
+       given author names 
+       
+         isaac newton james maxwell albert einstein n  bohr 
+       
+         isaac newton james maxwell albert einstein 
+       
+         isaac newton james maxwell 
+       
+         isaac newton 
+       
+       yield 
+       
+         nme  
+       
+         nme 
+       
+         nm 
+       
+         newton 
+        
+    
+       authinin format  
+       
+       each author gets  n div #authors  chars remaining  n mod #authors  
+       chars equally distributed authors first row n   #authors   only first n authors mentioned example newton j  maxwell einstein n  bohr      
+       
+       b newton j  maxwell einstein 
+       
+       c newton j  maxwell 
+       
+       d newton 
+       
+       authini4 gives nmeb  b  neme  c  nema  d  newt 
+       
+        param authorfield authors format  
+       
+        param n maximum number characters string long negative number zero lead returned  
+       
+        throws nullpointerexception authorfield null n   0 
+        
+    
+       split pages field separate numbers return lowest 
+       
+        param pages 
+                   may not null pages string 42--111 7 41 73--97 43  
+       
+        return first page number number found string 
+       
+        throws nullpointerexception pages null 
+        
+    
+       split pages field separate numbers return highest 
+       
+        param pages pages string 42--111 7 41 73--97 43  
+       
+        return first page number number found string 
+       
+        throws nullpointerexception pages null  
+        
+    
+       parse field marker modifiers  possibly containing parenthesised modifier well escaped colons parentheses  
+        param arg argument string  
+        return array strings representing parts marker method returns string similar one passed except molded form acceptable bibtex  
+        p  
+       watch-out returned string might length 0 afterwards  
+       
+        param key             maybenull 
+        param enforcelegalkey make sure key legal respects 
+        
+   user doesn't want enforce legal characters must still look whitespace some characters commas interfere parsing  
+   replace non-english characters umlauts etc sensible 
+   letter letter combination bibtex accept  net sf jabref logic bibtexkeypattern bibtexkeypatternutil setdatabase bibdatabase db    
+        database   db normalize content    
+        list tokens arraylist b   0  
+        stringbuilder and stringbuilder    
+        stringbuilder token stringbuilder p   0  p   content length    p b    0 andstring   and tostring andstring isempty        content charat p     ' '   
+                                equals andstring      content charat p     'a'   
+                              a  equals andstring      content charat p     'n'   
+                              an  equals andstring      content charat p     'd'      
+                    and append content charat p and  equals and tostring        content charat p     ' '     
+                    and stringbuilder    
+                    tokens add token tostring   trim     
+                    token stringbuilder content charat p     ' '    
+                        b content charat p     ' '    
+                        b--  
+                      
+                    token append and   
+                    and stringbuilder    
+                    token append content charat p token append content charat p    
+              
+          
+        tokens add token tostring     
+        stringbuilder normalized stringbuilder i   0  i   tokens size    i i   0    
+                normalized append   and     
+              
+ 
+            normalized append isinstitution tokens get i   ? generateinstitutionkey tokens get i     removediacritics  
+                    tokens get i normalized tostring removediacritics content content isempty content result   content  
+          
+        result   result replaceall  \\ \\\\\   a-za-z  \\     $1e    
+        result   result replaceall  \\\\\ \\   a-za-z  \\     $1e    
+        result   result replaceall  \\\\\   a-za-z      $1e    
+          
+        result   result replaceall  \\ \\\\   a-za-z  \\     $1    
+        result   result replaceall  \\\\ \\   a-za-z  \\     $1    
+        result   result replaceall  \\\\   a-za-z      $1 result unifydiacritics content content replaceall  
+                 \\$\\\\ddot\\ \\\\mathrm\\   ^\\   \\ \\ \\$   
+                  \\\ $1    replaceall  
+                  \\\\ ^\\-a-za-z  \\ ?  a-za-z  \\ ?   
+                  $1$2 isinstitution author stringutil isincurlybrackets author generateinstitutionkey content content isempty content result   content  
+        result   unifydiacritics result   
+        result   result replaceall  ^\\        replaceall  \\ $        
+        matcher matcher   regex_pattern matcher result matcher matches matcher group 1   
+          
+ 
+        result   removediacritics result parts   result split university department school rest list ignore   arrays aslist  press    the index   0  index   parts length  index      
+            list part arraylist k   parts index  replaceall  \\  a-z  \\        split    \\-_ k isempty      
+                            ignore contains k tolowercase locale english     
+                            k charat k length   - 1 valueof k charat 0    matches   a-z     
+                             k length      3      uni  equalsignorecase k substring 0  2       
+                    part add k isuniversity istechnology isdepartment isschool k   part k matches  ^ uu  nn  ii           
+                    isuniversity k matches  ^ tt  ee  cc  hh           
+                    istechnology fieldname school equalsignorecase k     
+                    isschool k matches  ^ dd  eeii  pp         k matches  ^ ll  aa  bb           
+                    isdepartment istechnology    
+                isuniversity isuniversity    
+                stringbuilder universitysb stringbuilder    
+                universitysb append  uni k   part k matches  ^ uu  nn  ii         
+                        universitysb append k   
+                      
+                  
+                university   universitysb tostring index   0      department department   parts index - 1 isschool    isdepartment    
+                stringbuilder schoolsb stringbuilder    
+                stringbuilder departmentsb stringbuilder k   part k matches  ^ dd  eeii  pp          fieldname school equalsignorecase k  
+                                 faculty  equalsignorecase k  
+                                 k replaceall starting_capital_pattern      isempty isschool    
+                            schoolsb append k replaceall starting_capital_pattern isdepartment    
+                            departmentsb append k replaceall starting_capital_pattern isschool    
+                    school   schoolsb tostring isdepartment    
+                    department   departmentsb tostring rest stringbuilder restsb stringbuilder part size     3 k   part    
+                        restsb append k k   part    
+                        k   k replaceall starting_capital_pattern k isempty       
+                            restsb append k   
+                          
+                      
+                  
+                rest   restsb tostring university rest   university  
+                   school school  
+                    department school department equals school   ? 
+                             department makelabel abstractbibtexkeypattern citekeypattern  bibdatabase dbase  bibentry entry  
+            bibtexkeypatternpreferences bibtexkeypatternpreferences    
+        database   dbase key  
+        stringbuilder stringbuilder stringbuilder entrytype   entry gettype    
+              
+            list typelist arraylist   citekeypattern getvalue entrytype typelist isempty      
+                typelist remove 0 field typelistentry   typelist equals typelistentry     
+                    field equals typelistentry     
+                    field field    
+                      
+                      
+                    list parts   parsefieldmarker typelistentry label   makelabel entry  parts get 0   bibtexkeypatternpreferences getkeyworddelimiter parts size     1    
+                        label   applymodifiers label  parts  1   
+                      
+ 
+                    stringbuilder append label stringbuilder append typelistentry exception e    
+            logger warn  cannot make label   e   
+          
+ 
+          
+        key   checklegalkey stringbuilder tostring    bibtexkeypatternpreferences isenforcelegalkey regex   bibtexkeypatternpreferences getkeypatternregex regex regex trim   isempty replacement   bibtexkeypatternpreferences getkeypatternreplacement    
+            key   key replaceall regex  replacement oldkey   entry getcitekeyoptional   orelse occurrences   database getduplicationchecker   getnumberofkeyoccurrences key objects equals oldkey  key     
+            occurrences alwaysaddletter   bibtexkeypatternpreferences isalwaysaddletter firstlettera   bibtexkeypatternpreferences isfirstlettera alwaysaddletter     occurrences    0     
+            entry setcitekey key number    alwaysaddletter     firstlettera ? 1   0 moddedkey moddedkey   key   getaddition number   
+                number    
+ 
+                occurrences   database getduplicationchecker   getnumberofkeyoccurrences moddedkey objects equals oldkey  moddedkey     
+                    occurrences occurrences   0   
+ 
+            entry setcitekey moddedkey applymodifiers label list parts offset resultinglabel   label parts size     offset j   offset  j   parts size    j modifier   parts get j abbr  equals modifier     
+                      
+                    stringbuilder abbreviatesb stringbuilder words   resultinglabel replaceall   \\ \\ '        
+                             split   \\ \\  \r\n word   words word isempty      
+                            abbreviatesb append word charat 0    
+                          
+                      
+                    resultinglabel    abbreviatesb tostring optional formatter  formatter   formatters getformatterformodifier modifier formatter ispresent      
+                        resultinglabel   formatter get   format label modifier isempty      modifier length     2     modifier charat 0     ' '     modifier endswith label isempty       modifier length     2     
+                            resultinglabel   modifier substring 1  modifier length   - 1 resultinglabel   label logger info  key generator warning  unknown modifier '  
+                                  modifier    '     
+                        resultinglabel   label resultinglabel makelabel bibentry entry value  character keyworddelimiter val   value val startswith  auth      val startswith  pureauth authstring   entry getfield fieldname author  
+                         map authorstring -  normalize database resolveforstrings authorstring    orelse val startswith  pure      
+                      
+                      
+                    val   val substring 4 authstring isempty      
+                    authstring   entry getfield fieldname editor  
+                             map authorstring -  normalize database resolveforstrings authorstring    orelse auth  equals val firstauthor authstring authforeini  equals val firstauthorforenameinitials authstring authfirstfull  equals val firstauthorvonandlast authstring authors  equals val allauthors authstring authorsalpha  equals val authorsalpha authstring authorlast  equals val lastauthor authstring authorlastforeini  equals val lastauthorforenameinitials authstring authorini  equals val oneauthorplusini authstring val matches  authini \\d num   integer parseint val substring 7 authinin authstring  num auth auth ea  equals val authauthea authstring auth etal  equals val authetal authstring         etal authetal  equals val authetal authstring       etal authshort  equals val authshort authstring val matches  auth \\d  _ \\d nums   val substring 4  split  _ authnofmth authstring  integer parseint nums 0    
+                            integer parseint nums 1 val matches  auth\\d fa   firstauthor authstring num   integer parseint val substring 4 num   fa length      
+                        num   fa length fa substring 0  num val matches  authors\\d nauthors authstring  integer parseint val substring 7 entry getfieldoralias val  orelse val startswith  ed edtr  equals val firstauthor entry getfield fieldname editor  orelse edtrforeini  equals val firstauthorforenameinitials entry getfield fieldname editor  orelse editors  equals val allauthors entry getfield fieldname editor  orelse editorlast  equals val lastauthor entry getfield fieldname editor  orelse editorlastforeini  equals val lastauthorforenameinitials entry getfield fieldname editor  orelse editorini  equals val oneauthorplusini entry getfield fieldname editor  orelse val matches  edtrini \\d num   integer parseint val substring 7 authinin entry getfield fieldname editor  orelse      num val matches  edtr \\d  _ \\d nums   val substring 4  split  _ authnofmth entry getfield fieldname editor  orelse      
+                            integer parseint nums 0    
+                            integer parseint nums 1   - 1 edtr edtr ea  equals val authauthea entry getfield fieldname editor  orelse edtrshort  equals val authshort entry getfield fieldname editor  orelse val matches  edtr\\d fa   firstauthor entry getfield fieldname editor  orelse num   integer parseint val substring 4 num   fa length      
+                        num   fa length fa substring 0  num entry getfieldoralias val  orelse firstpage  equals val firstpage entry getfield fieldname pages  orelse lastpage  equals val lastpage entry getfield fieldname pages  orelse shorttitle  equals val gettitlewords 3  entry getfield fieldname title  orelse shorttitleini  equals val keeplettersanddigitsonly  
+                        applymodifiers gettitlewordswithspaces 3  entry getfield fieldname title  orelse       
+                                collections singletonlist  abbr    0 veryshorttitle  equals val gettitlewords 1  entry getfield fieldname title  orelse shortyear  equals val yearstring   entry getfieldoralias fieldname year  orelse yearstring isempty yearstring yearstring startswith  in      yearstring startswith  sub ip yearstring length     2 yearstring substring yearstring length   - 2 yearstring val matches  keyword\\d num   integer parseint val substring 7    
+                keywordlist separatedkeywords   entry getkeywords keyworddelimiter separatedkeywords size     num return separatedkeywords get num-1  tostring val matches  keywords\\d num val length     8    
+                    num   integer parseint val substring 8 num   integer max_value  
+                  
+                keywordlist separatedkeywords   entry getkeywords keyworddelimiter   
+                stringbuilder sb stringbuilder i   0 keyword keyword   separatedkeywords    
+                      
+                    sb append keyword tostring   replaceall  \\s          
+ 
+                    i i    num sb tostring entry getfieldoralias val  orelse nullpointerexception ex    
+            logger debug  problem making label   ex getaddition number number    chars length lastchar   number % chars length getaddition  number   chars length    - 1    chars substring lastchar  lastchar   1 chars substring number  number   1 gettitlewords number title keeplettersanddigitsonly gettitlewordswithspaces number  title gettitlewordswithspaces number title ss removelatexcommandsformatter   format title   
+        stringbuilder stringbuilder stringbuilder    
+        stringbuilder current piv   0 words   0  
+ 
+          
+          
+        mainl piv   ss length        words   number     
+            current stringbuilder piv   ss length        character iswhitespace ss charat piv   
+                        ss charat piv     '-'     
+                current append ss charat piv    
+                piv    
+              
+            piv word   current tostring   trim word isempty smallword  word smaller_words word equalsignorecase smallword mainl stringbuilder length     0    
+                stringbuilder append ' '   
+              
+            stringbuilder append word   
+            words stringbuilder tostring keeplettersanddigitsonly in    
+        stringbuilder stringbuilder stringbuilder i   0  i   in length    i character isletterordigit in charat i      
+                stringbuilder append in charat i stringbuilder tostring firstauthor authorfield    
+        authorlist authorlist   authorlist parse authorfield authorlist isempty return authorlist getauthor 0  getlast   orelse firstauthorforenameinitials authorfield    
+        authorlist authorlist   authorlist parse authorfield authorlist isempty return authorlist getauthor 0  getfirstabbr   map s -  s substring 0  1   orelse firstauthorvonandlast authorfield    
+        authorlist authorlist   authorlist parse authorfield authorlist isempty stringbuilder stringbuilder stringbuilder    
+        authorlist getauthor 0  getvon   ifpresent vonauthor -  stringbuilder append vonauthor replaceall             
+        authorlist getauthor 0  getlast   ifpresent stringbuilder  append stringbuilder tostring lastauthor authorfield tokens   authorlist fixauthorforalphabetization authorfield  split  \\s \\band\\b\\s tokens length   0 lastauthor   tokens tokens length - 1  split lastauthor 0 lastauthorforenameinitials authorfield    
+        authorlist authorlist   authorlist parse authorfield authorlist isempty return authorlist getauthor authorlist getnumberofauthors   - 1  getfirstabbr   map s -  s substring 0  1   
+                 orelse allauthors authorfield nauthors authorfield  integer max_value authorsalpha authorfield authors fixedauthors   authorlist fixauthorlastnameonlycommas authorfield fixedauthors   fixedauthors replace   and tokens   fixedauthors split max   tokens length   4 ? 3   tokens length max    1 firstauthor   tokens 0  replaceall  \\s         trim   split j   0  j    firstauthor length - 1   j      
+                authors   authors concat firstauthor j  substring 0  1    
+              
+              
+            authors   authors concat firstauthor firstauthor length - 1  substring 0  
+                    math min 3  firstauthor firstauthor length - 1  length i   0  i   max  i curauthor   tokens i  replaceall  \\s         trim   split acurauthor   curauthor    
+                      
+                    authors   authors concat acurauthor substring 0  1 tokens length   4    
+                authors   authors concat authors nauthors authorfield n tokens   authorlist fixauthorforalphabetization authorfield  split  \\s \\band\\b\\s i   0  
+        stringbuilder authorsb stringbuilder tokens length   i      i   n lastname   tokens i  replaceall   \\s           
+            authorsb append lastname   
+            i tokens length   n    
+            authorsb append  etal authorsb tostring oneauthorplusini authorfield fixedauthorfield   authorlist fixauthorforalphabetization authorfield tokens   fixedauthorfield split  \\s \\band\\b\\s tokens length    0 firstauthor   tokens 0  split      0   
+        stringbuilder authorsb stringbuilder    
+        authorsb append firstauthor substring 0  math min chars_of_first  firstauthor length i   1 tokens length   i    
+              
+            authorsb append tokens i  charat 0    
+            i authorsb tostring authauthea authorfield fixedauthorfield   authorlist fixauthorforalphabetization authorfield tokens   fixedauthorfield split  \\s \\band\\b\\s tokens length    0 stringbuilder author stringbuilder    
+          
+        author append  tokens 0  split       0 tokens length    2    
+              
+            author append ' '  append  tokens 1  split       0 tokens length   2    
+              
+            author append   ea author tostring authetal authorfield delim append fixedauthorfield   authorlist fixauthorforalphabetization authorfield tokens   fixedauthorfield split  \\s \\band\\b\\s tokens length    0 stringbuilder author stringbuilder    
+        author append  tokens 0  split       0 tokens length    2    
+            author append delim  append  tokens 1  split       0 tokens length   2    
+            author append append author tostring authnofmth authorfield n m mminusone   m - 1 fixedauthorfield   authorlist fixauthorforalphabetization authorfield tokens   fixedauthorfield split  \\s \\band\\b\\s tokens length    mminusone      n   0      mminusone   0 lastname    tokens mminusone  split       0 lastname length      n lastname lastname substring 0  n authshort authorfield fixedauthorfield   authorlist fixauthorforalphabetization authorfield   
+        stringbuilder author stringbuilder tokens   fixedauthorfield split  \\band\\b i   0 tokens length    1    
+            author append authnofmth fixedauthorfield  fixedauthorfield length    1 tokens length    2 tokens length   i      i   3     
+                author append authnofmth fixedauthorfield  1  i   1    
+                i tokens length   3    
+                author append author tostring authinin authorfield n n    0 fixedauthorfield   authorlist fixauthorforalphabetization authorfield   
+        stringbuilder author stringbuilder tokens   fixedauthorfield split  \\band\\b tokens length    0 author tostring i   0 charsall   n   tokens length tokens length   i i    n % tokens length     
+                author append authnofmth fixedauthorfield  charsall   1  i   1 author append authnofmth fixedauthorfield  charsall  i   1    
+              
+            i author length      n author tostring author tostring   substring 0  n firstpage pages splitpages   pages split  \\d result   integer max_value n   splitpages n matches  \\d       
+                result   math min integer parseint n   result result    integer max_value return valueof result lastpage pages splitpages   pages split  \\d result   integer min_value n   splitpages n matches  \\d       
+                result   math max integer parseint n   result result    integer min_value return valueof result list parsefieldmarker arg    
+        list parts arraylist      
+        stringbuilder current stringbuilder escaped inparenthesis   0 i   0  i   arg length    i currentchar   arg charat i currentchar    ' '      escaped     inparenthesis    0     
+                parts add current tostring     
+                current stringbuilder currentchar    ' '      escaped    
+                inparenthesis    
+                current append currentchar currentchar    ' '      escaped     inparenthesis   0     
+                inparenthesis--  
+                current append currentchar currentchar escaped    
+                    escaped current append currentchar escaped escaped    
+                current append currentchar   
+                escaped current append currentchar   
+              
+          
+        parts add current tostring parts checklegalkey key enforcelegalkey key null enforcelegalkey    
+              
+              
+              
+            stringbuilder newkey stringbuilder i   0  i   key length    i c   key charat i character iswhitespace c            \\\   indexof c     -1     
+                    newkey append c newkey tostring    
+          
+ 
+        stringbuilder newkey stringbuilder i   0  i   key length    i c   key charat i character iswhitespace c            \\\ #~^'  indexof c     -1     
+                newkey append c stringutil replacespecialcharacters newkey tostring     
+      
+ 
+ 

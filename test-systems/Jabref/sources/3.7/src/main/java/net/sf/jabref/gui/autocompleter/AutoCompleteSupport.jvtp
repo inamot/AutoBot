@@ -1,0 +1,140 @@
+ 
+    
+   endows textbox ability autocomplete input  based code santhosh kumar 
+    http   www jroller com santhosh date 20050620  james lemieux  glazed lists autocompletesupport  
+   
+    param  e  type items displayed autocomplete popup 
+    
+    
+       constructs new autocompletesupport textbox using autocompleter renderer  
+       
+        param textcomp textbox component autocompletion enabled 
+        param autocompleter autocompleter providing data 
+        param renderer renderer displaying popup 
+        
+    
+       constructs new autocompletesupport textbox possible autocomplete items displayed simple 
+       list autocompletion items provided autocompleter specified later using 
+         link setautocompleter   
+       
+        param textcomp textbox component autocompletion enabled 
+        
+    
+       constructs new autocompletesupport textbox using autocompleter renderer possible 
+       autocomplete items displayed simple list  
+       
+        param textcomp textbox component autocompletion enabled 
+        param autocompleter autocompleter providing data 
+        
+    
+       inits autocompletion popup method called  further input specified textbox autocompleted  
+        
+   actionlisteners navigating suggested autocomplete items arrow keys 
+   actionlistener hiding autocomplete popup 
+   actionlistener accepting currently selected item autocompletion 
+   todo following refactored example autocompleter shouldn't know whether want complete one word multiple most fields only interested currently edited word seek caret backward closest space position last word separator  whitespace comma  
+   priv points whitespace char priv 1 
+   copy everything next char up end uptocaret fields journal reasonable try complete entire 
+   text field content skip searching keep entire part up caret  
+   create popup 
+   listen changes text -  update autocomplete suggestions nothing 
+   listen up down arrow keys -  move currently selected item up down reimplement function here cannot sure simple list used display items better renderer decide moreover list not focus probably not recognize keystrokes first place   
+   listen esc key -  hide popup 
+   listen focus events -  select text gaining focus 
+   listen enter key popup visible -  accept current autocomplete suggestion nothing 
+    
+       returns whether text textbox selected textbox gains focus  defaults true  
+       
+        return 
+        
+    
+       sets whether text textbox selected textbox gains focus  default true  
+       
+        param selectstextonfocusgain new value text changed update autocomplete suggestions accordingly action invoked hitting up down arrow key popup currently shown action relayed otherwise arrow keys trigger popup  
+        
+    
+       selects text textbox gains focus behavior controlled value returned link autocompletesupport#isselectstextonfocusgain nothing 
+    
+       sets autocompleter used present autocomplete suggestions  
+       
+        param autocompleter autocompleter providing data 
+        net sf jabref gui autocompleter autocompletesupport e autocompletesupport jtextcomponent textcomp  autocompleter e  autocompleter  
+            autocompleterenderer e  renderer renderer   renderer textcomp   textcomp autocompleter   autocompleter autocompletesupport jtextcomponent textcomp textcomp listautocompleterenderer autocompletesupport jtextcomponent textcomp  autocompleter e  autocompleter textcomp  autocompleter listautocompleterenderer install actionlistener upaction moveaction -1 actionlistener downaction moveaction 1 actionlistener hidepopupaction   e -  popup setvisible actionlistener acceptaction   e -    
+            e itemtoinsert   renderer getselecteditem itemtoinsert toinsert   autocompleter getautocompletetext itemtoinsert autocompleter issingleunitfield priv   textcomp gettext   length   - 1 priv    0      character iswhitespace textcomp gettext   charat priv   
+                            textcomp gettext   charat priv     ' '     
+                    priv--  
+                  
+                  
+                  
+                textcomp settext textcomp gettext   substring 0  priv   1    toinsert textcomp settext toinsert   
+              
+            textcomp setcaretposition textcomp gettext   length     
+            popup setvisible popup setborder borderfactory creatematteborder 1  1  1  1  color light_gray    
+        popup setpopupsize textcomp getwidth    200   
+        popup setlayout borderlayout     
+        popup setfocusable popup setrequestfocusenabled popup add renderer init acceptaction    
+ 
+          
+        textcomp getdocument   adddocumentlistener documentlistener     
+ 
+             override insertupdate documentevent e    
+                postprocesstextchange    
+              
+ 
+             override removeupdate documentevent e    
+                postprocesstextchange    
+              
+ 
+             override changedupdate documentevent e    
+                  
+              
+            
+ 
+          
+          
+          
+          
+        textcomp registerkeyboardaction downaction  keystroke getkeystroke keyevent vk_down  0   
+                jcomponent when_focused   
+ 
+        textcomp registerkeyboardaction upaction  keystroke getkeystroke keyevent vk_up  0   jcomponent when_focused   
+ 
+          
+        textcomp registerkeyboardaction hidepopupaction  keystroke getkeystroke keyevent vk_escape  0   
+                jcomponent when_in_focused_window textcomp addfocuslistener comboboxeditorfocushandler     
+ 
+          
+        popup addpopupmenulistener popupmenulistener     
+ 
+             override popupmenuwillbecomevisible popupmenuevent e    
+                textcomp registerkeyboardaction acceptaction  keystroke getkeystroke keyevent vk_enter  0   
+                        jcomponent when_focused   
+              
+ 
+             override popupmenuwillbecomeinvisible popupmenuevent e    
+                textcomp unregisterkeyboardaction keystroke getkeystroke keyevent vk_enter  0    
+              
+ 
+             override popupmenucanceled popupmenuevent e isselectstextonfocusgain selectstextonfocusgain setselectstextonfocusgain selectstextonfocusgain selectstextonfocusgain   selectstextonfocusgain postprocesstextchange autocompleter popup setvisible text   textcomp gettext    
+        list e  candidates   autocompleter complete text   
+        renderer update candidates textcomp isenabled        candidates isempty       
+            renderer selectitem 0   
+ 
+            popup setpopupsize textcomp getwidth    200   
+            popup show textcomp  0  textcomp getheight popup setvisible textcomp hasfocus      
+            textcomp requestfocusinwindow moveaction abstractaction moveaction offset offset   offset  
+          
+ 
+         override actionperformed actionevent e popup isvisible      
+                renderer selectitemrelative offset popup show textcomp  0  textcomp getheight comboboxeditorfocushandler focusadapter   
+ 
+         override focusgained focusevent e isselectstextonfocusgain       e istemporary      
+                textcomp selectall    
+              
+          
+ 
+         override focuslost focusevent e setautocompleter autocompleter e  autocompleter autocompleter   autocompleter setvisible visible   
+        popup setvisible visible isvisible popup isvisible    
+      
+ 
+ 

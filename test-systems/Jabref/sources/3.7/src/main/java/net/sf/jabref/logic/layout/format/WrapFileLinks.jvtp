@@ -1,0 +1,121 @@
+ formatter iterates over file links file links specified 
+   type  outputting format string given first argument format string contain number escape sequences indicating file link information inserted string  
+    p formatter take optional second argument specifying name file 
+   type specified iteration only include those files file type 
+   matching given name  case-insensitively specified empty argument file links included  
+    p second argument  pairs additional arguments added order specify regular expression replacements done upon inserted link information 
+   before insertion output string non-paired argument ignored order specify replacements without filtering file types  use empty second 
+   argument  
+    p   
+    p   
+    p escape sequences embedding information follows  
+    p inserts iteration index  starting 1 useful output list files enumerated  
+   \p inserts file path file link  relative links below file directory expanded absolute path  
+   \r inserts file path without expanding relative links  
+   \f inserts name file link's type  
+   \x inserts file's extension any  
+   \d inserts file link's description any  
+    p instance entry contain file link file   home john report pdf pdf  type description  john's final report   
+    p   
+   using wrapfilelinks formatter following argument  
+    p   
+   \format wrapfilelinks d  \p    \file  
+    p give following output  
+   1  john's final report   home john report pdf  
+    p entry contained second file link file   home john draft txt text file  type description early  draft output follows  
+   1  john's final report   home john report pdf  
+   2 early  draft    home john draft txt  
+    p formatter called second argument list filtered instance  
+   \format wrapfilelinks d  \p  text file   \file  
+    p show only text file  
+   1 early  draft    home john draft txt  
+    p wanted output part xml styled output quotes file description cause problems  adding two additional arguments translate quotes xml characters solves format wrapfilelinks d  \p  text file    quot    \file  
+    p give following output  
+   1 early  quot draft quot    home john draft txt  
+   
+   additional pairs replacements added  
+    
+   define codes various escape sequences inserted  
+   define escape sequences give results  
+   build list containing links  
+   counter relevant iterations 
+   use entry don't discriminate types type fits need resolve file directory database's metadata not available formatter  therefore ugly hack export routine set global variable before 
+   starting export contains database's file directory  
+   
+                           stumbled over investigating 
+                           
+                           https   sourceforge net tracker index php?func detail aid 1469903 group_id 92314 atid 600306 
+                            
+   
+                           stumbled over investigating 
+                           
+                           https   sourceforge net tracker index php?func detail aid 1469903 group_id 92314 atid 600306 
+                            
+  f touri   tostring    
+   update counter 
+    
+       parse format string return list formatentry objects format 
+       string basically marked up marking iteration number inserted p  marking file path current iteration inserted  plus additional markers  
+       
+        param format marked-up string  
+        return resulting format entries know ll out escape mode check escape sequence meaningful  
+   escaped backslash  means add backslash  
+   ok code  add previous string any entry indicated escape sequence  
+   clear buffer  
+   unknown escape sequence  
+   check start escape sequence  
+   finished scanning string collected text end  add entry class defines building blocks parsed format strings  each formatentry 
+       represents either literal string piece information pertaining file 
+       link exported iteration through series file links literal 
+       strings class encapsulates literal itself types information  
+       only type code provided subclass needs fill proper information 
+       based file link exported iteration status  
+        net sf jabref logic layout format wrapfilelinks abstractparamlayoutformatter wrapfilelinks escape_seq put 'i'  wrapfilelinks iteration_count   
+        wrapfilelinks escape_seq put 'p'  wrapfilelinks file_path   
+        wrapfilelinks escape_seq put 'r'  wrapfilelinks relative_file_path   
+        wrapfilelinks escape_seq put 'f'  wrapfilelinks file_type   
+        wrapfilelinks escape_seq put 'x'  wrapfilelinks file_extension   
+        wrapfilelinks escape_seq put 'd'  wrapfilelinks file_description wrapfilelinks filelinkpreferences filelinkpreferences prefs   filelinkpreferences  
+      
+ 
+     override setargument arg    
+        list parts   abstractparamlayoutformatter parseargument arg   
+        format   parseformatstring parts get 0 parts size     1      parts get 1  trim   isempty      
+            filetype   parts get 1 parts size     2 i   2  i    parts size   - 1   i    2    
+                replacements put parts get i   parts get i   1    
+              
+          
+      
+ 
+     override format field field stringbuilder sb stringbuilder    
+          
+        list parsedfilefield  filelist   filefield parse field piv   1 parsedfilefield flentry   filelist filetype flentry getfiletype   equalsignorecase filetype formatentry entry   format entry gettype sb append entry getstring iteration_count  
+                        sb append piv file_path  
+                        list dirs prefs getfiledirfordatabase prefs getfiledirfordatabase   isempty      
+                            dirs   prefs getgenerateddirfordatabase dirs   prefs getfiledirfordatabase    
+                          
+ 
+                        optional file  f   fileutil expandfilename flentry getlink    dirs f ispresent sb append replacestrings f get   getcanonicalpath ioexception ex    
+                                logger warn  problem getting path   ex   
+                                sb append replacestrings f get   getpath sb append replacestrings flentry getlink relative_file_path  
+ 
+                          
+                        sb append replacestrings flentry getlink file_extension  
+                        fileutil getfileextension flentry getlink    
+                                 ifpresent extension -  sb append replacestrings extension file_type  
+                        sb append replacestrings flentry getfiletype file_description  
+                        sb append replacestrings flentry getdescription piv sb tostring replacestrings text result   text map entry string  stringstringentry   replacements entryset to   stringstringentry getvalue    
+            result   result replaceall stringstringentry getkey    to result list formatentry  parseformatstring format    
+        list formatentry  l arraylist      
+        stringbuilder sb stringbuilder escaped i   0  i   format length    i c   format charat i escaped    
+                escaped c    '\\'    
+                      
+                    sb append wrapfilelinks escape_seq containskey c sb length     0    
+                        l add formatentry sb tostring      
+                          
+                        sb stringbuilder    
+                      
+                    l add formatentry wrapfilelinks escape_seq get c sb append '\\'   
+                    sb append c c    '\\'    
+                    escaped sb append c sb length     0    
+            l add formatentry sb tostring l formatentry formatentry type type   type formatentry value type   wrapfilelinks value gettype type getstring 

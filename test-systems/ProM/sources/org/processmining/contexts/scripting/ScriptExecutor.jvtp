@@ -1,0 +1,157 @@
+ 
+    
+   script interpretor prom class provides wrapper around java bsh   link interpreter initialize available plugins prom user directory link interpreter interpreter used interpret java code run-time 
+   against plugins allows scripted execution prom plugins  
+    
+    author dfahland others interpreter used run script plugin context interpreter executed allows retrieve available plugins 
+   set method signatures announced available plugins 
+   set method signatures announced plugins not loaded one reason meant provide diagnostic information case script fails  
+	    
+    
+	   initialize new interpreter available plugins  
+	    
+	    param context 
+	    throws scriptexecutionexception 
+	    
+    
+	   execute script interpreter  
+	    
+	    param script 
+	    throws scriptexecutionexception 
+	    
+   provide detailed error messages 
+    
+	   iterate over registered plugins  find declared methods try create invocation context each  return list plugins succeeded save list methods failed  
+	    
+	    return 
+	    
+   method signatures plugin right context type checked start pluginmanager plugin getcontexttype   isassignablefrom context getclass     
+     
+  plugininterpreter eval init tostring plugin works  remeber skip scanning working plugins  question scanning working plugins 
+   take much time plugindescriptor plugin   workingplugins right context type checked start pluginmanager plugin getcontexttype   isassignablefrom context getclass following code generates piece java code declares java method java method wrapper plugin method currently initializing name new java method transcription name declared pluginvariant   annotation plugin name owning  plugin class body wrapper method uses prom's invocation context plugin descriptor correctly call plugin given parameters returns results plugin executed script use transcribed name java plugin call plugin  
+   signature wrapper method  return type  name      
+   signature wrapper method      parameters     
+   body wrapper method execution context invoke plugin 
+   body wrapper method  wait plugin method complete return result 
+   finished declaring wrapper method each plugin variant each plugin 
+   compile java code wrapper methods org processmining contexts scripting scriptexecutor scriptexecutionexception exception scriptexecutionexception evalerror e e scriptexecutionexception e e scriptexecutor plugincontext context scriptexecutionexception context   context  
+		 
+		availableplugins hashset signature     
+		failedplugins hashset signature     
+		 
+		init execute script throwable interpreter eval script evalerror e e targeterror    
+				targeterror e2    targeterror e e2 gettarget executionexception    
+					executionexception e3    executionexception e2 gettarget e3 getcause filenotfoundexception    
+						system err println  error  the script tries to access a non-existing file path \n     
+								  filenotfoundexception e3 getcause    getmessage e3 getcause e2 gettarget java util concurrent cancellationexception    
+				  system err println  script execution was cancelled  message \n  e e2 gettarget e2 gettarget java lang assertionerror e2 gettarget scriptexecutionexception e linkedlist plugindescriptor  workingplugins     
+		linkedlist plugindescriptor  workingplugins linkedlist plugindescriptor     
+ 
+		set signature  foundsignatures hashset signature nl   system getproperty  line separator pluginindex   0 plugindescriptor plugin   context getpluginmanager   getallplugins boot verbose    level all  system out println  checking   plugin getname     
+ 
+			  
+			set signature  thispluginsignatures hashset signature stringbuffer init stringbuffer    
+				interpreter plugininterpreter interpreter    
+				plugininterpreter set  __main_context   context j   0  j   plugin getparametertypes   size    j      
+					signature signature   getsignature plugin  j   
+					thispluginsignatures add signature foundsignatures contains signature     
+						foundsignatures add signature   
+						pluginindex    
+ 
+						plugininterpreter set  __plugin_descriptor    pluginindex  plugin   
+						plugininterpreter set  __plugin_method_index    pluginindex  j signature getreturntypes   size      1    
+							init append object getcanonicalname init append object getcanonicalname     
+						  
+						init append       signature getname index   0 cl   signature getparametertypes index   0    
+								init append        
+							  
+							init append cl getcanonicalname     
+							init append   p    index     
+						  
+						init append         nl   
+						init append          plugincontext getcanonicalname   
+								    context   __main_context createchildcontext \ result of     
+						init append signature getname      \       nl   
+ 
+						init append      __plugin_descriptor    pluginindex     invoke __plugin_method_index  
+								  pluginindex      context object getcanonicalname i   0  i   signature getparametertypes   size    i i   0    
+								init append        
+							  
+							init append  p    i   
+						  
+						init append          nl signature getreturntypes   size     1    
+							init append      context getresult   synchronize       nl   
+							init append          object getcanonicalname       result object getcanonicalname       context getresult   getsize        nl   
+							init 
+									 append i   0  i   result length  i      result i    context getresult   getresult i      
+											  nl   
+							init append result     nl init append context getfutureresult 0  get       nl   
+						  
+						init append       nl   
+					  
+				  
+ 
+				  
+				workingplugins addlast plugin evalerror e    
+				system err println  failed to load plugin   plugin getname     
+				failedplugins addall thispluginsignatures noclassdeffounderror e    
+				system err println  failed to load plugin   plugin getname     
+				system err println  missing e getmessage     
+				failedplugins addall thispluginsignatures   
+			  
+			workingplugins addlast plugin workingplugins init scriptexecutionexception nl   system getproperty  line separator pluginindex   0 stringbuffer init stringbuffer    
+		interpreter interpreter    
+		interpreter set  __main_context   context   
+		 
+		system out println  initializing all plugins plugindescriptor plugin   context getpluginmanager   getallplugins boot verbose    level all  system out println  initializing   plugin getname j   0  j   plugin getparametertypes   size    j      
+				signature signature   getsignature plugin  j availableplugins contains signature     
+					availableplugins add signature   
+					pluginindex    
+ 
+					interpreter set  __plugin_descriptor    pluginindex  plugin   
+					interpreter set  __plugin_method_index    pluginindex  j signature getreturntypes   size      1    
+						init append object getcanonicalname init append object getcanonicalname     
+					  
+					init append       signature getname index   0 cl   signature getparametertypes index   0    
+							init append        
+						  
+						init append cl getcanonicalname     
+						init append   p    index     
+					  
+ 
+					  
+					init append         nl   
+					init append          plugincontext getcanonicalname   
+							    context   __main_context createchildcontext \ result of     
+					init append signature getname      \       nl   
+ 
+					init append      __plugin_descriptor    pluginindex     invoke __plugin_method_index  
+							  pluginindex      context object getcanonicalname i   0  i   signature getparametertypes   size    i i   0    
+							init append        
+						  
+						init append  p    i   
+					  
+					init append          nl signature getreturntypes   size     1    
+						init append      context getresult   synchronize       nl   
+						init append          object getcanonicalname       result object getcanonicalname       context getresult   getsize        nl   
+						init 
+						 append i   0  i   result length  i      result i    context getresult   getresult i      
+								  nl   
+						init append result     nl init append context getfutureresult 0  get       nl   
+					  
+					init append       nl   
+					  
+				  
+			    
+    	    
+ 
+    	  
+    	interpreter eval init tostring evalerror e    
+			system err println  failed to load one of the plugins scriptexecutionexception e noclassdeffounderror e    
+			system err println  failed to load one of the plugins scriptexecutionexception  missing e getmessage signature getsignature plugindescriptor plugin index name plugin hasannotation cli name   plugin getannotation cli functionname name   plugin getname signature plugin getreturntypes    stringutils getjavaidentifier name   plugin 
+				 getparametertypes index bind name  object value scriptexecutionexception interpreter set name  value evalerror e scriptexecutionexception e list signature  getavailableplugins     
+		list signature  result arraylist signature  availableplugins   
+ 
+		collections sort result comparator signature compare signature a  signature b a getname   compareto b getname result  
+	  
+ 

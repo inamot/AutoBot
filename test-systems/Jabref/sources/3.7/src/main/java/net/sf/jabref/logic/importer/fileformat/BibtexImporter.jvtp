@@ -1,0 +1,55 @@
+ importer exists only enable `--importtoopen someentry bib not intended import bib file done via option action treats metadata fields metadata not required read here class not called import 
+    
+   signature written top bib file earlier versions  
+    
+        return true effective way decide whether file bibtex format not  see 
+               https   github com jabref jabref pull 379#issuecomment-158685726 details want check jabref signature file tell character encoding used read signature must using compatible 
+   encoding first place signature doesn't contain any fancy characters read regardless encoding either utf-8 utf-16 s hypothesis any rate  
+   8 bit most likely try first  
+   now not anywhere check 16 bit encoding  
+    
+       searches file encoding  myencoding returns found supplied encoding  
+        
+   line not start comment lines stop parsing 
+   only keep part signature line keep reading skip next line 
+   line starts encoding rest line contain name encoding 
+   except already symbol signaling starting bibentry 
+   line not recognized stop parsing 
+   ignored net sf jabref logic importer fileformat bibteximporter importer bibteximporter importformatpreferences importformatpreferences importformatpreferences   importformatpreferences  
+      
+      
+     override isrecognizedformat bufferedreader reader    
+        objects requirenonnull reader override parserresult importdatabase path filepath  charset defaultencoding ioexception   
+          
+          
+          
+          
+          
+        optional charset  suppliedencoding bufferedreader utf8reader   getutf8reader filepath     
+            suppliedencoding   getsuppliedencoding utf8reader suppliedencoding ispresent bufferedreader utf16reader   getutf16reader filepath     
+                suppliedencoding   getsuppliedencoding utf16reader suppliedencoding ispresent importdatabase filepath  suppliedencoding get importdatabase filepath  defaultencoding   
+          
+      
+ 
+     override parserresult importdatabase bufferedreader reader ioexception bibtexparser parse reader  importformatpreferences   
+      
+ 
+     override getname bibtex   
+      
+ 
+     override fileextensions getextensions fileextensions bibtex_db  
+      
+ 
+     override getdescription importer exists only to enable `--importtoopen someentry bib`\n    
+                 it is not intended to a bib file is done via the option action  which treats the metadata fields \n    
+                 the metadata is not required to be read here  as is not called at optional charset  getsuppliedencoding bufferedreader reader line line   reader readline line   line trim line startswith optional empty    
+                  
+ 
+                  
+                line   line substring 1  trim line startswith bibteximporter signature line startswith savepreferences encoding_prefix     
+                      
+                      
+                    integer atsymbolindex   line indexof encoding atsymbolindex   0    
+                        encoding   line substring savepreferences encoding_prefix length    atsymbolindex encoding   line substring savepreferences encoding_prefix length optional of charset forname encoding optional empty ioexception ignored optional empty    
+      
+ 

@@ -1,0 +1,57 @@
+ 
+   classify logs org processmining logskeleton pdc2016 plugins  
+ 
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+ 
+ plugin name    pdc 2016 test   parameterlabels       returnlabels      results     returntypes     pdc2016testmodel pdc2016testplugin   
+ 
+	 uitopiavariant affiliation   uitopiavariant ehv  author    h m w  verbeek   email    h m w verbeek tue nl   
+	 pluginvariant variantlabel requiredparameterlabels pdc2016testmodel run uiplugincontext context    
+		pdc2016testparameters testparameters pdc2016testparameters    
+		pdc2016testdialog testdialog pdc2016testdialog testparameters   
+		interactionresult result   context showwizard  select test parameters true  testdialog result    interactionresult finished    
+			context getfutureresult 0  cancel pdc2016testmodel testmodel pdc2016testmodel testparameters   
+		pdc2016parameters parameters pdc2016parameters    
+		pdc2016logalgorithm logalgorithm pdc2016logalgorithm    
+		 
+		xeventclassifier classifier logskeletonclassifier xeventnameclassifier i   testparameters getnrs      
+				parameters setnr i   
+				parameters setset pdc2016set train   
+				xlog traininglog   logalgorithm apply context  parameters   
+				parameters setset pdc2016set cal1   
+				xlog testlogmay   testparameters getsets   contains pdc2016set cal1  ? logalgorithm apply context  parameters parameters setset pdc2016set cal2   
+				xlog testlogjune   testparameters getsets   contains pdc2016set cal2  ? logalgorithm apply context  parameters parameters setset pdc2016set test   
+				xlog testlogfinal   testparameters getsets   contains pdc2016set test  ? logalgorithm apply context  parameters logskeletonclassifieralgorithm classifieralgorithm logskeletonclassifieralgorithm    
+ 
+				xlog classifiedtestlogcal1 xlog classifiedtestlogcal2 xlog classifiedtestlogtest testparameters getsets   contains pdc2016set cal1     
+					system out println   pdc2016testplugin  classify pdc2016     pdc2016set cal1     number     i   
+					classifiedtestlogcal1   classifieralgorithm apply context  traininglog  testlogmay  classifier logpreprocessoralgorithm     
+					context getprovidedobjectmanager   createprovidedobject  pdc2016     pdc2016set cal1     number     i  
+							classifiedtestlogcal1  xlog context testparameters getsets   contains pdc2016set cal2     
+					system out println   pdc2016testplugin  classify pdc2016     pdc2016set cal2     number     i   
+					classifiedtestlogcal2   classifieralgorithm apply context  traininglog  testlogjune  classifier logpreprocessoralgorithm     
+					context getprovidedobjectmanager   createprovidedobject  pdc2016     pdc2016set cal2     number     i  
+							classifiedtestlogcal2  xlog context testparameters getsets   contains pdc2016set test     
+					system out println   pdc2016testplugin  classify pdc2016     pdc2016set test     number     i   
+					classifiedtestlogtest   classifieralgorithm apply context  traininglog  testlogfinal  classifier logpreprocessoralgorithm     
+					context getprovidedobjectmanager   createprovidedobject  pdc2016     pdc2016set test     number     i  
+							classifiedtestlogtest  xlog context   
+				  
+				testmodel add i  classifiedtestlogcal1  classifiedtestlogcal2  classifiedtestlogtest testmodel exception e    
+			e printstacktrace 

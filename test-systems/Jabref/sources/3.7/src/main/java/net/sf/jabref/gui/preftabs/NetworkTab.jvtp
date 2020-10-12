@@ -1,0 +1,89 @@
+ 
+   listener useproxycheckbox enable disable proxy related settings empty proxy passwords currently supported make sense case anyway  net sf jabref gui preftabs networktab jpanel prefstab networktab jabrefpreferences preferences preferences   preferences  
+ 
+        setlayout borderlayout     
+ 
+        useproxycheckbox jcheckbox localization lang  use custom proxy configuration     
+ 
+        hostnametextfield jtextfield    
+        hostnametextfield setenabled porttextfield jtextfield    
+        porttextfield setenabled useauthenticationcheckbox jcheckbox localization lang  proxy requires authentication     
+        useauthenticationcheckbox setenabled usernametextfield jtextfield    
+        usernametextfield setenabled passwordtextfield jpasswordfield    
+        passwordtextfield setenabled jlabel passwordwarninglabel jlabel localization lang  attention  password is stored in plain text      
+        passwordwarninglabel setenabled passwordwarninglabel setforeground color red   
+ 
+        insets margin insets 0  12  3  0   
+        useproxycheckbox setmargin margin   
+        porttextfield setmargin margin   
+        useauthenticationcheckbox setmargin margin   
+ 
+          
+        useproxycheckbox addchangelistener event -    
+            hostnametextfield setenabled useproxycheckbox isselected     
+            porttextfield setenabled useproxycheckbox isselected     
+            useauthenticationcheckbox setenabled useproxycheckbox isselected     
+            
+ 
+        useauthenticationcheckbox addchangelistener event -    
+            usernametextfield setenabled useproxycheckbox isselected      useauthenticationcheckbox isselected     
+            passwordtextfield setenabled useproxycheckbox isselected      useauthenticationcheckbox isselected     
+            passwordwarninglabel setenabled useproxycheckbox isselected      useauthenticationcheckbox isselected     
+            
+ 
+        formlayout layout formlayout  8dlu  left pref  4dlu  left pref  4dlu  fill 150dlu   
+                 p  2dlu  p  2dlu  p  2dlu  p  2dlu  p  2dlu  p  2dlu  p  p    
+        formbuilder builder   formbuilder create   layout layout   
+ 
+        builder addseparator localization lang  network    xyw 1  1  6   
+        builder add useproxycheckbox  xyw 2  3  5   
+        builder add localization lang  hostname     ' '  xy 2  5   
+        builder add hostnametextfield  xyw 4  5  3   
+        builder add localization lang  port     ' '  xy 2  7   
+        builder add porttextfield  xyw 4  7  3   
+        builder add useauthenticationcheckbox  xyw 4  9  3   
+        builder add localization lang  username     ' '  xy 4  11   
+        builder add usernametextfield  xy 6  11   
+        builder add localization lang  password     ' '  xy 4  13   
+        builder add passwordtextfield  xy 6  13   
+        builder add passwordwarninglabel  xy 6  14   
+ 
+        jpanel pan   builder getpanel    
+        pan setborder borderfactory createemptyborder 5  5  5  5    
+        add pan  borderlayout center   
+      
+ 
+     override setvalues     
+        proxypreferences proxypreferences   preferences getproxypreferences    
+        useproxycheckbox setselected proxypreferences isuseproxy     
+        hostnametextfield settext proxypreferences gethostname     
+        porttextfield settext proxypreferences getport     
+ 
+        useauthenticationcheckbox setselected proxypreferences isuseauthentication     
+        usernametextfield settext proxypreferences getusername     
+        passwordtextfield settext proxypreferences getpassword     
+ 
+        oldproxypreferences   proxypreferences  
+      
+ 
+     override storesettings useproxy   useproxycheckbox isselected hostname   hostnametextfield gettext   trim port   porttextfield gettext   trim useauthentication   useauthenticationcheckbox isselected username   usernametextfield gettext   trim password passwordtextfield getpassword     
+        proxypreferences proxypreferences proxypreferences useproxy  hostname  port  useauthentication  username  
+                password proxypreferences equals oldproxypreferences     
+            proxyregisterer register proxypreferences   
+          
+        preferences storeproxypreferences proxypreferences   
+      
+ 
+     override validatesettings validsetting validauthenticationsetting useproxycheckbox isselected host   hostnametextfield gettext port   porttextfield gettext host host trim   isempty       port port trim   isempty      
+                validsetting integer p p   integer parseint port   
+                    validsetting   p   0 numberformatexception e    
+                    validsetting useauthenticationcheckbox isselected username   usernametextfield gettext password   passwordtextfield getpassword username username trim   isempty       password password length    0     
+                    validauthenticationsetting validsetting validauthenticationsetting validsetting validsetting validauthenticationsetting    
+                joptionpane showmessagedialog localization lang  please specify both hostname and port    
+                        localization lang  invalid setting    joptionpane error_message joptionpane showmessagedialog localization lang  please specify both username and password    
+                        localization lang  invalid setting    joptionpane error_message validsetting  
+      
+ 
+     override gettabname localization lang  network    
+      
+ 

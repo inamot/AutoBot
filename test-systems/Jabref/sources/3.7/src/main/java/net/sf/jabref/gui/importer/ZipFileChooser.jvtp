@@ -1,0 +1,156 @@
+ 
+    
+   dialog allow users choose file contained zip file  
+   
+    author andreas_sf rudert-home dot de 
+    
+    
+       new zip file chooser  
+       
+        param owner  owner file chooser 
+        param zipfile  zip-fle choose must readable 
+        
+   cancel entry selected 
+   ok selected class check instantiable importer 
+   key bindings  
+  actionmap mainpanel getactionmap    
+  inputmap im   mainpanel getinputmap jcomponent when_in_focused_window   
+  im put globals getkeyprefs   getkey keybinds close_dialog    close put  close   closeaction   
+    
+       entries selected dialog  
+       
+        param zipfile  zip-file 
+        return  entries selected 
+        
+   
+         non-javadoc  
+        see java awt component#getsize   
+        
+    
+       table model zip archive contents  
+       
+        p contains one row each entry not contain rows directory entries   p  
+       
+        p columns contain information zip file entries  
+        ol  li  
+         name   link string  
+         li  li  
+         time last modification   link date  
+         li  li  
+         size  uncompressed    link long  
+         li   ol   p  
+        
+   
+             non-javadoc  
+            see javax swing table tablemodel#getcolumncount   
+            
+   
+             non-javadoc  
+            see javax swing table tablemodel#getrowcount   
+            
+   
+             non-javadoc  
+            see javax swing table tablemodel#getcolumnname int  
+            
+    
+           zip-file entry given row index  
+           
+            param rowindex  row index 
+            return  zip file entry 
+            
+    
+           zip file contains entries model  
+           
+            return zip file 
+            
+   
+             non-javadoc  
+            see javax swing table tablemodel#getvalueat int  int  
+            net sf jabref gui importer zipfilechooser jdialog zipfilechooser importcustomizationdialog importcustomizationdialog  zipfile zipfile importcustomizationdialog  localization lang  select file from zip-archive zipfilechoosertablemodel tablemodel zipfilechoosertablemodel zipfile  getselectablezipentries zipfile    
+        jtable table jtable tablemodel   
+        tablecolumnmodel cm   table getcolumnmodel    
+        cm getcolumn 0  setpreferredwidth 200   
+        cm getcolumn 1  setpreferredwidth 150   
+        cm getcolumn 2  setpreferredwidth 100   
+        jscrollpane sp jscrollpane table  scrollpaneconstants vertical_scrollbar_as_needed  
+                scrollpaneconstants horizontal_scrollbar_never   
+        table setselectionmode listselectionmodel single_selection   
+        table setpreferredscrollableviewportsize dimension 500  150 table getrowcount     0    
+            table setrowselectioninterval 0  0   
+          
+        guiutil correctrowheight table   
+ 
+          
+        jbutton cancelbutton jbutton localization lang  cancel     
+        cancelbutton addactionlistener e -  dispose     
+          
+        jbutton okbutton jbutton localization lang  ok     
+        okbutton addactionlistener e row   table getselectedrow row    -1    
+                joptionpane showmessagedialog localization lang  please select an importer zipfilechoosertablemodel model    zipfilechoosertablemodel  table getmodel    
+                zipentry tempzipentry   model getzipentry row classname   tempzipentry getname   substring 0  tempzipentry getname   lastindexof ' '   replace customimporter importer customimporter model getzipfile   getname    classname   
+  
+                    dispose classnotfoundexception exc    
+                    logger warn  could not instantiate importer      classname  exc   
+                    joptionpane showmessagedialog localization lang  could not instantiate %0 %1   
+                            classname     \n   exc getmessage      
+                  
+              
+            
+ 
+ 
+          
+        jpanel mainpanel jpanel    
+          
+          
+          
+          
+        mainpanel setlayout borderlayout     
+        mainpanel add sp  borderlayout center   
+ 
+        jpanel optionspanel jpanel    
+        optionspanel add okbutton   
+        optionspanel add cancelbutton   
+        optionspanel add box createhorizontalstrut 5    
+ 
+        getcontentpane   add mainpanel  borderlayout center   
+        getcontentpane   add optionspanel  borderlayout south setsize getsize     
+        pack setlocationrelativeto importcustomizationdialog   
+        table requestfocus list zipentry  getselectablezipentries zipfile zipfile    
+        list zipentry  entries arraylist      
+        enumeration zipentry  e   zipfile entries zipentry entry   collections list e entry isdirectory      entry getname   endswith entries add entry entries  
+      
+ 
+      
+     override dimension getsize dimension 400  300 zipfilechoosertablemodel abstracttablemodel list columnnames   arrays aslist localization lang  name    
+                localization lang  last modified    localization lang  size     
+  
+  
+ 
+ 
+        zipfilechoosertablemodel zipfile zipfile  list zipentry  rows rows   rows zipfile   zipfile  
+          
+ 
+          
+         override getcolumncount columnnames size    
+          
+ 
+          
+         override getrowcount rows size    
+          
+ 
+          
+         override getcolumnname col columnnames get col zipentry getzipentry rowindex rows get rowindex zipfile getzipfile zipfile  
+          
+ 
+          
+         override object getvalueat rowindex columnindex    
+            object value zipentry entry   getzipentry rowindex columnindex    0    
+                value   entry getname columnindex    1    
+                value   zoneddatetime ofinstant date entry gettime    toinstant    
+                        zoneid systemdefault    
+                         format datetimeformatter oflocalizeddatetime formatstyle medium columnindex    2    
+                value   entry getsize value  
+          
+      
+ 
+ 

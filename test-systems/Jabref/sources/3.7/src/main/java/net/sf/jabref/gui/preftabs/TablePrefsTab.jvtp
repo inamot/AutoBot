@@ -1,0 +1,212 @@
+ 
+    
+       customization external program paths  
+       
+        param prefs code jabrefpreferences  code  value 
+        
+    
+           added bibtexkey combobox  
+           
+             1540646   default sort order  bibtexkey 
+           
+           http   sourceforge net tracker index php?func detail aid 1540646 group_id 92314 atid 600306 
+            
+   create new panel formlayout items  
+    
+       store changes table preferences method called user 
+       clicks ok  
+       
+        
+   updatefont net sf jabref gui preftabs tableprefstab jpanel prefstab tableprefstab jabrefpreferences prefs prefs   prefs  
+        setlayout borderlayout     
+ 
+          
+        list fieldnames   internalbibtexfields getallpublicfieldnames    
+        fieldnames add bibentry key_field   
+        collections sort fieldnames allpluskey   fieldnames toarray fieldnames size      
+        prisort jcombobox   allpluskey   
+        secsort jcombobox   allpluskey   
+        tersort jcombobox   allpluskey   
+ 
+        autoresizemode jcheckbox localization lang  fit table horizontally on screen     
+ 
+        namesasis jradiobutton localization lang  show names unchanged     
+        namesff jradiobutton localization lang  show 'firstname lastname'     
+        namesfl jradiobutton localization lang  show 'lastname  firstname'     
+        namesnatbib jradiobutton localization lang  natbib style     
+        noabbrnames jradiobutton localization lang not abbreviate names     
+        abbrnames jradiobutton localization lang  abbreviate names     
+        lastnamesonly jradiobutton localization lang  show last names only     
+ 
+        floatmarked jcheckbox localization lang marked entries     
+ 
+        prifield jtextfield 10   
+        secfield jtextfield 10   
+        terfield jtextfield 10   
+ 
+        numericfields jtextfield 30   
+ 
+        prisort insertitemat localization lang   select     0   
+        secsort insertitemat localization lang   select     0   
+        tersort insertitemat localization lang   select     0   
+ 
+        prisort addactionlistener e prisort getselectedindex     0    
+                prifield settext prisort getselecteditem   tostring     
+                prisort setselectedindex 0   
+              
+            
+        secsort addactionlistener e secsort getselectedindex     0    
+                secfield settext secsort getselecteditem   tostring     
+                secsort setselectedindex 0   
+              
+            
+        tersort addactionlistener e tersort getselectedindex     0    
+                terfield settext tersort getselecteditem   tostring     
+                tersort setselectedindex 0   
+              
+            
+ 
+        buttongroup namestyle buttongroup    
+        namestyle add namesasis   
+        namestyle add namesnatbib   
+        namestyle add namesff   
+        namestyle add namesfl   
+        buttongroup nameabbrev buttongroup    
+        nameabbrev add lastnamesonly   
+        nameabbrev add abbrnames   
+        nameabbrev add noabbrnames   
+        pridesc jcheckbox localization lang  descending     
+        secdesc jcheckbox localization lang  descending     
+        terdesc jcheckbox localization lang  descending     
+ 
+        formlayout layout formlayout  
+                 1dlu  8dlu  left pref  4dlu  fill pref  4dlu  fill 60dlu  4dlu  fill pref        
+        defaultformbuilder builder defaultformbuilder layout   
+        jlabel lab  
+        jpanel pan jpanel    
+ 
+        builder appendseparator localization lang  format of author and editor names     
+        defaultformbuilder namebuilder defaultformbuilder formlayout  
+                 left pref  8dlu  left pref         
+ 
+        namebuilder append namesasis   
+        namebuilder append noabbrnames   
+        namebuilder nextline    
+        namebuilder append namesff   
+        namebuilder append abbrnames   
+        namebuilder nextline    
+        namebuilder append namesfl   
+        namebuilder append lastnamesonly   
+        namebuilder nextline    
+        namebuilder append namesnatbib   
+        builder append pan   
+        builder append namebuilder getpanel     
+        builder nextline    
+ 
+        builder appendseparator localization lang sort criteria     
+          
+        formlayout layout2 formlayout  
+                 left pref  8dlu  fill pref  4dlu  fill 60dlu  4dlu  left pref        
+        defaultformbuilder builder2 defaultformbuilder layout2   
+        lab jlabel localization lang  primary sort criterion     
+        builder2 append lab   
+        builder2 append prisort   
+        builder2 append prifield   
+        builder2 append pridesc   
+        builder2 nextline    
+        lab jlabel localization lang  secondary sort criterion     
+        builder2 append lab   
+        builder2 append secsort   
+        builder2 append secfield   
+        builder2 append secdesc   
+        builder2 nextline    
+        lab jlabel localization lang  tertiary sort criterion     
+        builder2 append lab   
+        builder2 append tersort   
+        builder2 append terfield   
+        builder2 append terdesc   
+        builder nextline    
+        builder append pan   
+        builder append builder2 getpanel     
+        builder nextline    
+        builder append pan   
+        builder append floatmarked   
+        builder nextline    
+        builder append pan   
+        builder2 defaultformbuilder formlayout  left pref  8dlu  fill pref         
+        builder2 append localization lang  sort the following fields as numeric fields     ' '   
+        builder2 append numericfields   
+        builder append builder2 getpanel    5   
+        builder nextline    
+        builder appendseparator localization lang  general     
+        builder append pan   
+        builder append autoresizemode   
+        builder nextline    
+ 
+        pan   builder getpanel    
+        pan setborder borderfactory createemptyborder 5  5  5  5    
+        add pan  borderlayout center   
+ 
+        namesnatbib addchangelistener e -    
+            abbrnames setenabled  namesnatbib isselected     
+            lastnamesonly setenabled  namesnatbib isselected     
+            noabbrnames setenabled  namesnatbib isselected     
+            
+      
+ 
+     override setvalues     
+        autoresizemode 
+         setselected prefs getint jabrefpreferences auto_resize_mode     jtable auto_resize_all_columns   
+ 
+        prifield settext prefs get jabrefpreferences table_primary_sort_field    
+        secfield settext prefs get jabrefpreferences table_secondary_sort_field    
+        terfield settext prefs get jabrefpreferences table_tertiary_sort_field    
+        prisort setselectedindex 0   
+        secsort setselectedindex 0   
+        tersort setselectedindex 0 prefs getboolean jabrefpreferences names_as_is     
+            namesasis setselected prefs getboolean jabrefpreferences names_first_last     
+            namesff setselected prefs getboolean jabrefpreferences names_natbib     
+            namesnatbib setselected namesfl setselected prefs getboolean jabrefpreferences abbr_author_names     
+            abbrnames setselected prefs getboolean jabrefpreferences names_last_only     
+            lastnamesonly setselected noabbrnames setselected pridesc setselected prefs getboolean jabrefpreferences table_primary_sort_descending    
+        secdesc setselected prefs getboolean jabrefpreferences table_secondary_sort_descending    
+        terdesc setselected prefs getboolean jabrefpreferences table_tertiary_sort_descending    
+ 
+        floatmarked setselected prefs getboolean jabrefpreferences float_marked_entries    
+ 
+        abbrnames setenabled  namesnatbib isselected     
+        lastnamesonly setenabled  namesnatbib isselected     
+        noabbrnames setenabled  namesnatbib isselected numf   prefs get jabrefpreferences numeric_fields numf numericfields settext numericfields settext numf   
+          
+ 
+      
+ 
+      
+     override storesettings     
+ 
+        prefs putboolean jabrefpreferences names_as_is  namesasis isselected     
+        prefs putboolean jabrefpreferences names_first_last  namesff isselected     
+        prefs putboolean jabrefpreferences names_natbib  namesnatbib isselected     
+        prefs putboolean jabrefpreferences names_last_only  lastnamesonly isselected     
+        prefs putboolean jabrefpreferences abbr_author_names  abbrnames isselected     
+ 
+        prefs putint jabrefpreferences auto_resize_mode  
+                autoresizemode isselected   ? jtable auto_resize_all_columns   jtable auto_resize_off   
+        prefs putboolean jabrefpreferences table_primary_sort_descending  pridesc isselected     
+        prefs putboolean jabrefpreferences table_secondary_sort_descending  secdesc isselected     
+        prefs putboolean jabrefpreferences table_tertiary_sort_descending  terdesc isselected     
+        prefs put jabrefpreferences table_primary_sort_field  prifield gettext   tolowercase   trim     
+        prefs put jabrefpreferences table_secondary_sort_field  secfield gettext   tolowercase   trim     
+        prefs put jabrefpreferences table_tertiary_sort_field  terfield gettext   tolowercase   trim     
+ 
+        prefs putboolean jabrefpreferences float_marked_entries  floatmarked isselected oldval   prefs get jabrefpreferences numeric_fields newval   numericfields gettext   trim newval isempty      
+            newval objects equals oldval  newval     
+            prefs put jabrefpreferences numeric_fields  newval   
+            internalbibtexfields setnumericfields globals prefs getstringlist jabrefpreferences numeric_fields    
+          
+ 
+      
+ 
+     override validatesettings override gettabname localization lang  entry table    
+      
+ 

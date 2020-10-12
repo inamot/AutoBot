@@ -1,0 +1,103 @@
+ 
+    
+   imports biblioscape tag file format described http   www biblioscape com manual_bsp biblioscape_tag_file htm 
+   several biblioscape field types ignored  others only included bibtex 
+   field  comment strategy look ty  -    line  
+  use optional here exception thrown file empty 
+   inbook   
+   normalize whitespaces month part unparseable ignore added id import 2005 12 01  morten alver  
+   fix authors 
+   id assumes existing database don't 
+   remove empty fields  
+   create one here net sf jabref logic importer fileformat risimporter importer   
+ 
+  
+ 
+ 
+     override getname ris   
+      
+ 
+     override fileextensions getextensions fileextensions ris  
+      
+ 
+     override getdescription imports a biblioscape tag file    
+      
+ 
+     override isrecognizedformat bufferedreader reader ioexception reader lines   anymatch line -  recognized_format_pattern matcher line  find     
+      
+ 
+     override parserresult importdatabase bufferedreader reader ioexception   
+        list bibentry  bibitems arraylist      
+ 
+          
+        optional optionallines   reader lines   reduce  line  nextline  -  line    \n    nextline linesasstring   optionallines ispresent   ? optionallines get entries   linesasstring replace  \u2013    -   replace  \u2014    --   replace  \u2015    --   
+                 split  er  -  \\n entry1   entries type author editor startpage endpage comment       
+            map string  fields hashmap lines   entry1 split  \n j   0  j   lines length  j      
+                stringbuilder current stringbuilder lines j done done     j    lines length - 1 lines j   1  length      6         -   equals lines j   1  substring 2  6 current length     0      character iswhitespace current charat current length   - 1   
+                                    character iswhitespace lines j   1  charat 0      
+                            current append ' '   
+                          
+                        current append lines j   1    
+                        j done entry   current tostring entry length     6 tag   entry substring 0  2 value   entry substring 6  trim ty  equals tag book  equals value     
+                            type    book jour  equals value      mgzn  equals value     
+                            type    article thes  equals value     
+                            type    phdthesis unpb  equals value     
+                            type    unpublished rprt  equals value     
+                            type    techreport conf  equals value     
+                            type    inproceedings chap  equals value     
+                            type    incollection pat  equals value     
+                            type    patent type    other t1  equals tag      ti  equals tag oldval   fields get fieldname title oldval fields put fieldname title  value oldval endswith         oldval endswith         oldval endswith  ?      
+                                fields put fieldname title  oldval         value fields put fieldname title  oldval          value   
+                              
+                          
+                        fields put fieldname title  fields get fieldname title  replaceall  \\s bt  equals tag     
+                        fields put fieldname booktitle  value t2  equals tag      jo  equals tag     
+                        fields put fieldname journal  value t3  equals tag     
+                        fields put fieldname series  value au  equals tag      a1  equals tag equals author     
+                            author   value author      and     value a2  equals tag      a3  equals tag      a4  equals tag editor isempty      
+                            editor   value editor      and     value ja  equals tag      jf  equals tag inproceedings  equals type     
+                            fields put fieldname booktitle  value fields put fieldname journal  value la  equals tag     
+                        fields put fieldname language  value ca  equals tag     
+                        fields put  caption   value db  equals tag     
+                        fields put  database   value is  equals tag     
+                        fields put fieldname number  value sp  equals tag     
+                        startpage   value pb  equals tag phdthesis  equals type     
+                            fields put fieldname school  value fields put fieldname publisher  value ad  equals tag      cy  equals tag     
+                        fields put fieldname address  value ep  equals tag     
+                        endpage   value endpage isempty      
+                            endpage    --    endpage et  equals tag     
+                        fields put fieldname edition  value sn  equals tag     
+                        fields put fieldname issn  value vl  equals tag     
+                        fields put fieldname volume  value n2  equals tag      ab  equals tag oldab   fields get fieldname oldab fields put fieldname value fields put fieldname oldab   os newline   value ur  equals tag     
+                        fields put fieldname url  value y1  equals tag      py  equals tag      da  equals tag       value length      4     
+                        fields put fieldname year  value substring 0  4 parts   value split parts length   1      parts 1  isempty monthnumber   integer parseint parts 1    
+                                monthutil month month   monthutil getmonthbynumber monthnumber month isvalid      
+                                    fields put fieldname month  month bibtexformat numberformatexception ex kw  equals tag fields containskey fieldname keywords kw   fields get fieldname keywords   
+                            fields put fieldname keywords  kw          value fields put fieldname keywords  value u1  equals tag      u2  equals tag      n1  equals tag comment isempty      
+                            comment   comment        
+                          
+                        comment   comment   value id  equals tag     
+                        fields put  refid   value m3  equals tag equals tag     
+                        adddoi fields  value author isempty      
+                    author   authorlist fixauthorlastnamefirst author   
+                    fields put fieldname author  author editor isempty      
+                    editor   authorlist fixauthorlastnamefirst editor   
+                    fields put fieldname editor  editor comment isempty      
+                    fields put  comment   comment   
+                  
+ 
+                fields put fieldname pages  startpage   endpage   
+              
+            bibentry b bibentry default_bibtexentry_id  type     
+ 
+              
+            fields entryset   removeif key -   key getvalue key getvalue   trim   isempty     
+ 
+              
+            b setfield fields   
+            bibitems add b parserresult bibitems adddoi map string  hm val doi   val tolowercase locale english doi startswith  doi       
+            doi   doi replaceall   ?i doi        trim    
+            hm put fieldname doi  doi   
+          
+      
+ 

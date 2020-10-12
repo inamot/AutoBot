@@ -1,0 +1,136 @@
+ 
+   used detect string references strings 
+   save actions defined -  apply every entry 
+   take care  using crossrefentry-comparator referred entries occur referring 
+   ones necessary requirement bibtex to resolve referenced entries correctly  
+   entries sorted based internal ids 
+   use configured sorting strategy begun use getsortedentries both database save operations non-database save operations non-database save operation exportdatabase call not wish use global preference saving standard order meta data present  simply return original order 
+   three options  
+           1  original order 
+           2  order specified metadata 
+           3  order specified preferences 
+            
+    
+       saves complete database  
+        
+    
+       saves database  including only specified entries  
+        
+   map collect entry type definitions must save along entries using some file formats write something start file encoding  
+   write preamble one  
+   write strings any  
+   write database entries  
+   check must write type definition entry well criterion non-standard 
+   types   not customized standard types  must written user-defined entry type add otherwise  gettype returns empty optional completely unknown entry type ignore write meta data  
+   write type definitions any  
+  finally write whatever remains file least concluding newline 
+    
+       writes data specified writer  using each object's tostring   method  
+        
+    
+       write strings alphabetical order  modified produce safe bibtex  order strings reference each param database database whose strings write  
+        
+   first  make map entries  
+   first remove remaining  list t cause problem circular refs go through string looking references strings find references strings write still haven't write those before proceeding ensures string order acceptable bibtex label found exists key remaining  map go write now  net sf jabref logic exporter bibdatabasewriter e savesession bibdatabasewriter savesessionfactory e  savesessionfactory savesessionfactory   savesessionfactory savesessionfactory e savesession    
+        e createsavesession charset encoding makebackup saveexception list fieldchange  applysaveactions list bibentry  tochange  metadata metadata    
+        list fieldchange  changes arraylist      
+ 
+        optional fieldformattercleanups  saveactions   metadata getsaveactions    
+        saveactions ifpresent actions bibentry entry   tochange    
+                changes addall actions applysaveactions entry changes list fieldchange  applysaveactions bibentry entry  metadata metadata applysaveactions arrays aslist entry   metadata list comparator bibentry   getsavecomparators savepreferences preferences  metadata metadata    
+ 
+        list comparator bibentry   comparators arraylist      
+        optional saveorderconfig  saveorder   getsaveorder preferences  metadata   
+ 
+          
+          
+        comparators add crossrefentrycomparator saveorder ispresent      
+              
+            comparators add idcomparator comparators add fieldcomparator saveorder get   sortcriteria 0     
+            comparators add fieldcomparator saveorder get   sortcriteria 1     
+            comparators add fieldcomparator saveorder get   sortcriteria 2     
+ 
+            comparators add fieldcomparator bibentry key_field comparators list bibentry  getsortedentries bibdatabasecontext bibdatabasecontext  list bibentry  entriestosort  
+            savepreferences preferences    
+        objects requirenonnull bibdatabasecontext   
+        objects requirenonnull entriestosort bibdatabasecontext getmetadata list bibentry  result linkedlist      
+            result addall entriestosort result  
+          
+ 
+        list comparator bibentry   comparators   bibdatabasewriter getsavecomparators preferences  
+                bibdatabasecontext getmetadata     
+        fieldcomparatorstack bibentry  comparatorstack fieldcomparatorstack   comparators   
+ 
+        list bibentry  sorted arraylist      
+        sorted addall entriestosort   
+ 
+        collections sort sorted  comparatorstack sorted optional saveorderconfig  getsaveorder savepreferences preferences  metadata metadata preferences issaveinoriginalorder optional empty preferences gettakemetadatasaveorderinaccount metadata getsaveorderconfig optional ofnullable preferences getsaveorder e savedatabase bibdatabasecontext bibdatabasecontext  savepreferences preferences saveexception savepartofdatabase bibdatabasecontext  bibdatabasecontext getdatabase   getentries    preferences e savepartofdatabase bibdatabasecontext bibdatabasecontext  
+            list bibentry  entries  savepreferences preferences saveexception   
+ 
+        session   savesessionfactory createsavesession preferences getencodingordefault    preferences getmakebackup     
+ 
+        optional shareddatabaseidoptional   bibdatabasecontext getdatabase   getshareddatabaseid shareddatabaseidoptional ispresent      
+            writedatabaseid shareddatabaseidoptional get     
+          
+ 
+          
+        map entrytype  typestowrite treemap preferences getsavetype      savepreferences databasesavetype plain_bibtex    
+            writeprelogue bibdatabasecontext  preferences getencoding     
+          
+ 
+          
+        writepreamble bibdatabasecontext getdatabase   getpreamble   orelse       
+ 
+          
+        writestrings bibdatabasecontext getdatabase    preferences isreformatfile    
+                preferences getlatexfieldformatterpreferences     
+ 
+          
+        list bibentry  sortedentries   getsortedentries bibdatabasecontext  entries  preferences   
+        list fieldchange  saveactionchanges   applysaveactions sortedentries  bibdatabasecontext getmetadata     
+        session addfieldchanges saveactionchanges bibentry entry   sortedentries entrytypes getstandardtype entry gettype    bibdatabasecontext getmode    ispresent      
+                  
+                  
+                entrytypes gettype entry gettype    bibdatabasecontext getmode    ifpresent  
+                        entrytype -  typestowrite put entrytype getname    entrytype    
+              
+ 
+            writeentry entry  bibdatabasecontext getmode    preferences isreformatfile    
+                    preferences getlatexfieldformatterpreferences preferences getsavetype      savepreferences databasesavetype plain_bibtex    
+              
+            writemetadata bibdatabasecontext getmetadata    preferences getglobalcitekeypattern     
+ 
+              
+            writeentrytypedefinitions typestowrite   
+          
+ 
+          
+        writeepilogue bibdatabasecontext getdatabase   getepilog session getwriter   close ioexception e saveexception e session writeprelogue bibdatabasecontext bibdatabasecontext  charset encoding saveexception writeentry bibentry entry  bibdatabasemode mode isreformatfile  
+            latexfieldformatterpreferences latexfieldformatterpreferences saveexception writeepilogue epilogue saveexception writemetadata metadata metadata  globalbibtexkeypattern globalcitekeypattern saveexception   
+        objects requirenonnull metadata   
+ 
+        map string  serializedmetadata   metadataserializer getserializedstringmap metadata  
+                globalcitekeypattern map entry string  metaitem   serializedmetadata entryset      
+            writemetadataitem metaitem writemetadataitem map entry string  metaitem saveexception writepreamble preamble saveexception writedatabaseid shareddatabaseid saveexception writestrings bibdatabase database reformatfile  
+            latexfieldformatterpreferences latexfieldformatterpreferences saveexception   
+        list bibtexstring  strings   database getstringkeyset   stream   map database  getstring  collect  
+                collectors tolist     
+        strings sort bibtexstringcomparator map bibtexstring  remaining hashmap maxkeylength   0 bibtexstring strings    
+            remaining put getname maxkeylength   math max maxkeylength getname   length bibtexstring type t   bibtexstring type values isfirststringintype bibtexstring bs   strings remaining containskey bs getname        bs gettype      t     
+                    writestring bs  isfirststringintype  remaining  maxkeylength  reformatfile  
+                            latexfieldformatterpreferences   
+                    isfirststringintype writestring bibtexstring bibtexstring isfirststring  map bibtexstring  remaining maxkeylength reformatfile  latexfieldformatterpreferences latexfieldformatterpreferences saveexception   
+          
+        remaining remove bibtexstring getname content   bibtexstring getcontent    
+        matcher m m   reference_pattern matcher content   find foundlabel   m group 1 restindex   content indexof foundlabel    foundlabel length    
+            content   content substring restindex label   foundlabel substring 1  foundlabel length   - 1 remaining containskey label     
+                bibtexstring referred   remaining get label   
+                writestring referred  isfirststring  remaining  maxkeylength  reformatfile  
+                        latexfieldformatterpreferences   
+              
+          
+ 
+        writestring bibtexstring  isfirststring  maxkeylength  reformatfile  latexfieldformatterpreferences writestring bibtexstring bibtexstring isfirststring maxkeylength reformatfile  latexfieldformatterpreferences latexfieldformatterpreferences saveexception writeentrytypedefinitions map entrytype  types saveexception entrytype type   types values type customentrytype    
+                writeentrytypedefinition  customentrytype  type writeentrytypedefinition customentrytype customtype saveexception savesession getactivesession session  
+      
+ 

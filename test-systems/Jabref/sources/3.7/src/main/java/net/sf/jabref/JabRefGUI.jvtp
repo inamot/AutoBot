@@ -1,0 +1,115 @@
+ 
+   passed file take first one focused property set make mac osx java vm move menu bar top screen 
+   set antialiasing everywhere only works jre    1 5 doesn't work  period  
+   todo test maybe remove found commented out additional info   payload lavabit com   
+   enabled jabref 2 11 beta 4 
+   default lcd  instead http   wiki netbeans org faqfontrendering http   docs oracle com javase 6 docs technotes guides 2d flags html#aafonts 
+   look feel must first thing before loading any swing-specific code option enabled  open last edited databases any  
+   add bibdatabases databases frame  
+   define focused tab not open original file 
+   things appended opened tab done opening tabs 
+   add list 
+   finally add things currently opened tab set remember window location remember maximised 
+   state needs set window made visible here  
+   display warnings any adding databases  go through each see any post open actions need done instance  checking found new entry types imported checking database contents modified due new features version jabref  
+   note check whether not go over getbasepanelcount importtoopen might used adds loadeddatabases not getbasepanelcount   
+   already parsed via command line parameter  e g    jabref jar somefile bib  
+   fixme  problems openjdk gtk l f 
+   see https   github com jabref jabref issues 393  https   github com jabref jabref issues 638 
+   metal l f 
+   fixme  open jdk problem 
+   try avoid ending up ugly metal l f 
+   specified look feel not exist classpath use system l f set system l f default 
+   notify user jabref v2 8 only non-mac  now try platforms 
+   only used testing not set mainframe    net sf jabref jabrefgui jabrefgui list parserresult  argsdatabases isblank bibdatabases   argsdatabases isblank   isblank  
+ 
+          
+        focusedfile   argsdatabases stream   findfirst   flatmap parserresult  getfile  map file  getabsolutepath  
+                 orelse globals prefs get jabrefpreferences last_focused    
+ 
+        openwindow    
+        jabrefgui checkfornewversion checkfornewversion manualexecution    
+        version tobeignored   globals prefs getversionpreferences   getignoredversion    
+        version currentversion   globals build_info getversion versionworker jabrefgui getmainframe    manualexecution  currentversion  tobeignored  execute openwindow os os_x    
+            system setproperty  apple laf usescreenmenubar system setproperty  swing aatext system setproperty  awt usesystemaafontsettings    lcd    
+ 
+          
+        setlookandfeel isblank    globals prefs getboolean jabrefpreferences open_last_edited     
+            openlastediteddatabases    
+          
+ 
+        guiglobals init    
+ 
+        logger debug  initializing frame    
+        jabrefgui mainframe jabrefframe first bibdatabases isempty iterator parserresult  parserresultiterator   bibdatabases iterator    parserresultiterator hasnext       
+                parserresult pr   parserresultiterator next pr getfile   get   getabsolutepath   equals focusedfile     
+                    first pr isinvalid      
+                    failed add pr   
+                    parserresultiterator remove pr getdatabase   isshared shareddatabaseuimanager mainframe  openshareddatabasefromparserresult pr sqlexception   databasenotsupportedexception   invaliddbmsconnectionpropertiesexception   
+                            notashareddatabaseexception e    
+                        pr getdatabasecontext   cleardatabasefile      
+                        pr getdatabase   clearshareddatabaseid    
+ 
+                        logger error  connection error   e   
+                        joptionpane showmessagedialog mainframe  
+                                e getmessage      \n\n    localization lang  a local copy will be opened     
+                                localization lang  connection error    joptionpane warning_message   
+                      
+                    toopentab add pr pr toopentab      
+                      
+                      
+                    toopentab add pr jabrefgui getmainframe   addparserresult pr  first   
+                    first parserresult pr   toopentab    
+            jabrefgui getmainframe   addparserresult pr  first   
+            first globals prefs getboolean jabrefpreferences window_maximised     
+            jabrefgui getmainframe   setextendedstate frame maximized_both   
+          
+ 
+        jabrefgui getmainframe   setvisible parserresult pr   failed message     html     localization lang  error opening file '%0'    pr getfile   get   getname    
+                        p   
+                      pr geterrormessage        html    
+ 
+            joptionpane showmessagedialog jabrefgui getmainframe    message  localization lang  error opening file    
+                    joptionpane error_message tabnumber   0 parserresult pr   bibdatabases    
+            parserresultwarningdialog showparserresultwarningdialog pr  jabrefgui getmainframe    tabnumber i   0   i   bibdatabases size        i   jabrefgui getmainframe   getbasepanelcount     i      
+            parserresult pr   bibdatabases get i   
+            basepanel panel   jabrefgui getmainframe   getbasepanelat i   
+            opendatabaseaction performpostopenactions panel  pr logger debug  finished adding panels bibdatabases isempty      
+            jabrefgui getmainframe   getcurrentbasepanel   getmaintable   requestfocus openlastediteddatabases globals prefs get jabrefpreferences last_edited list lastfiles   globals prefs getstringlist jabrefpreferences last_edited filename   lastfiles    
+            file dbfile file filename isloaded dbfile      dbfile exists backupmanager checkforbackupfile dbfile topath       
+                backupuimanager showrestorebackupdialog mainframe  dbfile topath     
+              
+ 
+            parserresult parseddatabase   opendatabase loaddatabase filename  
+                    globals prefs getimportformatpreferences parseddatabase isnullresult      
+                logger error localization lang  error opening file       '    dbfile getpath bibdatabases add parseddatabase isloaded file filetoopen parserresult pr   bibdatabases pr getfile   ispresent      pr getfile   get   equals filetoopen setlookandfeel lookfeel systemlookfeel   uimanager getsystemlookandfeelclassname globals prefs getboolean jabrefpreferences use_default_look_and_feel system getproperty  java runtime name   contains  openjdk      
+                      
+                    lookfeel   uimanager getcrossplatformlookandfeelclassname    
+                    logger warn  
+                             there seem to be problems with openjdk and the gtk look feel  using metal l f instead  change to another l f with caution lookfeel   systemlookfeel lookfeel   globals prefs get jabrefpreferences win_look_and_feel uimanager getcrossplatformlookandfeelclassname   equals lookfeel  
+                        system getproperty  java runtime name   contains  openjdk      
+                  
+                plastic3dlookandfeel lnf plastic3dlookandfeel    
+                metallookandfeel setcurrenttheme skybluer     
+                com jgoodies looks options setpopupdropshadowenabled uimanager setlookandfeel lnf uimanager setlookandfeel lookfeel classnotfoundexception   instantiationexception   illegalaccessexception   
+                        unsupportedlookandfeelexception e    
+                      
+                    uimanager setlookandfeel systemlookfeel   
+                      
+                    globals prefs put jabrefpreferences win_look_and_feel  systemlookfeel   
+                      
+                    joptionpane showmessagedialog jabrefgui getmainframe    
+                            localization 
+                                     lang  unable to find the requested look and feel and thus the one is used     
+                            localization lang  warning    joptionpane warning_message   
+                    logger warn  unable to find requested look and feel   e exception e    
+            logger warn  look and feel could not be set   e overridedefaultfonts   globals prefs getboolean jabrefpreferences override_default_fonts overridedefaultfonts fontsize   globals prefs getint jabrefpreferences menu_font_size   
+            uidefaults defaults   uimanager getdefaults    
+            enumeration object  keys   defaults keys object key   collections list keys key string  key  endswith   font      
+                    fontuiresource font    fontuiresource  uimanager get key   
+                    font fontuiresource font getname    font getstyle    fontsize   
+                    defaults put key  font jabrefframe getmainframe mainframe setmainframe jabrefframe mainframe    
+        jabrefgui mainframe   mainframe  
+      
+ 
+ 

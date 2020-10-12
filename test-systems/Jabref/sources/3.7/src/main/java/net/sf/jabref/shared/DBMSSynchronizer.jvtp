@@ -1,0 +1,155 @@
+ 
+    
+   synchronizes shared local databases opposite side  
+   local changes pushed link entryevent  using google's guava eventbus  
+    
+    
+       listening method  inserts new   link bibentry shared database  
+       
+        param event   link entryaddedevent  object synchronizing local database  see synchronizelocaldatabase   below   some entryevents may posted case dbsynchronizer not try insert bibentry entry again not harm   
+   pull changes case some 
+    
+       listening method  updates existing shared   link bibentry   
+       
+        param event   link fieldchangedevent  object synchronizing local database  see synchronizelocaldatabase   below   some entryevents may posted case dbsynchronizer not try update bibentry entry again not harm   
+   pull changes case some 
+    
+       listening method  deletes given   link bibentry shared database  
+       
+        param event   link entryremovedevent  object synchronizing local database  see synchronizelocaldatabase   below   some entryevents may posted case dbsynchronizer not try delete bibentry entry again not harm   
+   pull changes case some 
+    
+       listening method  synchronizes shared   link metadata applies locally  
+       
+        param event 
+        
+    
+       sets table structure shared database needed pulls shared entries new local database  
+       
+        throws databasenotsupportedexception version shared database not match version current shared database support    link dbmsprocessor check only performed once initial database setup  
+   calling dbmsprocessor setupshareddatabase   lets dbmsprocessor checkbaseintegrity true  
+    
+       synchronizes local database shared one  
+       possible update types removal  update insert link bibentry   
+        
+   remove old entries locally 
+   compare versions update local entry needed 
+   update fields 
+   remove not existing fields 
+    
+       removes local entries not present shared database  
+       
+        param localentries list link bibentry entries removed param sharedids set ids present shared database not reach listeners above  
+   due index shift localentries 
+    
+       synchronizes shared   link bibentry local one  
+        
+   perform possibly existing save actions 
+    
+       synchronizes meta data locally  
+        
+    
+       synchronizes shared meta data  
+        
+    
+       applies link metadata local shared bibentries  
+        
+   synchronize only changes present 
+    
+       synchronizes local bibentries applies fetched metadata checks whether current sql connection valid case connection not valid new   link connectionlostevent going sent  
+       
+         return  code true  code connection valid code false  code   
+        
+    
+       checks whether link entryeventsource link entryevent crucial class  
+       
+        param event link entryevent  
+        return  code true  code event trigger operations link dbmssynchronizer code false  code  
+        net sf jabref shared dbmssynchronizer dbmssynchronizer bibdatabasecontext bibdatabasecontext  character keywordseparator  
+            globalbibtexkeypattern globalcitekeypattern bibdatabasecontext   objects requirenonnull bibdatabasecontext bibdatabase   bibdatabasecontext getdatabase metadata   bibdatabasecontext getmetadata eventbus eventbus keywordseparator   keywordseparator globalcitekeypattern   objects requirenonnull globalcitekeypattern   
+      
+ 
+      
+     subscribe listen entryaddedevent event iseventsourceaccepted event     checkcurrentconnection      
+            dbmsprocessor insertentry event getbibentry     
+            synchronizelocalmetadata    
+            synchronizelocaldatabase      
+          
+      
+ 
+      
+     subscribe listen fieldchangedevent event ispresentlocalbibentry event getbibentry       iseventsourceaccepted event     checkcurrentconnection      
+            synchronizelocalmetadata    
+            bibentry bibentry   event getbibentry    
+            synchronizesharedentry bibentry   
+            synchronizelocaldatabase      
+          
+      
+ 
+      
+     subscribe listen entryremovedevent event iseventsourceaccepted event     checkcurrentconnection      
+            dbmsprocessor removeentry event getbibentry     
+            synchronizelocalmetadata    
+            synchronizelocaldatabase      
+          
+      
+ 
+      
+     subscribe listen metadatachangedevent event checkcurrentconnection      
+            synchronizesharedmetadata event getmetadata    globalcitekeypattern   
+            synchronizelocaldatabase    
+            applymetadata    
+            dbmsprocessor notifyclients    
+          
+      
+ 
+     subscribe listen entryevent event iseventsourceaccepted event     
+            dbmsprocessor notifyclients initializedatabases databasenotsupportedexception  sqlexception dbmsprocessor checkbaseintegrity      
+            logger info  integrity check failed  fixing       
+            dbmsprocessor setupshareddatabase dbmsprocessor checkforpre3dot6intergrity databasenotsupportedexception    
+              
+          
+ 
+        dbmsprocessor startnotificationlistener synchronizelocalmetadata    
+        synchronizelocaldatabase synchronizelocaldatabase checkcurrentconnection list bibentry  localentries   bibdatabase getentries    
+        map integer  integer  idversionmap   dbmsprocessor getsharedidversionmapping    
+ 
+          
+        removenotsharedentries localentries  idversionmap keyset map entry integer  integer  idversionentry   idversionmap entryset match bibentry localentry   localentries idversionentry getkey      localentry getsharedbibentrydata   getsharedid      
+                    match idversionentry getvalue     localentry getsharedbibentrydata   getversion      
+                        optional bibentry  sharedentry   dbmsprocessor getsharedentry idversionentry getkey sharedentry ispresent      
+                              
+                            localentry settype sharedentry get   gettype    entryeventsource shared   
+                            localentry getsharedbibentrydata   
+                                     setversion sharedentry get   getsharedbibentrydata   getversion field   sharedentry get   getfieldnames      
+                                localentry setfield field  sharedentry get   getfield field   entryeventsource shared   
+                              
+ 
+                            set redundantlocalentryfields   localentry getfieldnames    
+                            redundantlocalentryfields removeall sharedentry get   getfieldnames redundantfield   redundantlocalentryfields    
+                                localentry clearfield redundantfield  entryeventsource shared match    
+                optional bibentry  bibentry   dbmsprocessor getsharedentry idversionentry getkey bibentry ispresent      
+                    bibdatabase insertentry bibentry get    entryeventsource shared removenotsharedentries list bibentry  localentries  set integer  sharedids i   0  i   localentries size    i      
+            bibentry localentry   localentries get i match sharedid   sharedids localentry getsharedbibentrydata   getsharedid      sharedid    
+                    match match    
+                eventbus post sharedentrynotpresentevent localentry    
+                bibdatabase removeentry localentry  entryeventsource shared     
+                i synchronizesharedentry bibentry bibentry checkcurrentconnection bibdatabasewriter applysaveactions bibentry  metadata     
+            dbmsprocessor updateentry bibentry offlinelockexception exception    
+            eventbus post updaterefusedevent bibdatabasecontext  exception getlocalbibentry    exception getsharedbibentry sqlexception e    
+            logger error  sql error     e synchronizelocalmetadata checkcurrentconnection metadataparser parse metadata  dbmsprocessor getsharedmetadata    keywordseparator parseexception e    
+            logger error  parse error   e synchronizesharedmetadata metadata data  globalbibtexkeypattern globalcitekeypattern checkcurrentconnection dbmsprocessor setsharedmetadata metadataserializer getserializedstringmap data  globalcitekeypattern sqlexception e    
+            logger error  sql error     e applymetadata checkcurrentconnection bibentry bibentry   bibdatabase getentries bibdatabasewriter applysaveactions bibentry  metadata  isempty dbmsprocessor updateentry bibentry offlinelockexception exception    
+                    eventbus post updaterefusedevent bibdatabasecontext  exception getlocalbibentry    exception getsharedbibentry sqlexception e    
+                    logger error  sql error     e pullchanges checkcurrentconnection synchronizelocaldatabase    
+        synchronizelocalmetadata checkcurrentconnection isvalid   currentconnection isvalid 0 isvalid    
+                eventbus post connectionlostevent bibdatabasecontext isvalid sqlexception e    
+            logger error  sql error    e iseventsourceaccepted entryevent event    
+        entryeventsource eventsource   event getentryeventsource eventsource    entryeventsource local      eventsource    entryeventsource undo openshareddatabase dbmsconnection connection databasenotsupportedexception  sqlexception dbmstype   connection getproperties   gettype dbname   connection getproperties   getdatabase currentconnection   connection getconnection dbmsprocessor   dbmsprocessor getprocessorinstance connection   
+        initializedatabases openshareddatabase dbmsconnectionproperties properties sqlexception  databasenotsupportedexception  invaliddbmsconnectionpropertiesexception   
+        openshareddatabase dbmsconnection properties closeshareddatabase dbmsprocessor stopnotificationlistener    
+            currentconnection close sqlexception e    
+            logger error  sql error    e ispresentlocalbibentry bibentry bibentry bibdatabase getentries   contains bibentry getdbname dbname dbmstype getdbtype dbmstype dbmsprocessor getdbprocessor dbmsprocessor setmetadata metadata metadata metadata   metadata registerlistener object listener    
+        eventbus register listener   
+      
+ 

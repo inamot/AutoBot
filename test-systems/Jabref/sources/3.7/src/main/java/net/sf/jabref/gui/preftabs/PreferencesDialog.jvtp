@@ -1,0 +1,167 @@
+ 
+    
+   preferences dialog  contains tabbedpane tabs defined separate classes  tabs must implement prefstab interface dialog call storesettings   method tabs user presses 
+   ok design very easy add new tabs later  
+   
+    
+   add tabs 
+   set prototype value control width list  
+   add selection listener show correct panel selection changes  
+   key bindings  
+   import export actions  
+   first check tabs ready close not  break store settings close  
+   icons may changed 
+   update field values tabs  net sf jabref gui preftabs preferencesdialog jdialog preferencesdialog jabrefframe parent parent  localization lang  jabref preferences jabrefpreferences prefs   jabrefpreferences getinstance    
+        frame   parent  
+ 
+        main jpanel    
+        jpanel mainpanel jpanel    
+        jpanel lower jpanel    
+ 
+        getcontentpane   setlayout borderlayout     
+        getcontentpane   add mainpanel  borderlayout center   
+        getcontentpane   add lower  borderlayout south cardlayout cardlayout cardlayout    
+        main setlayout cardlayout   
+ 
+        list prefstab  tabs arraylist      
+        tabs add generaltab prefs    
+        tabs add networktab prefs    
+        tabs add filetab frame  prefs    
+        tabs add filesorttab prefs    
+        tabs add entryeditorprefstab prefs    
+        tabs add groupsprefstab prefs    
+        tabs add appearanceprefstab prefs    
+        tabs add externaltab frame prefs    
+        tabs add tableprefstab prefs    
+        tabs add tablecolumnstab prefs  parent    
+        tabs add bibtexkeypatternpreftab prefs  parent getcurrentbasepanel      
+        tabs add previewprefstab     
+        tabs add nameformattertab prefs    
+        tabs add importsettingstab prefs    
+        tabs add xmpprefstab prefs    
+        tabs add advancedtab prefs    
+ 
+          
+        tabs foreach tab -  main add  component  tab  tab gettabname      
+ 
+        mainpanel setborder borderfactory createetchedborder tabnames   tabs stream   map prefstab  gettabname  toarray jlist chooser jlist   tabnames   
+        chooser setborder borderfactory createetchedborder     
+          
+        chooser setprototypecellvalue should be wide enough    
+        chooser setselectedindex 0   
+        chooser setselectionmode listselectionmodel single_selection   
+ 
+          
+          
+        chooser addlistselectionlistener e e getvalueisadjusting o   chooser getselectedvalue    
+            cardlayout show main  o   
+            
+ 
+        jpanel buttons jpanel    
+        buttons setlayout gridlayout 4  1    
+        buttons add importpreferences  0   
+        buttons add exportpreferences  1   
+        buttons add showpreferences  2   
+        buttons add resetpreferences  3   
+ 
+        jpanel westpanel jpanel    
+        westpanel setlayout borderlayout     
+        westpanel add chooser  borderlayout center   
+        westpanel add buttons  borderlayout south   
+        mainpanel setlayout borderlayout     
+        mainpanel add main  borderlayout center   
+        mainpanel add westpanel  borderlayout west   
+ 
+        jbutton ok jbutton localization lang  ok     
+        jbutton cancel jbutton localization lang  cancel     
+        ok addactionlistener okaction     
+        cancelaction cancelaction cancelaction    
+        cancel addactionlistener cancelaction   
+        lower setborder borderfactory createemptyborder 2  2  2  2    
+        buttonbarbuilder buttonbarbuilder buttonbarbuilder lower   
+        buttonbarbuilder addglue    
+        buttonbarbuilder addbutton ok   
+        buttonbarbuilder addbutton cancel   
+        buttonbarbuilder addglue    
+ 
+          
+        keybinder bindclosedialogkeytocancelaction getrootpane    cancelaction   
+ 
+          
+        exportpreferences settooltiptext localization lang  export preferences to file     
+        exportpreferences addactionlistener exportaction     
+ 
+  
+        importpreferences addactionlistener e -    
+            filedialog dialog filedialog frame  getprefsexportpath    withextension fileextensions xml   
+            dialog setdefaultextension fileextensions xml   
+            optional path  filename   dialog showdialogandgetselectedfile filename ispresent prefs importpreferences filename get   tostring     
+                    updateafterpreferencechanges    
+                    joptionpane showmessagedialog preferencesdialog localization lang  you must restart jabref to come into effect     
+                            localization lang preferences    joptionpane warning_message dispose jabrefexception ex    
+                    logger warn ex getmessage    ex   
+                    joptionpane showmessagedialog preferencesdialog ex getlocalizedmessage    
+                            localization lang preferences    joptionpane error_message   
+                  
+              
+            
+ 
+        showpreferences addactionlistener  
+                e preferencesfilterdialog jabrefpreferencesfilter prefs   frame  setvisible resetpreferences addactionlistener e joptionpane showconfirmdialog preferencesdialog localization lang  are you sure you want to reset all settings to values?    
+                    localization lang  reset preferences    joptionpane ok_cancel_option     joptionpane ok_option prefs clear shareddatabasepreferences   clear    
+                    joptionpane showmessagedialog preferencesdialog localization lang  you must restart jabref to come into effect     
+                            localization lang  reset preferences    joptionpane warning_message backingstoreexception ex    
+                    logger warn ex getmessage    ex   
+                    joptionpane showmessagedialog preferencesdialog ex getlocalizedmessage    
+                            localization lang  reset preferences    joptionpane error_message   
+                  
+                updateafterpreferencechanges    
+              
+            
+ 
+        setvalues    
+ 
+        pack getprefsexportpath globals prefs get jabrefpreferences prefs_export_path updateafterpreferencechanges     
+        setvalues    
+        map exportformat  customformats   globals prefs customexports getcustomexportformats globals prefs  
+                globals journalabbreviationloader   
+        layoutformatterpreferences layoutpreferences   globals prefs 
+                 getlayoutformatterpreferences globals journalabbreviationloader   
+        savepreferences savepreferences   savepreferences loadforexportfrompreferences globals prefs   
+        exportformats initallexports customformats  layoutpreferences  savepreferences   
+ 
+        globals prefs updateentryeditortablist storeallsettings    
+          
+        component   preferencetabs   main getcomponents component tab  preferencetabs prefstab  tab  validatesettings component tab  preferencetabs    
+              prefstab  tab  storesettings    
+          
+        globals prefs flush    
+ 
+        setvisible maintable updaterenderers    
+        guiglobals updateentryeditorcolors    
+        frame setupalltables    
+        frame getgroupselector   revalidategroups      
+        frame output localization lang  preferences recorded okaction abstractaction okaction ok    
+          
+ 
+         override actionperformed actionevent e    
+            storeallsettings exportaction abstractaction exportaction export    
+          
+ 
+         override actionperformed actionevent e    
+            filedialog dialog filedialog frame  withextension fileextensions xml   
+            dialog setdefaultextension fileextensions xml   
+            optional path  path   dialog savenewfile    
+ 
+            path ifpresent exportfile storeallsettings    
+                    globals prefs exportpreferences exportfile tostring     
+                    globals prefs put jabrefpreferences prefs_export_path  exportfile tostring jabrefexception ex    
+                    logger warn ex getmessage    ex   
+                    joptionpane showmessagedialog preferencesdialog ex getlocalizedmessage    
+                            localization lang  export preferences    joptionpane warning_message setvalues count   main getcomponentcount    
+        component   comps   main getcomponents i   0  i   count  i      
+              prefstab  comps i   setvalues cancelaction abstractaction cancelaction cancel    
+          
+ 
+         override actionperformed actionevent e    
+            setvisible 

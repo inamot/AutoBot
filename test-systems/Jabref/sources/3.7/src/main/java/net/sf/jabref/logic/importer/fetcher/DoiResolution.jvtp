@@ -1,0 +1,35 @@
+ 
+    
+   fulltextfetcher implementation follows doi resolution redirects scans full-text pdf url  
+    
+   follow redirects scan single pdf link 
+   pretend browser  agent   referrer  
+  www google com    
+   some publishers quite slow  default 3s  
+   scan pdf 
+   only check pdf included link inside text 
+   acm uses tokens without pdf inside link 
+   see https   github com lehner localcopy scrape ideas 
+   return only one link found  high accuracy  net sf jabref logic importer fetcher doiresolution fulltextfetcher   
+  
+ 
+     override optional url  findfulltext bibentry entry ioexception   
+        objects requirenonnull entry   
+        optional url  pdflink   optional empty    
+ 
+        optional doi  doi   entry getfield fieldname doi  flatmap doi  build doi ispresent scilink   doi get   geturiasasciistring scilink isempty connection connection   jsoup connect scilink   
+                      
+                    connection useragent  mozilla 5 0  windows  u  windowsnt 5 1  en-us  rv1 8 1 6  gecko 20070725 firefox 2 0 0 6    
+                    connection referrer  http   
+                    connection followredirects connection ignorehttperrors connection timeout 5000   
+ 
+                    document html   connection get    
+                      
+                    elements elements   html body   select  a href     
+                    list optional url   links arraylist element element   elements href   element attr  abs href   tolowercase locale english hreftext   element text   tolowercase locale english href contains  pdf      hreftext contains  pdf       mimetypedetector ispdfcontenttype href     
+                            links add optional of url href links size      1    
+                        logger info  fulltext pdf found       scilink   
+                        pdflink   links get 0 ioexception e    
+                    logger warn  doiresolution fetcher failed     e pdflink  
+      
+ 

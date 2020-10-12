@@ -1,0 +1,203 @@
+ 
+    
+   conversion csv structure xes  use 
+     link #doconvertcsvtoxes progresslistener  csvfile  csvconfig  csvconversionconfig convert xes  use 
+     link #convertcsv progresslistener  csvconfig  csvconversionconfig  csvfile  csvconversionhandler use link csvconversionhandler some format  
+    p  
+   example usage  
+    p  
+    
+    pre  
+   csvfilereferenceunivocityimpl csvfile   new csvfilereferenceunivocityimpl getfile   topath     
+   csvconfig config   new csvconfig csvfile   
+   try  icsvreader reader   csvfile createreader config     
+   	csvconversion conversion   new csvconversion    
+   	csvconversionconfig conversionconfig   new csvconversionconfig csvfile  config   
+   	conversionconfig autodetect    
+    
+   	conversionconfig setcasecolumns immutablelist quot case quot     
+   	conversionconfig seteventnamecolumns immutablelist quot event quot     
+   	conversionconfig setcompletiontimecolumn  quot time quot    
+   	conversionconfig setemptycellhandlingmode csvemptycellhandlingmode sparse   
+   	conversionconfig seterrorhandlingmode csverrorhandlingmode abort_on_error   
+   	map lt string  csvmapping gt  conversionmap   conversionconfig getconversionmap    
+   	csvmapping mapping   conversionmap quot time quot    
+   	mapping setdatatype datatype time   
+   	mapping setpattern  quot yyyy mm dd quot    
+    
+   	conversionresult lt xlog gt  result   conversion doconvertcsvtoxes new noopprogresslistenerimpl    csvfile  config  
+   			conversionconfig   
+    
+   	xlog log   result getresult    
+     
+     pre  
+    
+    author f  mannhardt 
+   
+    
+    
+	   convert link csvfilereferenceopencsvimpl link xlog  using supplied configuration  without progress information  
+	    
+	    param csvfile 
+	    param importconfig 
+	    param conversionconfig 
+	    return 
+	    throws csvconversionexception 
+	    throws csvconversionconfigexception 
+	    
+    
+	   convert link csvfilereferenceopencsvimpl link xlog  using supplied configuration  
+	    
+	    param progresslistener 
+	    param csvfile 
+	    param importconfig 
+	    param conversionconfig 
+	    return 
+	    throws csvconversionexception 
+	    throws csvconversionconfigexception 
+	    
+    
+	   converts link csvfilereferenceopencsvimpl something determined supplied   link csvconversionhandler   use 
+	     link #doconvertcsvtoxes progresslistener  csvfilereferenceopencsvimpl  csvconfig  csvconversionconfig case want convert link xlog   
+	    
+	    param progress 
+	    param importconfig 
+	    param conversionconfig 
+	    param csvfile 
+	    param conversionhandler 
+	    return 
+	    throws csvconversionexception 
+	    throws csvconversionconfigexception following code assumes file sorted cases written disk compressed lzf 
+   handle new traces 
+   finished current case 
+   update current case id next case id 
+   create new case 
+   create new event 
+   read event name 
+   read time stamps already mapped special column not include again 
+   already sorted time 
+   close last trace least one trace present 
+    
+	   calls xeslite commit method available  uses reflection not 
+	   introduce dependency xeslite  
+	    
+	    param factory 
+	    
+   todo  nicer create names unknown-1    unknown-2   etc  instead skipping attribute 
+    
+	   concatenates multiple composite attributes string representation  
+	    
+	    param columnindex 
+	    param line 
+	    param compositeseparator 
+	    return composite attributes concatenated empty string case columns selected 
+	    
+   fix 3 digits ms example 44 00 540000 not return ensure string formatted 540 ms instead 540000 ms org processmining log csvimport csvconversion conversionresult r    
+		r getresult hasconversionerrors getconversionerrors progresslistener   
+		progress getprogress log message noopprogresslistenerimpl progresslistener log message progress getprogress noopprogressimpl noopprogressimpl progress setvalue value setminimum value setmaximum value setindeterminate makeindeterminate setcaption message isindeterminate iscancelled inc getvalue 0 getminimum 0 getmaximum 0 getcaption cancel conversionresult xlog  doconvertcsvtoxes csvfile csvfile  csvconfig importconfig  
+			csvconversionconfig conversionconfig csvconversionexception  csvconversionconfigexception doconvertcsvtoxes noopprogresslistenerimpl    csvfile  importconfig  conversionconfig conversionresult xlog  doconvertcsvtoxes progresslistener progresslistener  csvfile csvfile  
+			csvconfig importconfig  csvconversionconfig conversionconfig csvconversionexception  csvconversionconfigexception convertcsv progresslistener  importconfig  conversionconfig  csvfile xesconversionhandlerimpl importconfig  conversionconfig r  conversionresult r  convertcsv progresslistener progress  csvconfig importconfig  
+			csvconversionconfig conversionconfig  csvfile csvfile csvconversionhandler r  conversionhandler csvconversionexception  csvconversionconfigexception   
+ 
+		progress p   progress getprogress    
+ 
+		p setminimum 0   
+		p setmaximum 1   
+		p setvalue 0   
+		p setindeterminate startcsvtime   system currenttimemillis    
+ 
+		conversionhandler startlog csvfile casecolumnindex conversionconfig getcasecolumns   size eventnamecolumnindex conversionconfig geteventnamecolumns   size completiontimecolumnindex   -1 starttimecolumnindex   -1 header map integer  headermap hashmap map integer  csvmapping  columnmap hashmap header   csvfile readheader importconfig i   0  i   header length  i columnheader   header i   
+				integer oldindex   headermap put columnheader  i oldindex csvconversionexception format  
+							 ambigous header in the csv file  two columns  %s  %s  have the same header %s  please fix in the csv file    
+							oldindex  i  columnheader    
+				  
+				csvmapping columnmapping   conversionconfig getconversionmap   get columnheader   
+				columnmap put i  columnmapping i   0  i   conversionconfig getcasecolumns   size    i      
+				casecolumnindex i    headermap get conversionconfig getcasecolumns   get i i   0  i   conversionconfig geteventnamecolumns   size    i      
+				eventnamecolumnindex i    headermap get conversionconfig geteventnamecolumns   get i conversionconfig getcompletiontimecolumn conversionconfig getcompletiontimecolumn   isempty      
+				completiontimecolumnindex   headermap get conversionconfig getcompletiontimecolumn conversionconfig getstarttimecolumn conversionconfig getstarttimecolumn   isempty      
+				starttimecolumnindex   headermap get conversionconfig getstarttimecolumn ioexception e csvconversionexception  could not read first row of csv file with header information   e   
+		  
+ 
+		inputstream sortedcsvinputstream file sortedfile try startsorttime   system currenttimemillis maxmemory runtime getruntime   maxmemory     maxsortingmemory    1024   1024   
+				progress log format  sorting csv file  % 2f mb  by and time using maximal %s mb of memory       
+								 getfilesizeinbytes csvfile    1024   1024   maxmemory    
+				ordering casecomparator stringbasedimportordering casecolumnindex   
+				sortedfile   csvsorter sortcsv csvfile  casecomparator  importconfig  maxmemory  header length  
+						progress   
+				sortedcsvinputstream lzfinputstream fileinputstream sortedfile endsorttime   system currenttimemillis    
+				progress log format  finished sorting in % 2f seconds    endsorttime - startsorttime    1000 0d illegalargumentexception e csvsortexception  could not sort csv file   e ioexception e csvsortexception  could not sort csv file   e   
+			  
+ 
+			  
+			progress log  reading cases icsvreader reader   csvfile getcsv   createreader sortedcsvinputstream  importconfig caseindex   0 eventindex   0 lineindex   -1 nextline currentcaseid nextline   reader readnext caseindex % 100    0     p iscancelled       
+					lineindex newcaseid   readcompositeattribute casecolumnindex  nextline  
+							conversionconfig getcompositeattributeseparator newcaseid equals currentcaseid currentcaseid conversionhandler endtrace currentcaseid   
+						  
+ 
+						  
+						currentcaseid   newcaseid  
+ 
+						  
+						conversionhandler starttrace currentcaseid   
+						caseindex caseindex % progress_report_window    0    
+							progress log  reading line     lineindex      already     caseindex     cases and   
+									  eventindex     events processed eventclass   readcompositeattribute eventnamecolumnindex  nextline  
+							conversionconfig getcompositeattributeseparator     
+ 
+					  
+					date completiontime   parsetime conversionhandler  completiontimecolumnindex  columnmap  lineindex  
+							nextline   
+					date starttime   parsetime conversionhandler  starttimecolumnindex  columnmap  lineindex  nextline   
+ 
+					conversionhandler startevent eventclass  completiontime  starttime i   0  i   nextline length  i ints contains eventnamecolumnindex  i     ints contains casecolumnindex  i  
+								   i    completiontimecolumnindex    i    starttimecolumnindex name   header i value   nextline i conversionconfig getemptycellhandlingmode      csvemptycellhandlingmode sparse 
+								    value conversionconfig gettreatasemptyvalues   contains value  
+										   value isempty        
+							parseattributes progress  conversionconfig  conversionhandler  columnmap get i   lineindex  
+									i  name  nextline   
+						  
+					  
+ 
+					  
+					conversionhandler endevent    
+					eventindex currentcaseid conversionhandler endtrace currentcaseid ioexception e csvconversionexception  error converting the csv file to xes   e sortedcsvinputstream sortedcsvinputstream close exception e csvconversionexception  error closing the csv file   e sortedfile sortedfile delete    
+			  
+		  
+		commitfactoryifneeded conversionconfig getfactory endconverttime   system currenttimemillis    
+		progress log format  finished reading cases in %d seconds     endconverttime - startcsvtime    1000 conversionresult r r getresult conversionhandler getresult hasconversionerrors conversionhandler hasconversionerrors getconversionerrors conversionhandler getconversionerrors commitfactoryifneeded xfactory factory method method   factory getclass   getmethod  commit method method invoke factory nosuchmethodexception   securityexception   illegalaccessexception   illegalargumentexception 
+				  invocationtargetexception e r  date parsetime csvconversionhandler r  conversionhandler timecolumnindex map integer  csvmapping  columnmap lineindex nextline csvconversionexception timecolumnindex    -1 timevalue   nextline timecolumnindex parsedate  dateformat  columnmap get timecolumnindex  getformat    timevalue parseexception e    
+				conversionhandler errordetected lineindex  timecolumnindex  
+						columnmap get timecolumnindex  geteventattributename    timevalue  e getfilesizeinbytes csvfile csvfile ioexception files size csvfile getfile r parseattributes progresslistener progress  csvconversionconfig conversionconfig  
+			csvconversionhandler r  conversionhandler  csvmapping csvmapping lineindex columnindex name line csvconversionexception value   line columnindex name csvmapping getdatatype conversionhandler startattribute name  value csvmapping getdatatype boolean boolval equalsignorecase value      j  equalsignorecase value      y  equalsignorecase value  
+								    t  equalsignorecase value      1  equals value     
+							boolval equalsignorecase value      n  equalsignorecase value  
+								    f  equalsignorecase value      0  equals value     
+							boolval parseexception value     cannot be converted to a 0   
+						  
+						conversionhandler startattribute name  boolval continuous csvmapping getformat conversionhandler startattribute name csvmapping getformat   parseobject value conversionhandler startattribute name parsedouble value discrete csvmapping getformat conversionhandler startattribute name   integer  csvmapping getformat   parseobject value conversionhandler startattribute name parselong value time   
+						conversionhandler startattribute name  parsedate  dateformat  csvmapping getformat    value literal csvmapping getformat value     messageformat  csvmapping getformat    
+									 format objectarrays concat value  line stringbuffer tostring    
+						  
+						conversionhandler startattribute name  value numberformatexception e    
+				conversionhandler errordetected lineindex  columnindex  name  value  e conversionconfig geterrorhandlingmode      csverrorhandlingmode best_effort    
+					conversionhandler startattribute name  value parseexception e    
+				conversionhandler errordetected lineindex  columnindex  name  value  e conversionconfig geterrorhandlingmode      csverrorhandlingmode best_effort    
+					conversionhandler startattribute name  value   
+				  
+			  
+		  
+		conversionhandler endattribute readcompositeattribute columnindex line compositeseparator columnindex length    0 size   0 index   columnindex cell   line index   
+			size     cell 0   cell length     
+		  
+		stringbuilder sb stringbuilder size   columnindex length index   columnindex cell   line index cell sb append cell   
+			  
+			sb append compositeseparator sb substring 0  sb length   - 1 date parsedate dateformat customdateformat value parseexception value parseexception  could not parse timestamp    0 customdateformat parseposition pos parseposition 0   
+			date date   customdateformat parse value  pos date invalid_ms_pattern matcher value  find date fixedvalue   invalid_ms_pattern matcher value  replacefirst  $1    
+				pos setindex 0   
+				date   customdateformat parse fixedvalue  pos date date pattern    unkown customdateformat simpledateformat    
+						pattern     simpledateformat  customdateformat  topattern parseexception  could not parse     value     using pattern '    pattern    '   
+							pos geterrorindex parseexception  could not parse     value  -1 getmaxsortingmemory maxsortingmemory setmaxsortingmemory maxsortingmemory maxsortingmemory   maxsortingmemory  
+	  
+ 
+ 

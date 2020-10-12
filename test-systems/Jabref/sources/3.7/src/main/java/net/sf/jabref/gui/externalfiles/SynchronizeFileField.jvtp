@@ -1,0 +1,186 @@
+ action goes through selected entries basepanel attempts autoset given external file  pdf  ps       based same algorithm used auto  button entryeditor  
+    
+   ask rules operation  
+   autoset takes 10  ?  times longer checkexisting 
+   first try autoset fields 
+   start automatically setting process following loop checks external links already set  
+   check extension set need specify directories search util expandfilename  
+   see link looks url  
+   don't check remote file  
+   todo option check remote links variable keep track whether link gets deleted absolute path representation delete link  
+   assign new file  
+   clear field  
+   make sure don't investigate link further  
+   step back iteration removed entry  
+   clear field  
+   make sure don't investigate link further  
+   step back iteration removed entry  
+   notify further cases  
+   cancel 
+   unless deleted link  see file type recognized  
+   user doesn't want handle unknown link type  
+   user define new file type  show dialog old list types  add one update list prefs  
+   user change type link  
+   first model file links entry table modified  store change  
+   add undo edit  net sf jabref gui externalfiles synchronizefilefield abstractworker object   brokenlinkoptions    localization lang  ignore    localization lang  assign file    
+            localization lang  remove link    localization lang  remove all broken links    
+            localization lang  quit synchronization synchronizefilefield basepanel panel panel   panel  
+      
+ 
+     override init     
+        collection bibentry  col   panel getdatabase   getentries    
+        goon sel arraylist   col optdiag optdiag synchronizefilefield optionsdialog panel frame    panel getbibdatabasecontext     
+          
+        optdiag setlocationrelativeto panel frame     
+        optdiag setvisible optdiag canceled      
+            goon autoset    optdiag isautosetnone    
+        checkexisting   optdiag ischecklinks    
+ 
+        panel output localization lang  synchronizing file links        
+      
+ 
+     override run goon    
+            panel output localization lang operation requires one or more entries to be selected entrieschangedcount   0  
+        panel frame   setprogressbarvalue 0   
+        panel frame   setprogressbarvisible weightautoset   10 progressbarmax    autoset ? weightautoset   sel size     0     checkexisting ? sel size     0   
+        panel frame   setprogressbarmaximum progressbarmax progress   0 namedcompound ce namedcompound localization lang  automatically set file links     
+ 
+        set bibentry  changedentries hashset autoset    
+            list bibentry  entries arraylist   sel   
+ 
+              
+            runnable r   autosetlinks autosetlinks entries  ce  changedentries panel getbibdatabasecontext null   
+            jabrefexecutorservice instance executeandwait r   
+          
+        progress    sel size     weightautoset  
+        panel frame   setprogressbarvalue progress checkexisting removeallbroken mainloop bibentry asel   sel    
+                panel frame   setprogressbarvalue progress optional old   asel getfield fieldname file old ispresent        old get   isempty       
+                    filelisttablemodel tablemodel filelisttablemodel    
+                    tablemodel setcontentdontguesstypes old get     
+ 
+                      
+                    list dirss   panel getbibdatabasecontext   
+                             getfiledirectory globals prefs getfiledirectorypreferences     
+                    list file  dirs arraylist dirs1   dirss    
+                        dirs add file dirs1 j   0  j   tablemodel getrowcount    j      
+                        filelistentry flentry   tablemodel getentry j httplink   flentry link tolowercase locale english  startswith  http httplink deleted optional file  file   fileutil expandfilename flentry link  dirss file ispresent        file get   exists answer removeallbroken    
+                                answer   2 answer   joptionpane showoptiondialog panel frame    
+                                        localization lang   html could not find file '%0' br linked from entry '%1'  html    
+                                                flentry link  
+                                                asel getcitekeyoptional   orelse localization lang  undefined      
+                                        localization lang  broken link    
+                                        joptionpane yes_no_cancel_option  
+                                        joptionpane question_message brokenlinkoptions  brokenlinkoptions 0 answer 1  
+                                  
+                                filelistentryeditor fleditor filelistentryeditor 
+                                 panel frame    flentry panel getbibdatabasecontext     
+                                fleditor setvisible true 2  
+                                  
+                                tablemodel removeentry j   
+                                deleted j 3  
+                                  
+                                tablemodel removeentry j   
+                                deleted j--    
+                                removeallbroken mainloop deleted    flentry type ispresent   
+                                    flentry type get unknownexternalfiletype options localization lang  define '%0'   flentry type get   getname     
+                                    localization lang  change file type    
+                                    localization lang  cancel defoption   options 0 answer   joptionpane showoptiondialog panel frame    localization lang  one or more file links are of the type '%0'  which is undefined  what you want to flentry type get   getname     
+                                    localization lang  undefined file type    joptionpane yes_no_cancel_option  
+                                    joptionpane question_message options  defoption answer    joptionpane cancel_option answer    joptionpane yes_option    
+                                  
+                                externalfiletype newtype externalfiletype flentry type get   getname icontheme jabreficon file getsmallicon     
+                                externalfiletypeentryeditor editor externalfiletypeentryeditor panel frame    newtype   
+                                editor setvisible editor okpressed      
+                                      
+                                    list externalfiletype  filetypes arraylist    
+                                            externalfiletypes getinstance   getexternalfiletypeselection     
+                                    filetypes add newtype   
+                                    collections sort filetypes   
+                                    externalfiletypes getinstance   setexternalfiletypes filetypes   
+                                    panel getmaintable   repaint filelistentryeditor editor filelistentryeditor 
+                                         panel frame    flentry panel getbibdatabasecontext     
+                                editor setvisible tablemodel getstringrepresentation   equals old orelse toset   tablemodel getstringrepresentation toset isempty      
+                            ce addedit undoablefieldchange asel  fieldname file  old orelse null    
+                            asel clearfield fieldname file ce addedit undoablefieldchange asel  fieldname file  old orelse toset    
+                            asel setfield fieldname file  toset   
+                          
+                        changedentries add asel changedentries isempty      
+              
+            ce end    
+            panel getundomanager   addedit ce   
+            panel markbasechanged    
+            entrieschangedcount   changedentries size    
+          
+      
+ 
+     override update goon panel output localization lang  finished synchronizing file links  entries changed  %0 valueof entrieschangedcount     
+        panel frame   setprogressbarvisible entrieschangedcount   0    
+            panel markbasechanged optionsdialog jdialog jradiobutton autosetunset jradiobutton localization lang  automatically set file links   
+                         localization lang not overwrite existing links jradiobutton autosetall jradiobutton localization lang  automatically set file links   
+                         localization lang  allow overwriting existing links optionsdialog jframe parent  bibdatabasecontext databasecontext parent  localization lang  synchronize file links databasecontext   databasecontext  
+            ok addactionlistener e -    
+                canceled dispose    
+                
+ 
+            action closeaction abstractaction     
+ 
+                 override actionperformed actionevent e    
+                    dispose    
+                  
+               
+ 
+            cancel addactionlistener closeaction   
+ 
+            inputmap im   cancel getinputmap jcomponent when_in_focused_window   
+            actionmap am   cancel getactionmap    
+            im put globals getkeyprefs   getkey keybinding close_dialog    close    
+            am put  close   closeaction   
+ 
+            buttongroup bg buttongroup    
+            bg add autosetunset   
+            bg add autosetnone   
+            bg add autosetall   
+ 
+            formlayout layout formlayout  fill pref   
+                     pref  2dlu  pref  2dlu  pref  pref  pref  2dlu  pref  2dlu  pref  2dlu  pref  2dlu  pref    
+            formbuilder builder   formbuilder create   layout layout   
+            jlabel description jlabel   html   
+                      localization 
+                             lang  attempt to automatically set file links your entries  automatically setting works a file in your file directory br or a subdirectory is named identically to an entry's bibtex key  plus extension    
+                         html     
+ 
+            builder addseparator localization lang  automatically set file links    xy 1  1   
+            builder add description  xy 1  3   
+            builder add autosetunset  xy 1  5   
+            builder add autosetall  xy 1  6   
+            builder add autosetnone  xy 1  7   
+            builder addseparator localization lang  check links    xy 1  9   
+ 
+            description jlabel   html   
+                      localization 
+                             lang makes jabref look up each file link and check the file exists not  you will be given options br to resolve the problem    
+                         html     
+            builder add description  xy 1  11   
+            builder add checklinks  xy 1  13   
+            builder addseparator     xy 1  15   
+ 
+            jpanel main   builder getpanel    
+            main setborder borderfactory createemptyborder 5  5  5  5    
+ 
+            buttonbarbuilder bb buttonbarbuilder    
+            bb addglue    
+            bb addbutton ok   
+            bb addbutton cancel   
+            bb addglue    
+            getcontentpane   add main  borderlayout center   
+            getcontentpane   add bb getpanel    borderlayout south   
+ 
+            pack    
+          
+ 
+         override setvisible visible visible    
+                canceled list dirs   databasecontext getfiledirectory globals prefs getfiledirectorypreferences dirs isempty      
+                autosetnone setselected autosetnone setenabled autosetall setenabled autosetunset setenabled autosetnone setenabled autosetall setenabled autosetunset setenabled ok requestfocus setvisible visible isautosetnone autosetnone isselected ischecklinks checklinks isselected canceled canceled  
+          
+      
+ 

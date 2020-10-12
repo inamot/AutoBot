@@ -1,0 +1,139 @@
+ 
+    
+       creates pdfimporter 
+       
+        param frame jabref frame 
+        param panel panel use 
+        param entrytable entry table work param droprow row entry dropped may 1 indicate row selected  
+        
+    
+       
+       imports pdf files given filenames 
+       
+        param filenames states names files import 
+        return list successful created bibtex entries list non-pdf files 
+        
+   sort filenames pdffiles import files 
+   pdffiles  variable files files  variable nopdffiles 
+   files nopdffiles correctly sorted 
+   import files 
+    
+        param filenames - pdf files import 
+        return true import succeeded  false otherwise 
+        
+   import failed -  generate default entry 
+   only one entry imported 
+   insert entry database link file list file directories  
+   import failed -  generate default entry 
+   only one entry imported 
+   insert entry database link file 
+   find out type desired want center dialog make look nicer  
+   only dialog not canceled  
+   set owner timestamp options enabled  
+   create undoableinsertentry object going select new entry  before make sure show-entry mode aren't already mode  enter will_show_editor 
+   mode makes sure selection trigger display entry editor adjustment splitter database changed  net sf jabref pdfimport pdfimporter pdfimporter jabrefframe frame  basepanel panel  maintable entrytable droprow frame   frame panel   panel entrytable   entrytable droprow   droprow importpdffilesresult importpdffilesresult list nopdffiles  list bibentry  entries nopdffiles   nopdffiles entries   entries list getnopdffiles nopdffiles list bibentry  getentries entries importpdffilesresult importpdffiles list filenames    
+          
+          
+          
+        list files arraylist   filenames   
+        list nopdffiles arraylist file   files pdffilefilter accept file     
+                nopdffiles add file   
+              
+          
+        files removeall nopdffiles   
+          
+ 
+          
+        list bibentry  entries   importpdffilesinternal files importpdffilesresult nopdffiles  entries list bibentry  importpdffilesinternal list filenames panel collections emptylist    
+          
+        importdialog importdialog donotshowagain nevershow   globals prefs getboolean jabrefpreferences import_alwaysuse globalchoice   globals prefs getint jabrefpreferences import_default_pdf_import_style   
+ 
+ 
+        list bibentry  res arraylist filename   filenames nevershow     donotshowagain xmputil hasmetadata paths get filename   globals prefs getxmppreferences       
+  
+                  
+  
+  
+                donotshowagain   importdialog isdonotshowagain nevershow     importdialog getresult      joptionpane ok_option choice   nevershow ? globalchoice   importdialog getchoice choice importdialog xmp  
+                    doxmpimport filename  res importdialog content  
+                    docontentimport filename  res importdialog nometa  
+                    createnewblankentry filename  ifpresent res  add importdialog onlyattach  
+                    droppedfilehandler dfh droppedfilehandler frame  panel   
+                    dfh linkpdftoentry filename  entrytable  droprow res doxmpimport filename  list bibentry  res    
+        list bibentry  localres arraylist      
+        pdfxmpimporter importer pdfxmpimporter globals prefs getxmppreferences     
+        path filepath   paths get filename   
+        parserresult result   importer importdatabase filepath  globals prefs getdefaultencoding result haswarnings      
+            frame showmessage result geterrormessage     
+          
+        localres addall result getdatabase   getentries     
+ 
+        bibentry entry localres isempty      
+              
+            logger info failed    
+            createnewblankentry filename  ifpresent res  add entry   localres get 0   
+ 
+          
+        panel getdatabase   insertentry entry   
+        panel markbasechanged    
+        filelisttablemodel tm filelisttablemodel    
+        file tolink file filename   
+          
+        list dirss   panel getbibdatabasecontext   
+                 getfiledirectory globals prefs getfiledirectorypreferences     
+ 
+        tm addentry 0 filelistentry tolink getname    fileutil shortenfilename tolink  dirss  getpath    
+                externalfiletypes getinstance   getexternalfiletypebyname  pdf      
+        entry setfield fieldname file  tm getstringrepresentation     
+        res add entry optional bibentry  createnewblankentry filename    
+        optional bibentry  newentry   createnewentry    
+        newentry ifpresent bibentry -    
+            droppedfilehandler dfh droppedfilehandler frame  panel   
+            dfh linkpdftoentry filename  bibentry newentry docontentimport filename  list bibentry  res    
+ 
+        pdfcontentimporter contentimporter pdfcontentimporter  
+                globals prefs getimportformatpreferences     
+        path filepath   paths get filename   
+        parserresult result   contentimporter importdatabase filepath  globals prefs getdefaultencoding result haswarnings      
+            frame showmessage result geterrormessage result getdatabase   hasentries      
+              
+            createnewblankentry filename  ifpresent res  add bibentry entry   result getdatabase   getentries   get 0   
+ 
+          
+        panel getdatabase   insertentry entry   
+        panel markbasechanged    
+        bibtexkeypatternutil makelabel panel getbibdatabasecontext   getmetadata   
+                 getcitekeypattern globals prefs getbibtexkeypatternpreferences   getkeypattern     panel getdatabase    entry  
+                globals prefs getbibtexkeypatternpreferences     
+        droppedfilehandler dfh droppedfilehandler frame  panel   
+        dfh linkpdftoentry filename  entry   
+        panel highlightentry entry globals prefs getboolean jabrefpreferences auto_open_form     
+            entryeditor editor   panel getentryeditor entry   
+            panel showentryeditor editor   
+          
+        res add entry optional bibentry  createnewentry     
+          
+        entrytypedialog etd entrytypedialog frame   
+          
+        etd setlocationrelativeto frame   
+        etd setvisible entrytype type   etd getchoice type id   idgenerator next bibentry bibentry bibentry id  type getname panel getdatabase   insertentry bibentry   
+ 
+                  
+                list bibentry  list arraylist      
+                list add bibentry   
+                updatefield setautomaticfields list true  globals prefs getupdatefieldpreferences     
+ 
+                  
+                panel getundomanager   addedit undoableinsertentry panel getdatabase    bibentry  panel    
+                panel output localization lang  added type getname   tolowercase      '   
+                          localization lang  entry panel getmode      basepanelmode showing_editor    
+                    panel setmode basepanelmode will_show_editor   
+                  
+ 
+                swingutilities invokelater    -  panel showentry bibentry    
+ 
+                  
+                panel markbasechanged optional of bibentry keycollisionexception ex    
+                logger info  key collision occurred   ex optional empty    
+      
+ 

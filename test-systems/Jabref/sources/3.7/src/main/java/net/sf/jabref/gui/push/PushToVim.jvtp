@@ -1,0 +1,74 @@
+ 
+    
+   created intellij idea  user  alver date  mar 7  2007 time  6 55 56 pm change template use file   settings 
+     file templates  
+    
+   error stream closed  see any errors  net sf jabref gui push pushtovim abstractpushtoapplication pushtoapplication   
+ 
+  
+ 
+  
+ 
+ 
+     override getapplicationname vim   
+      
+ 
+     override icon geticon icontheme getimage  vim    
+      
+ 
+     override jpanel getsettingspanel     
+        vimserver settext globals prefs get jabrefpreferences vim_server getsettingspanel    
+      
+ 
+     override storesettings storesettings    
+        globals prefs put jabrefpreferences vim_server  vimserver gettext     
+      
+ 
+     override initsettingspanel initsettingspanel    
+        builder appendrows  2dlu  p    
+        builder add localization lang  vim server name          xy 1  3   
+        builder add vimserver  xy 3  3   
+        settings   builder build    
+      
+ 
+     override pushentries bibdatabase database  list bibentry  entries keys  metadata metadata    
+ 
+        couldnotconnect couldnotcall notdefined initparameters    
+        commandpath   globals prefs get commandpathpreferencekey commandpath commandpath trim   isempty      
+            notdefined com commandpath   --servername   
+                    globals prefs get jabrefpreferences vim_server    --remote-send   
+                      c-\\  c-n a    getcitecommand     
+                          keys process p   runtime getruntime   exec com   
+ 
+            jabrefexecutorservice instance executeandwait inputstream out   p geterrorstream c  
+                    stringbuilder sb stringbuilder c   out read       -1    
+                            sb append c ioexception e    
+                        logger warn  could not read from stderr    e sb tostring   trim   isempty      
+                        logger warn  push to vim error      sb   
+                        couldnotconnect ioexception e    
+                    logger warn  file problem    e ioexception excep    
+            couldnotcall logger warn  problem pushing to vim    excep   
+          
+ 
+      
+ 
+     override operationcompleted basepanel panel couldnotconnect    
+            joptionpane showmessagedialog  
+                    panel frame    
+                      html     
+                            localization lang  could not connect to vim server  make sure that   
+                                       vim is running br with correct server name    
+                         html    
+                    localization lang  error    joptionpane error_message couldnotcall    
+            joptionpane showmessagedialog  
+                    panel frame    
+                    localization lang  could not run the 'vim' program     
+                    localization lang  error    joptionpane error_message operationcompleted panel   
+          
+      
+ 
+     override initparameters     
+        commandpathpreferencekey   jabrefpreferences vim  
+      
+ 
+ 

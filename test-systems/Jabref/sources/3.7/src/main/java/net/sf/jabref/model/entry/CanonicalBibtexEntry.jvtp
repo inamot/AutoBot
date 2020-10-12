@@ -1,0 +1,31 @@
+ returns canonical bibtex serialization  special characters not escaped written serializes fields  even jabref internal ones not serialize  key_field field key 
+        
+   generate first line  type bibtex key introduce new map fields stored case-sensitive jabref  see https   github com koppor jabref issues 45   
+   determine sorted fields fields lower case 
+   jabref stores key field key_field must not serialized 
+   generate field entries 
+   append closing entry bracket net sf jabref model entry canonicalbibtexentry getcanonicalrepresentation bibentry e    
+        stringbuilder sb stringbuilder citekey   e getcitekeyoptional   orelse      
+        sb append format   %s %s    e gettype   tolowercase locale us   citekey   append '\n'   
+ 
+          
+        map string  mapfieldtovalue hashmap      
+ 
+          
+        sortedset sortedfields treeset entry string  field   e getfieldmap   entryset fieldname   field getkey fieldvalue   field getvalue fieldname equals bibentry key_field lowercasefieldname   fieldname tolowercase locale us   
+                sortedfields add lowercasefieldname   
+                mapfieldtovalue put lowercasefieldname  fieldvalue   
+              
+          
+ 
+          
+        stringjoiner sj stringjoiner   \n        \n fieldname   sortedfields line format    %s    %s    fieldname valueof mapfieldtovalue get fieldname   replaceall  \\r\\n   \n     
+            sj add line   
+          
+        sb append sj   
+ 
+          
+        sb append sb tostring    
+      
+ 
+ 

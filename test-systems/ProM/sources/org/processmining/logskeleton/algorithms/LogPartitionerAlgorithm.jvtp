@@ -1,0 +1,58 @@
+ org processmining logskeleton algorithms logpartitioneralgorithm partition eventlogarray logs  set positivefilters  set negativefilters  xeventclassifier classifier    
+		xlog log   logs getlog logs getsize   - 1   
+		xlog filteredlog   xfactoryregistry instance   currentdefault   
+				 createlog  xattributemap  log getattributes   clone     
+		xlog discardedlog   xfactoryregistry instance   currentdefault   createlog log getattributes xtrace trace   log ok set tomatch hashset positivefilters xevent event   trace activity   classifier getclassidentity event negativefilters contains activity     
+					ok tomatch remove activity ok    tomatch isempty      
+				filteredlog add trace discardedlog add trace   
+			  
+		  
+		logs removelog logs getsize   - 1   
+ 
+		logs addlog filteredlog   
+		logs addlog discardedlog eventlogarray apply xlog log  xeventclassifier classifier name   xconceptextension instance   extractname log   
+		set activities hashset xtrace trace   log xevent event   trace    
+				activities add classifier getclassidentity event    
+			  
+		  
+		list activitylist arraylist activities   
+		collections sort activitylist line activity   activitylist    
+			line   line   activity        
+		  
+		line   line    #   
+		system out println line   
+		eventlogarray logs   eventlogarrayfactory createeventlogarray    
+		logs addlog log   
+		set positivefilters hashset log isempty      
+			map set scores hashmap set double maxscore   0  
+			set negativefilters hashset xtrace trace   log    
+				set score hashset xevent event   trace    
+					score add classifier getclassidentity event scores containskey score     
+					scores put score  1 0    trace size     1 scores put score  scores get score     1 0    trace size     1 scores get score    maxscore    
+					maxscore   scores get score   
+				  
+			  
+			list bestscore xattributelist list   xfactoryregistry instance   currentdefault   createattributelist  activities set score   scores keyset bestscore scores get score     maxscore    
+					bestscore arraylist score   
+					collections sort bestscore   
+					negativefilters addall activitylist   
+					negativefilters removeall score s   bestscore    
+						list addtocollection xfactoryregistry instance   currentdefault   
+								 createattributeliteral xconceptextension key_name  s  xconceptextension instance      
+					  
+				  
+			  
+			partition logs  positivefilters  negativefilters  classifier   
+			log   logs getlog logs getsize   - 2   
+			xconceptextension instance   assignname log  name           logs getsize   - 1           log size            bestscore   
+			line activity   activitylist bestscore contains activity     
+					line   line    1 line   line    0    
+				  
+			  
+			line   line   log size    
+			system out println line   
+			log getattributes   put  activities   list   
+			log   logs getlog logs getsize   - 1 logs  
+	  
+ 
+ 

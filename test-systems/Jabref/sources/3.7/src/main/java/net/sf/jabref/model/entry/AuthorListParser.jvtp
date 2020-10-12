@@ -1,0 +1,160 @@
+ raw bibtex author editor field    
+    index start original example point abc abc xyz'  tokenstart 2    
+    index end original example point abc abc xyz'  tokenend 5    
+    end token abbreviation  always  tokenstart   tokenabbr    tokenend   only valid gettoken returns token_word    
+    either space dash    
+    true upper-case token  false lower-case    
+   constant hashset containing names tex special characters static constructor initialize number entries token following offsets entry group entries one token 
+   character -- token terminator  either comma  
+   token types  returned gettoken procedure  
+    
+       parses string containing person names returns list person information  
+       
+        param listofnames string containing person names parsed 
+        return parsed list persons 
+        
+   initialization parser 
+   parse author author 
+   5 seems reasonable initial size 
+    
+       parses one author name returns preformatted information  
+       
+        return preformatted author name   code optional empty    code author name empty  
+        
+   initialization 
+   first step  collect tokens tokens' vector calculate indices first name contained hyphen 
+   second step  split name parts  here  calculate indices parts tokens' vector author information following negatives indicate absence corresponding part commas von part' 
+   'von part present 
+   commas present affects only 'first part junior part' 
+   one comma 
+   two commas 
+   'von part present von part first last name von part likely indicate single-entry name without initial capital letter unknown make von part last name facilitate handling last-name formatters  
+   third step actual splitting  construct author object last part small string complete upper case interpret initial first name case example smith sh think lastname smith firstname sh length   5 constraint allow smith s h input 
+    
+       concatenates list tokens tokens' vector  tokens separated spaces dashes  depending stored tokens'  callers always ensure start   end  thus exists least one token concatenated  
+       
+        param start     index first token concatenated tokens' vector 
+                         always divisible token_group_length   
+        param end       index first token not concatenated tokens' 
+                        vector  always divisible token_group_length   
+        param offset    offset within token group  used request concatenation either full tokens abbreviation   
+        param dotafter  code true  code  -- add period each token   code false  code not add  
+        return result concatenation  
+        
+   here always start   end 
+    
+       parses next token  
+        p string being parsed stored global variable  code orig  code position parsing start stored global variable 
+        code token_end  code   thus   code token_end  code set 0 before first invocation  procedure updates  code token_end  code   
+       thus  subsequent invocations not require any additional variable 
+       settings  
+        p type token returned code token_word  code   
+       additional information given global variables  code token_start  code   
+        code token_end  code    code token_abbr  code    code token_term  code code token_case  code   namely   code orig substring token_start token_end   code thext token   code orig substring token_start token_abbr   code token abbreviation   code token_term  code  contains token 
+       terminator  space dash code token_case  code code true  code token upper-case code false  code token lower-case  
+       
+        return  code token_eof  code tokens   code token_comma  code  -- 
+       token comma   code token_and  code  -- token word or etc colon   code token_word  code  -- 
+       token word  additional information given global 
+       variables  code token_start  code    code token_end  code   
+        code token_abbr  code    code token_term  code code token_case  code   
+        
+   colon considered separate names particle braces  always treat it starts upper case letter  otherwise name van den bergen   hans not yield proper last name  net sf jabref model entry authorlistparser tex_names add  aa    
+        tex_names add  ae    
+        tex_names add  l    
+        tex_names add  o    
+        tex_names add  oe    
+        tex_names add  i    
+        tex_names add  aa    
+        tex_names add  ae    
+        tex_names add  l    
+        tex_names add  o    
+        tex_names add  oe    
+        tex_names add  j authorlist parse listofnames    
+ 
+        objects requirenonnull listofnames   
+ 
+          
+        original   listofnames  
+        tokenstart   0  
+        tokenend   0  
+ 
+          
+        list author  authors arraylist   5 tokenstart   original length      
+            getauthor   ifpresent authors  add authorlist authors optional author  getauthor     
+ 
+        list object  tokens arraylist vonstart   -1 laststart   -1 commafirst   -1 commasecond   -1 continueloop continueloop token   gettoken token token_eof token_and  
+                continueloop token_comma commafirst   0    
+                    commafirst   tokens size commasecond   0    
+                    commasecond   tokens size token_word  
+                tokens add original substring tokenstart  tokenend    
+                tokens add original substring tokenstart  tokenabbr    
+                tokens add tokenterm   
+                tokens add tokencase commafirst    0 laststart    0 vonstart   0 tokencase previoustermtoken    tokens size   - token_group_length - token_group_length    offset_token_term previoustermtoken    0     tokens get previoustermtoken  equals vonstart   tokens size   - token_group_length laststart   0     tokencase    
+                    laststart   tokens size   - token_group_length break tokens isempty optional empty firstpartstart   -1 vonpartstart   -1 lastpartstart   -1 jrpartstart   -1 firstpartend vonpartend   0 lastpartend   0 jrpartend   0 commafirst   0 vonstart   0      
+                lastpartend   tokens size    
+                lastpartstart   tokens size   - token_group_length index    tokens size   -  2   token_group_length     offset_token_term index   0    
+                    character ch    character  tokens get index ch    '-'    
+                        lastpartstart -  token_group_length  
+                      
+                  
+                firstpartend   lastpartstart firstpartend   0    
+                    firstpartstart   0 laststart    0    
+                    lastpartend   tokens size    
+                    lastpartstart   laststart  
+                    vonpartend   lastpartstart vonpartend   tokens size    
+                  
+                vonpartstart   vonstart  
+                firstpartend   vonpartstart firstpartend   0    
+                    firstpartstart   0 firstpartend   tokens size commasecond   0 commafirst   firstpartend    
+                    firstpartstart   commafirst commasecond   firstpartend    
+                    firstpartstart   commasecond  
+                  
+                jrpartend   commasecond commafirst   jrpartend    
+                    jrpartstart   commafirst vonstart    0 laststart   0    
+                    vonpartend   commafirst lastpartend   commafirst  
+                    lastpartstart   laststart  
+                    vonpartend   lastpartstart  
+                  
+                vonpartstart   0 lastpartend   commafirst lastpartend   0    
+                    lastpartstart   0 firstpartstart    -1      lastpartstart    -1      vonpartstart    -1     
+              
+              
+              
+              
+            lastpartstart   vonpartstart  
+            lastpartend   vonpartend  
+            vonpartstart   -1  
+            vonpartend   -1 firstpart   firstpartstart   0 concattokens tokens  firstpartstart  firstpartend  offset_token firstabbr   firstpartstart   0 concattokens tokens  firstpartstart  firstpartend  
+                offset_token_abbr vonpart   vonpartstart   0 concattokens tokens  vonpartstart  vonpartend  offset_token lastpart   lastpartstart   0 concattokens tokens  lastpartstart  lastpartend  offset_token jrpart   jrpartstart   0 concattokens tokens  jrpartstart  jrpartend  offset_token firstpart lastpart lastpart equals lastpart touppercase        lastpart length     5 optional of author lastpart  lastpart  vonpart  firstpart  jrpart optional of author firstpart  firstabbr  vonpart  lastpart  jrpart concattokens list object  tokens start end offset dotafter    
+        stringbuilder result stringbuilder    
+          
+        result append tokens get start   offset dotafter    
+            result append updatedstart   start   token_group_length updatedstart   end    
+            result append tokens get  updatedstart - token_group_length    offset_token_term    
+            result append tokens get updatedstart   offset dotafter    
+                result append ' '   
+              
+            updatedstart    token_group_length result tostring gettoken     
+        tokenstart   tokenend tokenstart   original length c   original charat tokenstart c    '~'      c    '-'     character iswhitespace c tokenstart    
+          
+        tokenend   tokenstart tokenstart    original length token_eof original charat tokenstart     ' '    
+            tokenend token_comma original charat tokenstart     ' '    
+            tokenend token_and  
+          
+        tokenabbr   -1  
+        tokenterm   ' '  
+        tokencase braceslevel   0 currentbackslash   -1 firstletterisfound tokenend   original length c   original charat tokenend c    ' '    
+                braceslevel firstletterisfound     tokenabbr   0       braceslevel    0      c    ' '      
+                tokenabbr   tokenend c    ' '      braceslevel   0     
+                braceslevel firstletterisfound     currentbackslash   0     character isletter c braceslevel    0    
+                    tokencase   character isuppercase c tokencase firstletterisfound currentbackslash    0      character isletter c firstletterisfound texcmdname   original substring currentbackslash   1  tokenend tex_names contains texcmdname     
+                        tokencase   character isuppercase texcmdname charat 0    
+                        firstletterisfound currentbackslash   -1 c    '\\'    
+                currentbackslash   tokenend braceslevel    0          ~-  indexof c     -1     character iswhitespace c tokenend tokenabbr   0    
+            tokenabbr   tokenend tokenend   original length        original charat tokenend     '-'     
+            tokenterm and  equalsignorecase original substring tokenstart  tokenend token_and token_word  
+          
+      
+ 
+ 

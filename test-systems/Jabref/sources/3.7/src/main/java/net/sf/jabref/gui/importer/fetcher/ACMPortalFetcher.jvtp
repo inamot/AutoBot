@@ -1,0 +1,167 @@
+ 
+   fetch only one page  otherwise user blocked acm  100 old setting  see bug 3532752 - https   sourceforge net tracker index php?func detail aid 3532752 group_id 92314 atid 600306 
+   user settings 
+   patterns used extract information preview  
+   convert html optionally add curly brackets around key words keep case 
+   unit formatting 
+   case keeping id 
+   always try ris import first 
+   find authors  
+   find title  
+   find source  
+   set user-agent avoid being blocked crawler 
+  wait between requests blocked acm abstract 
+  wait between requests blocked acm 
+   ignored method must convert html style char sequences normal characters  
+        param text text handle  
+        return converted text  
+        
+    
+       find out many hits found  
+        param page 
+        
+   remove 1 234 method called dialog user canceled signaled stop expected any long-running fetch operations stop method called  net sf jabref gui importer fetcher acmportalfetcher previewentryfetcher pattern max_hits_pattern   pattern 
+             compile  result \\d   \\d   ndash  \\d   \\d  of  \\d   \\d      
+ 
+  
+ 
+  
+ 
+      
+  
+  
+  
+ 
+ 
+     override jpanel getoptionspanel     
+        jpanel pan jpanel    
+        pan setlayout gridlayout 0  1    
+ 
+        guidebutton setselected buttongroup group buttongroup    
+        group add acmbutton   
+        group add guidebutton   
+ 
+        pan add abscheckbox   
+        pan add acmbutton   
+        pan add guidebutton pan  
+      
+ 
+     override processquerygetpreview query  fetcherpreviewdialog preview  outputprinter status terms   query  
+        piv   0  
+        shouldcontinue acmorguide   acmbutton isselected    
+        fetchabstract   abscheckbox isselected address   makeurl    
+        linkedhashmap jlabel  previews linkedhashmap urldownload dl urldownload address page   dl downloadtostring globals prefs getdefaultencoding hits   getnumberofhits page  results_found_pattern  acmportalfetcher hits_pattern index   page indexof results_found_pattern index    0    
+                page   page substring index   results_found_pattern length hits    0    
+                status showmessage localization lang  no entries found the search 0'   terms   
+                        localization lang  search %0   gettitle     joptionpane information_message hits   20    
+                status showmessage  
+                        localization lang  %0 entries found  to reduce server load  only %1 will be downloaded valueof hits valueof per_page    
+                        localization lang  search %0   gettitle     joptionpane information_message   
+              
+ 
+            hits   getnumberofhits page  page_range_pattern  acmportalfetcher max_hits_pattern   
+            parse page  math min hits  per_page   previews map entry jlabel  entry   previews entryset      
+                preview addentry entry getkey    entry getvalue ioexception e    
+            logger error  error fetching from     gettitle    e   
+            preview showerrormessage gettitle    e getlocalizedmessage override getentries map selection  importinspector inspector map entry selentry   selection entryset shouldcontinue selentry getvalue      
+                downloadentrybibtex selentry getkey    fetchabstract  ifpresent entry -     
+                      
+                    entry getfield fieldname title  ifpresent title -    
+                        title   title replace  \\         replace  \\#    #    
+                        title   converthtmlchars title globals prefs getboolean jabrefpreferences use_unit_formatter_on_search     
+                            title   unitstolatexformatter format title globals prefs getboolean jabrefpreferences use_case_keeper_on_search     
+                            title   protecttermsformatter format title   
+                          
+                        entry setfield fieldname title  title   
+                        
+ 
+                    entry getfield fieldname ifpresent abstr -  entry setfield fieldname converthtmlchars abstr     
+                    inspector addentry entry   
+                    
+              
+          
+      
+ 
+     override getwarninglimit 10  
+      
+ 
+     override getpreferredpreviewheight 75  
+      
+ 
+     override processquery query  importinspector dialog  outputprinter status makeurl     
+        stringbuilder sb stringbuilder acmportalfetcher start_url  append acmportalfetcher search_url_part  
+                 append terms replace       %20    append acmportalfetcher search_url_part_ii acmorguide    
+            sb append  acm sb append  guide    
+          
+        sb append acmportalfetcher end_url sb tostring parse text hits  map jlabel  entries entrynumber   1 getnextentryurl text  entrynumber  entries      entrynumber    hits     
+            entrynumber getentrybibtexurl fullcitation    
+          
+        matcher idmatcher   acmportalfetcher id_pattern matcher fullcitation idmatcher find idmatcher group 1   
+          
+        logger info  did not find id in      fullcitation getnextentryurl alltext entrynumber  
+            map jlabel  entries index   alltext indexof next_entry_pattern  piv endindex   alltext indexof end_entry_pattern  index   
+        piv   endindex index    0 text   alltext substring index  endindex   
+              
+            matcher fullcitation   
+                    acmportalfetcher full_citation_pattern matcher text item fullcitation find link   getentrybibtexurl fullcitation group 1 endindex   0    
+                    stringbuilder sb stringbuilder authstart   text indexof author_marker authstart    0 authend   text indexof    div    authstart   author_marker length authend    0    
+                            sb append   p    append text substring authstart  authend   append    p     
+                          
+ 
+                      
+                      
+                    matcher titm   acmportalfetcher title_pattern matcher text titm find      
+                        sb append   p    append titm group 1   append    p sourcestart   text indexof source_marker sourcestart    0 sourceend   text indexof    div    sourcestart   source_marker length sourceend    0 sourcetext   text substring sourcestart  sourceend   
+                              
+                            matcher source   acmportalfetcher source_pattern matcher sourcetext source find      
+                                sb append   p    append source group 1   append    p     
+                              
+                          
+                      
+ 
+                    item   sb tostring item   link  
+                  
+ 
+                jlabel preview jlabel   html     item      html     
+                preview setpreferredsize dimension 750  100    
+                entries put link  preview logger warn  citation unmatched     integer tostring entrynumber false optional bibentry  downloadentrybibtex id downloadabstract url url url acmportalfetcher start_url   acmportalfetcher bibtex_url   id   acmportalfetcher bibtex_url_end   
+            urlconnection connection   url openconnection    
+ 
+              
+            connection addrequestproperty  user-agent    mozilla 5 0  windows nt 5 1  rv 31 0  gecko 20100101 firefox 31 0    
+            collection bibentry  items bufferedreader in bufferedreader inputstreamreader connection getinputstream    standardcharsets utf_8      
+                items   bibtexparser parse in  globals prefs getimportformatpreferences    getdatabase   
+                         getentries ioexception e    
+                logger info  download of bibtex information from acm portal failed    e items items isempty optional empty    
+              
+            bibentry entry   items iterator   next    
+            thread sleep acmportalfetcher wait_time downloadabstract    
+                urldownload dl urldownload acmportalfetcher start_url   acmportalfetcher abstract_url   id page   dl downloadtostring globals prefs getdefaultencoding     
+ 
+                matcher absm   acmportalfetcher abstract_pattern matcher page absm find      
+                    entry setfield fieldname absm group 1  trim     
+                  
+                thread sleep acmportalfetcher wait_time optional of entry nosuchelementexception e    
+            logger info  bad bibtex record read at      acmportalfetcher bibtex_url   id   acmportalfetcher bibtex_url_end  
+                    e malformedurlexception e    
+            logger info  malformed url    e ioexception e    
+            logger info  cannot connect    e interruptedexception ignored optional empty converthtmlchars text htmltolatexformatter format text getnumberofhits page marker  pattern pattern ioexception ind   page indexof marker ind    0 substring   page substring ind  math min ind   100  page length      
+            matcher m   pattern matcher substring m find number   m group 1   
+                    number   number replace integer parseint number numberformatexception ex ioexception  cannot parse number of hits    
+                  
+              
+            logger info  unmatched      substring ioexception  cannot parse number of hits    
+      
+ 
+     override gettitle acm portal   
+      
+ 
+     override helpfile gethelppage helpfile fetcher_acm  
+      
+ 
+ 
+      
+      
+      
+     override stopfetching     
+        shouldcontinue 

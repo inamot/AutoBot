@@ -1,0 +1,92 @@
+ 
+    
+   tools automatically detecting jar executable paths openoffice libreoffice  
+    
+   linux  
+   found both 
+   otherwise one file found  select them net sf jabref gui openoffice autodetectpaths abstractworker autodetectpaths jdialog parent  openofficepreferences preferences parent   parent preferences   preferences runautodetection     
+        foundpaths preferences checkautodetectedpaths init    
+        getworker   run    
+        update foundpaths  
+      
+ 
+     override run     
+        foundpaths   autodetectpaths canceled filesearchcanceled  
+      
+ 
+     override init     
+        prog   showprogressdialog parent  localization lang  autodetecting paths       
+                localization lang  please wait override update     
+        prog dispose autodetectpaths     
+        filesearch resetfilesearch os windows    
+            list file  progfiles   filesearch findwindowsprogramfilesdir    
+            list file  sofficefiles arraylist    
+                    filesearch findfileindirs progfiles  openofficepreferences windows_executable filesearchcanceled sofficefiles isempty      
+                joptionpane showmessagedialog parent  
+                        localization 
+                                 lang  unable to autodetect openoffice libreoffice installation  please choose the installation directory manually     
+                        localization lang  could not find openoffice libreoffice installation    
+                        joptionpane information_message   
+                jfilechooser filechooser jfilechooser file system getenv  programfiles      
+                filechooser setdialogtype jfilechooser open_dialog   
+                filechooser setfilefilter javax swing filechooser filefilter     
+ 
+                     override accept file file file isdirectory    
+                      
+ 
+                     override getdescription localization lang  directories    
+                      
+                    
+                filechooser setfileselectionmode jfilechooser directories_only   
+                filechooser showopendialog parent filechooser getselectedfile sofficefiles add filechooser getselectedfile     
+                  
+              
+            optional file  actualfile   checkandselectamongmultipleinstalls sofficefiles actualfile ispresent setuppreferencesforoo actualfile get   getparentfile    actualfile get    
+                        openofficepreferences windows_executable os os_x    
+            list file  dirlist   filesearch findosxprogramfilesdir    
+            list file  sofficefiles arraylist    
+                    filesearch findfileindirs dirlist  openofficepreferences osx_executable filesearchcanceled optional file  actualfile   checkandselectamongmultipleinstalls sofficefiles actualfile ispresent file rootdir   dirlist actualfile get   getpath   startswith rootdir getpath setuppreferencesforoo rootdir  actualfile get    openofficepreferences osx_executable usrroot     usr lib   
+            optional file  inusr   filesearch findfileindir file usrroot   openofficepreferences linux_executable filesearchcanceled inusr ispresent      
+                inusr   filesearch findfileindir file   usr lib64    openofficepreferences linux_executable inusr ispresent      
+                    usrroot     usr lib64 filesearchcanceled optional file  inopt   filesearch findfileindir file   opt    openofficepreferences linux_executable filesearchcanceled inusr ispresent         inopt ispresent setuppreferencesforoo usrroot  inusr get    openofficepreferences linux_executable inopt ispresent inusr ispresent setuppreferencesforoo   opt   inopt get    openofficepreferences linux_executable jradiobutton optrb jradiobutton inopt get   getpath jradiobutton usrrb jradiobutton inusr get   getpath buttongroup bg buttongroup    
+                    bg add optrb   
+                    bg add usrrb   
+                    formbuilder b   formbuilder create   
+                             layout formlayout  left pref    pref  2dlu  pref  2dlu  pref      
+                    b add localization 
+                             lang  found more than one openoffice libreoffice executable          
+                              localization lang  please choose which one to connect to     
+                             xy 1  1   
+                    b add optrb  xy 1  3   
+                    b add usrrb  xy 1  5 answer   joptionpane showconfirmdialog b getpanel    
+                            localization lang  choose openoffice libreoffice executable    
+                            joptionpane ok_cancel_option answer    joptionpane cancel_option optrb isselected setuppreferencesforoo   opt   inopt get    openofficepreferences linux_executable setuppreferencesforoo usrroot  inusr get    openofficepreferences linux_executable setuppreferencesforoo usrroot  file inusr sofficename setuppreferencesforoo file usrroot   inusr  sofficename setuppreferencesforoo file rootdir  file inusr sofficename    
+        preferences setexecutablepath file inusr  sofficename  getpath     
+        optional file  jurt   filesearch findfileindir rootdir   jurt jar filesearchcanceled jurt ispresent      
+            preferences setjarspath jurt get   getpath optional file  checkandselectamongmultipleinstalls list file  sofficefiles sofficefiles isempty optional empty sofficefiles size      1 optional of sofficefiles get 0    
+          
+          
+        defaultlistmodel file  mod defaultlistmodel file tmpfile   sofficefiles    
+            mod addelement tmpfile   
+          
+        jlist file  filelist jlist   mod   
+        filelist setselectionmode listselectionmodel single_selection   
+        filelist setselectedindex 0   
+        formbuilder builder   formbuilder create   layout formlayout  left pref    pref  2dlu  pref  4dlu  pref     
+        builder add localization lang  found more than one openoffice libreoffice executable     xy 1  1   
+        builder add localization lang  please choose which one to connect to     xy 1  3   
+        builder add filelist  xy 1  5 answer   joptionpane showconfirmdialog builder getpanel    
+                localization lang  choose openoffice libreoffice executable    joptionpane ok_cancel_option answer    joptionpane cancel_option optional empty optional of filelist getselectedvalue jdialog showprogressdialog jdialog progressparent title message includecancelbutton    
+        filesearchcanceled jprogressbar bar jprogressbar swingconstants horizontal jdialog progressdialog jdialog progressparent  title bar setborder borderfactory createemptyborder 10  10  10  10    
+        bar setindeterminate includecancelbutton    
+            jbutton cancel jbutton localization lang  cancel     
+            cancel addactionlistener event -    
+                filesearchcanceled filesearch cancelfilesearch    
+                  jbutton  event getsource    setenabled progressdialog add cancel  borderlayout south   
+          
+        progressdialog add jlabel message   borderlayout north   
+        progressdialog add bar  borderlayout center   
+        progressdialog pack    
+        progressdialog setlocationrelativeto progressdialog setvisible progressdialog  
+      
+ 

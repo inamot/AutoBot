@@ -1,0 +1,113 @@
+ 
+    
+   dialog modifying existing citations  
+    net sf jabref gui openoffice citationmanager citationmanager jabrefframe frame  oobibbase oobase nosuchelementexception  wrappedtargetexception  unknownpropertyexception   
+        diag jdialog frame  localization lang  manage citations oobase   oobase  
+ 
+        list basiceventlist      
+        xnameaccess nameaccess   oobase getreferencemarks    
+        list names   oobase getjabrefreferencemarks nameaccess name   names    
+            list add citationentry name  
+                      html        oobase getcitationcontext nameaccess  name  30  30 html    
+                    oobase getcustomproperty name     
+          
+        tablemodel defaulteventtablemodel   list citationentryformat     
+        table jtable tablemodel   
+        guiutil correctrowheight table   
+ 
+        diag add jscrollpane table   borderlayout center   
+ 
+        buttonbarbuilder bb buttonbarbuilder    
+        bb addglue    
+        jbutton ok jbutton localization lang  ok     
+        bb addbutton ok   
+        jbutton cancel jbutton localization lang  cancel     
+        bb addbutton cancel   
+        bb addglue    
+        bb getpanel   setborder borderfactory createemptyborder 5  5  5  5    
+        diag add bb getpanel    borderlayout south   
+ 
+        diag pack    
+        diag setsize 700  400   
+ 
+        ok addactionlistener e storesettings unknownpropertyexception   notremoveableexception   propertyexistexception   illegaltypeexception   
+                    illegalargumentexception ex    
+                logger warn  problem modifying citation   ex   
+                joptionpane showmessagedialog frame  localization lang  problem modifying citation     
+              
+            diag dispose    
+            
+ 
+        action cancelaction abstractaction     
+ 
+             override actionperformed actionevent actionevent    
+                diag dispose    
+              
+           
+        cancel addactionlistener cancelaction   
+ 
+        bb getpanel   getinputmap jcomponent when_in_focused_window  put 
+                 globals getkeyprefs   getkey keybinding close_dialog    close    
+        bb getpanel   getactionmap   put  close   cancelaction   
+ 
+        table getcolumnmodel   getcolumn 0  setpreferredwidth 580   
+        table getcolumnmodel   getcolumn 1  setpreferredwidth 110   
+        table setpreferredscrollableviewportsize dimension 700  500    
+        table addmouselistener tableclicklistener storesettings unknownpropertyexception  notremoveableexception  propertyexistexception  
+            illegaltypeexception  illegalargumentexception citationentry entry   list    
+            optional pageinfo   entry getpageinfo entry pageinfochanged      pageinfo ispresent      
+                oobase setcustomproperty entry getrefmarkname    pageinfo get showdialog     
+        diag setlocationrelativeto diag getparent     
+        diag setvisible citationentryformat tableformat citationentry    
+ 
+         override getcolumncount 2  
+          
+ 
+         override getcolumnname i i    0 localization lang  citation localization lang  extra information    
+              
+          
+ 
+         override object getcolumnvalue citationentry citentry i i    0 citentry getcontext citentry getpageinfo   orelse tableclicklistener mouseadapter   
+ 
+         override mouseclicked mouseevent e e getbutton      mouseevent button1      e getclickcount      2 row   table rowatpoint e getpoint row    0    
+                    singlecitationdialog scd singlecitationdialog list get row    
+                    scd showdialog singlecitationdialog singlecitationdialog citationentry citentry entry   citentry  
+            pageinfo settext entry getpageinfo   orelse       
+ 
+            singlecitedialog jdialog citationmanager diag  localization lang  citation formbuilder builder   formbuilder create   
+                     layout formlayout  left pref  4dlu  fill 150dlu grow    pref  4dlu  pref     
+            builder add entry getcontext    xyw 1  1  3   
+            builder add localization lang  extra information  e g  page number     xy 1  3   
+            builder add pageinfo  xy 3  3   
+            builder padding  10dlu  10dlu  10dlu  10dlu    
+            singlecitedialog getcontentpane   add builder getpanel    borderlayout center   
+ 
+            buttonbarbuilder bb buttonbarbuilder    
+            bb addglue    
+            bb addbutton okbutton   
+            bb addbutton cancelbutton   
+            bb addglue    
+            bb padding  5dlu  5dlu  5dlu  5dlu    
+            singlecitedialog add bb getpanel    borderlayout south   
+ 
+            okbutton addactionlistener e pageinfo gettext   trim   isempty      
+                    entry setpageinfo entry setpageinfo pageinfo gettext   trim     
+                  
+                tablemodel firetabledatachanged    
+                singlecitedialog dispose    
+                
+ 
+            action cancelaction abstractaction     
+ 
+                 override actionperformed actionevent actionevent    
+                    singlecitedialog dispose    
+                  
+               
+            cancelbutton addactionlistener cancelaction   
+ 
+            builder getpanel   getinputmap jcomponent when_in_focused_window  put 
+                     globals getkeyprefs   getkey keybinding close_dialog    close    
+            builder getpanel   getactionmap   put  close   cancelaction showdialog     
+            singlecitedialog pack    
+            singlecitedialog setlocationrelativeto singlecitedialog getparent     
+            singlecitedialog setvisible 

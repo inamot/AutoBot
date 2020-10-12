@@ -1,0 +1,55 @@
+ 
+    
+   restores saves position non-modal windows inside jabref preferences  
+   
+   includes multi-monitor support windows placed another monitor main one tries restore position afterwards stored position multi-monitor setup not available anymore places window equivalent position main monitor  
+    
+   set up componentlistener saves last size position dialog 
+   preference values wrong not multi-monitor setup anymore 
+   adapt position inside available boundaries 
+   maximizing handled explicitely 
+   current algorithm  
+   1  try move main screen 
+   2  use default sizes main monitor net sf jabref gui util windowlocation windowlocation window window posxkey posykey sizexkey sizeykey window   window posxkey   posxkey posykey   posykey sizexkey   sizexkey sizeykey   sizeykey  
+ 
+          
+        window addcomponentlistener componentadapter     
+             override componentresized componentevent e    
+                storecurrentwindowlocation    
+              
+ 
+             override componentmoved componentevent e    
+                storecurrentwindowlocation displaywindowatstoredlocation     
+        windowposition storedposition   getstoredlocation isdisplayable storedposition     
+              
+            storedposition   adaptposition storedposition   
+          
+ 
+        setwindowlocation storedposition storecurrentwindowlocation window frame    
+            frame frame    frame  window frame getextendedstate      frame maximized_both point location   window getlocation    
+        dimension dimensions   window getsize    
+ 
+        globals prefs putint posxkey  location x   
+        globals prefs putint posykey  location y   
+        globals prefs putint sizexkey  dimensions width   
+        globals prefs putint sizeykey  dimensions height windowposition getstoredlocation sizex   globals prefs getint sizexkey sizey   globals prefs getint sizeykey posx   globals prefs getint posxkey posy   globals prefs getint posykey windowposition posx  posy  sizex  sizey setwindowlocation windowposition storedposition    
+        window setlocation storedposition posx  storedposition posy   
+        window setsize storedposition sizex  storedposition sizey isdisplayable windowposition position    
+        jframe frame jframe    
+        frame setbounds position posx  position posy  position sizex  position sizey getvirtualbounds   contains frame getbounds rectangle getvirtualbounds     
+        rectangle bounds rectangle 0  0  0  0   
+        graphicsdevice   devices   graphicsenvironment getlocalgraphicsenvironment   getscreendevices graphicsdevice device   devices    
+            bounds add device getdefaultconfiguration   getbounds bounds windowposition adaptposition windowposition position isdisplayable position position  
+          
+ 
+          
+          
+          
+        graphicsdevice mainscreen   graphicsenvironment getlocalgraphicsenvironment   getdefaultscreendevice mainscreenheight   mainscreen getdisplaymode   getheight mainscreenwidth   mainscreen getdisplaymode   getwidth newposx   position posx newposy   position posy newsizex   position sizex newsizey   position sizey position posx   position sizex    mainscreenwidth position sizex    mainscreenwidth    
+                newposx   mainscreenwidth - position sizex newposx   globals prefs getintdefault posxkey   
+                newsizex   globals prefs getintdefault sizexkey position posy   position sizey    mainscreenheight position sizey    mainscreenheight    
+                newposy   mainscreenheight - position sizey newposy   globals prefs getintdefault posykey   
+                newsizey   globals prefs getintdefault sizeykey windowposition newposx  newposy  newsizex  newsizey windowposition posx posy sizex sizey windowposition posx posy sizex sizey posx   posx posy   posy sizex   sizex sizey   sizey  
+          
+      
+ 

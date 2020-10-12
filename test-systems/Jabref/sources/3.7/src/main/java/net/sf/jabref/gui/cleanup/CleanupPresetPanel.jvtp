@@ -1,0 +1,66 @@
+ net sf jabref gui cleanup cleanuppresetpanel cleanuppresetpanel bibdatabasecontext databasecontext  cleanuppreset cleanuppreset cleanuppreset   objects requirenonnull cleanuppreset databasecontext   objects requirenonnull databasecontext   
+        init init     
+        cleanupdoi jcheckbox  
+                localization lang  move dois from note and url field to doi field and remove http prefix     
+        cleanupissn jcheckbox localization lang  reformat issn databasecontext getmetadata   getdefaultfiledirectory   ispresent      
+            cleanupmovepdf jcheckbox localization lang  move linked files to file directory %0   
+                    databasecontext getmetadata   getdefaultfiledirectory   get cleanupmovepdf jcheckbox localization lang  move linked files to file directory %0            
+            cleanupmovepdf setenabled cleanupmovepdf setselected cleanupmakepathsrelative jcheckbox  
+                localization lang  make paths of linked files relative possible      
+        cleanuprenamepdf jcheckbox localization lang  rename pdfs to given filename format pattern     
+        cleanuprenamepdf addchangelistener  
+                event -  cleanuprenamepdfonlyrelativepaths setenabled cleanuprenamepdf isselected      
+        cleanuprenamepdfonlyrelativepaths jcheckbox localization lang  rename only pdfs having a relative path     
+        cleanupupgradeexternallinks jcheckbox  
+                localization lang  upgrade external pdf ps links to use the '%0' field    fieldname file    
+        cleanupbiblatex jcheckbox localization lang  
+                 convert to biblatex format example  move the value of the 'journal' field to 'journaltitle'      
+ 
+        cleanupformatters fieldformattercleanupspanel localization lang  run field formatter     
+                cleanups default_save_actions   
+ 
+        updatedisplay cleanuppreset   
+ 
+        formlayout layout formlayout  left 15dlu  pref grow   
+                 pref  pref  pref  pref  pref  pref  pref pref  pref 190dlu  fill pref grow     
+ 
+        formbuilder builder   formbuilder create   layout layout   
+        builder add cleanupdoi  xyw 1  1  2   
+        builder add cleanupupgradeexternallinks  xyw 1  2  2   
+        builder add cleanupmovepdf  xyw 1  3  2   
+        builder add cleanupmakepathsrelative  xyw 1  4  2   
+        builder add cleanuprenamepdf  xyw 1  5  2 currentpattern   localization lang  filename format pattern   concat       
+                 concat globals prefs get jabrefpreferences import_filenamepattern    
+        builder add jlabel currentpattern   xy 2  6   
+        builder add cleanuprenamepdfonlyrelativepaths  xy 2  7   
+        builder add cleanupbiblatex  xyw 1  8  2   
+        builder add cleanupissn  xyw 1  9  2   
+        builder add cleanupformatters  xyw 1  10  2   
+        panel   builder build updatedisplay cleanuppreset preset    
+        cleanupdoi setselected preset iscleanupdoi cleanupmovepdf isenabled      
+            cleanupmovepdf setselected preset ismovepdf     
+          
+        cleanupmakepathsrelative setselected preset ismakepathsrelative     
+        cleanuprenamepdf setselected preset isrenamepdf     
+        cleanuprenamepdfonlyrelativepaths setselected preset isrenamepdfonlyrelativepaths     
+        cleanuprenamepdfonlyrelativepaths setenabled cleanuprenamepdf isselected     
+        cleanupupgradeexternallinks setselected preset iscleanupupgradeexternallinks     
+        cleanupbiblatex setselected preset isconverttobiblatex     
+        cleanupbiblatex setselected preset iscleanupissn     
+        cleanupformatters setvalues preset getformattercleanups jpanel getpanel panel cleanuppreset getcleanuppreset     
+ 
+        set cleanuppreset cleanupstep  activejobs   enumset noneof cleanuppreset cleanupstep cleanupmovepdf isselected      
+            activejobs add cleanuppreset cleanupstep move_pdf cleanupdoi isselected      
+            activejobs add cleanuppreset cleanupstep clean_up_doi cleanupissn isselected      
+            activejobs add cleanuppreset cleanupstep clean_up_issn cleanupmakepathsrelative isselected      
+            activejobs add cleanuppreset cleanupstep make_paths_relative cleanuprenamepdf isselected cleanuprenamepdfonlyrelativepaths isselected      
+                activejobs add cleanuppreset cleanupstep rename_pdf_only_relative_paths activejobs add cleanuppreset cleanupstep rename_pdf cleanupupgradeexternallinks isselected      
+            activejobs add cleanuppreset cleanupstep clean_up_upgrade_external_links cleanupbiblatex isselected      
+            activejobs add cleanuppreset cleanupstep convert_to_biblatex   
+          
+ 
+        activejobs add cleanuppreset cleanupstep fix_file_links   
+ 
+        cleanuppreset cleanuppreset activejobs  cleanupformatters getformattercleanups cleanuppreset  
+      
+ 

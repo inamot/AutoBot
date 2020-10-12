@@ -1,0 +1,244 @@
+ class produces dialog box managing term list files  
+    
+   build dialog 
+   write changes preferences 
+   restore preferences 
+   add action listener edit  menu item supposed open term file external editor  
+   fall back txt  
+   add action listener show  menu item supposed open term file dialog  
+   create action listener removing term file used remove button 
+   add remove menu item 
+   add action listener reload  menu item supposed reload external term file currently selected term list  
+        return selected term list empty term list selected  
+        
+   make dialog box display contents listener table monitoring current selection  
+        
+   enable disable popup menu items buttons 
+   build content panel 
+   buttons 
+   key bindings  net sf jabref gui protectedterms protectedtermsdialog protectedtermsdialog jabrefframe frame  protectedtermsloader loader frame   objects requirenonnull frame loader   objects requirenonnull loader   
+        init init     
+        setuppopupmenu    
+ 
+        loadbutton addactionlistener actionevent -    
+            addfiledialog adddialog addfiledialog    
+            adddialog setvisible adddialog getfilename   ifpresent filename -  loader addprotectedtermslistfromfile filename tablemodel firetabledatachanged    
+            
+        loadbutton settooltiptext localization lang  add terms file     
+ 
+        removebutton addactionlistener removeaction   
+        removebutton settooltiptext localization lang  remove terms file     
+ 
+        newbutton addactionlistener actionevent -    
+            newprotectedtermsfiledialog newdialog newprotectedtermsfiledialog diag  loader   
+            newdialog setvisible tablemodel firetabledatachanged    
+            
+        newbutton settooltiptext localization lang terms file     
+ 
+ 
+        setuptable    
+ 
+          
+        diag jdialog frame  localization lang  manage terms files formbuilder builder   formbuilder create    
+        builder layout formlayout  fill pref grow  4dlu  left pref  4dlu  left pref  4dlu  left pref   
+                 100dlu grow  4dlu  pref     
+        builder add jscrollpane table   xyw 1  1  7   
+        builder add newbutton  xy 3  3   
+        builder add loadbutton  xy 5  3   
+        builder add removebutton  xy 7  3   
+        builder padding  5dlu  5dlu  5dlu  5dlu    
+ 
+        diag add builder getpanel    borderlayout center   
+ 
+        abstractaction oklistener abstractaction     
+ 
+             override actionperformed actionevent event    
+                  
+                storepreferences    
+                diag dispose    
+              
+           
+        ok addactionlistener oklistener   
+ 
+        action cancellistener abstractaction     
+ 
+             override actionperformed actionevent event    
+                  
+                loader update globals prefs getprotectedtermspreferences     
+                diag dispose    
+              
+           
+        cancel addactionlistener cancellistener   
+ 
+        buttonbarbuilder bb buttonbarbuilder    
+        bb addglue    
+        bb addbutton ok   
+        bb addbutton cancel   
+        bb addglue    
+        bb getpanel   setborder borderfactory createemptyborder 5  5  5  5    
+        diag add bb getpanel    borderlayout south   
+ 
+        actionmap am   bb getpanel   getactionmap    
+        inputmap im   bb getpanel   getinputmap jcomponent when_in_focused_window   
+        im put globals getkeyprefs   getkey keybinding close_dialog    close    
+        am put  close   cancellistener   
+        im put keystroke getkeystroke  enter     enterok    
+        am put  enterok   oklistener   
+ 
+        diag pack    
+ 
+        windowlocation pw windowlocation diag  jabrefpreferences terms_pos_x  jabrefpreferences terms_pos_y  
+                jabrefpreferences terms_size_x  jabrefpreferences terms_size_y   
+        pw displaywindowatstoredlocation setuptable     
+ 
+        tablemodel termtablemodel    
+        table jtable tablemodel   
+        tablecolumnmodel cm   table getcolumnmodel    
+        cm getcolumn 0  setminwidth  cm getcolumn 0  getpreferredwidth     11    10   
+        cm getcolumn 0  setmaxwidth  cm getcolumn 0  getpreferredwidth     11    10   
+        cm getcolumn 1  setpreferredwidth 100   
+        cm getcolumn 2  setpreferredwidth 100   
+        guiutil correctrowheight table   
+ 
+        table setselectionmode listselectionmodel single_selection   
+        table addmouselistener mouseadapter     
+ 
+             override mousepressed mouseevent mouseevent mouseevent ispopuptrigger      
+                    tablepopup mouseevent   
+                  
+              
+ 
+             override mousereleased mouseevent mouseevent mouseevent ispopuptrigger      
+                    tablepopup mouseevent   
+                  
+              
+ 
+             override mouseclicked mouseevent mouseevent mouseevent getclickcount      2    
+                    getselectedtermslist   ifpresent list -  list setenabled  list isenabled      
+                    tablemodel firetabledatachanged    
+                  
+              
+            
+ 
+        table getselectionmodel   addlistselectionlistener entryselectionlistener setuppopupmenu     
+        popup add edit   
+        popup add show   
+        popup add remove   
+        popup add reload   
+        popup addseparator    
+        popup add enabled   
+ 
+          
+        edit addactionlistener actionevent -  getselectedtermslist   ifpresent term -    
+            optional externalfiletype  type   externalfiletypes getinstance   getexternalfiletypebyext  terms filename   term getlocation type ispresent      
+                    jabrefdesktop openexternalfileanyformat bibdatabasecontext    filename  type optional externalfiletype  txttype   externalfiletypes getinstance   
+                             getexternalfiletypebyext  txt txttype ispresent      
+                        jabrefdesktop openexternalfileanyformat bibdatabasecontext    filename  txttype jabrefdesktop openexternalfileunknown frame bibentry bibdatabasecontext    filename unknownexternalfiletype  terms ioexception e    
+                logger warn  problem open terms file editor   e   
+              
+             
+ 
+          
+        show addactionlistener actionevent -  getselectedtermslist   ifpresent displayterms    
+ 
+          
+        removeaction   actionevent -  getselectedtermslist   ifpresent list list isinternallist       joptionpane showconfirmdialog diag  
+                    localization lang  are you sure you want to remove the terms file?    
+                    localization lang  remove terms file    
+                    joptionpane yes_no_option     joptionpane yes_option loader removeprotectedtermslist list     
+                    logger info  problem removing terms file    
+                  
+                tablemodel firetabledatachanged    
+              
+            
+          
+        remove addactionlistener removeaction   
+ 
+          
+        reload addactionlistener actionevent -    
+            getselectedtermslist   ifpresent loader  reloadprotectedtermslist   
+            
+ 
+        enabled addactionlistener actionevent -  getselectedtermslist   ifpresent list -    
+            list setenabled enabled isselected setvisible visible    
+        okpressed diag setvisible visible optional protectedtermslist  getselectedtermslist table getselectedrow      -1 optional of loader getprotectedtermslists   get table getselectedrow optional empty termtablemodel defaulttablemodel   
+         override getcolumncount 3  
+          
+ 
+         override getrowcount loader getprotectedtermslists   size    
+          
+ 
+         override getcolumnname i i 0 localization lang  enabled 1 localization lang  description 2 localization lang  file override object getvalueat row column column 0 loader getprotectedtermslists   get row  isenabled 1 loader getprotectedtermslists   get row  getdescription 2  
+                protectedtermslist list   loader getprotectedtermslists   get row list isinternallist   ? localization lang  internal list       -     list getlocation     list 
+                         getlocation override iscelleditable row column column    0  
+          
+ 
+         override getcolumnclass column column 0 1 2 string override setvalueat object cell row column column    0    
+                protectedtermslist list   loader getprotectedtermslists   get row   
+                list setenabled  list isenabled firetablecellupdated row  column isokpressed okpressed tablepopup mouseevent e    
+        popup show e getcomponent    e getx    e gety displayterms protectedtermslist list jdialog dd jdialog diag  list getdescription       -     list getlocation jtextarea ta jtextarea list gettermlisting     
+        ta seteditable jscrollpane sp jscrollpane ta   
+        sp setpreferredsize dimension 700  500    
+        dd getcontentpane   add sp  borderlayout center   
+        jbutton okbutton jbutton localization lang  ok     
+        buttonbarbuilder bb buttonbarbuilder    
+        bb addglue    
+        bb addbutton okbutton   
+        bb addglue    
+        bb getpanel   setborder borderfactory createemptyborder 5  5  5  5    
+        dd getcontentpane   add bb getpanel    borderlayout south   
+        okbutton addactionlistener actionevent -  dd dispose     
+        dd pack    
+        dd setlocationrelativeto diag   
+        dd setvisible entryselectionlistener listselectionlistener   
+ 
+         override valuechanged listselectionevent listevent    
+            getselectedtermslist   ifpresent list list isinternallist      
+                    remove setenabled edit setenabled reload setenabled removebutton setenabled remove setenabled edit setenabled reload setenabled removebutton setenabled enabled setselected list isenabled addfiledialog jdialog addfiledialog diag  localization lang  add terms file jbutton browse jbutton localization lang  browse     
+            filedialog dialog filedialog frame  withextension fileextensions terms   
+            dialog setdefaultextension fileextensions terms   
+            browse addactionlistener e -    
+                optional path  file   dialog showdialogandgetselectedfile    
+                file ifpresent f -  newfile settext f toabsolutepath   tostring      
+                
+ 
+              
+            formbuilder builder   formbuilder create    
+            builder layout formlayout  left pref  4dlu  fill 100dlu grow  4dlu  pref    p     
+            builder add localization lang  file    xy 1  1   
+            builder add newfile  xy 3  1   
+            builder add browse  xy 5  1   
+            builder padding  10dlu  10dlu  10dlu  10dlu    
+            getcontentpane   add builder build    borderlayout center   
+ 
+              
+            buttonbarbuilder bb buttonbarbuilder    
+            jbutton addokbutton jbutton localization lang  ok     
+            jbutton addcancelbutton jbutton localization lang  cancel     
+            bb addglue    
+            bb addbutton addokbutton   
+            bb addbutton addcancelbutton   
+            bb addglue    
+            bb getpanel   setborder borderfactory createemptyborder 5  5  5  5    
+            getcontentpane   add bb getpanel    borderlayout south   
+            addokbutton addactionlistener e -    
+                addokpressed dispose    
+                
+ 
+            action cancelaction abstractaction     
+ 
+                 override actionperformed actionevent e    
+                    addokpressed dispose    
+                  
+               
+            addcancelbutton addactionlistener cancelaction   
+ 
+              
+            bb getpanel   getinputmap jcomponent when_in_focused_window  
+                     put globals getkeyprefs   getkey keybinding close_dialog    close    
+            bb getpanel   getactionmap   put  close   cancelaction   
+            pack    
+            setlocationrelativeto diag optional getfilename addokpressed     newfile gettext newfile gettext   isempty optional of newfile gettext optional empty storepreferences     
+        globals prefs setprotectedtermspreferences loader   
+      
+ 

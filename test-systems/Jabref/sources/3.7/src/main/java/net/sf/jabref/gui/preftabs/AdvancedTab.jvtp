@@ -1,0 +1,95 @@
+ 
+    4dlu  fill pref     4dlu  left pref  4dlu   
+   ieee net sf jabref gui preftabs advancedtab jpanel prefstab advancedtab jabrefpreferences prefs    
+        preferences   prefs  
+        remotepreferences   prefs getremotepreferences    
+ 
+        useremoteserver jcheckbox localization lang  listen remote operation on port     ' '   
+        useieeeabrv jcheckbox localization lang  use ieee latex abbreviations     
+        remoteserverport jtextfield    
+        usecasekeeperonsearch jcheckbox localization lang  add    to specified title words on search to keep the correct useunitformatteronsearch jcheckbox localization lang  format units by adding non-breaking separators and keeping the correct on search     
+ 
+        formlayout layout formlayout 
+                  1dlu  8dlu  left pref  4dlu  fill 3dlu    
+                             
+        defaultformbuilder builder defaultformbuilder layout   
+        jpanel pan jpanel    
+ 
+        builder appendseparator localization lang  remote operation     
+        builder nextline    
+        builder append jpanel     
+        builder append jlabel   html   
+                  localization lang feature lets files be opened or imported into an   
+                           already running instance of jabref br instead of opening a instance instance is useful when you open a file in jabref br from your web browser   
+                            br note that will prevent you from running more than one instance of jabref at a time    
+                     html      
+        builder nextline    
+        builder append jpanel     
+ 
+        jpanel p jpanel    
+        p add useremoteserver   
+        p add remoteserverport   
+        p add helpaction helpfile remote  gethelpbutton     
+        builder append p   
+ 
+          
+        builder nextline    
+        builder appendseparator localization lang  search %0    ieeexplore     
+        builder nextline    
+        builder append jpanel     
+        builder append useieeeabrv   
+ 
+        builder nextline    
+        builder appendseparator localization lang conversions     
+        builder nextline    
+        builder append pan   
+        builder append usecasekeeperonsearch   
+        builder nextline    
+        builder append pan   
+        builder append useunitformatteronsearch   
+ 
+        pan   builder getpanel    
+        pan setborder borderfactory createemptyborder 5  5  5  5    
+        setlayout borderlayout     
+        add pan  borderlayout center   
+ 
+      
+ 
+     override setvalues     
+        useremoteserver setselected remotepreferences useremoteserver     
+        remoteserverport settext valueof remotepreferences getport      
+        useieeeabrv setselected globals prefs getboolean jabrefpreferences use_ieee_abrv    
+        usecasekeeperonsearch setselected globals prefs getboolean jabrefpreferences use_case_keeper_on_search    
+        useunitformatteronsearch setselected globals prefs getboolean jabrefpreferences use_unit_formatter_on_search    
+      
+ 
+     override storesettings preferences getboolean jabrefpreferences use_ieee_abrv     useieeeabrv isselected      
+            preferences putboolean jabrefpreferences use_ieee_abrv  useieeeabrv isselected     
+            globals journalabbreviationloader update globals prefs getjournalabbreviationpreferences     
+          
+        storeremotesettings    
+ 
+        preferences putboolean jabrefpreferences use_case_keeper_on_search  usecasekeeperonsearch isselected     
+        preferences putboolean jabrefpreferences use_unit_formatter_on_search  useunitformatteronsearch isselected storeremotesettings     
+        getportasint   ifpresent newport remotepreferences isdifferentport newport     
+                remotepreferences setport newport remotepreferences useremoteserver      
+                    joptionpane showmessagedialog localization lang  remote server port   concat      
+                                     concat localization lang  you must restart jabref to come into effect      
+                            localization lang  remote server port    joptionpane warning_message   
+                  
+              
+            
+ 
+        remotepreferences setuseremoteserver useremoteserver isselected remotepreferences useremoteserver      
+            globals remote_listener openandstart jabrefmessagehandler    remotepreferences getport globals remote_listener stop    
+          
+        preferences setremotepreferences remotepreferences optional integer  getportasint optional of integer parseint remoteserverport gettext numberformatexception ex optional empty    
+          
+      
+ 
+     override validatesettings portnumber   integer parseint remoteserverport gettext remoteutil isuserport portnumber numberformatexception numberformatexception ex    
+            joptionpane showmessagedialog localization lang  you must enter an integer value in the interval 1025-65535 in the text field localization lang  remote server port     '\''  
+                    localization lang  remote server port    joptionpane error_message override gettabname localization lang  advanced    
+      
+ 
+ 

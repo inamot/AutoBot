@@ -1,0 +1,274 @@
+ 
+  ieee api seems use  qt marker quotes exact phrase searching 
+  open search url 
+  add request header 
+   set post data 
+  retrieve search results page blank search not work  not sure exact conditions lead declaring invalid search now  
+  parses json data returned query 
+  todo faster way parse json tokens one time extract article number seems fast enough search results found max hits exceeded  display warning 
+  fetch raw bibtex results ieeexplore 
+  preprocess result  eg  convert html escaped characters latex formatting not performed bibtexparser  
+  parse page bibtex entries method called dialog user canceled import  
+        
+  buffer use building url fetching bibtex data ieeexplore 
+  loop over each record create comma-separate list article numbers used download raw bibtex 
+  delete last comma 
+  add abstract setting 
+  append remaining url some reason escaped html characters titles format  #xnnnn missing ampersand  
+  add ampersands back before passing html formatter properly converted 
+  todo  maybe edit htmlconverter recognize escaped characters even missing percent signs not escaped ieeexplore bibtex output appear subsequent processing jabref 
+  todo  maybe find better spot applies universally 
+  format bibtexresults using html formatter  clears up numerical text escaped characters remaining html tags  
+   clean up title 
+   use alt-text replace image links 
+   try sort out most spl   conversions 
+   deal specific nested type first 
+      \\$_\\\\infty\\$    
+      \\$\\^\\\\infty\\$    
+   replace general expressions 
+   deal subscripts superscripts 
+   replace \infin infty 
+   unit formatting 
+   automatic case keeping 
+   write back 
+   clean up author 
+  reorder jr    sr   etc correct ordering 
+  todo  remove trailing commas 
+   clean up month 
+   clean up pages 
+   single page 
+   clean up publication field 
+   see legacy     
+  iee proceedings- 
+   clean up abstract 
+   try sort out most spl   conversions 
+   deal specific nested type first 
+      \\$_\\\\infty\\$    
+      \\$\\^\\\\infty\\$    
+   replace general expressions 
+   deal subscripts superscripts 
+   replace \infin infty 
+   write back 
+   clean up url 
+  ieeexplore ieee org    url replace  tp            
+   replace keyword separator net sf jabref gui importer fetcher ieeexplorefetcher entryfetcher ieeexplorefetcher journalabbreviationloader abbreviationloader abbreviationloader   objects requirenonnull abbreviationloader   
+        cookiehandler setdefault cookiemanager     
+      
+ 
+     override jpanel getoptionspanel     
+        jpanel pan jpanel    
+        pan setlayout borderlayout     
+        pan add abscheckbox  borderlayout north pan  
+      
+ 
+     override processquery query  importinspector dialog  outputprinter status terms   query replaceall  \     \\ qt\\     
+ 
+        shouldcontinue parsed   0 pagenumber   1 postdata   makesearchpostrequestpayload pagenumber  terms urldownload dl urldownload ieeexplorefetcher url_search   
+ 
+              
+            dl addparameters  accept    application json    
+            dl addparameters  content-type    application json    
+ 
+              
+            dl setpostdata postdata page   dl downloadtostring standardcharsets utf_8 page isempty      
+                status showmessage localization lang  you have entered an invalid search '%0'    query   
+                        dialog_title  joptionpane information_message jsonobject searchresultsjson jsonobject page hits   searchresultsjson getint  totalrecords hits    0    
+                status showmessage localization lang  no entries found the search 0'   query   
+                        dialog_title  joptionpane information_message hits   ieeexplorefetcher max_fetch    
+                status showmessage  
+                        localization lang  %0 entries found  to reduce server load  only %1 will be downloaded valueof hits valueof ieeexplorefetcher max_fetch    
+                        dialog_title  joptionpane information_message bibtexpage urldownload createbibtexqueryurl searchresultsjson   
+                     downloadtostring globals prefs getdefaultencoding     
+ 
+              
+            bibtexpage   preprocessbibtexresultspage bibtexpage   
+ 
+              
+            collection bibentry  parsedbibtexcollection   bibtexparser fromstring bibtexpage  
+                    globals prefs getimportformatpreferences nentries   parsedbibtexcollection size    
+            iterator bibentry  parsedbibtexcollectioniterator   parsedbibtexcollection iterator parsedbibtexcollectioniterator hasnext      shouldcontinue    
+                dialog addentry cleanup parsedbibtexcollectioniterator next      
+                dialog setprogress parsed  nentries   
+                parsed ioexception   jsonexception e    
+            logger error  error fetching from     gettitle    e   
+              importinspectiondialog dialog  showerrormessage gettitle    e getlocalizedmessage override gettitle ieeexplore   
+      
+ 
+     override helpfile gethelppage helpfile fetcher_ieeexplore  
+      
+ 
+      
+     override stopfetching     
+        shouldcontinue makesearchpostrequestpayload startindex terms querytext\      jsonobject quote terms      \ refinements\     \ pagenumber\  \     startindex 
+                   \  \ searchwithin\     \ newsearch searchfield\  \ search_all\  \ rowsperpage\  \ 100 createbibtexqueryurl jsonobject searchresultsjson    
+ 
+          
+        stringbuilder bibtexqueryurlstringbuf stringbuilder    
+        bibtexqueryurlstringbuf append url_bibtex_start   
+ 
+          
+        jsonarray recordsjsonarray   searchresultsjson getjsonarray  records n   0  n   recordsjsonarray length    n recordsjsonarray getjsonobject n  isnull  articlenumber      
+                bibtexqueryurlstringbuf append recordsjsonarray getjsonobject n  getstring  articlenumber    
+                         append ' '   
+              
+          
+          
+        bibtexqueryurlstringbuf deletecharat bibtexqueryurlstringbuf length   - 1 includeabstract   abscheckbox isselected includeabstract    
+            bibtexqueryurlstringbuf append   citations-format citation bibtexqueryurlstringbuf append   citations-format citation-only    
+          
+ 
+          
+        bibtexqueryurlstringbuf append url_bibtex_end bibtexqueryurlstringbuf tostring preprocessbibtexresultspage bibtexpage result   preprocessing_pattern matcher bibtexpage  replaceall   $1    
+ 
+          
+          
+        result   result replaceall   ?  \\\\ %    \\\\%    
+ 
+          
+        result   htmltolatexformatter format result result bibentry cleanup bibentry entry entry null  
+          
+ 
+          
+        entry getfield fieldname title  ifpresent dirtytitle title   dirtytitle replaceall     ?img src  ^    alt \   ^\    \     ?    \\$$1\\$    
+              
+              
+            title   title replaceall   sub  spl infin  
+            title   title replaceall   sup  spl infin  
+              
+            title   title replaceall    ss pl   ^         \\$\\\\$1\\$    
+              
+            title   super_detection_1 matcher title  replaceall super_text_result   
+            title   sub_detection_1 matcher title  replaceall sub_text_result   
+            title   super_detection_2 matcher title  replaceall super_text_result   
+            title   sub_detection_2 matcher title  replaceall sub_text_result   
+ 
+              
+            title   title replaceall  \\\\infin    \\\\infty globals prefs getboolean jabrefpreferences use_unit_formatter_on_search     
+                title   unitstolatexformatter format title globals prefs getboolean jabrefpreferences use_case_keeper_on_search     
+                title   protecttermsformatter format title   
+              
+              
+            entry setfield fieldname title  title   
+            
+ 
+          
+        entry getfield fieldname author  ifpresent dirtyauthor author   dirtyauthor replaceall  \\s authorsplit   author split   ^\\s  \\s $ \\s and\\s      
+            list authorresult arraylist authorsplitpart   authorsplit    
+                authorresult add authorsplitpart replaceall     ?     ?          $1 $3 $2     
+              
+            author join   and    authorresult   
+ 
+            author   author replace            replace            replace    -     -   replace         and    
+                     replace            replace             
+            author   author replaceall        $        
+              
+            entry setfield fieldname author  author   
+            
+ 
+          
+        entry getfield fieldname month  filter month -   month isempty    ifpresent dirtymonth month   dirtymonth replace           
+            month   month tolowercase    
+ 
+            matcher mm   month_pattern matcher month   
+            stringbuilder date stringbuilder month mm find mm group 3  isempty mm group 2  isempty      
+                        date stringbuilder   append mm group 1   append date stringbuilder   append '#'  append mm group 2  substring 0  3   append mm group 1  isempty      
+                            date append ' '  append mm group 1   append mm group 2  isempty mm group 4  isempty      
+                        date append date stringbuilder   append '#'  append mm group 4  substring 0  3   append '#'  
+                                 append mm group 1   append  --   append mm group 3   append date stringbuilder   append '#'  append mm group 2  substring 0  3   append '#'  
+                             append mm group 1   append  --#   append mm group 4  substring 0  3   append '#'  
+                             append mm group 3   append ' '   
+                  
+              
+            entry setfield fieldname month  date tostring     
+            
+ 
+          
+        entry getfield fieldname pages  ifpresent pages pagenumbers   pages split pagenumbers length    2 pagenumbers 0  equals pagenumbers 1       
+                    entry setfield fieldname pages  pagenumbers 0 entry setfield fieldname pages  pages replace type   entry gettype sourcefield article  equals type     
+            sourcefield   fieldname journal  
+            entry clearfield fieldname booktitle inproceedings  equals type     
+            sourcefield   fieldname booktitle entry hasfield sourcefield fullname   entry getfield sourcefield  get article  equals type ind   fullname indexof    accepted future publication ind   0    
+                    fullname   fullname substring 0  ind   
+                    entry setfield fieldname year   to be published    
+                    entry clearfield fieldname month   
+                    entry clearfield fieldname pages   
+                    entry clearfield fieldname number parts   fullname split   \\ \\        
+                fullname   parts 0 parts length    3    
+                    fullname    parts 2   
+                  
+                entry getfield fieldname note  filter note -   early access  equals note   ifpresent note -    
+                    entry setfield fieldname year   to be published    
+                    entry clearfield fieldname month   
+                    entry clearfield fieldname pages   
+                    entry clearfield fieldname number fullname   fullname replace  conference proceedings    proceedings   
+                         replace  proceedings of    proceedings   replace  proceedings     proceedings    
+                fullname   fullname replace  international fullname   fullname replace  symposium    symp     
+                fullname   fullname replace  conference    conf     
+                fullname   fullname replace   on        replace             
+              
+ 
+            matcher m1   publication_pattern matcher fullname abrvpattern       ^   '?\\d m1 find prefix   m1 group 2  trim postfix   m1 group 1  trim abrv parts   prefix split  \\     2 parts length    2 parts 0  matches abrvpattern     
+                        prefix   parts 1   
+                        abrv   parts 0 prefix   parts 0   
+                        abrv   parts 1 prefix matches abrvpattern     
+                    fullname   postfix         prefix fullname   prefix         postfix         abrv  
+                    fullname   fullname trim article  equals type     
+                fullname   fullname replace   -     -      
+ 
+                fullname   fullname trim globals prefs getboolean jabrefpreferences use_ieee_abrv     
+                    fullname   abbreviationloader 
+                             getrepository globals prefs getjournalabbreviationpreferences    
+                             getmedlineabbreviation fullname  
+                             orelse fullname inproceedings  equals type     
+                matcher m2   proceedings_pattern matcher fullname m2 find prefix   m2 group 2 postfix   m2 group 1  replaceall prefix matches abrvpattern     
+                        fullname   postfix trim           prefix trim abrv parts   postfix split  \\     2 parts length    2 parts 0  matches abrvpattern     
+                                postfix   parts 1   
+                                abrv   parts 0 postfix   parts 0   
+                                abrv   parts 1   
+                              
+                          
+                        fullname   prefix trim           postfix trim           abrv  
+ 
+                      
+ 
+                  
+ 
+                fullname   fullname trim    
+ 
+                fullname   fullname replaceall  ^ tt he        replaceall  ^\\d 4         replaceall      $        
+                optional year   entry getfield fieldname year year ispresent      
+                    fullname   fullname replaceall        year get fullname contains fullname contains  summaries   
+                            fullname contains  conference record      
+                    fullname    proc      fullname  
+                  
+              
+            entry setfield sourcefield  fullname   
+          
+ 
+          
+        entry getfield fieldname ifpresent dirtyabstr abstr   dirtyabstr replaceall   sub  spl infin  
+            abstr   abstr replaceall   sup  spl infin  
+              
+            abstr   abstr replaceall    ss pl   ^         \\$\\\\$1\\$    
+              
+            abstr   super_detection_1 matcher abstr  replaceall super_text_result   
+            abstr   sub_detection_1 matcher abstr  replaceall sub_text_result   
+            abstr   super_detection_2 matcher abstr  replaceall super_text_result   
+            abstr   sub_detection_2 matcher abstr  replaceall sub_text_result   
+              
+            abstr   abstr replace  \\infin    \\infty    
+              
+            entry setfield fieldname abstr   
+            
+ 
+          
+        entry getfield fieldname url  
+                 ifpresent url -  entry setfield fieldname url   http   
+ 
+          
+        entry getfield fieldname keywords  ifpresent keys -  entry setfield fieldname keywords  
+                keys replace      globals prefs get jabrefpreferences keyword_separator entry  
+      
+ 
+ 
+ 

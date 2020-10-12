@@ -1,0 +1,155 @@
+ code save sort order copied filesorttab slightly updated fit storing metadata encoding shared database always utf-8 
+   file dir setting 
+   store original values see changed  
+  set save actions 
+   repeat individual file dir - reuse 'text dir' vars 
+   see any values modified mark base changed  prevent undo button removing 
+   change marking  net sf jabref gui dbproperties databasepropertiesdialog jdialog jcheckbox protect jcheckbox  
+            localization lang  refuse to save the database before external changes have been reviewed databasepropertiesdialog jframe parent parent  localization lang  database properties encoding jcombobox      
+        encoding setmodel defaultcomboboxmodel   encodings encodings    
+        ok jbutton localization lang  ok     
+        cancel jbutton localization lang  cancel     
+        init parent setpanel basepanel panel panel   panel metadata   panel getbibdatabasecontext   getmetadata updateenablestatus     
+        databaselocation location   panel getbibdatabasecontext   getlocation isshared    location    databaselocation shared   
+        encoding setenabled  isshared     
+        saveinoriginalorder setenabled  isshared   
+        saveinspecifiedorder setenabled  isshared   
+        saveorderpanel setenabled  isshared   
+        protect setenabled  isshared init jframe parent    
+ 
+        jbutton browsefile jbutton localization lang  browse     
+        jbutton browsefileindv jbutton localization lang  browse     
+ 
+        browsefile addactionlistener e filedialog parent  showdialogandgetselecteddirectory   
+                         ifpresent f -  filedir settext f toabsolutepath   tostring     
+           
+        browsefileindv addactionlistener e filedialog parent  showdialogandgetselecteddirectory   
+                         ifpresent f -  filedirindv settext f toabsolutepath   tostring     
+           
+ 
+        setupsortorderconfiguration    
+        formlayout form formlayout  left pref  4dlu  pref grow  4dlu  pref grow  4dlu  pref   
+                 pref  2dlu  pref  2dlu  pref  2dlu  pref  2dlu  pref  2dlu  pref  2dlu  pref  2dlu  pref  2dlu  pref  2dlu  pref  2dlu  pref  2dlu  pref  2dlu  pref  2dlu  pref  2dlu  fill pref grow  180dlu  fill pref grow     
+        formbuilder builder   formbuilder create   layout form   
+        builder getpanel   setborder borderfactory createemptyborder 5  5  5  5    
+ 
+        builder add localization lang  database encoding    xy 1  1   
+        builder add encoding  xy 3  1   
+ 
+        builder addseparator localization lang  override file directories    xyw 1  3  5   
+        builder add localization lang  general file directory    xy 1  5   
+        builder add filedir  xy 3  5   
+        builder add browsefile  xy 5  5   
+        builder add localization lang  user-specific file directory    xy 1  7   
+        builder add filedirindv  xy 3  7   
+        builder add browsefileindv  xy 5  7   
+ 
+        builder addseparator localization lang  save sort order    xyw 1  13  5   
+        builder add saveinoriginalorder  xyw 1  15  5   
+        builder add saveinspecifiedorder  xyw 1  17  5   
+ 
+        saveorderpanel saveorderconfigdisplay    
+        builder add saveorderpanel getpanel    xyw 1  21  5   
+ 
+        builder addseparator localization lang  database protection    xyw 1  23  5   
+        builder add protect  xyw 1  25  5   
+ 
+        fieldformattercleanupspanel fieldformattercleanupspanel localization lang  enable save actions    
+                cleanups default_save_actions   
+        builder addseparator localization lang  save actions    xyw 1  27  5   
+        builder add fieldformattercleanupspanel  xyw 1  29  5   
+ 
+        buttonbarbuilder bb buttonbarbuilder    
+        bb addglue    
+        bb addbutton ok   
+        bb addbutton cancel   
+        bb addrelatedgap    
+        bb addbutton helpaction helpfile database_properties  gethelpbutton     
+        bb addglue    
+        bb getpanel   setborder borderfactory createemptyborder 5  5  5  5    
+ 
+        getcontentpane   add builder getpanel    borderlayout center   
+        getcontentpane   add bb getpanel    borderlayout south   
+        pack    
+ 
+        abstractaction closeaction abstractaction     
+             override actionperformed actionevent e    
+                dispose    
+              
+           
+        actionmap am   builder getpanel   getactionmap    
+        inputmap im   builder getpanel   getinputmap jcomponent when_in_focused_window   
+        im put globals getkeyprefs   getkey keybinding close_dialog    close    
+        am put  close   closeaction   
+ 
+        ok addactionlistener e -    
+            storesettings    
+            dispose    
+            
+ 
+        cancel addactionlistener e -  dispose setupsortorderconfiguration     
+        saveinoriginalorder jradiobutton localization lang  save entries in their original order     
+        saveinspecifiedorder jradiobutton localization lang  save entries ordered as specified     
+ 
+        buttongroup bg buttongroup    
+        bg add saveinoriginalorder   
+        bg add saveinspecifiedorder   
+        actionlistener listener   e selected   e getsource      saveinspecifiedorder  
+            saveorderpanel setenabled selected   
+           
+ 
+        saveinoriginalorder addactionlistener listener   
+        saveinspecifiedorder addactionlistener listener   
+      
+ 
+     override setvisible visible visible    
+            setvalues setvisible visible setvalues     
+        optional charset  charset   panel getbibdatabasecontext   getmetadata   getencoding    
+        encoding setselecteditem charset orelse globals prefs getdefaultencoding      
+ 
+        optional saveorderconfig  storedsaveorderconfig   metadata getsaveorderconfig selected storedsaveorderconfig ispresent      
+            saveinoriginalorder setselected oldsaveorderconfig   saveorderconfig getdefaultsaveorder    
+            selected saveorderconfig saveorderconfig   storedsaveorderconfig get    
+            oldsaveorderconfig   saveorderconfig saveorderconfig saveinoriginalorder    
+                saveinoriginalorder setselected selected saveinspecifiedorder setselected selected saveorderpanel setsaveorderconfig saveorderconfig   
+          
+        saveorderpanel setenabled selected   
+ 
+        optional filed   metadata getdefaultfiledirectory filed ispresent      
+            filedir settext filed get   trim filedir settext filedi   metadata getuserfiledirectory globals prefs getuser    orelse        
+        filedirindv settext filedi   
+        oldfileindvval   filedirindv gettext    
+ 
+        protect setselected metadata isprotected     
+ 
+          
+        oldfileval   filedir gettext    
+        oldprotectval   protect isselected    
+ 
+          
+        fieldformattercleanupspanel setvalues metadata storesettings     
+ 
+        charset oldencoding   panel getbibdatabasecontext   getmetadata   getencoding   
+                 orelse globals prefs getdefaultencoding     
+        charset newencoding    charset  encoding getselecteditem    
+        panel getbibdatabasecontext   getmetadata   setencoding newencoding text   filedir gettext   trim text isempty      
+            metadata cleardefaultfiledirectory metadata setdefaultfiledirectory text   
+          
+          
+        text   filedirindv gettext text isempty      
+            metadata clearuserfiledirectory globals prefs getuser metadata setuserfiledirectory globals prefs getuser    text protect isselected      
+            metadata markasprotected metadata markasnotprotected    
+          
+ 
+        saveorderconfig newsaveorderconfig saveinoriginalorder isselected      
+            newsaveorderconfig   saveorderconfig getdefaultsaveorder newsaveorderconfig   saveorderpanel getsaveorderconfig    
+            newsaveorderconfig setsaveinspecifiedorder saveorderconfigchanged newsaveorderconfig equals oldsaveorderconfig     
+            saveorderconfigchanged saveorderconfigchanged saveorderconfigchanged newsaveorderconfig equals saveorderconfig getdefaultsaveorder       
+                metadata clearsaveorderconfig metadata setsaveorderconfig newsaveorderconfig saveactionschanged   fieldformattercleanupspanel haschanged saveactionschanged fieldformattercleanupspanel isdefaultsaveactions      
+                metadata clearsaveactions fieldformattercleanupspanel storesettings metadata changed   saveorderconfigchanged     newencoding equals oldencoding  
+                    oldfileval equals filedir gettext        oldfileindvval equals filedirindv gettext    
+                    oldprotectval    protect isselected       saveactionschanged changed    
+            panel marknonundoablebasechanged    
+          
+      
+ 

@@ -1,0 +1,254 @@
+ 
+    
+        param frame jabref frame 
+        
+   setloadingconnectbuttontext false not reached regularly  
+    
+       defines sets different actions up  
+        
+  jpasswordfield getpassword not return string char array  
+    
+           set up listener updates default port number once selection dbmstypedropdown changed  
+            
+   add enter button action listener 
+    
+       fetches possibly saved data configures control elements respectively  
+        
+    
+       set up layout position control units right place  
+        
+  1  column 
+   2  column hostfield smaller others  
+   3  column 
+   help button 
+   add panel 
+   filepanel 
+   buttonpanel 
+   owner window disabled dialog opened  
+    
+       saves data dialog persistently facilitate usage case password already set 
+    
+       checks every required text field emptiness  
+        
+    
+       sets connectbutton according current connection state  
+        
+    
+       checks whether database given  link   link dbmsconnectionproperties already opened  
+        net sf jabref gui shared connecttoshareddatabasedialog jdialog connecttoshareddatabasedialog jabrefframe frame frame  localization lang  connect to shared database frame   frame  
+        initlayout    
+        updateenablestate    
+        applypreferences    
+        setupactions    
+        pack    
+        setlocationrelativeto frame openshareddatabase isshareddatabasealreadypresent      
+            joptionpane showmessagedialog connecttoshareddatabasedialog localization lang  you are already connected to a database using entered connection details     
+                    localization lang  warning    joptionpane warning_message autosavefile isselected      
+ 
+            path localfilepath   paths get filelocationfield gettext files exists localfilepath      files isdirectory localfilepath answer   joptionpane showconfirmdialog localization lang  '%0' exists  overwrite file?   localfilepath getfilename   tostring     
+                        localization lang  existing file    joptionpane yes_no_option answer    joptionpane no_option    
+                    filelocationfield requestfocus setloadingconnectbuttontext basepanel panel shareddatabaseuimanager frame  opennewshareddatabasetab connectionproperties   
+            setpreferences    
+            dispose filelocationfield gettext   isempty savedatabaseaction panel  paths get filelocationfield gettext     runcommand throwable e    
+                    logger error  error saving the database   e sqlexception   invaliddbmsconnectionpropertiesexception exception    
+            joptionpane showmessagedialog connecttoshareddatabasedialog exception getmessage    
+                    localization lang  connection error    joptionpane error_message databasenotsupportedexception exception migrationhelpdialog setvisible setloadingconnectbuttontext setupactions     
+ 
+        action openaction abstractaction     
+             override actionperformed actionevent e checkfields    
+ 
+                    connectionproperties dbmsconnectionproperties    
+                    connectionproperties settype  dbmstype  dbmstypedropdown getselecteditem     
+                    connectionproperties sethost hostfield gettext     
+                    connectionproperties setport integer parseint portfield gettext      
+                    connectionproperties setdatabase databasefield gettext     
+                    connectionproperties setuser userfield gettext     
+                    connectionproperties setpassword passwordfield getpassword        
+ 
+                    openshareddatabase jabrefexception exception    
+                    joptionpane showmessagedialog connecttoshareddatabasedialog exception getmessage    
+                            localization lang  warning    joptionpane warning_message   
+                  
+              
+           
+        connectbutton addactionlistener openaction   
+        cancelbutton addactionlistener e -  dispose     
+ 
+          
+        action dbmstypedropdownaction abstractaction     
+             override actionperformed actionevent e    
+                portfield settext integer tostring   dbmstype  dbmstypedropdown getselecteditem    getdefaultport      
+              
+           
+        dbmstypedropdown addactionlistener dbmstypedropdownaction   
+ 
+          
+        connectbutton getinputmap jcomponent when_in_focused_window  put keystroke getkeystroke keyevent vk_enter  0   
+                 enter_pressed    
+        connectbutton getactionmap   put  enter_pressed   openaction   
+        browsebutton addactionlistener e -  showfilechooser     
+        autosavefile addactionlistener e -  updateenablestate applypreferences     
+        optional shareddatabasetype   prefs gettype    
+        optional shareddatabasehost   prefs gethost    
+        optional shareddatabaseport   prefs getport    
+        optional shareddatabasename   prefs getname    
+        optional shareddatabaseuser   prefs getuser    
+        optional shareddatabasepassword   prefs getpassword shareddatabaserememberpassword   prefs getrememberpassword shareddatabasetype ispresent      
+            optional dbmstype  dbmstype   dbmstype fromstring shareddatabasetype get dbmstype ispresent      
+                dbmstypedropdown setselecteditem dbmstype get shareddatabasehost ispresent      
+            hostfield settext shareddatabasehost get shareddatabaseport ispresent      
+            portfield settext shareddatabaseport get portfield settext integer tostring   dbmstype  dbmstypedropdown getselecteditem    getdefaultport shareddatabasename ispresent      
+            databasefield settext shareddatabasename get shareddatabaseuser ispresent      
+            userfield settext shareddatabaseuser get shareddatabasepassword ispresent      shareddatabaseuser ispresent passwordfield settext password shareddatabasepassword get   tochararray    shareddatabaseuser get    decrypt generalsecurityexception   unsupportedencodingexception e    
+                logger error  could not read the password due to decryption problems    e   
+              
+          
+ 
+        rememberpassword setselected shareddatabaserememberpassword initlayout     
+ 
+        setresizable insets defautinsets insets 4  15  4  4   
+ 
+        connectionpanel setborder borderfactory createtitledborder borderfactory createetchedborder    localization lang  connection      
+        connectionpanel setlayout gridbaglayout   
+ 
+        set dbmstype  availabledbmstypes   dbmsconnection getavailabledbmstypes    
+        defaultcomboboxmodel dbmstype  comboboxmodel defaultcomboboxmodel    
+                availabledbmstypes toarray dbmstype availabledbmstypes size       
+ 
+        dbmstypedropdown setmodel comboboxmodel   
+ 
+        gridbagconstraints insets   defautinsets  
+        gridbagconstraints fill   gridbagconstraints both  
+        gridbaglayout setconstraints connectionpanel  gridbagconstraints   
+ 
+          
+        gridbagconstraints gridx   0  
+        gridbagconstraints gridy   0  
+        connectionpanel add databasetypelabel  gridbagconstraints   
+ 
+        gridbagconstraints gridy   1  
+        connectionpanel add hostportlabel  gridbagconstraints   
+ 
+        gridbagconstraints gridy   2  
+        connectionpanel add databaselabel  gridbagconstraints   
+ 
+        gridbagconstraints gridy   3  
+        connectionpanel add userlabel  gridbagconstraints   
+ 
+        gridbagconstraints gridy   4  
+        connectionpanel add passwordlabel  gridbagconstraints   
+ 
+          
+        gridbagconstraints gridwidth   2  
+ 
+        gridbagconstraints gridx   1  
+        gridbagconstraints gridy   0  
+        connectionpanel add dbmstypedropdown  gridbagconstraints   
+ 
+        gridbagconstraints gridy   1  
+        gridbagconstraints gridwidth   1    
+        gridbagconstraints insets insets 4  15  4  0   
+        connectionpanel add hostfield  gridbagconstraints   
+ 
+        gridbagconstraints gridy   2  
+        gridbagconstraints gridwidth   2  
+        gridbagconstraints insets   defautinsets  
+        connectionpanel add databasefield  gridbagconstraints   
+ 
+        gridbagconstraints gridy   3  
+        connectionpanel add userfield  gridbagconstraints   
+ 
+        gridbagconstraints gridy   4  
+        connectionpanel add passwordfield  gridbagconstraints   
+ 
+        gridbagconstraints gridy   5  
+        connectionpanel add rememberpassword  gridbagconstraints   
+ 
+          
+        gridbagconstraints gridx   2  
+        gridbagconstraints gridy   1  
+        gridbagconstraints gridwidth   1  
+        gridbagconstraints insets insets 4  0  4  4   
+        connectionpanel add portfield  gridbagconstraints   
+ 
+          
+        gridbagconstraints gridx   0  
+        gridbagconstraints gridy   6  
+        gridbagconstraints insets insets 10  10  0  0   
+        jpanel helppanel jpanel flowlayout flowlayout left    
+        helppanel add helpbutton   
+ 
+          
+        getcontentpane   setlayout gridbaglayout   
+        gridbagconstraints gridx   0  
+        gridbagconstraints gridy   0  
+        gridbagconstraints gridwidth   1  
+        gridbagconstraints insets insets 5  5  5  5   
+        gridbaglayout setconstraints connectionpanel  gridbagconstraints   
+        getcontentpane   add connectionpanel   
+ 
+          
+        filepanel setborder  
+                borderfactory createtitledborder borderfactory createetchedborder    localization lang  file      
+        filepanel setlayout gridbaglayout   
+ 
+        gridbagconstraints gridx   0  
+        gridbagconstraints gridy   0  
+        gridbagconstraints gridwidth   2  
+ 
+        filepanel add autosavefile  gridbagconstraints   
+        gridbagconstraints gridx   1  
+        gridbagconstraints gridy   1  
+        gridbagconstraints gridwidth   1  
+        filepanel add filelocationfield  gridbagconstraints   
+        gridbagconstraints gridx   2  
+        filepanel add browsebutton  gridbagconstraints   
+ 
+        gridbagconstraints gridx   0  
+        gridbagconstraints gridy   1  
+        gridbagconstraints insets insets 5  5  5  5   
+        gridbaglayout setconstraints filepanel  gridbagconstraints   
+        getcontentpane   add filepanel   
+ 
+          
+        buttonpanel setlayout flowlayout flowlayout center    
+ 
+        buttonpanel add connectbutton   
+        buttonpanel add cancelbutton   
+        buttonpanel add helppanel   
+ 
+        gridbagconstraints gridy   2  
+        gridbagconstraints insets insets 5  5  5  5   
+        gridbaglayout setconstraints buttonpanel  gridbagconstraints   
+        getcontentpane   add buttonpanel   
+ 
+        setmodal setpreferences     
+        prefs settype dbmstypedropdown getselecteditem   tostring     
+        prefs sethost hostfield gettext     
+        prefs setport portfield gettext     
+        prefs setname databasefield gettext     
+        prefs setuser userfield gettext rememberpassword isselected prefs setpassword password passwordfield getpassword    userfield gettext    encrypt generalsecurityexception   unsupportedencodingexception e    
+                logger error  could not store the password due to encryption problems    e prefs clearpassword      
+          
+ 
+        prefs setrememberpassword rememberpassword isselected isemptyfield jtextfield field field gettext   trim   length      0 checkfields jabrefexception isemptyfield hostfield     
+            hostfield requestfocus jabrefexception localization lang  required field \ %0\  is empty    localization lang  host isemptyfield portfield     
+            portfield requestfocus jabrefexception localization lang  required field \ %0\  is empty    localization lang  port isemptyfield databasefield     
+            databasefield requestfocus jabrefexception  
+                    localization lang  required field \ %0\  is empty    localization lang  database isemptyfield userfield     
+            userfield requestfocus jabrefexception localization lang  required field \ %0\  is empty    localization lang  user autosavefile isselected      isemptyfield filelocationfield     
+            filelocationfield requestfocus jabrefexception localization lang  please enter a valid file path setloadingconnectbuttontext isloading    
+        connectbutton setenabled  isloading isloading    
+            connectbutton settext localization lang  connecting connectbutton settext localization lang  connect isshareddatabasealreadypresent     
+        list basepanel  panels   jabrefgui getmainframe   getbasepanellist panels parallelstream   anymatch panel -    
+            bibdatabasecontext context   panel getbibdatabasecontext context getlocation      databaselocation shared connectionproperties equals context getdbmssynchronizer   
+                     getdbprocessor   getdbmsconnectionproperties showfilechooser     
+        filedialog dialog filedialog dialog withextension fileextensions bibtex_db   
+        dialog setdefaultextension fileextensions bibtex_db   
+ 
+        optional path  path   dialog showdialogandgetselectedfile    
+        path ifpresent p -  filelocationfield settext p tostring updateenablestate     
+        filelocationfield setenabled autosavefile isselected     
+        browsebutton setenabled autosavefile isselected     
+      
+ 

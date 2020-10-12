@@ -1,0 +1,275 @@
+ 
+    
+   pdfcontentimporter parses data first page pdf creates bibtex entry  
+    p  
+   currently  springer ieee formats supported  
+    p  
+   integrating xmp support future work 
+    
+   input lines several lines 
+   current index lines 
+    
+       removes non-letter characters end 
+        p  
+       exception closing bracket not removed 
+         p  
+        p  
+       todo  additionally replace multiple subsequent spaces one space cause rename method 
+         p asterix dot something end  remove todo  replace normalizenamesformatter?  
+   supported formats  
+     matthias schrepfer1  johannes wolf1  jan mendling1 hajo reijers2 
+   skip possible ands between names 
+   cannot first name contained string 
+   assumption  names separated space 
+   empty names    something really wrong    
+   last item first middle name check whether middle name not add item last name add found middle name 
+   last name found probably van    vom rely fact things written lower case letters not finish name 
+   finish name nothing increment end iteration 
+   idea  split   contains different lines 
+   blocks separated empty lines 
+   treat each block special treatment authors not broken  
+     therefore line-based not block-based splitting points current line 
+   curstring  mostly  contains current block different lines joined one thereby separated pdf not parsed empty 
+   return empty list start current line might incremented later curstring modified year class variable method extractyear   uses special case  possibly conference first line page 
+   e g  copyright  c  1998 genetics society america 
+   future work year using regex 
+   start  title points next non-empty line title  authors 
+   author names unlikely lines different lines 
+   treat line line lines returned streamlinenames nothing abstract keywords follow 
+   only word  abstract  found -- skip line 
+   fillcurstringwithnonemptylines   cannot used uses line separator 
+   whereas need linebreak separator 
+   only word  keywords  found -- skip line 
+   assumption  last character curstring not ' ' 
+     otherwise pos 1 leads out bounds exception 
+   last block  doi  detailed information 
+   sometimes information third last block etc    
+   therefore  read until beginning file now points block before 1 
+   curstring contains last block  separated looks springer last line 
+   e g persson j  stirna  eds    poem 2009  lnbip 39  pp  161-175  2009  
+   2 eds subsequent space 
+   ieee conference things end 
+   year extracted extractyear 
+   otherwise determine follows  
+   string yearstr   curstring substring curstring length  -4 isyear yearstr     
+  	year   yearstr found price 
+   before price issn stated 
+   skip todo  institution parsing missing 
+    
+       extract year out curstring not defined  
+        
+    
+       pdftextstripper normally not produce multiple empty lines 
+        besides strange pdfs strange pdfs handled here  
+       proceed next non-empty line 
+        
+    
+       fill curstring lines until found trailing space added advanced next non-empty line  ignoring white space  
+        p  
+       lines containing only white spaces ignored not considered p  
+       uses global variables lines  curline ensure curstring not end insert separating space necessary 
+    
+       resets curstring 
+       curstring now contains last block  until    reached  
+       trailing space added 
+        p  
+       invariant before points line before last handled block now end block 
+   find beginning now line before beginning block fulfills invariant net sf jabref logic importer fileformat pdfcontentimporter importer pdfcontentimporter importformatpreferences importformatpreferences importformatpreferences   importformatpreferences removenonlettersatend input result   input trim result isempty result lastc   result charat result length   - 1 character isletter lastc      lastc    ' '     
+              
+            result   result substring 0  result length   - 1 result isempty lastc   result charat result length   - 1 result streamlinenames names res names contains splitnames   names split       
+            res isfirst splitname   splitnames curname   removenonlettersatend splitname curname indexof  and      0    
+                      
+                    curname   curname substring 3  trim posand   curname indexof   and posand    0 namebefore   curname substring 0  posand   
+                          
+                        res   res concat   and    concat removenonlettersatend namebefore    
+                        curname   curname substring posand   5 equals curname et al   equalsignorecase curname     
+                        curname    others isfirst    
+                        isfirst res   res concat   and     
+                      
+                    res   res concat curname splitnames   names split splitnames length    0 workedonfirstormiddle isfirst i   0  
+            res workedonfirstormiddle splitnames i  contains         
+                          
+                        res   res concat splitnames i   concat res   res concat removenonlettersatend splitnames i splitnames i  isempty      character islowercase splitnames i  charat 0      
+                              
+                              
+                              
+                            res   res concat workedonfirstormiddle and  equalsignorecase splitnames i isfirst    
+                            isfirst res   res concat   and et  equalsignorecase splitnames i       splitnames length    i   1   
+                                    al   equalsignorecase splitnames i   1      
+                            res   res concat  others res   res concat splitnames i   concat       
+                            workedonfirstormiddle i i   splitnames length res streamlinetitle title removenonlettersatend title   
+      
+ 
+     override isrecognizedformat bufferedreader reader ioexception   
+        objects requirenonnull reader override parserresult importdatabase bufferedreader reader ioexception   
+        objects requirenonnull reader unsupportedoperationexception  
+                 pdfcontentimporter does not support importdatabase bufferedreader reader    
+                           instead use importdatabase path filepath  charset defaultencoding      
+      
+ 
+     override parserresult importdatabase path filepath  charset defaultencoding arraylist bibentry  result arraylist   1 fileinputstream filestream fileinputstream filepath tofile     
+                pddocument document   xmputil loadwithautomaticdecryption filestream firstpagecontents   getfirstpagecontents document   
+ 
+            optional doi  doi   doi findintext firstpagecontents doi ispresent      
+                parserresult parserresult parserresult result   
+                optional bibentry  entry doifetcher importformatpreferences  performsearchbyid doi get   getdoi     
+                entry ifpresent parserresult getdatabase    insertentry parserresult  
+              
+ 
+              
+              
+              
+              
+              
+              
+              
+              
+            lines   firstpagecontents split system lineseparator     
+ 
+            proceedtonextnonemptyline i    lines length parserresult    
+              
+ 
+              
+            curstring   lines i   
+              
+            i   i   1 author editor abstractt keywords title conference doi series volume number pages publisher entrytype type   bibtexentrytypes inproceedings curstring length     4    
+                  
+                extractyear curstring contains  conference      
+                    fillcurstringwithnonemptylines    
+                    conference   curstring  
+                    curstring lower   curstring tolowercase lower contains  copyright      
+                        fillcurstringwithnonemptylines    
+                        publisher   curstring  
+                        curstring       
+                      
+                  
+              
+ 
+              
+            fillcurstringwithnonemptylines    
+            title   streamlinetitle curstring   
+            curstring       
+              
+ 
+              
+            author i   lines length         equals lines i      
+                  
+                  
+                curstring   streamlinenames lines i author author   curstring equals curstring author   author concat   and    concat curstring   
+                      
+                  
+                i    
+              
+            curstring       
+            i i   lines length    
+                curstring   lines i curstring length length equalsignorecase curstring substring 0 length curstring length length      
+                          
+                        curstring curstring   curstring substring length     1  trim   concat system lineseparator     
+                      
+                    i i   lines length         equals lines i      
+                        curstring   curstring concat lines i   concat system lineseparator     
+                        i    
+                      
+                    abstractt   curstring trim    
+                    i curstring length       keywords  length        keywords  equalsignorecase curstring substring 0   keywords  length curstring length       keywords  length      
+                          
+                        curstring curstring   curstring substring  keywords  length     1  trim    
+                      
+                    i    
+                    fillcurstringwithnonemptylines    
+                    keywords   removenonlettersatend curstring lower   curstring tolowercase pos   lower indexof  technical pos    0    
+                        type   bibtexentrytypes techreport  
+                        pos   curstring trim   lastindexof pos    0    
+                              
+                              
+                            number   curstring substring pos   1   
+                          
+                      
+ 
+                    i    
+                    proceedtonextnonemptyline    
+                  
+              
+ 
+            i   lines length - 1 i    0    
+                readlastblock    
+                  
+                  
+ 
+                extractyear pos   curstring indexof   eds pos    0      publisher publisher    springer   
+                    editor   streamlinenames curstring substring 0  pos - 1    
+                    curstring   curstring substring pos     eds    length     2 springersplit   curstring split springersplit length    4    
+                        conference   springersplit 0 seriesdata   springersplit 1 lastspace   seriesdata lastindexof ' '   
+                        series   seriesdata substring 0  lastspace   
+                        volume   seriesdata substring lastspace   1   
+ 
+                        pages   springersplit 2  substring 4 springersplit 3  length      4    
+                            year   springersplit 3  substring 0  4 doi pos   curstring indexof  doi pos   0    
+                            pos   curstring indexof fieldname doi pos    0    
+                            pos    3 delimiter   curstring charat pos delimiter    ' '      delimiter    ' '     
+                                pos nextspace   curstring indexof ' '  pos nextspace   0    
+                                doi   curstring substring pos  nextspace doi   curstring substring pos publisher curstring contains  ieee      
+                          
+                        publisher    ieee conference pos   curstring indexof pos   0    
+                                  
+                                  
+                                  
+                                pos -  2 pos    0      curstring charat pos     ' '     
+                                    pos pos   0    
+                                    conference   curstring substring 0  pos   
+                                  
+                              
+                          
+                      
+                  
+              
+ 
+            bibentry entry bibentry    
+            entry settype type author entry setfield fieldname author  author editor entry setfield fieldname editor  editor abstractt entry setfield fieldname abstractt strings isnullorempty keywords     
+                entry setfield fieldname keywords  keywords title entry setfield fieldname title  title conference entry setfield fieldname booktitle  conference doi entry setfield fieldname doi  doi series entry setfield fieldname series  series volume entry setfield fieldname volume  volume number entry setfield fieldname number  number pages entry setfield fieldname pages  pages year entry setfield fieldname year  year publisher entry setfield fieldname publisher  publisher   
+              
+ 
+            result add entry encryptedpdfsnotsupportedexception e parserresult fromerrormessage localization lang  decryption not supported ioexception exception parserresult fromerrormessage exception getlocalizedmessage fetcherexception e parserresult fromerrormessage e getmessage parserresult result getfirstpagecontents pddocument document ioexception   
+        pdftextstripper stripper pdftextstripper    
+ 
+        stripper setstartpage 1   
+        stripper setendpage 1   
+        stripper setsortbyposition stripper setparagraphend system lineseparator     
+        stringwriter writer stringwriter    
+        stripper writetext document  writer writer tostring extractyear year matcher m   year_extract_pattern matcher curstring m find      
+            year   curstring substring m start    m end proceedtonextnonemptyline i   lines length        equals lines i  trim       
+            i fillcurstringwithnonemptylines     
+          
+        curstring   curstring trim i   lines length         equals lines i curline   lines i  trim equals curline curstring isempty      
+                      
+                    curstring   curstring concat       
+                  
+                curstring   curstring concat lines i    
+              
+            i    
+          
+ 
+        proceedtonextnonemptyline readlastblock i    0        equals lines i  trim       
+            i end   i i    0         equals lines i      
+            i--  
+          
+          
+          
+ 
+        curstring j   i   1  j    end  j      
+            curstring   curstring concat lines j  trim j    end    
+                curstring   curstring concat       
+              
+          
+      
+ 
+     override getname pdfcontent   
+      
+ 
+     override fileextensions getextensions fileextensions pdf_content  
+      
+ 
+     override getdescription pdfcontentimporter parses data of the first page of the pdf and creates a bibtex entry  currently  springer and ieee formats are supported    
+      
+ 
+ 

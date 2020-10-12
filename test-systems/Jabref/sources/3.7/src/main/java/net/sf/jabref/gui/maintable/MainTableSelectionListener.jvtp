@@ -1,0 +1,224 @@
+ 
+    
+   list event  mouse  key focus listener main table makes up most part basepanel single bib database  
+    
+   register last character pressed quick jump table  together storing last row number jumped used multiple 
+   key strokes cycle between entries starting same letter  
+   entry already selected currently editing not steal focus selected textfield panel already showing entry currently being edited new editor entry edit  
+   show new editor unless already visible not used destroy entryeditor 
+   either nothing preview shown  update preview ve already waited once  give up selection  
+   check entry preview still selected nothing already shown  set preview move separator  
+   first find column row user clicked maintablecolumn currently visible col 
+   check user right-clicked open right-click menu  
+   show normal right click menu 
+   show right click menu icon columns handling done mousereleased  
+   first find column user clicked double click entry open entry's editor maintablecolumn currently visible col 
+   workaround windows  right-click not popup trigger mousepressed mousereleased  therefore need avoid taking action point action taken button released  
+   check clicked colum specialfield column 
+   handle specialfield 
+   left click icon field icon here nothing  
+   open now thread program won't freeze during wait  
+   check field names whether link present relevant combinations url doi   
+   check field present not skip field 
+   see simple file link field file-list 
+   field specify list links use filelisttablemodel parse field content one links correct type  open first one file types specified open first file 
+   only open first link 
+   clicking crossref column 
+    
+       method handle single left click one special fields  e g   ranking  quality       
+       shows either popup select clear value simply toggles functionality set unset special field 
+       
+        param e mouseevent used determine position popups 
+        param columnname name specialfield column 
+        
+   special field found 
+   directly execute toggle action instead showing menu one action 
+    
+       process general right-click events table  show table context menu position user right-clicked  
+        param e mouse event defining popup trigger  
+        param row row event occurred  
+        
+    
+       process popup trigger events occurring icon cell table  show menu user choose external resource open entry relevant external resources exist normal popup trigger 
+       handler thing instead  
+       
+        param e mouse event defining popup trigger  
+        param row row event occurred  
+        param column maintablecolumn associated table cell  
+        
+   see simple file link field file-list 
+   field specify list links use filelisttablemodel parse field content  
+   full pop shown left click already shows short popup nothing nothing 
+    
+       receive key event main table key letter digit select first entry table starts given 
+       letter column table sorted  
+        param e keyevent 
+        
+   reset last pressed character 
+   update timestamp  
+   add new char search array sorting? todo  look up author  etc ? 
+   todo following lookup done faster algorithm binary search table may not sorted properly  
+   due marked entries  search etc rules out binary search  
+   escape loop immediately find mismatch found match nothing nothing nothing 
+   reset quick jump focus lost  net sf jabref gui maintable maintableselectionlistener listeventlistener bibentry   mouselistener  
+        keylistener  focuslistener maintableselectionlistener basepanel panel  maintable table table   table panel   panel tablerows   table gettablemodel   gettablerows    
+        previewpanel previewpanel   panel getpreviewpanel previewpanel preview   previewpanel preview previewpanel panel getbibdatabasecontext panel   
+            panel frame   getglobalsearchbar   getsearchqueryhighlightobservable   addsearchlistener preview setenabled enabled enabled   enabled  
+      
+ 
+     override listchanged listevent bibentry  e enabled eventlist bibentry  selected   e getsourcelist selected isempty bibentry newselected   selected get 0 panel getmode      basepanelmode showing_editor    panel getmode      basepanelmode will_show_editor  
+                   panel getcurrenteditor newselected    panel getcurrenteditor   getentry newselected basepanelmode mode   panel getmode mode    basepanelmode will_show_editor      mode    basepanelmode showing_editor     
+                  
+                entryeditor oldeditor   panel getcurrenteditor visname oldeditor visname   oldeditor getvisiblepanelname    
+                  
+                  
+                entryeditor neweditor   panel getentryeditor newselected objects equals neweditor  oldeditor      mode    basepanelmode showing_editor visname neweditor setvisiblepanel visname   
+                      
+                    panel showentryeditor neweditor   
+                    swingutilities invokelater    -  table ensurevisible table getselectedrow neweditor setmovingtodifferententry previewactive    
+                    updatepreview newselected updatepreview bibentry toshow changedpreview    
+        updatepreview toshow  changedpreview  0 updatepreview bibentry toshow changedpreview repeats workingonpreview repeats   0 timer t timer 50  actionevent -  updatepreview toshow  changedpreview  1    
+            t setrepeats t start eventlist bibentry  list   table getselected list size      1      list get 0     toshow basepanelmode mode   panel getmode    
+        workingonpreview swingutilities invokelater    -    
+            preview setentry toshow changedpreview     mode    basepanelmode showing_nothing     
+                panel showpreview preview   
+                panel adjustsplitter    
+              
+            workingonpreview editsignalled table getselected   size      1    
+            editsignalled table getselected   get 0 editsignalled bibentry entry basepanelmode mode   panel getmode mode    basepanelmode showing_editor    
+            panel showentryeditor panel getentryeditor entry    
+          
+        panel getcurrenteditor   requestfocus    
+      
+ 
+     override mousereleased mouseevent e col   table columnatpoint e getpoint row   table rowatpoint e getpoint modelindex   table getcolumnmodel   getcolumn col  getmodelindex    
+        maintablecolumn modelcolumn   table getmaintablecolumn modelindex e ispopuptrigger       e getbutton      mouseevent button3 modelcolumn modelcolumn isiconcolumn      
+                  
+                processpopuptrigger e  row showiconrightclickmenu e  row  modelcolumn   
+              
+          
+      
+ 
+     override mousepressed mouseevent e    
+          
+      
+ 
+     override mouseclicked mouseevent e row   table rowatpoint e getpoint e getclickcount      2    
+            bibentry toshow   tablerows get row   
+            editsignalled toshow col   table columnatpoint e getpoint modelindex   table getcolumnmodel   getcolumn col  getmodelindex    
+        maintablecolumn modelcolumn   table getmaintablecolumn modelindex os windows     modelcolumn isiconcolumn        e getbutton      mouseevent button1 modelcolumn isiconcolumn       specialfield isspecialfield modelcolumn getcolumnname        
+              
+            handlespecialfieldleftclick e  modelcolumn getcolumnname modelcolumn isiconcolumn        
+ 
+            object value   table getvalueat row  col value bibentry entry   tablerows get row list fieldnames   modelcolumn getbibtexfields    
+ 
+              
+            jabrefexecutorservice instance execute    -    
+                panel output localization lang  external viewer called fieldname   fieldnames entry hasfield fieldname link   entry getfield fieldname  get fieldname equals fieldname file     
+ 
+                              
+                            filelisttablemodel filelist filelisttablemodel    
+                            filelist setcontent link   
+ 
+                            filelistentry flentry modelcolumn isfilefilter i   0  i   filelist getrowcount    i filelist getentry i  type tostring   equals modelcolumn getcolumnname       
+                                        flentry   filelist getentry i filelist getrowcount     0    
+                                  
+                                flentry   filelist getentry 0 flentry externalfilemenuitem item externalfilemenuitem panel frame    entry      
+                                        flentry link  flentry type map externalfiletype  geticon  orelse panel getbibdatabasecontext    flentry type success   item openlink success    
+                                    panel output localization lang  unable to open link jabrefdesktop openexternalviewer panel getbibdatabasecontext    link  fieldname ioexception ex    
+                                panel output localization lang  unable to open link      
+                                logger info  unable to open link   ex modelcolumn getbibtexfields   contains fieldname crossref       
+            tablerows get row  getfield fieldname crossref  
+                     ifpresent crossref -  panel getdatabase   getentrybykey crossref  ifpresent entry -  panel highlightentry entry     
+          
+        panel frame   updateenabledstate handlespecialfieldleftclick mouseevent e columnname e getclickcount      1     
+            specialfield getspecialfieldinstancefromfieldname columnname  ifpresent field field issinglevaluefield specialfieldviewmodel field  getspecialfieldaction field getvalues   get 0   panel frame    action jpopupmenu menu jpopupmenu specialfieldvalue val   field getvalues      
+                        menu add specialfieldmenuaction specialfieldvalueviewmodel val   panel frame      
+                      
+                    menu show table  e getx    e gety processpopuptrigger mouseevent e row selrow   table getselectedrow selrow    -1      table isrowselected table rowatpoint e getpoint        
+            table setrowselectioninterval row  row   
+          
+        rightclickmenu rightclickmenu rightclickmenu jabrefgui getmainframe    panel   
+        rightclickmenu show table  e getx    e gety showiconrightclickmenu mouseevent e row  maintablecolumn column    
+        bibentry entry   tablerows get row   
+        jpopupmenu menu jpopupmenu showdefaultpopup column getbibtexfields   isempty field   column getbibtexfields fieldname file equals field     
+                      
+                    filelisttablemodel filelist filelisttablemodel    
+                    entry getfield field  ifpresent filelist  setcontent i   0  i   filelist getrowcount    i      
+                        filelistentry flentry   filelist getentry i column isfilefilter   
+                                     flentry type get   getname   equalsignorecase column getcolumnname description   flentry description description description trim   isempty       
+                            description   flentry link  
+                          
+                        menu add externalfilemenuitem panel frame    entry  description  flentry link  
+                                flentry type get   geticon    panel getbibdatabasecontext    
+                                flentry type    
+                        showdefaultpopup specialfield isspecialfield column getcolumnname       
+                          
+                        showdefaultpopup optional content   entry getfield field content ispresent      
+                            icon icon  
+                            jlabel iconlabel   guiglobals gettableicon field iconlabel icon   icontheme jabreficon file geticon icon   iconlabel geticon    
+                              
+                            menu add externalfilemenuitem panel frame    entry  content get    content get    icon  
+                                    panel getbibdatabasecontext    field field equals fieldname doi     
+                                menu add copydoiurlaction content get      
+                              
+                            showdefaultpopup showdefaultpopup    
+                processpopuptrigger e  row menu show table  e getx    e gety entryeditorclosing entryeditor editor    
+        preview setentry editor getentry previewactive    
+            panel showpreview preview panel hidebottomcomponent    
+          
+        panel adjustsplitter    
+        table requestfocus    
+      
+ 
+     override mouseentered mouseevent e    
+          
+      
+ 
+     override mouseexited mouseevent e setpreviewactive enabled    
+        previewactive   enabled previewactive table getselected   isempty      
+                updatepreview table getselected   get 0 panel hidebottomcomponent nextpreviewstyle    
+        cyclepreview globals prefs getpreviewpreferences   getpreviewcycleposition     1 previouspreviewstyle    
+        cyclepreview globals prefs getpreviewpreferences   getpreviewcycleposition   - 1 cyclepreview newposition    
+        previewpreferences previewpreferences   globals prefs getpreviewpreferences   
+                 getbuilder   
+                 withpreviewcycleposition newposition  
+                 build    
+        globals prefs storepreviewpreferences previewpreferences   
+ 
+        preview updatelayout    
+        preview update    
+        panel showpreview preview table getselected   isempty      
+            updatepreview table getselected   get 0 override keytyped keyevent e e isactionkey       character isletterordigit e getkeychar    
+                    e getmodifiers      0 time   system currenttimemillis quick_jump_timeout   2000 time - lastpressedtime    quick_jump_timeout    
+                lastpressedcount   0    
+              
+              
+            lastpressedtime   time c   e getkeychar lastpressedcount   lastpressed length    
+                lastpressed lastpressedcount    c  
+                lastpressedcount sortingcolumn   table getsortingcolumn 0 sortingcolumn    -1 i   0  i   table getrowcount    i      
+                object o   table getvalueat i  sortingcolumn o s   o tostring   tolowercase s length      lastpressedcount j   0  j   lastpressedcount  j s charat j     lastpressed j j     lastpressedcount - 1     
+                              
+                            table setrowselectioninterval i  i   
+                            table ensurevisible i e getkeychar      keyevent vk_escape    
+            lastpressedcount   0  
+          
+        panel frame   updateenabledstate    
+      
+ 
+     override keyreleased keyevent e    
+          
+      
+ 
+     override keypressed keyevent e    
+          
+      
+ 
+     override focusgained focusevent e    
+          
+      
+ 
+     override focuslost focusevent e    
+        lastpressedcount   0 previewpanel getpreview preview  
+      
+ 

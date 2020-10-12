@@ -1,0 +1,112 @@
+ wizard dialog generating new sub database existing tex aux file open databases jabrefframe 
+   insert buttons 
+   key bindings  
+   collect names open databases generated database contains entries active generate-button net sf jabref gui auximport fromauxdialog jdialog fromauxdialog jabrefframe frame title modal  jtabbedpane vieweddbs frame  title  modal   
+ 
+        parenttabbedpane   vieweddbs  
+        parentframe   frame  
+ 
+        jbinit    
+        pack    
+        setsize 600  500 jbinit     
+        jpanel panel1 jpanel    
+ 
+        panel1 setlayout borderlayout     
+        generatebutton settext localization lang  generate     
+        generatebutton setenabled generatebutton addactionlistener e -    
+            generatepressed dispose    
+            
+        cancelbutton settext localization lang  cancel     
+        cancelbutton addactionlistener e -  dispose     
+ 
+        parsebutton settext localization lang  parse     
+        parsebutton addactionlistener e -  parseactionperformed     
+ 
+        initpanels    
+ 
+          
+        buttonbarbuilder bb buttonbarbuilder    
+        jpanel buttonpanel   bb getpanel    
+        buttonpanel setborder borderfactory createemptyborder 5  5  5  5    
+ 
+        bb addglue    
+        bb addbutton parsebutton   
+        bb addrelatedgap    
+        bb addbutton generatebutton   
+        bb addbutton cancelbutton   
+        bb addglue setmodal setresizable settitle localization lang  aux file jlabel desc jlabel   html  h3     localization lang  aux file h3  p   
+                  localization lang feature generates a database based on which entries   
+                           are needed in an existing latex document    
+                     p       p   
+                  localization lang  you need to select one of your open databases from which to choose   
+                           entries  as well as the aux file produced by latex when compiling your document    
+                     p   html     
+        desc setborder borderfactory createemptyborder 5  5  5  5    
+        panel1 add desc  borderlayout north   
+ 
+        jpanel centerpane jpanel borderlayout     
+        centerpane add buttons  borderlayout north   
+        centerpane add statuspanel  borderlayout center   
+ 
+        getcontentpane   add panel1  borderlayout north   
+        getcontentpane   add centerpane  borderlayout center   
+        getcontentpane   add buttonpanel  borderlayout south   
+ 
+          
+        actionmap am   statuspanel getactionmap    
+        inputmap im   statuspanel getinputmap jcomponent when_in_focused_window   
+        im put globals getkeyprefs   getkey keybinding close_dialog    close    
+        am put  close abstractaction     
+ 
+             override actionperformed actionevent e    
+                dispose initpanels len   parenttabbedpane gettabcount toselect   -1 i   0  i   len  i      
+            dbchooser additem parenttabbedpane gettitleat i parentframe getbasepanelat i     parentframe getcurrentbasepanel      
+                toselect   i toselect    0    
+            dbchooser setselectedindex toselect   
+          
+ 
+        auxfilefield jtextfield     25   
+        jbutton browseauxfilebutton jbutton localization lang  browse     
+ 
+        filedialog dialog filedialog parentframe  withextension fileextensions aux   
+        dialog setdefaultextension fileextensions aux   
+        browseauxfilebutton addactionlistener e -    
+            optional path  file   dialog showdialogandgetselectedfile    
+            file ifpresent f -  auxfilefield settext f toabsolutepath   tostring      
+            
+ 
+        notfoundlist jlist      
+        jscrollpane listscrollpane jscrollpane notfoundlist   
+        statusinfos jtextarea     5  20   
+        jscrollpane statusscrollpane jscrollpane statusinfos   
+        statusinfos seteditable defaultformbuilder b defaultformbuilder formlayout  left pref  4dlu  fill pref grow  4dlu  left pref        buttons   
+        b appendseparator localization lang  options     
+        b append localization lang  reference database           
+        b append dbchooser  3   
+        b nextline    
+        b append localization lang  latex aux file           
+        b append auxfilefield   
+        b append browseauxfilebutton   
+        b getpanel   setborder borderfactory createemptyborder 5  5  5  5    
+ 
+        b defaultformbuilder formlayout  fill pref grow  4dlu  fill pref grow    pref  pref  fill pref grow    
+                statuspanel   
+        b appendseparator localization lang  result     
+        b append localization lang  unknown bibtex entries           
+        b append localization lang  messages           
+        b nextline    
+        b append listscrollpane   
+        b append statusscrollpane   
+        b getpanel   setborder borderfactory createemptyborder 5  5  5  5 parseactionperformed     
+        parsebutton setenabled basepanel bp    basepanel  parenttabbedpane getcomponentat dbchooser getselectedindex     
+        notfoundlist removeall    
+        statusinfos settext bibdatabase refbase   bp getdatabase auxname   auxfilefield gettext auxname refbase auxname isempty      
+            auxparser auxparser auxname  refbase   
+            auxparserresult result   auxparser parse    
+            notfoundlist setlistdata result getunresolvedkeys   toarray result getunresolvedkeys   size       
+            statusinfos append result getinformation generatebutton setenabled result getgeneratedbibdatabase   hasentries      
+                statusinfos append  \n    localization lang  empty database     
+                generatebutton setenabled generatebutton setenabled parsebutton setenabled generatepressed generatepressed bibdatabase getgeneratedb auxparser parse   getgeneratedbibdatabase    
+      
+ 
+ 

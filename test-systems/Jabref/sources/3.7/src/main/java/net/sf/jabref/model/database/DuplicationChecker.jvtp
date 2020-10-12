@@ -1,0 +1,53 @@
+ 
+    
+   determines bibtex cite keys duplicates single   link bibdatabase   
+    
+    use map instead set need know many each key checks one occurrence key 
+        
+    
+       checks one occurrence cite key 
+        
+    
+       returns number occurrences given key database  
+        
+    
+       helper function counting number key usages  
+       adds given key internal keyset together count counter increased key already exists  otherwise set 1  
+        br  
+       special case null empty key passed not counted thus not added  
+       
+       reasoning  
+       consider add key xxx add another key xxx warning delete key xxx  
+       consider jabref simply removing key set allkeys add another key xxx don't warning  
+       thus need way count number keys each type  
+       solution  hashmap  int  increment each time add decrement each time remove  
+        
+    
+       helper function counting number key usages  
+       removes given key internal keyset together count key set 1 not set 1 counter decreased  
+        br  
+       special case null empty key passed not counted thus not removed  
+        net sf jabref model database duplicationchecker isduplicatecitekeyexisting citekey getnumberofkeyoccurrences citekey    1 isduplicatecitekeyexisting bibentry entry isduplicatecitekeyexisting entry getcitekeyoptional   orelse getnumberofkeyoccurrences citekey allkeys getordefault citekey  0 addkeytoset key key key isempty allkeys put key  getnumberofkeyoccurrences key    1 removekeyfromset key key key isempty numberofkeyoccurrences   getnumberofkeyoccurrences key numberofkeyoccurrences   1    
+            allkeys put key  numberofkeyoccurrences - 1 allkeys remove key   
+          
+      
+ 
+     subscribe listen fieldchangedevent fieldchangedevent fieldchangedevent getfieldname   equals bibentry key_field     
+            removekeyfromset fieldchangedevent getoldvalue     
+            addkeytoset fieldchangedevent getnewvalue     
+          
+      
+ 
+     subscribe listen entryremovedevent entryremovedevent    
+        optional citekey   entryremovedevent getbibentry   getcitekeyoptional citekey ispresent      
+            removekeyfromset citekey get     
+          
+      
+ 
+     subscribe listen entryaddedevent entryaddedevent    
+        optional citekey   entryaddedevent getbibentry   getcitekeyoptional citekey ispresent      
+            addkeytoset citekey get     
+          
+      
+ 
+ 

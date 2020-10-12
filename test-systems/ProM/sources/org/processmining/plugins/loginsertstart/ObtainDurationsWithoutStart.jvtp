@@ -1,0 +1,87 @@
+ 
+    
+   check log see any start events exist not event log  
+    
+    author jnakatumba 
+    
+    
+    
+	   initialize plugin checking any start events exist log 
+	    
+	    param context plugincontext plugin executed  
+	    
+	    param log log needs filtered  
+	    
+	    
+    
+	   check see current resource executed any event before 
+	    
+    
+	   checks information based case perspective edits event new information obtained  
+	    org processmining plugins loginsertstart obtaindurationswithoutstart obtaindurationswithoutstart xlog log choice    
+		displaychoice   choice  
+ 
+		resdurationlist arraylist pair resdurationlistres arraylist pair resdurationlistcase arraylist pair resdurationlistresaver arraylist pair resnameslist treeset resdatelist arraylist comparablepair date      
+		ciddatelist arraylist comparablepair date      
+ 
+		resdate comparablepair date null   
+		ciddate comparablepair date null xtrace trace   log xevent event   trace xlifecycleextension instance   extracttransition event  equals  complete rname   xorganizationalextension instance   extractresource event   
+					date cdate   xtimeextension instance   extracttimestamp event   
+					resdate   getdate rname  cdate   
+					resdatelist add resdate   
+					resnameslist add rname   
+ 
+				  
+			  
+		  
+		collections sort resdatelist xtrace trace   log xevent event   trace xlifecycleextension instance   extracttransition event  equals  complete      
+					insertstartevents trace  event insertstartevents xtrace trace  xevent event    
+		myevent   event  
+		cdate   xtimeextension instance   extracttimestamp myevent   
+		caseid   xconceptextension instance   extractname trace   
+		rname   xorganizationalextension instance   extractresource myevent   
+		getresourcedetails    
+ 
+		ciddate   getdate caseid  cdate   
+		ciddatelist add ciddate getresourcedetails rname  
+		date rdate resdatelist size      0    
+			search i   0  i   resdatelist size    i      
+				prevpair   resdatelist get i   
+				rname   prevpair getfirst    
+				rdate   prevpair getsecond rname equals rname rdate compareto cdate     0 i    0    
+							comparablepair date  currentp   resdatelist get i - 1   
+							rname   currentp getfirst rname equals rname     
+								rdate   currentp getsecond    
+								prevrestimes   rdate gettime    
+								currenttimes   cdate gettime    
+								servicetime   currenttimes - prevrestimes  
+								servicetime   servicetime   1000  
+								servicetime   servicetime   60 st   servicetime longvalue    
+ 
+								resdurpair pair rname  st   
+								resdurationlistres add resdurpair   
+								getservicetimesoncase search  
+ 
+							  
+							getservicetimesoncase search getservicetimesoncase listsize   ciddatelist size listsize    0      listsize   1     
+			prevpaircase   ciddatelist get listsize - 1   
+			prevcasdate   prevpaircase getsecond prevcasdate compareto cdate    0    
+				currenttimes   cdate gettime prevcastimes   prevcasdate gettime    
+ 
+				servicetime   currenttimes - math max prevcastimes  prevrestimes   
+				servicetime   servicetime   1000  
+				servicetime   servicetime   60 st   servicetime longvalue    
+				resdurpair pair rname  st   
+				resdurationlistresaver add resdurpair   
+ 
+				servicetime   currenttimes - prevcastimes  
+				servicetime   servicetime   1000  
+				servicetime   servicetime   60 stc   servicetime longvalue    
+				resdurpair pair rname  stc   
+				resdurationlistcase add resdurpair list pair getresdatedetails displaychoice equals  resource perspective      
+			resdurationlist   resdurationlistres displaychoice equals perspective      
+			resdurationlist   resdurationlistcase displaychoice equals  resource perspective      
+			resdurationlist   resdurationlistresaver resdurationlist set getresnames resnameslist comparablepair date  getdate rname  date timestamp comparablepair date  rname  timestamp   
+	  
+ 
+ 

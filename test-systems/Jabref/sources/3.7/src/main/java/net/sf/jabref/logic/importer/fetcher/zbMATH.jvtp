@@ -1,0 +1,71 @@
+ 
+    
+   fetches data zentralblatt math  https   www zbmath org   
+    
+    
+       todo  implement entrybasedparserfetcher use zbmath citation matcher  https   www zbmath org citationmatching   
+       instead usual search tool optimized finding publication based partial information  
+        
+   
+     override 
+    public url geturlforentry bibentry entry  throws urisyntaxexception  malformedurlexception  fetcherexception   
+           example  https   zbmath org citationmatching match?q ratiu 
+      
+       
+  zbmath org bibtexoutput     
+   search fields 
+   start index return up 200 items  instead default 100  
+    
+       older java vms not automatically trust zbmath certificate case following exception thrown  
+        sun security validator validatorexception  pkix path building failed  
+        sun security provider certpath suncertpathbuilderexception  unable find 
+        valid certification path requested target 
+       jm   8u101 may trust certificate default according http   stackoverflow com 34111150 873661 fix issue accepting certificates ugly jabref not rely security-relevant information kind ok actually not      
+       
+       taken http   stackoverflow com 6055903 873661 
+        
+   create trust manager not validate certificate chains 
+   install trusting trust manager net sf jabref logic importer fetcher zbmath searchbasedparserfetcher zbmath importformatpreferences preferences preferences   objects requirenonnull preferences   
+      
+ 
+     override getname zbmath   
+      
+ 
+      
+      
+ 
+     override url geturlforquery query urisyntaxexception  malformedurlexception  fetcherexception   
+        uribuilder uribuilder uribuilder  https   
+        uribuilder addparameter  q   query     
+        uribuilder addparameter  start    0      
+        uribuilder addparameter  count    200      
+ 
+        fixsslverification uribuilder build   tourl fixsslverification     
+ 
+        logger warn  fix ssl exception by accepting all certificates    
+ 
+          
+        trustmanager   trustallcerts trustmanager x509trustmanager     
+ 
+             override checkclienttrusted x509certificate   x509certificates s certificateexception   
+ 
+              
+ 
+             override checkservertrusted x509certificate   x509certificates s certificateexception   
+ 
+              
+ 
+             override x509certificate   getacceptedissuers x509certificate 0 sslcontext sc   sslcontext getinstance  tls    
+            sc init trustallcerts securerandom     
+            httpsurlconnection setdefaultsslsocketfactory sc getsocketfactory exception e    
+            logger error  ssl problem   e   
+          
+      
+ 
+     override parser getparser bibtexparser preferences   
+      
+ 
+     override dopostcleanup bibentry entry movefieldcleanup  msc2010   fieldname keywords  cleanup entry movefieldcleanup  fjournal   fieldname journal  cleanup entry fieldformattercleanup fieldname journal removebracesformatter    cleanup entry fieldformattercleanup fieldname title removebracesformatter    cleanup entry   
+      
+ 
+ 

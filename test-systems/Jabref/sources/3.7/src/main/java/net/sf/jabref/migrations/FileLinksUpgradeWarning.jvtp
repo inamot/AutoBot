@@ -1,0 +1,128 @@
+ class defines warning offered opening pre-2 3 
+   jabref file later version warning mentions new external file 
+   link system version jabref offers upgrade old-style pdf ps links file  field 
+     modify general fields show  file  instead pdf     ps  
+     modify table column settings show  file  instead pdf     ps method performed major minor versions recorded parserresult less equal 2 2  
+        param pr 
+        return true file written jabref version   2 2 
+        
+   find out actions offered  
+   only offer change preferences file column not already visible  
+   only offer upgrade links pdf ps fields used file  directory not set  offer migrate pdf ps dir  
+   first check warning disabled method presents dialog box explaining offering make changes user confirms changes performed  
+        param panel 
+        param parserresult 
+        
+   nothing return  
+   keep formatting lines  otherwise  strings translated again  
+   see updated jabref_en properties modifications python synclang py -s -u 
+    
+       check database find out whether any set fields used any entries  
+        param database bib database  
+        param fields set fields look return true least one given fields set least one entry  
+        false otherwise method performs actual changes  
+        param panel 
+        param pr 
+        param filedir path file directory set null not set  
+        
+   update file links links database  
+   exchange table columns  
+   modify general fields necessary don't find file field  insert bottom first tab  
+    
+       collect file links given set fields add list contained field 
+       guiglobals file_field  
+       
+        param database database modify  
+        param fields fields find links return compoundedit specifying undo operation whole operation  
+        net sf jabref migrations filelinksupgradewarning postopenaction   
+ 
+  
+ 
+  
+ 
+  
+ 
+  
+ 
+ 
+      
+     override isactionnecessary parserresult pr    
+          
+          
+        offerchangesettings    globals prefs getboolean jabrefpreferences file_column      showsfileingenfields    
+          
+        offerchangedatabase   linksfound pr getdatabase    filelinksupgradewarning fields_to_look_for   
+          
+        offersetfiledir    globals prefs haskey fieldname file   filedirectorypreferences dir_suffix  
+                    globals prefs haskey fieldname pdf   filedirectorypreferences dir_suffix  
+                           globals prefs haskey fieldname ps   filedirectorypreferences dir_suffix globals prefs getboolean jabrefpreferences show_file_links_upgrade_warning     istheresomethingtobedone    
+      
+ 
+      
+     override performaction basepanel panel  parserresult parserresult istheresomethingtobedone jcheckbox changesettings jcheckbox localization lang  change table column and general fields settings to use the feature    
+                offerchangesettings   
+        jcheckbox changedatabase jcheckbox localization lang  upgrade old external file links to use the feature    
+                offerchangedatabase   
+        jcheckbox setfiledir jcheckbox localization lang  set main external file directory          offersetfiledir   
+        jtextfield filedir jtextfield 30   
+        jcheckbox donotshowdialog jcheckbox localization lang not show these options in the future jpanel message jpanel    
+        formbuilder formbuilder   formbuilder create   layout formlayout  left pref    p row   1  
+        formbuilder add jlabel   html     localization lang database uses outdated file links        br  br   
+                  localization lang  jabref no longer supports 'ps' or 'pdf' fields  br file links are now stored in the 'file' field and files are stored in an external file directory  br to make use of feature  jabref needs to upgrade file links  br  br        p   
+                  localization lang you want jabref to the following operations?        html     xy 1  row offerchangesettings    
+            formbuilder appendrows  2dlu  p    
+            row    2  
+            formbuilder add changesettings  xy 1  row offerchangedatabase    
+            formbuilder appendrows  2dlu  p    
+            row    2  
+            formbuilder add changedatabase  xy 1  row offersetfiledir globals prefs haskey fieldname pdf   filedirectorypreferences dir_suffix     
+                filedir settext globals prefs get fieldname pdf   filedirectorypreferences dir_suffix filedir settext globals prefs get fieldname ps   filedirectorypreferences dir_suffix    
+              
+            jpanel builderpanel jpanel    
+            builderpanel add setfiledir   
+            builderpanel add filedir   
+            jbutton browse jbutton localization lang  browse     
+            browse addactionlistener e filedialog showdialogandgetselectedfile   
+                             ifpresent f -  filedir settext f toabsolutepath   tostring     
+               
+            builderpanel add browse   
+            formbuilder appendrows  2dlu  p    
+            row    2  
+            formbuilder add builderpanel  xy 1  row   
+          
+        formbuilder appendrows  6dlu  p    
+        formbuilder add donotshowdialog  xy 1  row 2   
+ 
+        message add formbuilder build answer   joptionpane showconfirmdialog panel frame    
+                message  localization lang  upgrade file    joptionpane yes_no_option donotshowdialog isselected      
+            globals prefs putboolean jabrefpreferences show_file_links_upgrade_warning answer    joptionpane yes_option    
+            makechanges panel  parserresult  changesettings isselected    changedatabase isselected    
+                    setfiledir isselected   ? filedir gettext istheresomethingtobedone offerchangesettings    offerchangedatabase    offersetfiledir linksfound bibdatabase database fields bibentry entry   database getentries field   fields entry hasfield field makechanges basepanel panel  parserresult pr upgradeprefs upgradedatabase filedir upgradedatabase    
+              
+            namedcompound ce   upgradepdfpstofile pr getdatabase     
+            panel getundomanager   addedit ce   
+            panel markbasechanged filedir globals prefs put fieldname file   filedirectorypreferences dir_suffix  filedir upgradeprefs    
+              
+            globals prefs putboolean jabrefpreferences file_column showsfileingenfields gfs   globals prefs get jabrefpreferences custom_tab_fields    0    
+                stringbuilder sb stringbuilder gfs gfs isempty      
+                    sb append ' '   
+                  
+                sb append fieldname file   
+                globals prefs put jabrefpreferences custom_tab_fields    0   sb tostring     
+                globals prefs updateentryeditortablist    
+              
+            panel frame   setupalltables showsfileingenfields found entryeditortablist tablist   globals prefs getentryeditortablist    
+        outer i   0  i   tablist gettabcount    i      
+            list fields   tablist gettabfields i field   fields field equals fieldname file     
+                    found outer found namedcompound upgradepdfpstofile bibdatabase database    
+        namedcompound ce namedcompound localization lang  move external links to 'file' field     
+ 
+        upgradepdfpstofilecleanup cleanupjob upgradepdfpstofilecleanup bibentry entry   database getentries      
+            list fieldchange  changes   cleanupjob cleanup entry fieldchange change   changes    
+                ce addedit undoablefieldchange change    
+              
+          
+ 
+        ce end ce  
+      
+ 

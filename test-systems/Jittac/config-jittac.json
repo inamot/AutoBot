@@ -1,0 +1,312 @@
+// Configuration Settings
+//
+// *** README ***
+//
+// A module's description should not be more than 1,024 words ( lucene limit )
+//
+// Possible 'WeightingType' values are  
+// 		Global ( % of Unmapped Classes ) 
+// 		Global ( Gradient of Unmapped Classes )
+// 		Local ( IR vs Intended )
+// 		Local ( % of Calls To Mapped Neighbours ) 
+// 		Local ( % of Mapped Neighbours )
+//
+// 'SaveInterval' controls after how many runs the evaluation results should be saved to disk. Higher numbers increases speed but lowers fault tolerance	
+//	
+// ------------------------------
+// Global Settings
+// ------------------------------
+
+SaveInterval : "10"	
+ThreadCount : "1"
+
+
+// ------------------------------		
+// Program Specific Settings
+// ------------------------------
+
+****
+	ProgramName : "JITTAC"	
+	ProgramUrl: "test-systems/Jittac/"
+	ProgramSourceUrl: "test-systems/Jittac/sources/combined-src/"
+	ProgramJarRootPackage: "se/kau/cs/jittac/"
+	ModuleNames : { 
+		"architecture-model" 
+		"resource-mapping" 
+		"impl-model" 
+		"reporting" 
+		"jdt-builder" 
+		"eclipse-resource-mapping"
+		"eclipse-ui" 
+		"eclipse-codesupport" 
+		"eclipse-main"
+	}
+	
+	ModuleDescriptions : { 
+		"Representation of architecture models as defined in reflexion modelling, i.e. modules / components connected via connectors indicating intended or unintended dependencies. Includes definition of a file format for storing architecture models and definition of architecture model change events."
+		"This module encapsulates the data structures and functionality required for mapping elements of a system's implementation to elements of an architectural model of the system. For this purpose, it also defines an abstract resource model. It also defines events that are raised when the mapping is changed to propagate these changes to the architecture model if needed."
+		"This module defines the data structure needed to store dependency information extracted from a codebase. In addition, a format to persist this information is defined in this module as well as events which can be used to propagate changes in the implementation to interested components, such as the architectural model."
+		"Container module to gather different report generators that convert the information (or a part of it) stored in architectural models, mapping, and implementation models into human-readable form."
+		"This module contains a parser for Java based on Eclipse JDT to populate Jittac's internal implementation model."
+		"This module wraps the Eclipse-internal resource model for Jittac such that Eclipse resource can be mapped to components in architecture models"
+		"Contains all user interface elements for the Eclipse version of Jittac, including, among others the architecture model editor and detailed reference view."
+		"Contains Jittac-specific extensions to the Java editor of Eclipse such as markers in the editor for architectural problems."
+		"Contains classes required by the Eclipse plugin architecture and plugin-wide utility functions."
+	}
+	
+	ModuleDependencies : {
+		"+1, +1, -1, +1, -1, +1, +1, +1, +1"
+		"+1, +1, +1, +1, +1, +1, +1, +1, +1"
+		"+1, -1, +1, +1, +1, +1, +1, +1, +1"
+		"-1, -1, -1, +1, -1, -1, -1, -1, -1"
+		"-1, -1, -1, -1, +1, -1, -1, +1, +1"
+		"-1, -1, -1, -1, -1, +1, +1, -1, +1"
+		"-1, -1, -1, -1, -1, -1, +1, -1, -1"
+		"-1, -1, -1, -1, -1, -1, -1, +1, -1"
+		"-1, -1, -1, -1, -1, -1, -1, -1, +1"
+	}
+	
+	ProgramMapping : {
+		"MODULE : architecture-model"
+		"se.kau.cs.jittac.model.am.AbstractArchitectureElement"
+		"se.kau.cs.jittac.model.am.ArchitectureModel"
+		"se.kau.cs.jittac.model.am.Component"
+		"se.kau.cs.jittac.model.am.Connector"
+			"se.kau.cs.jittac.model.am.IArchitectureElement"
+
+		"se.kau.cs.jittac.model.am.events.AbstractArchitectureModelChangeListener"
+		"se.kau.cs.jittac.model.am.events.ComponentNameChangeEvent"
+		"se.kau.cs.jittac.model.am.events.ConnectorReferencesAddedEvent"
+		"se.kau.cs.jittac.model.am.events.ConnectorReferencesRemovedEvent"
+		"se.kau.cs.jittac.model.am.events.ConnectorStateChangeEvent"
+		"se.kau.cs.jittac.model.am.events.IArchitectureModelChangeListener"
+			"se.kau.cs.jittac.model.am.events.ArchitectureModelChangeEvent"
+			"se.kau.cs.jittac.model.am.events.ComponentAdditionEvent"
+			"se.kau.cs.jittac.model.am.events.ComponentRemovalEvent"
+			"se.kau.cs.jittac.model.am.events.ConnectorAdditionEvent"
+			"se.kau.cs.jittac.model.am.events.ConnectorRemovalEvent"
+			"se.kau.cs.jittac.model.am.events.IArchitectureModelVisitor"
+
+		"se.kau.cs.jittac.model.am.io.ArchitectureModelReader"
+		"se.kau.cs.jittac.model.am.io.ArchitectureModelWriter"
+		
+
+
+		"MODULE : resource-mapping"
+		"se.kau.cs.jittac.model.mapping.AbstractJittacProject"
+		"se.kau.cs.jittac.model.mapping.AbstractMappableElement"
+		"se.kau.cs.jittac.model.mapping.ArchitectureMapping"
+		"se.kau.cs.jittac.model.mapping.IJittacProject"
+		"se.kau.cs.jittac.model.mapping.IJittacResource"
+		"se.kau.cs.jittac.model.mapping.IJittacResourceFactory"
+		"se.kau.cs.jittac.model.mapping.IMappableElement"
+		"se.kau.cs.jittac.model.mapping.JittacResourceModelRegistry"
+			"se.kau.cs.jittac.model.mapping.AbstractJittacResource"
+
+		"se.kau.cs.jittac.model.mapping.events.AbstractArchitectureMappingChangeListener"
+		"se.kau.cs.jittac.model.mapping.events.IArchitectureMappingChangeListener"
+		"se.kau.cs.jittac.model.mapping.events.ManagedProjectAddedEvent"
+		"se.kau.cs.jittac.model.mapping.events.ManagedProjectRemovedEvent"
+		"se.kau.cs.jittac.model.mapping.events.MappingAdditionEvent"
+		"se.kau.cs.jittac.model.mapping.events.MappingRemovalEvent"
+			"se.kau.cs.jittac.model.mapping.events.ArchitectureMappingChangeEvent"
+		
+
+
+		"MODULE : impl-model"
+		"se.kau.cs.jittac.model.im.BuildUnit"
+		"se.kau.cs.jittac.model.im.IImplementationModel"							
+		"se.kau.cs.jittac.model.im.IImplementationModelElement"							
+		"se.kau.cs.jittac.model.im.ImplementationModel"							
+		"se.kau.cs.jittac.model.im.ImplementationModelFactory"							
+		"se.kau.cs.jittac.model.im.ImplementationModelFactoryRegistry"							
+		"se.kau.cs.jittac.model.im.ImplementationModelPartition"							
+		"se.kau.cs.jittac.model.im.ImplementationModelPartitionType"														
+		"se.kau.cs.jittac.model.im.IXReference"							
+		"se.kau.cs.jittac.model.im.IXReferenceType"	
+			"se.kau.cs.jittac.model.im.ImplementationModelBuilder"
+
+		"se.kau.cs.jittac.model.im.events.AbstractBuildEventListener"							
+		"se.kau.cs.jittac.model.im.events.BuildEndEvent"							
+		"se.kau.cs.jittac.model.im.events.BuildEventListener"							
+		"se.kau.cs.jittac.model.im.events.IImplementationChangeListener"							
+		"se.kau.cs.jittac.model.im.events.XReferenceChangeDeltaEvent"	
+			"se.kau.cs.jittac.model.im.events.BuildEvent"
+			"se.kau.cs.jittac.model.im.events.BuildStartEvent"
+
+		"se.kau.cs.jittac.model.im.io.ImplementationModelReader"							
+		"se.kau.cs.jittac.model.im.io.ImplementationModelWriter"
+								
+
+
+		"MODULE : reporting"
+		"se.kau.cs.jittac.model.report.PlainTextViolationReporter"
+		"se.kau.cs.jittac.model.report.ReporterUtils"
+		
+
+
+		"MODULE : jdt-builder"
+		"se.kau.cs.jittac.eclipse.Activator"
+
+		"se.kau.cs.jittac.eclipse.builders.jdt.commands.BaseHandler"
+		"se.kau.cs.jittac.eclipse.builders.jdt.commands.DisableJavaCodeAnalysisHandler"
+		"se.kau.cs.jittac.eclipse.builders.jdt.commands.EnableJavaCodeAnalysisHandler"
+			"se.kau.cs.jittac.eclipse.builders.jdt.JDTJavaImplementationModelPartitionType"
+			"se.kau.cs.jittac.eclipse.builders.jdt.JDTJavaReferenceCodeInformation"
+
+		"se.kau.cs.jittac.eclipse.builders.jdt.JavaASTHandler"
+		"se.kau.cs.jittac.eclipse.builders.jdt.JavaASTProcessorSH"
+		"se.kau.cs.jittac.eclipse.builders.jdt.JavaImplementationModelBuilder"
+		"se.kau.cs.jittac.eclipse.builders.jdt.JDTImplementationModelFactory"
+		"se.kau.cs.jittac.eclipse.builders.jdt.JDTJavaModelElement"
+		"se.kau.cs.jittac.eclipse.builders.jdt.JDTJavaReference"
+		"se.kau.cs.jittac.eclipse.builders.jdt.util.Projects"
+
+
+		
+		"MODULE : eclipse-resource-mapping"
+		"se.kau.cs.jittac.model.mapping.eclipse.EclipseJittacProject"
+		"se.kau.cs.jittac.model.mapping.eclipse.EclipseJittacResource"
+		"se.kau.cs.jittac.model.mapping.eclipse.EclipseJittacResourceFactory"
+		
+
+
+		"MODULE : eclipse-ui"
+		"se.kau.cs.jittac.eclipse.ui.ArchitectureModelModule"
+		"se.kau.cs.jittac.eclipse.ui.ArchitectureModelPropertyPage"
+			"se.kau.cs.jittac.eclipse.ui.ArchitectureModelModuleUI"
+
+		"se.kau.cs.jittac.eclipse.ui.editors.ArchitectureModelEditor"
+		"se.kau.cs.jittac.eclipse.ui.editors.ArchitectureModelOutlineAdapterFactory"
+		"se.kau.cs.jittac.eclipse.ui.editors.ArchitectureModelOutlinePage"
+
+		"se.kau.cs.jittac.eclipse.ui.models.ItemCreationModel"
+
+		"se.kau.cs.jittac.eclipse.ui.operations.MarkConnectorAsEnvisagedOperation"
+		"se.kau.cs.jittac.eclipse.ui.operations.SetComponentNameOperation"
+
+		"se.kau.cs.jittac.eclipse.ui.parts.ArchitectureModelAnchorProvider"
+		"se.kau.cs.jittac.eclipse.ui.parts.ArchitectureModelPart"
+		"se.kau.cs.jittac.eclipse.ui.parts.ArchitectureModelPartsFactory"
+		"se.kau.cs.jittac.eclipse.ui.parts.ComponentPart"
+		"se.kau.cs.jittac.eclipse.ui.parts.ConnectorGeometricOutlineProvider"
+		"se.kau.cs.jittac.eclipse.ui.parts.ConnectorPart"
+		"se.kau.cs.jittac.eclipse.ui.parts.ConnectorSelectionFeedbackPart"
+		"se.kau.cs.jittac.eclipse.ui.parts.CreateConnectorFeedbackPart"
+		"se.kau.cs.jittac.eclipse.ui.parts.CreateConnectorFeedbackPartBehavior"
+		"se.kau.cs.jittac.eclipse.ui.parts.CreateConnectorFeedbackPartFactory"
+		"se.kau.cs.jittac.eclipse.ui.parts.HoverFeedbackPartFactory"
+		"se.kau.cs.jittac.eclipse.ui.parts.SelectionColorProvider"
+
+		"se.kau.cs.jittac.eclipse.ui.policies.AbortConnectorCreationStrokeHandler"
+		"se.kau.cs.jittac.eclipse.ui.policies.ComponentOnDragHandler"
+		"se.kau.cs.jittac.eclipse.ui.policies.CreateComponentOnClickHandler"
+		"se.kau.cs.jittac.eclipse.ui.policies.CreateConnectorOnClickHandler"
+		"se.kau.cs.jittac.eclipse.ui.policies.ShowArchitectureElementContextMenuOnClickHandler"
+		"se.kau.cs.jittac.eclipse.ui.policies.ShowArchitectureModelContextMenuOnClickHandler"
+
+		"se.kau.cs.jittac.eclipse.ui.views.ArchitectureModelView"
+		"se.kau.cs.jittac.eclipse.ui.views.BrowserView"
+		"se.kau.cs.jittac.eclipse.ui.views.ReferenceTableView"
+
+		"se.kau.cs.jittac.eclipse.ui.visuals.ComponentVisual"
+
+		"se.kau.cs.jittac.eclipse.ui.visuals.ConnectorVisual"
+		"se.kau.cs.jittac.eclipse.ui.wizards.NewArchitectureModelWizard"
+		
+
+
+		"MODULE : eclipse-codesupport"
+		"se.kau.cs.jittac.eclipse.codesupport.ProblemMarker"
+		
+
+
+		"MODULE : eclipse-main"
+		"se.kau.cs.jittac.eclipse.JittacJavaNature"
+		"se.kau.cs.jittac.eclipse.ModelManager"
+		
+		"se.kau.cs.jittac.eclipse.util.DummyProgressMonitor"
+	}
+
+	
+	PackageExclusion : { 
+		"java.*" 
+		"javax.*" 
+		"javafx.*" 
+		"org.*" 
+		"com.*"
+
+
+   		"se.kau.cs.jittac.model.am.test.ConsoleArchitectureModelListener"
+
+   		"se.kau.cs.jittac.model.mapping.test.JittacResourceStub"
+   		"se.kau.cs.jittac.model.mapping.test.TestResourceFactory"
+
+		"se.kau.cs.jittac.eclipse.ui.visuals.TestApplication"
+
+   		"se.kau.cs.jittac.eclipse.ui.policies.TestOnDragHandler"
+
+
+		"se.kau.cs.jittac.model.ModelConfiguration"
+		"se.kau.cs.jittac.model.ModelManager"
+		"se.kau.cs.jittac.model.ModelProblemCollector"
+		"se.kau.cs.jittac.model.ModelProblemManager"
+
+		"se.kau.cs.jittac.model.feature.Feature"
+		"se.kau.cs.jittac.model.feature.FeatureLocation"
+		"se.kau.cs.jittac.model.feature.FeatureLocationRegistry"
+
+		"se.kau.cs.jittac.eclipse.ui.views.ComponentFeaturesView"
+		"se.kau.cs.jittac.eclipse.ui.views.FeatureDependencyMatrixView"
+		"se.kau.cs.jittac.eclipse.ui.views.FeatureLocationTableView"
+
+		"se.kau.cs.jittac.eclipse.util.FeatureLocationCSV"
+
+		"se.kau.cs.jittac.eclipse.builders.jdt.FeatureAnnotationProcessor"
+	}
+
+	----
+	
+	WeightingType : { 
+		"Search Only"
+    }
+
+	ThresholdType : { 
+		"Recommendation Average"
+    }		
+
+	MinResultsPerPage : "10"
+	MaxResultsPerPage : "50"					
+	ResultsPerPageStep : "5"
+	
+	MinMNBoostFactor : "20.0"
+	MaxMNBoostFactor : "45.0"					
+	MNBoostFactorStep : "1.0"
+	
+	MinMDBoostFactor : "1.0"
+	MaxMDBoostFactor : "10.0"					
+	MDBoostFactorStep : "1.0"
+
+	----
+
+	NormalizationType : { 
+		"None"
+    }
+
+	MinThreshold : "0.0"
+	MaxThreshold : "0.0"					
+	ThresholdStep : "0.1"
+
+	----
+
+	MinTechniqueWeighting : "1.0"
+	MaxTechniqueWeighting : "1.0"			
+	TechniqueWeightingStep : "0.1"
+	
+	MinPenaltyFactor : "0.0"
+	MaxPenaltyFactor : "0.0"					
+	PenaltyFactorStep : "1.0"
+	
+	MinInitialMappingFraction : "0.0"
+	MaxInitialMappingFraction : "0.0"					
+	InitialMappingFractionStep : "0.1"

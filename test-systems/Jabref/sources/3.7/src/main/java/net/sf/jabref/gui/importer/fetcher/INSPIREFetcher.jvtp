@@ -1,0 +1,85 @@
+ class allows access slac inspire database port original spires fetcher either generalfetcher pose requests database fetch individual entries  
+   
+    author fedor bezrukov 
+    author sheer el-showk 
+   
+    version $id$ 
+   
+    
+    
+       construct query url 
+       
+       note truncate 1000 returned entries likely inspire returns fewer anyway shouldn't problem users probably specific searches  
+       
+        param key key oai2 entry url point return string denoting query url least 87 characters 
+     append inspirefetcher inspire_host  
+    
+       constructs inspire query url slaccitation field 
+       
+        param slaccitation 
+        return query string 
+       
+               public static string constructurlfromslaccitation string slaccitation    string cmd    j   string key   
+               slaccitation replaceall  ^%%citation          replaceall key matches  ^\\w -\\w         
+                  cmd    eprint   try   key   urlencoder encode key   utf-8      catch  unsupportedencodingexception e  
+                   stringbuffer sb   new stringbuffer  http      append inspire_host   append       
+               sb append  spires find hep www   append  ?    sb append  rawcmd find    append cmd  append       
+               sb append key   return sb tostring      
+       
+                   construct inspire query url eprint field 
+       
+        param eprint 
+        return query string 
+       
+               public static string constructurlfromeprint string eprint    string key   eprint replaceall       $   
+                    try   key   urlencoder encode key   utf-8      catch  unsupportedencodingexception e    return       
+               stringbuffer sb   new stringbuffer  http      append inspire_host   append       
+               sb append  spires find hep www   append  ?    sb append  rawcmd find eprint     sb append key   return 
+               sb tostring      
+        
+    
+       import entry oai2 archive bibentry provided field oai2_identifier_field set search string  
+       
+        param key oai2 key fetch arxiv  
+        return imported bibentry null none  
+        
+   
+        see net sf jabref imports fetcher entryfetcher additional options nothing 
+   
+        see java lang runnable 
+        
+   query archive load results bibentry    
+   add entry inspection dialog    net sf jabref gui importer fetcher inspirefetcher entryfetcher constructurl key identifier identifier   urlencoder encode key  standardcharsets utf_8 name unsupportedencodingexception e stringbuilder sb stringbuilder 87  append  http   
+                 append   search?ln en ln en p find    append identifier  
+                 append   action_search search sf  so d rm  rg 1000 sc 0 of hx    
+        logger debug  inspire url      sb    \n sb tostring bibdatabase importinspireentries key  outputprinter frame ioexception url   constructurl key   
+        httpurlconnection conn    httpurlconnection url url  openconnection    
+        conn setrequestproperty  user-agent    jabref    
+        inputstream inputstream   conn getinputstream inspirebibtexfilterreader reader inspirebibtexfilterreader inputstreamreader inputstream  standardcharsets utf_8      
+ 
+            parserresult pr   bibtexparser parse reader  globals prefs getimportformatpreferences pr getdatabase    
+          
+      
+ 
+ 
+      
+     override helpfile gethelppage helpfile fetcher_inspire  
+      
+ 
+     override jpanel getoptionspanel override gettitle inspire   
+      
+ 
+     override stopfetching     
+          
+      
+ 
+      
+     override processquery query  importinspector dialog  outputprinter status status setstatus localization lang  fetching entries from inspire     
+              
+            bibdatabase bd   importinspireentries query  status   
+ 
+            status setstatus localization lang  adding fetched entries     
+              
+            bd getentries   foreach dialog  addentry exception e    
+            logger error  error fetching from     gettitle    e   
+              importinspectiondialog dialog  showerrormessage gettitle    e getlocalizedmessage 

@@ -1,0 +1,181 @@
+ action launching keyword managing dialog 
+   
+    
+   keyword add 
+   keywordlist getselectedindices not work  therefore operate values nothing nothing nothing nothing 
+   key bindings  
+   nothing add 
+   list empty word greater last word list 
+   nothing word already table 
+   lazy creation dialog  
+   build keywordstoadd userselectedkeywords parallel 
+   nothing done nothing new nothing obsolete 
+   update keywords 
+   put keywords back 
+   fill dialog values keywords first entry added remaining entries  intersection used approach ensures one empty keyword list leads empty set common keywords net sf jabref gui actions managekeywordsaction mnemonicawareaction managekeywordsaction jabrefframe frame    
+        putvalue action name  localization menutitle  manage keywords frame   frame createdialog diag jtextfield keyword jtextfield    
+ 
+        keywordlistmodel defaultlistmodel      
+        jlist keyword  keywordlist jlist   keywordlistmodel   
+        keywordlist setvisiblerowcount 8   
+        jscrollpane kpane jscrollpane keywordlist   
+ 
+        diag jdialog frame  localization lang  manage keywords jbutton ok jbutton localization lang  ok     
+        jbutton cancel jbutton localization lang  cancel     
+        jbutton add jbutton localization lang  add     
+        jbutton remove jbutton localization lang  remove     
+ 
+        keywordlist setvisiblerowcount 10   
+ 
+        intersectkeywords jradiobutton localization lang  display keywords appearing in all entries     
+        mergekeywords jradiobutton localization lang  display keywords appearing in any entry     
+        buttongroup group buttongroup    
+        group add intersectkeywords   
+        group add mergekeywords   
+        actionlistener statechanged   e -  fillkeywordlist    
+        intersectkeywords addactionlistener statechanged   
+        mergekeywords addactionlistener statechanged   
+        intersectkeywords setselected formbuilder builder   formbuilder create   layout formlayout  fill 200dlu grow  4dlu  fill pref   
+                 pref  2dlu  pref  1dlu  pref  2dlu  fill 100dlu grow  4dlu  pref  4dlu  pref       
+ 
+        builder addseparator localization lang  keywords of selected entries    xyw 1  1  3   
+        builder add intersectkeywords  xyw 1  3  3   
+        builder add mergekeywords  xyw 1  5  3   
+        builder add kpane  xywh 1  7  1  3   
+        builder add remove  xy 3  9   
+        builder add keyword  xy 1  11   
+        builder add add  xy 3  11   
+ 
+        buttonbarbuilder bb buttonbarbuilder    
+        bb addglue    
+        bb addbutton ok   
+        bb addbutton cancel   
+        bb addglue    
+        builder getpanel   setborder borderfactory createemptyborder 5  5  5  5    
+        bb getpanel   setborder borderfactory createemptyborder 5  5  5  5    
+ 
+        ok addactionlistener e -    
+            canceled diag dispose    
+            
+ 
+        action cancelaction abstractaction     
+             override actionperformed actionevent e    
+                canceled diag dispose    
+              
+           
+        cancel addactionlistener cancelaction actionlistener addactionlistener   arg0 -  addbuttonactionlistener keyword   
+ 
+        add addactionlistener addactionlistener actionlistener removeactionlistenter   arg0 -    
+              
+            list keyword  values   keywordlist getselectedvalueslist keyword val   values    
+                keywordlistmodel removeelement val   
+              
+           
+ 
+        remove addactionlistener removeactionlistenter   
+ 
+        keywordlist addkeylistener keylistener     
+ 
+             override keytyped keyevent arg0    
+                  
+              
+ 
+             override keyreleased keyevent arg0    
+                  
+              
+ 
+             override keypressed keyevent arg0 arg0 getkeycode      keyevent vk_delete    
+                    removeactionlistenter actionperformed autocompleter autocomp   jabrefgui getmainframe   getcurrentbasepanel   getautocompleters   
+                 get fieldname keywords   
+        autocompletelistener acl autocompletelistener autocomp   
+        keyword addkeylistener acl   
+        keyword addfocuslistener acl   
+        keyword addkeylistener keylistener     
+ 
+             override keytyped keyevent e    
+                  
+              
+ 
+             override keyreleased keyevent e    
+                  
+              
+ 
+             override keypressed keyevent e e getkeycode      keyevent vk_enter    
+                    addactionlistener actionperformed actionmap am   builder getpanel   getactionmap    
+        inputmap im   builder getpanel   getinputmap jcomponent when_in_focused_window   
+        im put globals getkeyprefs   getkey keybinding close_dialog    close    
+        am put  close   cancelaction   
+ 
+        diag getcontentpane   add builder getpanel    borderlayout center   
+        diag getcontentpane   add bb getpanel    borderlayout south addbuttonactionlistener jtextfield keywordtextfield stringutil isblank keywordtextfield gettext keyword newkeyword keyword keywordtextfield gettext   trim keywordlistmodel isempty      
+            keywordlistmodel addelement newkeyword idx   0  
+            keyword element   keywordlistmodel getelementat idx idx   keywordlistmodel size        element compareto newkeyword    0     
+                idx idx    keywordlistmodel size      
+                  
+                keywordlistmodel addelement newkeyword element compareto newkeyword     0 keywordlistmodel add idx  newkeyword   
+              
+          
+        keywordtextfield settext keywordtextfield requestfocusinwindow    
+ 
+      
+ 
+     override actionperformed actionevent e    
+        basepanel bp   frame getcurrentbasepanel bp bp getselectedentries   isempty      
+            bp output localization lang  select at least one entry to manage keywords createdialog    
+ 
+        canceled fillkeywordlist    
+ 
+        diag pack    
+        diag setlocationrelativeto frame   
+        diag setvisible canceled keywordlist keywordstoadd keywordlist    
+        keywordlist userselectedkeywords keywordlist enumeration keyword  keywords   keywordlistmodel elements    keywords hasmoreelements       
+            keyword keyword   keywords nextelement    
+            userselectedkeywords add keyword sortedkeywordsofallentriesbeforeupdatebyuser contains keyword     
+                keywordstoadd add keyword   
+              
+          
+ 
+        keywordlist keywordstoremove keywordlist keyword kword   sortedkeywordsofallentriesbeforeupdatebyuser userselectedkeywords contains kword     
+                keywordstoremove add kword keywordstoadd isempty      keywordstoremove isempty globals prefs iskeywordsyncenabled       keywordstoadd isempty      
+            specialfieldsutils synchronizespecialfields keywordstoadd  keywordstoremove   
+          
+ 
+        namedcompound ce   updatekeywords bp getselectedentries    keywordstoadd  keywordstoremove   
+        bp getundomanager   addedit ce   
+        bp markbasechanged namedcompound updatekeywords list bibentry  entries  keywordlist keywordstoadd  
+            keywordlist keywordstoremove    
+        namedcompound ce namedcompound localization lang  update keywords bibentry entry   entries    
+            keywordlist keywords   entry getkeywords globals prefs getkeyworddelimiter     
+ 
+              
+            keywords removeall keywordstoremove   
+            keywords addall keywordstoadd   
+ 
+              
+            optional fieldchange  change   entry putkeywords keywords  globals prefs getkeyworddelimiter change ispresent      
+                ce addedit undoablefieldchange change get globals prefs iskeywordsyncenabled      
+                specialfieldsutils syncspecialfieldsfromkeywords entry  globals prefs getkeyworddelimiter     
+              
+          
+        ce end ce fillkeywordlist     
+        basepanel bp   frame getcurrentbasepanel    
+        list bibentry  entries   bp getselectedentries    
+ 
+          
+        keywordlistmodel clear    
+        sortedkeywordsofallentriesbeforeupdatebyuser clear mergekeywords isselected bibentry entry   entries    
+                keywordlist separatedkeywords   entry getkeywords globals prefs getkeyworddelimiter     
+                sortedkeywordsofallentriesbeforeupdatebyuser addall separatedkeywords intersectkeywords isselected    
+ 
+              
+            bibentry firstentry   entries get 0   
+            keywordlist separatedkeywords   firstentry getkeywords globals prefs getkeyworddelimiter     
+            sortedkeywordsofallentriesbeforeupdatebyuser addall separatedkeywords i   1  i   entries size    i      
+                bibentry entry   entries get i   
+                separatedkeywords   entry getkeywords globals prefs getkeyworddelimiter     
+                sortedkeywordsofallentriesbeforeupdatebyuser retainall separatedkeywords keyword keyword   sortedkeywordsofallentriesbeforeupdatebyuser    
+            keywordlistmodel addelement keyword   
+          
+      
+ 
+ 

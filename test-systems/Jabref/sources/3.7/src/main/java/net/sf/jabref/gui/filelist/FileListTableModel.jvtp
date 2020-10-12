@@ -1,0 +1,77 @@
+ 
+    
+   data structure contain list file links  parseable coded string  
+   doubles table model file list editor  
+    
+    
+       add entry table model fire change event change event fired event dispatch thread  
+        param index row index insert entry param entry entry insert nothing 
+    
+       set up table contents based flat string representation file list 
+        param value string representation 
+        
+    
+       convenience method finding label corresponding type first file link given field content difference between using method using setcontent instance filelisttablemodel slight optimization method  parsing discontinued first entry found  
+        param content file field content fed class' setcontent   method  
+        return jlabel set up text icon first entry's file type null entry found entry icon file type recognized  try find usable file type based mime type type found mime type extension  
+    
+       transform file list shown table flat string representable bibtex field  
+        return string representation  
+        
+    
+       transform file list shown table html string representation 
+       suitable displaying contents tooltip  
+        return tooltip representation  
+        net sf jabref gui filelist filelisttablemodel abstracttablemodel   
+ 
+  
+ 
+     override getrowcount list list size    
+          
+      
+ 
+     override getcolumncount 3  
+      
+ 
+     override getcolumnclass columnindex override object getvalueat rowindex columnindex list    
+            filelistentry entry   list get rowindex columnindex 0 entry description 1 entry link entry type ispresent   ? entry type get   getname filelistentry getentry index list list get index setentry index  filelistentry entry list    
+            list set index  entry   
+            firetablerowsupdated index  index removeentry index list    
+            list remove index   
+            firetablerowsdeleted index  index addentry index filelistentry entry list    
+            list add index  entry swingutilities iseventdispatchthread      
+                firetablerowsinserted index  index swingutilities invokelater    -  firetablerowsinserted index  index    
+              
+          
+ 
+      
+ 
+     override setvalueat object avalue rowindex columnindex setcontent value    
+        setcontent value setcontentdontguesstypes value    
+        setcontent value false filelistentry setcontent val firstonly deduceunknowntypes value   val value value       
+          
+ 
+        list parsedfilefield  fields   filefield parse value   
+        list filelistentry  files arraylist parsedfilefield entry   fields entry isempty firstonly decodeentry entry  deduceunknowntypes files add decodeentry entry  deduceunknowntypes list    
+            list clear    
+            list addall files   
+          
+        firetablechanged tablemodelevent jlabel getfirstlabel content    
+        filelisttablemodel tm filelisttablemodel    
+        filelistentry entry   tm setcontent content true entry entry type ispresent entry type get   geticonlabel filelistentry decodeentry parsedfilefield entry deduceunknowntype    
+        optional externalfiletype  type   externalfiletypes getinstance   getexternalfiletypebyname entry getfiletype deduceunknowntype     type get unknownexternalfiletype     
+              
+              
+            type   externalfiletypes getinstance   getexternalfiletypebymimetype entry getfiletype type ispresent      
+                  
+                optional extension   fileutil getfileextension entry getlink extension ispresent      
+                    optional externalfiletype  typeguess   externalfiletypes getinstance   
+                             getexternalfiletypebyext extension get typeguess ispresent      
+                        type   typeguess filelistentry entry getdescription    entry getlink    type getstringrepresentation list array list size i   0 filelistentry entry   list    
+                array i    entry getstringarrayrepresentation    
+                i filefield encodestringarray array gettooltiphtmlrepresentation     
+        stringjoiner sb stringjoiner   br      html       html list filelistentry entry   list    
+                sb add format  %s  %s    entry description  entry link sb tostring    
+      
+ 
+ 

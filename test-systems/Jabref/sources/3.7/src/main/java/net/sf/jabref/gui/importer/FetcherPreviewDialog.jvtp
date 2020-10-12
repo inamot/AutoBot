@@ -1,0 +1,130 @@
+ 
+    
+   
+    
+   key bindings  
+    
+       check whether large number entries selected ask user whether go return true go non-javadoc  
+       see net sf jabref gui importinspection#addentry net sf jabref bibentry  
+       
+   
+           public tablecelleditor getcelleditor     return 
+           getdefaulteditor boolean class     
+            
+   only column 0 controlled bibentry searchhit editable  
+    
+       displays dialog tells user error occurred fetching entries 
+        net sf jabref gui importer fetcherpreviewdialog jdialog outputprinter fetcherpreviewdialog jabrefframe frame warninglimit tablerowheight frame  localization lang  title frame   frame warninglimit   warninglimit  
+ 
+        jbutton ok jbutton localization lang  ok     
+        ok addactionlistener e verifyselection      
+                okpressed dispose    
+              
+            
+        jbutton cancel jbutton localization lang  cancel     
+        cancel addactionlistener e -    
+            okpressed dispose    
+            
+        jbutton selectall jbutton localization lang  select all     
+        selectall addactionlistener e -  setselectionall jbutton deselectall jbutton localization lang  deselect all     
+        deselectall addactionlistener e -  setselectionall defaulteventtablemodel tableentry  tablemodelgl    defaulteventtablemodel tableentry   glazedlistsswing 
+                 eventtablemodelwiththreadproxylist entries entrytableformat     
+        gltable entrytable tablemodelgl   
+        gltable setrowheight tablerowheight   
+        gltable getcolumnmodel   getcolumn 0  setmaxwidth 45   
+        gltable setpreferredscrollableviewportsize dimension 1100  600    
+        defaulteventselectionmodel tableentry  selectionmodel    defaulteventselectionmodel tableentry   glazedlistsswing 
+                 eventselectionmodelwiththreadproxylist entries   
+        gltable setselectionmodel selectionmodel   
+        buttonstackbuilder builder buttonstackbuilder    
+        builder addbutton selectall   
+        builder addbutton deselectall   
+        builder getpanel   setborder borderfactory createemptyborder 5  5  5  5    
+ 
+        buttonbarbuilder bb buttonbarbuilder    
+        bb addglue    
+        bb addbutton ok   
+        bb addbutton cancel   
+        bb addglue    
+        bb getpanel   setborder borderfactory createemptyborder 5  5  5  5    
+ 
+        jpanel centerpan jpanel    
+        centerpan setlayout borderlayout     
+        centerpan add jscrollpane gltable   borderlayout center   
+        centerpan add builder getpanel    borderlayout west   
+ 
+        getcontentpane   add centerpan  borderlayout center   
+        getcontentpane   add bb getpanel    borderlayout south   
+ 
+          
+        action closeaction abstractaction     
+ 
+             override actionperformed actionevent e    
+                dispose    
+              
+           
+        actionmap am   centerpan getactionmap    
+        inputmap im   centerpan getinputmap jcomponent when_in_focused_window   
+        im put globals getkeyprefs   getkey keybinding close_dialog    close    
+        am put  close   closeaction   
+ 
+        pack verifyselection selected   0 tableentry entry   entries entry iswanted      
+                selected selected   warninglimit result   joptionpane showconfirmdialog localization lang  you have selected more than %0 entries download  some web sites   
+                                       might block you you make too many rapid downloads you want to valueof warninglimit    
+                    localization lang  confirm selection    joptionpane yes_no_option  joptionpane warning_message result    joptionpane yes_option map getselection     
+        linkedhashmap selection linkedhashmap tableentry e   entries    
+            selection put e id  e iswanted selection addentry entryid  jlabel preview    
+        tableentry entry tableentry entryid  preview entries getreadwritelock   writelock   lock entries add entry entries getreadwritelock   writelock   unlock    
+        gltable repaint setselectionall select i   0  i   gltable getrowcount    i      
+            gltable setvalueat select  i  0   
+          
+        gltable repaint tableentry tableentry id  jlabel preview id   id preview   preview iswanted wanted setwanted wanted wanted   wanted jlabel getpreview preview previewrenderer tablecellrenderer   
+ 
+  
+ 
+ 
+         override component gettablecellrenderercomponent jtable table  object value isselected hasfocus row column    
+            jlabel valuelabel    jlabel  value  
+            label settext valuelabel gettext label entrytable jtable entrytable tablemodel model model   
+            gettableheader   setreorderingallowed override tablecellrenderer getcellrenderer row column column    0 ? getdefaultrenderer renderer  
+          
+ 
+          
+ 
+         override getcolumnclass col col    0 return jlabel override iscelleditable row column column    0  
+          
+ 
+         override setvalueat object value row column    
+              
+              
+            entries getreadwritelock   writelock   lock    
+            tableentry entry   entries get row   
+            entry setwanted value   
+            entries getreadwritelock   writelock   unlock entrytableformat tableformat tableentry    
+ 
+         override getcolumncount 2  
+          
+ 
+         override getcolumnname i i    0 localization lang  keep localization lang  preview    
+              
+          
+ 
+         override object getcolumnvalue tableentry entry i i    0 entry iswanted entry getpreview isokpressed okpressed  
+      
+ 
+     override setstatus s    
+        frame setstatus s   
+      
+ 
+     override showmessage message title msgtype    
+        joptionpane showmessagedialog message  title  msgtype   
+      
+ 
+     override showmessage message    
+        joptionpane showmessagedialog message showerrormessage fetchertitle localizedmessage    
+        showmessage localization lang  error fetching from %0   fetchertitle     \n    
+                        localization lang  please again later and or check your network connection       \n    
+                        localizedmessage  
+                localization lang  search %0   fetchertitle   joptionpane error_message   
+      
+ 

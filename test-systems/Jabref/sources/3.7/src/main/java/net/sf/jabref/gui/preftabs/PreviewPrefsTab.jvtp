@@ -1,0 +1,141 @@
+ 
+   update preview net sf jabref gui preftabs previewprefstab jpanel prefstab previewprefstab     
+        setuplogic    
+        setupgui setuplogic    
+        chosen getselectionmodel   addlistselectionlistener event selectionempty     listselectionmodel  event getsource    isselectionempty    
+            btnleft setenabled  selectionempty   
+            btndown setenabled  selectionempty   
+            btnup setenabled  selectionempty   
+            
+ 
+        available getselectionmodel   
+                 addlistselectionlistener e -  btnright setenabled    listselectionmodel  e getsource    isselectionempty      
+ 
+        btnright addactionlistener event object object   available getselectedvalueslist      
+                availablemodel removeelement object   
+                chosenmodel addelement object   
+              
+            
+ 
+        btnleft addactionlistener event object object   chosen getselectedvalueslist      
+                availablemodel addelement object   
+                chosenmodel removeelement object   
+              
+            
+ 
+        btnup addactionlistener event -    
+            list integer  newselectedindices arraylist oldindex   chosen getselectedindices alreadytaken   newselectedindices contains oldindex - 1 newindex    oldindex   0     alreadytaken  ? oldindex - 1   oldindex  
+                chosenmodel add newindex  chosenmodel remove oldindex    
+                newselectedindices add newindex   
+              
+            chosen setselectedindices arrayutils toprimitive newselectedindices toarray integer newselectedindices size        
+            
+ 
+        btndown addactionlistener event -    
+            list integer  newselectedindices arraylist selectedindices   chosen getselectedindices i   selectedindices length - 1  i    0  i oldindex   selectedindices i alreadytaken   newselectedindices contains oldindex   1 newindex    oldindex   chosenmodel getsize   - 1     alreadytaken  ? oldindex   1   oldindex  
+                chosenmodel add newindex  chosenmodel remove oldindex    
+                newselectedindices add newindex   
+              
+            chosen setselectedindices arrayutils toprimitive newselectedindices toarray integer newselectedindices size        
+            
+ 
+ 
+        btndefault addactionlistener event -  layout settext globals prefs getpreviewpreferences   
+                 getpreviewstyledefault   replace  __newline__    \n      
+ 
+        btntest addactionlistener event previewpanel testpane previewpanel testentry gettestentry setfixedlayout layout gettext     
+                testpane setpreferredsize dimension 800  350    
+                joptionpane showmessagedialog previewprefstab jscrollpane testpane   localization lang  preview    joptionpane plain_message stringindexoutofboundsexception exception    
+                logger warn  parsing error    exception   
+                joptionpane showmessagedialog localization lang  parsing error            localization lang  illegal backslash expression   
+                                    \n    exception getmessage    
+                        localization lang  parsing error    joptionpane error_message setupgui    
+        jpanel choosestyle   formbuilder create   
+                 columns  0 grow  $lcgap  pref  $lcgap  0 grow   
+                 rows  pref  $lg  fill pref grow  $lg  pref grow  $lg  pref grow  $lg  pref grow   
+                 padding paddings dialog  
+ 
+                 addseparator localization lang  current preview    xyw 1  1  5  
+                 add available  xywh 1  3  1  7  
+                 add chosen  xywh 5  3  1  7  
+ 
+                 add btnright  xy 3  3   fill  bottom   
+                 add btnleft  xy 3  5   fill  top   
+                 add btnup  xy 3  7   fill  bottom   
+                 add btndown  xy 3  9   fill  top   
+                 build    
+ 
+        jpanel preview   formbuilder create   
+                 columns  pref grow  $lcgap  pref  $lcgap  pref   
+                 rows  pref  $lg  fill pref grow   
+                 padding paddings dialog  
+ 
+                 addseparator localization lang  preview    xy 1  1  
+                 add btntest  xy 3  1  
+                 add btndefault  xy 5  1  
+                 add scrollpane  xyw 1  3  5  
+                 build    
+ 
+        setlayout boxlayout boxlayout y_axis    
+        add choosestyle  borderlayout center   
+        add preview  borderlayout page_end   
+      
+ 
+     override setvalues     
+        previewpreferences previewpreferences   globals prefs getpreviewpreferences    
+ 
+        chosenmodel clear ispreviewchosen style   previewpreferences getpreviewcycle citationstyle iscitationstylefile style     
+                chosenmodel addelement citationstyle createcitationstylefromfile style ispreviewchosen    
+                    logger error  preview is already in the list  something went wrong ispreviewchosen chosenmodel addelement localization lang  preview     
+              
+          
+ 
+        availablemodel clear ispreviewchosen   
+            availablemodel addelement localization lang  preview     
+          
+ 
+        btnleft setenabled  chosen isselectionempty     
+        btnright setenabled  available isselectionempty     
+        btnup setenabled  chosen isselectionempty     
+        btndown setenabled  chosen isselectionempty discovercitationstyleworker discovercitationstyleworker cancel discovercitationstyleworker swingworker list citationstyle override list citationstyle  doinbackground exception citationstyle discovercitationstyles    
+              
+ 
+             override done iscancelled get   stream   
+                             filter style -   previewpreferences getpreviewcycle   contains style getfilepath     
+                             sorted  style0  style1  -  style0 gettitle   compareto style1 gettitle     
+                             foreach availablemodel  addelement   
+ 
+                    btnright setenabled  availablemodel isempty interruptedexception   executionexception e    
+                    logger error  something went wrong adding the discovered citationstyles to the list     
+                  
+              
+           
+        discovercitationstyleworker execute    
+ 
+        layout settext globals prefs getpreviewpreferences   getpreviewstyle   replace  __newline__    \n     
+      
+ 
+     override storesettings     
+        list styles arraylist      
+        enumeration object  elements   chosenmodel elements elements hasmoreelements      
+            object obj   elements nextelement obj citationstyle    
+                styles add   citationstyle  obj  getfilepath obj styles add  preview    
+              
+          
+        previewpreferences previewpreferences   globals prefs getpreviewpreferences   
+                 getbuilder   
+                 withpreviewcycle styles  
+                 withpreviewstyle layout gettext   replace  \n    __newline__    
+                 build    
+        globals prefs storepreviewpreferences previewpreferences basepanel basepanel   jabrefgui getmainframe   getbasepanellist      
+            basepanel getpreviewpanel   updatelayout    
+          
+      
+ 
+     override validatesettings chosenmodel isempty    
+      
+ 
+     override gettabname localization lang  entry preview    
+      
+ 
+ 

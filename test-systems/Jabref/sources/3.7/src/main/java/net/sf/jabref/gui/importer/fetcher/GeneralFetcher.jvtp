@@ -1,0 +1,124 @@
+ 
+  jlabel   choices   new jlabel fetchers size     
+   add action reset-button  resets tf requests focus 
+   go button 
+   reset button 
+   help button two categories fetchers  one category show previews first ask user ones download category downloads entries first asks user ones keep  net sf jabref gui importer fetcher generalfetcher sidepanecomponent actionlistener generalfetcher jabrefframe frame  sidepanemanager sidepanemanager sidepanemanager  icontheme jabreficon www getsmallicon    localization lang  web search frame   frame  
+        list entryfetcher  fetchers entryfetchers globals journalabbreviationloader  getentryfetchers    
+        entryfetcher   fetcherarray   fetchers toarray entryfetcher fetchers size      
+        arrays sort fetcherarray entryfetchercomparator choices fetcherarray length i   0  i   fetcherarray length  i      
+            choices i    fetcherarray i  gettitle    
+          
+        jcombobox fetcherchoice jcombobox   choices defaultfetcher   globals prefs getint jabrefpreferences selected_fetcher_index defaultfetcher    fetcherarray length    
+            defaultfetcher   0 activefetcher   fetcherarray defaultfetcher   
+        fetcherchoice setselectedindex defaultfetcher activefetcher getoptionspanel optpanel add activefetcher getoptionspanel    borderlayout center   
+          
+        helpaction help helpaction activefetcher gethelppage     
+        jbutton helpbut   help gethelpbutton    
+        helpbut setenabled activefetcher gethelppage fetcherchoice addactionlistener actionevent -    
+            activefetcher   fetcherarray fetcherchoice getselectedindex     
+            globals prefs putint jabrefpreferences selected_fetcher_index  fetcherchoice getselectedindex activefetcher gethelppage helpbut setenabled help sethelpfile activefetcher gethelppage     
+                helpbut setenabled optionscards show optionspanel valueof fetcherchoice getselectedindex      
+            optpanel removeall activefetcher getoptionspanel optpanel add activefetcher getoptionspanel    borderlayout center   
+              
+            revalidate    
+            
+ 
+        action toggleaction localization lang  web search    
+                localization lang  toggle web search globals getkeyprefs   getkey keybinding web_search   
+                icontheme jabreficon www   
+ 
+        helpbut setmargin insets 0  0  0  0    
+        tf setpreferredsize dimension 1  tf getpreferredsize   height os os_x    
+            tf putclientproperty  jtextfield variant    search    
+          
+ 
+        tf setname  tf    
+          
+        jbutton reset jbutton localization lang  reset     
+        reset addactionlistener event -    
+            tf settext      
+            tf requestfocus    
+            
+ 
+        jpanel main jpanel    
+        gridbaglayout gbl gridbaglayout    
+        main setlayout gbl   
+        gridbagconstraints con gridbagconstraints    
+        con fill   gridbagconstraints both  
+        con insets insets 0  0  2  0   
+        con gridwidth   gridbagconstraints remainder  
+        con weightx   1  
+        con weighty   1  
+        con insets insets 1  0  1  0   
+        con fill   gridbagconstraints both  
+        gbl setconstraints fetcherchoice  con   
+        main add fetcherchoice   
+        con insets insets 0  0  0  0   
+        gbl setconstraints tf  con   
+        main add tf   
+ 
+          
+        con weighty   0  
+        con gridwidth   1  
+        jbutton go jbutton localization lang  fetch     
+        gbl setconstraints go  con   
+        main add go   
+ 
+          
+        reset setname  reset    
+        gbl setconstraints reset  con   
+        main add reset   
+ 
+          
+        con gridwidth   gridbagconstraints remainder  
+        gbl setconstraints helpbut  con   
+        main add helpbut   
+ 
+        gbl setconstraints optpanel  con   
+        main add optpanel   
+ 
+        main setborder borderfactory createemptyborder 1  1  1  1    
+        add main  borderlayout center   
+        go addactionlistener tf addactionlistener jtextfield gettextfield tf  
+      
+ 
+     override toggleaction gettoggleaction action  
+      
+ 
+     override actionperformed actionevent e tf gettext   trim   isempty      
+            frame output localization lang  please enter a search frame getcurrentbasepanel frame output localization lang  please open or start a database before searching activefetcher previewentryfetcher    
+            frame output localization lang  searching        
+            frame setprogressbarindeterminate frame setprogressbarvisible previewentryfetcher pfetcher    previewentryfetcher  activefetcher fetcherpreviewdialog dialog fetcherpreviewdialog frame  
+                    pfetcher getwarninglimit    pfetcher getpreferredpreviewheight     
+            jabrefexecutorservice instance execute result   pfetcher processquerygetpreview tf gettext   trim    dialog  dialog   
+                swingutilities invokelater    -    
+                    frame setprogressbarvisible frame output result    
+                        dialog setlocationrelativeto frame   
+                        dialog setvisible dialog isokpressed importinspectiondialog d2 importinspectiondialog frame  
+                                    frame getcurrentbasepanel    activefetcher gettitle d2 addcallback activefetcher   
+                            d2 setlocationrelativeto frame   
+                            d2 setvisible jabrefexecutorservice instance execute    -    
+                                pfetcher getentries dialog getselection    d2   
+                                d2 entrylistcomplete importinspectiondialog dialog importinspectiondialog frame  frame getcurrentbasepanel    
+                    activefetcher gettitle dialog addcallback activefetcher   
+            dialog setlocationrelativeto frame   
+            dialog setvisible jabrefexecutorservice instance execute activefetcher processquery tf gettext   trim    dialog  dialog     
+                    dialog entrylistcomplete dialog dispose    
+                  
+                
+          
+      
+ 
+     override grabfocus     
+        gettextfield   grabfocus    
+      
+ 
+     override componentclosing componentclosing    
+        gettoggleaction   setselected globals prefs putboolean jabrefpreferences web_search_visible override componentopening componentopening    
+        globals prefs putboolean jabrefpreferences web_search_visible override getrescalingweight 0 entryfetchercomparator comparator entryfetcher    
+ 
+         override compare entryfetcher entryfetcher  entryfetcher entryfetcher1 entryfetcher gettitle   compareto entryfetcher1 gettitle     
+          
+      
+ 

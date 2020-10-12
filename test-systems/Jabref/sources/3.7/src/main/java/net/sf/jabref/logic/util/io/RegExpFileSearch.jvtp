@@ -1,0 +1,149 @@
+ 
+    
+   created intellij idea  
+   user  alver 
+   date  apr 12  2008 
+   time  1 46 44 pm change template use file   settings   file templates  
+    
+    
+       search file links set entries using regexp  lists extensions directories given  
+        param entries entries search param extensions extensions acceptable  
+        param directories root directories search  
+        param regexp expression deciding names acceptable  
+        param keyworddelimiter 
+        return map linking each given entry list files matching given criteria  
+        
+    
+       method searching files using regexp list extensions directories given  
+        param entry entry search param extensions extensions acceptable  
+        param directories root directories search  
+        param regularexpression expression deciding names acceptable  
+        param keyworddelimiter 
+        return list files paths matching given criteria  
+        
+    
+       searches given directory filename pattern file bibtex entry  
+       
+       used fix  
+       
+       http   sourceforge net tracker index php?func detail aid 1503410 group_id 92314 atid 600309 
+       
+       requirements find associated pdf set given directories return relative path absolute path fast  
+        - allow flexible naming schemes pdfs  
+       
+       syntax scheme file  
+        ul  
+        li   any subdir  li  
+        li    any subdir  recursive   li  
+        li  key  key bibtex file database  li  
+        li    anything taken regular expression   li  
+         ul  
+       
+        param keyworddelimiter 
+        param entry 
+                  non-null 
+        param dirs set root directories start search paths returned relative directories relative set true directories not expanded anything  use file attribute param file 
+                  non-null 
+       
+        return return first file found match given criteria null none found  
+        
+    
+       internal version findfile accepts current directory base search 1601651   pdf subdirectory - missing first character 
+                   
+                   http   sourceforge net tracker index php?func detail aid 1601651 group_id 92314 atid 600306 
+                    
+   changed m  alver 2007 01 04  
+   remove first character directory separator character actual work-horse find absolute filepaths starting given directory using given regular expression string search  
+        
+   escape handling    
+   windows drive letter 
+   stay current directory direct subdirs direct indirect subdirs subdirs each elements found todo 
+   end process directory information 
+   last step  check given file found directory 
+    
+       takes string contains bracketed expression expands each using getfieldandformat  
+        p  
+       unknown bracket expressions silently dropped  
+       
+        param bracketstring 
+        param entry 
+        param database 
+        param keyworddelimiter 
+        return 
+        
+    
+       accepts string author lower title abbr auth   whereas first part signifies bibtex-field key generator field marker use others modifiers applied  
+       
+        param fieldandformat 
+        param entry 
+        param database 
+        param keyworddelimiter 
+        return field value found  try interpret key generator field marker  net sf jabref logic util io regexpfilesearch map bibentry  list file   findfilesforset list bibentry  entries  list extensions  
+            list file  directories regexp  character keyworddelimiter    
+ 
+        map bibentry  list file   res hashmap bibentry entry   entries    
+            res put entry  findfiles entry  extensions  directories  regexp  keyworddelimiter res list file  findfiles bibentry entry  list extensions  list file  directories regularexpression  character keyworddelimiter extensionregexp join      extensions findfile entry  directories  regularexpression  extensionregexp  keyworddelimiter list file  findfile bibentry entry  list file  dirs file extensionregexp  
+            character keyworddelimiter    
+        list file  res arraylist file directory   dirs    
+            res addall findfile entry  directory getpath    file  extensionregexp  keyworddelimiter res list file  findfile bibentry entry directory file extensionregexp  
+            character keyworddelimiter    
+ 
+        file root directory root file root file directory root exists collections emptylist    
+          
+        list file  filelist   regexpfilesearch findfile entry  root  file  extensionregexp  keyworddelimiter   
+ 
+        list file  result arraylist file tmpfile   filelist tmp   tmpfile getcanonicalpath   substring root getcanonicalpath   length tmp length     1      tmp charat 0     file separatorchar     
+                    tmp   tmp substring 1   
+                  
+                result add file tmp ioexception e    
+                logger warn  problem searching   e result list file  findfile bibentry entry  file directory file extensionregexp  
+            character keyworddelimiter    
+ 
+        list file  res arraylist filename   file  
+        file actualdirectory filename startswith         
+            actualdirectory file       
+            filename   filename substring 1 actualdirectory   directory  
+          
+ 
+          
+        matcher m   escape_pattern matcher filename   
+        stringbuffer s stringbuffer m find      
+            m appendreplacement s  m group 1    ' '   m group 2    
+          
+        m appendtail s   
+        filename   s tostring fileparts   filename split fileparts length    0 res i   0  i    fileparts length - 1   i dirtoprocess   fileparts i   
+            dirtoprocess   expandbrackets dirtoprocess  entry keyworddelimiter dirtoprocess matches  ^  $        
+                actualdirectory file dirtoprocess equals dirtoprocess equals dirtoprocess     
+                actualdirectory file actualdirectory getparent equals dirtoprocess       
+ 
+                file   subdirs   actualdirectory listfiles subdirs restoffilestring   stringutil join fileparts       i   1  fileparts length file subdir   subdirs subdir isdirectory      
+                            res addall findfile entry  subdir  restoffilestring  extensionregexp  keyworddelimiter equals dirtoprocess     
+                list file  todo linkedlist      
+                todo add actualdirectory restoffilestring   stringutil join fileparts       i   1  fileparts length todo isempty      
+ 
+                      
+                    file   subdirs   todo remove 0  listfiles subdirs todo addall arrays aslist subdirs file subdir   subdirs subdir isdirectory res addall findfile entry  subdir  restoffilestring  extensionregexp  keyworddelimiter filepart   fileparts fileparts length - 1  replace   extension    ext_marker filenametolookfor   expandbrackets filepart  entry keyworddelimiter  replaceall ext_marker  extensionregexp pattern tomatch   pattern compile '^'   filenametolookfor replaceall  \\\\\\\\    \\\\     '$'  
+                pattern case_insensitive   
+ 
+        file   matches   actualdirectory listfiles  arg0  arg1 tomatch matcher arg1  matches matches matches length   0     
+            collections addall res  matches res expandbrackets bracketstring  bibentry entry  bibdatabase database  
+            character keyworddelimiter    
+        matcher m   square_brackets_pattern matcher bracketstring   
+        stringbuffer s stringbuffer m find replacement   getfieldandformat m group    entry  database  keyworddelimiter   
+            m appendreplacement s  replacement   
+          
+        m appendtail s s tostring getfieldandformat fieldandformat  bibentry entry  bibdatabase database  
+            character keyworddelimiter strippedfieldandformat   stringutil stripbrackets fieldandformat colon   strippedfieldandformat indexof beforecolon aftercolon colon    -1    
+            beforecolon   strippedfieldandformat  
+            aftercolon beforecolon   strippedfieldandformat substring 0  colon   
+            aftercolon   strippedfieldandformat substring colon   1   
+          
+        beforecolon   beforecolon trim beforecolon isempty fieldvalue   entry getresolvedfieldoralias beforecolon  database  
+                 orelse bibtexkeypatternutil makelabel entry  beforecolon  keyworddelimiter fieldvalue aftercolon aftercolon isempty fieldvalue  
+          
+ 
+        list parts   arrays aslist aftercolon split        
+        fieldvalue   bibtexkeypatternutil applymodifiers fieldvalue  parts  0 fieldvalue  
+      
+ 
+ 

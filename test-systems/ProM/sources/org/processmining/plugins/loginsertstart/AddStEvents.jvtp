@@ -1,0 +1,201 @@
+ 
+    
+   add start events class start events actually added event log 
+    
+    author jnakatumba 
+    
+    
+    
+	   add start events 
+	    
+	    param traces trace edited 
+	    param resdatelist list resources log particular 
+	              dates event execution occurred log done resources  
+	    
+    
+		   iterate through each trace log see duplicate 
+		   events example start event followed another 
+		   start event complete event match second start 
+		   event complete event discard first start event 
+		    
+    
+		   discard events same event type per activity 
+		   occurring trace 
+		    
+    
+		   obtain insert start events log 
+		    
+    
+		   add new start events event log added before 
+		   each complete event observed log  
+		    
+    
+	   check start event log matched corresponding 
+	   event start event missing e observe only complete 
+	   event insert log durations each event checked based either resource 
+	   perspective  case maximum both resource case 
+	   perspective  
+	    
+    
+	   check see current resource executed any event before one  
+	    
+    
+	   checks information based case perspective edits event new information obtained obtain start date based duration complete date per event complete date occurred before 13hrs assume started 8hrs started 13hrs  
+	    
+	    param servicet 
+	              service time 
+	    
+    
+	   based complete date certain duration obtain start date 
+	    
+	    param servt 
+	              service time 
+	    return start date 
+	    org processmining plugins loginsertstart addstevents addstevents xtrace trace  list comparablepair date   resdatelist displaychoice outlierchoice  integer addcounter  integer rcount resdatelist   resdatelist  
+		displaychoice   displaychoice outlierchoice   outlierchoice  
+		count   addcounter  
+		removecount   rcount  
+ 
+		starteventslist arraylist pair string      
+		completeeventslist arraylist pair string      
+		starteventslist1 arraylist pair string      
+		completeeventslist1 arraylist pair string      
+		eventlist arraylist xevent     
+		starts arraylist xevent     
+		removeevents arraylist xevent     
+ 
+		ciddatelist arraylist comparablepair date      
+		ciddate comparablepair date null xevent event   trace    
+			cdate   xtimeextension instance   extracttimestamp event   
+			caseid   xconceptextension instance   extractname trace   
+			rname   xorganizationalextension instance   extractresource event   
+			eventtype   xlifecycleextension instance   extracttransition event   
+			actname   xconceptextension instance   extractname event   
+			myevent   event  
+			typenamepair pair string  eventtype  actname   
+			starts add myevent eventtype equals  start starteventslist1 contains typenamepair starteventslist1 add typenamepair i   0  i   starts size    i      
+						xevent prevevent   starts get i actvname   xconceptextension instance   extractname prevevent actvname equals actname  
+								   xlifecycleextension instance   extracttransition prevevent  equals  start      
+							removeevents add prevevent   
+							starts remove prevevent eventtype equals  complete completeeventslist1 contains typenamepair completeeventslist1 add typenamepair i   0  i   starts size    i      
+						xevent prevevent   starts get i actvname   xconceptextension instance   extractname prevevent actvname equals actname  
+								   xlifecycleextension instance   extracttransition prevevent  equals  complete      
+							removeevents add prevevent   
+							starts remove prevevent i   0  i   removeevents size    i      
+			xevent prevevent   removeevents get i   
+			trace remove prevevent   
+			removecount xevent event   trace    
+			cdate   xtimeextension instance   extracttimestamp event   
+			caseid   xconceptextension instance   extractname trace   
+			rname   xorganizationalextension instance   extractresource event   
+			eventtype   xlifecycleextension instance   extracttransition event   
+			actname   xconceptextension instance   extractname event   
+			myevent   event  
+			typenamepair pair string  eventtype  actname   
+			init    
+			ciddate   getiddate caseid  cdate   
+			ciddatelist add ciddate i   0  i   eventlist size    i      
+			xevent events   eventlist get i actnames   xconceptextension instance   extractname events sn   0  
+			now listiterator xevent  eventlistit   trace listiterator    eventlistit hasnext eventlistit hasnext xevent event   eventlistit next    
+					sn xlifecycleextension instance   extracttransition event  equals  complete actname   xconceptextension instance   extractname event actnames equals actname     
+							trace add sn - 1  events   
+							count now trace   trace init eventtype equals  start starteventslist contains typenamepair starteventslist add typenamepair   
+				starts add myevent eventtype equals  complete completeeventslist contains typenamepair startnamepair pair string   start   actname starteventslist contains startnamepair start start displaychoice equals  resource perspective      
+			getresourcedetails displaychoice equals perspective      
+			getservicetimesoncase displaychoice equals  resource perspective      
+			getservicetimesonaverage getresourcedetails rname  
+		date rdate resdatelist size      0    
+			search i   0  i   resdatelist size    i      
+				prevpair   resdatelist get i   
+				rname   prevpair getfirst    
+				rdate   prevpair getsecond rname equals rname rdate compareto cdate     0 i    0    
+							comparablepair date  currentp   resdatelist get i - 1   
+							rname   currentp getfirst rname equals rname     
+								rdate   currentp getsecond    
+								prevrestimes   rdate gettime    
+								currenttimes   cdate gettime    
+								servicetime   currenttimes - prevrestimes  
+								servicetime   servicetime   1000  
+								servicetime   servicetime   60 value   servicetime longvalue dvalue valueof value outlierchoice equals  estimate values      
+									estimatedates servicetime search outlierrange valueof outlierchoice dvalue   outlierrange    
+										date pdate   estimatestartdates servicetime   
+										xtimeextension instance   assigntimestamp myevent  pdate   
+										eventlist add myevent search xtimeextension instance   assigntimestamp myevent  cdate   
+										eventlist add myevent search outlierchoice equals  estimate values      
+								estimatedates servicetime search xtimeextension instance   assigntimestamp myevent  cdate   
+								eventlist add myevent search getservicetimesonaverage rname  
+		date rdate listsize   ciddatelist size    
+		xorganizationalextension instance   assignresource myevent  rname   
+		xlifecycleextension instance   assigntransition myevent  transition resdatelist size      0    
+			search i   0  i   resdatelist size    i      
+				prevpair   resdatelist get i   
+				rname   prevpair getfirst    
+				rdate   prevpair getsecond rname equals rname rdate compareto cdate     0 i    0    
+							comparablepair date  currentp   resdatelist get i - 1   
+							rname   currentp getfirst rname equals rname     
+								rdate   currentp getsecond    
+								prevrestimes   rdate gettime    
+								currenttimes   cdate gettime listsize    0    
+									prevpaircase   ciddatelist get listsize - 1   
+									prevcasdate   prevpaircase getsecond prevcasdate compareto cdate    0    
+										currenttimes   cdate gettime    
+										prevcastimes   prevcasdate gettime    
+ 
+										servicetime   currenttimes - math max prevcastimes  prevrestimes   
+										servicetime   servicetime   1000  
+										servicetime   servicetime   60 outlierchoice equals  estimate values      
+											estimatedates servicetime search outlierrange valueof outlierchoice value   servicetime longvalue dvalue valueof value dvalue   outlierrange    
+												date pdate   estimatestartdates servicetime   
+												xtimeextension instance   assigntimestamp myevent  pdate   
+												eventlist add myevent search xtimeextension instance   assigntimestamp myevent  cdate   
+												eventlist add myevent search xtimeextension instance   assigntimestamp myevent  cdate   
+										eventlist add myevent search  
+									  
+ 
+								  
+							  
+							xtimeextension instance   assigntimestamp myevent  cdate   
+							eventlist add myevent search getservicetimesoncase listsize   ciddatelist size listsize    0    
+			prevpaircase   ciddatelist get listsize - 1   
+			prevcasdate   prevpaircase getsecond    
+			xorganizationalextension instance   assignresource myevent  rname   
+			xlifecycleextension instance   assigntransition myevent  transition prevcasdate compareto cdate    0    
+				currenttimes   cdate gettime    
+				prevcastimes   prevcasdate gettime    
+ 
+				servicetime   currenttimes - prevcastimes  
+				servicetime   servicetime   1000  
+				servicetime   servicetime   60 outlierchoice equals  estimate values      
+					estimatedates servicetime outlierrange valueof outlierchoice value   servicetime longvalue dvalue valueof value dvalue   outlierrange    
+						date pdate   estimatestartdates servicetime   
+						xtimeextension instance   assigntimestamp myevent  pdate   
+						eventlist add myevent xtimeextension instance   assigntimestamp myevent  cdate   
+						eventlist add myevent xtimeextension instance   assigntimestamp myevent  cdate   
+			eventlist add myevent estimatedates servicet st   servicet longvalue    
+ 
+		calendar mycalendar   calendar getinstance    
+		mycalendar settime cdate currentday   mycalendar get calendar day_of_week currentmonth   mycalendar get calendar month currenttime   mycalendar get calendar hour_of_day currentdaymonth   mycalendar get calendar day_of_month currentyear   mycalendar get calendar year a st  
+		mycalendar add calendar minute  -a   
+		newdate   mycalendar gettime outlierchoice equals  estimate values      
+ 
+			calendar newcalendars   calendar getinstance    
+			newcalendars settime newdate prevday   newcalendars get calendar day_of_week prevmonth   newcalendars get calendar month prevdaymonth   newcalendars get calendar day_of_month prevyear   mycalendar get calendar year prevday   currentday      prevmonth   currentmonth      prevdaymonth   currentdaymonth  
+					    prevyear   currentyear     
+				calendar newcalendar   calendar getinstance    
+				newcalendar settime cdate ctime   newcalendar get calendar hour_of_day ctime   12    
+					newcalendar add calendar hour_of_day  - currenttime - 8    
+					newdate   newcalendar gettime    
+					xtimeextension instance   assigntimestamp myevent  newdate   
+					eventlist add myevent newcalendar add calendar hour_of_day  - currenttime - 13    
+ 
+					newdate   newcalendar gettime    
+					xtimeextension instance   assigntimestamp myevent  newdate   
+					eventlist add myevent xtimeextension instance   assigntimestamp myevent  newdate   
+				eventlist add myevent date estimatestartdates servt st   servt longvalue    
+		calendar mycalendar   calendar getinstance    
+		mycalendar settime cdate a st  
+		mycalendar add calendar minute  -a   
+		date cdate   mycalendar gettime cdate comparablepair date  getiddate caseid  date timestamp comparablepair date  caseid  timestamp xtrace gettrace trace getaddevents count getremoveevents removecount  
+	  
+ 
+ 

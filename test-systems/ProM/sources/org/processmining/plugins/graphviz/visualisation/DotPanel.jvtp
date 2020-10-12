@@ -1,0 +1,236 @@
+ 
+    
+	    
+	    
+  listen ctrl d change graph layouting direction 
+  listen ctrl q increasing aspect ratio 
+  listen ctrl w decreasing aspect ratio 
+  add mouse listeners 
+  pass clicks elements process selection changes not click already catched user not click anything clickable  remove selection  
+  call mousereleased elements under mouse start dragging exit elements 
+  something above captured mouse hover exit dot elements 
+  process mouseenter exit dot elements 
+  exit 
+  enter 
+  exit dot elements leaving screen 
+    
+	   deselect nodes  return whether selection changed 
+	    
+	    return 
+	    
+  only change element 
+  deselect element 
+  select element 
+  clicked selected element without keypress 
+  deselect selected elements 
+  only element selected  deselect clicked not selected element without keypress 
+  deselect selected elements 
+  select element elements clicked position 
+  renderableelement element   path iterator   next class id found node edge 
+    
+	   sets new image 
+	    
+	    param dot 
+	                set dot param resetview 
+	                whether reset view centered fitting 
+	    
+    
+	   sets new precomputed image  assumptions made dot diagram not provide arbitrary ones  
+	    
+	    param dot 
+	                set dot param diagram 
+	                use svg image 
+	    param resetview 
+	                whether reset view centered fitting 
+	    
+   
+	   convert dot svg 
+	    
+   
+	   select dotelement 
+	    
+    
+	    
+	    param image 
+	    param element 
+	    return svg element dotelement 
+	    
+    
+	   set css-property dotelement  returns old value null  
+	    
+	    param image 
+	    param element 
+	    param attribute 
+	    param value 
+	    return 
+	    
+    
+	   set css-property svg element  returns old value null 
+	   providing null value removes attribute 
+	    
+	    param element 
+	    param attribute 
+	    param value 
+	    return 
+	    
+  listeners 
+    
+	   public method change graph direction listeners called s responsibility  
+	    
+	    param topdown 
+	    org processmining plugins graphviz visualisation dotpanel navigablesvgpanel action changegraphdirection abstractaction actionperformed actionevent e    
+			graphdirection newdirection dot getdirection bottomtop   
+					newdirection   graphdirection leftright leftright   
+					newdirection   graphdirection rightleft rightleft   
+					newdirection   graphdirection topdown topdown   
+					newdirection   graphdirection bottomtop newdirection   graphdirection bottomtop usersettings setdirection newdirection   
+			changedot dot graphchanged graphchangedreason graphdirectionchanged  newdirection action increaseaspectratio abstractaction actionperformed actionevent e    
+			usersettings nodeseparation   math min usersettings nodeseparation    05  4   
+			changedot dot graphchanged graphchangedreason nodeseparationchanged  usersettings nodeseparation action decreaseaspectratio abstractaction actionperformed actionevent e    
+			usersettings nodeseparation   math max usersettings nodeseparation - 0 05  0 02   
+			changedot dot graphchanged graphchangedreason nodeseparationchanged  usersettings nodeseparation dotpanel dot dot dot2svg dot dot   dot  
+		preparenodeselection dot   
+		mouseinelements hashset      
+		usersettings dotpanelusersettings dot   
+ 
+		  
+		helpercontrolsshortcuts add  ctrl d    
+		helpercontrolsexplanations add  change graph direction    
+		getinputmap when_in_focused_window  put keystroke getkeystroke keyevent vk_d  inputevent ctrl_mask   
+				 changegraphdirection    
+		getactionmap   put  changegraphdirection   changegraphdirection   
+ 
+		  
+		helpercontrolsshortcuts add  ctrl q    
+		helpercontrolsexplanations add  increase graph node distance    
+		getinputmap when_in_focused_window  put keystroke getkeystroke keyevent vk_q  inputevent ctrl_mask   
+				 increaseaspectratio    
+		getactionmap   put  increaseaspectratio   increaseaspectratio   
+ 
+		  
+		helpercontrolsshortcuts add  ctrl w    
+		helpercontrolsexplanations add  decrease graph node distance    
+		getinputmap when_in_focused_window  put keystroke getkeystroke keyevent vk_w  inputevent ctrl_mask   
+				 decreaseaspectratio    
+		getactionmap   put  decreaseaspectratio   decreaseaspectratio dotpanel this2 addmouselistener mouseadapter mousepressed mouseevent e    
+				e setsource this2 dotelement element   getelementsatpoint e getpoint       
+					element mousepressed e   
+				  
+			  
+		    
+	  
+ 
+	 override processmouseclick mouseevent e superchanged processmouseclick e selectionchange point point   e getpoint superchanged    
+			e setsource dotelement element   getelementsatpoint point     
+				element mouseclicked e swingutilities isleftmousebutton e     
+					selectionchange   selectionchange    processselection element  e swingutilities isleftmousebutton e      selectionchange     e iscontroldown      
+				  
+				selectionchange   removeselection selectionchange    
+				selectionchanged superchanged    selectionchange  
+	   
+ 
+	 override processmouserelease mouseevent e superchanged processmouserelease e dotelement element   getelementsatpoint e getpoint       
+			element mousereleased e superchanged  
+	  
+ 
+	 override processmousedrag mouseevent e changed processmousedrag e   
+ 
+		  
+		changed    exitallelements e changed  
+	  
+ 
+	 override processmousemove mouseevent e captured processmousemove e changed captured    
+			  
+			changed   exitallelements e set dotelement  newelements   getelementsatpoint e getpoint dotelement element   mouseinelements newelements contains element     
+					element mouseexited e   
+					changed dotelement element   newelements mouseinelements contains element     
+					element mouseentered e   
+					changed mouseinelements   newelements changed    
+				mouseinelementschanged changed    captured  
+	  
+ 
+	 override processmouseexit mouseevent e changed processmouseexit e   
+ 
+		  
+		changed    exitallelements e changed  
+	  
+ 
+	 override list exporter  getexporters     
+		list exporter  exporters getexporters    
+		exporters add exporterdot exporters removeselection dotelement element   selectedelements dotelementselectionlistener listener   element getselectionlisteners      
+				listener deselected element  image result    selectedelements isempty    
+		selectedelements clear result processselection dotelement element  mouseevent e element isselectable e iscontroldown selectedelements contains element     
+					  
+					selectedelements remove element dotelementselectionlistener listener   element getselectionlisteners      
+						listener deselected element  image selectedelements add element dotelementselectionlistener listener   element getselectionlisteners      
+						listener selected element  image selectedelements contains element selectedelements size     1    
+						  
+						iterator dotelement  it   selectedelements iterator it hasnext      
+							dotelement selectedelement   it next selectedelement    element dotelementselectionlistener listener   selectedelement getselectionlisteners      
+									listener deselected selectedelement  image   
+								  
+								it remove selectedelements remove element dotelementselectionlistener a   element getselectionlisteners      
+							a deselected element  image iterator dotelement  it   selectedelements iterator it hasnext      
+						dotelement selectedelement   it next selectedelement    element dotelementselectionlistener listener   selectedelement getselectionlisteners      
+								listener deselected selectedelement  image   
+							  
+							it remove    
+						  
+					  
+					  
+					selectedelements add element dotelementselectionlistener listener   element getselectionlisteners      
+						listener selected element  image suppresswarnings  unchecked set dotelement  getelementsatpoint point pointusercoordinates    
+		hashset dotelement  result hashset dotelement isinimage pointusercoordinates     
+			point2d pointimagecoordinates   transformuser2image pointusercoordinates list list renderableelement   elements   image pick pointimagecoordinates styleattribute classattribute styleattribute styleattribute idattribute styleattribute  id list renderableelement  path   elements renderableelement element   path element group    
+							group group    group  element  
+ 
+							  
+							group getpres classattribute   
+ 
+							  
+							group getpres idattribute id   idattribute getstringvalue classattribute getstringvalue   equals  node   
+									   classattribute getstringvalue   equals  edge      
+								  
+								dotelement dotelement   id2element get id dotelement result add dotelement svgexception e1    
+				e1 printstacktrace result exitallelements mouseevent e dotelement element   mouseinelements    
+			element mouseexited e changed    mouseinelements isempty    
+		mouseinelements clear changed    
+			mouseinelementschanged changed changedot dot dot resetview    
+		usersettings applytodot dot   
+		svgdiagram diagram   dot2svg dot   
+		changedot dot  diagram  resetview changedot dot dot  svgdiagram diagram resetview    
+		preparenodeselection dot dot   dot  
+		setimage diagram  resetview preparenodeselection dot dot    
+		selectedelements hashset dotelement     
+ 
+		id2element hashmap dotelement dotnode dotnode   dot getnodesrecursive      
+			id2element put dotnode getid    dotnode dotedge dotedge   dot getedgesrecursive      
+			id2element put dotedge getid    dotedge svgdiagram dot2svg dot dot    
+		svguniverse universe svguniverse    
+ 
+		inputstream stream   dot2image dot2imageinputstream dot  type svg   
+		uri uri uri   universe loadsvg stream   hoi ioexception e svgdiagram diagram   universe getdiagram uri diagram runtimeexception  the dot-structure given is not valid\n    dot tostring diagram select dotelement element    
+		selectedelements add element dotelementselectionlistener listener   element getselectionlisteners      
+			listener selected element  image   
+		  
+		selectionchanged group getsvgelementof svgdiagram image  dotelement element    
+		svgelement svgelement   image getelement element getid svgelement group group  svgelement setcssattributeof svgdiagram image  dotelement element attribute value    
+		group group   getsvgelementof image  element setcssattributeof group  attribute  value getattributeof svgelement element attribute element hasattribute attribute  animationelement at_css     
+				styleattribute sty styleattribute attribute   
+				element getstyle sty sty getstringvalue element hasattribute attribute  animationelement at_xml     
+				styleattribute sty styleattribute attribute   
+				element getpres sty sty getstringvalue svgelementexception e    
+			e printstacktrace svgexception e    
+			e printstacktrace setcssattributeof svgelement element attribute  color colour setcssattributeof element  attribute  colourmap tohexstring colour setcssattributeof svgelement element attribute value element hasattribute attribute  animationelement at_css     
+				styleattribute sty styleattribute attribute   
+				element getstyle sty oldvalue   sty getstringvalue value element setattribute attribute  animationelement at_css  value element removeattribute attribute  animationelement at_css oldvalue value element addattribute attribute  animationelement at_css  value svgelementexception e    
+			e printstacktrace svgexception e    
+			e printstacktrace set dotelement  getselectedelements collections unmodifiableset selectedelements set dotelement  getmouseinelements collections unmodifiableset mouseinelements list dotedge  getedges dot getedgesrecursive list dotnode  getnodes dot getnodesrecursive svgdiagram getsvg image dot getdot dot dotpanelusersettings getusersettings usersettings graphchanged graphchangedreason reason  object newstate graphchangedlistener listener   graphchangedlisteners    
+			listener graphchanged reason  newstate selectionchanged selectionchangedlistener dotelement  listener   selectionchangedlisteners    
+			listener selectionchanged collections unmodifiableset selectedelements mouseinelementschanged mouseinelementschangedlistener dotelement  listener   mouseinelementschangedlisteners    
+			listener mouseinelementschanged collections unmodifiableset mouseinelements addselectionchangedlistener selectionchangedlistener dotelement  listener    
+		selectionchangedlisteners add listener addgraphchangedlistener graphchangedlistener listener    
+		graphchangedlisteners add listener addmouseinelementschangedlistener mouseinelementschangedlistener dotelement  listener    
+		mouseinelementschangedlisteners add listener setdirection graphdirection direction    
+		usersettings setdirection direction   
+		changedot dot 

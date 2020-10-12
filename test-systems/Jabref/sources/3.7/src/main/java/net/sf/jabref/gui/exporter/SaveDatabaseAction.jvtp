@@ -1,0 +1,196 @@
+ 
+    
+   action save save operations called basepanel class used save operations closing database quitting applications operations run synchronously offload save operation event thread using spin  
+   callers query whether operation canceled whether successful  
+    
+    
+        param panel basepanel contains database saved 
+        param filepath path file database saved check external modifications true  save not performed not tell user save underway return instead  
+   save directly target file location known 
+   reset title tab 
+   todo  user option override lock file  
+   make sure current edit stored set preferences  generate missing bibtex keys 
+   check external modifications alleviate multiuser concurrency issue near 
+   simultaneous saves occur shared database file true not perform save return instead  
+   save database 
+   release panel save status 
+    only successful save following 
+   statement marks base unchanged last save  
+   block user input 
+   fixme  rethrow anti-pattern 
+   error occured during processing entry  highlight fixme  rethrow anti-pattern 
+   re-enable user input 
+   handle encoding problems user use another encoding  
+   backup file? 
+   make sure remember encoding used  
+    
+       run save  operation method offloads actual save operation background thread still runs synchronously using spin method returns only completing operation part uses spin's features worker returned getworker wrapped spin makes methods run different thread edt method runs same thread edt  
+   useful initial gui actions printing message callback returned getcallback wrapped spin over makes methods run edt  
+   runs potentially time-consuming action 
+   without freezing gui magic line execution not continue until run finished  
+   runs update   method edt  
+   configure file dialog 
+    
+       run save operation method offloads actual save operation background thread still runs synchronously using spin method returns only completing operation   
+        
+   save properties dependent id makes possible restore operation failed  revert file field return  
+   register notifications outside changes file  
+    
+       query whether last operation successful  
+       
+        return true last save saveas operation completed successfully  false otherwise  
+        
+    
+       query whether last operation canceled  
+       
+        return true last save saveas operation canceled file dialog another 
+       query dialog  false otherwise  
+        
+    
+       check whether not external database modified need alert user accept external updates prior saving database necessary avoid overwriting users work using multiuser database file  
+       
+        return true external database file modified user must choose accept changes false modifications found requested protection database file  
+        
+   check external modifications  
+   todo  gui handling situation externally modified file keeps being locked  
+   user indicated store anyway  
+   return false either external database file modifications found overwrite requested any way net sf jabref gui exporter savedatabaseaction abstractworker savedatabaseaction basepanel panel panel   panel frame   panel frame filepath   optional empty savedatabaseaction basepanel panel  path filepath panel filepath   optional ofnullable filepath   
+      
+ 
+     override init exception   
+        success canceled filelockederror panel getbibdatabasecontext   getdatabasefile   ispresent checkexternalmodification panel frame   output localization lang  saving database             
+            panel setsaving filepath ispresent      
+              
+            saveas filepath get   tofile saveas    
+          
+      
+ 
+     override update success    
+              
+            frame settabtitle panel  panel gettabtitle    
+                    panel getbibdatabasecontext   getdatabasefile   get   getabsolutepath     
+            frame output localization lang  saved database       '  
+                      panel getbibdatabasecontext   getdatabasefile   get   getpath      '     
+            frame setwindowtitle    
+            frame updatealltabtitles canceled filelockederror    
+                  
+                frame output localization lang  could not save  file locked by another jabref instance frame output localization lang  save failed     
+              
+          
+      
+ 
+     override run canceled     panel getbibdatabasecontext   getdatabasefile   ispresent panel storecurrentedit    
+ 
+              
+            panel autogeneratekeysbeforesaving filebasedlock waitforfilelock panel getbibdatabasecontext   getdatabasefile   get   topath checkexternalmodification success   savedatabase panel getbibdatabasecontext   getdatabasefile   get panel getbibdatabasecontext   getmetadata   getencoding   orelse globals prefs getdefaultencoding      
+ 
+                globals getfileupdatemonitor   updatetimestamp panel getfilemonitorhandle success filelockederror panel setsaving success    
+                panel getundomanager   markunchanged    
+                  
+                  
+                  
+                panel setnonundoablechange panel setbasechanged panel setupdatedexternally saveexception ex ex    saveexception file_locked    
+                success filelockederror logger error  problem saving file   ex savedatabase file file selectedonly  charset encoding saveexception   
+        savesession session  
+ 
+          
+        frame block savepreferences prefs   savepreferences loadforsavefrompreferences globals prefs  withencoding encoding   
+            bibtexdatabasewriter savesession  databasewriter bibtexdatabasewriter   filesavesession selectedonly    
+                session   databasewriter savepartofdatabase panel getbibdatabasecontext    panel getselectedentries    prefs session   databasewriter savedatabase panel getbibdatabasecontext    prefs   
+              
+ 
+            panel registerundoablechanges session unsupportedcharsetexception ex    
+            joptionpane showmessagedialog frame  
+                    localization lang  could not save file    
+                              localization lang  character encoding '%0' is not supported    encoding displayname     
+                    localization lang  save database    joptionpane error_message saveexception  rt saveexception ex ex    saveexception file_locked ex ex specificentry      
+                bibentry entry   ex getentry    
+                  
+                panel highlightentry entry logger error  a problem occured when trying to save the file   ex   
+              
+ 
+            joptionpane showmessagedialog frame  localization lang  could not save file        \n    ex getmessage    
+                    localization lang  save database    joptionpane error_message saveexception  rt frame unblock success session getwriter   couldencodeall      
+            formbuilder builder   formbuilder create   layout formlayout  left pref  4dlu  fill pref    pref  4dlu  pref     
+            jtextarea ta jtextarea session getwriter   getproblemcharacters     
+            ta seteditable builder add localization lang  the chosen encoding '%0' could not encode the following characters    session getencoding   displayname     xy 1  1   
+            builder add ta  xy 3  1   
+            builder add localization lang  what you want to xy 1  3 trydiff   localization lang different encoding answer   joptionpane showoptiondialog frame  builder getpanel    localization lang  save database    
+                    joptionpane yes_no_cancel_option  joptionpane warning_message localization lang  save    trydiff  localization lang  cancel     trydiff answer    joptionpane no_option    
+                  
+                object choice   joptionpane showinputdialog frame  localization lang  select encoding    
+                        localization lang  save database    joptionpane question_message encodings encodings_displaynames  encoding choice success charset newencoding   charset forname choice savedatabase file  selectedonly  newencoding answer    joptionpane cancel_option    
+                success success    
+                session commit file topath     
+                  
+                panel getbibdatabasecontext   getmetadata   setencoding encoding  changepropagation do_not_post_event session cancel saveexception e ans   joptionpane showconfirmdialog localization lang  save failed during backup creation          
+                              localization lang  save without backup?    
+                    localization lang  unable to create backup    joptionpane yes_no_option ans    joptionpane yes_option    
+                session setusebackup session commit file topath     
+                panel getbibdatabasecontext   getmetadata   setencoding encoding  changepropagation do_not_post_event success success runcommand exception   
+          
+        worker worker   getworker    
+          
+          
+          
+        callback callback   getcallback    
+ 
+        init      
+          
+ 
+          
+          
+          
+        worker run      
+          
+          
+        callback update save exception   
+        runcommand    
+        frame updateenabledstate saveas exception   
+          
+        filedialog dialog filedialog frame   
+        dialog withextension fileextensions bibtex_db   
+        dialog setdefaultextension fileextensions bibtex_db   
+ 
+        optional path  path   dialog savenewfile path ispresent      
+            saveas path get   tofile canceled saveas file file exception   
+        bibdatabasecontext context   panel getbibdatabasecontext context getlocation      databaselocation shared    
+              
+            dbmsconnectionproperties properties   context getdbmssynchronizer   getdbprocessor   getdbmsconnectionproperties shareddatabasepreferences context getdatabase   generateshareddatabaseid    putalldbmsconnectionproperties properties   
+          
+ 
+        context setdatabasefile file file getparent globals prefs put jabrefpreferences working_directory  file getparent     
+          
+        runcommand success panel setfilemonitorhandle globals getfileupdatemonitor   addupdatelistener panel  
+                    context getdatabasefile   orelse ioexception ex    
+            logger error  problem registering file change notifications   ex readyforautosave context     
+            autosavemanager autosaver   autosavemanager start context   
+            autosaver registerlistener autosaveuimanager panel readyforbackup context     
+            backupmanager start context   
+          
+ 
+        context getdatabasefile   ifpresent presentfile -  frame getfilehistory   newfile presentfile getpath      
+        frame updateenabledstate readyforautosave bibdatabasecontext context context getlocation      databaselocation shared    
+                  context getlocation      databaselocation local     globals prefs getboolean jabrefpreferences local_auto_save       
+                context getdatabasefile   ispresent readyforbackup bibdatabasecontext context context getlocation      databaselocation local    context getdatabasefile   ispresent issuccess success iscanceled canceled checkexternalmodification panel isupdatedexternally   
+                   globals getfileupdatemonitor   hasbeenmodified panel getfilemonitorhandle opts localization lang  review changes    localization lang  save    
+                    localization lang  cancel answer   joptionpane showoptiondialog panel frame    
+                    localization lang  file has been updated externally       what you want to localization lang  file updated externally    joptionpane yes_no_cancel_option  
+                    joptionpane question_message opts  opts 0 answer    joptionpane cancel_option    
+                canceled true answer    joptionpane yes_option    
+                canceled jabrefexecutorservice instance execute filebasedlock 
+                             waitforfilelock panel getbibdatabasecontext   getdatabasefile   get   topath       
+                          
+                        logger error  file locked will be trouble     
+                      
+ 
+                    changescanner scanner changescanner panel frame    panel  
+                            panel getbibdatabasecontext   getdatabasefile   get     
+                    jabrefexecutorservice instance executewithlowpriorityinownthreadandwait scanner scanner changesfound      
+                        scanner displayresult resolved resolved    
+                                panel setupdatedexternally swingutilities invokelater    -  panel getsidepanemanager   hide fileupdatepanel canceled true panel getbibdatabasecontext   getmetadata   isprotected      
+                    joptionpane showmessagedialog frame  
+                            localization 
+                                     lang  database is cannot save until external changes have been reviewed     
+                            localization lang database    joptionpane error_message   
+                    canceled panel setupdatedexternally panel getsidepanemanager   hide fileupdatepanel 

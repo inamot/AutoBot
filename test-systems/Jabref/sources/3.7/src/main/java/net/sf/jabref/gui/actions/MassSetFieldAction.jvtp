@@ -1,0 +1,146 @@
+ action launching mass field  
+   
+   functionality  
+     defaults selected entries entries none selected  
+     input field name 
+     either set field clear field  
+    
+   entering text only relevant setting  not clearing  
+   overwrite protection makes sense clearing field  
+   entering text only relevant renaming 
+   check any field name set not close dialog  
+   check user tries rename multiple fields not close dialog  
+   key bindings  
+   make sure one following ones selected  
+   lazy creation dialog entries treated  change entries array not close dialog  
+    
+       set given field given value entries collection method not update any undomanager returns relevant compoundedit registered caller  
+       
+        param entries entries set field param field name field set  
+        param text value set value null  indicating field cleared  
+        param overwritevalues indicate whether value set even entry already field set  
+        return compoundedit entire operation not allowed overwrite values  check nonempty 
+   value already entry  
+    
+       move contents one field another collection entries  
+       
+        param entries entries operation param field field move contents param newfield field move contents param overwritevalues true  overwrites any existing values new field false  makes change entries existing value new field  
+        return compoundedit entire operation value nothing not allowed overwrite values  check non-empty value already entry new field  net sf jabref gui actions masssetfieldaction mnemonicawareaction masssetfieldaction jabrefframe frame    
+        putvalue action name  localization menutitle  set clear rename fields frame   frame createdialog     
+        diag jdialog frame  localization lang  set clear rename fields field jcombobox      
+        field seteditable text jtextfield    
+        text setenabled renameto jtextfield    
+        renameto setenabled jbutton ok jbutton localization lang  ok     
+        jbutton cancel jbutton localization lang  cancel     
+ 
+        all jradiobutton localization lang  all entries     
+        selected jradiobutton localization lang  selected entries     
+        clear jradiobutton localization lang  clear fields     
+        set jradiobutton localization lang  set fields     
+        rename jradiobutton localization lang  rename field to           
+        rename settooltiptext localization lang  move contents of a field into a field with a different name     
+ 
+        set allfields   frame getcurrentbasepanel   getdatabase   getallvisiblefields f   allfields    
+            field additem f   
+          
+ 
+        set addchangelistener e -  
+          
+        text setenabled set isselected      
+ 
+        clear addchangelistener e -  
+          
+        overwrite setenabled  clear isselected      
+ 
+        rename addchangelistener e -  
+          
+        renameto setenabled rename isselected      
+ 
+        overwrite jcheckbox localization lang  overwrite existing field values buttongroup bg buttongroup    
+        bg add all   
+        bg add selected   
+        bg buttongroup    
+        bg add clear   
+        bg add set   
+        bg add rename   
+        formbuilder builder   formbuilder create   layout formlayout  
+                 left pref  4dlu  fill 100dlu grow    pref  2dlu  pref  2dlu  pref  2dlu  pref  2dlu  pref  2dlu  pref  2dlu  pref  2dlu  pref  2dlu  pref  2dlu  pref     
+        builder addseparator localization lang  field name    xyw 1  1  3   
+        builder add localization lang  field name    xy 1  3   
+        builder add field  xy 3  3   
+        builder addseparator localization lang  include entries    xyw 1  5  3   
+        builder add all  xyw 1  7  3   
+        builder add selected  xyw 1  9  3   
+        builder addseparator localization lang field value    xyw 1  11  3   
+        builder add set  xy 1  13   
+        builder add text  xy 3  13   
+        builder add clear  xyw 1  15  3   
+        builder add rename  xy 1  17   
+        builder add renameto  xy 3  17   
+        builder add overwrite  xyw 1  19  3   
+ 
+        buttonbarbuilder bb buttonbarbuilder    
+        bb addglue    
+        bb addbutton ok   
+        bb addbutton cancel   
+        bb addglue    
+        builder getpanel   setborder borderfactory createemptyborder 5  5  5  5    
+        bb getpanel   setborder borderfactory createemptyborder 5  5  5  5    
+        diag getcontentpane   add builder getpanel    borderlayout center   
+        diag getcontentpane   add bb getpanel    borderlayout south   
+        diag pack    
+ 
+        ok addactionlistener e fieldtext field getselecteditem fieldtext fieldtext trim   isempty      
+                joptionpane showmessagedialog diag  localization lang  you must enter at least one field name        
+                        joptionpane error_message rename isselected fields   getfieldnames fieldtext fields length   1    
+                    joptionpane showmessagedialog diag  localization lang  you can only rename one field at a time    
+                                joptionpane error_message canceled diag dispose    
+            
+ 
+        action cancelaction abstractaction     
+ 
+             override actionperformed actionevent e    
+                canceled diag dispose    
+              
+           
+        cancel addactionlistener cancelaction   
+ 
+          
+        actionmap am   builder getpanel   getactionmap    
+        inputmap im   builder getpanel   getinputmap jcomponent when_in_focused_window   
+        im put globals getkeyprefs   getkey keybinding close_dialog    close    
+        am put  close   cancelaction preparedialog selection    
+        selected setenabled selection selection    
+            selected setselected all setselected set isselected       clear isselected       rename isselected      
+            set setselected override actionperformed actionevent e    
+        basepanel bp   frame getcurrentbasepanel bp list bibentry  entries   bp getselectedentries diag createdialog    
+          
+        canceled preparedialog  entries isempty diag diag setlocationrelativeto frame   
+            diag setvisible canceled collection bibentry  entrylist all isselected      
+            entrylist   bp getdatabase   getentries entrylist   entries toset   text gettext toset isempty      
+            toset fields   getfieldnames field getselecteditem    trim   tolowercase     
+        namedcompound ce namedcompound localization lang  set field rename isselected fields length   1    
+                joptionpane showmessagedialog diag  localization lang  you can only rename one field at a time        
+                        joptionpane error_message ce addedit masssetfieldaction massrenamefield entrylist  fields 0   renameto gettext    
+                        overwrite isselected field1   fields    
+                ce addedit masssetfieldaction masssetfield entrylist  field1  
+                        set isselected   ? toset overwrite isselected      
+              
+          
+        ce end    
+        bp getundomanager   addedit ce   
+        bp markbasechanged undoableedit masssetfield collection bibentry  entries field text overwritevalues    
+ 
+        namedcompound ce namedcompound localization lang  set field bibentry entry   entries    
+            optional oldval   entry getfield field overwritevalues     oldval ispresent        oldval get   isempty text entry clearfield field entry setfield field  text   
+              
+            ce addedit undoablefieldchange entry  field  oldval orelse text    
+          
+        ce end ce undoableedit massrenamefield collection bibentry  entries field newfield overwritevalues    
+        namedcompound ce namedcompound localization lang  rename field bibentry entry   entries    
+            optional valtomove   entry getfield field valtomove ispresent       valtomove get   isempty optional valinnewfield   entry getfield newfield overwritevalues     valinnewfield ispresent        valinnewfield get   isempty entry setfield newfield  valtomove get     
+            ce addedit undoablefieldchange entry  newfield  valinnewfield orelse valtomove get      
+            entry clearfield field   
+            ce addedit undoablefieldchange entry  field  valtomove get ce end ce getfieldnames s s split   \\s       
+      
+ 

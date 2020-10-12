@@ -1,0 +1,159 @@
+ 
+    
+   fetcher arxiv  
+   
+    see href  http   arxiv org help api index  arxiv api overview api 
+    see href  http   arxiv org help api user-manual#_calling_the_api  arxiv api user's manual detailed 
+   description use api 
+   
+   similar implementions href  https   github com nathangrigg arxiv2bib  arxiv2bib href  https   arxiv2bibtex org   live a herf  https   gitlab c3sl ufpr br portalmec dspace-portalmec blob aa209d15082a9870f9daac42c78a35490ce77b52 dspace-api src main java org dspace submit lookup arxivservice java  dspace-portalmec 1  eprint pdf entry specified id 
+   2  doi 
+   search entry arxiv linked doi 
+    
+       queries api only   code searchquery given api return results each article matches query only   code ids given api return results each article list both   code searchquery code ids given api return each article code ids matches   code searchquery allows api act results filter  
+       
+        param searchquery search query used find articles href  http   arxiv org help api user-manual#query_details  details param ids list arxiv identifiers 
+        param start index first returned result  zero-based  
+        param maxresults number maximal results smaller 2000  
+        return response api xml document  atom 1 0  
+        throws fetcherexception problem building url api not accessible arxiv api problems accents remove e  frã©chet -  frechet  
+   bad request error server  try information 
+   check api returned error case error  only one entry returned error information example  
+   http   export arxiv org api query?id_list 0307015 
+    entry  
+         id http   arxiv org api errors#incorrect_id_format_for_0307015  id  
+         title error  title  
+         summary incorrect id format 0307015  summary  
+     entry  
+  arxiv org api errors    orelse false   
+   see http   arxiv org help api user-manual#_details_of_atom_results_returned 
+   title article result arxiv contains hard line breaks  try remove url leading abstract page 
+   date first version published 
+   abstract article 
+   authors article 
+   categories  arxiv  acm msc classification  
+   links 
+   associated doi 
+   journal reference provided author  
+   primary category 
+   ex   arxiv primary_category xmlns arxiv  http   arxiv org schemas atom  term  math-ph  scheme  http   arxiv org schemas atom    
+    
+           returns url linked pdf 
+            
+    
+           returns arxiv identifier 
+            
+   remove leading http   arxiv org abs abstract url arxiv id 
+  arxiv org abs    
+    
+           returns date first version put arxiv 
+            
+   publication string contains time  e g  2014-05-09t14 49 43z net sf jabref logic importer fetcher arxiv fulltextfetcher  searchbasedfetcher  idbasedfetcher arxiv importformatpreferences importformatpreferences importformatpreferences   importformatpreferences  
+      
+ 
+     override optional url  findfulltext bibentry entry ioexception   
+        objects requirenonnull entry   
+ 
+          
+        optional identifier   entry getfield fieldname eprint stringutil isnotblank identifier optional url  pdfurl   searchforentrybyid identifier get    flatmap arxiventry  getpdfurl pdfurl ispresent      
+                    logger info  fulltext pdf found   arxiv pdfurl fetcherexception e    
+                logger warn  arxiv eprint api request failed   e   
+              
+          
+ 
+          
+        optional doi  doi   entry getfield fieldname doi  flatmap doi  build doi ispresent doistring   doi get   getdoi optional url  pdfurl   searchforentry  doi     doistring  flatmap arxiventry  getpdfurl pdfurl ispresent      
+                    logger info  fulltext pdf found   arxiv pdfurl fetcherexception e    
+                logger warn  arxiv doi api request failed   e optional empty optional arxiventry  searchforentry searchquery fetcherexception   
+        list arxiventry  entries   queryapi searchquery  collections emptylist    0  1 entries size      1 optional of entries get 0 optional empty optional arxiventry  searchforentrybyid identifier fetcherexception   
+        list arxiventry  entries   queryapi     collections singletonlist identifier   0  1 entries size      1 optional of entries get 0 optional empty list arxiventry  searchforentries searchquery fetcherexception queryapi searchquery  collections emptylist    0  10 list arxiventry  queryapi searchquery  list ids start maxresults fetcherexception   
+        document result   callapi searchquery  ids  start  maxresults   
+        list node  entries   xmlutil aslist result getelementsbytagname  entry entries stream   map arxiventry collect collectors tolist document callapi searchquery  list ids start maxresults fetcherexception maxresults   2000 illegalargumentexception  the arxiv api limits the number of maximal results to be 2000 uribuilder uribuilder uribuilder api_url stringutil isnotblank searchquery     
+                uribuilder addparameter  search_query   stringutil stripaccents searchquery ids isempty      
+                uribuilder addparameter  id_list join      ids    
+              
+            uribuilder addparameter  start valueof start    
+            uribuilder addparameter  max_results valueof maxresults    
+            url url   uribuilder build   tourl    
+ 
+            documentbuilderfactory factory   documentbuilderfactory newinstance    
+            documentbuilder builder   factory newdocumentbuilder    
+ 
+            httpurlconnection connection    httpurlconnection  url openconnection connection getresponsecode      400 getexception builder parse connection geterrorstream builder parse connection getinputstream saxexception   parserconfigurationexception   ioexception   urisyntaxexception exception fetcherexception  arxiv api request failed   exception fetcherexception getexception document error    
+        list node  entries   xmlutil aslist error getelementsbytagname  entry entries size      1    
+            node node   entries get 0   
+            optional id   xmlutil getnodecontent node   id iserror   id map idcontent -  idcontent startswith  http iserror errormessage   xmlutil getnodecontent node   summary   orelse  unknown error fetcherexception errormessage fetcherexception  arxiv api request failed    
+      
+ 
+     override getname arxiv   
+      
+ 
+     override helpfile gethelppage helpfile fetcher_oai2_arxiv  
+      
+ 
+     override list bibentry  performsearch query fetcherexception searchforentries query  stream   map  
+                 arxiventry  -  arxiventry tobibentry importformatpreferences getkeywordseparator     collect collectors tolist     
+      
+ 
+     override optional bibentry  performsearchbyid identifier fetcherexception searchforentrybyid identifier  map  
+                 arxiventry  -  arxiventry tobibentry importformatpreferences getkeywordseparator arxiventry arxiventry node item    
+              
+ 
+              
+              
+            title   xmlutil getnodecontent item   title   map oai2handler  correctlinebreaks   
+ 
+              
+            urlabstractpage   xmlutil getnodecontent item   id    
+ 
+              
+            publisheddate   xmlutil getnodecontent item   published    
+ 
+              
+            abstracttext   xmlutil getnodecontent item   summary   map oai2handler  correctlinebreaks  
+                     map trim   
+ 
+              
+            authornames arraylist node authornode   xmlutil getnodesbyname item   author      
+                optional authorname   xmlutil getnodecontent authornode   name   map trim   
+                authorname ifpresent authornames  add   
+              
+ 
+              
+            categories arraylist node categorynode   xmlutil getnodesbyname item   category      
+                optional category   xmlutil getattributecontent categorynode   term    
+                category ifpresent categories  add   
+              
+ 
+              
+            optional url  pdfurlparsed   optional empty node linknode   xmlutil getnodesbyname item   link      
+                optional linktitle   xmlutil getattributecontent linknode   title linktitle equals optional of  pdf       
+                    pdfurlparsed   xmlutil getattributecontent linknode   href   map url url url malformedurlexception e pdfurl   pdfurlparsed  
+ 
+              
+            doi   xmlutil getnodecontent item   arxiv doi    
+ 
+              
+            journalreferencetext   xmlutil getnodecontent item   arxiv journal_ref    
+ 
+              
+              
+            primarycategory   xmlutil getnode item   arxiv primary_category   
+                     flatmap node -  xmlutil getattributecontent node   term optional url  getpdfurl pdfurl optional getid prefix    http urlabstractpage map abstracturl abstracturl startswith prefix abstracturl substring prefix length abstracturl optional getdate publisheddate map date date length     10 date substring 0  10 bibentry tobibentry character keyworddelimiter    
+            bibentry bibentry bibentry    
+            bibentry settype bibtexentrytypes article   
+            bibentry setfield fieldname eprinttype   arxiv    
+            bibentry setfield fieldname author join   and    authornames    
+            bibentry addkeywords categories  keyworddelimiter   
+            getid   ifpresent id -  bibentry setfield fieldname eprint  id    
+            title ifpresent titlecontent -  bibentry setfield fieldname title  titlecontent    
+            doi ifpresent doicontent -  bibentry setfield fieldname doi  doicontent    
+            abstracttext ifpresent abstractcontent -  bibentry setfield fieldname abstractcontent    
+            getdate   ifpresent date -  bibentry setfield fieldname date  date    
+            primarycategory ifpresent category -  bibentry setfield fieldname eprintclass  category    
+            journalreferencetext ifpresent journal -  bibentry setfield fieldname journaltitle  journal    
+            getpdfurl   ifpresent url typedbibentry bibentry  bibdatabasemode biblatex   
+                     setfiles collections singletonlist parsedfilefield  online   url   pdf bibentry  
+          
+      
+ 

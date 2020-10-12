@@ -1,0 +1,220 @@
+ 
+    
+   importer medline pubmed format  
+    p  
+   check here details format 
+   https   www nlm nih gov bsd licensee elements_descriptions html 
+    
+  go root element 
+  check whether article set article book article book article set 
+  authorlists size one 
+   add investigators authors 
+  now add affiliation info 
+  add keywords list 
+  check whether meshheadinglist exist not exists  combine meshheading keywords authors appear add personal names authors year pubdate null medlinedate shouldn't null happen article only start page not happen endpage appears without startpage year medlinedate first 4 digits 
+    
+       convert medline page ranges short form full form  
+       medline reports page ranges shorthand format last page reported using only digits differ first page e  12345-51 refers actual range 12345-12351 
+        net sf jabref logic importer fileformat medlineimporter importer parser   
+ 
+  
+  
+ 
+  
+ 
+ 
+     override getname medline   
+      
+ 
+     override fileextensions getextensions fileextensions medline  
+      
+ 
+     override getid medline   
+      
+ 
+     override getdescription importer the medline format    
+      
+ 
+     override isrecognizedformat bufferedreader reader ioexception str i   0 str   reader readline i   50 str tolowercase english  contains   pubmedarticle    
+                       str tolowercase english  contains   pubmedbookarticle i override parserresult importdatabase bufferedreader reader ioexception   
+        objects requirenonnull reader   
+ 
+        list bibentry  bibitems arraylist jaxbcontext context   jaxbcontext newinstance  net sf jabref logic importer fileformat medline    
+            xmlinputfactory xmlinputfactory   xmlinputfactory newfactory    
+            xmlstreamreader xmlstreamreader   xmlinputfactory createxmlstreamreader reader xmlstreamreader isstartelement      
+                xmlstreamreader next    
+              
+ 
+            unmarshaller unmarshaller   context createunmarshaller    
+            object unmarshalledobject   unmarshaller unmarshal xmlstreamreader unmarshalledobject pubmedarticleset    
+                pubmedarticleset articleset    pubmedarticleset  unmarshalledobject object article   articleset getpubmedarticleorpubmedbookarticle article pubmedarticle    
+                        pubmedarticle currentarticle    pubmedarticle  article  
+                        parsearticle currentarticle  bibitems article pubmedbookarticle    
+                        pubmedbookarticle currentarticle    pubmedbookarticle  article  
+                        parsebookarticle currentarticle  bibitems unmarshalledobject pubmedarticle    
+                pubmedarticle article    pubmedarticle  unmarshalledobject  
+                parsearticle article  bibitems unmarshalledobject pubmedbookarticle    
+                pubmedbookarticle currentarticle    pubmedbookarticle  unmarshalledobject  
+                parsebookarticle currentarticle  bibitems pubmedbookarticleset bookarticleset    pubmedbookarticleset  unmarshalledobject pubmedbookarticle bookarticle   bookarticleset getpubmedbookarticle      
+                    parsebookarticle bookarticle  bibitems jaxbexception   xmlstreamexception e    
+            logger debug  could not parse document   e parserresult fromerrormessage e getlocalizedmessage parserresult bibitems parsebookarticle pubmedbookarticle currentarticle  list bibentry  bibitems    
+        map string  fields hashmap currentarticle getbookdocument bookdocument bookdocument   currentarticle getbookdocument    
+            fields put fieldname pmid  bookdocument getpmid   getcontent bookdocument getdaterevised daterevised daterevised   bookdocument getdaterevised    
+                adddaterevised fields  daterevised bookdocument getabstract abs   bookdocument getabstract    
+                addabstract fields  abs bookdocument getpagination pagination pagination   bookdocument getpagination    
+                addpagination fields  pagination bookdocument getsections arraylist result arraylist      
+                sections sections   bookdocument getsections section section   sections getsection serializable content   section getsectiontitle   getcontent content result add content   
+                          
+                      
+                  
+                fields put  sections   join result bookdocument getkeywordlist addkeywords fields  bookdocument getkeywordlist bookdocument getcontributiondate addcontributiondate fields  bookdocument getcontributiondate bookdocument getpublicationtype list result arraylist publicationtype type   bookdocument getpublicationtype type getcontent result add type getcontent     
+                      
+                  
+                fields put  pubtype   join result bookdocument getarticletitle articletitle articletitle   bookdocument getarticletitle    
+                arraylist titles arraylist serializable content   articletitle getcontent content titles add content   
+                      
+                  
+                fields put  article   join titles bookdocument getbook addbookinformation fields  bookdocument getbook currentarticle getpubmedbookdata pubmedbookdata bookdata   currentarticle getpubmedbookdata    
+            putifvaluenotnull fields   pubstatus   bookdata getpublicationstatus     
+          
+ 
+        bibentry entry bibentry idgenerator next     article    
+        entry setfield fields   
+ 
+        bibitems add entry addbookinformation map string  fields  book book book getpublisher publisher publisher   book getpublisher    
+            putifvaluenotnull fields   publocation   publisher getpublisherlocation     
+            putstringfromserializablelist fields  fieldname publisher  publisher getpublishername   getcontent book getbooktitle booktitle title   book getbooktitle    
+            putstringfromserializablelist fields  fieldname title  title getcontent book getpubdate addpubdate fields  book getpubdate book getauthorlist list authorlist  authorlists   book getauthorlist authorlists size      1 authorlist authorlist   authorlists    
+                    handleauthors fields  authorlist logger info format  size of authorlist was %s   authorlists size      
+              
+          
+ 
+        putifvaluenotnull fields  fieldname volume  book getvolume     
+        putifvaluenotnull fields  fieldname edition  book getedition     
+        putifvaluenotnull fields   medium   book getmedium     
+        putifvaluenotnull fields   reportnumber   book getreportnumber book getelocationid elocationid id   book getelocationid      
+                addelocationid fields  id book getisbn fields put fieldname isbn  join book getisbn putstringfromserializablelist map string  fields medlinekey  
+            list serializable  contentlist    
+        stringbuilder result stringbuilder serializable content   contentlist content result append content result length     0    
+            fields put medlinekey  result tostring addcontributiondate map string  fields  contributiondate contributiondate contributiondate getday contributiondate getmonth contributiondate getyear result   converttodateformat contributiondate getyear    contributiondate getmonth    
+                    contributiondate getday     
+            fields put  contribution   result converttodateformat year month day format  %s-%s-%s   year  month  day parsearticle pubmedarticle article  list bibentry  bibitems    
+        map string  fields hashmap article getpubmeddata article getmedlinecitation   getdaterevised daterevised daterevised   article getmedlinecitation   getdaterevised    
+                adddaterevised fields  daterevised   
+                putifvaluenotnull fields   pubstatus   article getpubmeddata   getpublicationstatus article getpubmeddata   getarticleidlist articleidlist articleidlist   article getpubmeddata   getarticleidlist    
+                    addarticleidlist fields  articleidlist article getmedlinecitation medlinecitation medlinecitation   article getmedlinecitation    
+ 
+            fields put  status   medlinecitation getstatus     
+            datecreated datecreated   medlinecitation getdatecreated    
+            fields put  created   
+                    converttodateformat datecreated getyear    datecreated getmonth    datecreated getday      
+            fields put  pubmodel   medlinecitation getarticle   getpubmodel medlinecitation getdatecompleted datecompleted datecompleted   medlinecitation getdatecompleted    
+                fields put  completed   
+                        converttodateformat datecompleted getyear    datecompleted getmonth    datecompleted getday      
+              
+ 
+            fields put fieldname pmid  medlinecitation getpmid   getcontent     
+            fields put fieldname owner  medlinecitation getowner     
+ 
+            addarticleinformation fields  medlinecitation getarticle   getcontent     
+ 
+            medlinejournalinfo medlinejournalinfo   medlinecitation getmedlinejournalinfo    
+            putifvaluenotnull fields   country   medlinejournalinfo getcountry     
+            putifvaluenotnull fields   journal-abbreviation   medlinejournalinfo getmedlineta     
+            putifvaluenotnull fields   nlm-id   medlinejournalinfo getnlmuniqueid     
+            putifvaluenotnull fields   issn-linking   medlinejournalinfo getissnlinking medlinecitation getchemicallist medlinecitation getchemicallist   getchemical addchemicals fields  medlinecitation getchemicallist   getchemical medlinecitation getcitationsubset fields put  citation-subset   join medlinecitation getcitationsubset medlinecitation getgenesymbollist addgenesymbols fields  medlinecitation getgenesymbollist medlinecitation getmeshheadinglist addmeashheading fields  medlinecitation getmeshheadinglist     
+              
+            putifvaluenotnull fields   references   medlinecitation getnumberofreferences medlinecitation getpersonalnamesubjectlist addpersonalnames fields  medlinecitation getpersonalnamesubjectlist medlinecitation getotherid addotherid fields  medlinecitation getotherid medlinecitation getkeywordlist addkeywords fields  medlinecitation getkeywordlist medlinecitation getspaceflightmission fields put  space-flight-mission   join medlinecitation getspaceflightmission medlinecitation getinvestigatorlist addinvestigators fields  medlinecitation getinvestigatorlist medlinecitation getgeneralnote addnotes fields  medlinecitation getgeneralnote     
+              
+          
+ 
+        bibentry entry bibentry idgenerator next     article    
+        entry setfield fields   
+ 
+        bibitems add entry addarticleidlist map string  fields  articleidlist articleidlist articleid id   articleidlist getarticleid id getidtype pubmed  equals id getidtype       
+                    fields put  pmid   id getcontent fields put id getidtype    id getcontent addnotes map string  fields  list generalnote  generalnote    
+        list notes arraylist generalnote note   generalnote note notes add note getcontent     
+              
+          
+        fields put fieldname note  join notes addinvestigators map string  fields  investigatorlist investigatorlist    
+        list investigatornames arraylist      
+        list affiliationinfos arraylist name investigatorlist getinvestigator list investigator  investigators   investigatorlist getinvestigator investigator investigator   investigators    
+                name   investigator getlastname investigator getforename name           investigator getforename    
+                  
+                investigatornames add name investigator getaffiliationinfo affiliationinfo info   investigator getaffiliationinfo serializable affiliation   info getaffiliation   getcontent affiliation affiliationinfos add affiliation   
+                              
+                          
+                      
+                    fields put  affiliation   join affiliationinfos          
+                  
+              
+            fields put  investigator   join investigatornames    and addkeywords map string  fields  list keywordlist  allkeywordlists    
+        list keywordstrings arraylist keywordlist keywordlist   allkeywordlists keyword keyword   keywordlist getkeyword serializable content   keyword getcontent content keywordstrings add content fields get fieldname keywords fields put fieldname keywords  join keywordstrings  keyword_separator keywordstrings size     0 result   join keywordstrings         
+                result   fields get fieldname keywords    keyword_separator   result  
+                fields put fieldname keywords  result addotherid map string  fields  list otherid  otherid otherid id   otherid id getsource id getcontent fields put id getsource    id getcontent addpersonalnames map string  fields  personalnamesubjectlist personalnamesubjectlist fields get fieldname author list personalnames arraylist personalnamesubjectlist getpersonalnamesubject list personalnamesubject  personalnamesubject   personalnamesubjectlist getpersonalnamesubject personalnamesubject personalname   personalnamesubject name   personalname getlastname personalname getforename name           personalname getforename   tostring    
+                      
+                    personalnames add name   
+                  
+                fields put fieldname author  join personalnames    and addmeashheading map string  fields  meshheadinglist meshheadinglist    
+        arraylist keywords arraylist meshheading keyword   meshheadinglist getmeshheading result   keyword getdescriptorname   getcontent keyword getqualifiername qualifiername qualifier   keyword getqualifiername      
+                    result           qualifier getcontent    
+                  
+              
+            keywords add result   
+          
+        fields put fieldname keywords  join keywords  keyword_separator addgenesymbols map string  fields  genesymbollist genesymbollist    
+        list genesymbols   genesymbollist getgenesymbol    
+        fields put  gene-symbols   join genesymbols addchemicals map string  fields  list chemical  chemicals    
+        list chemicalnames arraylist chemical chemical   chemicals chemical chemicalnames add chemical getnameofsubstance   getcontent     
+              
+          
+        fields put  chemicals   join chemicalnames addarticleinformation map string  fields  list object  content object object   content object journal    
+                journal journal    journal  object  
+                putifvaluenotnull fields  fieldname journal  journal gettitle     
+ 
+                issn issn   journal getissn issn putifvaluenotnull fields  fieldname issn  issn getcontent     
+                  
+ 
+                journalissue journalissue   journal getjournalissue    
+                putifvaluenotnull fields  fieldname volume  journalissue getvolume     
+                putifvaluenotnull fields  fieldname issue  journalissue getissue     
+ 
+                addpubdate fields  journalissue getpubdate object articletitle    
+                articletitle articletitle    articletitle  object  
+                fields put fieldname title  stringutil stripbrackets articletitle getcontent   tostring object pagination    
+                pagination pagination    pagination  object  
+                addpagination fields  pagination object elocationid    
+                elocationid elocationid    elocationid  object  
+                addelocationid fields  elocationid object abstract abs object  
+                addabstract fields  abs object authorlist    
+                authorlist authors    authorlist  object  
+                handleauthors fields  authors addelocationid map string  fields  elocationid elocationid fieldname doi equals elocationid geteidtype       
+            fields put fieldname doi  elocationid getcontent pii  equals elocationid geteidtype       
+            fields put  pii   elocationid getcontent addpubdate map string  fields  pubdate pubdate pubdate getyear fields put fieldname year  extractyear pubdate getmedlinedate fields put fieldname year  pubdate getyear pubdate getmonth fields put fieldname month  pubdate getmonth pubdate getseason fields put  season   pubdate getseason addabstract map string  fields abs    
+        putifvaluenotnull fields   copyright   abs getcopyrightinformation     
+        list abstracttext arraylist abstracttext text   abs getabstracttext serializable textcontent   text getcontent textcontent abstracttext add textcontent   
+                  
+              
+          
+        fields put fieldname join abstracttext addpagination map string  fields  pagination pagination startpage endpage jaxbelement element   pagination getcontent medlinepgn  equals element getname   getlocalpart       
+                putifvaluenotnull fields  fieldname pages  fixpagerange element getvalue startpage  equals element getname   getlocalpart       
+                  
+                startpage   element getvalue     endpage  
+                putifvaluenotnull fields  fieldname pages  startpage endpage  equals element getname   getlocalpart       
+                endpage   element getvalue    
+                  
+                fields put fieldname pages  fixpagerange startpage    -    endpage extractyear medlinedate medlinedate substring 0  4 handleauthors map string  fields  authorlist authors    
+        list authornames arraylist author author   authors getauthor author getcollectivename text collectivenames   author getcollectivename serializable content   collectivenames getcontent content authornames add content authorname   author getlastname author getforename authorname           author getforename    
+                  
+                authornames add authorname   
+              
+          
+        fields put fieldname author  join authornames    and join list list string joiner on join list adddaterevised map string  fields  daterevised daterevised daterevised getday daterevised getmonth daterevised getyear fields put  revised   
+                    converttodateformat daterevised getyear    daterevised getmonth    daterevised getday putifvaluenotnull map string  fields medlinekey value value fields put medlinekey  value fixpagerange pagerange minuspos   pagerange indexof minuspos   0 pagerange startpage   pagerange substring 0  minuspos  trim endpage   pagerange substring minuspos   1  trim lengthofendpage   endpage length lengthofstartpage   startpage length lengthofendpage   lengthofstartpage    
+            endpage   startpage substring 0  lengthofstartpage - lengthofendpage    endpage startpage    --    endpage  
+      
+ 
+     override list bibentry  parseentries inputstream inputstream parseexception importdatabase bufferedreader inputstreamreader inputstream  standardcharsets utf_8    getdatabase   getentries ioexception e    
+            logger error e getlocalizedmessage    e collections emptylist    
+      
+ 

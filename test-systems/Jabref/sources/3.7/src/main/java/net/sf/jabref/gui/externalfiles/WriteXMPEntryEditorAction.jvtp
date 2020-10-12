@@ -1,0 +1,72 @@
+ 
+    
+   write xmp action entryeditor toolbar  
+    
+   normally next call without  localization lang string  write xmp used non-menu places therefore translation must available localization lang 
+   make list pdfs linked entry  
+   first check legacy   pdf  field check file  field want offload actual work background thread worker 
+   thread  
+   using spin thread gets synchronously offloaded new thread  
+   blocking execution method worker thread finishes unblocked ready print status message  net sf jabref gui externalfiles writexmpentryeditoraction abstractaction writexmpentryeditoraction basepanel panel  entryeditor editor panel   panel editor   editor  
+          
+        putvalue action name  localization lang  write xmp     
+        putvalue action small_icon  icontheme jabreficon write_xmp geticon     
+        putvalue action short_description  localization lang  write bibtexentry as xmp-metadata to pdf      
+      
+ 
+     override actionperformed actionevent actionevent    
+        setenabled panel output localization lang  writing xmp-metadata        
+        panel frame   setprogressbarindeterminate panel frame   setprogressbarvisible bibentry entry   editor getentry    
+ 
+          
+        list file  files arraylist      
+ 
+          
+        entry getfield fieldname pdf  
+                 ifpresent pdf -  fileutil expandfilename pdf  panel getbibdatabasecontext   
+                         getfiledirectory fieldname pdf  globals prefs getfiledirectorypreferences     
+                 ifpresent files  add    
+ 
+          
+        list dirs   panel getbibdatabasecontext   getfiledirectory globals prefs getfiledirectorypreferences entry hasfield fieldname file     
+            filelisttablemodel tm filelisttablemodel    
+            entry getfield fieldname file  ifpresent tm  setcontent j   0  j   tm getrowcount    j      
+                filelistentry flentry   tm getentry j flentry type ispresent        pdf  equalsignorecase flentry type get   getname       
+                    fileutil expandfilename flentry link  dirs  ifpresent files  add   
+                  
+              
+          
+ 
+          
+          
+        abstractworker worker writexmpworker files  entry   
+          
+          
+        worker getworker   run    
+          
+          
+        panel output message   
+        panel frame   setprogressbarvisible setenabled writexmpworker abstractworker writexmpworker list file  files  bibentry entry files   files entry   entry  
+          
+ 
+         override run files isempty      
+                message   localization lang  no pdf linked       \n written   0 error   0 file file   files file exists files size      1    
+                            message   localization lang  pdf does not exist    
+                          
+                        error xmputil writexmp file  entry  panel getdatabase    globals prefs getxmppreferences files size      1    
+                                message   localization lang  wrote xmp-metadata    
+                              
+                            written ioexception   transformerexception e files size      1    
+                                message   localization lang  error writing       '    file getpath      '   
+                              
+                            error files size     1    
+                    stringbuilder sb stringbuilder    
+                    sb append localization lang  finished writing xmp-metadata  wrote to %0 file s valueof written error   0    
+                        sb append ' '  append localization lang  error writing to %0 file s valueof error     
+                      
+                    message   sb tostring    
+                  
+              
+          
+      
+ 

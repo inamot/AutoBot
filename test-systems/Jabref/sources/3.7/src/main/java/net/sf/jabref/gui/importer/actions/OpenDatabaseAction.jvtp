@@ -1,0 +1,124 @@
+ action concerned opening existing database  
+   list actions may need called opening file upgrade actions etc may depend jabref version wrote file  
+   add action checking new custom entry types loaded bib file  
+   add action converting legacy entries explicitgroup 
+   add action new external file handling system version 2 3  
+   add action warning handling duplicate bibtex keys  
+    
+       opens given file null 404  nothing happens 
+       
+        param file file  may null not existing 
+        
+    
+       opens given files one null 404  nothing happens 
+       
+        param filestoopen filestoopen  may null not existing 
+        
+   check any files already open  
+   see removed final one must perhaps 
+   raise basepanel question bps check found matching one 
+   run actual open thread prevent program 
+   locking until file loaded files remaining open mean file already open may raise correct tab  
+    
+        param file file  may null not existing lock file fairly old offer steal file not open original file adding database  go through list see any post open actions need done instance  checking found new entry types imported checking database contents modified due new features version jabref  
+    
+       go through list post open actions perform those need performed  
+       
+        param panel basepanel database shown  
+        param result result bib file parse operation  
+        
+   file set null inside eventdispatcherthread net sf jabref gui importer actions opendatabaseaction mnemonicawareaction log logger   logfactory getlog opendatabaseaction post_open_actions add checkfornewentrytypesaction     
+          
+        post_open_actions add convertlegacyexplicitgroups     
+          
+        post_open_actions add filelinksupgradewarning     
+          
+        post_open_actions add handleduplicatewarnings opendatabaseaction jabrefframe frame showdialog icontheme jabreficon open geticon frame   frame showdialog   showdialog  
+        putvalue action name  localization menutitle  open database     
+        putvalue action accelerator_key  globals getkeyprefs   getkey keybinding open_database    
+        putvalue action short_description  localization lang  open bibtex database     
+      
+ 
+     override actionperformed actionevent e    
+        list file  filestoopen arraylist showdialog    
+            filedialog dialog filedialog frame  withextension fileextensions bibtex_db   
+            dialog setdefaultextension fileextensions bibtex_db   
+            list chosenstrings   dialog showdialogandgetmultiplefiles    
+            filestoopen addall chosenstrings stream   map file collect collectors tolist logger info action name         e getactioncommand     
+            filestoopen add file stringutil getcorrectfilename e getactioncommand     bib      
+          
+ 
+        openfiles filestoopen openfile file file raisepanel    
+        list file  filestoopen arraylist      
+        filestoopen add file   
+        openfiles filestoopen  raisepanel openfilesasstringlist list filenamestoopen raisepanel    
+        list file  filestoopen arraylist filename   filenamestoopen    
+            filestoopen add file filename    
+          
+        openfiles filestoopen  raisepanel openfiles list file  filestoopen raisepanel    
+        basepanel toraise initialcount   filestoopen size removed   0 iterator file  iterator   filestoopen iterator    iterator hasnext       
+            file file   iterator next i   0  i   frame gettabbedpane   gettabcount    i      
+                basepanel basepanel   frame getbasepanelat i basepanel getbibdatabasecontext   getdatabasefile   ispresent    
+                           basepanel getbibdatabasecontext   getdatabasefile   get   equals file     
+                    iterator remove    
+                    removed removed    initialcount    
+                        toraise   basepanel filestoopen isempty list file  thefiles   collections unmodifiablelist filestoopen   
+            jabrefexecutorservice instance execute file thefile   thefiles    
+                    openthefile thefile  raisepanel file thefile   thefiles    
+                frame getfilehistory   newfile thefile getpath toraise frame output localization lang  file '%0' is already open    
+                    toraise getbibdatabasecontext   getdatabasefile   get   getpath      
+            frame gettabbedpane   setselectedcomponent toraise   
+          
+ 
+        frame output localization lang  files opened             filestoopen size openthefile file file raisepanel file file exists      
+            file filetoload   file  
+            frame output localization lang  opening        '    file getpath filename   file getpath    
+            globals prefs put jabrefpreferences working_directory  file getparent filebasedlock haslockfile file topath       
+                optional filetime  modificationtime   filebasedlock getlockfiletimestamp file topath modificationtime ispresent         system currenttimemillis   
+                            - modificationtime get   tomillis      filebasedlock lockfile_critical_age answer   joptionpane showconfirmdialog html     localization lang  error opening file       '    filename    '    
+                                          localization lang  file is locked by another jabref instance        p   
+                                          localization lang you want to override the file lock?    
+                            localization lang  file locked    joptionpane yes_no_option answer    joptionpane yes_option    
+                        filebasedlock deletelockfile file topath filebasedlock waitforfilelock file topath       
+                    joptionpane showmessagedialog localization lang  error opening file       '    filename    '    
+                                      localization lang  file is locked by another jabref instance     
+                            localization lang  error    joptionpane error_message backupmanager checkforbackupfile filetoload topath       
+                backupuimanager showrestorebackupdialog frame  filetoload topath     
+              
+ 
+            parserresult result result   opendatabase loaddatabase filetoload  globals prefs getimportformatpreferences ioexception ex    
+                logger error  error loading database     filetoload  ex   
+                result   parserresult getnullresult    
+                joptionpane showmessagedialog localization lang  error opening file       '    filename    '   
+                        localization lang  error    joptionpane error_message result getdatabase   isshared shareddatabaseuimanager frame  openshareddatabasefromparserresult result sqlexception   databasenotsupportedexception   invaliddbmsconnectionpropertiesexception   
+                        notashareddatabaseexception e    
+                    result getdatabasecontext   cleardatabasefile      
+                    result getdatabase   clearshareddatabaseid    
+                    logger error  connection error   e   
+                    joptionpane showmessagedialog frame  
+                            e getmessage      \n\n    localization lang  a local copy will be opened     
+                            localization lang  connection error    joptionpane warning_message   
+                  
+              
+ 
+            basepanel panel   addnewdatabase result  file  raisepanel parserresult finalreferencetoresult   result  
+            swingutilities invokelater    -  opendatabaseaction performpostopenactions panel  finalreferencetoresult performpostopenactions basepanel panel  parserresult result mustraisepanel postopenaction action   opendatabaseaction post_open_actions action isactionnecessary result mustraisepanel    
+                    panel frame   gettabbedpane   setselectedcomponent panel   
+                  
+                action performaction panel  result basepanel addnewdatabase parserresult result file file raisepanel    
+ 
+        bibdatabase database   result getdatabase result haswarnings      
+            jabrefexecutorservice instance 
+                     execute    -  parserresultwarningdialog showparserresultwarningdialog result  frame    
+          
+ 
+        basepanel basepanel basepanel frame  result getdatabasecontext     
+ 
+          
+        swingutilities invokelater    -  frame addtab basepanel  raisepanel objects nonnull file     
+            frame output localization lang  opened database       '    file getpath      '     localization lang  with   
+                          
+                      database getentrycount           localization lang  entries basepanel  
+      
+ 
+ 

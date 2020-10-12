@@ -1,0 +1,150 @@
+ class produces dialog box editing single file link bibtex entry information edited includes file description link itself file type dialog includes convenience buttons quick linking use downloading files class offers progress bar downloading     
+   label hidden download complete not make variable final lambda action listener fail compiã¶e not make variable final lambda action listener fail compile ok button disabled  ignore event necessary  ask external confirm object whether ready close  
+   construct updated filelistentry  
+  final browselistener browse   new browselistener frame  link     todo  maybe use browse action 
+   add ok action two text fields simplify entering  
+   key bindings nothing 
+   check looks remote link  
+   try guess file type  
+   see reasonable selection type combobox  
+   see trim file link relative file directory  
+   don't think happen set file link directly fallback file set found 
+   store directory next time file below file directory  make path relative  net sf jabref gui filelist filelistentryeditor filelistentryeditor jabrefframe frame  filelistentry entry showprogressbar showopenbutton  
+            bibdatabasecontext databasecontext entry   entry databasecontext   databasecontext frame   frame  
+ 
+        actionlistener okaction   e ok isenabled externalconfirm storesettings entry externalconfirm confirmclose entry diag dispose    
+            storesettings filelistentryeditor entry   
+            okpressed types jcombobox      
+        types additemlistener itemevent okdisabledexternally    
+                ok setenabled types getselecteditem formbuilder builder   formbuilder create   layout formlayout  
+                 left pref  4dlu  fill 150dlu  4dlu  fill pref  4dlu  fill pref    p  2dlu  p  2dlu  p     
+        builder add localization lang  link    xy 1  1   
+        builder add link  xy 3  1 jbutton browsebut jbutton localization lang  browse     
+        browsebut addactionlistener browsepressed   
+        builder add browsebut  xy 5  1   
+        jbutton open jbutton localization lang  open showopenbutton    
+            builder add open  xy 7  1   
+          
+        builder add localization lang  description    xy 1  3   
+        builder add description  xyw 3  3  3   
+        builder getpanel   setborder borderfactory createemptyborder 5  5  5  5    
+        builder add localization lang  file type    xy 1  5   
+        builder add types  xyw 3  5  3 showprogressbar    
+            builder appendrows  2dlu  p    
+            builder add downloadlabel  xy 1  7   
+            builder add prog  xyw 3  7  3   
+          
+ 
+        buttonbarbuilder bb buttonbarbuilder    
+        bb addglue    
+        bb addrelatedgap    
+        bb addbutton ok   
+        jbutton cancel jbutton localization lang  cancel     
+        bb addbutton cancel   
+        bb addglue    
+        bb getpanel   setborder borderfactory createemptyborder 5  5  5  5    
+ 
+        ok addactionlistener okaction   
+          
+        link addactionlistener okaction   
+        description addactionlistener okaction   
+ 
+        open addactionlistener e -  openfile     
+ 
+        abstractaction cancelaction abstractaction     
+ 
+             override actionperformed actionevent e    
+                diag dispose    
+              
+           
+        cancel addactionlistener cancelaction   
+ 
+          
+        actionmap am   builder getpanel   getactionmap    
+        inputmap im   builder getpanel   getinputmap jcomponent when_in_focused_window   
+        im put globals getkeyprefs   getkey keybinding close_dialog    close    
+        am put  close   cancelaction   
+ 
+        link getdocument   adddocumentlistener documentlistener     
+ 
+             override insertupdate documentevent documentevent    
+                checkextension    
+              
+ 
+             override removeupdate documentevent documentevent    
+                  
+              
+ 
+             override changedupdate documentevent documentevent    
+                checkextension    
+              
+ 
+            
+ 
+        diag jdialog frame  localization lang  save file diag getcontentpane   add builder getpanel    borderlayout center   
+        diag getcontentpane   add bb getpanel    borderlayout south   
+        diag pack    
+        diag setlocationrelativeto frame   
+        diag addwindowlistener windowadapter     
+ 
+             override windowactivated windowevent event openbrowsewhenshown     dontopenbrowseuntildisposed    
+                    dontopenbrowseuntildisposed swingutilities invokelater    -  browsepressed actionperformed actionevent browsebut  0         
+                  
+              
+ 
+             override windowclosed windowevent event    
+                dontopenbrowseuntildisposed setvalues entry checkextension types getselectedindex      -1       link gettext   trim   isempty filelistentryeditor remote_link_pattern matcher link gettext    matches      
+                optional externalfiletype  type   externalfiletypes getinstance   getexternalfiletypebyext  html type ispresent      
+                    types setselecteditem type get thelink   link gettext   trim    
+            externalfiletypes getinstance   getexternalfiletypeforname thelink  ifpresent types  setselecteditem openfile     
+        externalfiletype type    externalfiletype  types getselecteditem type jabrefdesktop openexternalfileanyformat databasecontext  link gettext    optional of type ioexception e    
+                logger error  file could not be opened   e setexternalconfirm confirmclosefilelistentryeditor ec externalconfirm   ec setokenabled enabled    
+        okdisabledexternally    enabled  
+        ok setenabled enabled jprogressbar getprogressbar prog jlabel getprogressbarlabel downloadlabel setentry filelistentry entry entry   entry  
+        setvalues entry setvisible visible openbrowse    
+        openbrowsewhenshown   openbrowse    globals prefs getboolean jabrefpreferences allow_file_auto_open_browse visible    
+            okpressed diag setvisible visible isvisible diag diag isvisible setvalues filelistentry entry    
+        description settext entry description   
+        link settext entry link   
+ 
+        collection externalfiletype  list   externalfiletypes getinstance   getexternalfiletypeselection    
+ 
+        types setmodel defaultcomboboxmodel   list toarray externalfiletype list size        
+        types setselectedindex -1 entry type ispresent         entry type get unknownexternalfiletype     
+            types setselecteditem entry type get entry link entry link isempty       
+            checkextension storesettings filelistentry listentry descriptiontext description gettext   trim filelink list dirs   databasecontext getfiledirectory globals prefs getfiledirectorypreferences dirs isempty      
+                filelink link gettext   trim found dir   dirs canpath file dir   getcanonicalpath    
+                    file fl file link gettext   trim fl isabsolute flpath   fl getcanonicalpath flpath length     canpath length        flpath startswith canpath      
+                            filelink   fl getcanonicalpath   substring canpath length     1   
+                            found found    
+                    filelink link gettext   trim ioexception ex    
+              
+            filelink link gettext   trim    
+          
+ 
+        externalfiletype type    externalfiletype  types getselecteditem    
+ 
+        listentry description   descriptiontext  
+        listentry type   optional ofnullable type   
+        listentry link   filelink okpressed okpressed actionlistener browsepressed   e filepath   link gettext   trim    
+        optional file  file   fileutil expandfilename databasecontext  filepath  
+                globals prefs getfiledirectorypreferences workingdir file ispresent      
+            workingdir   file get   getpath workingdir   globals prefs get jabrefpreferences working_directory   
+          
+ 
+        optional path  path filedialog frame  workingdir  showdialogandgetselectedfile    
+ 
+        path ifpresent selection -    
+            file newfile   selection tofile    
+              
+            globals prefs put jabrefpreferences working_directory  newfile getpath     
+ 
+              
+            list filedirs databasecontext getfiledirectory globals prefs getfiledirectorypreferences     
+            newfile   fileutil shortenfilename newfile  filedirs   
+ 
+            link settext newfile getpath     
+            link requestfocus    
+            
+       
+ 

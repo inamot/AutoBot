@@ -1,0 +1,33 @@
+ 
+    
+       returns set containing words used database given field type  characters code remove  code not included  
+       
+        param db code bibdatabase  code  value 
+        param field code string  code  value 
+        param remove code string  code  value 
+        return code set  code  value 
+        
+    
+       finds authors' last names given fields given database  
+       
+        param db database  
+        param fields fields look return set containing names  
+        net sf jabref model groups groupsutil set finddeliminatedwordsinfield bibdatabase db field deliminator    
+        set res treeset bibentry be   db getentries      
+            be getfield field  ifpresent fieldvalue -    
+                stringtokenizer tok stringtokenizer fieldvalue trim    deliminator tok hasmoretokens      
+                    res add stringutil capitalizefirst tok nexttoken   trim res set findallwordsinfield bibdatabase db field remove    
+        set res treeset bibentry be   db getentries      
+            be getfield field  ifpresent o -    
+                stringtokenizer tok stringtokenizer o  remove tok hasmoretokens      
+                    res add stringutil capitalizefirst tok nexttoken   trim res set findauthorlastnames bibdatabase db  list fields    
+        set res treeset bibentry be   db getentries field   fields    
+                be getfield field  ifpresent val val isempty      
+                        authorlist al   authorlist parse val   
+                        res addall al getauthors   stream   map author  getlast  filter optional  ispresent  
+                                 map optional  get  filter lastname -   lastname isempty    
+                                 collect collectors tolist res  
+      
+ 
+ 
+ 

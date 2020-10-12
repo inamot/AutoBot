@@ -1,0 +1,260 @@
+ 
+   add input action pair deleting entries  
+   add input action pair inserting entry  
+   add input action pair moving entry up  
+   add input action pair moving entry down  
+   set table row height 
+   
+        returns component added container  might jscrollpane component itself  
+       
+   
+       returns text component itself nothing nothing nothing 
+   select entry main table 
+   focus bibtex key field nothing nothing nothing nothing nothing nothing nothing nothing 
+    
+           add entry table model fire change event change event fired event dispatch thread  
+            param index row index insert entry param entry entry insert  
+            net sf jabref gui fieldeditors entrylinklisteditor jtable fieldeditor entrylinklisteditor jabrefframe frame  bibdatabasecontext databasecontext fieldname content  
+            entryeditor entryeditor singleentry frame   frame databasecontext   databasecontext fieldname   fieldname entryeditor   entryeditor singleentry   singleentry  
+        label fieldnamelabel fieldname   
+        tablemodel entrylinklisttablemodel entrylinklist parse content  databasecontext getdatabase      
+        settext content   
+        setmodel tablemodel   
+        jscrollpane spane jscrollpane settableheader addmouselistener tableclicklistener     
+ 
+        add settooltiptext entry link  insert      
+        remove settooltiptext   remove entry link  delete      
+        add setmargin insets 0  0  0  0    
+        remove setmargin insets 0  0  0  0    
+        add addactionlistener e -  addentry     
+        remove addactionlistener e -  removeentries     
+ 
+        formbuilder builder   formbuilder create   
+                 layout formlayout  fill pref grow 1dlu fill pref grow   
+                         fill pref fill pref 1dlu fill pref singleentry    
+            jbutton up jbutton icontheme jabreficon up getsmallicon     
+ 
+            jbutton down jbutton icontheme jabreficon down getsmallicon     
+            up setmargin insets 0  0  0  0    
+            down setmargin insets 0  0  0  0    
+            up addactionlistener e -  moveentry -1    
+            down addactionlistener e -  moveentry 1    
+            builder add up  xy 1  1   
+            builder add down  xy 1  2   
+          
+        builder add add  xy 3  1   
+        builder add remove  xy 3  2   
+        jbutton button jbutton localization lang  select     
+        button addactionlistener e -  selectentry     
+        builder add button  xyw 1  4  3   
+ 
+        panel jpanel    
+        panel setlayout borderlayout     
+        panel add spane  borderlayout center   
+        panel add builder getpanel    borderlayout east   
+ 
+          
+        getinputmap   put keystroke getkeystroke  delete     delete    
+        getactionmap   put  delete abstractaction     
+ 
+             override actionperformed actionevent actionevent row   getselectedrow    
+                removeentries    
+                row   math min row  getrowcount   - 1 row    0    
+                    setrowselectioninterval row  row   
+                  
+              
+            
+ 
+          
+        getinputmap   put keystroke getkeystroke  insert     insert    
+        getactionmap   put  insert abstractaction     
+ 
+             override actionperformed actionevent actionevent row   getselectedrow    
+                addentry    
+                setrowselectioninterval row  row   
+              
+            
+ 
+          
+        getinputmap   put globals getkeyprefs   getkey keybinding file_list_editor_move_entry_up    move up    
+        getactionmap   put  move up abstractaction     
+ 
+             override actionperformed actionevent actionevent    
+                moveentry -1   
+              
+            
+ 
+          
+        getinputmap   put globals getkeyprefs   getkey keybinding file_list_editor_move_entry_down    move down    
+        getactionmap   put  move down abstractaction     
+ 
+             override actionperformed actionevent actionevent    
+                moveentry 1   
+              
+            
+ 
+        jmenuitem openlink jmenuitem localization lang  select     
+        menu add openlink   
+        openlink addactionlistener e -  selectentry     
+ 
+          
+        fontmetrics metrics   getfontmetrics getfont     
+        setrowheight math max getrowheight    metrics getheight      
+ 
+        updatebuttonstates selectentry selectedrow   getselectedrow selectedrow    -1 crossref   tablemodel getentry selectedrow  getkey    
+ 
+            frame getcurrentbasepanel   getdatabase   getentrybykey crossref  
+                     ifpresent entry -  frame getcurrentbasepanel   highlightentry entry adjustcolumnwidth column   0  column getcolumncount    column width   0 row   0  row getrowcount    row      
+                tablecellrenderer renderer getcellrenderer row  column   
+                component comp preparerenderer renderer  row  column   
+                width   math max comp getpreferredsize   width  width columnmodel getcolumn column  setpreferredwidth width   
+          
+      
+ 
+     override getfieldname fieldname  
+      
+ 
+      
+     override jcomponent getpane panel  
+      
+ 
+      
+     override jcomponent gettextcomponent override jlabel getlabel label  
+      
+ 
+     override setlabelcolor color color    
+        label setforeground color   
+      
+ 
+     override gettext tablemodel gettext    
+      
+ 
+     override settext newtext    
+        tablemodel setcontent entrylinklist parse newtext  databasecontext getdatabase      
+        adjustcolumnwidth    
+        updatebuttonstates    
+      
+ 
+     override append text    
+          
+      
+ 
+     override updatefont     
+          
+      
+ 
+     override paste texttoinsert    
+          
+      
+ 
+     override getselectedtext addentry row   getselectedrow row    -1    
+            row   0  
+          
+        parsedentrylink entry parsedentrylink     databasecontext getdatabase     
+        tablemodel addentry row  entry   
+        entryeditor updatefield adjustcolumnwidth    
+        updatebuttonstates removeentries rows   getselectedrows rows i   rows length - 1  i    0  i--    
+                tablemodel removeentry rows i    
+              
+          
+        entryeditor updatefield adjustcolumnwidth    
+        updatebuttonstates updatebuttonstates singleentry tablemodel isempty      
+                add setenabled remove setenabled add setenabled remove setenabled moveentry i sel   getselectedrows sel length    1      tablemodel getrowcount     2 toidx   sel 0    i toidx    tablemodel getrowcount      
+            toidx -  tablemodel getrowcount toidx   0    
+            toidx    tablemodel getrowcount    
+          
+        parsedentrylink entry   tablemodel getentry sel 0    
+        tablemodel removeentry sel 0    
+        tablemodel addentry toidx  entry   
+        entryeditor updatefield setrowselectioninterval toidx  toidx   
+        adjustcolumnwidth tableclicklistener mouseadapter   
+ 
+         override mouseclicked mouseevent e e getbutton      mouseevent button1      e getclickcount      2 row   rowatpoint e getpoint row    0    
+                    optional bibentry   entry   tablemodel getentry row  getlinkedentry entry ispresent      
+                          
+                        frame getcurrentbasepanel   highlightentry entry get else e ispopuptrigger      
+                processpopuptrigger e   
+              
+          
+ 
+         override mousepressed mouseevent e e ispopuptrigger      
+                processpopuptrigger e   
+              
+          
+ 
+         override mousereleased mouseevent e e ispopuptrigger      
+                processpopuptrigger e processpopuptrigger mouseevent e row   rowatpoint e getpoint row    0    
+                setrowselectioninterval row  row   
+                menu show entrylinklisteditor e getx    e gety     
+              
+          
+      
+ 
+     override undo     
+          
+      
+ 
+     override redo     
+          
+      
+ 
+     override setautocompletelistener autocompletelistener listener    
+          
+      
+ 
+     override clearautocompletesuggestion     
+          
+      
+ 
+     override setactivebackgroundcolor     
+          
+      
+ 
+     override setvalidbackgroundcolor     
+          
+      
+ 
+     override setinvalidbackgroundcolor     
+          
+      
+ 
+     override updatefontcolor entrylinklisttablemodel defaulttablemodel entrylinklisttablemodel list parsedentrylink  originallist    
+            addentries originallist gettext internallist result   entrylinklist serialize internallist result addentries list parsedentrylink  newlist    
+            internallist addall newlist swingutilities iseventdispatchthread      
+                firetabledatachanged swingutilities invokelater    -  firetabledatachanged setcontent list parsedentrylink  newlist    
+ 
+            internallist clear    
+            internallist addall newlist swingutilities iseventdispatchthread      
+                firetabledatachanged swingutilities invokelater    -  firetabledatachanged     
+              
+          
+ 
+         override getcolumncount 2  
+          
+ 
+         override getrowcount internallist 0 internallist internallist size    
+              
+          
+ 
+         override getcolumnclass columnindex override object getvalueat rowindex columnindex internallist    
+                parsedentrylink entry   internallist get rowindex columnindex 0 entry getkey 1 entry getlinkedentry   
+                             map bibentry -  formatentry bibentry  entry getdatabase     
+                             orelse  unknown entry parsedentrylink getentry index internallist internallist get index removeentry index    
+            internallist remove index swingutilities iseventdispatchthread      
+                firetablerowsdeleted index  index swingutilities invokelater    -  firetablerowsdeleted index  index isempty internallist isempty addentry index parsedentrylink entry internallist    
+                internallist add index  entry swingutilities iseventdispatchthread      
+                    firetabledatachanged swingutilities invokelater    -  firetabledatachanged     
+                  
+              
+          
+ 
+         override iscelleditable row column column    0   
+          
+ 
+         override setvalueat object avalue rowindex columnindex internallist columnindex    0    
+                    internallist get rowindex  setkey avalue swingutilities iseventdispatchthread      
+                        firetablerowsupdated rowindex  rowindex swingutilities invokelater    -  firetablerowsupdated rowindex  rowindex formatentry bibentry entry  bibdatabase database    
+        stringreader sr stringreader layoutformat layout layout layouthelper sr  
+                    globals prefs getlayoutformatterpreferences globals journalabbreviationloader   
+                             getlayoutfromtext layout dolayout entry  database ioexception e    
+            logger warn  problem generating entry layout   e 

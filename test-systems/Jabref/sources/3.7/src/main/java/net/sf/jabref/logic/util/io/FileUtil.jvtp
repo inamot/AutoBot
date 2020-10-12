@@ -1,0 +1,171 @@
+ 
+    
+       returns extension file optional empty file not one name   
+       
+        param file 
+        return extension  trimmed lowercase  
+        
+    
+       returns extension file name optional empty file not one name   
+       
+        param filename 
+        return extension  without leading dot   trimmed lowercase  
+        
+    
+       returns name part file name e   everything front last       
+        
+    
+       adds extension given file name original extension not replaced means  
+        demo bib     sav  gets  demo bib sav not  demo sav  
+       
+        param path path add extension param extension extension add 
+        return modified file name 
+        
+    
+       creates minimal unique path substring each file multiple file paths  
+       
+        param paths file paths 
+        return minimal unique path substring each file path 
+        
+   prepare data structures 
+   compute shortest folder substrings 
+    
+       copies file  
+       
+        param pathtosourcefile      path source file 
+        param pathtodestinationfile path destination file 
+        param replaceexisting       boolean determines whether copy goes even file exists  
+        return boolean whether copy succeeded stopped due file already existing  
+        throws ioexception 
+        
+   check file already exists  
+    
+       renames given file 
+       
+        param fromfile source filename rename 
+        param tofile target filename 
+        return true rename successful  false exception occurred 
+        
+    
+       converts relative filename absolute one necessary  returns 
+       null file not exist  br   
+        p  
+       uses  ul  
+        li default directory associated extension file  li  
+        li standard file directory  li  
+        li directory bib file  li  
+         ul  
+       
+        param databasecontext database file belongs param name filename  may relative path file 
+        
+   find default directory field type any  
+   include standard  file  directory  
+   include directory bib file  
+    
+       converts relative filename absolute one necessary  returns 
+       null file not exist  
+        p look each given dirs starting beginning returning first found file match any  
+        
+    
+       converts relative filename absolute one necessary  returns 
+       null file not exist  
+        
+   fix problems  
+    
+       converts absolute filename relative one necessary  
+       returns parameter filename itself shortening possible 
+        p method works correctly only dirs sorted decent length e   home user literature important before  home user literature 
+       
+        param filename filename shortened 
+        param dirs     directories check  
+        
+   case-insensitive matching windows 
+   result based original name  not lower-cased name 
+   first scan directories 
+   initialize result-set 
+   now look keys 
+   first  look exact matches here not find any exact matches non-exact 
+   matches allowed  try find one  
+    
+       returns list linked files files absolute filename 
+       
+        param bes list bibtex entries 
+        param filedirs list directories try expansion 
+       
+        return list files  may empty 
+        
+    
+       determines filename provided entry database 
+       
+        param database database entry located 
+        param entry entry file linked param filenamepattern filename pattern 
+        param prefs layout preferences 
+        return suggested filename 
+        
+  removes illegal characters filename net sf jabref logic util io fileutil isposixcompilant   filesystems getdefault   supportedfileattributeviews   contains  
+             posix optional getfileextension file file getfileextension file getname optional getfileextension filename dotposition   filename lastindexof dotposition   0      dotposition    filename length   - 1 optional of filename substring dotposition   1  trim   tolowercase optional empty getfilename filenamewithextension dotposition   filenamewithextension lastindexof dotposition    0 filenamewithextension substring 0  dotposition filenamewithextension path addextension path path extension    
+        path filename   path getfilename path resolvesibling filename   extension list uniquepathsubstrings list paths    
+        list stack stacklist arraylist   paths size path   paths    
+            list directories   arrays aslist path split pattern quote file separator     
+            stack stack stack      
+            stack addall directories   
+            stacklist add stack   
+          
+ 
+        list pathsubstrings arraylist   collections ncopies paths size stacklist stream   allmatch vector  isempty i   0  i   stacklist size    i tempstring   pathsubstrings get i tempstring isempty       stacklist get i  isempty      
+                    pathsubstrings set i  stacklist get i  pop stacklist get i  isempty      
+                    pathsubstrings set i  stacklist get i  pop     file separator   tempstring i   0  i   stacklist size    i tempstring   pathsubstrings get i collections frequency pathsubstrings  tempstring     1    
+                    stacklist get i  clear pathsubstrings copyfile path pathtosourcefile  path pathtodestinationfile replaceexisting files exists pathtosourcefile     
+            logger error  path to the source file doesn't exist files exists pathtodestinationfile      replaceexisting    
+            logger error  path to the destination file is not exists and the file shouldn't be replace files copy pathtosourcefile  pathtodestinationfile  standardcopyoption replace_existing ioexception e    
+            logger error  copying files failed    e renamefile fromfile tofile path src   paths get fromfile files move src  src resolvesibling tofile ioexception e    
+            logger error  renaming files failed   e optional file  expandfilename bibdatabasecontext databasecontext name  
+            filedirectorypreferences filedirectorypreferences    
+        optional extension   getfileextension name   
+          
+        list directories   databasecontext getfiledirectory extension orelse filedirectorypreferences   
+          
+        list filedir   databasecontext getfiledirectory filedirectorypreferences   
+          
+        list al arraylist dir   directories al contains dir     
+                al add dir afiledir   filedir al contains afiledir     
+                al add afiledir expandfilename name  al optional file  expandfilename name  list directories dir   directories dir optional file  result   expandfilename name  dir result ispresent result optional empty optional file  expandfilename filename dir filename filename isempty optional empty name   filename  
+ 
+        file file file name file exists       dir optional of file dir endswith os file_separator     
+            name   dir   name name   dir   os file_separator   name os windows    
+            name   slash matcher name  replaceall name   backslash matcher name  replaceall       
+          
+ 
+        file fileindir file name fileindir exists optional of fileindir optional empty file shortenfilename file filename  list dirs filename filename isabsolute       dirs filename dir   dirs dir file result   shortenfilename filename  dir result result equals filename result filename file shortenfilename file filename directory filename filename isabsolute       directory filename dir   directory longname os windows    
+              
+            longname   filename tostring   tolowercase    
+            dir   dir tolowercase longname   filename tostring dir endswith os file_separator     
+            dir   dir concat os file_separator longname startswith dir newname   filename tostring   substring dir length file newname filename map bibentry  list file   findassociatedfiles list bibentry  entries  
+            list extensions  list file  directories autolinkexactkeyonly    
+        map bibentry  list file   result hashmap      
+ 
+          
+        set file  fileswithextension   filefinder findfiles extensions  directories bibentry entry   entries    
+            result put entry arraylist       
+          
+ 
+          
+        nextfile file file   fileswithextension name   file getname dot   name lastindexof bibentry entry   entries    
+                optional citekey   entry getcitekeyoptional citekey ispresent        citekey get   isempty       dot   0  
+                           name substring 0  dot  equals citekey get       
+                    result get entry  add file nextfile autolinkexactkeyonly bibentry entry   entries    
+                    optional citekey   entry getcitekeyoptional citekey ispresent        citekey get   isempty      name startswith citekey get       
+                        result get entry  add file nextfile result list file  getlistoflinkedfiles list bibentry  bes  list filedirs    
+        objects requirenonnull bes   
+        objects requirenonnull filedirs   
+ 
+        list file  result arraylist bibentry entry   bes    
+            entry getfield fieldname file  ifpresent filefield -    
+                list parsedfilefield  filelist   filefield parse filefield parsedfilefield file   filelist    
+                    expandfilename file getlink    filedirs  ifpresent result  add result createfilenamefrompattern bibdatabase database  bibentry entry filenamepattern  layoutformatterpreferences prefs targetname stringreader sr stringreader filenamepattern   
+        layout layout layout layouthelper sr  prefs  getlayoutfromtext ioexception e    
+            logger info  wrong format     e getmessage    e layout targetname   layout dolayout entry  database targetname targetname isempty      
+            targetname   entry getcitekeyoptional   orelse targetname   filenamecleaner cleanfilename targetname targetname  
+      
+ 
+ 

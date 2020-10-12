@@ -1,0 +1,132 @@
+ net sf jabref gui preftabs externaltab jpanel prefstab externaltab jabrefframe frame  preferencesdialog prefsdiag  jabrefpreferences prefs prefs   prefs frame   frame  
+        setlayout borderlayout     
+ 
+        jbutton editfiletypes jbutton localization lang  manage external file types     
+        citecommand jtextfield 25   
+        editfiletypes addactionlistener externalfiletypeeditor getaction prefsdiag    
+ 
+ 
+        defaultconsole jradiobutton localization lang  use terminal emulator     
+        executeconsole jradiobutton localization lang  execute command           
+        consolecommand jtextfield    
+        browsebutton jbutton localization lang  browse     
+ 
+        jlabel commanddescription jlabel localization lang  
+                 note  use the placeholder %0 the location of the opened database file     %dir     
+ 
+        buttongroup consoleoptions buttongroup    
+        consoleoptions add defaultconsole   
+        consoleoptions add executeconsole   
+ 
+        jpanel consoleoptionpanel jpanel gridbaglayout     
+        gridbagconstraints layoutconstraints gridbagconstraints    
+ 
+        defaultconsole addactionlistener e -  updateexecuteconsolebuttonandfieldenabledstate     
+        executeconsole addactionlistener e -  updateexecuteconsolebuttonandfieldenabledstate     
+        browsebutton addactionlistener e -  showconsolechooser     
+ 
+        layoutconstraints fill   gridbagconstraints horizontal  
+ 
+        layoutconstraints gridx   0  
+        layoutconstraints gridy   0  
+        layoutconstraints insets insets 0  0  6  0   
+        consoleoptionpanel add defaultconsole  layoutconstraints   
+ 
+        layoutconstraints gridy   1  
+        consoleoptionpanel add executeconsole  layoutconstraints   
+ 
+        layoutconstraints gridx   1  
+        consoleoptionpanel add consolecommand  layoutconstraints   
+ 
+        layoutconstraints gridx   2  
+        layoutconstraints insets insets 0  4  6  0   
+        consoleoptionpanel add browsebutton  layoutconstraints   
+ 
+        layoutconstraints gridx   1  
+        layoutconstraints gridy   2  
+        consoleoptionpanel add commanddescription  layoutconstraints   
+ 
+        formlayout layout formlayout  
+                 1dlu  8dlu  left pref  4dlu  fill 150dlu  4dlu  fill pref        
+ 
+        defaultformbuilder builder defaultformbuilder layout   
+ 
+        builder appendseparator localization lang  sending of emails     
+        builder append jpanel     
+        jlabel lab jlabel localization lang  subject sending an email with references   concat        
+        builder append lab   
+        emailsubject jtextfield 25   
+        builder append emailsubject   
+        builder nextline    
+        builder append jpanel     
+        openfoldersofattachedfiles jcheckbox localization lang  automatically open folders of attached files     
+        builder append openfoldersofattachedfiles   
+        builder nextline    
+ 
+        builder appendseparator localization lang  external programs     
+        builder nextline    
+ 
+        jpanel butpan jpanel    
+        butpan setlayout gridlayout 3  3 pushtoapplication pushtoapplication   frame getpushapplications   getapplications      
+            addsettingsbutton pushtoapplication  butpan   
+          
+        builder append jpanel     
+        builder append butpan  3   
+ 
+        builder nextline    
+        lab jlabel localization lang  cite command     ' '   
+        jpanel pan jpanel    
+        builder append pan   
+        builder append lab   
+        builder append citecommand   
+ 
+        builder nextline    
+        builder append pan   
+        builder append editfiletypes   
+        builder nextline    
+ 
+        builder appendseparator localization lang  open console     
+        builder nextline    
+        builder append jpanel     
+        builder append consoleoptionpanel   
+ 
+        pan   builder getpanel    
+        pan setborder borderfactory createemptyborder 5  5  5  5    
+        add pan  borderlayout center addsettingsbutton pushtoapplication pt  jpanel p    
+        jbutton button jbutton localization lang  settings 0   pt getapplicationname     
+                pt geticon     
+        button addactionlistener e -  pushtoapplicationbutton showsettingsdialog frame  pt  pt getsettingspanel      
+        p add button   
+      
+ 
+     override setvalues     
+ 
+        emailsubject settext prefs get jabrefpreferences email_subject    
+        openfoldersofattachedfiles setselected prefs getboolean jabrefpreferences open_folders_of_attached_files    
+ 
+        citecommand settext prefs get jabrefpreferences cite_command    
+ 
+        defaultconsole setselected globals prefs getboolean jabrefpreferences use_default_console_application    
+        executeconsole setselected  globals prefs getboolean jabrefpreferences use_default_console_application    
+ 
+        consolecommand settext globals prefs get jabrefpreferences console_command    
+ 
+        updateexecuteconsolebuttonandfieldenabledstate    
+      
+ 
+     override storesettings     
+        prefs put jabrefpreferences email_subject  emailsubject gettext     
+        prefs putboolean jabrefpreferences open_folders_of_attached_files  openfoldersofattachedfiles isselected     
+        prefs put jabrefpreferences cite_command  citecommand gettext     
+        prefs putboolean jabrefpreferences use_default_console_application  defaultconsole isselected     
+        prefs put jabrefpreferences console_command  consolecommand gettext     
+      
+ 
+     override validatesettings override gettabname localization lang  external programs updateexecuteconsolebuttonandfieldenabledstate     
+        browsebutton setenabled executeconsole isselected     
+        consolecommand setenabled executeconsole isselected showconsolechooser     
+        jfilechooser consolechooser jfilechooser answer   consolechooser showopendialog externaltab answer    jfilechooser approve_option    
+            consolecommand settext consolechooser getselectedfile   getabsolutepath     
+          
+      
+ 

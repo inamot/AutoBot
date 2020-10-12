@@ -1,0 +1,233 @@
+ class holds functionality autolinking file s dropped 
+   onto entry  
+    p  
+   options handling files p  
+   1  link file current position  disabled file remote  
+    p  
+   2  copy file directory  rename bibtex key extension 
+    p  
+   3  move file directory  rename bibtex key extension 
+    
+    
+       offer copy move linking options dragged external file  perform chosen operation any  
+       
+        param filename name dragged file  
+        param filetype filetype associated file  
+        param maintable maintable file dragged param droprow row file dropped  
+        
+    
+        param filename name dragged file  
+        param filetype filetype associated file  
+        param entry target entry drop  
+        
+   show dialog 
+   
+           ok re ready go  see first need file copy before 
+           linking  
+            
+   done mrdlib 
+   show dialog 
+   
+           ok re ready go  see first need file copy before 
+           linking  
+            
+   done mrdlib user canceled thus done  
+   reply    joptionpane yes_option  
+   
+           todo extract import functionality importmenuitem importmenuitem importer   new importmenuitem frame   maintable    
+           null   new pdfxmpimporter     
+           
+           importer automatedimport new string     filename     
+            
+   
+    return true user pushed  ok   false otherwise 
+   
+   determine name suggest  
+   store user's choice 
+    
+       make extension file  
+       
+        param entry entry extension param filetype filetype associated file  
+        param filename path file  
+        param edits namedcompound action action added none given edit added panel's undomanager avoidduplicate  true check file already linked comparison  find absolute filename shouldn't happen based old code maybe one set something find absolute filename existing link filenames equal don't need link simply return  
+    
+       move given file base directory file type rename given filename  
+       
+        param filename name source file  
+        param destfilename destination filename  
+        param edits        todo undo action 
+        return true operation succeeded  
+        
+   oops don't know directory put given 
+   dir doesn't exist not happen   
+    
+       copy given file base directory file type give given name  
+       
+        param filename name source file  
+        param tofile destination filename existing path-component removed  
+        param edits    todo undo return 
+        
+   oops don't know directory put given 
+   dir doesn't exist not happen   
+   file already correct position  don't override  net sf jabref gui externalfiles droppedfilehandler droppedfilehandler jabrefframe frame  basepanel panel frame   frame panel   panel  
+ 
+        buttongroup grp buttongroup    
+        grp add linkinplace   
+        grp add copyradiobutton   
+        grp add moveradiobutton   
+ 
+        formlayout layout formlayout  left 15dlu pref pref pref    bottom 14pt pref pref pref pref    
+        layout setrowgroups 1  2  3  4  5     
+        formbuilder builder   formbuilder create   layout layout   
+ 
+        builder add linkinplace  xyw 1  1  4   
+        builder add destdirlabel  xyw 1  2  4   
+        builder add copyradiobutton  xyw 2  3  3   
+        builder add moveradiobutton  xyw 2  4  3   
+        builder add renamecheckbox  xyw 2  5  1   
+        builder add renametotextbox  xyw 4  5  1   
+        optionspanel add builder getpanel handledroppedfile filename  externalfiletype filetype  maintable maintable droprow    
+ 
+        bibentry entry   maintable getentryat droprow   
+        handledroppedfile filename  filetype  entry handledroppedfile filename  externalfiletype filetype  bibentry entry    
+        namedcompound edits namedcompound localization lang  drop %0   filetype getextension tryxmpimport filename  filetype  edits     
+            edits end    
+            panel getundomanager   addedit edits showlinkmovecopyrenamedialog filename  filetype  entry  panel getdatabase success destfilename linkinplace isselected      
+            destfilename   fileutil 
+                     shortenfilename file filename   
+                            panel getbibdatabasecontext   getfiledirectory globals prefs getfiledirectorypreferences     
+                     tostring destfilename   renamecheckbox isselected   ? renametotextbox gettext file filename  getname copyradiobutton isselected      
+                success   docopy filename  destfilename  edits moveradiobutton isselected      
+                success   domove filename  destfilename  edits success    
+            dolink entry  filetype  destfilename edits   
+            panel markbasechanged    
+            panel updateentryeditorifshowing    
+          
+        edits end    
+        panel getundomanager   addedit edits linkpdftoentry filename  maintable entrytable droprow    
+        bibentry entry   entrytable getentryat droprow   
+        linkpdftoentry filename  entry linkpdftoentry filename  bibentry entry    
+        optional externalfiletype  optfiletype   externalfiletypes getinstance   getexternalfiletypebyext  pdf optfiletype ispresent      
+            logger warn  no file type with extension 'pdf' registered externalfiletype filetype   optfiletype get showlinkmovecopyrenamedialog filename  filetype  entry  panel getdatabase success destfilename  
+        namedcompound edits namedcompound localization lang  drop %0   filetype getextension linkinplace isselected      
+            destfilename   fileutil 
+                     shortenfilename file filename   
+                            panel getbibdatabasecontext   getfiledirectory globals prefs getfiledirectorypreferences     
+                     tostring destfilename   renamecheckbox isselected   ? renametotextbox gettext file filename  getname copyradiobutton isselected      
+                success   docopy filename  destfilename  edits moveradiobutton isselected      
+                success   domove filename  destfilename  edits success    
+            dolink entry  filetype  destfilename edits   
+            panel markbasechanged    
+          
+        edits end    
+        panel getundomanager   addedit edits tryxmpimport filename  externalfiletype filetype  namedcompound edits pdf  equals filetype getextension list bibentry  xmpentriesinfile xmpentriesinfile   xmputil readxmp filename  globals prefs getxmppreferences ioexception e    
+            logger warn  problem reading xmp   e xmpentriesinfile xmpentriesinfile isempty jlabel confirmationmessage jlabel  
+                localization lang  the pdf contains one or several bibtex-records    
+                           \n  
+                          localization lang you want to these as entries into the current database?     
+        jpanel entriespanel jpanel    
+        entriespanel setlayout boxlayout entriespanel  boxlayout y_axis    
+        xmpentriesinfile foreach entry -    
+            jtextarea entryarea jtextarea entry tostring     
+            entryarea seteditable entriespanel add entryarea   
+            
+ 
+        jpanel contentpanel jpanel borderlayout     
+        contentpanel add confirmationmessage  borderlayout north   
+        contentpanel add entriespanel  borderlayout center reply   joptionpane showconfirmdialog frame  contentpanel  
+                localization lang  xmp-metadata found in pdf  %0   filename   joptionpane yes_no_cancel_option  
+                joptionpane question_message reply    joptionpane cancel_option reply    joptionpane no_option issingle   xmpentriesinfile size      1  
+        bibentry single   issingle ? xmpentriesinfile get 0 success destfilename linkinplace isselected      
+            destfilename   fileutil 
+                     shortenfilename file filename   
+                            panel getbibdatabasecontext   getfiledirectory globals prefs getfiledirectorypreferences     
+                     tostring renamecheckbox isselected       single destfilename   filename destfilename   single getcitekey           filetype getextension copyradiobutton isselected      
+                success   docopy filename  destfilename  edits moveradiobutton isselected      
+                success   domove filename  destfilename  edits success bibentry axmpentriesinfile   xmpentriesinfile    
+ 
+                axmpentriesinfile setid idgenerator next     
+                edits addedit undoableinsertentry panel getdatabase    axmpentriesinfile  panel    
+                panel getdatabase   insertentry axmpentriesinfile   
+                dolink axmpentriesinfile  filetype  destfilename edits   
+ 
+              
+            panel markbasechanged    
+            panel updateentryeditorifshowing showlinkmovecopyrenamedialog linkfilename  externalfiletype filetype  bibentry entry  
+            bibdatabase database dialogtitle   localization lang  link to file %0   linkfilename   
+        list dirs   panel getbibdatabasecontext   getfiledirectory globals prefs getfiledirectorypreferences found   -1 i   0  i   dirs size    i file dirs get i   exists      
+                found   i found   0    
+            destdirlabel settext localization lang  file directory is not set or does not exist      
+            copyradiobutton setenabled moveradiobutton setenabled renametotextbox setenabled renamecheckbox setenabled linkinplace setselected destdirlabel settext localization lang  file directory is '%0'    dirs get found     
+            copyradiobutton setenabled moveradiobutton setenabled renametotextbox setenabled renamecheckbox setenabled changelistener cl   arg0 -    
+            renamecheckbox setenabled  linkinplace isselected     
+            renametotextbox setenabled  linkinplace isselected     
+           
+ 
+        linkinplace settext localization lang  leave file in its current directory     
+        copyradiobutton settext localization lang  copy file to file directory     
+        moveradiobutton settext localization lang  move file to file directory     
+        renamecheckbox settext localization lang  rename file to   concat targetname   fileutil createfilenamefrompattern database  entry  
+                globals prefs get jabrefpreferences import_filenamepattern   
+                globals prefs getlayoutformatterpreferences globals journalabbreviationloader    
+ 
+        renametotextbox settext targetname concat      concat filetype getextension      
+ 
+        linkinplace setselected frame prefs   getboolean jabrefpreferences droppedfilehandler_leave    
+        copyradiobutton setselected frame prefs   getboolean jabrefpreferences droppedfilehandler_copy    
+        moveradiobutton setselected frame prefs   getboolean jabrefpreferences droppedfilehandler_move    
+        renamecheckbox setselected frame prefs   getboolean jabrefpreferences droppedfilehandler_rename    
+ 
+        linkinplace addchangelistener cl   
+        cl statechanged changeevent linkinplace object   messages    localization lang  how would you like to link to '%0'?   linkfilename   
+                    optionspanel reply   joptionpane showconfirmdialog frame  messages  dialogtitle  
+                    joptionpane ok_cancel_option  joptionpane question_message reply    joptionpane ok_option    
+                  
+                frame prefs   putboolean jabrefpreferences droppedfilehandler_leave  linkinplace isselected     
+                frame prefs   putboolean jabrefpreferences droppedfilehandler_copy  copyradiobutton isselected     
+                frame prefs   putboolean jabrefpreferences droppedfilehandler_move  moveradiobutton isselected     
+                frame prefs   putboolean jabrefpreferences droppedfilehandler_rename  renamecheckbox isselected linkinplace removechangelistener cl dolink bibentry entry  externalfiletype filetype filename avoidduplicate  namedcompound edits    
+ 
+        optional oldvalue   entry getfield fieldname file   
+        filelisttablemodel tm filelisttablemodel    
+        oldvalue ifpresent tm  setcontent avoidduplicate    
+              
+            list dirs   panel getbibdatabasecontext   
+                     getfiledirectory globals prefs getfiledirectorypreferences absfilename file filename  isabsolute      dirs isempty      
+                absfilename   filename optional file  file   fileutil expandfilename filename  dirs file ispresent      
+                    absfilename   file get   getabsolutepath absfilename         
+                  
+              
+ 
+            logger debug  absfilename      absfilename i   0  i   tm getrowcount    i      
+                filelistentry flentry   tm getentry i absname file flentry link  isabsolute      dirs isempty      
+                    absname   flentry link optional file  file   fileutil expandfilename flentry link  dirs file ispresent      
+                        absname   file get   getabsolutepath absname logger debug  absname      absname absfilename equals absname tm addentry tm getrowcount filelistentry     filename  filetype newvalue   tm getstringrepresentation    
+        undoablefieldchange edit undoablefieldchange entry  fieldname file  oldvalue orelse newvalue   
+        entry setfield fieldname file  newvalue edits panel getundomanager   addedit edit edits addedit edit domove filename destfilename  
+                           namedcompound edits    
+        list dirs   panel getbibdatabasecontext   getfiledirectory globals prefs getfiledirectorypreferences found   -1 i   0  i   dirs size    i file dirs get i   exists      
+                found   i found   0    
+              
+              
+              
+            logger warn  cannot determine destination directory or destination directory does not exist file tofile file dirs get found    os file_separator   destfilename tofile exists answer   joptionpane showconfirmdialog frame  
+                    localization lang  '%0' exists  overwrite file?   tofile getabsolutepath     
+                    localization lang  overwrite file?    
+                    joptionpane yes_no_option answer    joptionpane no_option file fromfile file filename fromfile renameto tofile joptionpane showmessagedialog frame  
+                    localization lang  could not move file '%0'    tofile getabsolutepath      
+                            localization lang  please move the file manually and link in place     
+                    localization lang  move file failed    joptionpane error_message docopy filename tofile  namedcompound edits    
+ 
+        list dirs   panel getbibdatabasecontext   getfiledirectory globals prefs getfiledirectorypreferences found   -1 i   0  i   dirs size    i file dirs get i   exists      
+                found   i found   0    
+              
+              
+              
+            logger warn  cannot determine destination directory or destination directory does not exist destinationfilename file tofile  getname    
+ 
+        file destfile file dirs get found    os file_separator   destinationfilename destfile equals file filename destfile exists answer   joptionpane showconfirmdialog frame  
+                    localization lang  '%0' exists  overwrite file?   destfile getpath     
+                    localization lang  file exists    joptionpane yes_no_option  joptionpane question_message answer    joptionpane no_option fileutil copyfile paths get filename   destfile topath true  
+      
+ 
+ 

@@ -1,0 +1,268 @@
+ 
+    
+   dialog display search results  potentially one basepanel possibility preview locate each entry main window  
+    
+   key bindings  
+  override 'selectnextcolumncell selectpreviouscolumncell move rows instead cells tab 
+     look clipboardmanager 
+   override standard enter-action  enter opens selected entry 
+   remember default last size  
+    
+       control visibility dialog  
+        param visible true show dialog  false hide  
+        
+    
+       set up comparators each column user modify sort order clicking column labels  
+        param comparatorchooser comparator chooser controlling sort order  
+        
+   icon columns  
+   remaining columns  
+    
+       set column widths according field shown lock icon columns suitable width  
+        
+    
+       add list entries table  
+        param newentries list entries  
+        param panel reference basepanel entries belong  
+        
+    
+       add single entry table  
+        param entry entry add  
+        param panel reference basepanel entry belongs  
+        
+    
+       mouse listener entry table  processes icon clicks open external 
+       files urls well opening context menu  
+        
+   first find row user clicked double click entry highlight entry basepanel e user signalled opening context menu event 
+           gets redirected method  here open file link menu user pointing file link icon  otherwise general context 
+           menu shown  
+            param e triggering mouse event use filelisttablemodel parse field content one links  open first one listener glazed list monitoring current selection selection changes need update preview panel  
+        
+   find out basepanel selected entry belongs update preview's database context  
+   update preview's entry  
+    
+       tableformat table shown dialog  handles display entry 
+       fields icons linked files urls name fields  tap maintableformat instance use same name formatting used entry table  net sf jabref gui search searchresultframe fields fieldname author  fieldname title  fieldname year  fieldname journal searchresultframe jabrefframe frame title  searchquery searchquery globalsearch frame   objects requirenonnull frame searchquery   searchquery globalsearch   globalsearch  
+        frame getglobalsearchbar   setsearchresultframe init objects requirenonnull title init title    
+        searchresultframe jframe    
+        searchresultframe settitle title   
+        searchresultframe seticonimage icontheme getimage  jabreficon48   getimage     
+ 
+        preview previewpanel null   
+ 
+        sortedentries sortedlist   entries entrycomparator fieldname author    
+        model    defaulteventtablemodel bibentry   glazedlistsswing eventtablemodelwiththreadproxylist sortedentries entrytableformat     
+        entrytable jtable model   
+        guiutil correctrowheight entrytable   
+ 
+        generalrenderer renderer generalrenderer color white   
+        entrytable setdefaultrenderer jlabel renderer   
+        entrytable setdefaultrenderer renderer   
+        setwidths    
+        tablecomparatorchooser bibentry  tablesorter   
+                tablecomparatorchooser install entrytable  sortedentries  
+                        abstracttablecomparatorchooser multiple_column_keyboard   
+        setupcomparatorchooser tablesorter   
+        jscrollpane sp jscrollpane entrytable defaulteventselectionmodel bibentry  selectionmodel    defaulteventselectionmodel bibentry   glazedlistsswing 
+                 eventselectionmodelwiththreadproxylist sortedentries   
+        entrytable setselectionmodel selectionmodel   
+        selectionmodel getselected   addlisteventlistener entryselectionlistener     
+        entrytable addmouselistener tableclicklistener     
+ 
+        contentpane settopcomponent sp   
+        contentpane setbottomcomponent preview   
+ 
+          
+        abstractaction closeaction abstractaction     
+             override actionperformed actionevent e    
+                dispose    
+              
+           
+ 
+        actionmap actionmap   contentpane getactionmap    
+        inputmap inputmap   contentpane getinputmap jcomponent when_in_focused_window   
+        inputmap put globals getkeyprefs   getkey keybinding close_dialog    close    
+        inputmap put globals getkeyprefs   getkey keybinding close_database    close    
+        actionmap put  close   closeaction   
+ 
+        actionmap   entrytable getactionmap    
+        inputmap   entrytable getinputmap    
+          
+        actionmap put  selectnextcolumncell abstractaction     
+             override actionperformed actionevent e    
+                selectnextentry    
+              
+            
+        actionmap put  selectpreviouscolumncell abstractaction     
+             override actionperformed actionevent e    
+                selectpreviousentry    
+              
+            
+        actionmap put  selectnextrow abstractaction     
+             override actionperformed actionevent e    
+                selectnextentry    
+              
+            
+        actionmap put  selectpreviousrow abstractaction     
+             override actionperformed actionevent e    
+                selectpreviousentry selectfirst    selectfirst   
+        inputmap put globals getkeyprefs   getkey keybinding select_first_entry   selectfirst   
+        actionmap put selectfirst abstractaction     
+             override actionperformed actionevent event    
+                selectfirstentry selectlast    selectlast   
+        inputmap put globals getkeyprefs   getkey keybinding select_last_entry   selectlast   
+        actionmap put selectlast abstractaction     
+             override actionperformed actionevent event    
+                selectlastentry    
+              
+            
+ 
+        actionmap put  copy abstractaction     
+             override actionperformed actionevent e selectionmodel getselected   isempty      
+                    list bibentry  bes   selectionmodel getselected    
+                    transferablebibtexentry trbe transferablebibtexentry bes   
+                      
+                    toolkit getdefaulttoolkit   getsystemclipboard   
+                             setcontents trbe  frame getcurrentbasepanel     
+                    frame output localization lang  copied     ' '    bes size     1 ? bes size         
+                              localization lang  entries   
+                               1     localization lang  entry     ' '    
+                  
+              
+            
+ 
+          
+        entrytable getinputmap jcomponent when_ancestor_of_focused_component  put keystroke getkeystroke keyevent vk_enter  0    enter    
+        actionmap put  enter abstractaction     
+             override actionperformed actionevent ae    
+                bibentry entry   sortedentries get entrytable getselectedrow     
+                selectentryinbasepanel entry   
+              
+            
+ 
+        searchresultframe addwindowlistener windowadapter     
+             override windowopened windowevent e    
+                contentpane setdividerlocation 0 5f   
+              
+ 
+             override windowclosing windowevent event    
+                dispose    
+              
+            
+ 
+        searchresultframe getcontentpane   add contentpane  borderlayout center   
+ 
+          
+        searchpreferences searchpreferences searchpreferences globals prefs   
+        searchresultframe setsize searchpreferences getseachdialogwidth    searchpreferences getseachdialogheight     
+        searchresultframe setlocation searchpreferences getsearchdialogposx    searchpreferences getsearchdialogposy     
+ 
+        searchresultframe addcomponentlistener componentadapter     
+             override componentresized componentevent e searchpreferences globals prefs  
+                         setsearchdialogwidth searchresultframe getsize   width  
+                         setsearchdialogheight searchresultframe getsize   height   
+              
+ 
+             override componentmoved componentevent e searchpreferences globals prefs  
+                         setsearchdialogposx searchresultframe getlocation   x  
+                         setsearchdialogposy searchresultframe getlocation   y setvisible visible    
+        searchresultframe setvisible visible selectfirstentry     
+        selectentry 0 selectlastentry     
+        selectentry entrytable getrowcount   - 1 selectpreviousentry     
+        selectentry  entrytable getselectedrow   - 1   entrytable getrowcount    % entrytable getrowcount selectnextentry     
+        selectentry  entrytable getselectedrow     1  % entrytable getrowcount selectentry index index    0    index   entrytable getrowcount      
+            entrytable changeselection index  0 false contentpane setdividerlocation 1 0f setupcomparatorchooser tablecomparatorchooser bibentry  comparatorchooser    
+        list comparator  comparators i   0  i   pad  i      
+            comparators   comparatorchooser getcomparatorsforcolumn i   
+            comparators clear i    file_col    
+                comparators add iconcomparator collections singletonlist fieldname file i    url_col    
+                comparators add iconcomparator collections singletonlist fieldname url i    database_col    
+                comparators add  entry1  entry2 databasetitle1   entryhome get entry1  gettabtitle databasetitle2   entryhome get entry2  gettabtitle databasetitle1 compareto databasetitle2 i   pad  i    pad   fields length   i      
+            comparators   comparatorchooser getcomparatorsforcolumn i   
+            comparators clear    
+            comparators add fieldcomparator fields i - pad     
+          
+ 
+        sortedentries getreadwritelock   writelock   lock    
+        comparatorchooser appendcomparator pad  0 sortedentries getreadwritelock   writelock   unlock setwidths     
+        tablecolumnmodel cm   entrytable getcolumnmodel i   0  i   pad   fields length  i i file_col url_col  
+                    cm getcolumn i  setpreferredwidth guiglobals width_icon_col   
+                    cm getcolumn i  setminwidth guiglobals width_icon_col   
+                    cm getcolumn i  setmaxwidth guiglobals width_icon_col database_col width   internalbibtexfields getfieldlength fieldname author   
+                    cm getcolumn i  setpreferredwidth width width   internalbibtexfields getfieldlength fields i - pad    
+                    cm getcolumn i  setpreferredwidth width addentries list bibentry  newentries  basepanel panel bibentry entry   newentries    
+            addentry entry  panel addentry bibentry entry  basepanel panel    
+        entries add entry   
+        entryhome put entry  panel preview getentry preview getbasepanel   ispresent     
+            preview setentry entry   
+            preview setbasepanel panel   
+            preview setdatabasecontext panel getbibdatabasecontext selectentryinbasepanel bibentry entry   
+        basepanel basepanel   entryhome get entry   
+        frame showbasepanel basepanel   
+        basepanel requestfocus    
+        basepanel highlightentry entry dispose    
+        frame getglobalsearchbar   setsearchresultframe searchresultframe dispose    
+        frame getglobalsearchbar   focus focus    
+        entrytable requestfocus searchquery getsearchquery searchquery isglobalsearch globalsearch tableclicklistener mouseadapter   
+ 
+         override mousereleased mouseevent e e ispopuptrigger      
+                processpopuptrigger e   
+              
+          
+ 
+         override mousepressed mouseevent e e ispopuptrigger      
+                processpopuptrigger e row   entrytable rowatpoint e getpoint e getclickcount      2    
+                selectentryinbasepanel model getelementat row    
+              
+          
+ 
+         override mouseclicked mouseevent e e ispopuptrigger      
+                processpopuptrigger e col   entrytable columnatpoint e getpoint row   entrytable rowatpoint e getpoint col   pad    
+                bibentry entry   sortedentries get row   
+                basepanel p   entryhome get entry col file_col entry hasfield fieldname file     
+                        filelisttablemodel tablemodel filelisttablemodel    
+                        entry getfield fieldname file  ifpresent tablemodel  setcontent tablemodel getrowcount      0 filelistentry fl   tablemodel getentry 0 externalfilemenuitem frame  entry      fl link p getbibdatabasecontext    fl type   actionperformed url_col  
+                    entry getfield fieldname url  ifpresent link jabrefdesktop openexternalviewer p getbibdatabasecontext    link  fieldname url ioexception ex    
+                            logger warn  could not open viewer   ex processpopuptrigger mouseevent e    
+            bibentry entry   sortedentries get entrytable rowatpoint e getpoint      
+            basepanel p   entryhome get entry col   entrytable columnatpoint e getpoint     
+            jpopupmenu menu jpopupmenu count   0 col    file_col    
+                  
+                filelisttablemodel filelist filelisttablemodel    
+                entry getfield fieldname file  ifpresent filelist  setcontent i   0  i   filelist getrowcount    i      
+                    filelistentry flentry   filelist getentry i description   flentry description description description trim   isempty       
+                        description   flentry link  
+                      
+                    menu add externalfilemenuitem p frame    entry  description  flentry link  
+                            flentry type get   geticon    p getbibdatabasecontext    flentry type    
+                    count count   0    
+                menu show entrytable  e getx    e gety entryselectionlistener listeventlistener bibentry    
+ 
+         override listchanged listevent bibentry  listevent listevent getsourcelist   size      1    
+                bibentry entry   listevent getsourcelist   get 0   
+                  
+                basepanel basepanel   entryhome get entry   
+                  
+                preview setdatabasecontext basepanel getbibdatabasecontext     
+                  
+                preview setentry entry   
+                preview setbasepanel entryhome get entry    
+                preview setdatabasecontext entryhome get entry  getbibdatabasecontext     
+                contentpane setdividerlocation 0 5f   
+                swingutilities invokelater    -  preview scrollrecttovisible torect entrytableformat advancedtableformat bibentry    
+ 
+         override getcolumncount pad   fields length  
+          
+ 
+         override getcolumnname column column    pad stringutil capitalizefirst fields column - pad column    database_col localization lang  database override object getcolumnvalue bibentry entry column column   pad column database_col entryhome get entry  gettabtitle file_col entry hasfield fieldname file     
+                        filelisttablemodel tmpmodel filelisttablemodel    
+                        entry getfield fieldname file  ifpresent tmpmodel  setcontent   
+                        filelabel settooltiptext tmpmodel gettooltiphtmlrepresentation tmpmodel getrowcount     0 tmpmodel getentry 0  type ispresent      
+                                filelabel seticon tmpmodel getentry 0  type get   geticon filelabel seticon icontheme jabreficon file getsmallicon filelabel url_col    
+                    optional urlfield   entry getfield fieldname url urlfield ispresent      
+                        urllabel settooltiptext urlfield get urllabel null field   fields column - pad fieldcontent   entry getlatexfreefield field  orelse internalbibtexfields getfieldproperties field  contains fieldproperty person_names maintablenameformatter formatname fieldcontent fieldcontent  
+              
+          
+ 
+         override getcolumnclass i i file_col url_col jlabel override comparator ?  getcolumncomparator i 

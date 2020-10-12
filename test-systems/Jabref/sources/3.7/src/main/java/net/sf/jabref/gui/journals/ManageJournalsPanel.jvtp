@@ -1,0 +1,310 @@
+ 
+    
+   created intellij idea  user  alver date  sep 19  2005 time  7 57 29 pm browseold template use file   
+   settings   file templates  
+    
+   builtintable hold references external journal lists  
+   set up panel editing single journal used dialog box  
+   key bindings  
+   store list external files set up  
+   update journal abbreviation loader net sf jabref gui journals managejournalspanel jpanel managejournalspanel jabrefframe frame frame   frame  
+ 
+        personalfile seteditable buttongroup group buttongroup    
+        group add newfile   
+        group add oldfile   
+        addextpan setlayout borderlayout     
+        jbutton addext jbutton icontheme jabreficon add geticon     
+        addextpan add addext  borderlayout east   
+        addextpan settooltiptext localization lang  add     
+        formlayout layout formlayout  1dlu  8dlu  left pref  4dlu  fill 200dlu grow  4dlu  fill pref   
+                 pref  pref  pref  20dlu  20dlu  fill 200dlu  4dlu  pref    
+        formbuilder builder   formbuilder create   layout layout   
+ 
+        builder addseparator localization lang  built-in journal list    xyw 2  1  6   
+        jlabel description jlabel  
+                  html     localization lang  jabref includes a built-in list of journal abbreviations        br   
+                          localization 
+                                 lang  you can add additional journal names by setting up a personal journal list  br as   
+                                           well as linking to external journal lists    
+                             html     
+        description setborder borderfactory createemptyborder 5  0  5  0    
+        builder add description  xyw 2  2  6   
+        jbutton viewbuiltin jbutton localization lang  view     
+        builder add viewbuiltin  xy 7  2   
+        builder addseparator localization lang  personal journal list    xyw 2  3  6   
+ 
+        builder add newfile  xy 3  4   
+        builder add newnametf  xy 5  4   
+        jbutton browsenew jbutton localization lang  browse     
+        builder add browsenew  xy 7  4   
+        builder add oldfile  xy 3  5   
+        builder add personalfile  xy 5  5   
+        jbutton browseold jbutton localization lang  browse     
+        builder add browseold  xy 7  5   
+ 
+        userpanel setlayout borderlayout     
+        builder add userpanel  xyw 2  6  4   
+        buttonstackbuilder butbul buttonstackbuilder    
+        butbul addbutton add   
+        butbul addbutton remove   
+ 
+        butbul addglue    
+        builder add butbul getpanel    xy 7  6   
+ 
+        builder addseparator localization lang  external files    xyw 2  8  6   
+        externalfilespanel setlayout borderlayout     
+ 
+        setlayout borderlayout     
+        builder getpanel   setborder borderfactory createemptyborder 5  5  5  5    
+        add builder getpanel    borderlayout north   
+        add externalfilespanel  borderlayout center   
+        buttonbarbuilder bb buttonbarbuilder    
+        bb addglue    
+        jbutton ok jbutton localization lang  ok     
+        bb addbutton ok   
+        jbutton cancel jbutton localization lang  cancel     
+        bb addbutton cancel   
+        bb addunrelatedgap    
+ 
+        jbutton help helpaction helpfile journal_abbrev  gethelpbutton    
+        bb addbutton help   
+        bb addglue    
+        bb getpanel   setborder borderfactory createemptyborder 5  5  5  5    
+        dialog jdialog frame  localization lang  journal abbreviations dialog getcontentpane   add borderlayout center   
+        dialog getcontentpane   add bb getpanel    borderlayout south   
+ 
+          
+        formlayout layout2 formlayout  right pref  4dlu  fill 180dlu    p  2dlu  p    
+        formbuilder builder2   formbuilder create   layout layout2   
+        builder2 add localization lang  journal name    xy 1  1   
+        builder2 add nametf  xy 3  1   
+        builder2 add localization lang  iso abbreviation    xy 1  3   
+        builder2 add abbrtf  xy 3  3   
+        journaleditpanel   builder2 getpanel    
+ 
+        viewbuiltin addactionlistener e -    
+            jtable table jtable journalabbreviationsutil gettablemodel globals journalabbreviationloader 
+                     getrepository globals prefs getjournalabbreviationpreferences    getabbreviations      
+            guiutil correctrowheight table   
+ 
+            jscrollpane pane jscrollpane table   
+            joptionpane showmessagedialog pane  localization lang  journal list preview    
+                    joptionpane information_message   
+            
+ 
+        browsenew addactionlistener e -    
+            optional path  path filedialog frame  newnametf gettext    savenewfile    
+            path ifpresent filename -    
+                newnametf settext filename tostring     
+                newfile setselected browseold addactionlistener e -    
+            optional path  path filedialog frame  personalfile gettext    showdialogandgetselectedfile    
+ 
+            path ifpresent filename -    
+                personalfile settext filename tostring     
+                oldfile setselected oldfile setenabled setupusertable    
+                
+            
+ 
+        ok addactionlistener e readytoclose      
+                storesettings    
+                dialog dispose    
+              
+            
+ 
+        action cancelaction abstractaction     
+ 
+             override actionperformed actionevent e    
+                dialog dispose    
+              
+           
+        cancel addactionlistener cancelaction   
+ 
+        add addactionlistener tablemodel   
+        remove addactionlistener tablemodel   
+        addext addactionlistener e -    
+            externals add externalfileentry     
+            buildexternalspanel    
+            
+ 
+          
+        actionmap am   getactionmap    
+        inputmap im   getinputmap jcomponent when_in_focused_window   
+        im put globals getkeyprefs   getkey keybinding close_dialog    close    
+        am put  close   cancelaction xsize   getpreferredsize   width  
+        dialog setsize xsize   10  700 jdialog getdialog dialog setvalues     
+        personalfile settext globals prefs get jabrefpreferences personal_journal_list personalfile gettext   isempty      
+            newfile setselected newfile setenabled oldfile setselected oldfile setenabled newfile setselected newfile setenabled oldfile setselected oldfile setenabled setupusertable    
+        setupexternals    
+        buildexternalspanel buildexternalspanel     
+ 
+        formbuilder builder   formbuilder create   layout formlayout  fill pref grow    p row   1 externalfileentry efe   externals    
+            builder add efe getpanel    xy 1  row   
+            builder appendrows  2dlu  p    
+            row    2  
+          
+        builder add box createverticalglue    xy 1  row   
+        builder appendrows  2dlu  p  2dlu  p    
+        builder add addextpan  xy 1  row   2   
+        builder add box createverticalglue    xy 1  row   2   
+ 
+        jscrollpane pane jscrollpane builder getpanel     
+        pane setborder borderfactory createemptyborder 5  5  5  5    
+        externalfilespanel setminimumsize dimension 400  400    
+        externalfilespanel setpreferredsize dimension 400  400    
+        externalfilespanel removeall    
+        externalfilespanel add pane  borderlayout center   
+        externalfilespanel revalidate    
+        externalfilespanel repaint setupexternals     
+        list externalfiles   globals prefs getstringlist jabrefpreferences external_journal_lists externalfiles isempty      
+            externalfileentry efe externalfileentry    
+            externals add efe externalfile   externalfiles    
+                externalfileentry efe externalfileentry externalfile   
+                externals add efe setupusertable     
+        list abbreviation  userabbreviations arraylist filename   personalfile gettext filename isempty      files exists paths get filename userabbreviations   journalabbreviationloader readjournallistfromfile file filename   
+                        globals prefs getdefaultencoding filenotfoundexception e    
+                logger warn  problem reading abbreviation file   e   
+              
+          
+ 
+        tablemodel setjournals userabbreviations   
+        usertable jtable tablemodel   
+        guiutil correctrowheight usertable   
+ 
+        usertable addmouselistener tablemodel getmouselistener     
+        userpanel add jscrollpane usertable   borderlayout center readytoclose     
+        path filepath newfile isselected newnametf gettext   isempty tablemodel getrowcount     0    
+                    joptionpane showmessagedialog localization lang  you must choose a filename to store journal abbreviations    
+                            localization lang  store journal abbreviations    joptionpane error_message filepath   paths get newnametf gettext files exists filepath      joptionpane showconfirmdialog localization lang  '%0' exists  overwrite file?   filepath getfilename   tostring     
+                        localization lang  store journal abbreviations    
+                        joptionpane ok_cancel_option     joptionpane ok_option storesettings     
+        path filepath newfile isselected newnametf gettext   isempty      
+                filepath   paths get newnametf gettext filepath   paths get personalfile gettext filepath outputstream stream   files newoutputstream filepath  standardopenoption create   
+                    outputstreamwriter writer outputstreamwriter stream  globals prefs getdefaultencoding journalentry entry   tablemodel getjournals      
+                    writer write entry getname     
+                    writer write         
+                    writer write entry getabbreviation     
+                    writer write os newline ioexception e    
+                logger warn  problem writing abbreviation file   e filename   filepath tostring equals filename     
+                filename globals prefs put jabrefpreferences personal_journal_list  filename   
+          
+ 
+          
+        list extfiles arraylist externalfileentry efe   externals equals efe getvalue       
+                extfiles add efe getvalue     
+              
+          
+        globals prefs putstringlist jabrefpreferences external_journal_lists  extfiles   
+ 
+          
+        globals journalabbreviationloader update globals prefs getjournalabbreviationpreferences downloadaction abstractaction downloadaction jtextfield tc localization lang  download     
+            comp   tc  
+          
+ 
+         override actionperformed actionevent e chosen  
+            chosen   joptionpane showinputdialog localization lang  choose the url to download chosen comp gettext   isempty file tofile optional path  path filedialog frame  system getproperty  user home    savenewfile path ispresent      
+                    tofile file path get   tostring url url url chosen   
+                monitoredurldownload buildmonitoreddownload comp  url  downloadtofile tofile   
+                comp settext tofile getpath ioexception ex    
+                joptionpane showmessagedialog localization lang  error downloading file '%0'   chosen   
+                        localization lang  download failed    joptionpane error_message   
+                logger debug  error downloading file   ex abbreviationstablemodel abstracttablemodel actionlistener names localization lang  journal name    
+                localization lang  abbreviation setjournals list abbreviation  abbreviations journals arraylist abbreviation abbreviation   abbreviations journals add journalentry abbreviation getname    abbreviation getisoabbreviation      
+              
+            firetabledatachanged list journalentry  getjournals journals  
+          
+ 
+         override getcolumncount 2  
+          
+ 
+         override getrowcount journals size    
+          
+ 
+         override object getvalueat row col col    0 journals get row  getname journals get row  getabbreviation    
+              
+          
+ 
+         override setvalueat object object row col    
+            journalentry entry   journals get row col    0    
+                entry setname object entry setabbreviation object   
+              
+ 
+          
+ 
+         override getcolumnname i names i   
+          
+ 
+         override iscelleditable i i1 mouselistener getmouselistener mouseadapter     
+ 
+                 override mouseclicked mouseevent e e getclickcount      2    
+                        jtable table    jtable  e getsource row   table rowatpoint e getpoint     
+                        nametf settext getvalueat row  0    
+                        abbrtf settext getvalueat row  1 joptionpane showconfirmdialog dialog  journaleditpanel  localization lang  edit journal    
+                                joptionpane ok_cancel_option     joptionpane ok_option    
+                            setvalueat nametf gettext    row  0   
+                            setvalueat abbrtf gettext    row  1   
+                            collections sort journals   
+                            firetabledatachanged    
+                          
+ 
+                      
+                  
+               
+          
+ 
+         override actionperformed actionevent e e getsource      add    
+                nametf settext      
+                abbrtf settext joptionpane showconfirmdialog dialog  journaleditpanel  localization lang  edit journal    
+                        joptionpane ok_cancel_option     joptionpane ok_option    
+                    journals add journalentry nametf gettext    abbrtf gettext      
+                    collections sort journals   
+                    firetabledatachanged e getsource      remove rows   usertable getselectedrows rows length   0 i   rows length - 1  i    0  i--    
+                        journals remove rows i    
+                      
+                    firetabledatachanged externalfileentry externalfileentry     
+            tf jtextfield    
+            setuppanel externalfileentry filename    
+            tf jtextfield filename   
+            setuppanel setuppanel     
+            tf seteditable browse addactionlistener e filedialog frame  showdialogandgetselectedfile   
+                             ifpresent f -  tf settext f toabsolutepath   tostring     
+               
+            downloadaction da downloadaction tf   
+            download addactionlistener da   
+            formbuilder builder   formbuilder create   layout formlayout  
+                     fill pref grow  4dlu  fill pref  4dlu  fill pref  4dlu  fill pref  4dlu  fill pref    p     
+            builder add tf  xy 1  1   
+            builder add browse  xy 3  1   
+            builder add download  xy 5  1   
+            builder add view  xy 7  1   
+            builder add clear  xy 9  1   
+ 
+            pan   builder getpanel    
+ 
+            view addactionlistener e list abbreviation  abbreviations   journalabbreviationloader 
+                             readjournallistfromfile file tf gettext      
+ 
+                    jtable table jtable journalabbreviationsutil gettablemodel abbreviations    
+                    guiutil correctrowheight table   
+ 
+                    jscrollpane pane jscrollpane table   
+                    joptionpane showmessagedialog pane  localization lang  journal list preview    
+                            joptionpane information_message filenotfoundexception ex    
+                    logger debug  file not found   ex   
+ 
+                    joptionpane showmessagedialog localization lang  file '%0' not found   tf gettext     
+                            localization lang  error    joptionpane error_message   
+                  
+                
+            clear addactionlistener e -    
+                externals remove externalfileentry buildexternalspanel    
+                
+            clear settooltiptext localization lang  remove jpanel getpanel pan getvalue tf gettext journalentry comparable journalentry journalentry name abbreviation name   name abbreviation   abbreviation  
+          
+ 
+         override compareto journalentry other name compareto other name   
+          
+ 
+         override equals object o o o journalentry name equals   journalentry  o  name override hashcode name hashcode getname name setname name name   name getabbreviation abbreviation setabbreviation abbreviation abbreviation   abbreviation  
+          
+      
+ 

@@ -1,0 +1,84 @@
+ 
+   fallback net sf jabref gui preftabs importsettingstab jpanel prefstab default_style   importdialog content default_filenamepatterns_display bibtexkey   
+             bibtexkey - title default_filenamepatterns bibtexkey   
+             \\bibtexkey\\begin title  - \\format removebrackets  \\title \\end title importsettingstab jabrefpreferences prefs prefs   objects requirenonnull prefs   
+ 
+        setlayout borderlayout     
+        formlayout layout formlayout  1dlu  8dlu  left pref  4dlu  fill 3dlu    
+        radiobuttonnometa jradiobutton localization lang  create_blank_entry_linking_the_pdf     
+        radiobuttonxmp jradiobutton localization lang  create_entry_based_on_xmp_data     
+        radiobuttonpdfcontent jradiobutton localization lang  create_entry_based_on_content     
+        radiobuttononlyattachpdf jradiobutton localization lang  only_attach_pdf     
+        buttongroup bg buttongroup    
+        bg add radiobuttonnometa   
+        bg add radiobuttonxmp   
+        bg add radiobuttonpdfcontent   
+        bg add radiobuttononlyattachpdf   
+ 
+        usedefaultpdfimportstyle jcheckbox localization lang  always use pdf style  and not ask each filenamepattern jtextfield 50   
+        selectfilenamepattern jbutton localization lang  choose pattern     
+        selectfilenamepattern addactionlistener e -  openfilepatternmenu     
+ 
+        defaultformbuilder builder defaultformbuilder layout   
+        jpanel pan jpanel    
+ 
+        builder appendseparator localization lang style drag and drop of pdfs     
+        builder nextline    
+        builder append pan   
+        builder append radiobuttonnometa   
+        builder nextline    
+        builder append pan   
+        builder append radiobuttonxmp   
+        builder nextline    
+        builder append pan   
+        builder append radiobuttonpdfcontent   
+        builder nextline    
+        builder append pan   
+        builder append radiobuttononlyattachpdf   
+        builder nextline    
+        builder append pan   
+        builder append usedefaultpdfimportstyle   
+        builder nextline    
+ 
+        builder appendseparator localization lang pdf file link action     
+        builder nextline    
+        builder append pan   
+        jpanel pan2 jpanel    
+        jlabel lab jlabel localization lang  filename format pattern   concat        
+        pan2 add lab   
+        pan2 add filenamepattern   
+        pan2 add selectfilenamepattern   
+        builder append pan2   
+ 
+        pan   builder getpanel    
+        pan setborder borderfactory createemptyborder 5  5  5  5    
+        add pan  borderlayout center   
+      
+ 
+     override setvalues     
+        usedefaultpdfimportstyle setselected prefs getboolean jabrefpreferences import_alwaysuse style   prefs getint jabrefpreferences import_default_pdf_import_style style importdialog nometa  
+            radiobuttonnometa setselected importdialog xmp  
+            radiobuttonxmp setselected importdialog content  
+            radiobuttonpdfcontent setselected importdialog onlyattach  
+            radiobuttononlyattachpdf setselected radiobuttonpdfcontent setselected filenamepattern settext prefs get jabrefpreferences import_filenamepattern    
+      
+ 
+     override storesettings     
+        prefs putboolean jabrefpreferences import_alwaysuse  usedefaultpdfimportstyle isselected style   importsettingstab default_style radiobuttonnometa isselected      
+            style   importdialog nometa radiobuttonxmp isselected      
+            style   importdialog xmp radiobuttonpdfcontent isselected      
+            style   importdialog content radiobuttononlyattachpdf isselected      
+            style   importdialog onlyattach  
+          
+        prefs putint jabrefpreferences import_default_pdf_import_style  style   
+        prefs put jabrefpreferences import_filenamepattern  filenamepattern gettext     
+      
+ 
+     override validatesettings override gettabname localization lang openfilepatternmenu     
+        jpopupmenu popup jpopupmenu i   0  i   importsettingstab default_filenamepatterns length  i jmenuitem item jmenuitem importsettingstab default_filenamepatterns_display i toset   importsettingstab default_filenamepatterns i   
+            item addactionlistener e -  filenamepattern settext toset    
+            popup add item   
+          
+        popup show selectfilenamepattern  0  selectfilenamepattern getheight     
+      
+ 

@@ -1,0 +1,156 @@
+ 
+    
+   msbib entry representation 
+   
+    see href  http   mahbub wordpress com 2007 03 24 details microsoft-office-2007-bibliographic-format-compared bibtex   ms office 2007 bibliography format compared bibtex see href  http   mahbub wordpress com 2007 03 22 deciphering-microsoft-office-2007-bibliography-format   deciphering ms office 2007 bibliography format see href  http   www ecma-international org publications standards ecma-376 htm  ecma standard msbib fields values 
+    
+       reduced subset  supports only  city   state  country   br  
+         b \b \w  \s?   ?\s? \w  \s?   ?\s? \w  \b  b   br  
+        word space   space word space zero space word zero br  
+        matches both single locations  only city berlin full locations stroudsburg  pa  usa  br  
+        tested using http   www regexpal com  
+        
+    
+       allows 20 3-2007   20 3-  2007 etc  
+        b  \d 1 2  \s?   -  \s? \d 1 2  \s?   -  \s? \d 2 4    b  
+       1-2 digits space seperator space 1-2 digits space seperator space 2-4 digits 
+        
+  empty 
+    
+       createa new   link msbibentry import xml element 
+        param entry 
+        
+    
+       gets dom representation one entry  used export 
+        param document xmldocument 
+        return xmlelement represenation one entry 
+        
+   based bibtex content net sf jabref logic msbib msbibentry map string  fields hashmap list personname  authors list personname  bookauthors list personname  editors list personname  translators list personname  producernames list personname  composers list personname  conductors list personname  performers list personname  writers list personname  directors list personname  compilers list personname  interviewers list personname  interviewees list personname  inventors list personname  counsels pagenumbers pages standardnumber address conferencename thesistype internetsitetitle dateaccessed publicationtitle albumtitle broadcasttitle year month day number patentnumber journalname pattern date_pattern   pattern 
+             compile   \\d 1 2  \\s    -  \\s  \\d 1 2  \\s    -  \\s  \\d 2 4 msbibentry msbibentry element entry    
+        populatefromxml entry gettype fields get  sourcetype getcitekey fields get  tag getxmlelementtextcontent name  element entry value nodelist nodelst   entry getelementsbytagnamens      name nodelst getlength     0    
+            value   nodelst item 0  gettextcontent value populatefromxml element entry i   0  i   entry getchildnodes   getlength    i      
+            node node   entry getchildnodes   item i node getnodetype      node element_node key   node getlocalname value   node gettextcontent sourcetype  equals key bibtexentrytype   value  
+                  
+                fields put key  value temp   getxmlelementtextcontent  pages   entry temp pages pagenumbers temp   
+          
+ 
+        standardnumber   getxmlelementtextcontent  standardnumber   entry   
+        conferencename   getxmlelementtextcontent  conferencename   entry city   getxmlelementtextcontent  city   entry state   getxmlelementtextcontent  stateprovince   entry country   getxmlelementtextcontent  countryregion   entry   
+ 
+        stringbuilder addressbuffer stringbuilder city addressbuffer append city state state isempty         city city isempty       
+            addressbuffer append      append ' '   
+            addressbuffer append state country country isempty      
+            addressbuffer append      append ' '   
+            addressbuffer append country   
+          
+        address   addressbuffer tostring   trim address isempty          equals address     
+            address patent  equalsignorecase bibtexentrytype     
+            number   getxmlelementtextcontent  patentnumber   entry   
+          
+        journalname   getxmlelementtextcontent  journalname   entry   
+        month   getxmlelementtextcontent  month   entry   
+        internetsitetitle   getxmlelementtextcontent  internetsitetitle   entry monthaccessed   getxmlelementtextcontent  monthaccessed   entry dayaccessed   getxmlelementtextcontent  dayaccessed   entry yearaccessed   getxmlelementtextcontent  yearaccessed   entry   
+ 
+        stringbuilder sbdateaccesed stringbuilder monthaccessed sbdateaccesed append monthaccessed   
+            sbdateaccesed append dayaccessed sbdateaccesed append dayaccessed   
+            sbdateaccesed append yearaccessed sbdateaccesed append yearaccessed   
+          
+        dateaccessed   sbdateaccesed tostring   trim dateaccessed isempty          equals dateaccessed     
+            dateaccessed nodelist nodelst   entry getelementsbytagnamens       author nodelst getlength     0    
+            getauthors  element  nodelst item 0 getauthors element authorselem    
+        authors   getspecificauthors  author   authorselem   
+        bookauthors   getspecificauthors  bookauthor   authorselem   
+        editors   getspecificauthors  editor   authorselem   
+        translators   getspecificauthors  translator   authorselem   
+        producernames   getspecificauthors  producername   authorselem   
+        composers   getspecificauthors  composer   authorselem   
+        conductors   getspecificauthors  conductor   authorselem   
+        performers   getspecificauthors  performer   authorselem   
+        writers   getspecificauthors  writer   authorselem   
+        directors   getspecificauthors  director   authorselem   
+        compilers   getspecificauthors  compiler   authorselem   
+        interviewers   getspecificauthors  interviewer   authorselem   
+        interviewees   getspecificauthors  interviewee   authorselem   
+        inventors   getspecificauthors  inventor   authorselem   
+        counsels   getspecificauthors  counsel   authorselem list personname  getspecificauthors type  element authors    
+        list personname  result nodelist nodelst   authors getelementsbytagnamens      type nodelst getlength      0 result  
+          
+        nodelst     element  nodelst item 0   getelementsbytagnamens       namelist nodelst getlength      0 result  
+          
+        nodelist person     element  nodelst item 0   getelementsbytagnamens       person person getlength      0 result  
+          
+ 
+        result linkedlist i   0  i   person getlength    i      
+            nodelist firstname     element  person item i   getelementsbytagnamens       first    
+            nodelist lastname     element  person item i   getelementsbytagnamens       last    
+            nodelist middlename     element  person item i   getelementsbytagnamens       middle    
+            personname name personname firstname getlength     0    
+                name setfirstname firstname item 0  gettextcontent middlename getlength     0    
+                name setmiddlename middlename item 0  gettextcontent lastname getlength     0    
+                name setsurname lastname item 0  gettextcontent     
+              
+            result add name result element getentrydom document document    
+        element rootnode   document createelementns msbibdatabase namespace  msbibdatabase prefix    source map entry string  entry   fields entryset      
+            addfield document  rootnode  entry getkey    entry getvalue dateaccessed matcher matcher   date_pattern matcher dateaccessed matcher matches       matcher groupcount      3     
+                addfield document  rootnode   month     accessed   matcher group 1    
+                addfield document  rootnode   day     accessed   matcher group 2    
+                addfield document  rootnode   year     accessed   matcher group 3    
+              
+          
+ 
+        element allauthors   document createelementns msbibdatabase namespace  msbibdatabase prefix    author    
+ 
+        addauthor document  allauthors   author   authors   
+        addauthor document  allauthors   bookauthor   bookauthors   
+        addauthor document  allauthors   editor   editors   
+        addauthor document  allauthors   translator   translators   
+        addauthor document  allauthors   producername   producernames   
+        addauthor document  allauthors   composer   composers   
+        addauthor document  allauthors   conductor   conductors   
+        addauthor document  allauthors   performer   performers   
+        addauthor document  allauthors   writer   writers   
+        addauthor document  allauthors   director   directors   
+        addauthor document  allauthors   compiler   compilers   
+        addauthor document  allauthors   interviewer   interviewers   
+        addauthor document  allauthors   interviewee   interviewees   
+        addauthor document  allauthors   inventor   inventors   
+        addauthor document  allauthors   counsel   counsels   
+ 
+        rootnode appendchild allauthors pages addfield document  rootnode   pages   pages tostring  -     
+          
+        addfield document  rootnode   year   year   
+        addfield document  rootnode   month   month   
+ 
+        addfield document  rootnode   journalname   journalname   
+        addfield document  rootnode   patentnumber   patentnumber   
+ 
+        addfield document  rootnode   number   number   
+ 
+        addfield document  rootnode   standardnumber   standardnumber   
+        addfield document  rootnode   conferencename   conferencename   
+ 
+        addaddress document  rootnode  address   
+ 
+        addfield document  rootnode   thesistype   thesistype   
+        addfield document  rootnode   internetsitetitle   internetsitetitle   
+ 
+        addfield document  rootnode   publicationtitle   publicationtitle   
+        addfield document  rootnode   albumtitle   albumtitle   
+        addfield document  rootnode   broadcasttitle   broadcasttitle rootnode addfield document document  element parent name value value element elem   document createelementns msbibdatabase namespace  msbibdatabase prefix   name   
+        elem appendchild document createtextnode stringutil stripnonvalidxmlcharacters value     
+        parent appendchild elem addauthor document document  element allauthors entryname  list personname  authorslst authorslst element authortop   document createelementns msbibdatabase namespace  msbibdatabase prefix   entryname   
+        element namelist   document createelementns msbibdatabase namespace  msbibdatabase prefix    namelist personname name   authorslst    
+            element person   document createelementns msbibdatabase namespace  msbibdatabase prefix    person    
+            addfield document  person   last   name getsurname     
+            addfield document  person   middle   name getmiddlename     
+            addfield document  person   first   name getfirstname     
+            namelist appendchild person   
+          
+        authortop appendchild namelist   
+        allauthors appendchild authortop addaddress document document  element parent addresstosplit addresstosplit matcher matcher   address_pattern matcher addresstosplit matcher matches       matcher groupcount      3     
+            addfield document  parent   city   matcher group 1    
+            addfield document  parent   stateprovince   matcher group 2    
+            addfield document  parent   countryregion   matcher group 3 addfield document  parent   city   addresstosplit   
+          
+      
+ 

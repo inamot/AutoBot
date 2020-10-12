@@ -1,0 +1,194 @@
+ 
+    
+       creates new instance entrycustomizationdialog 
+        
+  typecomp setenabled false   
+  right setborder borderfactory createtitledborder borderfactory createetchedborder    globals lang  fields      
+  con fill   gridbagconstraints both  
+  con weightx   0 3  
+  con weighty   1  
+  gbl setconstraints typecomp  con entry type lastselected now unselected store current settings type two maps  
+   new entry 
+   iterate over map required fields list those types necessary type already existing  check any changes made type reverted default setup  
+   remove those removed  
+   both null  
+   one null not  
+   different length here know both non-null same length here entries matched  
+    
+       cycle through databases make sure everything updated new type customization includes making sure entries valid type obsolete entry editors around right-click menus' change type menu up date  
+        
+   default button pressed  remember entry reset default  
+   unless changes made later  net sf jabref gui entrycustomizationdialog jdialog listselectionlistener  actionlistener gridbaglayout gbl gridbaglayout gridbagconstraints con gridbagconstraints jbutton helpbutton jbutton delete jbutton importtypes jbutton exporttypes entrycustomizationdialog jabrefframe frame frame  localization lang  customize entry types frame   frame  
+        initgui initgui     
+        container pane   getcontentpane    
+        pane setlayout borderlayout frame getcurrentbasepanel bibdatabasemode   globals prefs getdefaultbibdatabasemode bibdatabasemode   frame getcurrentbasepanel   getbibdatabasecontext   getmode    
+          
+        biblatexmode   bibdatabasemode biblatex equals bibdatabasemode   
+ 
+        jpanel main jpanel    
+        jpanel buttons jpanel    
+        jpanel right jpanel    
+        main setlayout borderlayout     
+        right setlayout gridlayout biblatexmode ? 2   1  2    
+ 
+        list entrytypes arraylist s   entrytypes getalltypes bibdatabasemode     
+            entrytypes add s   
+          
+ 
+        typecomp entrytypelist entrytypes  bibdatabasemode   
+        typecomp addlistselectionlistener typecomp addadditionactionlistener typecomp adddefaultactionlistener defaultlistener     
+        typecomp setlistselectionmode listselectionmodel single_selection   
+ 
+          
+        reqcomp fieldsetcomponent localization lang  required fields arraylist      preset true   
+        reqcomp setenabled reqcomp setborder borderfactory createemptyborder 2  2  2  2    
+        listdatalistener datalistener datalistener    
+        reqcomp addlistdatalistener datalistener   
+        optcomp fieldsetcomponent localization lang  optional fields arraylist      preset true   
+        optcomp setenabled optcomp setborder borderfactory createemptyborder 2  2  2  2    
+        optcomp addlistdatalistener datalistener   
+        right add reqcomp   
+        right add optcomp biblatexmode    
+            optcomp2 fieldsetcomponent localization lang  optional fields       2 arraylist      preset true   
+            optcomp2 setenabled optcomp2 setborder borderfactory createemptyborder 2  2  2  2    
+            optcomp2 addlistdatalistener datalistener   
+            right add jpanel     
+            right add optcomp2   
+          
+ 
+          
+        right setborder borderfactory createetchedborder     
+        ok jbutton localization lang  ok     
+        cancel jbutton localization lang  cancel     
+        apply jbutton localization lang  apply     
+        ok addactionlistener apply addactionlistener cancel addactionlistener buttonbarbuilder bb buttonbarbuilder buttons   
+        buttons setborder borderfactory createemptyborder 2  2  2  2    
+        bb addglue    
+        bb addbutton ok   
+        bb addbutton apply   
+        bb addbutton cancel   
+        bb addglue    
+ 
+        abstractaction closeaction abstractaction     
+ 
+             override actionperformed actionevent e    
+                dispose    
+              
+           
+        actionmap am   main getactionmap    
+        inputmap im   main getinputmap jcomponent when_in_focused_window   
+        im put globals getkeyprefs   getkey keybinding close_dialog    close    
+        am put  close   closeaction   
+ 
+          
+          
+          
+          
+        main add typecomp  borderlayout west   
+        main add right  borderlayout center   
+        main setborder borderfactory createemptyborder 5  5  5  5    
+        pane add main  borderlayout center   
+        pane add buttons  borderlayout south   
+        pack    
+      
+ 
+     override valuechanged listselectionevent e e getvalueisadjusting lastselected reqlists put lastselected  reqcomp getfields     
+            optlists put lastselected  optcomp getfields biblatexmode    
+                opt2lists put lastselected  optcomp2 getfields s   typecomp getfirstselected s list rl   reqlists get s rl optional entrytype  type   entrytypes gettype s  bibdatabasemode type ispresent      
+                list req   type get   getrequiredfields    
+ 
+                list opt biblatexmode    
+                    opt   type get   getprimaryoptionalfields    
+ 
+                    list opt2   type get   getsecondaryoptionalfields    
+ 
+                    optcomp2 setfields opt2   
+                    optcomp2 setenabled opt   type get   getoptionalfields    
+                  
+                reqcomp setfields req   
+                reqcomp setenabled optcomp setfields opt   
+                optcomp setenabled reqcomp setfields arraylist       
+                reqcomp setenabled optcomp setfields arraylist       
+                optcomp setenabled biblatexmode    
+                    optcomp2 setfields arraylist       
+                    optcomp2 setenabled reqcomp requestfocus reqcomp setfields rl   
+            optcomp setfields optlists get s biblatexmode    
+                optcomp2 setfields opt2lists get s    
+              
+          
+ 
+        lastselected   s  
+        typecomp enable s  changed contains lastselected      defaulted contains lastselected applychanges     
+        valuechanged listselectionevent jlist      0  0 list types   typecomp getfields map entry list stringlistentry   reqlists entryset types contains stringlistentry getkey list reqstr   stringlistentry getvalue    
+            list optstr   optlists get stringlistentry getkey     
+            list opt2str   opt2lists get stringlistentry getkey opt2str opt2str arraylist   0 changesmade defaulted contains stringlistentry getkey nm   stringutil capitalizefirst stringlistentry getkey     
+                entrytypes removetype nm  bibdatabasemode   
+ 
+                updatetypesforentries optional entrytype  oldtype   entrytypes gettype stringlistentry getkey    bibdatabasemode oldtype ispresent      
+                list oldreq   oldtype get   getrequiredfieldsflat    
+                list oldopt   oldtype get   getoptionalfields biblatexmode    
+                    list oldpriopt   oldtype get   getprimaryoptionalfields    
+                    list oldsecopt   oldtype get   getsecondaryoptionalfields equallists oldreq  reqstr     equallists oldpriopt  optstr     
+                            equallists oldsecopt  opt2str     
+                        changesmade equallists oldreq  reqstr     equallists oldopt  optstr     
+                    changesmade changesmade    
+                customentrytype typ   biblatexmode customentrytype stringutil capitalizefirst stringlistentry getkey     reqstr  optstr  opt2str customentrytype stringutil capitalizefirst stringlistentry getkey     reqstr  optstr   
+ 
+                entrytypes addormodifycustomentrytype typ   
+                updatetypesforentries    
+              
+          
+ 
+        set object  toremove hashset o   entrytypes getalltypes bibdatabasemode types contains o     
+                toremove add o toremove isempty object atoremove   toremove    
+                typedeletion atoremove   
+              
+          
+ 
+        updatetables typedeletion name    
+        optional entrytype  type   entrytypes gettype name  bibdatabasemode type ispresent       type get customentrytype entrytypes getstandardtype name  bibdatabasemode  ispresent reply   joptionpane showconfirmdialog 
+                         frame  localization lang  all entries of type will be declared   
+                                           typeless localization lang  delete custom format     
+                                          '    stringutil capitalizefirst name    '\''  joptionpane yes_no_option  
+                                joptionpane warning_message reply    joptionpane yes_option entrytypes removetype name  bibdatabasemode   
+            updatetypesforentries    
+            changed remove name   
+            reqlists remove name   
+            optlists remove name biblatexmode    
+                opt2lists remove name equallists list one  list two one two one two one size      two size i   0  i   one size    i one get i  equals two get i override actionperformed actionevent e e getsource      ok    
+            applychanges    
+            dispose e getsource      cancel    
+            dispose e getsource      apply    
+            applychanges e getsource      typecomp    
+            typecomp selectfield e getactioncommand updatetypesforentries basepanel bp   frame getbasepanellist bibentry entry   bp getdatabase   getentries      
+                entrytypes gettype entry gettype    bibdatabasemode  ifpresent entry  settype updatetables basepanel basepanel   frame getbasepanellist      
+              abstracttablemodel  basepanel getmaintable   getmodel    firetabledatachanged defaultlistener actionlistener   
+ 
+         override actionperformed actionevent e lastselected defaulted add lastselected   
+ 
+            optional entrytype  type   entrytypes getstandardtype lastselected  bibdatabasemode type ispresent      
+                list of   type get   getoptionalfields    
+                list req   type get   getrequiredfields    
+                list opt1 arraylist      
+                list opt2 arraylist of isempty biblatexmode    
+                        opt1   type get   getprimaryoptionalfields    
+                        opt2   type get   getsecondaryoptionalfields opt1   of  
+                      
+                  
+ 
+                reqcomp setfields req   
+                reqcomp setenabled optcomp setfields opt1 biblatexmode    
+                    optcomp2 setfields opt2 datalistener listdatalistener   
+ 
+         override intervaladded listdataevent e    
+            record    
+          
+ 
+         override intervalremoved listdataevent e    
+            record    
+          
+ 
+         override contentschanged listdataevent e    
+            record record lastselected defaulted remove lastselected   
+            changed add lastselected   
+            typecomp enable lastselected 

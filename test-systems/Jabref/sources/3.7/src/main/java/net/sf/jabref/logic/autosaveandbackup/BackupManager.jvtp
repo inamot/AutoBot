@@ -1,0 +1,54 @@
+ 
+    
+   backups given bib database file link bibdatabasecontext every   link bibdatabasecontextchangedevent intelligent   link executorservice link blockingqueue  prevents high load making backups rejects redundant backup tasks class not manage bak file created opening database  
+    
+    
+       unregisters backupmanager eventbus link bibdatabasecontext deletes backup file method only used closing database jabref legally  
+        
+    
+       starts backupmanager associated given   link bibdatabasecontext database file present link bibdatabasecontext     link backupmanager nothing  
+       
+        param bibdatabasecontext associated   link bibdatabasecontext  
+        
+    
+       shuts down backupmanager associated given   link bibdatabasecontext  
+       
+        param bibdatabasecontext associated   link bibdatabasecontext  
+        
+    
+       checks whether backup file exists given database file  
+       
+        param originalpath path file backup checked restores backup file copying overwriting original one  
+       
+        param originalpath path file equalized backup file  
+        net sf jabref logic autosaveandbackup backupmanager backupmanager bibdatabasecontext bibdatabasecontext bibdatabasecontext   bibdatabasecontext preferences   jabrefpreferences getinstance workerqueue arrayblockingqueue   1 executor threadpoolexecutor 1  1  0  timeunit seconds  workerqueue charset   bibdatabasecontext getmetadata   getencoding   orelse preferences getdefaultencoding runnable backuptask runnable     
+         override run savepreferences prefs   savepreferences loadforsavefrompreferences preferences  withencoding charset  withmakebackup bibtexdatabasewriter   filesavesession savedatabase bibdatabasecontext  prefs  commit backuppath saveexception e    
+                logger error  error saving file    e   
+              
+          
+       
+ 
+     subscribe listen  suppresswarnings  unused   bibdatabasecontextchangedevent event    
+        startbackuptask startbackuptask executor submit backuptask rejectedexecutionexception e    
+            logger debug  rejecting another backup process is already running shutdown     
+        bibdatabasecontext getdatabase   unregisterlistener bibdatabasecontext getmetadata   unregisterlistener executor shutdown files exists backuppath      files isdirectory backuppath     
+                files delete backuppath ioexception e    
+            logger error  error deleting the backup file    e path getbackuppath path originalpath fileutil addextension originalpath  backup_extension backupmanager start bibdatabasecontext bibdatabasecontext    
+        backupmanager backupmanager backupmanager bibdatabasecontext   
+ 
+        optional file  originalfile   bibdatabasecontext getdatabasefile originalfile ispresent      
+            backupmanager originalpath   originalfile get   topath    
+            backupmanager backuppath   getbackuppath backupmanager originalpath   
+            backupmanager startbackuptask    
+            bibdatabasecontext getdatabase   registerlistener backupmanager   
+            bibdatabasecontext getmetadata   registerlistener backupmanager   
+            runninginstances add backupmanager backupmanager shutdown bibdatabasecontext bibdatabasecontext    
+        runninginstances stream   filter instance bibdatabasecontext    bibdatabasecontext  findany   
+                 ifpresent instance shutdown    
+                    runninginstances remove instance checkforbackupfile path originalpath    
+        path backuppath   getbackuppath originalpath files exists backuppath      files isdirectory backuppath restorebackup path originalpath    
+        path backuppath   getbackuppath originalpath files copy backuppath  originalpath  standardcopyoption replace_existing ioexception e    
+            logger error  error restoring the backup file    e   
+          
+      
+ 

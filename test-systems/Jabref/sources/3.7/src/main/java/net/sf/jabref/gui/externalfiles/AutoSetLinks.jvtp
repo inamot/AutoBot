@@ -1,0 +1,99 @@
+ 
+    
+       shortcut method links set without using gui 
+       
+        param entries entries links set 
+        param databasecontext database links set 
+        
+    
+       automatically add links set entries  based globally stored list external file types entries modified corresponding undoedit elements added namedcompound given argument  
+       furthermore entries modified added set entries given argument  
+        p entries' bibtex keys must set - entries lacking key ignored operation done new 
+       thread returned caller wait needed  
+       
+        param entries collection bibentry objects find links param ce namedcompound add undoedit elements param changedentries   modified  optional set bibentry objects modified entries added used status output debugging 
+        param singletablemodel ugly hack table model insert links already existing links not 
+                               duplicated removed parameter null entries count      1 hack introduced bibtexentry not support function getlisttablemodel filelistentryeditor editor holds instance table model not reconstruct search succeeded  
+        param databasecontext database providing relevant file directory any  
+        param callback actionlistener notified event dispatch thread search finished actionevent id 0 new links added id 1 one links added parameter null means callback notified  
+        param diag instantiated modal jdialog used display progress automatically setting parameter null means progress update shown  
+        return thread performing automatically setting 
+        
+   determine directories search determine extensions 
+   run search operation  
+   iterate over entries  
+  system out println  file    f getpath     
+  system out println  comp    existingentry getlink     
+   store undo information 
+   hack table model given not modify entry 
+   handle callbacks dialog 
+   fixme id signals action successful    
+   show dialog hidden task done 
+    
+       automatically add links entry table model given argument  based globally stored list external file types entry itself not modified entry's bibtex key must set  
+       
+        param entry bibentry find links param singletablemodel table model insert links already existing links not duplicated removed  
+        param databasecontext database providing relevant file directory any  
+        param callback actionlistener notified event dispatch thread search finished actionevent id 0 new links added id 1 one links added parameter null means callback notified passed actionevent constructed id id 1 something done 0 nothing done  
+        param diag instantiated modal jdialog used display progress automatically setting parameter null means progress update shown  
+        return runnable perform automatically setting 
+        net sf jabref gui externalfiles autosetlinks autosetlinks list bibentry  entries  bibdatabasecontext databasecontext    
+        autosetlinks entries null databasecontext null runnable autosetlinks list bibentry  entries namedcompound ce set bibentry  changedentries filelisttablemodel singletablemodel bibdatabasecontext databasecontext actionlistener callback jdialog diag collection externalfiletype  types   externalfiletypes getinstance   getexternalfiletypeselection diag jprogressbar prog jprogressbar swingconstants horizontal  0  types size   - 1 jlabel label jlabel localization lang  searching files     
+            prog setindeterminate prog setborder borderfactory createemptyborder 5  5  5  5    
+            diag settitle localization lang  automatically setting file links     
+            diag getcontentpane   add prog  borderlayout center   
+            diag getcontentpane   add label  borderlayout south   
+ 
+            diag pack    
+            diag setlocationrelativeto diag getparent     
+          
+ 
+        runnable r runnable     
+ 
+             override run     
+                  
+                list file  dirs arraylist      
+                list dirss   databasecontext getfiledirectory globals prefs getfiledirectorypreferences     
+                dirs addall dirss stream   map file collect collectors tolist      
+ 
+                  
+                list extensions arraylist externalfiletype type   types    
+                    extensions add type getextension     
+                  
+ 
+                  
+                map bibentry  list file   result globals prefs getboolean jabrefpreferences autolink_use_reg_exp_search_key regexp   globals prefs get jabrefpreferences reg_exp_search_expression_key   
+                    result   regexpfilesearch findfilesforset entries  extensions  dirs  regexp  
+                            globals prefs getkeyworddelimiter autolinkexactkeyonly   globals prefs getboolean jabrefpreferences autolink_exact_key_only   
+                    result   fileutil findassociatedfiles entries  extensions  dirs  autolinkexactkeyonly foundany entry bibentry  list file   entryfilepair   result entryset      
+                    filelisttablemodel tablemodel  
+                    optional oldval   entryfilepair getkey   getfield fieldname file singletablemodel tablemodel filelisttablemodel    
+                        oldval ifpresent tablemodel  setcontent entries size      1  
+                        tablemodel   singletablemodel  
+                      
+                    list file  files   entryfilepair getvalue file f   files    
+                        f   fileutil shortenfilename f  dirss alreadyhas j   0  j   tablemodel getrowcount    j      
+                            filelistentry existingentry   tablemodel getentry j file existingentry link  equals f     
+                                alreadyhas foundany alreadyhas    
+                            foundany optional externalfiletype  type  
+                            optional extension   fileutil getfileextension f extension ispresent      
+                                type   externalfiletypes getinstance   getexternalfiletypebyext extension get type   optional of unknownexternalfiletype       
+                              
+                            filelistentry flentry filelistentry f getname    f getpath    type   
+                            tablemodel addentry tablemodel getrowcount    flentry newval   tablemodel getstringrepresentation newval isempty      
+                                newval ce undoablefieldchange change undoablefieldchange entryfilepair getkey    
+                                        fieldname file  oldval orelse newval   
+                                ce addedit change singletablemodel entryfilepair getkey   setfield fieldname file  newval changedentries changedentries add entryfilepair getkey id   foundany ? 1   0  
+                swingutilities invokelater runnable     
+ 
+                     override run diag diag dispose callback callback actionperformed actionevent id        
+                          
+                      
+                    
+              
+           
+        swingutilities invokelater diag diag setvisible r runnable autosetlinks bibentry entry filelisttablemodel singletablemodel bibdatabasecontext databasecontext actionlistener callback jdialog diag autosetlinks collections singletonlist entry null  singletablemodel  databasecontext  callback  
+                diag   
+      
+ 
+ 

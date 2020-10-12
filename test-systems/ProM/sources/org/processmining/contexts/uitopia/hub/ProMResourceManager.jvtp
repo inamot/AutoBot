@@ -1,0 +1,306 @@
+ 
+   hv remember last file imported exported  
+   hv last file imported exported hv  return default exporter known types  fortunately handling favorite string based not need know actual 
+	   types  only names typename matches whatever prom workspace shows second line object  basically class name returned label match whatever uiexportplugin declaration  
+   particularly useful may prevent novice users using usual pnml export not export data  
+   hv favorite set user  use reasonable default values known types  
+   hv start location last file exported  
+   hv remember last file exported imported not initialized start import dialog resource called edt any thread  makes sure dialog-part actual import run edt  
+	    
+   
+			   called edt  ok  
+			    
+   
+			   not called edt edt take care todo auto-generated catch block 
+   todo auto-generated catch block method only called edt thread  
+	    
+   hv start location last file imported  
+   
+		   disable multi-selection allows user select two 
+		   files simultaneously cannot handled single importer user only use one importer    
+		    
+   
+		   hv method run edt result disabling multi-selection  use different way selected file s   
+			    
+  			file   files   new file    fc getselectedfile      
+   xl  parse file one one called edt any thread called edt any thread  makes sure dialog-par tof actual import run edt  
+	    
+   
+			   called edt  ok  
+			    
+   
+			   not called edt edzt take care todo auto-generated catch block 
+   todo auto-generated catch block method called edt  
+	    
+   hv remember location last file imported exported not initialized user chose files  option 
+   hv  only show plug-ins handle files files imported todo plugins available based filetype 
+   	show plugins 
+   
+				   hv method run edt import selected  
+   hv  dialog-part now done  hence load actual importing another thread frees edt showing progress bar doing import  
+   
+		   synchronize provided object manager prevent multiple imports  
+		   talking same time manager  
+		    
+  			thread yield    
+   
+		   hv  restrict length extension 9 characters dot filename  hence extension  
+   ignore  only respond future object ready object deleted  try next one object deleted  try next one 
+   ignore  access object provided using late-binding  hence last version label always returned resource 
+   ignore  access object provided using late-binding  hence last version object always returned resource 
+                                                                       
+	   pluginlifecycle  
+	   
+ 
+	public void plugincancelled plugincontext context    
+		   todo auto-generated method stub 
+ 
+	  
+ 
+	public void plugincompleted plugincontext plugincontext    
+		pluginexecutionresult result   plugincontext getresult int 0 result getsize providedobjectid id   result getprovidedobjectid class ?  type  
+			try   
+				type   context getprovidedobjectmanager   getprovidedobjecttype id   
+			  catch  providedobjectdeletedexception e object deleted  try next one 
+				continue  
+			  
+			resourcetype restype   getresourcetypefor type restype    null    
+				promresource ?  res   new promporesource context  null  restype  id  
+						collections  collection promporesource  emptylist     
+				res   addresource id  res 1    result getplugin   getmostsignificantresult      
+					res setfavorite true   
+				  
+			  
+		  
+	  
+ 
+	public void plugincreated plugincontext context    
+		   gracefully ignore 
+	  
+ 
+	public void plugindeleted plugincontext context    
+		   gracefully ignore 
+	  
+ 
+	public void pluginfuturecreated plugincontext context    
+		   gracefully ignore 
+	  
+ 
+	public void pluginresumed plugincontext context    
+		   gracefully ignore 
+	  
+ 
+	public void pluginstarted plugincontext context    
+		   gracefully ignore 
+	  
+ 
+	public void pluginsuspended plugincontext context    
+		   gracefully ignore 
+	  
+ 
+	public void pluginterminatedwitherror plugincontext context  throwable t    
+		   gracefully ignore 
+	  
+ 
+	public void addedimportplugins     
+		synchronized  importpluginadded    
+  
+		  
+	  
+ 
+	                                                                       
+	   connectionlistener  
+	   
+ 
+	public void connectioncreated connectionid id resources containskey id     
+			connection conn  
+			try   
+				conn   connectionmanager getconnection id conn isremoved      
+					   todo 
+					java util list collection promporesource   values   new arraylist collection promporesource object o   conn getobjects   baseset      
+						promresource ?  r   context getresourcemanager   getresourceforinstance o r    null    
+							assert r instanceof promporesource   
+							collection promporesource  c   new linkedlist promporesource     
+							c add  promporesource  r   
+							values add c   
+						  
+					  
+ 
+					promcresource res   new promcresource context  null  getresourcetypefor conn getclass     id  
+							values   
+					resources put id  res   
+					signalupdate    
+				  
+			  catch  connectioncannotbeobtained e nothing 
+			  
+		  
+	  
+ 
+	public void connectiondeleted connectionid id    
+		resources remove id need alert serializer connection not serialized removed destroyed  
+	  
+ 
+	public void connectionupdated connectionid id    
+		assert resources containskey id need alert serializer connections not serialized exit  not earlier  
+		signalupdate    
+	  
+ 
+  org processmining contexts uitopia hub promresourcemanager updatesignaller resourcemanager promresource ?    
+		providedobjectlifecyclelistener  pluginlifecycleeventlistener  connectionobjectlistener promresourcemanager uicontext context context   context type   context getpluginmanager   getknownobjecttypes      
+			addtype type type   context getpluginmanager   getknownclassesannotatedwith connectionannotation addtype type   
+		  
+		pomanager   context getprovidedobjectmanager    
+		pomanager getprovidedobjectlifecylcelisteners   add connectionmanager   context getconnectionmanager    
+		connectionmanager getconnectionlisteners   add preferences   preferences usernodeforpackage getclass name   preferences get lastimportfile lastimportedfile   name null file name lastimportedfile lastimportedfile exists      
+			lastimportedfile   lastimportedfile getparentfile    
+		  
+		name   preferences get lastexportfile lastexportedfile   name null file name lastexportedfile lastexportedfile exists      
+			lastexportedfile   lastexportedfile getparentfile resourcetype addtype type resourceclasses put type promresourcetype type promresourcemanager initialize uicontext context instance instance promresourcemanager context instance getdefaultexport typename typename equals  xlog xes files typename equals  petrinet pnml files typename equals  acceptingpetrinet accepting petri net typename equals  petrinetwithdata data-aware pnml files collection filefilter  getexportfilters resource resource    
+		collection filefilter  exportfilters hashset filefilter     
+		set pluginparameterbinding  potentialexportplugins   context getpluginmanager   getpluginsacceptinginanyorder  
+				uiplugincontext file resource gettype   gettypeclass pluginparameterbinding binding   potentialexportplugins binding getplugin   getannotation uiexportplugin description   binding getplugin   getannotation uiexportplugin description extension   binding getplugin   getannotation uiexportplugin extension    
+				filenameextensionfilter filter filenameextensionfilter description  extension   
+				exportfilters add filter exportfilters exportresource resource resource ioexception resource promresource lastchosenexportplugin   preferences get favoriteexport   resource gettype   gettypename lastchosenexportplugin isempty      
+			  
+			lastchosenexportplugin   getdefaultexport resource gettype   gettypename     
+		  
+		filefilter lastchosenfilter map filefilter  pluginparameterbinding  exportplugins treemap filefilter  pluginparameterbinding comparator filefilter compare filefilter f1  filefilter f2 f1 getdescription   tolowercase   compareto f2 getdescription   tolowercase     
+					  
+				    
+		set pluginparameterbinding  potentialexportplugins   context getpluginmanager   getpluginsacceptinginanyorder  
+				uiplugincontext file resource gettype   gettypeclass pluginparameterbinding binding   potentialexportplugins binding getplugin   getannotation uiexportplugin description   binding getplugin   getannotation uiexportplugin description extension   binding getplugin   getannotation uiexportplugin extension    
+				filenameextensionfilter filter filenameextensionfilter description  extension   
+				exportplugins put filter  binding description equals lastchosenexportplugin     
+					lastchosenfilter   filter  
+				  
+			  
+		  
+ 
+		  
+		jfilechooser fc    lastexportedfile jfilechooser lastexportedfile jfilechooser filefilter filter   exportplugins keyset      
+			fc addchoosablefilefilter filter   
+		  
+		fc setacceptallfilefilterused lastchosenfilter fc setfilefilter lastchosenfilter   
+		  
+ 
+		askforfile returnval   fc showsavedialog context getui returnval    jfilechooser approve_option      fc getselectedfile file file   fc getselectedfile    
+				filenameextensionfilter selectedfilter    filenameextensionfilter  fc getfilefilter selectedfilter selectedfilter    filenameextensionfilter  exportplugins keyset   iterator   next postfix         selectedfilter getextensions   0 file getabsolutepath   endswith postfix name   file getabsolutepath     postfix  
+					file file name file createnewfile ow   joptionpane showconfirmdialog context getui    
+							 are you sure you want to overwrite     file getname     confirm overwrite   
+							joptionpane yes_no_option ow    joptionpane no_option askforfile  
+					  
+				  
+ 
+				  
+				lastexportedfile   file getparentfile    
+				preferences put lastexportfile  lastexportedfile getabsolutepath lastimportedfile lastimportedfile   lastexportedfile  
+					preferences put lastimportfile  lastimportedfile getabsolutepath     
+				  
+ 
+				pluginparameterbinding binding   exportplugins get selectedfilter   
+ 
+				preferences put favoriteexport   resource gettype   gettypename    
+						binding getplugin   getannotation uiexportplugin description     
+ 
+				uiplugincontext importcontext   context getmainplugincontext   
+						 createchildcontext  saving file with     binding getplugin   getname     
+ 
+				pluginexecutionresult result   binding invoke importcontext  file  
+						  promresource ?   resource  getinstance     
+				context getprovidedobjectmanager   createprovidedobjects importcontext result synchronize cancellationexception e    
+					context getmainplugincontext   log  export of     file     cancelled exception e    
+					joptionpane showmessagedialog context getui    
+							  html error with export of     file      br     e getmessage        html    
+							 error exporting   joptionpane error_message false java util list promresource ?   getallresources arraylist promresource ?   resources values java util list promresource ?   getallresources resourcefilter filter filterlist getallresources    filter java util list resourcetype  getallsupportedresourcetypes     
+		java util list resourcetype  types arraylist resourcetype     
+		types addall resourceclasses values types java util list promresource ?   getchildrenof resource parent getallresources resourcefilter accept resource res getparentsof res  contains parent java util list promresource ?   getchildrenof resource parent resourcefilter filter getallresources resourcefilter accept resource res filter accept res     getparentsof res  contains parent java util list promresource ?   getfavoriteresources getallresources resourcefilter accept resource res res isfavorite java util list promresource ?   getfavoriteresources resourcefilter filter getallresources resourcefilter accept resource res filter accept res     res isfavorite java util list promresource ?   getimportedresources getallresources resourcefilter accept resource res getparentsof res  isempty java util list promresource ?   getimportedresources resourcefilter filter getallresources resourcefilter accept resource res filter accept res     getparentsof res  isempty java util list promresource ?   getparentsof resource child arraylist promresource ?     promresource ?   child  getparents java util list promresource ?   getparentsof resource child  resourcefilter filter    
+		java util list promresource ?   filtered arraylist promresource ?    
+				  promresource ?   child  getparents filterlist filtered  filter importresource eventqueue isdispatchthread swingutilities invokeandwait runnable run invocationtargetexception e    
+				  
+				e printstacktrace interruptedexception e    
+				  
+				e printstacktrace importresourceinedt eventqueue isdispatchthread      
+			system err println  method should only be called from edt importpluginadded importpluginadded    
+				buildimportplugins jfilechooser fc    lastimportedfile jfilechooser lastimportedfile jfilechooser filefilter filter   importplugins keyset      
+			fc addchoosablefilefilter filter   
+		  
+		fc setacceptallfilefilterused fc setmultiselectionenabled fc setfilefilter fc getacceptallfilefilter returnval   fc showopendialog context getui returnval    jfilechooser approve_option    
+			  
+			file   files   fc getselectedfiles importedsuccessfully file f   files    
+				pluginparameterbinding binding   importplugins get fc getfilefilter importedsuccessfully importresources file    files importresource files importresource pluginparameterbinding binding file    files eventqueue isdispatchthread swingutilities invokeandwait runnable run invocationtargetexception e    
+				  
+				e printstacktrace interruptedexception e    
+				  
+				e printstacktrace importresourceinedt pluginparameterbinding binding file    files eventqueue isdispatchthread      
+			system err println  method should only be called from edt importpluginadded importpluginadded    
+				buildimportplugins    
+  
+			  
+		  
+ 
+		  
+		lastimportedfile   files 0  getparentfile    
+		preferences put lastimportfile  lastimportedfile getabsolutepath lastexportedfile lastexportedfile   lastimportedfile  
+			preferences put lastexportfile  lastexportedfile getabsolutepath binding map pluginparameterbinding  bindings hashmap pluginparameterbinding filefilter filter   importplugins keyset ok file file   files filter accept file     
+						ok ok    
+					bindings put filter getdescription    importplugins get filter bindings size      0 filefilter filter   importplugins keyset      
+					bindings put filter getdescription    importplugins get filter bindings size      0    
+				  
+				joptionpane showmessagedialog context getui     no plugins available   
+								 no input plugins available    joptionpane error_message binding   bindings values   iterator   next bindings size     1 key   favoriteimport   extractfiletype files 0  getabsolutepath possibilities   bindings keyset   toarray 0 preferredimport   preferences get key  possibilities 0 selected joptionpane showinputdialog context getui    
+									 available plugins file     files 0  getname          
+									 select an plugin      joptionpane plain_message possibilities  
+									preferredimport selected preferences put key  selected   
+				binding   bindings get selected binding pluginparameterbinding finalbinding   binding  
+		runnable importthread runnable run thread importthread   start importresourcenotinedt pluginparameterbinding binding file    files eventqueue isdispatchthread      
+			system err println  method should never be called from edt context getprovidedobjectmanager file f   files    
+			uiplugincontext importcontext   context getmainplugincontext   
+					 createchildcontext  opening file with     binding getplugin   getname     
+  
+ 
+			progressoverlaydialog progress progressoverlaydialog context getcontroller   getmainview    
+  
+			context getcontroller   getmainview   showoverlay progress   
+  
+ 
+			pluginexecutionresult result   binding invoke importcontext  f   
+			context getprovidedobjectmanager   createprovidedobjects importcontext result synchronize cancellationexception e    
+				context getcontroller   getmainview   hideoverlay    
+				swingutilities invokelater runnable run     
+						joptionpane showmessagedialog context getui of     files     cancelled cancelled   
+								joptionpane warning_message   
+					  
+				    
+				context getmainplugincontext   log of     files     cancelled exception e    
+				context getcontroller   getmainview   hideoverlay    
+				swingutilities invokelater runnable run     
+						joptionpane showmessagedialog context getui    
+								  html error with of     files      br     e getmessage        html failed   
+								joptionpane error_message   
+					  
+				    
+				context getmainplugincontext   log  error with of     files        messagelevel error   
+				context getmainplugincontext   log e context getcontroller   getmainview   hideoverlay extractfiletype filename indexname   math max filename lastindexof file separatorchar   filename length   - 10 indexdot   filename indexof ' '  indexname indexdot   0 return filename substring indexdot buildimportplugins     
+		importplugins treemap filefilter  pluginparameterbinding comparator filefilter compare filefilter f1  filefilter f2 f1 getdescription   tolowercase   compareto f2 getdescription   tolowercase     
+			  
+		    
+ 
+		set pluginparameterbinding  potentialimportplugins   context getpluginmanager   
+				 getpluginsacceptingordered uiplugincontext file pluginparameterbinding binding   potentialimportplugins binding getplugin   hasannotation uiimportplugin filenameextensionfilter filter filenameextensionfilter  
+						binding getplugin   getannotation uiimportplugin description    
+						binding getplugin   getannotation uiimportplugin extensions resourcetype getresourcetypefor type resourceclasses get type isresourcetype type resourceclasses keyset   contains type java util list promresource ?   filterlist java util list promresource ?   filtered  
+			resourcefilter filter filtered    
+			iterator promresource ?   it   filtered iterator it hasnext filter accept it next       
+					it remove filtered java util list resourcetype  getresourcetypes java util list resource  res    
+		arraylist resourcetype  types arraylist resourcetype  res size resource r   res    
+			types add r gettype types providedobjectcreated providedobjectid objectid  plugincontext context providedobjectdeleted providedobjectid id resources remove id signalupdate providedobjectfutureready providedobjectid id type type   context getprovidedobjectmanager   getprovidedobjecttype id providedobjectdeletedexception e resourcetype restype   getresourcetypefor type restype promresource ?  res res   context getresourcemanager   
+						 getresourceforinstance context getprovidedobjectmanager   getprovidedobjectobject id res res promporesource context restype  id  
+							collections  collection promporesource  emptylist     
+					addresource id  res providedobjectdeletedexception e providedobjectnamechanged providedobjectid id resources containskey id     
+			signalupdate providedobjectobjectchanged providedobjectid id resources containskey id     
+			signalupdate    
+		  
+	  
+ 
+	 suppresswarnings  unchecked r promresource ?   r addresource providedobjectid id  r res resources containskey id r  resources get id resources put id  res   
+			signalupdate res promresource ?  getresourceforinstance object o promresource ?  resource   getallresources resource getinstance      o resource 

@@ -1,0 +1,110 @@
+ 
+    
+    p title    p  
+    p description    p  
+    p copyright  copyright  c  2003  p  
+    p company    p  
+    author not attributable 
+    version 1 0 
+    
+   column widths export customization dialog table  
+   ecd show    -  deprecated 1 5 
+   key bindings  net sf jabref gui exporter exportcustomizationdialog jdialog exportcustomizationdialog jabrefframe frame frame  localization lang  manage custom exports defaulteventtablemodel list tablemodel defaulteventtablemodel    
+                globals prefs customexports getsortedlist exporttableformat     
+        jtable table jtable tablemodel   
+        tablecolumnmodel cm   table getcolumnmodel    
+        cm getcolumn 0  setpreferredwidth col_0_width   
+        cm getcolumn 1  setpreferredwidth col_1_width   
+        cm getcolumn 2  setpreferredwidth col_2_width   
+        jscrollpane sp jscrollpane table  scrollpaneconstants vertical_scrollbar_as_needed  
+                scrollpaneconstants horizontal_scrollbar_never   
+        table setselectionmode listselectionmodel single_selection   
+        table setpreferredscrollableviewportsize dimension 500  150 table getrowcount     0    
+            table setrowselectioninterval 0  0   
+          
+ 
+        guiutil correctrowheight table   
+ 
+        jbutton addexport jbutton localization lang  add addexport addactionlistener e -    
+            customexportdialog ecd customexportdialog frame   
+            ecd setvisible ecd okpressed      
+                list newformat   arrays aslist ecd name    ecd layoutfile    ecd extension     
+                globals prefs customexports addformat newformat  
+                        globals prefs getlayoutformatterpreferences globals journalabbreviationloader   
+                        savepreferences loadforexportfrompreferences globals prefs    
+                globals prefs customexports store globals prefs   
+              
+            
+ 
+        jbutton modify jbutton localization lang  modify     
+        modify addactionlistener e row   table getselectedrow row    -1 list old   globals prefs customexports getsortedlist   get row   
+            customexportdialog ecd customexportdialog frame  old get 0   old get 1   old get 2    
+            ecd setvisible ecd okpressed      
+                old set 0  ecd name     
+                old set 1  ecd layoutfile     
+                old set 2  ecd extension     
+                table revalidate    
+                table repaint    
+                globals prefs customexports store globals prefs   
+              
+            
+ 
+        jbutton remove jbutton localization lang  remove     
+        remove addactionlistener e rows   table getselectedrows rows length    0 list list entries arraylist i   0  i   rows length  i      
+                entries add globals prefs customexports getsortedlist   get rows i     
+              
+            layoutformatterpreferences layoutpreferences   globals prefs 
+                     getlayoutformatterpreferences globals journalabbreviationloader   
+            savepreferences savepreferences   savepreferences loadforexportfrompreferences globals prefs list list   entries    
+                globals prefs customexports remove list  layoutpreferences  savepreferences   
+              
+            globals prefs customexports store globals prefs   
+            
+ 
+        action closeaction abstractaction     
+ 
+             override actionperformed actionevent e    
+                dispose    
+              
+           
+ 
+        jbutton close jbutton localization lang  close     
+        close addactionlistener closeaction   
+ 
+        jbutton help helpaction helpfile custom_exports  gethelpbutton    
+ 
+          
+        jpanel main jpanel    
+        actionmap am   main getactionmap    
+        inputmap im   main getinputmap jcomponent when_in_focused_window   
+        im put globals getkeyprefs   getkey keybinding close_dialog    close    
+        am put  close   closeaction   
+        main setlayout borderlayout     
+        main add sp  borderlayout center   
+        jpanel buttons jpanel    
+        buttonbarbuilder bb buttonbarbuilder buttons   
+        buttons setborder borderfactory createemptyborder 2  2  2  2    
+        bb addglue    
+        bb addbutton addexport   
+        bb addbutton modify   
+        bb addbutton remove   
+        bb addbutton close   
+        bb addunrelatedgap    
+        bb addbutton help   
+        bb addglue    
+ 
+        getcontentpane   add main  borderlayout center   
+        getcontentpane   add buttons  borderlayout south   
+        pack    
+        setlocationrelativeto frame   
+        table requestfocus exporttableformat tableformat list override object getcolumnvalue list strings i strings get i   
+          
+ 
+         override getcolumncount 3  
+          
+ 
+         override getcolumnname col col 0 localization lang  export name 1 localization lang  main layout file localization lang  extension    
+              
+          
+      
+ 

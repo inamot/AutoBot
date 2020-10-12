@@ -1,0 +1,278 @@
+ 
+   needed activate deactivate listener 
+   enum used define cell rendered  
+   set table header render creation comparatorchooser enables sort arrow rendering  
+   todo  figure out  whether call needed  
+   enable dnd 
+  override 'selectnextcolumncell selectpreviouscolumncell move rows instead cells tab content cell bigger cell itself render tooltip  thus throwing original tooltip away  
+   now grayed out renderer entries 1 very grayed out one entries 2 
+   return renderer red background entry incomplete marked feature  
+   setting column widths  
+   find index current maintablecolumn allcolumns 
+   set preferred width using found index j width array 
+    
+        return return value never null 
+        
+   todo check whether really works 
+  todo old 
+   string name   tableformat getcolumntype method sets up comparators used various table columns comparatorchooser enables disables comparators user clicks 
+       columns comparators defined comparatorchooser initialized sort order defined preferences  
+        
+   first column  
+   set initial sort columns  
+   default sort order  
+   descending 
+   todo prefix set sortfields startswith maintableformat icon_column_prefix   
+   add action listener remember sort order information current sort order  
+   update preferences  
+    
+       use caution modify entry table selection changes avoid code  getselected   getreadwritelock   writelock   lock    code code  unlock    code  
+        
+    
+       selects given row 
+       
+        param row row select 
+        
+   nopmd  equals doesn't recognise duplicates  
+    
+       method check whether maintablecolumn modelindex refers file field  either specific 
+       file extension filter not  
+       
+        param modelindex model index column check 
+        return true column shows file  field  false otherwise 
+        
+    
+       updatefont rectangle relative table northwest corner cell  0 0 always  0 0 location view relative table 
+   translate cell location relative view  assuming northwest corner view 0 0   
+   calculate location rect center view 
+   fake location cell scrollrecttovisible move cell center 
+   scroll area view  
+    
+       morten alver override workaround nullpointerexception dragging stuff table found forum idea works  
+        param newui 
+        
+    
+       find out column set sort column  
+        param number position sort hierarchy  primary  secondary  etc   
+        return sort column number  
+        net sf jabref gui maintable maintable jtable cellrenderermode   
+        required  
+        resolved  
+        optional  
+        other maintable updaterenderers maintable maintableformat tableformat  maintabledatamodel model  jabrefframe frame  
+            basepanel panel model   model  
+ 
+        addfocuslistener globals getfocuslistener     
+        setautoresizemode globals prefs getint jabrefpreferences auto_resize_mode tableformat   tableformat panel   panel  
+ 
+ 
+        setmodel glazedlistsswing 
+                 eventtablemodelwiththreadproxylist model gettablerows    tableformat    
+ 
+        tablecolorcodes   globals prefs getboolean jabrefpreferences table_color_codes_on   
+        tableresolvedcolorcodes   globals prefs getboolean jabrefpreferences table_resolved_color_codes_on   
+        localselectionmodel    defaulteventselectionmodel bibentry   glazedlistsswing 
+                 eventselectionmodelwiththreadproxylist model gettablerows     
+        setselectionmodel localselectionmodel   
+        pane jscrollpane pane setborder borderfactory createemptyborder     
+        pane getviewport   setbackground globals prefs getcolor jabrefpreferences table_background    
+        setgridcolor globals prefs getcolor jabrefpreferences grid_color globals prefs getboolean jabrefpreferences table_show_grid     
+            setshowgrid setshowgrid setintercellspacing dimension 0  0 settableheader preventdraggingjtableheader tableformat    
+ 
+        comparatorchooser createtablecomparatorchooser model getsortedforuserdefinedtablecolumnsorting    
+                abstracttablecomparatorchooser multiple_column_keyboard tablecolumnlistener persistencetablecolumnlistener this gettableheader   setdefaultrenderer maintableheaderrenderer gettableheader   getdefaultrenderer      
+ 
+          
+        getselected    
+ 
+          
+        setdragenabled transferhandler xfer entrytabletransferhandler frame  panel   
+        settransferhandler xfer   
+        pane settransferhandler xfer   
+ 
+        setupcomparatorchooser    
+        model updatemarkingstate globals prefs getboolean jabrefpreferences float_marked_entries    
+        setwidths    
+ 
+          
+        actionmap actionmap   getactionmap    
+        inputmap inputmap   getinputmap    
+        actionmap put  selectnextcolumncell abstractaction     
+             override actionperformed actionevent e    
+                panel selectnextentry    
+              
+            
+        actionmap put  selectpreviouscolumncell abstractaction     
+             override actionperformed actionevent e    
+                panel selectpreviousentry    
+              
+            
+        actionmap put  selectnextrow abstractaction     
+             override actionperformed actionevent e    
+                panel selectnextentry    
+              
+            
+        actionmap put  selectpreviousrow abstractaction     
+             override actionperformed actionevent e    
+                panel selectpreviousentry selectfirst    selectfirst   
+        inputmap put globals getkeyprefs   getkey keybinding select_first_entry   selectfirst   
+        actionmap put selectfirst abstractaction     
+             override actionperformed actionevent event    
+                panel selectfirstentry selectlast    selectlast   
+        inputmap put globals getkeyprefs   getkey keybinding select_last_entry   selectlast   
+        actionmap put selectlast abstractaction     
+             override actionperformed actionevent event    
+                panel selectlastentry addselectionlistener listeventlistener bibentry  listener    
+        getselected   addlisteventlistener listener jscrollpane getpane pane maintabledatamodel gettablemodel model  
+      
+ 
+     override gettooltiptext mouseevent e tooltiptext gettooltiptext e   
+        point p   e getpoint col   columnatpoint p row   rowatpoint p   
+ 
+        rectangle bounds   getcellrect row  col dimension d   preparerenderer getcellrenderer row  col   row  col  getpreferredsize d d width   bounds width      getvalueat row  col tooltiptext   getvalueat row  col  tostring tooltiptext  
+      
+ 
+     override tablecellrenderer getcellrenderer row column score   -3  
+        defaulttablecellrenderer renderer   maintable defrenderer model getsearchstate      maintabledatamodel displayoption matches row  searchmatcher instance     
+            score model getgroupingstate      maintabledatamodel displayoption matches row  groupmatcher instance     
+            score    2 score   -1 column    0    
+                maintable verygrayedoutnumberrenderer setnumber row   
+                renderer   maintable verygrayedoutnumberrenderer renderer   maintable verygrayedoutrenderer score    -1 column    0    
+                maintable grayedoutnumberrenderer setnumber row   
+                renderer   maintable grayedoutnumberrenderer renderer   maintable grayedoutrenderer column    0 iscomplete row     
+                maintable comprenderer setnumber row marking   ismarked row marking   0    
+                    marking   math min marking  entrymarker mark_color_levels   
+                    renderer   maintable markednumberrenderers get marking - 1   
+                    maintable markednumberrenderers get marking - 1  setnumber row renderer   maintable comprenderer maintable increnderer setnumber row   
+                renderer   maintable increnderer tablecolorcodes    tableresolvedcolorcodes    
+            cellrenderermode status   getcellstatus row  column  tableresolvedcolorcodes status    cellrenderermode required    
+                renderer   maintable reqrenderer status    cellrenderermode optional    
+                renderer   maintable optrenderer status    cellrenderermode resolved    
+                renderer   maintable resolvedrenderer marking   ismarked row column    0      marking   0     
+            marking   math min marking  entrymarker mark_color_levels   
+            renderer   maintable markedrenderers get marking - 1 renderer setwidths ncwidth   globals prefs getint jabrefpreferences number_col_width   
+        list widthsfrompreferences   globals prefs getstringlist jabrefpreferences column_widths   
+        tablecolumnmodel cm   getcolumnmodel    
+        cm getcolumn 0  setpreferredwidth ncwidth i   1  i   cm getcolumncount    i      
+            maintablecolumn maintablecolumn   tableformat gettablecolumn cm getcolumn i  getmodelindex specialfield ranking getfieldname   equals maintablecolumn getcolumnname       
+                cm getcolumn i  setpreferredwidth guiglobals width_icon_col_ranking   
+                cm getcolumn i  setminwidth guiglobals width_icon_col_ranking   
+                cm getcolumn i  setmaxwidth guiglobals width_icon_col_ranking maintablecolumn isiconcolumn      
+                cm getcolumn i  setpreferredwidth guiglobals width_icon_col   
+                cm getcolumn i  setminwidth guiglobals width_icon_col   
+                cm getcolumn i  setmaxwidth guiglobals width_icon_col list allcolumns   globals prefs getstringlist jabrefpreferences column_names j   0  j   allcolumns size    j allcolumns get j  equalsignorecase maintablecolumn getdisplayname cm getcolumn i  setpreferredwidth integer parseint widthsfrompreferences get j numberformatexception e    
+                            logger info  exception setting column widths  choosing e   
+                            cm getcolumn i  setpreferredwidth bibtexsinglefield default_field_length bibentry getentryat row model gettablerows   get row list bibentry  getselectedentries arraylist   getselected list getcurrentsortorder     
+        list order arraylist      
+        list integer  sortcols   comparatorchooser getsortingcolumns integer i   sortcols    
+            order add comparatorchooser iscolumnreverse i order list getcurrentsortfields     
+        list integer  sortcols   comparatorchooser getsortingcolumns    
+        list fields arraylist integer i   sortcols name   tableformat getcolumnname i name fields add name tolowercase fields setupcomparatorchooser     
+          
+        list comparator  comparators   comparatorchooser getcomparatorsforcolumn 0   
+        comparators clear    
+        comparators add firstcolumncomparator panel getbibdatabasecontext i   1  i   tableformat getcolumncount    i      
+            maintablecolumn tablecolumn   tableformat gettablecolumn i   
+ 
+            comparators   comparatorchooser getcomparatorsforcolumn i   
+            comparators clear specialfield ranking getfieldname   equals tablecolumn getcolumnname       
+                comparators add rankingfieldcomparator tablecolumn isiconcolumn      
+                comparators add iconcomparator tablecolumn getbibtexfields comparators   comparatorchooser getcomparatorsforcolumn i   
+                comparators clear    
+                comparators add fieldcomparator tableformat getcolumnname i  tolowercase sortfields globals prefs get jabrefpreferences table_primary_sort_field   
+                globals prefs get jabrefpreferences table_secondary_sort_field   
+                globals prefs get jabrefpreferences table_tertiary_sort_field sortdirections globals prefs getboolean jabrefpreferences table_primary_sort_descending   
+                globals prefs getboolean jabrefpreferences table_secondary_sort_descending   
+                globals prefs getboolean jabrefpreferences table_tertiary_sort_descending  
+             
+ 
+        model getsortedforuserdefinedtablecolumnsorting   getreadwritelock   writelock   lock i   0  i   sortfields length  i index   -1 sortfields i  startswith  iconcol j   0  j   tableformat getcolumncount    j sortfields i  equals tableformat getcolumnname j      
+                            index   j index   tableformat getcolumnindex sortfields i index    0    
+                    comparatorchooser appendcomparator index  0  sortdirections i model getsortedforuserdefinedtablecolumnsorting   getreadwritelock   writelock   unlock    
+          
+ 
+          
+        comparatorchooser addsortactionlistener e -    
+              
+            list fields   getcurrentsortfields    
+            list order   getcurrentsortorder count   math min fields size    order size count    1    
+                globals prefs put jabrefpreferences table_primary_sort_field  fields get 0    
+                globals prefs putboolean jabrefpreferences table_primary_sort_descending  order get 0 count    2    
+                globals prefs put jabrefpreferences table_secondary_sort_field  fields get 1    
+                globals prefs putboolean jabrefpreferences table_secondary_sort_descending  order get 1 globals prefs put jabrefpreferences table_secondary_sort_field       
+                globals prefs putboolean jabrefpreferences table_secondary_sort_descending count    3    
+                globals prefs put jabrefpreferences table_tertiary_sort_field  fields get 2    
+                globals prefs putboolean jabrefpreferences table_tertiary_sort_descending  order get 2 globals prefs put jabrefpreferences table_tertiary_sort_field       
+                globals prefs putboolean jabrefpreferences table_tertiary_sort_descending cellrenderermode getcellstatus row col checkresolved bibentry be   getentryat row checkresolved    tableformat gettablecolumn col  isresolved be cellrenderermode resolved  
+              
+            optional entrytype  type   entrytypes gettype be gettype    panel getbibdatabasecontext   getmode type ispresent columnname   getcolumnname col  tolowercase columnname equals bibentry key_field     type get   getrequiredfieldsflat   contains columnname cellrenderermode required type get   getoptionalfields   contains columnname cellrenderermode optional cellrenderermode other nullpointerexception ex cellrenderermode other eventlist bibentry  getselected localselectionmodel getselected setselected row    
+        localselectionmodel setselectioninterval row  row findentry bibentry entry    
+        eventlist bibentry  tablerows   model gettablerows row   0  row   tablerows size    row      
+            bibentry bibentry   tablerows get row entry    bibentry row 1 isfilecolumn modelindex tableformat gettablecolumn modelindex tableformat gettablecolumn modelindex  
+                 getbibtexfields   contains fieldname file matches row  matcher bibentry  m    
+        optional bibentry  bibentry   getbibentry row bibentry ispresent m matches bibentry get m matches iscomplete row    
+        optional bibentry  bibentry   getbibentry row bibentry ispresent      
+            typedbibentry typedentry typedbibentry bibentry get    panel getbibdatabasecontext typedentry hasallrequiredfields ismarked row    
+        optional bibentry  bibentry   getbibentry row bibentry ispresent entrymarker ismarked bibentry get 0 optional bibentry  getbibentry row optional of model gettablerows   get row indexoutofboundsexception e optional empty scrollto y    
+        jscrollbar scb   pane getverticalscrollbar    
+        scb setvalue y   scb getunitincrement 1 showfloatsearch gettablemodel   updatesearchstate maintabledatamodel displayoption scrollto 0 updatefont     
+        setfont guiglobals currentfont   
+        setrowheight globals prefs getint jabrefpreferences table_row_padding    guiglobals currentfont getsize ensurevisible row    
+        jscrollbar vert   pane getverticalscrollbar y   row   getrowheight y   vert getvalue         y     vert getvalue     vert getvisibleamount     
+                    model getsearchstate      maintabledatamodel displayoption scrolltocenter row  1 scrolltocenter rowindex vcolindex getparent jviewport jviewport viewport    jviewport getparent    
+ 
+          
+          
+        rectangle rect getcellrect rowindex  vcolindex rectangle viewrect   viewport getviewrect    
+ 
+          
+          
+          
+        rect setlocation rect x - viewrect x  rect y - viewrect y centerx    viewrect width - rect width    2 centery    viewrect height - rect height    2 rect x   centerx    
+            centerx   -centerx rect y   centery    
+            centery   -centery  
+          
+        rect translate centerx  centery   
+ 
+          
+        viewport scrollrecttovisible rect   
+ 
+        revalidate    
+        repaint updaterenderers     
+ 
+        maintable defrenderer generalrenderer globals prefs getcolor jabrefpreferences table_background   
+                globals prefs getcolor jabrefpreferences table_text    
+        color sel   maintable defrenderer gettablecellrenderercomponent jtable 0  0  getbackground    
+        maintable reqrenderer generalrenderer globals prefs getcolor jabrefpreferences table_req_field_background   globals prefs getcolor jabrefpreferences table_text    
+        maintable optrenderer generalrenderer globals prefs getcolor jabrefpreferences table_opt_field_background   globals prefs getcolor jabrefpreferences table_text    
+        maintable resolvedrenderer generalrenderer  
+                globals prefs getcolor jabrefpreferences table_resolved_field_background   
+                globals prefs getcolor jabrefpreferences table_text    
+        maintable increnderer incompleterenderer    
+        maintable comprenderer completerenderer globals prefs getcolor jabrefpreferences table_background    
+        maintable grayedoutnumberrenderer completerenderer globals prefs getcolor jabrefpreferences grayed_out_background    
+        maintable verygrayedoutnumberrenderer completerenderer globals prefs getcolor jabrefpreferences very_grayed_out_background    
+        maintable grayedoutrenderer generalrenderer globals prefs getcolor jabrefpreferences grayed_out_background   
+                globals prefs getcolor jabrefpreferences grayed_out_text   maintable mixcolors globals prefs getcolor jabrefpreferences grayed_out_background   
+                        sel    
+        maintable verygrayedoutrenderer generalrenderer globals prefs getcolor jabrefpreferences very_grayed_out_background   
+                globals prefs getcolor jabrefpreferences very_grayed_out_text   maintable mixcolors globals prefs getcolor jabrefpreferences very_grayed_out_background   
+                        sel    
+ 
+        maintable markedrenderers arraylist   entrymarker mark_color_levels   
+        maintable markednumberrenderers arraylist   entrymarker mark_color_levels i   0  i   entrymarker mark_color_levels  i      
+            color c   globals prefs getcolor jabrefpreferences marked_entry_background   i   
+            maintable markedrenderers add generalrenderer c  globals prefs getcolor jabrefpreferences table_text   
+                    maintable mixcolors globals prefs getcolor jabrefpreferences marked_entry_background   i   sel     
+            maintable markednumberrenderers add completerenderer c color mixcolors color one  color two color  one getred     two getred      2   one getgreen     two getgreen      2  
+                 one getblue     two getblue      2 tablecomparatorchooser bibentry  createtablecomparatorchooser jtable table  sortedlist bibentry  list  
+                                                                             object sortingstrategy tablecomparatorchooser install table  list  sortingstrategy   
+      
+ 
+      
+     override setui tableui newui setui newui   
+        transferhandler handler   gettransferhandler    
+        settransferhandler settransferhandler handler getsortingcolumn number    
+        list integer  l   comparatorchooser getsortingcolumns l size      number 1 l get number persistencetablecolumnlistener gettablecolumnlistener tablecolumnlistener maintablecolumn getmaintablecolumn modelindex tableformat gettablecolumn modelindex   
+      
+ 

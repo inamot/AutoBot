@@ -1,0 +1,65 @@
+ 
+   take latest version version given org processmining framework packages commandlineinterface commandlineinterface packagemanager manager manager   manager run args    
+		autohelpcommandlineparser command   commands updatecommand manager installorremovecommand manager listcommand manager     
+		autohelpcommandlineparser parser autohelpcommandlineparser  java   
+				  packagemanager getcanonicalname    commands   
+ 
+		cmdlineparser option helpoption   parser addhelp parser addbooleanoption 'h'   help    
+				 print help message and exit parser parse args cmdlineparser optionexception e    
+			system err println e getmessage     
+			parser printusage 1 parser getremainingargs   length    0 parser getoptionvalue helpoption parser printusage 0 exitcode manager initialize level all   
+			exitcode   parser runcommand throwable e    
+			e printstacktrace 1 exitcode    -1    
+			parser printusage 1 exitcode updatecommand autohelpcommandlineparser command updatecommand packagemanager manager update    retrieve the latest definitions from all repositories manager   manager  
+	  
+ 
+	 override run list args exception   
+		system out println  updating       
+		manager update level all   
+		system out println  done 0 installorremovecommand autohelpcommandlineparser command installorremovecommand packagemanager manager change   
+				 install the packages preceded by    remove packages preceded by x  example  change  packagea 1 0 xpackageb manager   manager  
+	  
+ 
+	 override run list args exception   
+		list packagedescriptor  toinstall arraylist packagedescriptor     
+		list packagedescriptor  toremove arraylist packagedescriptor     
+ 
+		set packagedescriptor  all hashset packagedescriptor  manager getinstalledpackages     
+		all addall manager getavailablepackages     
+		map sortedset packagedescriptor   map   packagemanager getpackagemap all packagenameandaction   args packagenameandaction length     1  
+					     packagenameandaction charat 0     'x'      packagenameandaction charat 0     ' '      
+				pair packageversion  packagename   parse packagenameandaction substring 1 install   packagenameandaction charat 0     ' '  
+				set packagedescriptor  versions   map get packagename getfirst     
+				packagedescriptor p versions versions isempty packagename getsecond p   versions toarray packagedescriptor 0   versions size   - 1 packagedescriptor v   versions v getversion   equals packagename getsecond       
+								p   v p system out println  could not find packagenameandaction substring 1  
+							    in the list of available packages  skipping system out println  selected     p install ?  installation     removal install    
+						toinstall add p toremove add p system out 
+						 println  invalid specification  please use   or - to indicate installation or removal   skipping toinstall isempty      toremove isempty      
+			system out println  nothing to install or remove system out println  starting installation       
+			manager install toinstall   
+			manager uninstall toremove   
+			packagestatereport report   manager getlatestreport    
+ 
+			system out print report   
+			system out println report haserrors   ?  installation is not performed      installation done 0 pair packageversion  parse name hyphen   name indexof hyphen    0 pair packageversion  name substring 0  hyphen packageversion  
+					name substring hyphen   1 pair packageversion  name listcommand autohelpcommandlineparser command listcommand packagemanager manager list    list all known packages and their status  a available i installed b broken   has update manager   manager  
+	  
+ 
+	 override run list args exception   
+		set packagedescriptor  installed   manager getinstalledpackages    
+		collection packagedescriptor  enabled   manager getenabledpackages    
+ 
+		set packagedescriptor  all hashset packagedescriptor  manager getinstalledpackages     
+		all addall manager getavailablepackages map entry sortedset packagedescriptor   item   packagemanager getpackagemap all  entryset      
+			packagedescriptor installedpackage packageversion highestversion isenabled versions packagedescriptor pack   item getvalue installed contains pack     
+					installedpackage   pack enabled contains pack     
+					isenabled versions length     0    
+					versions          
+				  
+				versions    pack getversion    
+				highestversion   pack getversion installedpackage system out println  a      item getkey            versions isenabled    
+				system out println  i     installedpackage getversion   lessthan highestversion  ?                  
+						  installedpackage          versions system out println  b     installedpackage getversion   lessthan highestversion  ?                  
+						  installedpackage          versions 0  
+	  
+ 

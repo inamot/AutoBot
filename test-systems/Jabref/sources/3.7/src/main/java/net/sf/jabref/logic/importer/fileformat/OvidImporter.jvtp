@@ -1,0 +1,121 @@
+ 
+    
+   imports ovid file  
+    
+   check author field  due minor special treatment field   
+   remove unnecessary dots end lines  unless author field case dot end significant  
+   may missing issue 
+   add double hyphens page ranges  
+   now need check book entry given editors author field rearrange  
+   rearrange names properly  
+   set entrytype properly means incollection  entry  
+   move chaptertitle title   
+    
+       convert string author names bibtex-compatible format  
+        param content name string  
+        return formatted names  
+        
+  ln fn   ln fn    net sf jabref logic importer fileformat ovidimporter importer pattern ovid_source_pattern   pattern 
+             compile  source    \\w \\-     \\       0-9   \\   \\w\\-   \\    0-9  \\-? 0-9  ? \\     0-9  0-9  0-9  0-9 pattern ovid_source_pattern_no_issue   pattern 
+             compile  source    \\w \\-     \\       0-9      0-9  \\-? 0-9  ? \\     0-9  0-9  0-9  0-9 pattern ovid_source_pattern_2   pattern compile  
+                \\w \\-    \\  vol   0-9   \\   \\w\\-   \\    a-za-z      0-9  0-9  0-9  0-9      0-9  \\-? 0-9 pattern incollection_pattern   pattern compile  
+                 \\   0-9  0-9  0-9  0-9  \\ \\     \\w \\-     \\     \\ pp    0-9  \\-? 0-9  ? \\   a-za-z0-9    pp\\    
+                         \\w         \\w pattern book_pattern   pattern compile  
+             \\   0-9  0-9  0-9  0-9  \\ \\   a-za-z      0-9    pp\\    \\w         \\w         
+ 
+  
+  
+ 
+  
+ 
+     override getname ovid   
+      
+ 
+     override fileextensions getextensions fileextensions ovid  
+      
+ 
+     override getdescription imports an ovid file    
+      
+ 
+     override isrecognizedformat bufferedreader reader ioexception str i   0 str   reader readline i   max_items ovidimporter ovid_pattern matcher str  find i override parserresult importdatabase bufferedreader reader ioexception   
+        list bibentry  bibitems arraylist      
+        stringbuilder sb stringbuilder line line   reader readline line isempty       line charat 0     ' '     
+                sb append  __newfield__    
+              
+            sb append line   
+            sb append '\n items   sb tostring   split ovid_pattern_string i   1  i   items length  i      
+            map string  h hashmap fields   items i  split  __newfield__ field   fields linebreak   field indexof '\n fieldname   field substring 0  linebreak  trim content   field substring linebreak  trim isauthor    fieldname indexof  author      0  
+                            fieldname contains  author keywords   
+                            fieldname contains  author e-mail isauthor    content endswith         
+                    content   content substring 0  content length   - 1 isauthor    
+ 
+                    h put fieldname author  content fieldname startswith  title      
+                    content   content replaceall  \\   \\        trim content endswith         
+                        content   content substring 0  content length   - 1   
+                      
+                    h put fieldname title  content fieldname startswith  chapter title      
+                    h put  chaptertitle   content fieldname startswith  source      
+                    matcher matcher matcher   ovidimporter ovid_source_pattern matcher content   find      
+                        h put fieldname journal  matcher group 1    
+                        h put fieldname volume  matcher group 2    
+                        h put fieldname issue  matcher group 3    
+                        h put fieldname pages  matcher group 4    
+                        h put fieldname year  matcher group 5 matcher   ovidimporter ovid_source_pattern_no_issue matcher content   find       
+                        h put fieldname journal  matcher group 1    
+                        h put fieldname volume  matcher group 2    
+                        h put fieldname pages  matcher group 3    
+                        h put fieldname year  matcher group 4 matcher   ovidimporter ovid_source_pattern_2 matcher content   find      
+ 
+                        h put fieldname journal  matcher group 1    
+                        h put fieldname volume  matcher group 2    
+                        h put fieldname issue  matcher group 3    
+                        h put fieldname month  matcher group 4    
+                        h put fieldname year  matcher group 5    
+                        h put fieldname pages  matcher group 6 matcher   ovidimporter incollection_pattern matcher content   find      
+                        h put fieldname editor  matcher group 1  replace    ed          
+                        h put fieldname year  matcher group 2    
+                        h put fieldname booktitle  matcher group 3    
+                        h put fieldname pages  matcher group 4    
+                        h put fieldname address  matcher group 5    
+                        h put fieldname publisher  matcher group 6 matcher   ovidimporter book_pattern matcher content   find      
+                        h put fieldname year  matcher group 1    
+                        h put fieldname pages  matcher group 2    
+                        h put fieldname address  matcher group 3    
+                        h put fieldname publisher  matcher group 4 h get fieldname pages h put fieldname pages  h get fieldname pages  replace equals fieldname     
+                    h put fieldname content publication type  equals fieldname content contains  book      
+                        h put bibentry type_header   book content contains  journal      
+                        h put bibentry type_header   article content contains  conference paper      
+                        h put bibentry type_header   inproceedings fieldname startswith  language      
+                    h put fieldname language  content fieldname startswith  author keywords      
+                    content   content replace           replace             
+                    h put fieldname keywords  content fieldname startswith  issn      
+                    h put fieldname issn  content fieldname startswith  doi number      
+                    h put fieldname doi  content auth   h get fieldname author auth auth contains    ed       
+                h remove fieldname author   
+                h put fieldname editor  auth replace    ed          
+              
+ 
+              
+            auth   h get fieldname author auth h put fieldname author  fixnames auth    
+              
+            auth   h get fieldname editor auth h put fieldname editor  fixnames auth entrytype   h containskey bibentry type_header  ? h get bibentry type_header    bibentry default_type  
+            h remove bibentry type_header book  equals entrytype     h containskey  chaptertitle      
+                  
+                entrytype    incollection   
+                  
+                h put fieldname title  h remove  chaptertitle     
+              
+            bibentry b bibentry idgenerator next    entrytype   
+            b setfield h   
+ 
+            bibitems add b parserresult bibitems fixnames content names content indexof ' '    0      
+            names   content replaceall   ^\\ a-za-z  \\-         replace        and content indexof         0 snames   content split        
+            stringbuilder sb stringbuilder i   0  i   snames length  i i   0    
+                    sb append   and     
+                  
+                sb append snames i  replacefirst              
+              
+            names   sb tostring names   content authorlist fixauthorlastnamefirst names   
+      
+ 
+ 
