@@ -1,10 +1,9 @@
-# Interactive Auto Mapping Tool
+# Interactive Source Code to Software Architecture Mapping
 
-A prototype implementation of an algorithm that automatically maps source code artifacts to a high level architectural representation using user feedback.
+Reflexion Modelling is a popular method used in software architectural consistency checking. However, it involves a mapping process that is manual and tedious. There exist techniques that attempt to automate mapping, however, most require an initial set of pre-mapped entities in order to achieve this. This prototypical tool uses a technique that improves the mapping process in reflexion modelling by eliminating the constraint of having pre-mapped entities in order to automate mapping. The technique interactively maps unmapped source code entities from scratch. Using a software’s architecture documentation the technique applies information retrieval concepts to the software’s codebase to provide mapping recommendations of the software’s source code entities to its architectural modules. 
 
+For the 3 systems tested, the recommendations the technique provided achieved a recall of 1.00, 0.95, and 0.91 and a precision of 0.93, 0.85, and 0.65 respectively. The proposed mapping technique, without the need of pre-mapped source code entities, is able to achieve similar, and in some cases higher, f1-scores in comparison to existing techniques that require pre-mapping. This provides a basis for improving tool support for software architects using reflexion modelling or similar methods.
 
-This proptotype has an automated evalutor to measure the performance of the algorithm.
+The replication package includes a prototype that has an automated evaluator to measure the performance of the algorithm in terms of recall and precision. The 3 open source java-based tests systems have been included with their respective configuration files module descriptions and oracle architectures. The config files allow you to set parameters that the evaluator can use to test the performance of the algorithm.
 
-Open source java-based tests systems have been uploaded with their respective config files that allow you to set parameters that the evaluator can use to test the performance of the algorithm.
-
-To view the results of an evaluation you need to open the algo-eval-results.html file using a browser that allows CORS, see https://www.thegeekstuff.com/2016/09/disable-same-origin-policy/update readme
+To view the results of an evaluation you need to open the algo-eval-results.html file using a browser that allows CORS, see https://www.thegeekstuff.com/2016/09/disable-same-origin-policy.
