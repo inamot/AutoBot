@@ -1,0 +1,296 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+   issues  
+ - ns param used provide  namespaces properties may flexible  
+ - object value ant1 5 string used properties nice support generic objects property remains immutable t change associated object allow jsp-el style setting using object attribute contains only property  name  $ property avoid object- string- object conversion  
+ - currently chain  only set property  probably most users only need need replace top helper   
+ need discuss find need not final  api may change 
+   
+   deals properties - substitution  dynamic properties  etc same code ant1 5 main addition ability chain multiple propertyhelpers replace default ant 1 6 
+    
+    project properties map  usually string string      
+    
+       map user  properties created ant task example   
+       note key value pairs always put project properties only project properties need queried  
+       mapping string string  
+        
+    
+       map inherited  user  properties those  user  
+       properties created tasks not set command line gui tool  
+       mapping string string  
+        
+    
+       default constructor  
+        
+  override facility subclasses put custom hashtables hook management  -------------------- 
+    
+       set project helper performing property resolution 
+       
+        param p project instance 2 ways hook property handling replace main propertyhelper replacement required support same semantics course chain property helper capable storing some properties  
+        again required respect immutability semantics least non-dynamic properties  
+       
+        param next next property helper chain next property helper chain  
+       
+        return next property helper  
+        
+    
+       factory method create property processor  
+       users provide replace using  ant propertyhelper  
+       reference  user tasks add themselves chain provide 
+       dynamic properties  
+       
+        param project project fro property helper required  
+       
+        return project's property helper  
+        
+   --------------------  methods override  -------------------- 
+    
+       sets property  any existing property same name overwritten  unless user property called setproperty helpers return false property saved default properties table setproperty  
+       
+        param ns namespace property currently 
+                   not used  
+        param name name property set  
+                   must not code null  code   
+        param value new value property  
+                    must not code null  code   
+        param inherited true property inherited sub ant call  property   
+        param user      true property user property  
+        param isnew     true new property  
+        return true helper stored property  false couldn't  each helper delegate next one  unless good reason not next handled property property hooks return null default 
+       tables used  
+       
+        param ns namespace sought property  
+        param name name sought property  
+        param user true user property  
+        return property returned hook null none  
+        
+   experimental testing removed 
+   -------------------- optional methods override those methods want optimize advanced things support special syntax methods not chain use embedding ant replacing main helper  
+    
+       parses string containing  code $ xxx   code  style property 
+       references two lists first list collection text fragments set string property names  
+        code null  code  entries first list indicate property 
+       reference second list overridden efficient customized version  
+       
+        param value     text parse  must not code null  code   
+        param fragments list add text fragments must not code null  code   
+        param propertyrefs list add property names must not code null  code   
+       
+        exception buildexception string contains opening 
+                                  code $   code  without closing 
+                                  code    code  
+        
+    
+       replaces  code $ xxx   code  style constructions given value string value corresponding data types  
+       
+        param ns namespace property  
+        param value string scanned property references  
+                    may code null  code case method returns immediately effect  
+        param keys  mapping  string string property names values code null  code   only project properties used  
+       
+        exception buildexception string contains opening 
+                                  code $   code  without closing 
+                                  code    code  
+        return original string properties replaced code null  code original string code null  code   
+        
+   try project keys 
+   backward compatibility 
+   -------------------- default implementation  -------------------- 
+   methods used support default behavior provide backward 
+   compatibility  some deprecated avoid calling default implementation setproperty called project original 1 5 implementation calls hook 
+        added  
+         param ns namespace property  currently not used   
+         param name name property  
+         param value value set property param verbose true output extra log messages  
+         return true property set  
+        
+   user  cli  properties take precedence 
+    
+       sets property value currently exists property 
+       exists already message logged method returns effect  
+       
+        param ns namespace property  currently not used   
+        param name name property set  
+                   must not code null  code   
+        param value new value property  
+                    must not code null  code ant 1 6 
+        
+    
+       sets user property cannot overwritten set unset property calls  any previous value overwritten  
+        param ns namespace property  currently not used   
+        param name name property set  
+                   must not code null  code   
+        param value new value property  
+                    must not code null  code   
+        
+    
+       sets inherited user property cannot overwritten set unset 
+       property calls  any previous value overwritten marks properties properties not come command line  
+       
+        param ns namespace property  currently not used   
+        param name name property set  
+                   must not code null  code   
+        param value new value property  
+                    must not code null  code   
+        
+   -------------------- getting properties  -------------------- 
+    
+       returns value property set override method order plug storage  
+       
+        param ns namespace property  currently not used   
+        param name name property  
+                   may code null  code case return value code null  code   
+        return property value code null  code match code null  code  name provided  
+        
+    
+       returns value user property set  
+       
+        param ns namespace property  currently not used   
+        param name name property  
+                   may code null  code case return value code null  code   
+        return property value code null  code match code null  code  name provided  
+        
+   -------------------- access property tables used support ant call similar tasks deprecated possible use better efficient  
+   mechanism preserve context  
+    
+       returns copy properties table  
+        return hashtable containing properties 
+                including user properties better way save context shouldn't 
+   delegate next s backward compatibility only  
+    
+       returns copy user property hashtable 
+        return hashtable containing user properties 
+        
+    
+       special back door subclasses  internal access hashtables 
+        return live hashtable properties 
+        
+    
+       special back door subclasses  internal access hashtables 
+       
+        return live hashtable user properties 
+        
+    
+       special back door subclasses  internal access hashtables 
+       
+        return live hashtable inherited properties 
+        
+    
+       copies user properties not set command line gui tool instance project 
+       instance given argument  
+       
+        p copy user  properties call 
+         link #copyuserproperties copyuserproperties    p  
+       
+        param project copy properties must not null ant 1 6 
+        
+    
+       copies user properties set command 
+       line gui tool instance project instance 
+       given argument  
+       
+        p copy user  properties call 
+         link #copyinheritedproperties copyinheritedproperties    p  
+       
+        param project copy properties must not null ant 1 6 
+        
+   -------------------- property parsing  -------------------- 
+   moved projecthelper override static method used backward compatibility code calls parse method projecthelper   
+    default parsing method here only support backward compatibility static projecthelper parsepropertystring    
+        
+  search next instance prev' position any text before add fragment 
+  todo check modified go pos prev  
+  seems current version stick empty strings list end string tack move past peek ahead see next char property not 
+  not property  insert char literal 
+   
+                fragments addelement value substring pos   1  pos   2    
+                prev   pos   2  
+                   
+  backwards compatibility two $ map one mode 
+  new behaviour  $x maps x values x  '$' 
+  property found  extract name bail typo signs found any tail file  append itorg apache tools ant PropertyHelper org apache tools ant propertyhelper propertyhelper setproject project p project   p setnext propertyhelper next next   next propertyhelper getnext next propertyhelper getpropertyhelper project project    
+        propertyhelper helper 
+               propertyhelper  project getreference magicnames refid_property_helper helper helper  
+          
+        helper propertyhelper    
+        helper setproject project   
+ 
+        project addreference magicnames refid_property_helper  helper helper setpropertyhook ns name  
+                                   object value inherited user isnew getnext subst   getnext   setpropertyhook ns  name  value  
+                    inherited  user  isnew subst object getpropertyhook ns name user getnext object o   getnext   getpropertyhook ns  name  user o o name startswith  tostring       
+            name   name substring  tostring   length     
+            object v   project getreference name v null   v tostring parsepropertystring value  vector fragments  
+                                    vector propertyrefs buildexception   
+        parsepropertystringdefault value  fragments  propertyrefs replaceproperties ns value  hashtable keys buildexception value value indexof '$'     -1 value  
+          
+        vector fragments vector    
+        vector propertyrefs vector    
+        parsepropertystring value  fragments  propertyrefs   
+ 
+        stringbuffer sb stringbuffer    
+        enumeration i   fragments elements    
+        enumeration j   propertyrefs elements i hasmoreelements fragment i nextelement fragment propertyname j nextelement    
+                object replacement keys replacement   keys get propertyname replacement replacement   getproperty ns  propertyname replacement project log  property \     propertyname 
+                               \  has not been set   project msg_verbose   
+                  
+                fragment    replacement replacement tostring   
+                           $     propertyname        
+              
+            sb append fragment sb tostring setproperty ns name  
+                                            object value verbose userproperties get name verbose    
+                project log  override ignored user property \     name 
+                       \    project msg_verbose done   setpropertyhook ns  name  value false done properties get name     verbose    
+            project log  overriding previous definition of property \     name 
+                   \    project msg_verbose verbose    
+            project log  setting project property      name     -    
+                  value  project msg_debug   
+          
+        properties put name  value setnewproperty ns name  
+                                            object value properties get name     
+            project log  override ignored property \     name 
+                   \    project msg_verbose done   setpropertyhook ns  name  value false done project log  setting project property      name     -    
+              value  project msg_debug name value properties put name  value setuserproperty ns name  
+                                             object value    
+        project log  setting ro project property      name     -    
+              value  project msg_debug   
+        userproperties put name  value done   setpropertyhook ns  name  value false done properties put name  value setinheritedproperty ns name  
+                                                  object value    
+        inheritedproperties put name  value   
+ 
+        project log  setting ro project property      name     -    
+              value  project msg_debug   
+        userproperties put name  value done   setpropertyhook ns  name  value false done properties put name  value object getproperty ns name name null  
+          
+ 
+        object o   getpropertyhook ns  name o o properties get name object getuserproperty ns name name null  
+          
+        object o   getpropertyhook ns  name o o userproperties get name hashtable getproperties hashtable properties hashtable getuserproperties hashtable userproperties hashtable getinternalproperties properties hashtable getinternaluserproperties userproperties hashtable getinternalinheritedproperties inheritedproperties copyinheritedproperties project other    
+        enumeration e   inheritedproperties keys e hasmoreelements arg   e nextelement   tostring other getuserproperty arg object value   inheritedproperties get arg   
+            other setinheritedproperty arg  value tostring copyuserproperties project other    
+        enumeration e   userproperties keys e hasmoreelements      
+            object arg   e nextelement inheritedproperties containskey arg object value   userproperties get arg   
+            other setuserproperty arg tostring    value tostring parsepropertystringdefault value  vector fragments  
+                                    vector propertyrefs buildexception prev   0 pos pos   value indexof  $   prev      0 pos   0    
+                fragments addelement value substring prev  pos pos     value length   - 1     
+                fragments addelement  $    
+                prev   pos   1 value charat pos   1 value charat pos   1     '$'    
+                      
+                    fragments addelement  $    
+                    prev   pos   2 fragments addelement value substring pos  pos   2    
+                    prev   pos   2 endname   value indexof ' '  pos endname   0 buildexception  syntax error in property    
+                                                   value propertyname   value substring pos   2  endname   
+                fragments addelement propertyrefs addelement propertyname   
+                prev   endname   1 prev   value length      
+            fragments addelement value substring prev    
+          
+      
+ 
+ org apache tools ant PropertyHelper

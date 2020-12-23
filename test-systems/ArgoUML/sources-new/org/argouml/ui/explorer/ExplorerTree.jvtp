@@ -1,0 +1,286 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications class jtree explorer provides  p  
+    pre  
+    - selection target management 
+    - mouse listener pop up   pre  
+   
+    author  alexb 0 15 2 
+    
+    
+       prevents target event cycles between targetmanager  
+        
+    
+       prevents target event cycles between targetmanager tree selection events  
+        
+    
+       creates new instance explorertree  
+        
+    
+       listens mouse events coming jtree right click  brings up pop-up menu constructor  
+            param newtree 
+            
+    
+           brings up pop-up menu  
+            
+            see java awt event mouselistener#mousepressed  
+                java awt event mouseevent  
+            
+    
+           brings up pop-up menu windows motif platforms user brings up popup menu releasing right mouse button cursor over component popup-enabled  
+            
+            see java awt event mouselistener#mousereleased  
+                java awt event mouseevent  
+            
+    
+           brings up pop-up menu  
+            
+            see java awt event mouselistener#mouseclicked  
+                java awt event mouseevent  
+            
+    
+           double-clicking item attempts show item diagram  
+            
+    
+           builds pop-up menu extra functionality tree  
+           
+            param mouse event preserve current  multiple  selection over part otherwise select item below mousepointer     
+   end class explorermouselistener    
+    
+       helps prepare state before node expanded  
+        
+   
+            see javax swing event treewillexpandlistener#treewillcollapse javax swing event treeexpansionevent  
+            
+   unimplemented only care expanding 
+   
+           updates stereotype setting  
+           adds children per treemodel 'build demand' design  
+           
+            see javax swing event treewillexpandlistener#treewillexpand javax swing event treeexpansionevent  
+            
+   todo not need know projectsettings - tfm 
+    
+       helps react tree expansion events  
+        
+   
+            see javax swing event treeexpansionlistener#treecollapsed  
+                   javax swing event treeexpansionevent nothing  
+   
+            see javax swing event treeexpansionlistener#treeexpanded  
+                   javax swing event treeexpansionevent  
+           updates selection state  
+            
+   need update selection state  
+    
+       refresh selection tree nodes not cause new events fired targetmanager  
+        
+    
+       sets selection state given set targets  
+       
+        param targets targets 
+        
+   todo following removed selectall gets fixed 
+   todo doesn't perform well enough large models enabled default performance t improved   
+   perhaps introduce manual  find explorer tree  action  
+          selectall targets   
+   todo only works item visible parents expanded  
+   getexpandeddescendants  makevisible 
+    
+       select any targets visible explorer pane 
+        
+    
+       search entire tree select instances targets found  
+        
+   
+       perform recursive search subtree rooted node'  selecting nodes userobject matching one targets  
+        
+   target may appear multiple places tree don't stop here s expensive search whole tree  - tfm - 20070904 
+                    targets remove t   
+                    break  
+    
+       manages selecting item show argo's views based highlighted row  
+        
+    
+            see javax swing event treeselectionlistener#valuechanged  
+                   javax swing event treeselectionevent  
+           
+           change explorer tree selection -  set target target manager elements 
+   scan visible rows duplicates elem select check targetmanager method call must call correct method targetmanager each added removed target t remove targets one go one one  
+    
+           actions change targets received targetmanager  
+           
+            param targets targets 
+            
+   
+            see org argouml ui targetmanager targetlistener#targetadded  
+	           org argouml ui targetmanager targetevent  
+            
+   settargets e getnewtargets     
+   
+            see org argouml ui targetmanager targetlistener#targetremoved  
+                org argouml ui targetmanager targetevent  
+            
+   settargets e getnewtargets     
+   
+            see org argouml ui targetmanager targetlistener#targetset  
+	           org argouml ui targetmanager targetevent uid  
+       org argouml ui explorer ExplorerTree org argouml ui explorer explorertree displaytexttree explorertree setmodel explorertreemodel projectmanager getmanager   
+			                     getcurrentproject this addmouselistener explorermouselistener this addtreeselectionlistener explorertreeselectionlistener addtreewillexpandlistener explorertreewillexpandlistener addtreeexpansionlistener explorertreeexpansionlistener     
+ 
+        targetmanager getinstance   
+	     addtargetlistener explorertargetlistener explorermouselistener mouseadapter explorermouselistener jtree newtree mltree   newtree  
+          
+ 
+          
+         override mousepressed mouseevent me me ispopuptrigger      
+                me consume    
+                showpopupmenu me   
+              
+          
+ 
+          
+         override mousereleased mouseevent me me ispopuptrigger      
+                me consume    
+                showpopupmenu me   
+              
+          
+ 
+          
+         override mouseclicked mouseevent me me ispopuptrigger      
+                me consume    
+                showpopupmenu me me getclickcount      2    
+                mydoubleclick mydoubleclick     
+            object target   targetmanager getinstance   gettarget target list show arraylist    
+                show add target   
+                projectactions jumptodiagramshowing show showpopupmenu mouseevent me    
+ 
+            treepath path   getpathforlocation me getx    me gety path ispathselected path     
+                  
+                getselectionmodel   setselectionpath path   
+              
+ 
+            object selecteditem   
+                  defaultmutabletreenode  path getlastpathcomponent    
+                         getuserobject    
+            jpopupmenu popup explorerpopup selecteditem  me popup getcomponentcount     0    
+                popup show mltree  me getx    me gety explorertreewillexpandlistener treewillexpandlistener treewillcollapse treeexpansionevent tee treewillexpand treeexpansionevent tee    
+              
+            project p   projectmanager getmanager   getcurrentproject    
+            projectsettings ps   p getprojectsettings    
+            setshowstereotype ps getshowstereotypesvalue getmodel explorertreemodel    
+ 
+                  explorertreemodel  getmodel    updatechildren tee getpath explorertreeexpansionlistener treeexpansionlistener treecollapsed treeexpansionevent event treeexpanded treeexpansionevent event    
+ 
+              
+            setselection targetmanager getinstance   gettargets   toarray refreshselection     
+        collection targets   targetmanager getinstance   gettargets    
+        updatingselectionviatreeselection setselection targets toarray     
+        updatingselectionviatreeselection setselection object   targets    
+        updatingselectionviatreeselection clearselection    
+        addtargetsinternal targets   
+        updatingselectionviatreeselection addtargetsinternal object   addedtargets addedtargets length   1 set targets hashset object t   addedtargets t fig    
+                targets add   fig  t  getowner targets add t   
+              
+              
+            selectvisible t selectedrows   getselectionrows selectedrows selectedrows length   0    
+              
+              
+              
+            makevisible getpathforrow selectedrows 0     
+            scrollrowtovisible selectedrows 0 selectvisible object target j   0  j   getrowcount    j      
+            object rowitem   
+                      defaultmutabletreenode  getpathforrow j  
+                             getlastpathcomponent    getuserobject rowitem    target    
+                addselectionrow j selectall set targets    
+        explorertreemodel model    explorertreemodel  getmodel    
+        explorertreenode root    explorertreenode  model getroot      
+        selectchildren model  root  targets selectchildren explorertreemodel model  explorertreenode node  
+            set targets targets isempty object nodeobject   node getuserobject nodeobject object t   targets t    nodeobject    
+                    addselectionpath treepath node getpath      
+                      
+                      
+                      
+  
+  
+                  
+              
+          
+ 
+        model updatechildren treepath node getpath      
+        enumeration e   node children e hasmoreelements      
+            selectchildren model   explorertreenode  e nextelement    targets explorertreeselectionlistener treeselectionlistener valuechanged treeselectionevent e updatingselectionviatreeselection    
+                updatingselectionviatreeselection treepath   addedorremovedpaths   e getpaths    
+                treepath   selectedpaths   getselectionpaths    
+                list elementsaslist arraylist i   0  
+                    selectedpaths i   selectedpaths length  i      
+                    object element   
+                          defaultmutabletreenode  
+                                selectedpaths i  getlastpathcomponent    
+                                 getuserobject    
+                    elementsaslist add element rows   getrowcount row   0  row   rows  row      
+                        object rowitem   
+			      defaultmutabletreenode  getpathforrow row  
+			             getlastpathcomponent    
+			             getuserobject rowitem    element 
+			         isrowselected row      
+                            addselectionrow row callsettarget list addedelements arraylist i   0  i   addedorremovedpaths length  i      
+                    object element   
+                          defaultmutabletreenode  
+                            addedorremovedpaths i  getlastpathcomponent    
+                             getuserobject e isaddedpath i     
+                        callsettarget addedelements add element callsettarget    addedelements size   
+                           elementsaslist size   
+                           elementsaslist containsall addedelements     
+                    targetmanager getinstance   settargets elementsaslist list removedtargets arraylist    
+                    list addedtargets arraylist i   0  i   addedorremovedpaths length  i      
+                        object element   
+                              defaultmutabletreenode  
+                                addedorremovedpaths i  
+                                         getlastpathcomponent    
+                                 getuserobject e isaddedpath i     
+                            addedtargets add element removedtargets add element removedtargets isempty      
+                        iterator it   removedtargets iterator it hasnext      
+                            targetmanager getinstance   removetarget it next addedtargets isempty      
+                        iterator it   addedtargets iterator it hasnext      
+                            targetmanager getinstance   addtarget it next     
+                          
+                      
+                  
+ 
+                updatingselectionviatreeselection explorertargetlistener targetlistener settargets object   targets updatingselection    
+                updatingselection targets length    0    
+                    clearselection setselection targets   
+                  
+                updatingselection targetadded targetevent e updatingselection    
+                updatingselection object   targets   e getaddedtargets    
+                 
+                updatingselectionviatreeselection addtargetsinternal targets   
+                updatingselectionviatreeselection updatingselection targetremoved targetevent e updatingselection    
+                updatingselection object   targets   e getremovedtargets rows   getrowcount i   0  i   targets length  i      
+                    object target   targets i target fig    
+                        target     fig  target  getowner j   0  j   rows  j      
+                        object rowitem   
+                              defaultmutabletreenode  
+                                    getpathforrow j  getlastpathcomponent    
+                             getuserobject rowitem    target    
+                            updatingselectionviatreeselection removeselectionrow j   
+                            updatingselectionviatreeselection getselectioncount     0    
+                    scrollrowtovisible getselectionrows   0    
+                  
+                updatingselection targetset targetevent e    
+            settargets e getnewtargets     
+ 
+          
+      
+ 
+      
+  
+ org argouml ui explorer ExplorerTree

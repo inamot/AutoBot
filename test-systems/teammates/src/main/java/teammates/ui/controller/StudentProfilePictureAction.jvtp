@@ -1,0 +1,35 @@
+ 
+    
+   action  serves profile picture stored google cloud storage  
+    
+   picture request only relevant registered student 
+   todo  remove null check once legacy data portedteammates ui controller StudentProfilePictureAction teammates ui controller studentprofilepictureaction action   
+ 
+  
+ 
+     override actionresult execute entitydoesnotexistexception isrequestfromstudent   getrequestparamvalue paramsnames blob_key isrequestfrominstructororotherstudent   
+                                        getrequestparamvalue paramsnames student_email isrequestfromstudent     isrequestfrominstructororotherstudent    
+            assumption fail  expected blob-key  or student email with courseid    
+          
+ 
+        actionresult result isrequestfromstudent    
+            result   handlerequestwithblobkey    
+            statustoadmin    requested profile picture by student directly isrequestfrominstructororotherstudent    
+            result   handlerequestwithemailandcourse    
+            statustoadmin    requested profile picture by instructor other students result actionresult handlerequestwithblobkey blobkey   getblobkeyfromrequest    
+        log info  blob-key given      blobkey createimageresult blobkey actionresult handlerequestwithemailandcourse entitydoesnotexistexception email courseid email   getstudentemailfromrequest    
+            courseid   getcourseidfromrequest invalidparametersexception e    
+            log warning  attempting to decrypt malformed ciphertext when retrieving email or course id from request entitydoesnotexistexception e   
+          
+ 
+        log info  email      email      course      courseid   
+ 
+        studentattributes student   getstudentforgivenparameters courseid  email   
+        gatekeeper verifyaccessibleforcurrentuserasinstructororteammember account  courseid  student section  email createimageresult getpicturekeyforstudent student studentattributes getstudentforgivenparameters courseid email entitydoesnotexistexception   
+        studentattributes student   logic getstudentforemail courseid  email student entitydoesnotexistexception  student with     courseid         email student getblobkeyfromrequest blobkey   getrequestparamvalue paramsnames blob_key   
+        assumption assertpostparamnotnull paramsnames blob_key  blobkey blobkey getcourseidfromrequest invalidparametersexception courseid   getrequestparamvalue paramsnames course_id   
+        assumption assertpostparamnotnull paramsnames course_id  courseid   
+        courseid   stringhelper decrypt courseid courseid getstudentemailfromrequest invalidparametersexception email   getrequestparamvalue paramsnames student_email   
+        assumption assertpostparamnotnull paramsnames student_email  email   
+        email   stringhelper decrypt email email getpicturekeyforstudent studentattributes student student googleid isempty      
+            studentprofileattributes profile   logic getstudentprofile student googleid profile profile picturekey teammates ui controller StudentProfilePictureAction

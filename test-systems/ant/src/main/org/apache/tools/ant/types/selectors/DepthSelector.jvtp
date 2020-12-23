@@ -1,0 +1,63 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   selector filters files based deep directory 
+   tree 1 5 
+    
+   checkstyle visibilitymodifier bc 
+    min attribute    
+    max attribute    
+   checkstyle visibilitymodifier used parameterized custom selector    
+    used parameterized custom selector    
+    
+       creates new  code depthselector  code  instance  
+       
+        
+    
+        return string describing object minimum depth below basedir before file selected  
+       
+        param min minimum directory levels below basedir go minimum depth below basedir before file selected  
+       
+        param max maximum directory levels below basedir go using custom selector method called translates each parameter appropriate setxxx   call  
+       
+        param parameters complete set parameters selector 
+        
+    
+       checks make sure settings kosher case means max depth not lower min depth heart matter selector gets decide inclusion file particular fileset  most work selector offloaded selectorutils static class provides same services both filenameselector directoryscanner  
+       
+        param basedir base directory scan being done param filename name file check 
+        param file java io file object selector use 
+        return whether file selected not 
+        
+   throw buildexception error felt daring cache basedir absolute path 
+   sanity check  ditch want faster performanceorg apache tools ant types selectors DepthSelector org apache tools ant types selectors depthselector baseextendselector min   -1 max   -1 min_key    min max_key    max depthselector tostring     
+        stringbuffer buf stringbuffer   depthselector min      
+        buf append min   
+        buf append   max      
+        buf append max   
+        buf append buf tostring setmin min min   min setmax max max   max setparameters parameter   parameters setparameters parameters parameters i   0  i   parameters length  i paramname   parameters i  getname min_key equalsignorecase paramname setmin integer parseint parameters i  getvalue numberformatexception nfe1    
+                        seterror  invalid minimum value   
+                                  parameters i  getvalue max_key equalsignorecase paramname setmax integer parseint parameters i  getvalue numberformatexception nfe1    
+                        seterror  invalid maximum value   
+                                  parameters i  getvalue seterror  invalid parameter     paramname verifysettings min   0    max   0    
+            seterror  you must set at least one of the min or the   
+                       max levels max   min    max   -1    
+            seterror  the maximum depth is lower than the minimum isselected file basedir filename  file file    
+ 
+          
+        validate depth   -1 absbase   basedir getabsolutepath absfile   file getabsolutepath    
+        stringtokenizer tokbase stringtokenizer absbase  
+                file separator   
+        stringtokenizer tokfile stringtokenizer absfile  
+                file separator tokfile hasmoretokens filetoken   tokfile nexttoken tokbase hasmoretokens basetoken   tokbase nexttoken basetoken equals filetoken buildexception  file     filename 
+                                does not appear within     absbase 
+                               directory depth    1 max   -1    depth   max tokbase hasmoretokens buildexception  file     filename 
+                    is outside of     absbase    directory tree min   -1    depth   min org apache tools ant types selectors DepthSelector

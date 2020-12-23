@@ -1,0 +1,61 @@
+ 
+   check conflicting feedback sessions courses 
+   copy feedback sessions 
+   todo  consider doing batch insert 
+   return redirection url  handled javascript sessions page copying instructor see new feedback sessions conflicts checked above only occur via race condition 
+    
+       given array course ids  return only ids courses existing feedback session name conflicting feedbacksessionname  
+       teammates ui controller InstructorFeedbackEditCopyAction teammates ui controller instructorfeedbackeditcopyaction action   
+ 
+     override actionresult execute entitydoesnotexistexception newfeedbacksessionname   getrequestparamvalue paramsnames copied_feedback_session_name coursesidtocopyto   getrequestparamvalues paramsnames copied_courses_id originalfeedbacksessionname   getrequestparamvalue paramsnames feedback_session_name originalcourseid   getrequestparamvalue paramsnames course_id nexturl   getrequestparamvalue paramsnames next_url   
+ 
+        assumption assertpostparamnotnull paramsnames course_id  originalcourseid   
+        assumption assertpostparamnotnull paramsnames feedback_session_name  originalfeedbacksessionname   
+        assumption assertpostparamnotnull paramsnames copied_feedback_session_name  newfeedbacksessionname nexturl nexturl actionuris instructor_feedback_sessions_page coursesidtocopyto coursesidtocopyto length    0 createajaxresultwitherrormessage statusmessages feedback_session_copy_noneselected   
+          
+ 
+        instructorattributes instructor   logic getinstructorforgoogleid originalcourseid  account googleid   
+        feedbacksessionattributes fsa   logic getfeedbacksession originalfeedbacksessionname  originalcourseid   
+ 
+        gatekeeper verifyaccessible instructor  logic getcourse originalcourseid paramsnames instructor_permission_modify_session   
+        gatekeeper verifyaccessible instructor  fsa list conflictcourses   
+                    filterconflictsincourses newfeedbacksessionname  coursesidtocopyto conflictcourses isempty commaseparatedlistofcourses   stringhelper tostring conflictcourses errortouser format statusmessages feedback_session_copy_alreadyexists  
+                                                   newfeedbacksessionname  
+                                                   commaseparatedlistofcourses createajaxresultwitherrormessage errortouser   
+              
+ 
+            feedbacksessionattributes fs courseidtocopyto   coursesidtocopyto    
+                instructorattributes instructorforcourse   
+                        logic getinstructorforgoogleid courseidtocopyto  account googleid   
+                gatekeeper verifyaccessible instructorforcourse  logic getcourse courseidtocopyto paramsnames instructor_permission_modify_session   
+ 
+                fs   logic copyfeedbacksession newfeedbacksessionname  courseidtocopyto  
+                        originalfeedbacksessionname  originalcourseid  instructor email   
+              
+ 
+            list courses   arrays aslist coursesidtocopyto commaseparatedlistofcourses   stringhelper tostring courses        
+ 
+            statustouser add statusmessage statusmessages feedback_session_copied  statusmessagecolor success    
+            statustoadmin   
+                     copying to multiple feedback sessions  br feedback session  span bold\       fs getfeedbacksessionname         span courses   br     commaseparatedlistofcourses     br   
+                        span bold\  from   span      fs getstarttime   
+                        span bold\   to  span      fs getendtime       br   
+                        span bold\  session visible from   span      fs getsessionvisiblefromtime       br   
+                        span bold\  results visible from   span      fs getresultsvisiblefromtime       br  br   
+                        span bold\  instructions   span      fs getinstructions       br   
+                       copied from  span bold\       originalfeedbacksessionname       span course   
+                        span bold\       originalcourseid       span  created  br createajaxresultwithoutclearingstatusmessage instructorfeedbackeditcopydata account  sessiontoken  
+                                                          config getappurl nexturl  
+                                                                 withparam paramsnames error tostring    
+                                                                 withparam paramsnames user_id  
+                                                                           account googleid entityalreadyexistsexception e    
+              
+            setstatusforexception e statusmessages feedback_session_exists createajaxresultwitherrormessage statusmessages feedback_session_exists invalidparametersexception e    
+            setstatusforexception e createajaxresultwitherrormessage e getmessage list filterconflictsincourses feedbacksessionname coursesidtocopyto    
+        list courses arraylist courseidtocopy   coursesidtocopyto    
+            feedbacksessionattributes existingfs   
+                    logic getfeedbacksession feedbacksessionname  courseidtocopy hasexistingfs   existingfs hasexistingfs    
+                courses add existingfs getcourseid courses ajaxresult createajaxresultwitherrormessage errortouser    
+        iserror createajaxresult instructorfeedbackeditcopydata account  sessiontoken  errortouser    
+      
+ teammates ui controller InstructorFeedbackEditCopyAction

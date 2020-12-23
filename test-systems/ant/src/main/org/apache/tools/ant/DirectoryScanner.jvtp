@@ -1,0 +1,716 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   class scanning directory files directories match certain 
+   criteria  
+    p criteria consist selectors patterns specified selectors select files want included  
+   files not selected excluded patterns include exclude files based filename  
+    p idea simple given directory recursively scanned files directories  each file directory matched against set selectors  
+   including special support matching against filenames include and exclude patterns  only files directories match least one 
+   pattern include pattern list file selector don't match 
+   any pattern exclude pattern list fail match against required 
+   selector placed list files directories found  
+    p list include patterns supplied used means everything matched list exclude patterns supplied empty list used nothing excluded selectors supplied  none applied  
+    p filename pattern matching done follows name matched split up path segments path segment name directory file bounded code file separator  code   ' ' under unix  '\' under windows example   abc def ghi xyz java split up segments  abc   
+    def   ghi xyz java same done pattern against matched  
+    p segments name pattern matched against each used path segment pattern matches 
+   zero path segments name  
+    p special case regarding use code file separator  code s beginning pattern string match  br pattern starts code file separator  code string match must start code file separator  code pattern not start code file separator  code string match may not start code file separator  code one rules not obeyed string not 
+   match  
+    p name path segment matched against pattern path segment following special characters used  br  
+   ' ' matches zero characters br  
+   '?' matches one character  
+    p  
+   examples  
+    p  
+      \  class  matches class files dirs directory tree  
+    p  
+    test java  matches files dirs start two characters java directory called test  
+    p  
+        matches everything directory tree  
+    p  
+      \test\  \xyz   matches files dirs start xyz parent directory called test  e g   abc\test\def\ghi\xyz123    
+    p  
+   case sensitivity may turned necessary default turned p  
+   example usage  
+    pre  
+     string   includes       \\  class    
+     string   excludes     modules\\ \\      
+     ds setincludes includes   
+     ds setexcludes excludes   
+     ds setbasedir new file  test     
+     ds setcasesensitive true   
+     ds scan    
+   
+     system out println  files     
+     string   files   ds getincludedfiles int 0 files length system out println files pre scan directory called test class files excludes files proper subdirectories directory called  modules openvms operating system re running patterns excluded default  
+       
+        p note now add patterns list default 
+       excludes   added patterns not become part array only kept around backwards compatibility 
+       reasons   p  
+       
+        deprecated 1 6 x  
+                   use link #getdefaultexcludes getdefaultexcludes  
+                   method instead  
+        
+   miscellaneous typical temporary files 
+  ~   
+            # #   
+   cvs 
+      
+             cvsignore   
+   sccs 
+      
+ 
+           visual sourcesafe 
+            vssver scc   
+   subversion 
+      
+ 
+           mac 
+             ds_store  
+    helper     
+    iterations case-sensitive scanning     
+    iterations non-case-sensitive scanning     
+    
+       patterns excluded default  
+       
+        see #adddefaultexcludes   
+        
+   checkstyle visibilitymodifier bc base directory scanned patterns files included patterns files excluded     
+    selectors filter files candidate list files matched least one include excludes selected files not match any includes selectors files matched least one include least 
+       one exclude directories matched least one include excludes selected directories found not match any includes directories matched least one include least one 
+       exclude files matched least one include excludes selector discarded directories matched least one include excludes selector discarded  
+        
+    whether not results built slow scan     
+    
+       whether not file system treated case sensitive 
+       one  
+        
+    
+       whether not symbolic links followed ant 1 5 
+        
+    whether not everything tested far included     
+   checkstyle visibilitymodifier temporary table speed up various scanning methods ant 1 6 
+        
+    
+       list scanned directories ant 1 6 
+        
+    
+       set include patterns full file names don't 
+       contain any wildcards  
+       
+        p instance not case sensitive file names turned lower case   p  
+       
+        p gets lazily initialized first invocation isincluded isexcluded cleared end scan 
+       method  cleared clearcaches  actually    p ant 1 6 3 
+        
+    
+       set include patterns full file names don't 
+       contain any wildcards  
+       
+        p instance not case sensitive file names turned lower case   p  
+       
+        p gets lazily initialized first invocation isincluded isexcluded cleared end scan 
+       method  cleared clearcaches  actually    p ant 1 6 3 
+        
+    
+       array include patterns contain wildcards  
+       
+        p gets lazily initialized first invocation isincluded isexcluded cleared end scan 
+       method  cleared clearcaches  actually    p ant 1 6 3 
+        
+    
+       array exclude patterns contain wildcards  
+       
+        p gets lazily initialized first invocation isincluded isexcluded cleared end scan 
+       method  cleared clearcaches  actually    p ant 1 6 3 non-pattern sets pattern arrays excludes initialized ant 1 6 3 
+        
+    
+       scanning flag ant 1 6 3 
+        
+    
+       scanning lock ant 1 6 3 
+        
+    
+       slow scanning flag ant 1 6 3 
+        
+    
+       slow scanning lock ant 1 6 3 
+        
+    
+       exception thrown during scan ant 1 6 3 
+        
+    
+       sole constructor  
+        
+    
+       test whether not given path matches start given 
+       pattern up first       
+        p not general purpose test only used live false positives example   code pattern code code str b  code yield  code true  code   
+       
+        param pattern pattern match against  must not code null  code   
+        param str path match string  must not code null  code   
+       
+        return whether not given path matches start given 
+       pattern up first       
+        
+    
+       test whether not given path matches start given 
+       pattern up first       
+        p not general purpose test only used live false positives example   code pattern code code str b  code yield  code true  code   
+       
+        param pattern pattern match against  must not code null  code   
+        param str path match string  must not code null  code   
+        param iscasesensitive whether not matching performed 
+                              case sensitively  
+       
+        return whether not given path matches start given 
+       pattern up first       
+        
+    
+       test whether not given path matches given pattern  
+       
+        param pattern pattern match against  must not code null  code   
+        param str path match string  must not code null  code   
+       
+        return  code true  code pattern matches against string code false  code  otherwise  
+        
+    
+       test whether not given path matches given pattern  
+       
+        param pattern pattern match against  must not code null  code   
+        param str path match string  must not code null  code   
+        param iscasesensitive whether not matching performed 
+                              case sensitively  
+       
+        return  code true  code pattern matches against string code false  code  otherwise  
+        
+    
+       test whether not string matches against pattern pattern may contain two special characters  br  
+       ' ' means zero characters br  
+       '?' means one only one character 
+       
+        param pattern pattern match against  
+                      must not code null  code   
+        param str string must matched against pattern  
+                      must not code null  code   
+       
+        return  code true  code string matches against pattern code false  code  otherwise  
+        
+    
+       test whether not string matches against pattern pattern may contain two special characters  br  
+       ' ' means zero characters br  
+       '?' means one only one character 
+       
+        param pattern pattern match against  
+                      must not code null  code   
+        param str string must matched against pattern  
+                      must not code null  code   
+        param iscasesensitive whether not matching performed 
+                              case sensitively  
+       
+       
+        return  code true  code string matches against pattern code false  code  otherwise list patterns excluded default  
+       
+        return array code string  code  based current 
+               contents code defaultexcludes  code  
+                code vector  code ant 1 6 
+        
+    
+       add pattern default excludes unless already default exclude  
+       
+        param s string add exclude pattern  
+        return     code true  code string added  
+                   code false  code already existed ant 1 6 
+        
+    
+       remove string default exclude  
+       
+        param s string attempt remove  
+        return     code true  code code s  code default 
+                  exclude thus removed   
+                   code false  code code s  code not default excludes list begin ant 1 6 
+        
+    
+       go back hardwired default exclude patterns ant 1 6 
+        
+    
+       set base directory scanned directory scanned recursively characters replaced code file separatorchar  code separator used need not match 
+        code file separatorchar  code   
+       
+        param basedir base directory scan  
+        
+    
+       set base directory scanned directory scanned recursively  
+       
+        param basedir base directory scanning  
+        
+    
+       return base directory scanned directory scanned recursively  
+       
+        return base directory scanned  
+        
+    
+       find out whether include exclude patterns matched case sensitive way  
+        return whether not scanning case sensitive ant 1 6 
+        
+    
+       set whether not include exclude patterns matched case sensitive way  
+       
+        param iscasesensitive whether not file system regarded case sensitive one whether not directoryscanner follows symbolic links  
+       
+        return flag indicating whether symbolic links followed ant 1 6 
+        
+    
+       set whether not symbolic links followed  
+       
+        param followsymlinks whether not symbolic links followed  
+        
+    
+       set list include patterns use characters replaced code file separatorchar  code separator used 
+       need not match  code file separatorchar  code   
+        p pattern ends appended  
+       
+        param includes list include patterns  
+                       may code null  code   indicating files included non- code null  code  
+                       list given elements must non- code null  code   
+        
+    
+       set list exclude patterns use characters replaced code file separatorchar  code separator used 
+       need not match  code file separatorchar  code   
+        p pattern ends appended  
+       
+        param excludes list exclude patterns  
+                       may code null  code   indicating files excluded non- code null  code  list given elements must non- code null  code   
+        
+    
+       add list exclude patterns use characters replaced code file separatorchar  code separator used need not match  code file separatorchar  code   
+        p pattern ends appended  
+       
+        param excludes list exclude patterns  
+                       may code null  code case exclude patterns don't changed ant 1 6 3 characters replaced code file separatorchar  code separator used need not 
+       match  code file separatorchar  code   
+       
+        p pattern ends appended ant 1 6 3 
+        
+    
+       set selectors select filelist  
+       
+        param selectors specifies selectors invoked scan  
+        
+    
+       return whether not scanner included files directories come across far  
+       
+        return  code true  code files directories found far included  
+        
+    
+       scan files match least one include pattern don't match 
+       any exclude patterns selectors files must pass 
+       muster well   scans under basedir set  otherwise include patterns without leading wildcards specify absolute paths files may included  
+       
+        exception illegalstateexception base directory set 
+                  incorrectly e doesn't exist isn't directory   
+        
+   set excludes reasonable defaults needed basedir includes  nothing routine actually checking include patterns order avoid scanning everything under base dir ant 1 6 
+        
+   put newroots map include patterns without 
+   wildcard tokens 
+  skip abs  paths not under basedir set  
+  skip non-abs  paths basedir    null going scan everything anyway 
+   only scan directories include matched files directories 
+   may case insensitive file system want results show s really disk need double check  
+   adapt currentelement case ve 
+   actually found 
+    
+       clear result caches scan  
+        
+    
+       top level invocation slow scan slow scan builds up full 
+       list excluded included files directories  whereas fast scan only full results included files ignores 
+       directories t possibly hold any included files directories  
+        p  
+       returns immediately slow scan already completed  
+        
+   empty 
+   set excludes reasonable defaults needed  
+    
+       scan given directory files directories  found files directories placed respective collections  based matching includes  excludes selectors directory found scanned recursively  
+       
+        param dir directory scan  must not code null  code   
+        param vpath path relative base directory  needed prevent problems absolute path using 
+                    dir   must not code null  code   
+        param fast  whether not call part fast scan  
+       
+        see #filesincluded 
+        see #filesnotincluded 
+        see #filesexcluded 
+        see #dirsincluded 
+        see #dirsnotincluded 
+        see #dirsexcluded 
+        see #slowscan 
+        
+   avoid double scanning directories only happen fast mode 
+   
+               two reasons mentioned api docs file list 
+                1  dir not directory impossible wouldn't here case  
+                2 io error occurred doesn't throw exception caught redirected ant's logging system 
+    
+       process included file  
+        param name  path file relative directory fileset  
+        param file  included file  
+        
+    
+       process included directory  
+        param name path directory relative directory fileset  
+        param file directory file  
+        param fast whether perform fast scans  
+        
+    
+       test whether not name matches against least one include 
+       pattern  
+       
+        param name name match  must not code null  code   
+        return  code true  code name matches against least one 
+               include pattern code false  code  otherwise  
+        
+    
+       test whether not name matches start least one include 
+       pattern  
+       
+        param name name match  must not code null  code   
+        return  code true  code name matches against start least one include pattern code false  code  otherwise  
+        
+    
+       verify pattern specifies files deeper level specified file  
+        param pattern pattern check  
+        param name name check  
+        return whether pattern deeper name ant 1 6 3 
+        
+    
+        find out whether one particular include pattern powerful excludes  
+        note power comparison based length include pattern exclude patterns without wildcards  
+        ideally comparison done based depth match many file separators matched 
+        before first end pattern  
+       
+        important function return false care   
+       
+         param name relative path test  
+         param includepattern one include pattern  
+         return true exclude pattern powerful include pattern ant 1 6 
+        
+    
+       test whether contents specified directory must excluded  
+        param name directory name check  
+        return whether specified directory's contents excluded  
+        
+    
+       test whether not name matches against least one exclude 
+       pattern  
+       
+        param name name match  must not code null  code   
+        return  code true  code name matches against least one 
+               exclude pattern code false  code  otherwise  
+        
+    
+       test whether file selected  
+       
+        param name filename check selecting  
+        param file java io file object filename  
+        return  code false  code selectors file not selected   code true  code  otherwise  
+        
+    
+       return names files matched least one include patterns none exclude patterns names relative base directory  
+       
+        return names files matched least one include patterns none exclude patterns  
+        
+    
+       return count included files  
+        return  code int  code ant 1 6 3 
+        
+    
+       return names files matched none include 
+       patterns names relative base directory involves 
+       performing slow scan one not already completed  
+       
+        return names files matched none include 
+               patterns  
+       
+        see #slowscan 
+        
+    
+       return names files matched least one include patterns least one exclude patterns names relative base directory involves 
+       performing slow scan one not already completed  
+       
+        return names files matched least one include patterns least one exclude patterns  
+       
+        see #slowscan 
+        
+    
+        p return names files selected out therefore not ultimately included   p  
+       
+        p names relative base directory involves 
+       performing slow scan one not already completed   p  
+       
+        return names files deselected  
+       
+        see #slowscan 
+        
+    
+       return names directories matched least one include patterns none exclude patterns names relative base directory  
+       
+        return names directories matched least one include patterns none exclude patterns  
+        
+    
+       return count included directories  
+        return  code int  code ant 1 6 3 
+        
+    
+       return names directories matched none include 
+       patterns names relative base directory involves 
+       performing slow scan one not already completed  
+       
+        return names directories matched none include 
+       patterns  
+       
+        see #slowscan 
+        
+    
+       return names directories matched least one include patterns least one exclude patterns names relative base directory involves 
+       performing slow scan one not already completed  
+       
+        return names directories matched least one include patterns least one exclude patterns  
+       
+        see #slowscan 
+        
+    
+        p return names directories selected out therefore not ultimately included   p  
+       
+        p names relative base directory involves 
+       performing slow scan one not already completed   p  
+       
+        return names directories deselected  
+       
+        see #slowscan 
+        
+    
+       add default exclusions current exclusions set named resource  
+        param name path name file relative dir attribute  
+       
+        return resource given name ant 1 5 2 
+        
+    
+       return cached result list performed file available   invokes method caches result otherwise  
+       
+        param file file  dir list ant 1 6 code base  code  traverse filesystem order find file matches given name  
+       
+        param base base file  dir   
+        param path file path  
+        param cs whether scan case-sensitively  
+        return file object points file question null ant 1 6 3 
+        
+  removing base path yields change  path not child base code base  code  traverse filesystem order find file matches given stack names  
+       
+        param base base file  dir   
+        param pathelements vector path elements  dirs   file   
+        param cs whether scan case-sensitively  
+        return file object points file question null ant 1 6 3 traverse symlink trying reach path basedir? 
+        param base base file  dir   
+        param path file path ant 1 6 traverse symlink trying reach path basedir? 
+        param base base file  dir   
+        param pathelements vector path elements  dirs   file ant 1 6 caught redirected ant's logging system directory given path relative base 
+       directory already scanned? 
+       
+        p registers given directory scanned side effect   p ant 1 6 method interest testing purposes returned 
+       set live not modified  
+        return set relative directory names scanned  
+        
+   package-private    set getscanneddirs     
+    
+       clear internal caches ant 1 6 
+        
+    
+       ensure exclude  quot patterns quot properly divided up ant 1 6 3 
+        
+    
+       add patterns not real patterns not contain 
+       wildcards set returns real patterns  
+       
+        param set set populate  
+        param patterns string patterns ant 1 6 3 
+       org apache tools ant DirectoryScanner org apache tools ant directoryscanner filescanner  selectorscanner  resourcefactory defaultexcludes     
+          
+             
+             #    
+            % %   
+             _    
+ 
+          
+            cvs   
+            cvs  
+ 
+          
+            sccs   
+            sccs  
+ 
+          
+             svn   
+             svn resetdefaultexcludes file basedir includes excludes fileselector   selectors vector filesincluded vector filesnotincluded vector filesexcluded vector dirsincluded vector dirsnotincluded vector dirsexcluded vector filesdeselected vector dirsdeselected haveslowresults iscasesensitive everythingincluded directoryscanner matchpatternstart pattern str selectorutils matchpatternstart pattern  str matchpatternstart pattern str iscasesensitive selectorutils matchpatternstart pattern  str  iscasesensitive matchpath pattern str selectorutils matchpath pattern  str matchpath pattern str iscasesensitive selectorutils matchpath pattern  str  iscasesensitive match pattern str selectorutils match pattern  str match pattern str iscasesensitive selectorutils match pattern  str  iscasesensitive getdefaultexcludes defaultexcludes toarray defaultexcludes 
+                                                              size adddefaultexclude s defaultexcludes indexof s     -1    
+            defaultexcludes add s removedefaultexclude s defaultexcludes remove s resetdefaultexcludes     
+        defaultexcludes vector i   0  i   defaultexcludes length  i      
+            defaultexcludes add defaultexcludes i setbasedir basedir    
+        setbasedir basedir file file basedir replace ' '  file separatorchar  replace  
+            '\\'  file separatorchar setbasedir file basedir basedir   basedir file getbasedir basedir iscasesensitive iscasesensitive setcasesensitive iscasesensitive iscasesensitive   iscasesensitive isfollowsymlinks followsymlinks setfollowsymlinks followsymlinks followsymlinks   followsymlinks setincludes includes includes includes includes includes length i   0  i   includes length  i includes i    normalizepattern includes i setexcludes excludes excludes excludes excludes excludes length i   0  i   excludes length  i excludes i    normalizepattern excludes i addexcludes excludes excludes excludes length   0 excludes excludes length   0 tmp excludes length excludes length   
+                system arraycopy excludes  0  tmp  0 excludes length i   0  i   excludes length  i      
+                    tmp excludes length   i    
+                        normalizepattern excludes i excludes   tmp setexcludes excludes normalizepattern p pattern   p replace ' '  file separatorchar  
+             replace '\\'  file separatorchar pattern endswith file separator     
+            pattern pattern setselectors fileselector   selectors selectors   selectors iseverythingincluded everythingincluded scan illegalstateexception scanlock scanning scanning scanlock wait interruptedexception e illegal illegal scanning illegal clearresults nullincludes    includes includes   nullincludes includes nullexcludes    excludes excludes   nullexcludes 0    excludes basedir nullincludes basedir exists      
+                        illegal illegalstateexception  basedir     basedir 
+                                                                does not exist basedir isdirectory      
+                        illegal illegalstateexception  basedir     basedir 
+                                                                is not a directory illegal illegal isincluded isexcluded isselected     basedir     
+                            dirsincluded addelement dirsdeselected addelement dirsexcluded addelement dirsnotincluded addelement      
+                  
+                checkincludepatterns    
+                clearcaches    
+                includes   nullincludes includes  
+                excludes   nullexcludes excludes scanlock    
+                scanning scanlock notifyall checkincludepatterns     
+        map newroots hashmap i   0  i   includes length  i fileutils isabsolutepath includes i basedir selectorutils matchpatternstart includes i   
+                    basedir getabsolutepath    iscasesensitive basedir newroots put selectorutils rtrimwildcardtokens  
+                includes i    includes i newroots containskey        basedir scandir basedir iterator it   newroots entryset   iterator    
+ 
+            file canonbase basedir canonbase   basedir getcanonicalfile ioexception ex buildexception ex it hasnext      
+                map entry entry    map entry  it next currentelement entry getkey basedir fileutils isabsolutepath currentelement originalpattern entry getvalue    
+                file myfile file basedir  currentelement myfile exists path    basedir myfile getcanonicalpath   
+                              file_utils removeleadingpath canonbase  
+                            myfile getcanonicalfile path equals currentelement     on_vms    
+                            myfile   findfile basedir  currentelement myfile basedir currentelement   file_utils removeleadingpath  
+                                    basedir  myfile ioexception ex buildexception ex myfile myfile exists        iscasesensitive      
+                    file f   findfile basedir  currentelement f f exists      
+                          
+                          
+                        currentelement    basedir f getabsolutepath   
+                              file_utils removeleadingpath basedir  f   
+                        myfile   f myfile myfile exists followsymlinks 
+                           issymlink basedir  currentelement myfile isdirectory isincluded currentelement  
+                               currentelement length     0    
+                            accountforincludeddir currentelement  myfile currentelement length     0 currentelement charat currentelement 
+                                                           length   - 1  
+                                       file separatorchar    
+                                    currentelement   
+                                        currentelement   file separatorchar  
+                                  
+                              
+                            scandir myfile  currentelement included   iscasesensitive   
+                            ? originalpattern equals currentelement  
+                              originalpattern equalsignorecase currentelement included    
+                            accountforincludedfile currentelement  myfile clearresults     
+        filesincluded vector    
+        filesnotincluded vector    
+        filesexcluded vector    
+        filesdeselected vector    
+        dirsincluded vector    
+        dirsnotincluded vector    
+        dirsexcluded vector    
+        dirsdeselected vector    
+        everythingincluded    basedir scanneddirs clear slowscan slowscanlock haveslowresults slowscanning slowscanning slowscanlock wait interruptedexception e slowscanning nullincludes    includes includes   nullincludes includes nullexcludes    excludes excludes   nullexcludes 0    excludes excl dirsexcluded size     
+                dirsexcluded copyinto excl notincl dirsnotincluded size     
+                dirsnotincluded copyinto notincl   
+ 
+                processslowscan excl   
+                processslowscan notincl   
+                clearcaches    
+                includes   nullincludes includes  
+                excludes   nullexcludes excludes slowscanlock    
+                haveslowresults slowscanning slowscanlock notifyall processslowscan arr i   0  i   arr length  i couldholdincluded arr i      
+                scandir file basedir  arr i    
+                        arr i    file separator scandir file dir vpath fast dir buildexception  dir must not be dir exists buildexception dir     doesn't exist dir isdirectory buildexception dir     is not a directory fast    hasbeenscanned vpath newfiles   dir list newfiles buildexception  io error scanning directory '  
+                                       dir getabsolutepath followsymlinks    
+            vector nolinks vector i   0  i   newfiles length  i file_utils issymboliclink dir  newfiles i name   vpath   newfiles i   
+                        file file file dir  newfiles i    
+                         file isdirectory   
+                            ? dirsexcluded   filesexcluded  addelement name nolinks addelement newfiles i ioexception ioe msg    ioexception caught checking links  couldn't get canonical path    
+                      
+                    system err println msg   
+                    nolinks addelement newfiles i    
+                  
+              
+            newfiles nolinks toarray nolinks size i   0  i   newfiles length  i name   vpath   newfiles i   
+            file file file dir  newfiles i file isdirectory isincluded name     
+                    accountforincludeddir name  file  fast everythingincluded dirsnotincluded addelement name fast    couldholdincluded name     
+                        scandir file  name   file separator  fast fast    
+                    scandir file  name   file separator  fast file isfile isincluded name     
+                    accountforincludedfile name  file everythingincluded filesnotincluded addelement name accountforincludedfile name  file file    
+        processincluded name  file  filesincluded  filesexcluded  filesdeselected accountforincludeddir name  file file fast    
+        processincluded name  file  dirsincluded  dirsexcluded  dirsdeselected fast    couldholdincluded name      contentsexcluded name     
+            scandir file  name   file separator  fast processincluded name  file file  vector inc  vector exc  vector des inc contains name     exc contains name     des contains name included isexcluded name     
+            exc add name isselected name  file     
+            included inc add name des add name   
+          
+        everythingincluded    included isincluded name    
+        ensurenonpatternsetsready iscasesensitive   
+            ? includenonpatterns contains name  
+              includenonpatterns contains name touppercase i   0  i   includepatterns length  i matchpath includepatterns i   name  iscasesensitive couldholdincluded name i   0  i   includes length  i matchpatternstart includes i   name  iscasesensitive    
+                   ismorepowerfulthanexcludes name  includes i   
+                   isdeeper includes i   name isdeeper pattern name    
+        vector p   selectorutils tokenizepath pattern   
+        vector n   selectorutils tokenizepath name p contains          p size     n size ismorepowerfulthanexcludes name includepattern soughtexclude   name   file separator counter   0  counter   excludes length  counter excludes counter  equals soughtexclude contentsexcluded name    
+        name    name endswith file separator   ? name   name   file separator i   0  i   excludes length  i e   excludes i e endswith          selectorutils matchpath  
+                e substring 0  e length   - 2   name  iscasesensitive isexcluded name    
+        ensurenonpatternsetsready iscasesensitive   
+            ? excludenonpatterns contains name  
+              excludenonpatterns contains name touppercase i   0  i   excludepatterns length  i matchpath excludepatterns i   name  iscasesensitive isselected name  file file selectors i   0  i   selectors length  i selectors i  isselected basedir  name  file getincludedfiles filesincluded illegalstateexception  must call scan   first files filesincluded size     
+        filesincluded copyinto files   
+        arrays sort files files getincludedfilescount filesincluded illegalstateexception  must call scan   first filesincluded size getnotincludedfiles     
+        slowscan files filesnotincluded size     
+        filesnotincluded copyinto files files getexcludedfiles     
+        slowscan files filesexcluded size     
+        filesexcluded copyinto files files getdeselectedfiles     
+        slowscan files filesdeselected size     
+        filesdeselected copyinto files files getincludeddirectories dirsincluded illegalstateexception  must call scan   first directories dirsincluded size     
+        dirsincluded copyinto directories   
+        arrays sort directories directories getincludeddirscount dirsincluded illegalstateexception  must call scan   first dirsincluded size getnotincludeddirectories     
+        slowscan directories dirsnotincluded size     
+        dirsnotincluded copyinto directories directories getexcludeddirectories     
+        slowscan directories dirsexcluded size     
+        dirsexcluded copyinto directories directories getdeselecteddirectories     
+        slowscan directories dirsdeselected size     
+        dirsdeselected copyinto directories directories adddefaultexcludes excludeslength   excludes 0   excludes length newexcludes  
+        newexcludes excludeslength   defaultexcludes size excludeslength   0    
+            system arraycopy excludes  0  newexcludes  0  excludeslength defaultexcludestemp   getdefaultexcludes i   0  i   defaultexcludestemp length  i      
+            newexcludes i   excludeslength    
+                defaultexcludestemp i  replace ' '  file separatorchar  
+                 replace '\\'  file separatorchar   
+          
+        excludes   newexcludes resource getresource name fileresource basedir  name list file file files filelistmap get file files files   file list files filelistmap put file  files files file findfile file base path cs fileutils isabsolutepath path base s   file_utils dissect path   
+                base file s 0    
+                path   s 1 file f   file_utils normalize path s   file_utils removeleadingpath base  f s equals f getabsolutepath path   s findfile base  selectorutils tokenizepath path   cs file findfile file base  vector pathelements cs pathelements size      0 base current pathelements remove 0 base findfile file current   pathelements  cs base isdirectory files   list base files buildexception  io error scanning directory   
+                                       base getabsolutepath matchcase   cs ? cs_scan_only   cs_then_non_cs i   0  i   matchcase length  i j   0  j   files length  j matchcase i  ? files j  equals current  
+                                   files j  equalsignorecase current findfile file base  files j    pathelements  cs issymlink file base path issymlink base  selectorutils tokenizepath path issymlink file base  vector pathelements pathelements size     0 current pathelements remove 0 file_utils issymboliclink base  current  
+                       issymlink file base  current   pathelements ioexception ioe msg    ioexception caught checking links  couldn't get canonical path    
+                  
+                system err println msg hasbeenscanned vpath scanneddirs add vpath scanneddirs clearcaches     
+        filelistmap clear    
+        includenonpatterns clear    
+        excludenonpatterns clear    
+        includepatterns excludepatterns arenonpatternsetsready ensurenonpatternsetsready arenonpatternsetsready    
+            includepatterns   fillnonpatternset includenonpatterns  includes   
+            excludepatterns   fillnonpatternset excludenonpatterns  excludes   
+            arenonpatternsetsready fillnonpatternset set set patterns    
+        arraylist al arraylist patterns length i   0  i   patterns length  i selectorutils haswildcards patterns i      
+                set add iscasesensitive   ? patterns i  
+                      patterns i  touppercase al add patterns i set size      0 ? patterns al toarray al size      
+      
+ 
+ org apache tools ant DirectoryScanner

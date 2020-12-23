@@ -1,0 +1,91 @@
+ 
+    
+   factory generate log messages  
+    
+    
+       generates log message action  
+       
+        param url url action 
+        param params parametermap request 
+        param curruser login information generated link teammates logic api gatekeeper  
+        param useraccount authentication user account generated action 
+        param unregisteredstudent authentication unregisteredstudent attributes generated action 
+        param logmessage log message show admin 
+        return log message form specified link activitylogentry  
+        
+    
+       generates log message servlet action failure  
+       
+        param url url request 
+        param params parametermap request 
+        param e exception thrown failure 
+        param curruser login information generated link teammates logic api gatekeeper  
+        return log message form specified link activitylogentry  
+        
+    
+       generates log message basic information  
+       
+        param url url request 
+        param params parametermap request 
+        param message log message show admin 
+        param curruser login information generated link teammates logic api gatekeeper  
+        return log message form specified link activitylogentry  
+        
+    
+       generates basic builder activitylogentry  
+       
+        param url url request 
+        param params parametermap request 
+        param curruser login information generated link teammates logic api gatekeeper  
+        return builder builder basic information 
+       teammates common util LogMessageGenerator teammates common util logmessagegenerator pattern pattern_action_name   pattern compile  ^ \\s ?  ? actionname  ^\\s pattern_action_name_group    actionname generatepageactionlogmessage url  map string    params  usertype curruser  
+            accountattributes useraccount  studentattributes unregisteredstudent logmessage    
+        builder builder   generatebasiclogentrybuilder url  params  curruser isunregisteredstudent   unregisteredstudent isaccountwithgoogleid   useraccount useraccount googleid isunregisteredstudent    
+            updateinfoforunregisteredstudent builder  unregisteredstudent isaccountwithgoogleid    
+            updateinfofornormaluser builder  curruser  useraccount   
+          
+ 
+        builder withlogmessage logmessage builder build   generatelogmessage updateinfoforunregisteredstudent builder builder  studentattributes unregisteredstudent role activitylog role_unregistered unregisteredstudent course unregisteredstudent course isempty      
+            role activitylog role_unregistered         unregisteredstudent course  
+          
+        builder withuserrole role  
+                withusername unregisteredstudent name  
+                withuseremail unregisteredstudent email updateinfofornormaluser builder builder  usertype curruser  accountattributes useraccount    
+        checkandupdateformasquerademode builder  curruser  useraccount   
+        builder withusergoogleid useraccount googleid  
+                withuseremail useraccount email  
+                withusername useraccount name checkandupdateformasquerademode builder builder  usertype loggedinuser  accountattributes account loggedinuser loggedinuser id account ismasquerademode    loggedinuser id equals account googleid   
+            builder withmasqueradeuserrole ismasquerademode generateactionfailurelogmessage url  map string    params  
+            exception e  usertype curruser    
+        builder builder   generatebasiclogentrybuilder url  params  curruser message     span text-danger\  servlet action failure in   
+                           builder getactionname       br   
+                           e getclass            teammatesexception tostringwithstacktrace e      br   
+                           jsonutils tojson params  map span    
+        builder withlogmessage message   
+ 
+        builder withactionresponse action_result_failure builder build   generatelogmessage generatebasicactivitylogmessage url  map string    params message  
+            usertype curruser    
+        builder builder   generatebasiclogentrybuilder url  params  curruser   
+ 
+        builder withlogmessage message builder build   generatelogmessage builder generatebasiclogentrybuilder url  map string    params  usertype curruser actionname   getactionnamefromurl url currtime   system currenttimemillis    
+        builder builder builder actionname  url  currtime isautomatedaction url     
+            builder withlogid generatelogidforautomatedaction currtime   
+                     withuserrole activitylog role_auto curruser builder withlogid generatelogidwithoutgoogleid params  currtime   
+                     withusergoogleid activitylog auth_not_login builder withlogid generatelogidwithgoogleid curruser id  currtime   
+                     withusergoogleid curruser id   
+            updateroleforloggedinuser builder  curruser builder updateroleforloggedinuser builder builder  usertype curruser curruser isadmin    
+            builder withuserrole activitylog role_admin   
+            downgraderoletostudentifnecessary builder   
+            downgraderoletoinstructorifnecessary builder curruser isinstructor    curruser isstudent    
+            builder withuserrole activitylog role_instructor   
+            downgraderoletostudentifnecessary builder curruser isstudent    
+            builder withuserrole activitylog role_student curruser isinstructor    
+            builder withuserrole activitylog role_instructor builder withuserrole activitylog role_unregistered downgraderoletostudentifnecessary builder builder isstudentpage builder getactionname       
+            builder withuserrole activitylog role_student downgraderoletoinstructorifnecessary builder builder isinstructorpage builder getactionname       
+            builder withuserrole activitylog role_instructor isinstructorpage actionname actionname tolowercase   startswith activitylog prefix_instructor_page actionuris instructor_feedback_stats_page contains actionname actionuris instructor_course_stats_page contains actionname isstudentpage actionname actionname tolowercase   startswith activitylog prefix_student_page isautomatedaction actionname actionname startswith activitylog prefix_auto_page getactionnamefromurl requesturl    
+        matcher m   pattern_action_name matcher requesturl m find   ? m group pattern_action_name_group format activitylog message_error_action_name  requesturl generatelogidforautomatedaction time stringhelper join activitylog field_connector activitylog role_auto  formattimeforid date time generatelogidwithoutgoogleid map string    params time courseid   httprequesthelper getvaluefromparammap params paramsnames course_id studentemail   httprequesthelper getvaluefromparammap params paramsnames student_email courseid studentemail stringhelper join activitylog field_connector  
+                    studentemail  courseid  formattimeforid date time stringhelper join activitylog field_connector activitylog auth_not_login  formattimeforid date time generatelogidwithgoogleid googleid time stringhelper join activitylog field_connector  googleid  formattimeforid date time formattimeforid date date    
+        simpledateformat sdf simpledateformat activitylog time_format_logid   
+        sdf settimezone timezone gettimezone systemparams admin_time_zone sdf format date gettime     
+      
+ teammates common util LogMessageGenerator

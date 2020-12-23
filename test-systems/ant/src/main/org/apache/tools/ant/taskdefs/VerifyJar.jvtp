@@ -1,0 +1,80 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   jar verification task every jar passed fork jarsigner verify correctly signed rigorous checking existence signature entire certification chain tested ant 1 7 file message   value string look text indicate direct verification 
+        
+    
+       certification flag 
+        
+    error output failure verify jar     
+    
+       ask certificate information printed 
+        param certificates true print certificates  
+        
+    
+       verify jar files 
+        throws buildexception error  
+        
+  validation logic 
+  patch redirector save output file 
+    
+       verify jar  
+        param jar jar verify  
+        throws buildexception file not verified 
+        
+  verify special operations 
+  jar required 
+  deal jdk1 4 2 bug not thread safe here not use multiple threads same time  
+        
+    
+       catch output buffer 
+        
+  hand down 
+  cache 
+  returnorg apache tools ant taskdefs VerifyJar org apache tools ant taskdefs verifyjar abstractjarsignertask error_no_file    not found error_no_verify    failed to verify setcertificates certificates certificates   certificates execute buildexception hasjar   jar hasjar     hasresources buildexception error_no_source   
+          
+ 
+        beginexecution    
+ 
+          
+        redirectorelement redirector   getredirector    
+        redirector setalwayslog filterchain outputfilterchain   redirector createoutputfilterchain    
+        outputfilterchain add outputcache path sources   createunifiedsourcepath    
+            iterator iter   sources iterator iter hasnext      
+                fileresource fr    fileresource  iter next    
+                verifyonejar fr getfile endexecution verifyonejar file jar jar exists buildexception error_no_file   jar exectask cmd   createjarsigner    
+ 
+        setcommonoptions cmd   
+        bindtokeystore cmd   
+ 
+          
+        addvalue cmd   -verify certificates    
+            addvalue cmd   -certs    
+          
+ 
+          
+        addvalue cmd  jar getpath     
+ 
+        log  verifying jar      jar getabsolutepath     
+        outputcache clear    
+        buildexception ex cmd execute buildexception e    
+            ex   e results   outputcache tostring ex results indexof  zip file closed      0    
+                log  you are running     jarsigner_command     against a jvm with  
+                        a known bug that manifests as an illegalstateexception    
+                    project msg_warn ex results indexof verified_text    0 buildexception error_no_verify   jar bufferingoutputfilter chainablereader reader chain reader rdr    
+            buffer bufferingoutputfilterreader rdr buffer tostring buffer tostring clear buffer buffer clear bufferingoutputfilterreader reader bufferingoutputfilterreader reader next next   next read cbuf off len ioexception result   next read cbuf  off  len   
+              
+            buffer append cbuf  off  len result close ioexception   
+            next close tostring buffer tostring clear     
+            buffer stringbuffer    
+          
+      
+ org apache tools ant taskdefs VerifyJar

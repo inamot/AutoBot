@@ -1,0 +1,239 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   synchronize local target directory files defined one filesets  
+   
+    p uses lt copy gt  task internally forbidding use mappers filter chains  files destination directory not 
+   present any source fileset removed   p ant 1 6 
+   
+   revised href  mailto daniel armbrust mayo edu  dan armbrust remove orphaned directories  
+   
+    ant task category  filesystem  
+    
+   same regular  copy  task    see end file  
+   similar fileset doesn't allow dir attribute set 
+   override task#init 
+    
+       initialize sync task  
+        throws buildexception problem  
+        see task#init   
+        
+   instantiate default config mycopy purposes  
+   override task#execute 
+    
+       execute sync task  
+        throws buildexception error  
+        see task#execute destination files copy complete list files copy destination directory didn't already exist empty previous file removal necessary  
+   copy necessary out date files need perform further processing? 
+   nope rid files not listed source filesets rid empty directories destination side 
+    
+       removes files folders not found keys table 
+        used set    
+       
+        p provided file directory recursively 
+       scanned orphaned files removed well   p  
+       
+        p directory orphan removed   p  
+       
+        param  nonorphans table non-orphan  code file  code s  
+        param  file initial file directory scan test  
+        return number orphaned files directories actually removed  
+       position 0 array number orphaned directories  
+       position 1 array number orphaned files  
+        
+   want keep todir itself 
+   preserveintarget find files want keep need find want delete meaning patterns selectors must inverted 
+   selectors implicitly anded directoryscanner revert logic wrap none  selector 
+   instead  
+   ds returns directories lexicographic order  
+   iterating through array backwards means deleting 
+   leaves before parent nodes - thus making sure  well likely directories empty try delete removes empty directories directory  
+       
+        p  em note directory contains only empty 
+       directories  directly not removed   em   p  
+       
+        p recurses depth-first find leaf directories empty removes unwinds recursion stack  removing directories become empty themselves  etc     p  
+       
+        param  dir root directory scan empty directories  
+        param  removeifempty whether remove root directory 
+               itself becomes empty  
+        return number empty directories actually removed  
+        
+   test here again avoid method call non-directories directory may become empty need re-query children list  
+   
+   various copy attributes subelements copy  passed thru mycopy  
+   
+    
+       sets destination directory  
+        param destdir destination directory 
+        
+    
+       used force listing names copied files  
+        param verbose true force listing names copied files  
+        
+    
+       overwrite any existing destination file s   
+        param overwrite true overwrite any existing destination file s   
+        
+    
+       used copy empty directories  
+        param includeempty true copy empty directories false  note errors output keep going  
+        param failonerror true false 
+        
+    
+       adds set files copy  
+        param set fileset 
+        
+    
+       adds collection filesystem resources copy  
+        param rc resource collection ant 1 7 number milliseconds leeway give before deciding target out date  
+       
+        p default 0 milliseconds 2 seconds dos systems   p  
+        param granularity code long  code  value ant 1 6 2 container patterns selectors used specify files kept target even not present any source directory  
+       
+        p must not invoke method once   p  
+        param s preserveintarget nested element ant 1 7 
+        
+    
+       subclass copy order access s file dir maps  
+        
+   list files must copied  irrelevant fact newer not destination  
+    constructor mycopy     
+    
+            see copy#scan file  file  string    string    
+            
+      inheritdoc     
+    
+            see copy#scan resource    file  
+            
+      inheritdoc destination directory  
+            return destination directory includeemptydirs attribute  
+            return true emptydirs included 
+            
+    
+           yes return true always ant 1 7 
+            
+    
+       inner class used hold exclude patterns selectors save 
+       stuff happens live target directory not removed ant 1 7 
+        
+    
+           constructor synctarget changes default value defaultexcludes true false  
+            
+    
+           override abstractfileset#setdir file disallow 
+           setting directory  
+            param dir ignored 
+            throws buildexception always 
+            
+    
+       pseudo-assert method  
+       org apache tools ant taskdefs Sync org apache tools ant taskdefs sync task init buildexception   
+          
+        mycopy mycopy    
+        configuretask mycopy   
+ 
+          
+        mycopy setfiltering mycopy setincludeemptydirs mycopy setpreservelastmodified configuretask task helper    
+        helper setproject getproject     
+        helper settaskname gettaskname     
+        helper setowningtarget getowningtarget     
+        helper init execute buildexception   
+          
+        file todir   mycopy gettodir    
+ 
+          
+        set allfiles   mycopy nonorphans noremovalnecessary    todir exists      todir list   length   1  
+ 
+          
+        log  pass#1  copying files to     todir  project msg_debug   
+        mycopy execute noremovalnecessary    
+            log  no removing necessary in     todir  project msg_debug log  pass#2  removing orphan files from     todir  project msg_debug removedfilecount   removeorphanfiles allfiles  todir   
+        logremovedcount removedfilecount 0    dangling director    y    ies    
+        logremovedcount removedfilecount 1    dangling file        s mycopy getincludeemptydirs      
+            log  pass#3  removing empty directories from     todir  
+                project msg_debug removeddircount   removeemptydirectories todir logremovedcount removeddircount   empty director    y    ies logremovedcount count prefix singularsuffix pluralsuffix    
+        file todir   mycopy gettodir what    prefix prefix  
+        what     count   2  ? singularsuffix   pluralsuffix count   0    
+            log  removed     count         what     from     todir  
+                project msg_info log  no     what     to remove from     todir  
+                project msg_verbose removeorphanfiles set nonorphans  file todir removedcount 0  0 excls nonorphans toarray nonorphans size     1    
+          
+        excls nonorphans size          
+ 
+        directoryscanner ds synctarget fileset fs fileset    
+            fs setdir todir   
+            fs setcasesensitive synctarget iscasesensitive     
+            fs setfollowsymlinks synctarget isfollowsymlinks     
+ 
+              
+              
+              
+            patternset ps   synctarget mergepatterns getproject     
+            fs appendexcludes ps getincludepatterns getproject      
+            fs appendincludes ps getexcludepatterns getproject      
+            fs setdefaultexcludes  synctarget getdefaultexcludes     
+ 
+              
+              
+              
+            fileselector   s   synctarget getselectors getproject s length   0    
+                noneselector ns noneselector i   0  i   s length  i      
+                    ns appendselector s i    
+                  
+                fs appendselector ns   
+              
+            ds   fs getdirectoryscanner getproject ds directoryscanner    
+            ds setbasedir todir   
+          
+        ds addexcludes excls   
+ 
+        ds scan files   ds getincludedfiles i   0  i   files length  i      
+            file f file todir  files i    
+            log  removing orphan file      f  project msg_debug   
+            f delete    
+              removedcount 1 dirs   ds getincludeddirectories i   dirs length - 1  i    0  --i    
+            file f file todir  dirs i f list   length   1    
+            log  removing orphan directory      f  project msg_debug   
+            f delete    
+              removedcount 0 removedcount removeemptydirectories file dir removeifempty removedcount   0 dir isdirectory      
+            file   children   dir listfiles i   0  i   children length    i    
+                file file   children i file isdirectory      
+                    removedcount    removeemptydirectories file children length   0    
+                  
+                  
+                children   dir listfiles children length   1    removeifempty    
+                log  removing empty directory      dir  project msg_debug   
+                dir delete    
+                  removedcount removedcount settodir file destdir    
+        mycopy settodir destdir setverbose verbose    
+        mycopy setverbose verbose setoverwrite overwrite    
+        mycopy setoverwrite overwrite setincludeemptydirs includeempty    
+        mycopy setincludeemptydirs includeempty setfailonerror failonerror    
+        mycopy setfailonerror failonerror addfileset fileset set    
+        add set add resourcecollection rc    
+        mycopy add rc setgranularity granularity    
+        mycopy setgranularity granularity addpreserveintarget synctarget s synctarget buildexception  you must not specify multiple   
+                                        preserveintarget elements     
+          
+        synctarget   s mycopy copy mycopy scan file fromdir  file todir files dirs    
+            asserttrue  no mapper   mapperelement scan fromdir  todir  files  dirs i   0  i   files length    i    
+                nonorphans add files i i   0  i   dirs length    i    
+                nonorphans add dirs i map scan resource   resources  file todir    
+            asserttrue  no mapper   mapperelement map m scan resources  todir   
+ 
+            iterator iter   m keyset   iterator iter hasnext      
+                nonorphans add   resource  iter next    getname m file gettodir destdir getincludeemptydirs includeempty supportsnonfileresources synctarget abstractfileset synctarget setdir file dir buildexception buildexception  preserveintarget doesn't support the dir   
+                                        attribute asserttrue message condition condition buildexception  assertion error      message   
+          
+      
+ 
+ org apache tools ant taskdefs Sync

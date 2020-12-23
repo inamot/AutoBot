@@ -1,0 +1,160 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications  
+    
+   enhanced version selectionnodeclarifiers new methods 
+   necessary enhanced support marked abstract implementors forced implement selectionnodeclarifiers simple 
+   extension implements null versions required  
+   methods backward compatibility previous implementation  
+    p upgrade subtypes selectionnodeclarifiers  change extend class instead implement required abstract methods methods paintbuttons  draghandle  hithandle createedge usually removed  
+   
+    author jrobbins 
+    author tom morris 
+    
+    base index array    
+    top handle    
+    bottom handle    
+    left handle    
+    right handle    
+    lower left corner handle    
+    
+       construct new selectionnodeclarifiers given fig 
+        
+        param f given fig 
+        
+   
+        see org tigris gef base selectionbuttons#paint java awt graphics  
+        
+   
+        see org tigris gef base selectionbuttons#paintbuttons graphics  
+        
+   
+        see org tigris gef base selectionbuttons#getnewnode int  
+        
+    
+       compute handle selection any cursor location  
+        
+        param cursor 
+                  cursor point represented 0-size rectangle 
+        param h 
+                  handle return selected handle information  output 
+                  parameter handle index 1 indicates cursor not over any handle gef any api documentation see following  
+        see org tigris gef base selectionresize#hithandle java awt rectangle  
+            org tigris gef presentation handle  
+        
+   super implementation found hit 
+   
+           crazy numbering scheme work here   here's handle numbers laid out   values 0-7 defined gef go left right  top bottom  ie not clockwise counterclockwise   
+           values 10-14 zigzag north  south  west  east  southwest correctly guess 15 go buy lottery ticket immediately  
+             pre  
+                      10 
+               0-------1-------2 
+                                 
+            12 3               4 13 
+                                 
+            14 5-------6-------7 
+                      11 
+             pre  
+            
+   
+        see org tigris gef base selection#draghandle int  int  int  int  
+       org tigris gef presentation handle  
+        
+   remember handle clicked case drag released over empty space array icons use drawing handles  
+        return icon null instructions  string pass gef given handle number  
+        
+        param index 
+                  handle number being dragged return string null node type create dragging given handle number  
+        
+        param index 
+                  handle number being dragged return metatype model element  null disallow drag edge type create dragging given handle number  
+        
+        param index 
+                  handle number being dragged return metatype model element  null disallow drag node type create dragging given handle number  
+        
+        param index 
+                  handle number being dragged return true reverse direction assocation direction drag  
+               eg  specialization instead generalization   default 
+               implementation always returns false draggability particular handle  default implementation 
+       always returns true  override return false handles shouldn't draggable e only support clicks  not drags   
+        
+        param index 
+                  handle index check draggability return true handle draggable  false otherwise 
+        
+    
+       request post processing edge gef created using 
+         link modecreateedgeandnode#modecreateedgeandnode editor  object  object  boolean   
+        
+        return true postprocessing requested 
+        
+    
+        return index last button handle clicked 
+       org argouml uml diagram ui SelectionNodeClarifiers2 org argouml uml diagram ui selectionnodeclarifiers2 selectionbuttons logger log   
+            logger getlogger selectionnodeclarifiers2 base   10 top   10 bottom   11 left   12 right   13 lower_left   14 selectionnodeclarifiers2 fig f f   
+      
+     
+      
+     override paint graphics g    
+          clarifiable  getcontent    paintclarifiers g paint g paintbuttons graphics g    
+        icon   icons   geticons icons cx   getcontent   getx cy   getcontent   gety cw   getcontent   getwidth ch   getcontent   getheight icons 0 paintbuttonabove icons 0   g  cx   cw   2  cy - offset  top icons 1 paintbuttonbelow icons 1   g  cx   cw   2  cy   ch   offset   
+                    bottom icons 2 paintbuttonleft icons 2   g  cx - offset  cy   ch   2  left icons 3 paintbuttonright icons 3   g  cx   cw   offset  cy   ch   2  
+                    right icons 4 paintbuttonleft icons 4   g  cx - offset  cy   ch  lower_left object getnewnode arg0 hithandle rectangle cursor  handle h hithandle cursor  h h index    -1 ispaintbuttons icon   icons   geticons icons editor ce   globals cureditor    
+        selectionmanager sm   ce getselectionmanager sm size      1 modemanager mm   ce getmodemanager mm includes modemodify getpressedbutton      -1 cx   getcontent   getx cy   getcontent   gety cw   getcontent   getwidth ch   getcontent   getheight icons 0 hitabove cx   cw   2  cy   
+                icons 0  geticonwidth    icons 0  geticonheight     
+                cursor     
+            h index   top icons 1 hitbelow cx   cw   2  cy   ch   
+                icons 1  geticonwidth    icons 1  geticonheight     
+                cursor     
+            h index   bottom icons 2 hitleft cx  cy   ch   2   
+                icons 2  geticonwidth    icons 2  geticonheight     
+                cursor     
+            h index   left icons 3 hitright cx   cw  cy   ch   2   
+                icons 3  geticonwidth    icons 3  geticonheight     
+                cursor     
+            h index   right icons 4 hitleft cx  cy   ch   
+                icons 4  geticonwidth    icons 4  geticonheight     
+                cursor     
+            h index   lower_left h index   -1 h index    -1    
+            h instructions   getinstructions 15 h instructions   getinstructions h index draghandle mx my anx any  handle hand hand index   10    
+            setpaintbuttons draghandle mx  my  anx  any  hand isdraggablehandle hand index cx   getcontent   getx    cy   getcontent   gety cw   getcontent   getwidth    ch   getcontent   getheight bx   mx  by   my  
+         
+          
+          
+        button   hand index hand index top  
+            by   cy  
+            bx   cx   cw   2 bottom  
+            by   cy   ch  
+            bx   cx   cw   2 left  
+            by   cy   ch   2  
+            bx   cx right  
+            by   cy   ch   2  
+            bx   cx   cw lower_left  
+            by   cy   ch  
+            bx   cx log warn  invalid handle number object nodetype   getnewnodetype hand index   
+        object edgetype   getnewedgetype hand index reverse   isreverseedge hand index edgetype nodetype editor ce   globals cureditor    
+            modecreateedgeandnode m modecreateedgeandnode ce  
+                      edgetype  isedgepostprocessrequested m setup  fignode  getcontent    getcontent   getowner    
+                    bx  by  reverse   
+            ce pushmode m   
+          
+      
+     
+     override buttonclicked buttoncode buttonclicked buttoncode object createedgeabove mutablegraphmodel gm  object newnode createedge gm  newnode  top object createedgeunder mutablegraphmodel gm  object newnode createedge gm  newnode  bottom object createedgeleft mutablegraphmodel gm  object newnode createedge gm  newnode  left object createedgeright mutablegraphmodel gm  object newnode createedge gm  newnode  right object createedge mutablegraphmodel gm  object newnode index    
+        object edge isreverseedge index     
+            edge   gm connect  
+                    newnode  getcontent   getowner    getnewedgetype index edge   gm connect  
+                    getcontent   getowner    newnode  getnewedgetype index edge object createedgetoself mutablegraphmodel gm    
+        object edge   gm connect  
+                getcontent   getowner    getcontent   getowner    
+                getnewedgetype lower_left edge icon   geticons getinstructions index object getnewnodetype index object getnewedgetype index isreverseedge index isdraggablehandle index isedgepostprocessrequested getbutton button  
+      
+     
+   
+org argouml uml diagram ui SelectionNodeClarifiers2

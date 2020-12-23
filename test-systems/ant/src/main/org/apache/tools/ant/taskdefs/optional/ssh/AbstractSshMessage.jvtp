@@ -1,0 +1,110 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   abstract class ssh upload download nothing  
+    
+       constructor abstractsshmessage 
+        param session ssh session use 
+        
+    
+       constructor abstractsshmessage 
+        param verbose true verbose logging 
+        param session ssh session use ant 1 6 2 
+        
+    
+       open ssh channel  
+        param command command use 
+        return channel 
+        throws jschexception error 
+        
+    
+       open ssh sftp channel  
+        return channel 
+        throws jschexception error 
+        
+    
+       send ack  
+        param out output stream use 
+        throws ioexception error 
+        
+    
+       reads response  throws buildexception response 
+       indicates error  
+        param input stream use 
+        throws ioexception o error 
+        throws buildexception errors 
+        
+   b may 0 success  
+            1 error  
+            2 fatal error  
+   didn't receive any response 
+    
+       carry out transfer  
+        throws ioexception o errors 
+        throws jschexception ssh errors 
+        
+    
+       set log listener  
+        param alistener log listener 
+        
+    
+       log message log listener  
+        param message message log 
+        
+    
+       log transfer stats log listener  
+        param timestarted time started 
+        param timeended finishing time 
+        param totallength total length verbose attribute set  
+        return true verbose attribute set ant 1 6 2 
+        
+    
+       track progress every 10 100kb   filesize   1mb larger 
+       files track progress every percent transmitted  
+        param filesize size file transmitted 
+        param totallength total transmission size 
+        param percenttransmitted current percent transmitted 
+        return percent file total progress monitor  
+        return progress monitor  
+       org apache tools ant taskdefs optional ssh AbstractSshMessage org apache tools ant taskdefs optional ssh abstractsshmessage loglistener listener loglistener log message abstractsshmessage session session session abstractsshmessage verbose  session session verbose   verbose session   session channel openexecchannel command jschexception   
+        channelexec channel    channelexec  session openchannel  exec    
+        channel setcommand command channel channelsftp opensftpchannel jschexception   
+        channelsftp channel    channelsftp  session openchannel  sftp channel sendack outputstream out ioexception buf 1   
+        buf 0    0  
+        out write buf   
+        out flush waitforack inputstream in ioexception  buildexception b   in read b    -1 buildexception  no response from server b    0    
+            stringbuffer sb stringbuffer c   in read c   0    c    '\n'    
+                sb append c   
+                c   in read b    1 buildexception  server indicated an error    
+                                           sb tostring b    2 buildexception  server indicated a fatal error    
+                                           sb tostring buildexception  unknown response  code     b 
+                                             message      sb tostring execute ioexception  jschexception setloglistener loglistener alistener    
+        listener   alistener log message    
+        listener log message logstats timestarted timeended totallength duration    timeended - timestarted    1000 0  
+        numberformat format   numberformat getnumberinstance    
+        format setmaximumfractiondigits 2   
+        format setminimumfractiondigits 1   
+        listener log  file transfer time      format format duration  
+                average rate      format format totallength   duration  
+                b s getverbose verbose trackprogress filesize totallength percenttransmitted percent math round math floor  totallength filesize    100 percent   percenttransmitted filesize   1048576 percent % 10    0 percent    100    
+                        system out println   100 system out print percent    50    
+                    system out println   50 percent    100    
+                    system out println   100 system out print percent sftpprogressmonitor getprogressmonitor monitor monitor progressmonitor monitor progressmonitor sftpprogressmonitor init op src dest max    
+            initfilesize   max  
+            totallength   0  
+            percenttransmitted   0 count len    
+            totallength    len  
+            percenttransmitted   trackprogress initfilesize  
+                                               totallength  
+                                               percenttransmitted end gettotallength totallength  
+          
+      
+ org apache tools ant taskdefs optional ssh AbstractSshMessage

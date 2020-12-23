@@ -1,0 +1,107 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications general class rerouting edges  achieved delegating re-routing logic graphmodels  extends 
+   functionality selectionedgeclarifiers  
+   
+    p graphmodel not override canchangeconnectednode rerouting not possible argouml behave rerouting never implemented  
+   
+    author  alexb 0 13 2 
+    
+    
+       used determine association now self case association needs automatic layout  
+        
+    
+       used determine association now self case association needs automatic layout re-routing capability armed mouse previously 
+       dragged  
+        p prevents selecting message clicking somewhere diagram index point line message  
+        p 0   sender end 
+        p 1      receiver end 
+        
+     
+       creates new instance selectionrerouteedge 
+       
+        param feme given fig 
+        
+   set invalid number default make sure set correctly  
+    
+       set up re-routing  
+       
+         inheritdoc  
+        
+   calculate source dest figs self assoc 
+  reset pointindex 
+   
+       need arm rerouting capability mousedragged    
+        p  
+       don't arm edtior's current mode figedge create mode once new edge created not deselected  
+       therefore next create unwanted reroute performed  
+       
+        see java awt event mousemotionlistener#mousedragged java awt event mouseevent  
+        
+   
+       perform re-routing src dest nodes changed  
+       
+        p method needs armed previous mousedragged avoid situation user clicks node clicks some unrelated fig  without moving edge    
+       
+        p todo  improve fig finding algorithm find top most fig layer useful nested states statechart  
+       
+        see java awt event mouselistener#mousereleased java awt event mouseevent  
+        
+   check pre-conds 
+  set-up fig under mouse released 
+  make nice little target area find fig  
+   last top fig  
+   check intermediate post-condition  
+   delegate re-routing graphmodels org argouml uml diagram ui SelectionRerouteEdge org argouml uml diagram ui selectionrerouteedge selectionedgeclarifiers selectionrerouteedge figedgemodelelement feme feme   
+ 
+          
+          
+        pointindex   -1 mousepressed mouseevent me    
+ 
+          
+        sourcefig   
+	     fignodemodelelement    figedge  getcontent    getsourcefignode    
+        destfig    
+             fignodemodelelement    figedge  getcontent    getdestfignode    
+ 
+        rectangle mouseposition rectangle me getx   - 5  me gety   - 5  10  10   
+          
+        pointindex   -1 npoints   getcontent   getnumpoints xs   getcontent   getxs ys   getcontent   getys i   0  i   npoints    i mouseposition contains xs i   ys i      
+                pointindex   i mousepressed me mousepressed me mousedragged mouseevent me    
+ 
+        editor editor   globals cureditor    
+        modemanager modemgr   editor getmodemanager    
+        figmodifyingmode fmode   modemgr top fmode modecreatepolyedge     
+            armed mousedragged me mousereleased mouseevent me me isconsumed       armed    pointindex    -1    
+            armed mousereleased me x   me getx    y   me gety    
+          
+        fignodemodelelement newfig rectangle mousepoint rectangle x - 5  y - 5  5  5   
+          
+        editor editor   globals cureditor    
+        layermanager lm   editor getlayermanager    
+        layer active   lm getactivelayer    
+        enumeration figs   active elementsin mousepoint figs hasmoreelements      
+            fig candidatefig    fig  figs nextelement candidatefig fignodemodelelement 
+                       candidatefig isselectable      
+                newfig    fignodemodelelement  candidatefig newfig armed mousereleased me umlmutablegraphsupport mgm   
+             umlmutablegraphsupport  editor getgraphmodel    
+        fignodemodelelement oldfig issource pointindex    0    
+            oldfig   sourcefig  
+            issource oldfig   destfig mgm canchangeconnectednode newfig getowner    
+				       oldfig getowner getcontent   getowner       
+	    mgm changeconnectednode newfig getowner    
+				    oldfig getowner getcontent   getowner    
+				    issource   
+	  
+ 
+        editor getselectionmanager   deselect getcontent     
+        armed figedgemodelelement figedge    figedgemodelelement  getcontent    
+        figedge determinefignodes    
+        figedge computeroute mousereleased me org argouml uml diagram ui SelectionRerouteEdge

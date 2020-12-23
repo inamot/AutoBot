@@ -1,0 +1,321 @@
+ 
+   $id$ 
+   copyright  c  2004-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications module loader loads modules implementing moduleinterface  p singleton convenience functions static access module  p  
+   
+    stereotype singleton 
+    author linus tolke 0 15 4 
+    
+    
+       logger map contains module loader information module  p keys list available modules  
+        
+    
+       list locations ve searched loaded modules information purposes only allow displayed settings environment tab module loader object prefix url s files prefix url s jars  
+        
+    
+       class file suffix  
+        
+    
+       constructor object hold instance object  
+       
+        return instance 
+        
+    
+       return collection available modules  
+       
+        return collection available modules  
+        
+   access methods program infrastructure  
+    
+       enables selected modules disabling modules not selected  p short attempts make modules obey selection  p  
+       
+        param failingallowed code true  code enabling disabling some modules allowed fail  
+        
+   access methods modules need query status modules  
+    
+       gets loaded status some module  
+       
+        return true module exists enabled  
+        param name module name queried module 
+        
+   access methods gui user uses enable disable 
+   modules collection names  
+       
+        return names selected  
+       
+        param name name module  
+        return  code true  code module selected selected  
+       
+        see #isselected string  
+        param name name module  
+        return  code true  code module selected  
+        
+    
+       set selected value  
+       
+        param name name module  
+        param value selected not  
+        
+    
+       set selected value  
+       
+        see #setselected string  boolean  
+        param name name module  
+        param value selected not  
+        
+    
+       create description module based information provided module itself  
+       
+        param name name module  
+        return description  
+        
+    
+       create description module based information provided module itself  
+       
+        see #getdescription string  
+        param name name module  
+        return description  
+        
+   access methods program infrastructure 
+    
+       enables selected modules  
+       
+        param failingallowed true not last attempt turning notify user modules list selected not enabled not possible enable not 
+   selected cannot disable  
+   
+   currently log todo eventually pop up some warning window  
+   
+    
+       gets loaded status some module  
+       
+        return true module exists enabled  
+        param name module name queried module 
+        
+    
+       return moduleinterface  modulestatus pair module given name code null  code isn't any  
+       
+        param name given name  
+        return pair  map entry   
+        
+    
+       tries find many available modules possible  p modules found appended link #modulestatus   p  
+        
+   todo  huntformodulesfromjavawebstart    
+   load modules specified system property  
+   modules specified system property running modules within eclipse running java web start  
+    
+       find enable modules ext  directory directory specified argo ext dir   p  
+       
+       todo calculation ext  directory eventually make sure calculation only present one place code not several  
+        
+   use little trick find out argo being loaded s jar  clean up make look file url list locations ve loaded extension modules return list paths ve loaded find enable module given directory  
+       
+        param dirname name directory  
+        
+   try-catch only jarfile instantiation don't accidentally mask anything argojarclassloader processjarfile  
+   todo delegating different 
+   classloader default here? - - tfm 
+    
+       check jar file argouml extension module  p isn't manifest isn't readable fail silently  
+       
+        param classloader classloader use  
+        param file file process  
+        throws classnotfoundexception manifest file contains class doesn't exist  
+        
+   look specification 
+   add search list i18n properties 
+    
+       process jar file entry  attempting load anything looks java class  
+        
+        param classloader classloader use loading class 
+        param cname class name 
+        throws classnotfoundexception 
+        return true class module class loaded successfully 
+        
+    
+       add class current class loader  
+       
+        param classname name class  including package   
+        throws classnotfoundexception class classname not found  
+        
+    
+       try load module given classloader  p  
+       
+       only add module module e implements link moduleinterface  interface  
+       
+        param classloader classloader load param classname name  
+        throws classnotfoundexception class classname not found following check satisfied before instantiated module double check again 
+    
+       add newly found module link #modulestatus already 
+       know don't add param mf module add way compare objects equal search through list point havn't found add enable todo default selects modules found  
+         eventually obey default either modules themselves found information modules selected configuration file filter selects jar files  
+        
+   
+	    see java io filefilter#accept java io file  
+	    
+    
+   status each available modules created one copy per 
+   available module module enabled module selected  
+        
+    
+       tells module enabled not  
+       
+        return true module enabled  
+        
+    
+       setter enabled  
+        
+    
+       setter enabled  
+        
+    
+       tells module selected user not  
+       
+        return true selected  
+        
+    
+       setter selected  
+        
+    
+       setter selected  
+        
+    
+       setter selected  
+       
+        param value value set  
+       org argouml moduleloader ModuleLoader2 org argouml moduleloader moduleloader2 class_suffix moduleloader2     
+	modulestatus hashmap moduleinterface  modulestatus moduleloader2 getinstance instance collection moduleinterface  availablemodules collections unmodifiablecollection modulestatus keyset doload failingallowed    
+	getinstance   dointernal failingallowed isenabled name getinstance   isenabledinternal name collection allmodules     
+	collection coll hashset moduleinterface mf   getinstance   availablemodules      
+	    coll add mf getname coll isselected name getinstance   isselectedinternal name isselectedinternal name    
+	map entry moduleinterface  modulestatus  entry   findmodule name entry modulestatus status   entry getvalue status status isselected setselected name value    
+	getinstance   setselectedinternal name  value setselectedinternal name value    
+	map entry moduleinterface  modulestatus  entry   findmodule name entry modulestatus status   entry getvalue    
+ 
+	    status setselected value getdescription name getinstance   getdescriptioninternal name getdescriptioninternal name    
+	map entry moduleinterface  modulestatus  entry   findmodule name entry illegalargumentexception  module does not exist     
+	  
+ 
+	moduleinterface module   entry getkey    
+        stringbuffer sb stringbuffer desc   module getinfo moduleinterface description desc sb append desc   
+            sb append  \n\n author   module getinfo moduleinterface author author sb append  author     append author   
+            sb append  \n version   module getinfo moduleinterface version version sb append  version     append version   
+            sb append  \n sb tostring dointernal failingallowed    
+	huntformodules somemodulesucceeded somemodulesucceeded moduleinterface module   getinstance   availablemodules      
+ 
+		modulestatus status   modulestatus get module status status isenabled      status isselected module enable      
+		        somemodulesucceeded status setenabled status isenabled       status isselected module disable      
+		        somemodulesucceeded status setdisabled somemodulesucceeded failingallowed moduleinterface module   getinstance   availablemodules      
+ 
+		modulestatus status   modulestatus get module status status isenabled      status isselected status isenabled       status isselected status isselected      
+		    log warn  moduleloader was not able to enable module   
+		               module getname log warn  moduleloader was not able to disable module   
+		               module getname isenabledinternal name    
+	map entry moduleinterface  modulestatus  entry   findmodule name entry modulestatus status   entry getvalue status status isenabled map entry moduleinterface  modulestatus  findmodule name map entry moduleinterface  modulestatus  entry   modulestatus 
+                 entryset      
+            moduleinterface module   entry getkey name equalsignorecase module getname entry huntformodules     
+        huntformodulesfromextensiondir listofclasses   system getproperty  argouml modules listofclasses stringtokenizer si stringtokenizer listofclasses si hasmoretokens classname   si nexttoken addclass classname classnotfoundexception e    
+                    log error  could not load module from classname huntformodulesfromextensiondir extform   getclass   getresource argo argoini  toexternalform argoroot   
+	    extform substring 0  
+			      extform length   - argo argoini length argoroot startswith jar_prefix     
+	    argoroot   argoroot substring jar_prefix length argoroot endswith         
+	        argoroot   argoroot substring 0  argoroot length   - 1 argohome argoroot log info  argoroot is     argoroot argoroot startswith file_prefix     
+	        argohome file argoroot substring file_prefix length     
+	            	 getabsolutefile   getparent argohome file argoroot  getabsolutefile   getparent argohome   java net urldecoder decode argohome   
+                        argo getencoding unsupportedencodingexception e    
+		log warn  encoding    
+                          argo getencoding    
+                            is unknown     
+	      
+ 
+	    log info  argohome is     argohome argohome extdir argohome startswith file_prefix     
+	        extdir   argohome substring file_prefix length    
+                          file separator    ext extdir   argohome   file separator    ext   
+	      
+            extensionlocations add extdir   
+	    huntmodulesfromnameddirectory extdir extdir   system getproperty  argo ext dir extdir extensionlocations add extdir   
+	    huntmodulesfromnameddirectory extdir list getextensionlocations collections unmodifiablelist extensionlocations huntmodulesfromnameddirectory dirname    
+	file extensiondir file dirname extensiondir isdirectory      
+	    file   files   extensiondir listfiles jarfilefilter file file   files    
+		jarfile jarfile jarfile jarfile file jarfile classloader classloader urlclassloader url     
+				file touri   tourl processjarfile classloader  file classnotfoundexception e    
+	                    log error  the is not found    e ioexception ioe    
+		    log debug  cannot open jar file     file  ioe processjarfile classloader classloader  file file classnotfoundexception   
+ 
+	log info  opening jar file     file   
+        jarfile jarfile jarfile jarfile file ioexception e    
+	    log error  unable to open     file  e manifest manifest manifest   jarfile getmanifest manifest log debug file     does not have a manifest ioexception e    
+            log error  unable to read manifest of     file  e loadedclass manifest enumeration jarentry  jarentries   jarfile entries jarentries hasmoreelements      
+                jarentry entry   jarentries nextelement    
+                loadedclass   
+                        loadedclass 
+                                  processentry classloader  entry getname map attributes  entries   manifest getentries key   entries keyset      
+                  
+                loadedclass   
+                    loadedclass 
+                              processentry classloader  key loadedclass    
+              
+            translator addclassloader classloader log error  failed to find any loadable argouml modules in jar   
+                      file processentry classloader classloader cname classnotfoundexception cname endswith class_suffix classnamelen   cname length   - class_suffix length classname   cname substring 0  classnamelen   
+            classname   classname replace addclass classloader  classname addclass classname classnotfoundexception   
+ 
+        getinstance   addclass moduleloader2 getclassloader    
+			       classname addclass classloader classloader classname classnotfoundexception   
+ 
+        log info  loading module     classname moduleclass moduleclass   classloader loadclass classname unsupportedclassversionerror e    
+            log error  unsupported java version classname moduleinterface isassignablefrom moduleclass     
+            log debug  the classname     is not a module constructor defaultconstructor defaultconstructor   
+                    moduleclass getdeclaredconstructor securityexception e    
+            log error  the constructor classname 
+                          is not accessable    
+                      e nosuchmethodexception e    
+            log error  the constructor classname 
+                          is not found    e noclassdeffounderror e    
+            log error  unable to find required loading   
+                      classname     - may indicate an obsolete  
+                        extension module or an unresolved dependency   e exception e    
+            log error  unexpected error loading     classname  e modifier ispublic defaultconstructor getmodifiers       
+            log error  the constructor classname 
+                        is not not loaded object moduleinstance moduleinstance   defaultconstructor newinstance object illegalargumentexception e    
+            log error  the constructor classname 
+                        is called with incorrect argument    e instantiationexception e    
+            log error  the constructor classname 
+                        threw an exception    e illegalaccessexception e    
+            log error  the constructor classname 
+                        is not accessible    e invocationtargetexception e    
+            log error  the constructor classname 
+                        cannot be called    e noclassdeffounderror e    
+            log error  unable to find required instantiating   
+                      classname     - may indicate an obsolete  
+                        extension module or an unresolved dependency   e exception e    
+            log error  unexpected error instantiating     classname  e moduleinstance moduleinterface     
+            log error  the classname     is not a module moduleinterface mf    moduleinterface  moduleinstance  
+ 
+        addmodule mf   
+        log info  succesfully loaded module     classname addmodule moduleinterface mf moduleinterface foundmf   modulestatus keyset foundmf getname   equals mf getname modulestatus ms modulestatus    
+ 
+	  
+	  
+	  
+	  
+	  
+	  
+	ms setselected    
+ 
+	modulestatus put mf  ms jarfilefilter filefilter accept file pathname pathname canread   
+		       pathname isfile   
+		       pathname getpath   tolowercase   endswith   jar modulestatus isenabled enabled setenabled     
+	enabled setdisabled     
+	enabled isselected selected setselected     
+	selected setunselect     
+	selected setselected value value    
+	    setselected setunselect    
+	  
+      
+ org argouml moduleloader ModuleLoader2

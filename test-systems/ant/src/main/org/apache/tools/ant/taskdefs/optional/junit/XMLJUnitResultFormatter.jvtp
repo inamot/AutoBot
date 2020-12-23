@@ -1,0 +1,133 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   prints xml output test specified writer  
+   
+    see formatterelement 
+    
+    constant unnnamed testsuites cases xml document wrapper whole testsuite  
+        
+    
+       element current test  
+        
+    
+       tests failed  
+        
+    
+       timing helper write log arg constructor     
+      inheritdoc      
+      inheritdoc      
+      inheritdoc whole testsuite started  
+        param suite testsuite  
+        
+  add timestamp hostname  
+   output properties local hostname 
+        return name local host localhost cannot work out whole testsuite ended  
+        param suite testsuite  
+        throws buildexception error  
+        
+    
+       interface testlistener  
+       
+        p new test started  
+        param t test  
+        
+    
+       interface testlistener  
+       
+        p test finished  
+        param test test  
+        
+   fix bug #5637 junit extensions testsetup used throws exception during setup starttest never called testsuite contain tests multiple classes  
+   even tests same name - disambiguate interface testlistener junit  lt   3 4  
+       
+        p test failed  
+        param test test  
+        param t exception  
+        
+    
+       interface testlistener junit  gt  3 4  
+       
+        p test failed  
+        param test test  
+        param t assertion  
+        
+    
+       interface testlistener  
+       
+        p error occurred running test  
+        param test test  
+        param t error  
+        
+   xmljunitresultformatterorg apache tools ant taskdefs optional junit XMLJUnitResultFormatter org apache tools ant taskdefs optional junit xmljunitresultformatter junitresultformatter  xmlconstants documentbuilder getdocumentbuilder documentbuilderfactory newinstance   newdocumentbuilder exception exc exceptionininitializererror exc xmljunitresultformatter setoutput outputstream out out   out setsystemoutput out    
+        formatoutput system_out  out setsystemerror out    
+        formatoutput system_err  out starttestsuite junittest suite    
+        doc   getdocumentbuilder   newdocument    
+        rootelement   doc createelement testsuite n   suite getname    
+        rootelement setattribute attr_name  n unknown   n timestamp   dateutils format date    
+                dateutils iso8601_datetime_pattern   
+        rootelement setattribute timestamp  timestamp   
+          
+        rootelement setattribute hostname  gethostname     
+ 
+          
+        element propselement   doc createelement properties   
+        rootelement appendchild propselement   
+        properties props   suite getproperties props enumeration e   props propertynames e hasmoreelements name e nextelement    
+                element propelement   doc createelement property   
+                propelement setattribute attr_name  name   
+                propelement setattribute attr_value  props getproperty name    
+                propselement appendchild propelement gethostname inetaddress getlocalhost   gethostname unknownhostexception e localhost endtestsuite junittest suite buildexception   
+        rootelement setattribute attr_tests       suite runcount     
+        rootelement setattribute attr_failures       suite failurecount     
+        rootelement setattribute attr_errors       suite errorcount     
+        rootelement setattribute attr_time        suite getruntime     1000 0 out writer wri wri bufferedwriter outputstreamwriter out   utf8     
+                wri write   ?xml version \ 1 0\  encoding \ utf-8\  ? \n domelementwriter    write rootelement  wri  0         
+                wri flush ioexception exc buildexception  unable to write log file   exc out    system out    out    system err    
+                    fileutils close wri starttest test t    
+        teststarts put t system currenttimemillis endtest test test teststarts containskey test     
+            starttest test   
+          
+ 
+        element currenttest failedtests containskey test     
+            currenttest   doc createelement testcase n   junitversionhelper gettestcasename test   
+            currenttest setattribute attr_name  
+                                     n unknown   n   
+              
+              
+            currenttest setattribute attr_classname  
+                    junitversionhelper gettestcaseclassname test    
+            rootelement appendchild currenttest   
+            testelements put test  currenttest currenttest    element  testelements get test l teststarts get test   
+        currenttest setattribute attr_time  
+                   system currenttimemillis   - l longvalue      1000 0 addfailure test test  throwable t    
+        formaterror failure  test  t addfailure test test  assertionfailederror t    
+        addfailure test   throwable  t adderror test test  throwable t    
+        formaterror error  test  t formaterror type  test test  throwable t test endtest test   
+            failedtests put test  test   
+          
+ 
+        element nested   doc createelement type   
+        element currenttest test currenttest    element  testelements get test currenttest   rootelement  
+          
+ 
+        currenttest appendchild nested message   t getmessage message message length     0    
+            nested setattribute attr_message  t getmessage     
+          
+        nested setattribute attr_type  t getclass   getname strace   junittestrunner getfilteredtrace t   
+        text trace   doc createtextnode strace   
+        nested appendchild trace formatoutput type output    
+        element nested   doc createelement type   
+        rootelement appendchild nested   
+        nested appendchild doc createcdatasection output    
+      
+ 
+   org apache tools ant taskdefs optional junit XMLJUnitResultFormatter

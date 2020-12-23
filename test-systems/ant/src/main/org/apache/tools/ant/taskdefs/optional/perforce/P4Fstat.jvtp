@@ -1,0 +1,96 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+   
+   portions software based upon public domain software 
+   originally written national center supercomputing applications  
+   university illinois  urbana-champaign  
+    
+    
+   p4fstat--find out files under perforce control not  
+   
+    br  b example usage   b  br  
+    pre  
+    lt project name  quot p4fstat quot  default  quot p4fstat quot  
+   basedir  quot c \dev\gnu quot  gt  
+        lt target name  quot p4fstat quot   gt  
+            lt p4fstat showfilter  quot quot  gt  
+                lt fileset dir  quot depot quot  includes  quot   \   quot   gt  
+            lt  p4fstat gt  
+        lt  target gt  
+    lt  project gt  
+     pre  
+   
+    ant task category  scm  
+    
+    
+       sets filter one applied  
+        table  
+        tr  th option  th  th meaning  th   tr  
+        tr  td td  td files under perforce control not  td   tr  
+        tr  td existing  td  td only files under perforce control  td   tr  
+        tr  td non-existing  td  td only files not under perforce control not  td   tr  
+         table  
+        param filter one existing non-existing  
+        
+    
+       sets optionally change list number  
+        param changelist change list one information throws buildexception change list number negative  
+        
+    
+       adds fileset examined p4fstat  
+        param set fileset add  
+        
+    
+       executes p4fstat task  
+        throws buildexception files specified  
+        
+    
+       return number files seen  
+        return number files seen  
+        
+    
+       return number passes make being used? 
+        return number passes many filesets   
+       org apache tools ant taskdefs optional perforce P4Fstat org apache tools ant taskdefs optional perforce p4fstat p4base existing_header 
+           following files exist in perforce nonexisting_header 
+           following files not exist in perforce setshowfilter filter filter equalsignorecase  all      
+            show   show_all filter equalsignorecase  existing      
+            show   show_existing filter equalsignorecase  non-existing      
+            show   show_non_existing buildexception  p4fstat  showfilter should be one of    
+                   all  existing  non-existing setchangelist changelist buildexception changelist    0 buildexception  p4fstat  changelist# should be a   
+                   positive number changelist   changelist addfileset fileset set    
+        filesets addelement set execute buildexception   
+        handler fstatp4outputhandler p4view addcmd   p4view  
+          
+        p4cmdopts    changelist   0  ?   -c     changelist        
+ 
+        filelist stringbuffer i   0  i   filesets size    i      
+            fileset fs    fileset  filesets elementat i   
+            directoryscanner ds   fs getdirectoryscanner getproject srcfiles   ds getincludedfiles    
+            filenum   srcfiles length srcfiles j   0  j   srcfiles length  j      
+                    file f file ds getbasedir    srcfiles j    
+                    filelist append      append ' '  append f getabsolutepath    append ' '   
+                    donefilenum filelist length     cmdlength    
+ 
+                        execp4fstat filelist   
+                        filelist stringbuffer filelist length     0    
+                    execp4fstat filelist log  no files specified to query status on    project msg_warn show    show_all    show    show_existing    
+            printres handler getexisting    existing_header show    show_all    show    show_non_existing    
+            printres handler getnonexisting    nonexisting_header getlengthoftask filenum getpasses filesets size printres arraylist ar header    
+        log header  project msg_info i   0  i   ar size    i      
+            log ar get i   project msg_info execp4fstat stringbuffer list l   list substring 0 debug    
+            log  executing fstat     p4cmdopts         addcmd   l    \n   
+                project msg_info   
+          
+        execp4command  fstat     p4cmdopts         addcmd   l  handler   
+      
+ 
+ org apache tools ant taskdefs optional perforce P4Fstat

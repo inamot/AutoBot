@@ -1,0 +1,135 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   sets properties current time offsets current time default properties tstamp  dstamp today ant 1 1 
+    ant task category  utility  
+    
+    
+       set prefix properties prefix not end one automatically added  
+        param prefix prefix use ant 1 5 
+        
+    
+       create timestamps  custom ones done before standard ones retaliation early  
+        throws buildexception error  
+        
+    
+       create custom format current prefix  
+        return ready fill format 
+        
+    
+       helper encapsulates prefix logic property setting 
+       policy e use setnewproperty instead setproperty nested element allows property set current date time given format date time patterns defined java simpledateformat class format element allows offsets applied time generate different time values  
+        todo consider refactoring out re-usable element  
+        
+    
+           create format property receive date time string given pattern 
+            param propertyname name property date time pattern used values defined java simpledateformat class  
+            param pattern pattern use  
+            see java text simpledateformat locale used create date time string general form language  country  variant either variant variant country may omitted information please refer documentation java util locale  class  
+            param locale locale use  
+            see java util locale timezone use displaying time values defined java timezone class  
+            param id timezone value  
+            see java util timezone numeric offset current time  
+            param offset offset use  
+            
+    
+           set unit type  using string   
+            param unit unit use  
+            deprecated 1 5 x  
+                       setunit string deprecated replaced setunit tstamp unit make ant's 
+                       introspection mechanism work encapsulate operations unit class unit offset applied current time  
+           valid values ul  
+               li millisecond  li  
+               li second  li  
+               li minute  li  
+               li hour  li  
+               li day  li  
+               li week  li  
+               li month  li  
+               li year  li  
+             ul default unit day  
+            param unit unit use  
+            
+    
+           validate parameter execute format  
+            param project project set property param date date use starting point  
+            param location line file errors  
+            
+    
+       set valid units use time offsets  
+        
+    constructor unit enumerated type     
+    
+           convert value int unit value  
+            return int value valid values  
+            return value values  
+           org apache tools ant taskdefs Tstamp org apache tools ant taskdefs tstamp task setprefix prefix prefix   prefix prefix endswith prefix execute buildexception date d date    
+ 
+            enumeration i   customformats elements i hasmoreelements      
+                customformat cts    customformat  i nextelement    
+                cts execute getproject    d  getlocation     
+              
+ 
+            simpledateformat dstamp simpledateformat   yyyymmdd    
+            setproperty  dstamp   dstamp format d    
+ 
+            simpledateformat tstamp simpledateformat   hhmm    
+            setproperty  tstamp   tstamp format d    
+ 
+            simpledateformat today simpledateformat   mmmm d yyyy   locale us   
+            setproperty  today   today format d exception e buildexception e customformat createformat     
+        customformat cts customformat    
+        customformats addelement cts cts setproperty name value    
+        getproject   setnewproperty prefix   name  value customformat customformat setproperty propertyname propertyname   propertyname setpattern pattern pattern   pattern setlocale locale    
+            stringtokenizer st stringtokenizer locale    \t\n\r\f language   st nexttoken st hasmoreelements      
+                    country   st nexttoken st hasmoreelements      
+                        variant   st nexttoken st hasmoreelements buildexception  bad locale format   
+                                                      getlocation country nosuchelementexception e buildexception  bad locale format   e  
+                                         getlocation settimezone id    
+            timezone   timezone gettimezone id setoffset offset offset   offset setunit unit    
+            log  deprecated - the setunit method has been deprecated   
+                    use setunit tstamp unit  instead     
+            unit u unit    
+            u setvalue unit   
+            field   u getcalendarfield setunit unit unit    
+            field   unit getcalendarfield execute project project  date date  location location propertyname buildexception  property attribute must be provided   
+                                         location pattern buildexception  pattern attribute must be provided   
+                                         location   
+              
+ 
+            simpledateformat sdf language sdf simpledateformat pattern variant sdf simpledateformat pattern locale language  country sdf simpledateformat pattern locale language  country  
+                                                      variant offset    0    
+                calendar calendar   calendar getinstance    
+                calendar settime date   
+                calendar add field  offset   
+                date   calendar gettime timezone sdf settimezone timezone   
+              
+            tstamp setproperty propertyname  sdf format date unit enumeratedattribute units     
+                                                millisecond  
+                                                second  
+                                                minute  
+                                                hour  
+                                                day  
+                                                week  
+                                                month  
+                                                year unit     
+            calendarfields put millisecond integer calendar millisecond    
+            calendarfields put second integer calendar second    
+            calendarfields put minute integer calendar minute    
+            calendarfields put hour integer calendar hour_of_day    
+            calendarfields put day integer calendar date    
+            calendarfields put week integer calendar week_of_year    
+            calendarfields put month integer calendar month    
+            calendarfields put year integer calendar year getcalendarfield key   getvalue   tolowercase    
+            integer i    integer  calendarfields get key i intvalue getvalues units  
+          
+      
+ org apache tools ant taskdefs Tstamp

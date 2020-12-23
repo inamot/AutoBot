@@ -1,0 +1,232 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   handles jdbc configuration needed sql type tasks  
+    p following example class prints contents first column each row tablename  
+    p  
+   code  pre  
+package examples  
+  
+  
+  
+  
+ 
+  
+  
+ 
+public class sqlexampletask extends jdbctask   
+ 
+  
+ 
+    public void execute   throws buildexception   
+        connection conn   getconnection    
+        statement stmt null  
+        try tablename    null    
+                throw new buildexception  tablename must specified  location   
+              
+            string sql    select tablename  
+            stmt  conn createstatement    
+            resultset rs   stmt executequery sql rs next      
+                log rs getobject 1  tostring     
+              
+          catch  sqlexception e    
+ 
+          finally stmt    null    
+                try  stmt close    catch  sqlexception ingore conn    null    
+                try  conn close    catch  sqlexception ingore     
+              
+          
+      
+    public void settablename string tablename tablename   tablename  
+      
+ 
+  
+ 
+ 
+  pre   code ant 1 5 
+   
+    
+    
+       used caching loaders   driver avoid 
+       getting outofmemoryerror calling task 
+       multiple times row  
+        
+    
+       autocommit flag  default value false 
+        
+    
+       db driver  
+        
+    
+       db url  
+        
+    
+       user name  
+        
+    
+       password 
+        
+    
+       rdbms product needed sql  
+         
+    
+       rdbms version needed sql  
+         
+    
+       sets classpath loading driver  
+        param classpath classpath set 
+        
+    
+       caching loaders   driver avoid 
+       getting outofmemoryerror calling task 
+       multiple times row  default  true 
+        param enable code boolean  code  value 
+        
+    
+       add path classpath loading driver  
+        return path configured 
+        
+    
+       set classpath loading driver 
+       using classpath reference  
+        param r reference classpath 
+        
+    
+       class name jdbc driver  required  
+        param driver driver set 
+        
+    
+       sets database connection url  required  
+        param url url set 
+        
+    
+       sets password  required  
+        param password password set 
+        
+    
+       auto commit flag database connection  
+       optional  default false  
+        param autocommit autocommit set 
+        
+    
+       execute task only lower case product name db matches param rdbms rdbms set 
+        
+    
+       sets version string  execute task only rdbms version match  optional  
+        param version version set 
+        
+    
+       verify connected correct rdbms 
+        param conn jdbc connection 
+        return true connected correct rdbms not required information cache loaders drivers  
+        return hashtable classloader used create driver  
+        return classloader 
+        
+    
+       creates new connection using driver  url  userid password 
+       specified calling method responsible closing connection  
+       
+        return connection newly created connection  
+        throws buildexception userid password url not set suitable driver driver fails load  
+        
+   driver doesn't understand url 
+    
+       gets instance required driver  
+       uses ant class loader optionally provided classpath  
+        return driver 
+        throws buildexception 
+        
+   check first not already loaded otherwise 
+   consecutive runs seems end outofmemoryerror fails native library load 
+   several times far being perfect work most cases  
+    
+       set caching attribute  
+        param value code boolean  code  value 
+        
+    
+       gets classpath  
+        return returns path 
+        
+    
+       gets autocommit  
+        return returns boolean 
+        
+    
+       gets url  
+        return returns string 
+        
+    
+       gets userid  
+        return returns string 
+        
+    
+       set user name connection  required  
+        param userid userid set 
+        
+    
+       gets password  
+        return returns string 
+        
+    
+       gets rdbms  
+        return returns string 
+        
+    
+       gets version  
+        return returns string 
+       org apache tools ant taskdefs JDBCTask org apache tools ant taskdefs jdbctask task setclasspath path classpath classpath   classpath setcaching enable    
+        caching   enable path createclasspath classpath classpath path getproject classpath createpath setclasspathref reference r    
+        createclasspath   setrefid r setdriver driver driver   driver trim seturl url url   url setpassword password password   password setautocommit autocommit autocommit   autocommit setrdbms rdbms rdbms   rdbms setversion version version   version isvalidrdbms connection conn rdbms version databasemetadata dmd   conn getmetadata rdbms thevendor   dmd getdatabaseproductname   tolowercase    
+ 
+                log  rdbms       thevendor  project msg_verbose thevendor thevendor indexof rdbms    0    
+                    log  not the required rdbms      rdbms  project msg_verbose version theversion   dmd getdatabaseproductversion   tolowercase locale english   
+ 
+                log  version       theversion  project msg_verbose theversion theversion startswith version  
+                           theversion indexof       version     0     
+                    log  not the required version  \     version    \    project msg_verbose sqlexception e    
+              
+            log  failed to obtain required rdbms information   project msg_err hashtable getloadermap loadermap antclassloader getloader loader connection getconnection buildexception userid buildexception  userid attribute must be set    getlocation password buildexception  password attribute must be set    getlocation url buildexception  url attribute must be set    getlocation log  connecting to     geturl    project msg_verbose   
+            properties info properties    
+            info put  user   getuserid     
+            info put  password   getpassword     
+            connection conn   getdriver   connect geturl    info conn sqlexception  no suitable driver url   
+              
+ 
+            conn setautocommit autocommit conn sqlexception e buildexception e  getlocation driver getdriver buildexception driver buildexception  driver attribute must be set    getlocation     
+          
+ 
+        driver driverinstance dc classpath loadermap caching    
+                        loader    antclassloader  loadermap get driver loader log  loading     driver 
+                                using antclassloader with classpath   
+                              classpath  project msg_verbose   
+                        loader   getproject   createclassloader classpath caching    
+                            loadermap put driver  loader log  loading     driver 
+                                using a cached antclassloader    
+                                project msg_verbose   
+                      
+                  
+                dc   loader loadclass driver log  loading     driver     using system loader    
+                    project msg_verbose   
+                dc forname driver   
+              
+            driverinstance    driver  dc newinstance classnotfoundexception e buildexception not found  jdbc driver     driver     could not be loaded   
+                    e  
+                    getlocation illegalaccessexception e buildexception  
+                     illegal access  jdbc driver     driver     could not be loaded   
+                    e  
+                    getlocation instantiationexception e buildexception  
+                     instantiation exception  jdbc driver     driver     could not be loaded   
+                    e  
+                    getlocation driverinstance iscaching value    
+        caching   value path getclasspath classpath isautocommit autocommit geturl url getuserid userid setuserid userid userid   userid getpassword password getrdbms rdbms getversion version  
+      
+ 
+ org apache tools ant taskdefs JDBCTask

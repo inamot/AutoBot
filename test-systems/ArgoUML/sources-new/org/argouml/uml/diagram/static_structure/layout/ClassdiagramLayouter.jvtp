@@ -1,0 +1,341 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications class implements layout algorithm class diagrams  p layout process performed row row way position nodes row set using sequence given em natural order 
+     em nodes  p resulting layout sequence  
+    ol  
+    li standalone e  without links  nodes first  followed linked nodes 
+    li ordered node-typ  package  interface  class   em em  
+    li increasing level link-hierarchy - root elements first 
+    li decreasing amount weighted links 
+    li ascending name model object 
+     ol  
+   
+    see classdiagramnode#compareto 
+   
+    
+   todo  make magic numbers  configurable class keeps nodes one row together provides basic 
+       functionality author david gunkel 
+        
+    
+           keeps nodes row row number row  
+            
+    
+           construct empty noderow given row number  
+           
+            param arownumber row number row  
+            
+    
+           add node noderow  
+           
+            param node node added 
+            
+    
+           splittable packages standalone-nodes split performed maximum width reached type change occurs package not-package standalone not-standalone   
+	   
+            ul  
+            li packages 
+            li standalone 
+             ul  
+	   
+           split row two ul  
+            li least one standalone node available 
+            li given maximum row width exceeded 
+            li non-standalone element detected  
+             ul  
+	   
+           return new noderow null row not split  
+           
+            param maxwidth maximum allowed row width 
+            param gap horizontal gab between two nodes 
+            return noderow 
+            
+   split   
+        split    null    split isstandalone    ? node   split  
+    
+            return returns nodes  
+            deprecated 0 25 1 tfmorris - use   link #getnodelist    
+            
+    
+            return returns nodes  
+            
+    
+            return returns rownumber iterator nodes row  sorted natural 
+           order  
+           
+            return iterator sorted nodes width row using given horizontal gap between 
+           nodes  
+           
+            param gap horizontal gap between nodes  
+            return width row 
+            
+    
+           set row number row  
+           
+            param rownum rownumber set  
+            
+    
+           adjust properties nodes row  rank  
+           column  offset edges  
+            
+    
+       constant value gap between edges  
+        
+    
+       constant value horizontal gap between nodes  
+        
+    
+       logger logging events  
+        
+    
+       constant value maximum row width  
+        
+   todo configurable property 
+    
+       constant value vertical gap between nodes  
+        
+   attributes diagram layouted  
+        
+    
+       hashmap figures key nodes elements  
+        
+    
+       layoutedclassnodes convenience holds subset layoutedobjects  only classnodes   
+        
+    
+       holds edges - subset layoutedobjects  
+        
+    
+       attribute layoutedobjects holds objects layout  
+        
+    
+       noderows contains diagramrows diagram  
+        
+    
+       internal  
+        
+    
+       internal  
+        
+    
+       constructor layouter  takes diagram input extract layoutedobjects layouted  
+       
+        param thediagram diagram layout  
+        
+    
+       add object layout  
+       
+        param obj represents object layout  
+        
+   todo  check duplicates possible horizontal gap between nodes  
+       
+        return horizontal gap between nodes  
+        
+    
+       operation getminimumdiagramsize returns minimum diagram size layout process  
+       
+        return minimum diagram size layout process  
+        
+    
+       operation getobject returns object given index layouter  
+       
+        param index 
+                  represents index object layouter  
+        return layoutedobject given index  
+        
+    
+       operation getobjects returns objects currently participating layout process  
+       
+        return array holding object layouter vertical gap between nodes  
+       
+        return vertical gap between nodes  
+        
+    
+       operation layout implements actual layout algorithm layoutedobjects type  edge placed using edge-type specific layout algorithm offset em centered  em  edge taken parent node avoid 
+       overlaps  
+       
+        see classdiagramedge 
+        
+    
+       set placement coordinate given node  
+       
+        param node placed  
+        
+    xoffset - curw    2  
+    
+       place noderows diagram  
+        
+   todo  place comments near connected classes 
+   todo  place middle towards outer edges place largest  
+   groups first  
+    
+       center parents over children  working bottom top  
+        
+   todo  make another pass deal overlaps? 
+    
+       compute horizontal center list nodes  
+        param nodes list nodes 
+        return computed x coordinate 
+        
+    
+       rank nodes depending level  position hierarchy set weight achieve proper node-sequence layout  rows 
+       exceeding maximum row width split standalone nodes available  
+        p  
+       weight nodes determine columns  
+        p  
+       todo  weighting doesn't appear working intended multiple 
+       groups children specializations intermixed name order being grouped parent generalization  - tfm - 20070314 
+        
+          boolean haspackages   false  
+   todo  move  package row noderow node ispackage      
+                  haspackages   true haspackages    
+                  haspackages   false  
+                  currentrank   -1  
+                
+    
+       remove object layout process  
+       
+        param obj represents object remove  
+        
+    
+       set up downlinks each node based edges shown diagram  
+        
+   associations not supported todo  create appropriate classdiagramedgeorg argouml uml diagram static_structure layout ClassdiagramLayouter org argouml uml diagram static_structure layout classdiagramlayouter layouter noderow list classdiagramnode  nodes arraylist classdiagramnode noderow arownumber    
+            rownumber   arownumber addnode classdiagramnode node    
+            node setrank rownumber   
+            node setcolumn nodes size     
+            nodes add node noderow dosplit maxwidth gap    
+            treeset classdiagramnode  ts treeset classdiagramnode  nodes ts size     2 classdiagramnode firstnode   ts first firstnode isstandalone classdiagramnode lastnode   ts last firstnode isstandalone      lastnode isstandalone   
+                        firstnode ispackage      lastnode ispackage    
+                       getwidth gap     maxwidth haspackage   firstnode ispackage    
+ 
+            noderow newrow noderow rownumber   1   
+            classdiagramnode node classdiagramnode split iterator classdiagramnode  iter width   0 iter   ts iterator    iter hasnext      width   maxwidth     
+                node   iter next    
+                  
+                  
+                split   
+                     split haspackage    split ispackage      haspackage  
+                               split isstandalone    
+                    ? node 
+                      split  
+                width    node getsize   width   gap  
+              
+            nodes arraylist classdiagramnode  ts headset split iter   ts tailset split  iterator    iter hasnext       
+                newrow addnode iter next log isdebugenabled      
+                log debug  row split row width      getwidth gap  
+                            next row s  width      newrow getwidth gap newrow vector classdiagramnode  getnodes vector classdiagramnode  nodes list classdiagramnode  getnodelist nodes getrownumber rownumber iterator classdiagramnode  getsortediterator treeset classdiagramnode  nodes   iterator getwidth gap result   0 classdiagramnode node   nodes    
+                result    node getsize   width   gap log isdebugenabled      
+                log debug  width of row     rownumber          result result setrownumber rownum rownumber   rownum  
+            adjustrownodes adjustrownodes col   0 numnodeswithdownlinks   0  
+            list classdiagramnode  list arraylist classdiagramnode iterator classdiagramnode  iter   getsortediterator    iter 
+                     hasnext       
+                classdiagramnode node   iter next    
+                node setrank rownumber   
+                node setcolumn col node getdownnodes   isempty      
+                    numnodeswithdownlinks    
+                    list add node offset   -numnodeswithdownlinks   e_gap   2 classdiagramnode node   list     
+                node setedgeoffset offset   
+                offset    e_gap logger log   
+	logger getlogger classdiagramlayouter hashmap fig  classdiagramnode  fignodes hashmap fig  classdiagramnode list classdiagramnode  layoutedclassnodes arraylist classdiagramnode list classdiagramedge  layoutededges arraylist classdiagramedge list layoutedobject  layoutedobjects arraylist layoutedobject classdiagramlayouter argodiagram thediagram    
+        diagram   thediagram  
+        iterator fig  nodeiter   diagram getlayer   getcontents   iterator nodeiter hasnext      
+            fig fig   nodeiter next fig getenclosingfig add classdiagrammodelelementfactory singleton getinstance fig add layoutedobject obj    
+          
+        layoutedobjects add obj obj classdiagramnode    
+            layoutedclassnodes add  classdiagramnode  obj obj classdiagramedge    
+            layoutededges add  classdiagramedge  obj gethgap h_gap dimension getminimumdiagramsize width   0  height   0 hgap2   gethgap     2 vgap2   getvgap     2 classdiagramnode node   layoutedclassnodes    
+            width   
+		math max width  
+			 node getlocation   x node getsize   getwidth     hgap2   
+            height   
+		math max height  
+			 node getlocation   y node getsize   getheight     vgap2 dimension width  height layoutedobject getobject index layoutedobjects get index layoutedobject   getobjects layoutedobject    layoutedobjects toarray getvgap v_gap layout s   system currenttimemillis    
+        setuplinks    
+        rankandweightnodes    
+        placenodes    
+        placeedges    
+        log debug  layout duration       system currenttimemillis   - s placeedges     
+        classdiagramedge setvgap getvgap     
+        classdiagramedge sethgap gethgap classdiagramedge edge   layoutededges edge classdiagraminheritanceedge    
+                classdiagramnode parent   fignodes get edge getdestfignode     
+                  classdiagraminheritanceedge  edge  setoffset parent 
+                         getedgeoffset     
+              
+            edge layout placenode classdiagramnode node    
+        list classdiagramnode  uplinks   node getupnodes    
+        list classdiagramnode  downlinks   node getdownnodes curw   node getsize   width xoffset   node getsize   width   gethgap bumpx   gethgap     2 xposnew   
+	    math max xpos   bumpx  
+		     uplinks size      1 ? node getplacementhint     -1   
+        node setlocation point xposnew  ypos log isdebugenabled      
+            log debug  placenode - row      node getrank       col    
+                      node getcolumn       weight      node getweight   
+                        position       xposnew         ypos      xpos     
+                      xpos     hint      node getplacementhint downlinks size      1 
+                   downlinks get 0  getupnodes   get 0  equals node     
+            downlinks get 0  setplacementhint xposnew   
+          
+        xpos math max node getplacementhint     curw  xpos   xoffset placenodes xinit   0  
+        ypos   getvgap     2 noderow row   noderows    
+            iterator classdiagramnode  inode   row getsortediterator    
+            xpos   xinit rowheight   0 inode hasnext      
+                classdiagramnode node   inode next    
+                placenode node   
+                rowheight   math max rowheight  node getsize   height   
+              
+            ypos    rowheight   getvgap    
+ 
+          
+        centerparents centerparents i   noderows size   - 1  i    0  i--    
+            iterator classdiagramnode  inode   
+                    noderows get i  getsortediterator inode hasnext      
+                classdiagramnode node   inode next    
+                list classdiagramnode  children   node getdownnodes children size     0    
+                    node setlocation point xcenter children  
+                            - node getsize   width   2  node getlocation   y xcenter list classdiagramnode  nodes left   9999999 right   0 classdiagramnode node   nodes x   node getlocation   x  
+            left   math min left  x   
+            right   math max right  x   node getsize   width right   left    2 rankandweightnodes     
+        list classdiagramnode  comments arraylist classdiagramnode     
+        noderows clear    
+        treeset classdiagramnode  nodetree treeset classdiagramnode  layoutedclassnodes classdiagramnode node   nodetree node iscomment      
+                comments add node rownum   node getrank i   noderows size    i    rownum  i      
+                    noderows add noderow rownum                        
+                  
+                noderows get rownum  addnode node classdiagramnode node   comments rowind   
+                    node getupnodes   isempty    
+                            ? 0  
+                                node getupnodes   get 0   getrank     
+ 
+            noderows get rowind  addnode node row   0  row   noderows size       
+            noderow diarow   noderows get row   
+            diarow setrownumber row     
+            diarow   diarow dosplit max_row_width  h_gap diarow noderows add row  diarow remove layoutedobject obj    
+        layoutedobjects remove obj setuplinks     
+        fignodes clear    
+        hashmap fig  list classdiagraminheritanceedge   figparentedges hashmap fig  list classdiagraminheritanceedge classdiagramnode node   layoutedclassnodes    
+            node getupnodes   clear    
+            node getdownnodes   clear    
+            fignodes put node getfigure    node classdiagramedge edge   layoutededges    
+            fig parentfig   edge getdestfignode    
+            classdiagramnode child   fignodes get edge getsourcefignode     
+            classdiagramnode parent   fignodes get parentfig edge classdiagraminheritanceedge parent child parent adddownlink child   
+                    child adduplink parent   
+                    list classdiagraminheritanceedge  edgelist   
+                            figparentedges get parentfig edgelist edgelist arraylist classdiagraminheritanceedge     
+                        figparentedges put parentfig  edgelist   
+                      
+                    edgelist add  classdiagraminheritanceedge  edge log error  edge with missing end s       edge edge classdiagramnoteedge parent iscomment      
+                    parent adduplink child child iscomment      
+                    child adduplink parent log error  unexpected parent child constellation edge    
+                                      edge edge classdiagramassociationedge log error  unsupported edge type    
+              
+             
+          
+      
+ org argouml uml diagram static_structure layout ClassdiagramLayouter

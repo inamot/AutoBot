@@ -1,0 +1,70 @@
+ 
+   set creator email instructors' email session opening reminder email always sent students 
+   without accounts need receive email to respond 
+   failed create feedback questions specified template feedback session type  
+  todo user know error occurred? delete feedback session? 
+  todo  add condition include status due inconsistency problem database 
+         similar one below  
+   iserror    true exception occurred above 
+    
+       gets list questions specified feedback session template  
+       teammates ui controller InstructorFeedbackAddAction teammates ui controller instructorfeedbackaddaction instructorfeedbackabstractaction   
+ 
+  
+ 
+     override actionresult execute courseid   getrequestparamvalue paramsnames course_id   
+ 
+        assumption assertpostparamnotnull paramsnames course_id  courseid   
+        assumption assertnotempty courseid   
+ 
+        instructorattributes instructor   logic getinstructorforgoogleid courseid  account googleid   
+ 
+        gatekeeper verifyaccessible  
+                instructor  logic getcourse courseid paramsnames instructor_permission_modify_session   
+ 
+        feedbacksessionattributes fs   extractfeedbacksessiondata fs setcreatoremail instructor email   
+ 
+          
+          
+        fs setopeningemailenabled feedbacksessiontype   getrequestparamvalue paramsnames feedback_session_type   
+ 
+        instructorfeedbacksessionspagedata data instructorfeedbacksessionspagedata account  sessiontoken logic createfeedbacksession fs createtemplatefeedbackquestions fs getcourseid    fs getfeedbacksessionname    
+                                                fs getcreatoremail    feedbacksessiontype invalidparametersexception e    
+                  
+                  
+                log severe teammatesexception tostringwithstacktrace e    
+              
+ 
+            statustouser add statusmessage statusmessages feedback_session_added  statusmessagecolor success    
+            statustoadmin feedback session  span bold\       fs getfeedbacksessionname         span course   
+                        span bold\       fs getcourseid         span  created  br   
+                        span bold\  from   span      fs getstarttime   
+                        span bold\   to  span      fs getendtime       br   
+                        span bold\  session visible from   span      fs getsessionvisiblefromtime       br   
+                        span bold\  results visible from   span      fs getresultsvisiblefromtime       br  br   
+                        span bold\  instructions   span      fs getinstructions createredirectresult  
+                    data getinstructorfeedbackeditlink  
+                            fs getcourseid    fs getfeedbacksessionname entityalreadyexistsexception e    
+            setstatusforexception e statusmessages feedback_session_exists invalidparametersexception e    
+            setstatusforexception e shouldomitarchived map instructorattributes  instructors   loadcourseinstructormap shouldomitarchived   
+        list instructorattributes  instructorlist arraylist   instructors values     
+        list courseattributes  courses   loadcourseslist instructorlist   
+        list feedbacksessionattributes  feedbacksessions   loadfeedbacksessionslist instructorlist   
+        feedbacksessionattributes sortfeedbacksessionsbycreationtimedescending feedbacksessions feedbacksessions isempty      
+            statustouser add statusmessage statusmessages feedback_session_add_db_inconsistency  
+                                               statusmessagecolor warning    
+          
+ 
+        data initwithouthighlightedrow courses  courseid  feedbacksessions  instructors  fs  
+                                       feedbacksessiontype createshowpageresult viewuris instructor_feedback_sessions  data createtemplatefeedbackquestions courseid feedbacksessionname creatoremail feedbacksessiontype invalidparametersexception feedbacksessiontype list feedbackquestionattributes  questions   
+                getfeedbacksessiontemplatequestions feedbacksessiontype  courseid  feedbacksessionname  creatoremail questionnumber   1 feedbackquestionattributes fqa   questions    
+            logic createfeedbackquestionfortemplate fqa  questionnumber   
+            questionnumber list feedbackquestionattributes  getfeedbacksessiontemplatequestions templatetype courseid feedbacksessionname creatoremail    
+        assumption assertnotnull templatetype teamevaluation  equals templatetype jsonstring   templates populatetemplate feedbacksessiontemplates team_evaluation  
+                     $ courseid    courseid  
+                     $ feedbacksessionname    feedbacksessionname  
+                     $ creatoremail    creatoremail   
+ 
+            type listtype typetoken arraylist feedbackquestionattributes       gettype jsonutils fromjson jsonstring  listtype arraylist      
+      
+ teammates ui controller InstructorFeedbackAddAction

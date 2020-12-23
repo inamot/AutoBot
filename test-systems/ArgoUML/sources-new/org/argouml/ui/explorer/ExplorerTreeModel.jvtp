@@ -1,0 +1,359 @@
+ 
+   $id$ 
+   copyright  c  1996-2006 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications model explorer tree view uml model  
+   
+   provides  
+    - receives events uml model updates itself tree ui  
+    - responds changes perspective ordering  
+   
+    author  alexb 0 15 2 
+    
+    
+       logger array link org argouml ui explorer rules perspectiverule perspectiverules determine tree view map used resolve model elements tree nodes determining effect model event tree global order siblings tree children currently being updated runnable object executed update some 
+       currently pending nodes  
+        
+    
+       help class semi-lazily update nodes tree class thread safe set nodes pending being updated object currently waiting run maximum number nodes update one chunk  
+            
+    
+	   schedule object run awt-eventqueue-0 some later time  
+	    
+    
+	   schedule updatechildren called node some later time nothing already pending update node  
+	   
+	    param node explorertreenode updated  
+	    throws nullpointerexception node null  
+	    
+    
+	   call updatechildren some pending nodes call most 
+	   max_updates_per_run each time still pending 
+	   updates reschedule itself  p method not called explicitly  instead schedule called method called automatically  
+	    
+   todo seems brute force workaround very 
+   indirect one appears needed though until fix problem properly  - tfm 20070904 solves issue 2287 constructor explorertreemodel  
+       
+        param root object place root 
+        param mytree tree 
+        
+   
+        see org argouml ui explorer treemodelumleventlistener#modelelementchanged java lang object  
+        
+   
+        see org argouml ui explorer treemodelumleventlistener#modelelementadded java lang object  
+        
+    
+       traverses children  finds those affected given node notifies modified  
+       
+        param start node start param node given node 
+        
+   
+        see org argouml ui explorer treemodelumleventlistener#modelelementremoved java lang object model structure changed significantly  eg new project  
+        see org argouml ui explorer treemodelumleventlistener#structurechanged   
+        
+   remove references gc only helpful old garbage collectors somewhat inconsistent design constructor receives root object argument okay may need constructor argument  
+    
+       updates next level explorer tree given tree path  
+       
+        param path path node whose children update  
+        throws illegalargumentexception node child not descendant defaultmutabletreenode  
+        
+   avoid doing early initialization process 
+   avoid recursively updating same child 
+    
+       sorts child nodes node using current ordering  p  
+       
+       note  userobject only available descendants defaultmutabletreenode any children couldn't sorted  
+       thus currently forbidden currently node inserted tree  
+       
+        param node node whose children sort 
+        return userobjects children same order children  
+        throws illegalargumentexception node child not descendant defaultmutabletreenode  
+        
+   enumerate current children node find out now sorts different order must moved node moved currently selected  
+		       move predecessors instead don't lose selection fixes issue 3249  
+		       note not deal case multiple nodes selected out order respect each don't think one node reordered time - tfm 
+		        
+   avoid deinitialization here node added back tree again each reordered node  find s new position current 
+   children move avoid initialization here 
+    
+       collects set children modelelement point time children added newchildren  p  
+       
+       note  both newchildren deps modified function fact s primary purpose modify collections responsibility make sure empty called know doing not  
+       
+        param modelelement element collect children param newchildren new children modelelement  
+        param deps set objects monitored changes affect list  
+        throws unsupportedoperationexception add not supported newchildren addall isn't supported deps  
+        throws nullpointerexception newchildren deps null  
+        throws classcastexception newchildren deps rejects some element  
+        throws illegalargumentexception newchildren deps rejects some 
+               element  
+        
+   collect current set objects children node 
+   todo better implementation batch events logical groups update tree one time entire 
+   group  synchronizing access model repository stays consistent during query likely 
+   require doing updates different thread event delivery thread prevent deadlocks right now protect ourselves try catch blocks  
+   order new children dependencies cannot need not ordered 
+    
+       returns set current children remove modifies newchildren only contain children not already children not subsumed any weakexplorernode children  p  
+       
+       note  newchildren modified call  p  
+       
+       note expected weakexplorernode not reused thus always initially slated removal only those 
+       nodes fact used check subsumption new nodes  new nodes not checked themselves subsumtion  
+       
+        param children list current children  
+        param newchildren list expected children  
+        return set current children remove  
+        throws unsupportedoperationexception newchildren doesn't support 
+               remove removeall  
+        throws nullpointerexception either argument null  
+        
+   handle weakexplorernodes 
+   remove node removeset 
+   remove obj3 weaknodes newchildren 
+    
+       merges current children new children removing children longer present adding new children right place  
+       
+        param node treenode merging lists param children current child userobjects order  
+        param newchildren expected child userobjects order  
+        throws unsupportedoperationexception iterator returned newchildren doesn't support remove operation newchildren itself doesn't support remove removeall  
+        throws nullpointerexception node  children newchildren null  
+        
+   remember children not treenodes userobjects 
+   add any remaining nodes 
+   
+        see javax swing tree defaulttreemodel#insertnodeinto javax swing tree mutabletreenode  javax swing tree mutabletreenode  int  
+        
+   
+        see javax swing tree defaulttreemodel#removenodefromparent javax swing tree mutabletreenode  
+        
+    
+       map nodes subtree rooted node  
+       
+        param node node added 
+        
+    
+       unmap nodes subtree rooted given node  
+       
+        param node given node 
+        
+    
+       adds new tree node model element map  
+       nodes removed map link #modelelementremoved object  
+       modelelementremoved  event received  
+       
+        param modelelement modelelement added 
+        param node node added 
+        
+    
+       removes new tree node model element map  
+       
+        param modelelement modelelement removed 
+        param node node removed 
+        
+    
+       node lookup given model element  
+       
+        param modelelement given modelelement 
+        return nodes sought 
+        
+    
+       updates explorer new perspectives   orderings  
+       
+         inheritdoc combo order  
+   todo  temporary tree expand implicitly - tfm 
+    
+        return returns nodeupdater uid  
+       org argouml ui explorer ExplorerTreeModel org argouml ui explorer explorertreemodel defaulttreemodel treemodelumleventlistener  itemlistener logger log   
+	logger getlogger explorertreemodel list explorertreenode  updatingchildren arraylist explorertreenode explorerupdater runnable linkedlist explorertreenode  pendingupdates linkedlist explorertreenode max_updates_per_run   100 schedule hot hot eventqueue invokelater schedule explorertreenode node node getpending pendingupdates add node   
+	    node setpending schedule run done i   0  i   max_updates_per_run  i      
+		explorertreenode node pendingupdates isempty      
+			node   pendingupdates removefirst    
+			node setpending done hot updatechildren treepath getpathtoroot node done    
+		schedule tree refreshselection explorertreemodel object root  explorertree mytree defaultmutabletreenode     
+ 
+        tree   mytree  
+	setroot explorertreenode root setasksallowschildren modelelementmap hashmap object  set explorertreenode      
+ 
+	explorereventadaptor getinstance   
+	     settreemodelumleventlistener order typethennameorder modelelementchanged object node    
+        traversemodified  treenode  getroot    node modelelementadded object node    
+        traversemodified  treenode  getroot    node traversemodified treenode start  object node    
+	enumeration children   start children children hasmoreelements      
+	    treenode child    treenode  children nextelement    
+	    traversemodified child  node start explorertreenode    
+	      explorertreenode  start  nodemodified node modelelementremoved object node explorertreenode changenode   findnodes node changenode getparent removenodefromparent changenode   
+              
+          
+ 
+        traversemodified  treenode  getroot    node structurechanged getroot explorertreenode    
+              explorertreenode  getroot    remove collection nodes   modelelementmap values      
+	    nodes clear    
+	  
+	modelelementmap clear    
+ 
+	  
+	  
+	  
+	modelelementmap hashmap object  set explorertreenode      
+	project proj   projectmanager getmanager   getcurrentproject    
+	explorertreenode rootnode explorertreenode proj addtomap proj  rootnode   
+	setroot rootnode updatechildren treepath path    
+	explorertreenode node    explorertreenode  path getlastpathcomponent    
+        object modelelement   node getuserobject rules updatingchildren contains node updatingchildren add node   
+ 
+	list children   reorderchildren node   
+ 
+	list newchildren arraylist    
+	set deps hashset    
+	collectchildren modelelement  newchildren  deps   
+ 
+	node setmodifyset deps   
+ 
+	mergechildren node  children  newchildren   
+ 
+	updatingchildren remove node list object  reorderchildren explorertreenode node    
+	list object  childuserobjects arraylist object     
+	list explorertreenode  reordered arraylist explorertreenode     
+ 
+	  
+	  
+	enumeration enchld   node children    
+	object lastobj enchld hasmoreelements      
+	    object child   enchld nextelement child explorertreenode    
+		object obj     explorertreenode  child  getuserobject lastobj order compare lastobj  obj    0 tree ispathselected treepath  
+                            getpathtoroot  explorertreenode  child       
+			reordered add  explorertreenode  child explorertreenode prev    
+		             explorertreenode    explorertreenode  child  
+                                 getprevioussibling prev order compare prev getuserobject    obj  
+                                           0     
+			    reordered add prev   
+			    childuserobjects remove childuserobjects size   - 1   
+			    prev    explorertreenode  prev getprevioussibling    
+			  
+			childuserobjects add obj   
+			lastobj   obj childuserobjects add obj   
+		    lastobj   obj illegalargumentexception  
+			 incomprehencible child node     child tostring explorertreenode child   reordered removenodefromparent child explorertreenode child   reordered    
+	    object obj   child getuserobject ip   collections binarysearch childuserobjects  obj  order ip   0    
+		ip   - ip   1 insertnodeinto child  node  ip   
+	    childuserobjects add ip  obj childuserobjects collectchildren object modelelement  list newchildren  
+				 set deps modelelement perspectiverule rule   rules    
+ 
+              
+              
+              
+              
+              
+              
+              
+            collection children children   rule getchildren modelelement invalidelementexception e    
+                log debug  invalidelementexception in explorertree      
+                          e getstacktrace object child   children child log warn  perspectiverule     rule     wanted to   
+                               add to the explorer tree newchildren contains child     
+                    newchildren add child set dependencies   rule getdependencies modelelement   
+                deps addall dependencies invalidelementexception e    
+                log debug  invalidelementexception in explorertree      
+                          e getstacktrace     
+              
+ 
+          
+ 
+	  
+	  
+	collections sort newchildren  order   
+	deps addall newchildren set prepareaddremovesets list children  list newchildren    
+	set removeset hashset    
+	set commonobjects hashset children size     newchildren size      
+	    commonobjects addall children   
+	    commonobjects retainall newchildren commonobjects addall newchildren   
+	    commonobjects retainall children   
+	  
+	newchildren removeall commonobjects   
+	removeset addall children   
+	removeset removeall commonobjects   
+ 
+	  
+	iterator it   removeset iterator    
+	list weaknodes it hasnext      
+	    object obj   it next obj weakexplorernode weakexplorernode node    weakexplorernode  obj weaknodes weaknodes linkedlist    
+		iterator it2   newchildren iterator it2 hasnext      
+		    object obj2   it2 next obj2 weakexplorernode    
+			weaknodes add obj2   
+		      
+		  
+	      
+ 
+	    iterator it3   weaknodes iterator it3 hasnext      
+		object obj3   it3 next node subsumes obj3     
+		      
+		    it remove    
+		      
+		    newchildren remove obj3   
+		    it3 remove removeset mergechildren explorertreenode node  list children  
+			       list newchildren    
+	set removeobjects   prepareaddremovesets children  newchildren   
+	  
+	list explorertreenode  actualnodes arraylist explorertreenode     
+	enumeration childrenenum   node children childrenenum hasmoreelements      
+	    actualnodes add  explorertreenode  childrenenum nextelement position   0  
+	iterator childnodes   actualnodes iterator    
+	iterator newnodes   newchildren iterator    
+	object firstnew   newnodes hasnext   ? newnodes next childnodes hasnext      
+	    object childobj   childnodes next childobj explorertreenode explorertreenode child    explorertreenode  childobj  
+	    object userobject   child getuserobject removeobjects contains userobject     
+		removenodefromparent child firstnew order compare firstnew  userobject    0    
+		    insertnodeinto explorertreenode firstnew node  
+				   position   
+		    position    
+		    firstnew   newnodes hasnext   ? newnodes next position firstnew insertnodeinto explorertreenode firstnew node  
+			   position   
+	    position    
+	    firstnew   newnodes hasnext   ? newnodes next override insertnodeinto mutabletreenode newchild  
+			       mutabletreenode parent index insertnodeinto newchild  parent  index newchild explorertreenode    
+            addnodestomap  explorertreenode  newchild   
+          
+      
+ 
+      
+     override removenodefromparent mutabletreenode node node explorertreenode    
+	    removenodesfrommap  explorertreenode  node   
+	      explorertreenode  node  remove removenodefromparent node addnodestomap explorertreenode node    
+	enumeration children   node children children hasmoreelements      
+	    explorertreenode child    explorertreenode  children nextelement    
+	    addnodestomap child   
+	  
+	addtomap node getuserobject    node removenodesfrommap explorertreenode node    
+	enumeration children   node children children hasmoreelements      
+	    explorertreenode child    explorertreenode  children nextelement    
+	    removenodesfrommap child   
+	  
+	removefrommap node getuserobject    node addtomap object modelelement  explorertreenode node    
+	set explorertreenode  nodes   modelelementmap get modelelement nodes nodes add node nodes hashset explorertreenode     
+	    nodes add node   
+	    modelelementmap put modelelement  nodes removefrommap object modelelement  explorertreenode node    
+	collection explorertreenode  nodes   modelelementmap get modelelement nodes nodes remove node nodes isempty      
+                modelelementmap remove modelelement collection explorertreenode  findnodes object modelelement    
+	collection explorertreenode  nodes   modelelementmap get modelelement nodes collections empty_list nodes itemstatechanged itemevent e e getsource perspectivecombobox    
+            rules     explorerperspective  e getitem    getlist order    comparator  e getitem    
+	  
+	structurechanged    
+	  
+	tree expandpath tree getpathforrow 1    
+      
+ 
+      
+    explorerupdater getnodeupdater nodeupdater  
+      
+ 
+      
+  
+  
+org argouml ui explorer ExplorerTreeModel

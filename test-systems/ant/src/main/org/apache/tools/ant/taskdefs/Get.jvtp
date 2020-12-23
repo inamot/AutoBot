@@ -1,0 +1,207 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   gets particular file url source  
+   options include verbose reporting  timestamp based fetches controlling 
+   actions failures  nb  access through firewall only works whole 
+   java runtime correctly configured ant 1 1 
+   
+    ant task category  network  
+    
+   required 
+   required default work  
+       
+        exception buildexception thrown unrecoverable error  
+        
+  set up logging 
+  execute make request supplied progress logging info config parameters set task level  
+       source  dest  ignoreerrors  etc  
+        param loglevel level log see   link project#log string  int   
+        param progress progress callback  null callbacks 
+        return true successful download  false otherwise return value only relevant link #ignoreerrors true false failures raise buildexceptions  
+        throws ioexception network trouble 
+        throws buildexception argument errors trouble ignoreerrors false  
+        
+  dont any progress  unless asked 
+  set timestamp file date  
+  set up url connection 
+  modify headers 
+  nb  things user authentication go here prepare java 1 1 style credentials not use sun impl portability always use implementation consistent 
+  testing 
+  connect remote site  may take some time  
+  next test 304 result  http only  
+  not modified file download return 
+  instead trace out something user 
+  doesn't think download happened didn't 
+   test 401 result  http only  
+  revisit point even non http connections may 
+  support modified behaviour check date content skip write not 
+  newer  some protocols  ftp  don't include dates course three attempt trick round quirks different 
+  java implementations  some take few goes bind 
+  property ignore first couple failures started over write dest failed  
+   try delete garbage d otherwise leave 
+   behind only use file time option set saved file now timestamp set downloaded file 
+  successful download 
+    
+       set url param u url file copy source file  
+       
+        param dest path file true  show verbose progress information  
+       
+        param v true verbose true  log errors not treat fatal  
+       
+        param v true don't report download errors up ant true  conditionally download file based timestamp local copy  
+       
+        p situation modified header set file only fetched newer local 
+       file local file flag only valid http connections ignored cases flag set local copy downloaded file timestamp set remote file time   p  
+       
+        p note remote files date 1 1 1970  gmt treated timestamp web servers often serve files timestamp future replacing timestamp current time inter-computer clock differences cause end grief   p  
+        param v  true enable file time fetching 
+        
+    
+       username basic auth  
+       
+        param u username authentication 
+        
+    
+       password basic authentication  
+       
+        param p password authentication 
+        
+    
+       provide backward compatibility  
+        
+    
+       interface implemented reporting 
+       progess downloading  
+        
+    
+           begin download 
+            
+    
+           tick handler 
+           
+            
+    
+           end download nothing progress info 
+        
+    
+           begin download 
+            
+    
+           tick handler 
+           
+            
+    
+           end download 
+            
+    
+       verbose progress system prints some output stream 
+        
+   checkstyle visibilitymodifier bc 
+   checkstyle visibilitymodifier construct verbose progress reporter  
+            param out output stream  
+            
+    
+           begin download 
+            
+    
+           tick handler 
+           
+            
+    
+           end download 
+           org apache tools ant taskdefs Get org apache tools ant taskdefs get task execute buildexception loglevel   project msg_info  
+        downloadprogress progress verbose    
+            progress verboseprogress system out doget loglevel  progress ioexception ioe    
+            log  error getting     source     to     dest ignoreerrors buildexception ioe  getlocation doget loglevel  downloadprogress progress ioexception source buildexception  src attribute is required   getlocation dest buildexception  dest attribute is required   getlocation dest exists      dest isdirectory buildexception  the specified destination is a directory   
+                    getlocation dest exists       dest canwrite buildexception  can't write to     dest getabsolutepath    
+                    getlocation progress progress nullprogress    
+          
+        log  getting      source  loglevel   
+        log  to      dest getabsolutepath    loglevel timestamp   0 hastimestamp usetimestamp    dest exists      
+            timestamp   dest lastmodified verbose    
+                date t date timestamp   
+                log  local file date       t tostring    loglevel   
+              
+            hastimestamp urlconnection connection   source openconnection hastimestamp    
+            connection setifmodifiedsince timestamp uname pword up   uname         pword encoding  
+              
+              
+              
+            base64converter encoder base64converter    
+            encoding   encoder encode up getbytes     
+            connection setrequestproperty   authorization   
+                     basic     encoding   
+          
+ 
+          
+        connection connect connection httpurlconnection    
+            httpurlconnection httpconnection 
+                       httpurlconnection  connection lastmodified   httpconnection getlastmodified httpconnection getresponsecode   
+                       httpurlconnection http_not_modified 
+                    lastmodified    0    hastimestamp 
+                   timestamp    lastmodified     
+                  
+                  
+                  
+                  
+                log  not modified - so not downloaded   loglevel httpconnection getresponsecode   
+                       httpurlconnection http_unauthorized message    http authorization failure ignoreerrors    
+                    log message  loglevel buildexception message   
+                  
+              
+ 
+          
+ 
+          
+          
+          
+          
+          
+ 
+        inputstream is i   0  i   3  i is   connection getinputstream ioexception ex    
+                log  error opening connection     ex  loglevel is log  can't get     source     to     dest  loglevel ignoreerrors buildexception  can't get     source     to     dest  
+                    getlocation     
+          
+ 
+        fileoutputstream fos fileoutputstream dest   
+        progress begindownload finished buffer 100   1024 length length   is read buffer      0    
+                fos write buffer  0  length   
+                progress ontick    
+              
+            finished fileutils close fos   
+            fileutils close is finished    
+                dest delete    
+              
+          
+        progress enddownload usetimestamp remotetimestamp   connection getlastmodified verbose     
+                date t date remotetimestamp   
+                log  last modified       t tostring   
+                            remotetimestamp    0  
+                        ?   - using current time instead  
+                               loglevel remotetimestamp    0    
+                file_utils setfilelastmodified dest  remotetimestamp setsrc url u source   u setdest file dest dest   dest setverbose v    
+        verbose   v setignoreerrors v    
+        ignoreerrors   v setusetimestamp v    
+        usetimestamp   v setusername u uname   u setpassword p pword   p base64converter org apache tools ant util base64converter downloadprogress begindownload ontick enddownload nullprogress downloadprogress begindownload ontick enddownload verboseprogress downloadprogress    
+  
+          
+        printstream out verboseprogress printstream out out   out begindownload     
+            dots   0 ontick     
+            out print dots     50    
+                out flush    
+                dots   0 enddownload     
+            out println    
+            out flush    
+          
+      
+ 
+ org apache tools ant taskdefs Get

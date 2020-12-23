@@ -1,0 +1,112 @@
+ 
+    
+       stores requests excluded being shown admin activity logs page determines whether logs requests contained excludedlogrequesturis  below shown  use true url show logs keep showing logs despite any action change page unless page reloaded false simply reloaded parameter omitted determines whether logs related testing data shown  use  testdata true url show testing logs keep showing logs testing data despite any action change page 
+       unless page reloaded testdata false simply reloaded parameter omitted  
+        
+    
+       checks array contains specific value  
+        value converted lower case before comparing  
+        
+    
+       creates queryparameters object used filtering  
+        
+    
+       returns true current log entry included  
+        
+    
+       performs actual filtering  based queryparameters  
+       
+        p returns false logentry fails filtering process  
+       
+        p querymessage null function return true set querymessage error message  
+        
+  filter based query 
+    
+       converts query string queryparameters object  
+        
+  version specified com google appengine api log logquery not belong internal class  queryparameters need store here future use 
+    
+       returns possible servlet requests list html  
+        
+    
+       queryparameters inner class  used only within servlet hold query data once parsed boolean variables determine specific label within query xxvalue variables hold data linked label query 
+        
+    
+           add label values teammates ui pagedata AdminActivityLogPageData teammates ui pagedata adminactivitylogpagedata pagedata excludedlogrequesturis actionuris instructor_feedback_stats_page actionuris automated_log_compilation adminactivitylogpagedata accountattributes account sessiontoken account  sessiontoken   
+        setdefaultlogsearchperiod list getexcludedlogrequesturis     
+        list excludedlist arraylist excludedlogrequesturi   excludedlogrequesturis    
+            excludedlist add excludedlogrequesturi substring excludedlogrequesturi lastindexof ' '    1 excludedlist setdefaultlogsearchperiod     
+        calendar fromcalendardate   timehelper now 0 0   
+        fromcalendardate add calendar day_of_month  -1   
+ 
+        fromdatevalue   fromcalendardate gettimeinmillis    
+        todatevalue   timehelper now 0 0  gettimeinmillis init list activitylogentry  loglist    
+        initlogsastemplaterows loglist initlogsastemplaterows list activitylogentry  entries    
+        logs arraylist activitylogentry entry   entries    
+            adminactivitylogtablerow row adminactivitylogtablerow entry   
+            logs add row setshowalllogs val    
+        shouldshowalllogs   val setshowtestdata val    
+        shouldshowtestdata   val getshouldshowalllogs shouldshowalllogs getshouldshowtestdata shouldshowtestdata getfilterquery filterquery getquerymessage querymessage list adminactivitylogtablerow  getlogs logs list getversions versions getfromdate fromdatevalue setfromdate starttime    
+        fromdatevalue   starttime gettodate todatevalue settodate endtime    
+        todatevalue   endtime arraycontains array value element   array element equals value tolowercase   trim generatequeryparameters query    
+        filterquery   query trim q   parsequery filterquery tolowercase parseexception   invalidparametersexception e querymessage    error with the query      e getmessage shouldincludelogentry activitylogentry logentry shouldshowalllogs uri   excludedlogrequesturis logentry getactionurl logentry getactionurl   contains uri filterlog activitylogentry logentry q querymessage querymessage    error parsing the query  queryparameters not created shouldincludelogentry logentry q isrequestinquery     arraycontains q requestvalues  logentry getactionname q isresponseinquery     arraycontains q responsevalues  logentry getactionresponse q ispersoninquery 
+                    logentry getusername   tolowercase   contains q personvalue tolowercase    
+                    logentry getusergoogleid   tolowercase   contains q personvalue tolowercase    
+                    logentry getuseremail   tolowercase   contains q personvalue tolowercase q isroleinquery     arraycontains q rolevalues  logentry getuserrole q iscutoffinquery 
+                    logentry getactiontimetaken      0    logentry getactiontimetaken     q cutoffvalue q isinfoinquery keystring   q infovalues logentry getlogmessage   tolowercase   contains keystring tolowercase q isidinquery     arraycontains q idvalues  logentry getlogid shouldincludelogentry logentry queryparameters parsequery query parseexception  invalidparametersexception   
+        queryparameters q queryparameters    
+        versions arraylist query query isempty q tokens   query replaceall   and         
+                                replaceall            
+                                replaceall            
+                                split  \\    -1 token   tokens pair   token split      -1 pair length    2 invalidparametersexception  invalid format values   pair 1  split      -1   
+            values   stringhelper trim values label   pair 0  trim version  equals label value   values    
+                    versions add value replace from  equals label     
+                simpledateformat sdf simpledateformat  dd mm yy hh mm    
+                sdf settimezone timezone gettimezone systemparams admin_time_zone    
+                date d   sdf parse values 0      00 00    
+                calendar cal   timehelper now 0 0   
+                cal settime d   
+                fromdatevalue   cal gettime   gettime    
+                isfromdatespecifiedinquery to  equals label     
+                simpledateformat sdf simpledateformat  dd mm yy hh mm    
+ 
+                sdf settimezone timezone gettimezone systemparams admin_time_zone    
+                date d   sdf parse values 0      23 59    
+                calendar cal   timehelper now 0 0   
+                cal settime d   
+                todatevalue   cal gettime   gettime q add label  values q getactionlistashtml     
+        list allactionnames   getallactionnames totalcolumns   4 rowspercol   calculaterowspercol allactionnames size    totalcolumns convertactionlisttohtml allactionnames  rowspercol  totalcolumns convertactionlisttohtml list allactionnames rowspercol totalcolumns    
+ 
+        stringbuilder outputhtml stringbuilder 100   
+        outputhtml append   tr count   0 i   0  i   totalcolumns  i      
+ 
+            outputhtml append   td  ul list-group j   0  j   rowspercol  j count    allactionnames size outputhtml append   li list-group-item   
+                                    getstyleforlistgroupitem allactionnames get count   
+                                     \      allactionnames get count       li     
+ 
+                count    
+              
+            outputhtml append    ul   td outputhtml tostring getstyleforlistgroupitem actionname style actionname startswith  instructor      
+            style    list-group-item actionname startswith  student      
+            style    list-group-item-success actionname startswith  admin      
+            style    list-group-item-warning style    list-group-item-danger style calculaterowspercol totalnumofactions totalcolumns rowspercol   totalnumofactions   totalcolumns remainder   totalnumofactions % totalcolumns remainder   0    
+            rowspercol rowspercol list getallactionnames     
+ 
+        list actionnamelist arraylist field field actionuris getfields actionstring   getactionnamestringfromfield field   
+            actionnamelist add actionstring actionnamelist getactionnamestringfromfield field field rawactionstring rawactionstring   field get actionuris tostring illegalargumentexception   illegalaccessexception e    
+            assumption fail  fail to get action uri splitedstring   rawactionstring split splitedstring splitedstring length - 1 getquerykeywordsforinfo q q isinfoinquery return stringhelper join      q infovalues queryparameters isrequestinquery requestvalues isresponseinquery responsevalues ispersoninquery personvalue isroleinquery rolevalues iscutoffinquery cutoffvalue isinfoinquery infovalues isidinquery idvalues  
+ 
+        queryparameters     
+            isrequestinquery isresponseinquery ispersoninquery isroleinquery iscutoffinquery isinfoinquery isidinquery add label values invalidparametersexception label request   
+                isrequestinquery requestvalues   values response   
+                isresponseinquery responsevalues   values person   
+                ispersoninquery personvalue   values 0 role   
+                isroleinquery rolevalues   values time   
+                iscutoffinquery cutoffvalue parselong values 0 info   
+                isinfoinquery infovalues   values id   
+                isidinquery idvalues   values invalidparametersexception  invalid label setloglocaltime localtimeinfo    
+        loglocaltime   localtimeinfo getloglocaltime loglocaltime setstatusforajax status    
+        statusforajax   status getstatusforajax statusforajax ispersonspecified q q ispersoninquery getpersonspecified q null q personvalue isfromdatespecifiedinquery isfromdatespecifiedinquery  
+      
+ 
+ teammates ui pagedata AdminActivityLogPageData

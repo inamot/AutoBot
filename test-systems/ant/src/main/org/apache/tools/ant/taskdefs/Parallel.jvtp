@@ -1,0 +1,215 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   executes contained tasks separate threads  continuing 
+   once completed  
+    p  
+   new behavior allows ant script specify maximum number threads executed parallel   one very careful using code waitfor  code  task specifying  code threadcount  code cause deadlocks number threads small one nested tasks fails execute completely task selection algorithm insure tasks listed before task started before task started not insure successful completion those 
+   tasks those tasks finish first e s classic race 
+   condition   
+     p ant 1 4 
+   
+    ant task category  control  
+    
+    class holds list tasks execute    
+    collection holding nested tasks    
+    
+           add nested task execute parallel  asynchron   
+            p  
+            param nestedtask  nested task executed parallel  
+                              must not null  
+            
+    collection holding nested tasks    
+    semaphore notify completed threads    
+    total number threads run    
+    total number threads per processor run timeout period milliseconds    
+    indicates threads still running new threads issued    
+    indicates execution timedout    
+    
+       indicates whether failure any nested tasks end 
+       execution dameon task list any    
+    accumulation exceptions messages nested tasks    
+    number exceptions nested tasks first exception encountered location first exception    
+    
+       add group daemon threads 
+        param daemontasks tasks executed daemon  
+        
+    
+       interval poll completed threads threadcount threadsperprocessor specified   integer milliseconds   optional 
+       
+        param pollinterval new value property pollinterval  
+        
+    
+       control whether failure nested task halts execution  note task complete existing threads continue run not stopped 
+       
+        param failonany true any nested task failure causes parallel complete  
+        
+    
+       add nested task execute parallel  
+        param nestedtask  nested task executed parallel 
+        
+    
+       dynamically generates number threads execute based number available processors  via 
+        code java lang runtime availableprocessors    code    requires j2se 
+       1 4 vm overwrite value set threadcount used 1 1  1 2 1 3 vm task defer code threadcount  code    optional 
+        param numthreadsperprocessor number threads create per available 
+              processor  
+       
+        
+    
+       statically determine maximum number tasks execute 
+       simultaneously less tasks threads executed once only  code threadcount  code  
+       tasks executed one time code threadsperprocessor  code set jvm least 1 4 vm value ignored   optional 
+       
+        param numthreads total number threads  
+       
+        
+    
+       sets timeout set tasks timeout reached 
+       before threads complete execution task completes exception  
+       
+       note existing threads continue run  
+       
+        param timeout timeout milliseconds  
+        
+    
+       execute parallel tasks 
+       
+        exception buildexception any threads failed  
+        
+    
+       determine number threads based number processors 
+        
+    
+       spin up required threads maximum number active any given time  
+       
+        exception buildexception any threads failed leave block sure data really 
+   stored main memory before new threads start new 
+   threads sure load data main memory probably slightly paranoid  
+   start any daemon threads 
+   now run main threads limited numbers    
+   start initial batch threads 
+   start timeout thread 
+   ignore 
+   now find available running slots remaining threads 
+   continue outer loop another 
+   available slot here slots use sleep until 
+   something happens 
+   doesn't java know interruptions rude pretend didn't happen go out business  
+   sheesh threads finished 
+  system out println  thread still alive     
+   still running - wait interrupt time now any threads throw exception 
+    
+       determine number processors  only effective later vms 
+       
+        return number processors available 0 not determinable  
+        
+   return bogus number 
+    
+       thread execs task 
+        
+    
+           construct new taskrunnable  p  
+           
+            param task task executed separate thread 
+            
+    
+           executes task within thread takes care exceptions raised within task any exception thrown during execution  
+            return exception null exception not finished 
+            
+    
+           provides indicator task finished  
+            return returns true task finished  
+           org apache tools ant taskdefs Parallel org apache tools ant taskdefs parallel task taskcontainer tasklist taskcontainer addtask task nestedtask    
+            tasks add nestedtask adddaemons tasklist daemontasks daemontasks buildexception  only one daemon group is supported daemontasks   daemontasks setpollinterval pollinterval setfailonany failonany failonany   failonany addtask task nestedtask    
+        nestedtasks addelement nestedtask setthreadsperprocessor numthreadsperprocessor numthreadsperprocessor   numthreadsperprocessor setthreadcount numthreads numthreads   numthreads settimeout timeout timeout   timeout execute buildexception   
+        updatethreadcounts numthreads    0    
+            numthreads   nestedtasks size    
+          
+        spinthreads updatethreadcounts numthreadsperprocessor    0 numprocessors   getnumprocessors numprocessors    0    
+                numthreads   numprocessors   numthreadsperprocessor processexceptions taskrunnable   runnables runnables i   0  i   runnables length    i    
+            throwable t   runnables i  getexception t numexceptions firstexception firstexception   t t buildexception 
+                       firstlocation    location unknown_location    
+                    firstlocation     buildexception  t  getlocation    
+                  
+                exceptionmessage append stringutils line_sep   
+                exceptionmessage append t getmessage spinthreads buildexception numtasks   nestedtasks size    
+        taskrunnable   runnables taskrunnable numtasks   
+        stillrunning timedout threadnumber   0 enumeration e   nestedtasks elements    e hasmoreelements    
+             threadnumber      
+            task nestedtask    task  e nextelement    
+            runnables threadnumber taskrunnable nestedtask maxrunning   numtasks   numthreads ? numtasks   numthreads  
+        taskrunnable   running taskrunnable maxrunning   
+ 
+        threadnumber   0  
+        threadgroup group threadgroup  parallel    
+ 
+        taskrunnable   daemons daemontasks daemontasks tasks size      0    
+            daemons taskrunnable daemontasks tasks size semaphore semaphore daemons i   0  i   daemons length    i    
+                    daemons i taskrunnable  task  daemontasks tasks get i    
+                    thread daemonthread thread group  daemons i    
+                    daemonthread setdaemon daemonthread start i   0  i   maxrunning    i    
+                running i    runnables threadnumber     
+                thread thread thread group  running i    
+                thread start timeout    0    
+                  
+                thread timeoutthread thread run wait timeout semaphore    
+                                stillrunning timedout semaphore notifyall interruptedexception e    
+                              
+                          
+                      
+                   
+                timeoutthread start    
+              
+ 
+              
+            outer threadnumber   numtasks    stillrunning i   0  i   maxrunning  i running i running i  isfinished      
+                        running i    runnables threadnumber     
+                        thread thread thread group  running i    
+                        thread start outer semaphore wait interruptedexception ie    
+                      
+                      
+                      
+                  
+              
+ 
+              
+            outer2 stillrunning i   0  i   maxrunning    i running i running i  isfinished semaphore wait interruptedexception ie outer2  
+                      
+                  
+                stillrunning timedout buildexception  parallel execution timed out    
+          
+ 
+          
+        exceptionmessage stringbuffer    
+        numexceptions   0  
+        firstexception firstlocation   location unknown_location  
+        processexceptions daemons   
+        processexceptions runnables numexceptions    1 firstexception buildexception buildexception  firstexception buildexception firstexception numexceptions   1 buildexception exceptionmessage tostring    
+                                     firstlocation getnumprocessors paramtypes       
+            method availableprocessors   
+                runtime getmethod  availableprocessors   paramtypes   
+ 
+            object   args       
+            integer ret    integer  availableprocessors invoke runtime getruntime    args ret intvalue exception e 0 taskrunnable runnable   
+  
+  
+  
+ 
+          
+        taskrunnable task task task   task run task perform throwable t    
+                exception   t failonany    
+                    stillrunning semaphore    
+                    finished semaphore notifyall throwable getexception exception isfinished finished  
+          
+      
+ 
+ org apache tools ant taskdefs Parallel

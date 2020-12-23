@@ -1,0 +1,529 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   checks out files specific starteam server  project  view folder  
+    br  br program logs starteam server opens up specified 
+   project view searches through view given 
+   folder prefer uses root folder    beginning folder optionally continuing recursivesly  antstarteamcheckout 
+   compares each file include exclude filters checks out only appropriate  
+    br  br  
+   checked out files go directory specify under subfolder 
+   named default starteam path view entered  home cpovirk work target folder project named 
+    ourproject given view named  testview view stored default c \projects\test files checked 
+   out home cpovirk work test avoided using project name path may want keep several versions same 
+   project computer didn't want use view name may many  test version 1 0  views example system's success course  depends set default path starteam  
+    br  br set antstarteamcheckout verbose quiet mode safeguard against overwriting files computer target directory specify already exists program throw buildexception override exception  set  code force  code true  
+    br  br  
+    b program makes use functions starteam api result 
+   antstarteamcheckout available only licensed users starteam requires starteam sdk function must code starteam-sdk jar  code classpath run program information starteam api license see link below   b  
+   
+    version 1 0 
+    see href  http   www starbase com   starbase web site ant task name  starteam  category  scm  ignore  true constant sets filter include files default same result code setincludes       code   
+       
+        see #getincludes   
+        see #setincludes string includes disables exclude filter default words files excluded setting equivalent code setexcludes null   code  
+         
+       
+        see #getexcludes   
+        see #setexcludes string excludes default folder search root folder antstarteamcheckout searches subfolders default processes entire view  
+       
+        see #getfoldername   
+        see #setfoldername string foldername used formatting output directory name displayed only changes field keeps count number files checked out      
+   change through set methods name server wish connect port server used starteam name project name folder want check out files subfolders searched well view files want username starteam server starteam password path root folder want check out local 
+       directory force set true  antstarteamcheckout overwrite files target directory verbose true program display files directories checked out  
+        
+    
+       set recursion false check out files only given folder not subfolders fields deal includes excludes files fit pattern checked out files fitting pattern ignored file delimitor user's system      
+    
+       whether use starteam  default folder calculating target paths files checked out  false targetfolder 
+       represents absolute mapping foldername  
+        
+    convenient method check conditions    
+    
+       check attributes elements correct  
+        throws buildexception problem  
+        
+   check properties required way create full target path must slash end targetfolder foldername slash backslash only character  leave alone 
+   check see target directory exists execution  
+       
+        throws buildexception problem  
+        
+   connect starteam server log search items server  
+   disconnect server properties ok thing starteam any kind exceptions send message project log  
+   tell many files checked out  
+    
+       creates logs starteam server  
+       
+        return starteam server  
+        
+   simplest constructor  uses default encryption algorithm compression level  
+   optional  logon   connects necessary  
+   logon using specified user name password  
+    
+       searches specified project server  
+       
+        param s starteam server  
+        
+    
+       searches given view project  
+       
+        param s starteam server  
+        param p valid project given server  
+        
+    
+       searches folders given view  
+       
+        param s starteam server  
+        param p valid project server  
+        param v view name specified project  
+        param t item type currently always  file ugly  checking root folder performance reasons important pre-fetch properties ll need items ll searching always display itemid  object_id primary descriptor ll need item type's primary descriptor item type secondary descriptor ll need now  build array property names  
+   pre-fetch item properties cache now  search items selected folder  
+   free up memory used cached items  
+    
+       returns file object defines root local checkout tree  
+       depending value targetfolderabsolute either targetfolder exactly set user path formed appending default folder onto specified target folder  
+       
+        param v view file checked out  supplies default 
+            folder  
+        param rootsourcefolder root folder checkout operation star 
+            team 
+        return object referencing local file 
+        see #gettargetfolderabsolute   
+        
+   create variable dir contains name starteam folder root folder view default path current view  
+   convert whatever separator char starteam target system ends separator strip replace projectname file's absolute path viewname makes root target checkout operation equal targetfolder   dirname 
+   only want first time 
+    
+       searches files given folder method recursive thus searches subfolders  
+       
+        param s starteam server  
+        param p valid project server  
+        param v view name specified project  
+        param t item type currently always  file   
+        param f folder search  
+        param tgt target folder local machine 
+        
+   process items folder  
+   process subfolders recursively recursion check out one file matches include filter not exclude 
+       filter  
+       
+        param s starteam server  
+        param p valid project server  
+        param v view name specified project  
+        param t item type currently always  file   
+        param f folder file localed param item file check out  
+        param tgt target folder local machine descriptors item type  
+   verbose mode only 
+   show folder only changed want display folder same way enter command line remove view name name root folder therefore shows up start path displayed project  view  item type folder show list relevant item properties  
+   finally  show item properties     
+   always show itemid  
+   show primary descriptor always one  
+   show secondary descriptor one  
+   some item types one  some don't  
+   show file locked  
+   end verbose only 
+   check out ugly  
+   change item checked out starteam file local file name simply local target path  tgt passed recursively down top tree item's name appended  
+    
+       look file checked out  don't check out fits include filters fits exclude filter  
+       
+        param pname item name look being included  
+        return whether file checked out not  
+        
+    
+       convenient method see string match one pattern given set space-separated patterns  
+       
+        param patterns space-separated list patterns  
+        param pname name look matching  
+        return whether name match least one pattern primary descriptor given item type  returns null isn't one practice item types primary descriptor  
+       
+        param t item type point always file   
+        return specified item's primary descriptor secondary descriptor given item type  returns null isn't one  
+       
+        param t item type point always file   
+        return specified item's secondary descriptor may not one every file  
+        
+    
+       formats property value display user  
+       
+        param p item property format  
+        param value object format  
+        return string containing property truncated 35 
+            characters display  
+        
+   begin set methods 
+    
+       sets code servername  code  attribute given value  
+       
+        param servername name server wish connect see #getservername   
+        
+    
+       gets code servername  code  attribute  
+       
+        return starteam server log see #setservername string servername  
+        
+    
+       sets code serverport  code  attribute given value given value must valid integer must string object  
+       
+        param serverport string containing port starteam server use  
+        see #getserverport   
+        
+    
+       gets code serverport  code  attribute  
+       
+        return string containing port starteam server use  
+        see #setserverport int  
+        
+    
+       sets code projectname  code  attribute given value  
+       
+        param projectname starteam project search  
+        see #getprojectname   
+        
+    
+       gets code projectname  code  attribute  
+       
+        return starteam project search  
+        see #setprojectname string projectname  
+        
+    
+       sets code viewname  code  attribute given value  
+       
+        param viewname view find specified folder see #getviewname   
+        
+    
+       gets code viewname  code  attribute  
+       
+        return view find specified folder see #setviewname string viewname  
+        
+    
+       sets code foldername  code  attribute given value search root folder  use slash backslash simply don't set folder param foldername subfolder check out files  
+        see #getfoldername   
+        
+    
+       gets code foldername  code  attribute  
+       
+        return subfolder check out files subfolders searched well  
+        see #setfoldername string foldername  
+        
+    
+       sets code username  code  attribute given value  
+       
+        param username username specified starteam server  
+        see #getusername   
+        
+    
+       gets code username  code  attribute  
+       
+        return username given user  
+        see #setusername string username  
+        
+    
+       sets code password  code  attribute given value  
+       
+        param password password specified starteam server  
+        see #getpassword   
+        
+    
+       gets code password  code  attribute  
+       
+        return password given user  
+        see #setpassword string password  
+        
+    
+       sets code targetfolder  code  attribute given value  
+       
+        param targetfolder target path local machine check out see #gettargetfolder   
+        
+    
+       gets code targetfolder  code  attribute  
+       
+        return target path local machine check out see #settargetfolder string targetfolder  
+        
+    
+       sets code force  code  attribute given value  
+       
+        param force true overwrites files target directory default set false safeguard  note target 
+            directory not exist setting effect  
+        see #getforce   
+        
+    
+       gets code force  code  attribute  
+       
+        return whether continue target directory exists  
+        see #setforce boolean  
+        
+    
+       turns recursion param recursion true default  subfolders searched 
+            recursively files check out  otherwise  only files 
+            specified code foldername  code scanned  
+        see #getrecursion   
+        
+    
+       gets code recursion  code  attribute tells 
+       antstarteamcheckout whether search subfolders checking out 
+       files  
+       
+        return whether search subfolders checking out files  
+        see #setrecursion boolean  
+        
+    
+       sets code verbose  code  attribute given value  
+       
+        param verbose whether display files checks out default false program only displays total number files unless override default  
+        see #getverbose   
+        
+    
+       gets code verbose  code  attribute  
+       
+        return whether display files checks out  
+        see #setverbose boolean verbose  
+        
+   begin filter getters setters 
+    
+       sets include filter filtering files  antstarteamcheckout uses unmodified version code directoryscanner  code 's  code match  code  
+       method here patterns straight ant source code  
+        br  
+        br  
+       matches string against pattern pattern contains two special 
+       characters   br means zero characters   br means one only one character   br  
+        br  
+       separate multiple inlcude filters spaces not commas ant 
+       uses example want check out java class\ 
+       files put following line program  
+        code setincludes    java   class     code  
+       finally  note filters effect b directories  b scanned not check out files directories names beginning only build instance course limit antstarteamcheckout particular folder subfolders code setfoldername string foldername   code  command   br  
+        br  
+       treatment overlapping inlcudes excludes give simplistic 
+       example suppose set include filter htm   html exclude filter index happens index html? 
+       antstarteamcheckout not check out index html matches exclude filter   index      even though matches include filter well   br  
+        br  
+       please read following sections before using filters  
+       
+        param includes string filter patterns include  separate patterns spaces  
+        see #getincludes   
+        see #setexcludes string excludes  
+        see #getexcludes   
+        
+    
+       gets patterns include filter duplicate details antstarteancheckout's filtering here  refer links  
+       
+        return string filter patterns separated spaces  
+        see #setincludes string includes  
+        see #setexcludes string excludes  
+        see #getexcludes   
+        
+    
+       sets exclude filter filtering files  antstarteamcheckout uses unmodified version code directoryscanner  code 's  code match  code  
+       method here patterns straight ant source code  
+        br  
+        br  
+       matches string against pattern pattern contains two special 
+       characters   br means zero characters   br means one only one character   br  
+        br  
+       separate multiple exlcude filters spaces not commas ant 
+       uses example want check out files except  xml html files put following line program  
+        code setexcludes    xml   html     code  
+       finally  note filters effect b directories  b scanned not skip over files directories 
+       whose names begin project instance   br  
+        br  
+       treatment overlapping inlcudes excludes give simplistic 
+       example suppose set include filter htm   html exclude filter index happens index html? 
+       antstarteamcheckout not check out index html matches exclude filter   index      even though matches include filter well   br  
+        br  
+       please read following sections before using filters  
+       
+        param excludes string filter patterns exclude  separate patterns spaces  
+        see #setincludes string includes  
+        see #getincludes   
+        see #getexcludes   
+        
+    
+       gets patterns exclude filter duplicate details antstarteancheckout's filtering here  refer links  
+       
+        return string filter patterns separated spaces  
+        see #setexcludes string excludes  
+        see #setincludes string includes  
+        see #getincludes   
+        
+    
+       returns whether starteam default path factored calculated 
+       target path locations  false whether targetfolder absolute 
+       mapping root folder named foldername 
+       
+        return returns true absolute mapping used  false not 
+            used  
+        see #settargetfolderabsolute boolean  
+        
+    
+       sets property indicates whether not star team  default 
+       folder used calculation paths items target 
+        false targetfolder absolute mapping root folder 
+       named foldername  
+       
+        param targetfolderabsolute  tt true  tt absolute mapping used   tt false  tt default default folder factored see #gettargetfolderabsolute   
+       org apache tools ant taskdefs optional scm AntStarTeamCheckOut org apache tools ant taskdefs optional scm antstarteamcheckout org apache tools ant task default_includesetting default_excludesetting default_foldersetting asserttrue value msg buildexception value buildexception msg checkparameters buildexception   
+          
+        asserttrue getservername servername must be set     
+        asserttrue getserverport      -1   serverport must be set     
+        asserttrue getprojectname projectname must be set     
+        asserttrue getviewname viewname must be set     
+        asserttrue getusername username must be set     
+        asserttrue getpassword password must be set     
+        asserttrue gettargetfolder targetfolder must be set gettargetfolder   endswith      
+                   gettargetfolder   endswith  \\    
+                gettargetfolder   length     1    
+            settargetfolder gettargetfolder   substring 0  gettargetfolder   length   - 1    
+          
+ 
+          
+        java io file direxist java io file gettargetfolder direxist isdirectory       getforce buildexception  target directory exists  set \ force\    
+                    to to anyway execute buildexception   
+        log  deprecated - the starteam task is deprecated   use stcheckout instead    
+            project msg_warn   
+ 
+          
+        server s   getserver runserver s s disconnect    
+          
+          
+          
+          
+ 
+          
+        log checkedout     files checked out server getserver     
+          
+        server s server getservername    getserverport     
+ 
+          
+        s connect    
+ 
+          
+        s logon getusername    getpassword s runserver server s    
+        com starbase starteam project   projects   s getprojects i   0  i   projects length  i      
+            com starbase starteam project p   projects i p getname   equals getprojectname getverbose      
+                    log  found     getprojectname     delim   
+                  
+                runproject s  p runproject server s  com starbase starteam project p    
+        view   views   p getviews i   0  i   views length  i      
+            view v   views i v getname   equals getviewname getverbose      
+                    log  found     getprojectname     delim   getviewname     delim   
+                  
+                runtype s  p  v  s typeforname s gettypenames   file runtype server s  com starbase starteam project p  view v  type t    
+          
+        folder f   v getrootfolder getfoldername getfoldername   equals  \\      getfoldername   equals         
+                setfoldername f   starteamfinder findfolder v getrootfolder    getfoldername     
+                asserttrue f   error      getprojectname     delim 
+                      getviewname     delim   v getrootfolder     delim 
+                      getfoldername     delim 
+                        does not exist getverbose      getfoldername log  found     getprojectname     delim   getviewname   
+                  delim   getfoldername     delim    \n nproperties   2  
+ 
+          
+        property p1   getprimarydescriptor t   
+ 
+          
+          
+        property p2   getsecondarydescriptor t p2 nproperties strnames nproperties iproperty   0  
+ 
+        strnames iproperty      s getpropertynames   object_id  
+        strnames iproperty      p1 getname p2 strnames iproperty      p2 getname    
+          
+ 
+          
+        f populatenow t getname    strnames  -1   
+ 
+          
+        runfolder s  p  v  t  f  calctargetfolder v  f    
+ 
+          
+        f discarditems t getname    -1 java io file calctargetfolder view v  folder rootsourcefolder    
+        java io file root java io file gettargetfolder gettargetfolderabsolute defaultpath   v getdefaultpath    
+ 
+              
+            defaultpath   defaultpath replace ' '  java io file separatorchar   
+            defaultpath   defaultpath replace '\\'  java io file separatorchar   
+ 
+            java io file dir java io file defaultpath dirname   dir getname dirname endswith delim     
+                dirname   dirname substring 0  dirname length   - 1   
+              
+ 
+              
+              
+              
+            stringtokenizer pathtokenizer stringtokenizer rootsourcefolder getfolderhierarchy    delim currenttoken foundroot pathtokenizer hasmoretokens      
+                currenttoken   pathtokenizer nexttoken currenttoken equals getprojectname        foundroot    
+                    currenttoken   dirname  
+                    foundroot root java io file root  currenttoken root runfolder server s  
+                             com starbase starteam project p  
+                             view v  
+                             type t  
+                             folder f  
+                             java io file tgt    
+          
+        item   items   f getitems t getname i   0  i   items length  i      
+            runitem s  p  v  t  f  items i   tgt getrecursion      
+            folder   subfolders   f getsubfolders i   0  i   subfolders length  i      
+                runfolder s  p  v  t  subfolders i java io file tgt  subfolders i  getname runitem server s  
+                           com starbase starteam project p  
+                           view v  
+                           type t  
+                           folder f  
+                           item item  
+                           java io file tgt    
+          
+        property p1   getprimarydescriptor t   
+        property p2   getsecondarydescriptor t pname item get p1 getname shouldcheckout pname getverbose bshowheader    f    prevfolder bshowheader strfolder   f getfolderhierarchy i   strfolder indexof delim i    0    
+                    strfolder   strfolder substring i   1   
+                  
+                log              folder  \     strfolder    \     
+                prevfolder   f  
+ 
+                  
+                  
+                stringbuffer header stringbuffer                  item    
+ 
+                header append   \t   append p1 getdisplayname p2 header append   \t   append p2 getdisplayname     
+                  
+                log header tostring     
+              
+ 
+              
+              
+            stringbuffer itemline stringbuffer                      
+ 
+            itemline append item getitemid     
+ 
+              
+              
+            itemline append   \t   append formatfordisplay p1  item get p1 getname p2 itemline append   \t   append formatfordisplay p2  item get p2 getname locker   item getlocker locker   -1    
+                itemline append   \tlocked by    append locker itemline append   \tnot locked    
+              
+            log itemline tostring     
+          
+          
+ 
+          
+ 
+          
+        com starbase starteam file remote    com starbase starteam file  item  
+ 
+          
+          
+        java io file local java io file tgt item get p1 getname remote checkoutto local  item locktype unchanged true   
+            checkedout exception e buildexception  failed to checkout '    local    '   e shouldcheckout pname includeit   matchpatterns getincludes    pname excludeit   matchpatterns getexcludes    pname includeit     excludeit matchpatterns patterns pname patterns stringtokenizer exstr stringtokenizer patterns exstr hasmoretokens directoryscanner match exstr nexttoken    pname property getprimarydescriptor type t    
+        property   properties   t getproperties i   0  i   properties length  i      
+            property p   properties i p isprimarydescriptor p property getsecondarydescriptor type t    
+        property   properties   t getproperties i   0  i   properties length  i      
+            property p   properties i p isdescriptor       p isprimarydescriptor p formatfordisplay property p  object value p gettypecode      property types text str   value tostring str length     35    
+                str   str substring 0  32 str p gettypecode      property types enumerated p getenumdisplayname   integer  value  intvalue value tostring setservername servername servername   servername getservername servername setserverport serverport serverport   serverport getserverport serverport setprojectname projectname projectname   projectname getprojectname projectname setviewname viewname viewname   viewname getviewname viewname setfoldername foldername foldername   foldername getfoldername foldername setusername username username   username getusername username setpassword password password   password getpassword password settargetfolder targetfolder targetfolder   targetfolder gettargetfolder targetfolder setforce force force   force getforce force setrecursion recursion recursion   recursion getrecursion recursion setverbose verbose verbose   verbose getverbose verbose setincludes includes includes   includes getincludes includes setexcludes excludes excludes   excludes getexcludes excludes gettargetfolderabsolute targetfolderabsolute settargetfolderabsolute targetfolderabsolute targetfolderabsolute   targetfolderabsolute  
+      
+  
+org apache tools ant taskdefs optional scm AntStarTeamCheckOut

@@ -1,0 +1,143 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   touch file fileset s filelist s   
+   corresponds unix touch command  
+   
+    p file touch doesn't exist empty one created   p ant 1 1 
+   
+    ant task category  filesystem initial version used dateformat short time format ignores seconds want 
+           seconds well need dateformat medium turn break old build files  
+           
+           first try parse dateformat short fails medium - throw exception both 
+           fail  
+            
+    
+       construct new  code touch  code  task  
+        
+    
+       sets single source file touch file not exist empty file created  
+        param file code file  code touch  
+        
+    
+       set new modification time file s  touched milliseconds midnight jan 1 1970  optional  default now  
+        param millis code long  code  timestamp use  
+        
+    
+       set new modification time file s  touched format  quot mm dd yyyy hh mm pm quot quot mm dd yyyy hh mm ss pm quot   
+       optional  default now  
+        param datetime code string  code  date specified format  
+        
+    
+       set whether nonexistent parent directories created touching new files  
+        param mkdirs  code boolean  code  whether create parent directories ant 1 6 3 
+        
+    
+       set whether touch task report every file creates  
+       defaults code true  code   
+        param verbose  code boolean  code  flag ant 1 6 3 
+        
+    
+       set format datetime attribute  
+        param pattern code simpledateformat  code -compatible format pattern ant 1 6 3 
+        
+    
+       add code mapper  code   
+        param mapper code mapper  code add ant 1 6 3 
+        
+    
+       add code filenamemapper  code   
+        param filenamemapper code filenamemapper  code add ant 1 6 3 
+        throws buildexception multiple mappers added  
+        
+    
+       add set files touch  
+        param set code fileset  code add  
+        
+    
+       add filelist touch  
+        param list code filelist  code add  
+        
+    
+       add collection resources touch  
+        param rc collection add ant 1 7 
+        
+    
+       check task configured properly  
+        throws buildexception configuration errors detected ant 1 6 3 
+        
+  only set successful point  
+    
+       execute touch operation  
+        throws buildexception error occurs actual work  assumes everything checked now  
+        throws buildexception error occurs  
+        
+   deal resource collections 
+   deal filesets special way task 
+   originally used directories union won't return touch single file current timestamp millis method not interact any nested mappers remains reasons backwards-compatibility only  
+        param file file touch 
+        throws buildexception error 
+        deprecated 1 6 x  
+        
+   use create file deal non-writable filesorg apache tools ant taskdefs Touch org apache tools ant taskdefs touch task dateformatfactory   
+        dateformat getprimaryformat    
+        dateformat getfallbackformat dateformatfactory default_df_factory dateformatfactory dateformat getprimaryformat dateformat getdatetimeinstance dateformat dateformat locale us dateformat getfallbackformat dateformat getdatetimeinstance dateformat dateformat medium  locale us touch setfile file file file   file setmillis millis millis   millis setdatetime datetime datetime log  resetting datetime attribute to     datetime  project msg_verbose datetime   datetime  
+        datetimeconfigured setmkdirs mkdirs mkdirs   mkdirs setverbose verbose verbose   verbose setpattern pattern    
+        dffactory dateformatfactory dateformat getprimaryformat simpledateformat pattern dateformat getfallbackformat addconfiguredmapper mapper mapper    
+        add mapper getimplementation add filenamemapper filenamemapper buildexception filenamemapper buildexception  only one mapper may be added to the   
+                  gettaskname       task filenamemapper   filenamemapper addfileset fileset set    
+        filesets add set   
+        add set addfilelist filelist list    
+        add list add resourcecollection rc    
+        resources add rc checkconfiguration buildexception file resources size      0 buildexception  specify at least one source  
+                                      --a file or resource collection file file exists      file isdirectory buildexception  use a resource collection to touch directories datetime datetimeconfigured workmillis   millis  
+            dateformat df   dffactory getprimaryformat    
+            parseexception pe workmillis   df parse datetime  gettime parseexception peone    
+                df   dffactory getfallbackformat df pe   peone workmillis   df parse datetime  gettime parseexception petwo    
+                        pe   petwo pe buildexception pe getmessage    pe  getlocation workmillis   0 buildexception  date of     datetime 
+                                             results in negative   
+                                            milliseconds value   
+                                            relative to epoch   
+                                             january 1  1970    
+                                            00 00 00 gmt      
+              
+            log  setting millis to     workmillis     from datetime attribute   
+                  millis   0  ? project msg_debug   project msg_verbose    
+            setmillis workmillis   
+              
+            datetimeconfigured execute buildexception   
+        checkconfiguration    
+        touch touch buildexception defaulttimestamp   gettimestamp file touch fileresource file getparentfile    file getname     
+                  defaulttimestamp   
+          
+          
+        iterator iter   resources iterator iter hasnext      
+            resource r    resource  iter next r touchable buildexception  can't touch     r   
+              
+            touch r  defaulttimestamp i   0  i   filesets size    i      
+            fileset fs    fileset  filesets elementat i   
+            directoryscanner ds   fs getdirectoryscanner getproject     
+            file fromdir   fs getdir getproject srcdirs   ds getincludeddirectories j   0  j   srcdirs length  j      
+                touch fileresource fromdir  srcdirs j    defaulttimestamp touch file file    
+        touch file  gettimestamp gettimestamp millis   0  ? system currenttimemillis     millis touch resource r defaulttimestamp filenamemapper r fileresource    
+                  
+                touch   fileresource  r  getfile    defaulttimestamp touchable  r  touch defaulttimestamp mapped   filenamemapper mapfilename r getname mapped mapped length   0 modtime    r isexists    ? r getlastmodified   
+                      defaulttimestamp i   0  i   mapped length  i      
+                    touch getproject   resolvefile mapped i    modtime touch file file modtime file exists      
+            log  creating     file  
+                  verbose  ? project msg_info   project msg_verbose file_utils createnewfile file  mkdirs ioexception ioe buildexception  could not create     file  ioe  
+                                         getlocation file canwrite buildexception  can not change modification date of   
+                                        read-only file     file   
+          
+        file_utils setfilelastmodified file  modtime   
+      
+ 
+ org apache tools ant taskdefs Touch

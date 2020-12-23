@@ -1,0 +1,98 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license extension lt jar gt create war archive  
+   contains special treatment files end up code web-inf lib  code    code web-inf classes  code code web-inf  code  directories web application archive   p  
+    p war task shortcut specifying particular layout war file same thing accomplished using prefix i fullpath attributes zipfilesets zip jar task    p  
+    p extended zipfileset element zip task attributes prefix i fullpath i src available war task   p ant 1 2 
+   
+    ant task category  packaging  
+    see jar web xml deployment descriptor 
+        
+    
+       flag set descriptor added 
+        
+    path web xml file    
+    lower case version comparisons    
+    constructor war task deprecated name file create 
+       -use  tt destfile  tt  instead  
+        param warfile destination file 
+        deprecated 1 5 x  
+                   use setdestfile file  instead 
+        ant attribute ignore  true  
+        
+    
+       set deployment descriptor use  web-inf web xml   
+       required unless  tt update true  tt  
+        param descr deployment descriptor file 
+        
+   create zipfileset file pass up  
+    
+       set policy web xml file whether not needed 
+        param needxmlfile whether web xml file needed  default  true 
+        
+    
+       add files under web-inf lib  
+        param fs zip file set add set prefix fileset pass up  
+    
+       add files under web-inf classes 
+        param fs zip file set add set prefix fileset pass up  
+    
+       files add under web-inf  
+        param fs zip file set add set prefix fileset pass up  
+    
+       override parent  validates configuration 
+       before initializing output stream  
+        param zout zip output stream 
+        throws ioexception output error 
+        throws buildexception invalid configuration 
+        
+    
+       overridden zip class deal web xml 
+       
+       here cases arise 
+       -not web xml file   add 
+       -first web xml   add  remember added same web xml again  skip 
+       -alternate web xml   warn skip 
+       
+        param file file add archive 
+        param zout stream write param vpath name entry shall archive 
+        param mode unix permissions set  
+        throws ioexception output error file being added web-inf web xml warn s 
+   not one specified webxml  attribute s being added twice  meaning same file specified webxml  attribute fileset  element default add file web xml file found  see duplicate not second web xml file skip check see warn not added file web xml file add remember make sure don't think already web xml next time task 
+       gets executed  
+       org apache tools ant taskdefs War org apache tools ant taskdefs war jar xml_descriptor_path_lc   
+            xml_descriptor_path tolowercase locale english war archivetype    war   
+        emptybehavior    create setwarfile file warfile    
+        setdestfile warfile setwebxml file descr    
+        deploymentdescriptor   descr deploymentdescriptor exists buildexception  deployment descriptor    
+                                       deploymentdescriptor 
+                                         does not exist     
+          
+ 
+          
+        zipfileset fs zipfileset    
+        fs setfile deploymentdescriptor   
+        fs setfullpath xml_descriptor_path addfileset fs setneedxmlfile needxmlfile needxmlfile   needxmlfile addlib zipfileset fs    
+          
+        fs setprefix  web-inf lib addfileset fs addclasses zipfileset fs    
+          
+        fs setprefix  web-inf classes addfileset fs addwebinf zipfileset fs    
+          
+        fs setprefix  web-inf addfileset fs initzipoutputstream zipoutputstream zout ioexception  buildexception initzipoutputstream zout zipfile file file  zipoutputstream zout vpath mode ioexception vpathlowercase   vpath tolowercase locale english addfile xml_descriptor_path_lc equals vpathlowercase addedwebxmlfile addfile file_utils filenameequals addedwebxmlfile  file     
+                    log  warning  selected     archivetype 
+                                files include a second     xml_descriptor_path 
+                                which will be ignored \n  
+                               the duplicate entry is at     file   '\n' 
+                               the file that will be used is   
+                              addedwebxmlfile  
+                            project msg_warn addedwebxmlfile   file  
+                  
+                addfile deploymentdescriptor   file addfile zipfile file  zout  vpath  mode cleanup addedwebxmlfile deploymentdescriptor needxmlfile 
+                isinupdatemode buildexception  no web-inf web xml file was added \n is your intent  set needxml addedwebxmlfile cleanup    
+      
+ org apache tools ant taskdefs War

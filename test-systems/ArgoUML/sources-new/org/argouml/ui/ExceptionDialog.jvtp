@@ -1,0 +1,147 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications window displays exception user t handle any way  
+    
+   todo partly converted generic error dialog something specific exceptions renamed process complete  
+    
+    
+       construct exception dialog given frame throwable  
+       
+        param f code frame  code dialog displayed 
+        param e exception 
+        
+    
+       construct exception dialog given parameters  
+       
+        param f code frame  code dialog displayed 
+        param message message 
+        param e exception 
+        
+    
+       construct exception dialog given parameters  
+       
+        param f code frame  code dialog displayed 
+        param message message 
+        param e exception 
+        param highlightcause 
+                  give priority throwable cause display  use main exception mostly boilerplate really useful 
+                  information enclosed cause text developers doesn't need localized  
+    
+       construct exception dialog preformatted error string  
+       
+        param f code frame  code dialog displayed 
+        param message message 
+        deprecated tfmorris 0 24  use  
+         link #exceptiondialog frame  string  string  string   
+        
+    
+       construct exception dialog given title  introduction detail 
+       message  
+        
+        param f code frame  code dialog displayed 
+        param title 
+                  string use title dialog box 
+        param intro 
+                  introductory text  summary error  
+        param message message introducing label text box containing problem messages 
+   todo hidden default accessible via details  button tab provide info user shouldn't really br  instead p  elements lines run together pasted browser window  
+   
+        see java awt event actionlistener#actionperformed java awt event actionevent  
+        
+    
+       copy textpane's contents clipboard  
+       
+        param e actionevent 
+        
+    
+       dispose dialog  
+        
+    
+       handle link activation hyperlink  
+       
+        param e event uid  
+       org argouml ui ExceptionDialog org argouml ui exceptiondialog jdialog actionlistener exceptiondialog frame f  throwable e f  translator localize  dialog exception unknown error    e exceptiondialog frame f message  throwable e f  message  e exceptiondialog frame f message  throwable e highlightcause f  formatexception message  e  highlightcause formatexception message  throwable e highlightcause    
+        stringwriter sw stringwriter    
+        printwriter pw printwriter sw highlightcause    e getcause pw print message    
+            pw print   hr system info  p     systeminfodialog getinfo     
+            pw print   p  hr error occurred at date     
+            pw print   p   cause       
+            e getcause   printstacktrace pw   
+            pw print  ------- p full exception       
+          
+        e printstacktrace pw sw tostring exceptiondialog frame f message f  translator localize  dialog exception title     
+                translator localize  dialog exception message     
+                message exceptiondialog frame f title intro message f   
+        setresizable setmodal settitle title   
+ 
+        dimension scrsize   toolkit getdefaulttoolkit   getscreensize    
+        getcontentpane   setlayout borderlayout 0  0    
+ 
+          
+        northlabel jlabel intro   
+        northlabel setborder borderfactory createemptyborder 5  5  5  5    
+        getcontentpane   add northlabel  borderlayout north   
+ 
+          
+          
+          
+        textarea jeditorpane    
+        textarea setcontenttype  text html    
+        textarea seteditable textarea addhyperlinklistener hyperlinklistener hyperlinkupdate hyperlinkevent hle    
+                linkevent hle   
+              
+            
+ 
+          
+          
+        textarea settext message replaceall  \n     p      
+        textarea setcaretposition 0   
+ 
+        jpanel centerpanel jpanel borderlayout     
+        centerpanel add jscrollpane textarea    
+        centerpanel setpreferredsize dimension 500  200    
+        getcontentpane   add centerpanel   
+ 
+        copybutton jbutton translator localize  button copy-to-clipboard     
+        copybutton addactionlistener actionlistener actionperformed actionevent evt    
+                copyactionperformed evt   
+              
+            
+ 
+        closebutton jbutton translator localize  button close     
+        closebutton addactionlistener jpanel bottompanel jpanel    
+ 
+        bottompanel add copybutton   
+        bottompanel add closebutton   
+        getcontentpane   add bottompanel  borderlayout south   
+ 
+        addwindowlistener windowadapter windowclosing windowevent evt    
+                disposedialog    
+              
+            
+ 
+        pack    
+        dimension contentpanesize   getcontentpane   getsize    
+        setlocation scrsize width   2 - contentpanesize width   2  
+                scrsize height   2 - contentpanesize height   2 actionperformed actionevent e    
+        disposedialog copyactionperformed actionevent e e getsource      copybutton  
+        textarea setselectionstart 0   
+        textarea setselectionend textarea gettext   length     
+        textarea copy    
+        textarea setselectionend 0 disposedialog     
+        setvisible dispose linkevent hyperlinkevent e e geteventtype   equals hyperlinkevent eventtype activated     
+            startbrowser openurl e geturl     
+          
+      
+ 
+       
+  
+ 
+ org argouml ui ExceptionDialog

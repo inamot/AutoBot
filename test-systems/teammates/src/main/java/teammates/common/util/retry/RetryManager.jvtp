@@ -1,0 +1,80 @@
+ 
+    
+   handles running retrying link retryable  tasks  
+   generally methods retry tasks exponential backoff until one following conditions met  
+    ul  
+        li task successful  see specific method documentation definition success    li  
+        li maximum retries exceeded determined specified maximum delay    li  
+        li link throwable type specified task encountered thrown upwards    li  
+     ul  
+    
+    
+       creates new   link retrymanager contains methods retry tasks  
+       
+        param maxdelayins maximum delay seconds wait before final retry task's   code issuccessfulexec    method must return true task considered successful task's   code isresultnull    method must return false task considered successful  
+           only applicable task instance link retryabletaskreturnsthrows   
+            
+    
+           checks whether code task  ran successfully based based code successcondition   
+            
+    
+       runs   code task   retrying needed using exponential backoff  until task successful  
+       
+        returns   code task  result null none  
+        throws e encountered running evaluating   code task   
+        throws maximumretriesexceededexception maximum retries exceeded  
+        
+    
+       runs   code task   retrying needed using exponential backoff  until task returns non-null result  
+       
+        returns   code task  result null none  
+        throws e encountered running evaluating   code task   
+        throws maximumretriesexceededexception maximum retries exceeded  
+        
+    
+       runs   code task   retrying needed using exponential backoff  until exceptions specified 
+         code recognizedexceptiontypes caught  
+       
+        returns   code task  result null none  
+        throws e encountered running evaluating   code task   
+        throws maximumretriesexceededexception maximum retries exceeded  
+        
+   allow users catch specific errors e g  assertionerror 
+   continue retry processteammates common util retry RetryManager teammates common util retry retrymanager retrymanager maxdelayins maxdelayins   maxdelayins successcondition override t  e throwable issuccessful retryable t  e  task e task issuccessfulexec    
+              
+           
+ 
+          
+        not_null   
+             override t  e throwable issuccessful retryable t  e  task e   
+                assumption asserttrue  success condition     not_null     is only applicable to subclasses of   
+                          retryabletaskreturnsthrows getsimplename    
+                        retryabletaskreturnsthrows isinstance task retryabletaskreturnsthrows t  e   task  isresultnull t  e throwable issuccessful retryable t  e  task e t  e throwable  t rununtilsuccessful retryable t  e  task e  maximumretriesexceededexception doretry task  successcondition t  e throwable  t rununtilnotnull retryabletaskreturnsthrows t  e  task e  maximumretriesexceededexception doretry task  successcondition not_null   
+      
+ 
+      
+     safevarargs t  e throwable  t rununtilnorecognizedexception  
+            retryable t  e  task throwable     recognizedexceptiontypes e  maximumretriesexceededexception doretry task  recognizedexceptiontypes t  e throwable  t doretry retryable t  e  task  successcondition condition e  maximumretriesexceededexception   
+        t result   task runexec delay   1   condition issuccessful task     delay    maxdelayins  delay    2    
+            logfailure task  delay   
+            threadhelper waitfor delay   1000   
+            task beforeretry    
+            result   task runexec condition issuccessful task maximumretriesexceededexception task result  
+      
+ 
+     safevarargs 
+     suppresswarnings  pmd avoidcatchingthrowable t  e throwable  t doretry  
+            retryable t  e  task throwable     recognizedexceptiontypes e  maximumretriesexceededexception delay   1  delay    maxdelayins  delay    2 task runexec throwable e isthrowabletypein e  recognizedexceptiontypes e  
+                  
+                  
+              
+            logfailure task  delay   
+            threadhelper waitfor delay   1000   
+            task beforeretry task runexec throwable e isthrowabletypein e  recognizedexceptiontypes e maximumretriesexceededexception task  e   
+          
+      
+ 
+     safevarargs isthrowabletypein throwable e throwable     recognizedexceptiontypes recognizedexceptiontype   recognizedexceptiontypes recognizedexceptiontype isinstance e t  e throwable logfailure retryable t  e  task delay    
+        log info task getname       failed  waiting     delay    s before retry    
+      
+ teammates common util retry RetryManager

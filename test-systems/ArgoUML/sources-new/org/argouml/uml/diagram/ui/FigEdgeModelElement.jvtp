@@ -1,0 +1,701 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications  
+    
+   abstract class display diagram lines  edges uml modelelements look lines fig prepared show possibly editable  name multiple stereotypes  
+    
+    
+       set removefromdiagram false edge may not removed diagram  
+        
+    
+       offset end set popup actions new items inserted concrete figures  
+        
+                                                                 
+   instance variables fig displays name model element  
+       use getnamefig setter required  
+        
+    
+       use getstereotypefig setter required  
+        
+   
+       list model element listeners ve registered  
+        
+                                                                 
+   constructors 
+     
+       partially construct new figedge method creates name element holds name model element adds 
+       itself listener stereotype constructed constructor hooks fig uml model element  
+       
+        param edge uml element 
+        
+    
+       create figcommentport needed 
+        
+   according bob tarling  removing fixes issue 4599  
+   changed linus tolke before 0 24 alpha3 without 
+   time investigate  
+   computeroute    
+    
+        return figcommentport 
+        
+                                                                 
+   accessors 
+    
+       setter uid 
+        param newid new uid 
+        
+    
+       getter uid 
+        return uid 
+        
+   
+        see org tigris gef presentation fig#gettipstring java awt event mouseevent moused over object deleted 
+   transient condition - doesn't require i18n method shall return vector one 4 types  
+       abstractaction  jmenu  jmenuitem  jseparator  
+        
+   popupaddoffset equal number items added here  
+   check multiple items selected     
+   add stereotypes submenu set actions valid adding removing 
+       stereotypes modelelement fig's owner  
+         
+        return array actions  
+        
+    
+       distance formula   x-h ^2    y-k ^2   distance^2 
+       
+        param p1 point 
+        param p2 point 
+        return square distance 
+        
+    
+        param g code graphics  code  object 
+        
+    
+        param f fig indicate bounds param g graphics 
+        
+   todo needed user clicked clarifier  
+       
+        param x x point clicked 
+        param y y point clicked 
+        return todo item clicked 
+        
+    
+       return link selectionrerouteedge  object manages selection rerouting edge  
+       
+        see org tigris gef presentation fig#makeselection   
+        
+    
+       getter name name fig 
+        return namefig rectangle model elements name displayed 
+       
+        return bounds namefig 
+        
+    
+        return text namefig 
+        
+    
+       getter stereo stereotype fig 
+        return stereo fig 
+        
+   
+        see java beans vetoablechangelistener#vetoablechange java beans propertychangeevent  
+        
+   
+        see org argouml kernel delayedvchangelistener#delayedvetoablechange java beans propertychangeevent  
+        
+   update any text  colors  fonts  etc  
+   update relative sizes positions internel figs 
+   
+        see java beans propertychangelistener#propertychange java beans propertychangeevent handle consume editing events 
+   parse text edited 
+   pass everything except editing events superclass source event uml object uml model changed following possible future improvement modelchanged   function  
+           michiel  propose not to keep architecture stable pve instanceof attributechangeevent    
+              modelattributechanged  attributechangeevent  pve pve instanceof addassociationevent    
+              modelassociationadded  addassociationevent  pve pve instanceof removeassociationevent    
+              modelassociationremoved  removeassociationevent  pve   
+            
+    
+       called whenever receive attributechangeevent  
+        
+        param ace event 
+        
+   default implementation nothing 
+    
+       called whenever receive addassociationevent  
+        
+        param aae event 
+        
+   default implementation nothing         
+    
+       called whenever receive removeassociationevent  
+        
+        param rae event 
+        
+   default implementation nothing method called user doubleclicked text field starts editing  subclasses override method e g  
+       supply help user used format   p possible alter text edited 
+       already here  e g adding stereotype front name seems not user-friendly  
+       
+        param ft figtext edited contains start-text 
+        
+    
+       todo  remove nobody need michiel  
+        deprecated mvw v0 25 4  not used  
+        return i18 key represents help string 
+               giving explanation user syntax 
+        
+    
+       utility function localize given string help text show status bar argouml window function used favour inline call enable later improvements  e g possible show help-balloon  todo  work out  
+       one matter possibly improve  show multiple lines  
+       
+        param s given string localized shown method called user finishes editing text 
+       field figedgemodelelement   determine field update model class handles name  subclasses override handle text elements  
+       
+        param ft text fig edited 
+        
+    
+        param f fig 
+        return true editable 
+        
+                                                                 
+   event handlers - mouselistener implementation 
+   
+        see java awt event mouselistener#mousepressed java awt event mouseevent  
+        
+   required mouselistener interface only care clicks 
+   
+        see java awt event mouselistener#mousereleased java awt event mouseevent  
+        
+   required mouselistener interface only care clicks 
+   
+        see java awt event mouselistener#mouseentered java awt event mouseevent  
+        
+   required mouselistener interface only care clicks 
+   
+        see java awt event mouselistener#mouseexited java awt event mouseevent  
+        
+   required mouselistener interface only care clicks user double clicks any part fignode  pass down one internal figs allows user initiate direct text editing  
+       
+        see java awt event mouselistener#mouseclicked java awt event mouseevent  
+        
+   
+        see java awt event keylistener#keypressed java awt event keyevent  
+        
+   required keylistener interface not used 
+   
+        see java awt event keylistener#keyreleased java awt event keyevent  
+        
+   required keylistener interface not used 
+   
+        see java awt event keylistener#keytyped java awt event keyevent  
+        
+    
+       rerenders attached elements fig   p  
+        
+       warning purpose function not redraw whole fig everytime 
+       something changes inefficient  p  
+        
+       instead function only called major changes require complete redraw change owner change notation language   p  
+        
+       overrule function subclasses add extra remove graphical parts  
+        
+                                                                 
+   internal methods called any part uml modelelement changed method automatically updates name figtext  
+       subclasses override update parts  
+       
+        param e event need update model element went away 
+   update attached node figures 
+   todo  presumably only happen add remove event 
+    
+       generate notation modelelement stuff text fig 
+        
+    
+       generate notation stereotype stuff text fig method only called once any one fig instance represents model element  ie not figedgenote called 
+       either constructor takes model element argument called pgmlstackparser created fig use empty constructor  
+        p assigned model element  owner  must not change during lifetime fig  
+        
+        param owner model element fig represents  
+        throws illegalargumentexception owner given not model 
+                       element 
+        see org tigris gef presentation fig#setowner java lang object  
+        
+   
+       todo planned refactor only one fig 
+       constructor achieved method refactored out setting abstract 
+    
+       create notationproviders  
+        
+        param current owner 
+        
+   todo looking namedelement? - tfm 
+    
+       overrule subclasses need different notationprovider  
+        
+        return type notation provider 
+        
+    
+       implementations method register unregister fig model events may cause repaint necessary simplest case fig register itself listening events fired only owner   p for example figlink fig must register events fired association owner name association shown  not name link  p cases need register any event   
+       e g notationprovider used   p function called 2 places creation  load  time fig e owner changes some cases modelchanged   function e model changes   p function shall always register remove  event owner  
+       otherwise fig not deleted owner gets deleted  p method called both oldowner newowner equal not null listen only owner itself safely ignore call need update listeners related elements related elements may replaced  
+        
+        param newowner new owner listeners null listeners removed 
+        param oldowner previous owner null none listeners set 
+        
+   
+        see org tigris gef presentation fig#setlayer org tigris gef base layer  
+        
+   
+        see org tigris gef presentation fig#deletefrommodel   
+        
+   todo  mvw not done gef?    
+   
+        see org argouml application events argonotationeventlistener#notationchanged org argouml application events argonotationevent  
+        
+   
+        see org argouml application events argonotationeventlistener#notationadded org argouml application events argonotationevent  
+        
+   default implementation nothing 
+   
+        see org argouml application events argonotationeventlistener#notationremoved org argouml application events argonotationevent  
+        
+   default implementation nothing 
+   
+        see org argouml application events argonotationeventlistener#notationprovideradded org argouml application events argonotationevent  
+        
+   default implementation nothing 
+   
+        see org argouml application events argonotationeventlistener#notationproviderremoved org argouml application events argonotationevent  
+        
+   default implementation nothing 
+   
+        see org tigris gef presentation fig#hit java awt rectangle  
+        
+   check labels etc hit 
+   apparently gef require pathitems annotations ours aren't until resolved    
+   
+        see org tigris gef presentation fig#removefromdiagram   
+        
+    
+       subclasses override redirect remove request one fig another  
+       e g  figedgeassociationclass uses delegate remove attached figassociationclass  
+        return fig handling remove 
+        
+   todo  mvw not done gef?    
+   
+        see org tigris gef presentation fig#damage   
+        
+    
+        p determines figedge currently connected correct 
+       fignodes not edges correct fignodes set edge 
+       rerouted  
+        p typically used user amended property 
+       panel relationship one model element another graph 
+       needs react change  
+        p e g participant association end changed  
+        p calls helper method  layoutthistoself avoid edge 
+       disappearing new source dest same node  
+       
+        return boolean whether not update sucessful 
+        
+   adapted selectionwbuttons line 280 
+   calls helper method avoid edge disappearing new source dest same node version gef's presentationfor   method param element modelelement return presentation return fig representing presentation 
+        
+    
+       helper method updateclassifiers order automatically 
+       layout edge now same node type  
+        p adapted selectionwbuttons line 280 
+        
+  newfc   _content  
+   place edge layer update diagram 
+    
+       returns source edge source owner node edge travels binary relationship instance classifierrole sender  
+        return model element 
+        
+    
+       returns destination edge destination owner node edge travels binary 
+       relationship instance classifierrole receiver  
+        return model element 
+        
+   
+        see org tigris gef presentation fig#postload   
+        
+    
+        deprecated 
+        return returns plain font  
+        
+    
+        deprecated 
+        return returns italic font  
+        
+    
+        param allowed true function removefromdiagram allowed 
+        
+    
+       set associated diagram interchange element  
+        
+        param element element associated fig 
+        
+    
+        return diagram interchange element associated fig 
+        
+    
+        return returns popupaddoffset  
+        
+    
+       add element listener remember registration  
+        
+        param element 
+                  element listen changes see org argouml model modeleventpump#addmodeleventlistener propertychangelistener  object  string  
+        
+    
+       add listener remember registration  
+        
+        param element 
+                  element listen changes param property 
+                  name property listen changes see org argouml model modeleventpump#addmodeleventlistener propertychangelistener  object  string  
+        
+    
+       add listener remember registration  
+        
+        param element 
+                  element listen changes param property 
+                  array property names  strings listen changes see org argouml model modeleventpump#addmodeleventlistener propertychangelistener  object  string  
+        
+    
+       add element listener remember registration  
+        
+        param element 
+                  element listen changes see org argouml model modeleventpump#addmodeleventlistener propertychangelistener  object  string  
+        
+    
+       unregister listeners registered through addelementlistener 
+        see #addelementlistener object  string optional method not implemented throw link unsupportedoperationexception used  figs added graphmodel turn  owned project  
+        
+   todo  without fail draw e g class good solution layer not set constructor?    
+   todo above doesn't work reliably constructor need better way getting default fig settings owning 
+   project using project manager singleton  - tfm 
+    
+       handles diagram font changing  
+        param e event 
+        see org argouml application events argodiagramappearanceeventlistener#diagramfontchanged org argouml application events argodiagramappearanceevent  
+        
+  todo help function figtexts   
+       recalculate font-style  plain  bold  italic  bold italic apply calling figtext setfont    
+        
+    
+       determines font style based uml model   
+       overrule figs show bold italic based uml model represent   
+       e g  abstract classes show name italic  
+        
+        return font style namefig  
+        
+    
+       changes font figs contained given figgroup   p  
+        
+        todo fact design error method  
+        e g class name italic class abstract classes features plain font problem fixed implementing updatefont   method subclasses  
+         
+        param fg figgroup change font org argouml uml diagram ui FigEdgeModelElement org argouml uml diagram ui figedgemodelelement figedgepoly vetoablechangelistener  
+        delayedvchangelistener  
+        mouselistener  
+        keylistener  
+        propertychangelistener  
+        argonotationeventlistener  
+        argodiagramappearanceeventlistener  
+        highlightable  
+        iitemuid  
+        argofig logger log   
+        logger getlogger figedgemodelelement figedgemodelelement     
+ 
+        namefig fignamewithabstract 10  30  90  20 namefig settextfilled stereotypefig figstereotypescompartment 10  10  90  15   
+ 
+        setbetweennearestpoints argoeventpump addlistener argoeventtypes any_notation_event argoeventpump addlistener  
+                argoeventtypes any_diagram_appearance_event figedgemodelelement object edge setowner edge makeedgeport edgeport edgeport figedgeport getowner edgeport setowner getowner     
+              
+            edgeport setvisible addpathitem edgeport pathconvpercent 50  0 figedgeport getedgeport edgeport setitemuid itemuid newid    
+        itemuid   newid itemuid getitemuid itemuid  
+      
+ 
+      
+     override gettipstring mouseevent me    
+        todoitem item   hitclarifier me getx    me gety tip item globals cureditor   getselectionmanager   containsfig tip   item getheadline getowner tip   model getfacade   gettipstring getowner invalidelementexception e    
+                  
+                  
+                log warn  a deleted element still exists on the diagram translator localize  misc name deleted tip   tostring tip tip length     0     tip endswith         
+            tip tip  
+      
+ 
+      
+     override vector getpopupactions mouseevent me    
+        vector popupactions getpopupactions me   
+         
+          
+        popupactions add jseparator     
+        popupaddoffset   1 removefromdiagram    
+            popupactions add  
+                    projectactions getinstance   getremovefromdiagramaction     
+            popupaddoffset    
+          
+        popupactions add actiondeletemodelelements     
+        popupaddoffset ms   targetmanager getinstance   gettargets   size     1 ms    
+            todolist list   designer thedesigner   gettodolist    
+            list todoitem  items   
+                 list todoitem   list elementsforoffender getowner    clone items items size     0    
+                argojmenu critiques argojmenu  menu popup critiques    
+                todoitem itemundermouse   hitclarifier me getx    me gety itemundermouse critiques add actiongotocritique itemundermouse    
+                    critiques addseparator todoitem item   items item    itemundermouse critiques add actiongotocritique item    
+                  
+                popupactions add 0 jseparator     
+                popupactions add 0  critiques   
+              
+          
+          
+        action   stereoactions   getapplystereotypeactions stereoactions stereoactions length   0    
+            popupactions add 0 jseparator     
+            argojmenu stereotypes argojmenu  
+                     menu popup apply-stereotypes i   0  i   stereoactions length    i    
+                stereotypes addcheckitem stereoactions i    
+              
+            popupactions add 0  stereotypes popupactions action   getapplystereotypeactions stereotypeutility getapplystereotypeactions getowner getsquareddistance point p1  point p2 xsquared   p2 x - p1 x  
+        xsquared    xsquared ysquared   p2 y - p1 y  
+        ysquared    ysquared xsquared   ysquared paintclarifiers graphics g iconpos   25  gap   1  xoff   -4  yoff   -4  
+        point p point    
+        todolist list   designer thedesigner   gettodolist    
+        list todoitem  items   list elementsforoffender getowner todoitem item   items    
+            icon icon   item getclarifier icon clarifier    
+                  clarifier  icon  setfig clarifier  icon  settodoitem item icon stuffpointalongperimeter iconpos  p   
+                icon painticon g  p x   xoff  p y   yoff   
+                iconpos    icon geticonwidth     gap  
+              
+          
+        items   list elementsforoffender todoitem item   items    
+            icon icon   item getclarifier icon clarifier    
+                  clarifier  icon  setfig clarifier  icon  settodoitem item icon stuffpointalongperimeter iconpos  p   
+                icon painticon g  p x   xoff  p y   yoff   
+                iconpos    icon geticonwidth     gap indicatebounds figtext f  graphics g f text   f gettext text text length      0    
+            rectangle rect   f getbounds    
+            color c   g getcolor    
+            g setcolor globals getprefs   handlecolorfor f    
+            g drawrect rect x  rect y  rect width  rect height   
+            g setcolor c todoitem hitclarifier x y iconpos   25  xoff   -4  yoff   -4  
+        point p point    
+        todolist list   designer thedesigner   gettodolist    
+        list todoitem  items   list elementsforoffender getowner todoitem item   items    
+            icon icon   item getclarifier    
+            stuffpointalongperimeter iconpos  p width   icon geticonwidth height   icon geticonheight y    p y   yoff 
+                   y    p y   height   yoff 
+                   x    p x   xoff 
+                   x    p x   width   xoff item  
+            iconpos    width todoitem item   items    
+            icon icon   item getclarifier icon clarifier    
+                  clarifier  icon  setfig clarifier  icon  settodoitem item clarifier  icon  hit x  y item  
+              
+          
+        items   list elementsforoffender todoitem item   items    
+            icon icon   item getclarifier    
+            stuffpointalongperimeter iconpos  p width   icon geticonwidth height   icon geticonheight y    p y   yoff 
+                   y    p y   height   yoff 
+                   x    p x   xoff 
+                   x    p x   width   xoff item  
+            iconpos    width todoitem item   items    
+            icon icon   item getclarifier icon clarifier    
+                  clarifier  icon  setfig clarifier  icon  settodoitem item clarifier  icon  hit x  y item override selection makeselection selectionrerouteedge figtext getnamefig namefig rectangle getnamebounds namefig getbounds getname namefig gettext fig getstereotypefig stereotypefig vetoablechange propertychangeevent pce    
+        object src   pce getsource src    getowner      
+            delayedchangenotify delayednotify delayedchangenotify pce   
+            swingutilities invokelater delayednotify delayedvetoablechange propertychangeevent pce    
+          
+        renderingchanged    
+          
+        rectangle bbox   getbounds    
+        setbounds bbox x  bbox y  bbox width  bbox height   
+        endtrans    
+      
+ 
+      
+     override propertychange propertychangeevent pve    
+        object src   pve getsource pname   pve getpropertyname pve deleteinstanceevent    src    getowner      
+            removefromdiagram pname equals  editing equals pve getnewvalue       
+            log debug  finished editing    
+              
+            textedited  figtext  src   
+            calcbounds    
+            endtrans pname equals  editing equals pve getnewvalue       
+            texteditstarted  figtext  src propertychange pve model getfacade   isaumlelement src   
+                   getowner model getumlfactory   isremoved getowner       
+              
+            modelchanged pve modelattributechanged attributechangeevent ace modelassociationadded addassociationevent aae modelassociationremoved removeassociationevent rae texteditstarted figtext ft ft    getnamefig      
+            showhelp notationprovidername getparsinghelp     
+            ft settext notationprovidername tostring getowner    nparguments getparsinghelp notationprovidername getparsinghelp showhelp s    
+        argoeventpump fireevent argohelpevent  
+                argoeventtypes help_changed translator localize s textedited figtext ft ft    namefig getowner notationprovidername parse getowner    ft gettext     
+            ft settext notationprovidername tostring getowner    nparguments canedit fig f mousepressed mouseevent me mousereleased mouseevent me mouseentered mouseevent me mouseexited mouseevent me mouseclicked mouseevent me me isconsumed me getclickcount      2    
+            fig f   hitfig rectangle me getx   - 2  me gety   - 2  4  4 f mouselistener    canedit f   
+		  mouselistener  f  mouseclicked me   
+          
+        me consume keypressed keyevent ke keyreleased keyevent ke keytyped keyevent ke ke isconsumed namefig canedit namefig   
+            namefig keytyped ke renderingchanged     
+        updatenametext    
+        updatestereotypetext    
+        damage modelchanged propertychangeevent e e deleteinstanceevent e associationchangeevent  
+                   e attributechangeevent notationprovidername notationprovidername updatelistener getowner    e   
+                updatenametext    
+              
+            updatelisteners getowner    getowner     
+          
+ 
+          
+          
+        determinefignodes updatenametext getowner notationprovidername namestr   notationprovidername tostring  
+                    getowner    nparguments   
+            namefig settext namestr   
+            project p   getproject p updatefont    
+              
+            calcbounds    
+            setbounds getbounds updatestereotypetext getowner object modelelement   getowner    
+        stereotypefig setowner modelelement   
+      
+ 
+      
+      
+     override setowner object owner owner illegalargumentexception  an owner must be supplied getowner illegalstateexception  
+                     the owner cannot be changed once set model getfacade   isaumlelement owner illegalargumentexception  
+                     the owner must be a model element - got a   
+                      owner getclass   getname setowner owner   
+        namefig setowner owner edgeport edgeport setowner getowner     
+          
+        initnotationproviders owner   
+        updatelisteners owner   
+        renderingchanged initnotationproviders object own notationprovidername notationprovidername cleanlistener own model getfacade   isamodelelement own     
+            notationprovidername   
+                notationproviderfactory2 getinstance   getnotationprovider  
+                        getnotationprovidertype    own getnotationprovidertype notationproviderfactory2 type_name updatelisteners object oldowner  object newowner oldowner    newowner    
+            log warn  listeners being added and removed from the same owner oldowner removeelementlistener oldowner newowner addelementlistener newowner   remove    
+          
+      
+ 
+      
+     override setlayer layer lay setlayer lay   
+        getfig   setlayer lay   
+      
+ 
+      
+     override deletefrommodel     
+        object own   getowner own getproject   movetotrash own   
+          
+ 
+          
+        iterator it   getpathitemfigs   iterator it hasnext      
+              fig  it next    deletefrommodel deletefrommodel notationchanged argonotationevent event getowner initnotationproviders getowner     
+        renderingchanged notationadded argonotationevent event notationremoved argonotationevent event notationprovideradded argonotationevent event notationproviderremoved argonotationevent event    
+          
+      
+ 
+      
+     override hit rectangle r    
+	  
+	  
+	  
+	iterator it   getpathitemfigs   iterator it hasnext      
+	    fig f    fig  it next f hit r hit r removefromdiagram     
+        fig delegate   getremovedelegate delegate fignodemodelelement    
+              fignodemodelelement  delegate  removefromdiagramimpl delegate figedgemodelelement    
+              figedgemodelelement  delegate  removefromdiagramimpl delegate removefromdiagramimpl fig getremovedelegate removefromdiagramimpl     
+        object o   getowner o removeelementlistener o   
+          
+        argoeventpump removelistener notationprovidername notationprovidername cleanlistener getowner     
+          
+ 
+          
+        iterator it   getpathitemfigs   iterator it hasnext      
+            fig fig    fig  it next    
+            fig removefromdiagram removefromdiagram    
+        damage superremovefromdiagram removefromdiagram    
+      
+ 
+      
+     override damage damage    
+        getfig   damage determinefignodes     
+        object owner   getowner owner getlayer log error  the figedge has no owner or its layer is object newsource   getsource    
+        object newdest   getdestination    
+ 
+        fig currentsourcefig   getsourcefignode    
+        fig currentdestfig   getdestfignode    
+        object currentsource object currentdestination currentsourcefig currentdestfig currentsource   currentsourcefig getowner    
+            currentdestination   currentdestfig getowner newsource    currentsource    newdest    currentdestination    
+            fig newsourcefig   getnoedgepresentationfor newsource   
+            fig newdestfig   getnoedgepresentationfor newdest newsourcefig    currentsourcefig    
+                setsourcefignode  fignode  newsourcefig   
+                setsourceportfig newsourcefig newdestfig    currentdestfig    
+                setdestfignode  fignode  newdestfig   
+                setdestportfig newdestfig   
+              
+              fignode  newsourcefig  updateedges    
+              fignode  newdestfig  updateedges    
+            calcbounds newsourcefig    newdestfig    
+ 
+                layoutthistoself fig getnoedgepresentationfor object element element illegalargumentexception  can't search a owner    
+          
+        list contents   getlayer   getcontentsnoedges figcount   contents size figindex   0  figindex   figcount    figindex    
+            fig fig    fig  contents get figindex fig getowner      element fig illegalstateexception  can't find a fignode representing   
+                  model getfacade   getname element layoutthistoself     
+ 
+        figpoly edgeshape figpoly    
+          
+        point fccenter point getsourcefignode   getx     2  
+                    getsourcefignode   gety     2   
+        point centerright point fccenter x 
+			       getsourcefignode   getsize   getwidth     2   
+		      fccenter y yoffset getsourcefignode   getsize   getheight     2    
+        edgeshape addpoint fccenter x  fccenter y   
+        edgeshape addpoint centerright x  centerright y   
+        edgeshape addpoint centerright x   30  centerright y   
+        edgeshape addpoint centerright x   30  centerright y   yoffset   
+        edgeshape addpoint centerright x  centerright y   yoffset setbetweennearestpoints edgeshape setlinecolor color black   
+        edgeshape setfilled edgeshape setcomplete setfig edgeshape object getsource     
+        object owner   getowner owner model getcorehelper   getsource owner object getdestination     
+        object owner   getowner owner model getcorehelper   getdestination owner override postload     
+        argoeventpump removelistener argoeventpump addlistener font getlabelfont getproject   getprojectsettings   getfontplain font getitaliclabelfont getproject   getprojectsettings   getfontitalic allowremovefromdiagram allowed removefromdiagram   allowed setdielement dielement element dielement   element dielement getdielement dielement getpopupaddoffset popupaddoffset addelementlistener object element    
+        listeners add object    element model getpump   addmodeleventlistener element addelementlistener object element property    
+        listeners add object    element  property    
+        model getpump   addmodeleventlistener element  property addelementlistener object element property    
+        listeners add object    element  property    
+        model getpump   addmodeleventlistener element  property removeelementlistener object element    
+        listeners remove object    element model getpump   removemodeleventlistener element removeallelementlisteners iterator iter   listeners iterator    iter hasnext       
+            object   l    object    iter next    
+            object property   l 1 property model getpump   removemodeleventlistener l 0 property model getpump   removemodeleventlistener l 0 property property model getpump   removemodeleventlistener l 0 property runtimeexception  
+                         internal error in removeallelementlisteners    
+              
+          
+        listeners clear setproject project project unsupportedoperationexception project getproject     
+        layerperspective layer    layerperspective  getlayer layer editor editor   globals cureditor editor projectmanager getmanager   getcurrentproject    
+              
+            layer lay   editor getlayermanager   getactivelayer lay layerperspective    
+                layer    layerperspective  lay  
+              
+          
+        umlmutablegraphsupport gm    
+             umlmutablegraphsupport  layer getgraphmodel gm getproject diagramfontchanged argodiagramappearanceevent e    
+        updatefont    
+        calcbounds      
+        redraw updatefont     
+        project p   getproject p style   getnamefigfontstyle    
+        font f   p getprojectsettings   getfont style   
+        namefig setfont f   
+        deepupdatefont getnamefigfontstyle font plain deepupdatefont figedge fe    
+        font f   getproject   getprojectsettings   getfont font plain object pathfig   fe getpathitemfigs      
+            deepupdatefontrecursive f  pathfig   
+          
+        fe calcbounds deepupdatefontrecursive font f  object pathfig pathfig argofigtext    
+              argofigtext  pathfig  updatefont pathfig figtext    
+              figtext  pathfig  setfont f pathfig figgroup object fge     figgroup  pathfig  getfigs      
+                deepupdatefontrecursive f  fge   
+              
+          
+      
+ org argouml uml diagram ui FigEdgeModelElement

@@ -1,0 +1,221 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license original version class donated jason hunter wrote class part com oreilly servlet 
+   package book  java servlet programming   o'reilly   
+   see http   www servlets com class help send smtp email class improvement sun net smtp smtpclient class 
+   found jdk version extra functionality used jvms not extend jdk s not robust javamail standard extension classes s easier use easier install open source license  
+    p used blockquote  pre  
+   string mailhost    localhost another mail host 
+   string mail message servlet  lt mailmessage server com gt    
+   string to com   
+   string cc1    cc1 com   
+   string cc2    cc2 com   
+   string bcc    bcc com   
+    nbsp  
+   mailmessage msg   new mailmessage mailhost   
+   msg setport 25   
+   msg from   
+   msg to   
+   msg cc cc1   
+   msg cc cc2   
+   msg bcc bcc   
+   msg setsubject  test subject    
+   printstream out   msg getprintstream    
+    nbsp  
+   enumeration enum   req getparameternames enum hasmoreelements      
+     string name    string enum nextelement    
+     string value   req getparameter name   
+     out println name           value   
+     
+    nbsp  
+   msg sendandclose    
+     pre   blockquote  
+    p sure set address set recepient 
+   addresses set subject headers printstream write message finally send close class minimal error checking internally counts mail 
+   host complain s any malformatted input out order 
+   execution  
+    p attachment mechanism based rfc 1521 implemented top class meanwhile  javamail best solution sending 
+   email attachments  
+    p  
+   still ul  
+    li figure out close connection case error 
+     ul  
+   
+    version 1 1  2000 03 19  added angle brackets address  helps some servers 
+   version 1 0  1999 12 29 
+    
+    default mailhost    
+    default port smtp  25    
+    host name mail server    
+    host port mail server    
+    sender email address    
+    list email addresses reply list email addresses send list email addresses cc headers send mail    
+    
+     constructs new mailmessage send email  
+     use localhost mail server port 25  
+     
+      exception ioexception s any problem contacting mail server 
+      
+    
+     constructs new mailmessage send email  
+     use given host mail server port 25  
+     
+      param host mail server use 
+      exception ioexception s any problem contacting mail server 
+      
+    
+     constructs new mailmessage send email  
+     use given host port mail server  
+     
+      param host mail server use 
+      param port port connect exception ioexception s any problem contacting mail server 
+      
+    
+       set port connect smtp host  
+        param port port use connection  
+        see #default_port 
+        
+    
+       sets address sets header method called only once  
+        param address 
+        exception ioexception s any problem reported mail server 
+        
+    
+       sets replyto address method may called multiple times  
+        param rto replyto address 
+       
+        
+    
+     sets address sets header method may called multiple times  
+     
+      param to address 
+      exception ioexception s any problem reported mail server 
+      
+    
+     sets cc address sets cc  header method may called multiple times  
+     
+      param cc cc address 
+      exception ioexception s any problem reported mail server 
+      
+    
+     sets bcc address not set any header s blind  copy method may called multiple times  
+     
+      param bcc bcc address 
+      exception ioexception s any problem reported mail server need keep track bcc'd addresses 
+    
+     sets subject mail message   actually sets subject  
+     header  
+      param subj subject mail message 
+      
+    
+     sets named header given value   rfc 822 provides rules text may constitute header name value  
+      param name name header 
+      param value contents header 
+      
+   blindly trust user doesn't set any invalid headers 
+    
+     returns printstream used write body message stream used email bodies byte-oriented writer wrapped top necessary internationalization actually done message java 
+     
+      return printstream containing data headers email 
+      exception ioexception s any problem reported mail server 
+      see org apache tools ant taskdefs email message 
+      
+   rfc 822 s4 1 header must sent rely error checking mta 
+   rfc 822 s4 1   reply header optional 
+   rfc 822 s4 1  
+      header fields not required occur any particular order  
+      except message body must occur headers same section specifies reccommended order ignore  
+    
+     sends message closes connection server mailmessage object cannot reused  
+     
+      exception ioexception s any problem reported mail server 
+      
+   make limited attempt extract sanitized email address 
+   prefer text brackets   ignore anything parentheses  
+   support  address  name   
+   support   name  address  
+             raw protocol methods below here           
+   make sure dot new line 
+   raw supports  crlf   crlf  
+   check response one valid codes 
+   ignore 
+   ignore printstream subclass makes sure crlf   becomes  crlf    
+    per rfc 821 ensures new lines always \r\n  
+   
+   deprecated email byte-oriented 
+   mac n\r s tough distinguish windows \r\n\r\n  
+   don't tackle problem right now  
+   ensure always \r\n 
+   add extra dotorg apache tools mail MailMessage org apache tools mail mailmessage default_host    localhost default_port   25 mailmessage ioexception default_host  default_port mailmessage host ioexception host  default_port mailmessage host port ioexception port   port host   host  
+    replyto vector    
+    to vector    
+    cc vector    
+    headerskeys vector    
+    headersvalues vector    
+    connect    
+    sendhelo setport port port   port from from ioexception   
+        sendfrom from from   from replyto rto replyto addelement rto to to ioexception   
+    sendrcpt to to addelement to cc cc ioexception   
+    sendrcpt cc cc addelement cc bcc bcc ioexception   
+    sendrcpt bcc setsubject subj    
+    setheader  subject   subj setheader name value    
+      
+    headerskeys add name   
+    headersvalues add value printstream getprintstream ioexception   
+    setfromheader    
+    setreplytoheader    
+    settoheader    
+    setccheader    
+    setheader  x-mailer    org apache tools mail mailmessage  ant apache org     
+    senddata    
+    flushheaders out setfromheader     
+    setheader  from   from setreplytoheader replyto isempty      
+      setheader  reply-to   vectortolist replyto settoheader to isempty      
+      setheader  to   vectortolist to setccheader cc isempty      
+      setheader  cc   vectortolist cc vectortolist vector v    
+    stringbuffer buf stringbuffer    
+    enumeration e   v elements e hasmoreelements      
+      buf append e nextelement e hasmoreelements      
+        buf append buf tostring flushheaders ioexception i   0  i   headerskeys size    i name headerskeys elementat i value headersvalues elementat i   
+      out println name          value   
+      
+    out println    
+    out flush sendandclose ioexception senddot    
+          sendquit disconnect sanitizeaddress s paramdepth   0 start   0 end   0 len   s length i   0  i   len  i c   s charat i c    ' '    
+        paramdepth start    0    
+          end   i c    ' '    
+        paramdepth end    0    
+          start   i   1 paramdepth    0    c    ' '    
+        start   i   1 paramdepth    0    c    ' '    
+        end   i end    0    
+      end   len s substring start  end connect ioexception   
+    socket socket host  port   
+    out mailprintstream bufferedoutputstream  
+          socket getoutputstream      
+    in smtpresponsereader socket getinputstream     
+    getready getready ioexception response   in getresponse ok    ok_ready isresponseok response  ok ioexception  
+         didn't get introduction from server      response sendhelo ioexception local   inetaddress getlocalhost   gethostname ok    ok_helo   
+    send  helo     local  ok sendfrom from ioexception ok    ok_from   
+    send  mail from            sanitizeaddress from         ok sendrcpt rcpt ioexception ok    ok_rcpt_1  ok_rcpt_2   
+    send  rcpt to            sanitizeaddress rcpt         ok senddata ioexception ok    ok_data   
+    send  data   ok senddot ioexception ok    ok_dot   
+    send  \r\n    ok sendquit ioexception ok    ok_quit send  quit   ok ioexception e errorinquitexception e send msg ok ioexception   
+        out rawprint msg    \r\n response   in getresponse isresponseok response  ok ioexception  unexpected reply to command    
+                                    msg          response isresponseok response ok i   0  i   ok length  i response startswith      ok i disconnect ioexception out out close in in close ioexception e socket socket close ioexception e mailprintstream printstream mailprintstream outputstream out out write b b    '\n'    lastchar    '\r'    
+      rawwrite '\r'      
+      rawwrite b b    ' '    lastchar    '\n'    
+      rawwrite ' '      
+      rawwrite b rawwrite b   
+      
+    lastchar   b write buf off len i   0  i   len  i      
+      write buf off   i rawwrite b write b rawprint s len   s length i   0  i   len  i      
+      rawwrite s charat i    
+      
+    
+  
+org apache tools mail MailMessage

@@ -1,0 +1,164 @@
+ class represents architecture models  consisting components connectors implements iimplementationmodellistener functionality react any changes 
+   occuring implementation model connected architecture model furthermore contains mappinglistener react changes mapping between 
+   components resources  
+    author sebastian herold 
+   
+    
+  mapping listener mapping 
+  managing listeners architectural model 
+  components connectors 
+  local copy avoid concurrent modification exceptions 
+      srccomp equals trgcomp not call mapping consistent state  e g handling mapping change events  
+	    param refs 
+	    return 
+	    
+  set ixreference  actuallyremovedrefs   conn getcontributingreferences    
+			connector state oldstate   conn getstate    
+			actuallyremovedrefs retainall mappings conn    
+			 
+			referencesetmodified   conn removereferences actuallyremovedrefs conn isreflexive      referencesetmodified    
+				fireevent new connectorreferencesremovedevent conn  actuallyremovedrefs following true removed last references connector conn getstate      oldstate following true removed last references divergence conn getstate      connector state inconsistent removeconnector conn fireevent new connectorstatechangeevent conn  oldstate  conn getstate following true removed last references divergence 
+  retrieve references implementation model 
+  remove refs attach correct connectors 
+  todo  add corresponding removereferences class  
+  conn removereferences relevantrefs conn    
+  fireevent new connectorreferencesremovedevent conn  relevantrefs conn   architecturemodel addreferencestoconnectors connectors go old component  
+    
+		   queries references single connector need re-routed e assigned different connector mapping given element changed  
+		    param con connector references scanned 
+		    param elem element mapping changed 
+		    param prevcompforelem component element previously mapped return set references affected   
+		   se kau cs jittac model am ArchitectureModel se kau cs jittac model am architecturemodel abstractarchitectureelement iimplementationchangelistener architecturemodel createarchitecturemodel architecturemodel architecturemodel mappinglistener mappinglistener    
+		modellisteners arraylist iarchitecturemodelchangelistener mapping   architecturemapping createemptymapping mapping registerlistener mappinglistener   
+		components arraylist component     
+		connectors arraylist connector architecturemodel getmodel override getname architecture model architecturemapping getmapping mapping component createcomponent createcomponent null component createcomponent name createcomponent name component createcomponent name  uuid id    
+		component newcomponent   component createcomponent id newcomponent name newcomponent setname name components contains newcomponent     
+				components add newcomponent   
+			  
+			createconnector newcomponent  newcomponent fireevent componentadditionevent newcomponent newcomponent connector createconnector component src  component trg    
+		 
+		connector newconnector   connector createconnector src  trg newconnector connectors contains newconnector     
+			connectors add newconnector src equals trg     
+				src setreflexiveconnector newconnector src addoutgoingconnector newconnector   
+				trg addincomingconnector newconnector fireevent connectoradditionevent newconnector newconnector removecomponent component comp comp illegalargumentexception  argument must not be comp getmodel illegalargumentexception  component     comp     already attached to different model     
+		 
+		set connector  connectorstoberemoved hashset connector removed components contains comp connector conn   comp getoutgoingconnectors      
+				removed   connectorstoberemoved add conn connector conn   comp getincomingconnectors      
+				removed   connectorstoberemoved add conn connector conn   connectorstoberemoved removeconnector conn removeconnector comp getreflexiveconnector     
+			removed   components remove comp removed    
+				getmapping   removecomponent comp   
+				comp detachfrommodel fireevent componentremovalevent comp removed removeconnector connector conn conn illegalargumentexception  argument must not be conn getmodel illegalargumentexception  connector     conn     attached to different model removed conn isreflexive      
+			conn getsrc   removeoutgoingconnector conn   
+			conn gettrg   removeincomingconnector conn   
+			removed   connectors remove conn removed    
+				conn detachfrommodel    
+				fireevent connectorremovalevent conn conn getsrc   setreflexiveconnector removed   connectors remove conn removed makeconnectorunenvisaged connector conn conn illegalargumentexception  argument must not be conn getmodel illegalargumentexception  connector     conn     attached to different model conn getstate      connector state convergence    
+			changeconnectorstate conn conn getstate      connector state divergence conn getstate      connector state absence    
+			removeconnector conn changeconnectorstate connector conn envisaged conn illegalargumentexception  argument must not be conn getmodel illegalargumentexception  connector     conn     attached to different model changed connector state oldstate   conn getstate oldstate    connector state convergence    
+			oldstate    connector state divergence    
+			conn setenvisaged envisaged   
+			changed   oldstate    conn getstate changed fireevent connectorstatechangeevent conn  oldstate  conn getstate changed containscomponent component c components contains c containsconnectorbetween component src  component trg connector c   connectors src equals c getsrc       trg equals c gettrg component getcomponentbyid uuid id component c  components c getid   equals id c set component  getcomponents hashset component components set connector  getconnectors hashset connector connectors list component  getcomponentsaslist arraylist component components list connector  getconnectorsaslist arraylist connector connectors connector getconnectorbycomponents component src  component trg connector c   connectors src equals c getsrc       trg equals c gettrg c set ijittacproject  getmanagedprojects getmapping   getmanagedprojects setcomponentname component comp name oldname   comp getname oldname    name    
+			comp setname name   
+			fireevent componentnamechangeevent comp oldname  name registerlistener iarchitecturemodelchangelistener listener modellisteners contains listener     
+			modellisteners add listener deregisterlistener iarchitecturemodelchangelistener listener    
+		modellisteners remove listener   
+	  
+	 
+	 override onxreferencedeltaevent xreferencechangedeltaevent event event illegalargumentexception  argument must not be removereferencesfromconnectors event removedreferences     
+		addreferencestoconnectors event addedreferences     
+		addreferencestoconnectors event unchangedreferences     
+	  
+ 
+	 override oncompleteload iimplementationmodel im getmanagedprojects   contains im getproject implementationmodelpartition part   im getpartitions      
+				addreferencestoconnectors part getreferences fireevent architecturemodelchangeevent event    
+		  
+		list iarchitecturemodelchangelistener  temp arraylist   modellisteners iarchitecturemodelchangelistener listener   temp    
+			listener handleevent event addreferencestoconnectors set ixreference ? ?   refs refs illegalargumentexception  argument must not be referencesetmodified result map connector  set ixreference ? ?    mappings hashedmap connector  set ixreference ixreference ? ?  ref   refs    
+			component srccomp    
+					mapping getcomponent ref getsource   getresource     
+			component trgcomp    
+					mapping getcomponent ref gettarget   getresource srccomp trgcomp connector conn getconnectorbycomponents srccomp  trgcomp conn conn createconnector srccomp  trgcomp   
+					conn setenvisaged mappings containskey conn     
+					mappings put conn hashset ixreference ? ?       
+				  
+				mappings get conn  add ref connector changedconnector   mappings keyset      
+			set ixreference ? ?   actuallynewreferences   mappings get changedconnector   
+			actuallynewreferences removeall changedconnector getcontributingreferences     
+					 
+			referencesetmodified   changedconnector addreferences mappings get changedconnector    
+			result   result    referencesetmodified changedconnector isreflexive      referencesetmodified  
+				fireevent connectorreferencesaddedevent changedconnector  actuallynewreferences result removereferencesfromconnectors set ixreference ? ?   refs refs illegalargumentexception  argument must not be map connector  set ixreference ? ?    mappings hashedmap connector  set ixreference referencesetmodified result ixreference ? ?  ref   refs    
+			component srccomp    
+					mapping getcomponent ref getsource   getresource     
+			component trgcomp    
+					mapping getcomponent ref gettarget   getresource     
+			connector conn   getconnectorbycomponents srccomp  trgcomp conn mappings containskey conn     
+					mappings put conn hashset ixreference ? ?       
+				  
+				mappings get conn  add ref connector conn   mappings keyset      
+			  
+			result   result    removereferencesfromconnector conn  mappings get conn referencesetmodified removereferencesfromconnector connector conn  set ixreference ? ?   refs result conn refs set ixreference ? ?   actuallyremovedrefs   conn getcontributingreferences    
+			actuallyremovedrefs retainall refs   
+			connector state oldstate   conn getstate    
+			result   conn removereferences actuallyremovedrefs conn isreflexive      result    
+				fireevent connectorreferencesremovedevent conn  actuallyremovedrefs conn getstate      oldstate conn getstate      connector state inconsistent removeconnector conn fireevent connectorstatechangeevent conn  oldstate  conn getstate result mappinglistener abstractarchitecturemappingchangelistener   
+ 
+		 override onmappingadded mappingadditionevent event    
+			imappableelement newlymappedresource   event getelement    
+			map connector  set ixreference ? ?    relevantrefs hashedmap connector  set ixreference ? ?       
+			set ixreference ? ?   formerlyunmappedreferences hashset ixreference event getpreviouscomponent set connector  connectors   event getpreviouscomponent   getoutgoingconnectors    
+				connectors addall event getpreviouscomponent   getincomingconnectors     
+				connectors add event getpreviouscomponent   getreflexiveconnector connector con   connectors    
+					relevantrefs put con  _getreferencesaffectedbychangeofmapping con  newlymappedresource  event getpreviouscomponent _gatherreferencesfromidenticallymappedchildresources event getelement    formerlyunmappedreferences connector conn   relevantrefs keyset      
+				  
+				  
+				  
+				removereferencesfromconnector conn  relevantrefs get conn    
+ 
+				formerlyunmappedreferences addall relevantrefs get conn    
+				  
+			  
+			addreferencestoconnectors formerlyunmappedreferences   
+			event getelement   getproject   getimplementationmodel    
+				registerimplementationchangelistener architecturemodel override onmappingremoved mappingremovalevent event    
+			imappableelement newlymappedresource   event getelement    
+			map connector  set ixreference ? ?    relevantrefs hashedmap connector  set ixreference ? ?       
+			  
+			set connector  connectors   event getcomponent   getoutgoingconnectors    
+			set ixreference ? ?   refstoberemoved hashset ixreference ? ?      
+			connectors addall event getcomponent   getincomingconnectors     
+			connectors add event getcomponent   getreflexiveconnector connector con   connectors    
+				relevantrefs put con  _getreferencesaffectedbychangeofmapping con  newlymappedresource  event getcomponent connector con   relevantrefs keyset      
+				removereferencesfromconnector con  relevantrefs get con    
+				refstoberemoved addall relevantrefs get con event getcomponentafterremoval addreferencestoconnectors refstoberemoved getmapping   getmanagedprojects   contains event getelement   getproject       
+				event getelement   getproject   getimplementationmodel    
+					deregisterimplementationchangelistener architecturemodel override onmanagedprojectadded managedprojectaddedevent event    
+			ijittacproject project   event getproject    
+			iimplementationmodel im   project getimplementationmodel    
+			im registerimplementationchangelistener architecturemodel architecturemodel oncompleteload im onmanagedprojectremoved managedprojectremovedevent event    
+			ijittacproject project   event getproject    
+			iimplementationmodel im   project getimplementationmodel    
+			im deregisterimplementationchangelistener architecturemodel set ixreference ? ?   _getreferencesaffectedbychangeofmapping connector con   
+				imappableelement elem  component prevcompforelem    
+			set ixreference ? ?   relevantrefs hashset ixreference ? ?      
+			imappableelement endpointaresource imappableelement endpointbresource ixreference ? ?  ref   con getcontributingreferences con isreflexive      
+					endpointaresource   mapping getexplicitlymappedparent ref getsource   getresource     
+					endpointbresource   mapping getexplicitlymappedparent ref gettarget   getresource con getsrc   equals prevcompforelem     
+					endpointaresource   mapping getexplicitlymappedparent ref getsource   getresource     
+					endpointbresource   endpointaresource con gettrg   equals prevcompforelem     
+					endpointbresource   mapping getexplicitlymappedparent ref gettarget   getresource     
+					endpointaresource   endpointbresource  
+				  
+				elem   mapping getexplicitlymappedparent elem elem endpointaresource endpointbresource relevantrefs add ref elem equals endpointaresource     elem equals endpointbresource     
+					relevantrefs add ref relevantrefs _gatherreferencesfromidenticallymappedchildresources imappableelement elem  set ixreference ? ?   result    
+			iimplementationmodel im   elem getproject   getimplementationmodel    
+			set ixreference iimplementationmodelelement ?  ?   refsinresource hashset      
+			refsinresource addall im getreferencesforresource elem    
+			refsinresource addall im getincomingreferencesforresource elem    
+			result addall refsinresource imappableelement child   elem getchildren mapping getcomponent child  equals mapping getcomponent elem      
+					_gatherreferencesfromidenticallymappedchildresources child  result   
+				  
+			  
+		  
+	  
+ se kau cs jittac model am ArchitectureModel

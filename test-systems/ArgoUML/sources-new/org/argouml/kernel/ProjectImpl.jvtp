@@ -1,0 +1,471 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications projectimpl data structure represents designer's 
+   current project manages list diagrams uml models  
+    p  
+   note named project until 0 25 4 replaced interface same name renamed projectimpl  
+    
+    
+       logger  
+        
+    
+       default name project uid  
+        
+    
+       todo directory write preferences project-scope argouml version project last saved     
+   todo  break 3 main member types 
+   model  diagram version number persistence format last 
+       saved project  
+        
+    
+       instances uml model  
+        
+    
+       instances uml diagrams active diagram  pointer diagram list diagrams  
+        
+    
+       cache default model  
+        
+   todo  change use undomanager instance per project gef enhanced  
+    
+       constructor  
+       
+        param theprojecturi uri read project constructor moved ui action  
+   todo  maybe separate name 
+    
+        param d diagram diagram added successfully  add member param pm member added 
+        
+   adding todo member removes any existing one  
+    
+        param m model past veto  add member 
+    
+       removes project member diagram completely project  
+        param d argodiagram re deleting last diagram lets create new one 
+   todo  once go mdi won't need make topmost diagram not one being deleted  
+   current  
+    
+       enables save action project current project 
+        param enable true enable 
+        
+   send indeterminate new value instead making copy vector 
+   todo  remove next line gef 0 12 4m4 replaced newer one fixes gef bug removing diagram  
+    
+       listener events diagram class   p  
+       
+       purpose  changing name diagram shall set need save flag  
+       
+        author michiel 
+        
+    
+       removes diagram list diagrams  
+       
+       removes  hopefully event listeners diagram not remove diagram project members not called directly  use movetotrash want remove diagram  
+       
+        param d argodiagram 
+        
+   remove dependent 
+           modelelements statemachine statechartdiagram  
+            
+    
+       todo  remove class gef 0 12 4m4 replaced newer one 
+       
+        author michiel 
+        
+   
+   todo presave needed models? 
+   todo postsave needed models? 
+   issue 1725 root not set leads problems displaying prop panels don't need hashmap anymore free up memory 
+                                                                 
+   trash related methods 
+    
+       empty trash permanently delete objects contains  
+        
+        see org argouml kernel project#emptytrashcan   
+        
+    
+       removes some object project  
+       
+        param obj object thrown away not delete model 
+   todo  bob condition reached? 
+   surely obj cannot both model element  previous projectmember todo  presumably only relevant obj actually model added test model getfacade isamodel obj clarify going here  
+   need manually delete diagrams explorer don't decent event system set up  
+   todo  bob ve never seen appear log believe code never reached delete figedge fignode actually call method owner not fig itself  
+   mvw now called actiondeletemodelelements primitive figs  without owner   
+   todo  marcus aurelio deprecated changed implementation throw exception s longer 
+   functional probably need remove altogether model getfacade   isamodel thedefaultmodel     
+              throw new illegalargumentexception default model must model type  received thedefaultmodel getclass   getname     
+            
+   
+          profilepackages clear    
+          profilepackages add thedefaultmodel   
+          defaultmodeltypecache   new hashmap string  object     
+   todo  marcus aurelio deprecated changed implementation throw exception s longer 
+   functional probably need remove altogether object pkg   packages model getfacade   isapackage pkg     
+                  throw new illegalargumentexception  
+                           profiles must type package  received pkg getclass   getname     
+                
+            
+   
+          profilepackages clear    
+          profilepackages addall packages   
+          defaultmodeltypecache   new hashmap string  object     
+   todo  marcus aurelio deprecated changed implementation throw exception s longer 
+   functional probably need remove altogether  
+   first priority model best backward compatibility object pkg   profilepackages model getfacade   isamodel pkg     
+                  return pkg package object pkg   profilepackages model getfacade   isapackage pkg     
+                  return pkg fails first element 
+          return profilepackages iterator   next    
+   todo  marcus aurelio deprecated changed implementation throw exception s longer 
+   functional probably need remove altogether  
+          return profilepackages  
+   todo don't really want following m not sure depends tfm - 20070725 
+   todo  marcus aurelio deprecated changed implementation throw exception s longer 
+   functional probably need remove altogether  
+          return profile s one profileconfiguration project s way add another oneorg argouml kernel ProjectImpl org argouml kernel projectimpl java io serializable  project untitled_file   
+	translator localize  label projectbrowser-title serialversionuid   1399111233978692444l projectimpl uri theprojecturi uri   persistencemanager getinstance   fixuriextension theprojecturi   
+        uri   theprojecturi projectimpl     
+        setprofileconfiguration profileconfiguration projectsettings projectsettings    
+ 
+        model getmodelmanagementfactory   setrootmodel authorname   configuration getstring argo key_user_fullname   
+        authoremail   configuration getstring argo key_user_email   
+        description       
+          
+        version   applicationversion getversion    
+ 
+        historyfile       
+        defaultmodeltypecache hashmap object     
+ 
+        log info  making empty project with empty model    
+        addsearchpath  project_dir getbasename n   getname    
+        n   persistencemanager getinstance   getbasename n n getname uri untitled_file file uri  getname setname n urisyntaxexception s geturi s   geturi   tostring    
+          
+        s   s substring 0  s lastindexof        1    n  
+        seturi uri s uri geturi uri uri geturi uri seturi uri theuri theuri theuri   persistencemanager getinstance   fixuriextension theuri log isdebugenabled      
+            log debug  setting project uri from \     uri 
+                         \  to \     theuri    \      
+          
+ 
+        uri   theuri setfile file file    
+        uri theprojecturi   file touri log isdebugenabled      
+            log debug  setting project file name from \   
+                        uri 
+                         \  to \   
+                        theprojecturi 
+                         \      
+          
+ 
+        uri   theprojecturi  
+      
+ 
+ 
+     suppresswarnings  deprecation vector getsearchpath vector searchpath list getsearchpathlist collections unmodifiablelist searchpath addsearchpath searchpathelement searchpath contains searchpathelement     
+            searchpath add searchpathelement memberlist getmembers     
+        log info  getting the members there are     members size members adddiagrammember argodiagram d    
+        projectmember pm projectmemberdiagram d adddiagram d   
+          
+        members add pm addtodomember projectmembertodolist pm    
+          
+        members add pm   
+        log info  added todo member  there are now     members size addmember object m m illegalargumentexception  
+                     a model member must be suppleid m argodiagram    
+            log info  adding diagram member    
+            adddiagrammember  argodiagram  m m projectmembertodolist    
+            log info  adding todo member    
+            addtodomember  projectmembertodolist  m model getfacade   isamodel m     
+            log info  adding model member    
+            addmodelmember m illegalargumentexception  
+                     the member must be a uml model todo member or diagram   
+                       it is     m getclass   getname     
+          
+        log info  there are now     members size       members addmodelmember object m memberfound object currentmember   
+            members getmember projectmembermodel currentmember object currentmodel   
+                  projectmembermodel  currentmember  getmodel currentmodel    m    
+                memberfound memberfound models contains m     
+                addmodel m   
+              
+              
+            projectmember pm projectmembermodel m log info  adding model member to start of member list    
+            members add pm log info  attempted to load 2 models illegalargumentexception  
+                     attempted to load 2 models addmodel object model model getfacade   isamodel model illegalargumentexception models contains model     
+            setroot model addmodelinternal object model    
+        models add model   
+        roots add model   
+        setcurrentnamespace model   
+        setsaveenabled removeprojectmemberdiagram argodiagram d activediagram    d    
+            argodiagram defaultdiagram diagrams size      1    
+                  
+                  
+                object projectroot   getroot model getumlfactory   isremoved projectroot     
+                    defaultdiagram   diagramfactory getinstance   
+                             createdefaultdiagram projectroot   
+                    addmember defaultdiagram defaultdiagram   diagrams get 0 defaultdiagram    d    
+                    defaultdiagram   diagrams get 1   
+                  
+              
+            activediagram   defaultdiagram  
+          
+ 
+        removediagram d   
+        members remove d   
+        d remove    
+        setsaveenabled setsaveenabled enable    
+        projectmanager pm   projectmanager getmanager pm getcurrentproject pm setsaveenabled enable getauthorname authorname setauthorname s oldauthorname   authorname  
+        abstractcommand command abstractcommand object execute     
+                authorname   s undo     
+                authorname   oldauthorname  
+              
+           
+        undomanager execute command getauthoremail authoremail setauthoremail s oldauthoremail   authoremail  
+        abstractcommand command abstractcommand object execute     
+                authoremail   s undo     
+                authoremail   oldauthoremail  
+              
+           
+        undomanager execute command getversion version setversion s    
+        version   s getdescription description setdescription s olddescription   description  
+        abstractcommand command abstractcommand object execute     
+                description   s undo     
+                description   olddescription  
+              
+           
+        undomanager execute command gethistoryfile historyfile sethistoryfile s    
+        historyfile   s  
+      
+ 
+ 
+     suppresswarnings    deprecation    unchecked vector getuserdefinedmodels vector models list getuserdefinedmodellist models collection getmodels     
+        set result hashset    
+        result addall models profile profile   getprofileconfiguration   getprofiles result addall profile getprofilepackages org argouml profile profileexception e    
+                log error  exception when fetching models from profile   
+                          profile getdisplayname    e collections unmodifiablecollection result object getmodel models size      1 models iterator   next object findtype s findtype s object getdefaultattributetype profileconfiguration getdefaulttypestrategy profileconfiguration getdefaulttypestrategy   
+                     getdefaultattributetype object getdefaultparametertype profileconfiguration getdefaulttypestrategy profileconfiguration getdefaulttypestrategy   
+                     getdefaultparametertype object getdefaultreturntype profileconfiguration getdefaulttypestrategy profileconfiguration getdefaulttypestrategy   
+                     getdefaultreturntype object findtype s definenew s s   s trim s s length      0 object cls object model   models    
+            cls   findtypeinmodel s  model cls cls  
+              
+          
+        cls   findtypeindefaultmodel s cls definenew    
+            log debug type defined     
+            cls   
+                model getcorefactory   buildclass getcurrentnamespace     
+            model getcorehelper   setname cls  s cls collection fig  findfigsformember object member    
+        collection fig  figs arraylist fig argodiagram diagram   diagrams    
+            fig fig   diagram getcontainingfig member fig figs add fig figs collection findallpresentationsfor object obj    
+        collection fig  figs arraylist fig argodiagram diagram   diagrams    
+            fig afig   diagram presentationfor obj afig figs add afig figs object findtypeinmodel typename  object namespace typename illegalargumentexception  typename must be non model getfacade   isanamespace namespace illegalargumentexception  
+                     looking the classifier     typename 
+                        in a non-namespace object of     namespace 
+                         a namespace was expected     
+    	  
+ 
+        collection allclassifiers   
+            model getmodelmanagementhelper   
+	         getallmodelelementsofkind namespace  
+	                model getmetatypes   getclassifier object classifier   allclassifiers typename equals model getfacade   getname classifier classifier setcurrentnamespace object m m model getfacade   isanamespace m illegalargumentexception    
+    	  
+ 
+        currentnamespace   m object getcurrentnamespace currentnamespace  
+      
+ 
+ 
+     suppresswarnings  deprecation vector argodiagram  getdiagrams vector argodiagram  diagrams list argodiagram  getdiagramlist collections unmodifiablelist diagrams getdiagramcount diagrams size argodiagram getdiagram name argodiagram ad   diagrams ad getname ad getname   equals name ad ad getitemuid ad getitemuid   tostring   equals name ad adddiagram argodiagram d    
+          
+	d setproject diagrams add d   
+         
+          
+          
+          
+        d addvetoablechangelistener vcl     
+ 
+        d addpropertychangelistener  name namepcl     
+        setsaveenabled namepcl propertychangelistener propertychange propertychangeevent evt    
+            setsaveenabled removediagram argodiagram d    
+        d removevetoablechangelistener vcl     
+        diagrams remove d   
+          
+        object o   d getdependentelement o movetotrash o vcl vetoablechangelistener vetoablechange propertychangeevent evt propertyvetoexception getpresentationcountfor object me model getfacade   isaumlelement me illegalargumentexception presentations   0 argodiagram d   diagrams    
+            presentations    d getlayer   presentationcountfor me presentations object getinitialtarget diagrams size     0 diagrams get 0 models size     0 models iterator   next vetoablechangesupport getvetosupport vetosupport vetosupport vetoablechangesupport vetosupport presave argodiagram diagram   diagrams    
+            diagram presave postsave argodiagram diagram   diagrams    
+            diagram postsave    
+          
+          
+        setsaveenabled postload argodiagram diagram   diagrams    
+            diagram postload    
+          
+          
+          
+        object model   getmodel    
+ 
+        log info  setting root model to     model   
+ 
+        setroot model   
+ 
+        setsaveenabled uuidrefs emptytrashcan     
+        trashcan clear movetotrash object obj obj collection    
+            iterator i     collection  obj  iterator i hasnext      
+                object trash   i next trashcan contains trash     
+                    trashinternal trash trashcan contains obj     
+                trashinternal obj trashinternal object obj model getfacade   isamodel obj obj trashcan add obj model getfacade   isaumlelement obj     
+ 
+            model getumlfactory   delete obj obj projectmember 
+                       members contains obj     
+                  
+                  
+                  
+                members remove obj models contains obj     
+                models remove obj obj argodiagram    
+            removeprojectmemberdiagram  argodiagram  obj   
+              
+              
+            projectmanager getmanager   
+                     firepropertychanged  remove   obj obj fig    
+              fig  obj  deletefrommodel    
+              
+              
+              
+              
+              
+              
+            log info  request to delete a fig     obj getclass   getname obj commentedge    
+            commentedge ce    commentedge  obj  
+            log info  removing the link from     ce getannotatedelement   
+                        to     ce getcomment     
+            ce delete isintrash object obj trashcan contains obj   
+      
+ 
+ 
+     suppresswarnings  deprecation setdefaultmodel object thedefaultmodel unsupportedoperationexception    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+      
+ 
+     deprecated setprofiles collection packages unsupportedoperationexception    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+      
+ 
+ 
+     suppresswarnings  deprecation object getdefaultmodel unsupportedoperationexception    
+          
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+      
+ 
+     
+     suppresswarnings  deprecation   
+     deprecated collection getprofiles unsupportedoperationexception object findtypeindefaultmodel name defaultmodeltypecache containskey name defaultmodeltypecache get name   
+          
+         
+        object result   profileconfiguration findtype name   
+         
+        defaultmodeltypecache put name  result result  
+      
+ 
+ 
+     suppresswarnings  deprecation object getroot root  
+      
+ 
+ 
+     suppresswarnings  deprecation setroot object theroot theroot illegalargumentexception  
+        	     a root model element is required model getfacade   isamodel theroot illegalargumentexception  
+        	     the root model element must be a model - got   
+        	      theroot getclass   getname     
+          
+ 
+        object treeroot   model getmodelmanagementfactory   getrootmodel treeroot models remove treeroot   
+          
+        root   theroot  
+          
+          
+        model getmodelmanagementfactory   setrootmodel theroot   
+        addmodelinternal theroot   
+        roots clear    
+        roots add theroot collection getroots collections unmodifiablecollection roots setroots collection elements modelfound object element   elements model getfacade   isapackage element     
+                log warn  top level element other than found -    
+                          model getfacade   getname element model getfacade   isamodel element     
+                addmodel element modelfound    
+                    setroot element   
+                    modelfound roots clear    
+        roots addall elements isvaliddiagramname name rv argodiagram diagram   diagrams diagram getname   equals name     
+                rv rv  
+      
+ 
+ 
+     suppresswarnings  deprecation vector getsearchpath vector searchpath map object  getuuidrefs uuidrefs  
+      
+ 
+ 
+     suppresswarnings  deprecation setsearchpath vector thesearchpath    
+        searchpath clear    
+        searchpath addall thesearchpath setsearchpath list thesearchpath    
+        searchpath clear    
+        searchpath addall thesearchpath setuuidrefs map object  uuidrefs    
+        uuidrefs   uuidrefs setvetosupport vetoablechangesupport thevetosupport    
+        vetosupport   thevetosupport argodiagram getactivediagram activediagram setactivediagram argodiagram thediagram    
+        activediagram   thediagram remove argodiagram diagram   diagrams    
+            diagram remove    
+          
+ 
+        members clear object model   roots    
+            log debug  deleting root element   
+                      model getfacade   getname model    
+            model getumlfactory   delete model   
+          
+        roots clear    
+        models clear    
+        diagrams clear    
+        searchpath clear uuidrefs uuidrefs clear defaultmodeltypecache defaultmodeltypecache clear    
+          
+ 
+        uuidrefs defaultmodeltypecache uri authorname authoremail description version historyfile currentnamespace vetosupport activediagram emptytrashcan getpersistenceversion persistenceversion setpersistenceversion pv    
+        persistenceversion   pv  
+      
+ 
+ 
+     suppresswarnings  deprecation   
+     deprecated profile getprofile unsupportedoperationexception repair     
+        stringbuilder report stringbuilder    
+        iterator it   members iterator it hasnext      
+            projectmember member    projectmember  it next    
+            report append member repair report tostring projectsettings getprojectsettings projectsettings undomanager getundomanager undomanager profileconfiguration getprofileconfiguration profileconfiguration setprofileconfiguration profileconfiguration pc profileconfiguration members remove profileconfiguration profileconfiguration   pc  
+ 
+          
+          
+        members add pc           
+      
+ 
+ org argouml kernel ProjectImpl

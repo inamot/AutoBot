@@ -1,0 +1,362 @@
+ 
+    
+   handles operations related generating emails sent provided templates  
+   
+    see emailtemplates 
+    see emailtype 
+    see emailwrapper 
+    
+   status-related strings 
+   feedback action strings 
+    
+       generates feedback session opening emails given   code session   
+        
+    
+       generates feedback session reminder emails given   code session code students code instructorstoremind addition emails forwarded code instructorstonotify   
+        
+    
+       generates email containing summary feedback sessions 
+       email given   code courseid code student   
+        param courseid - id course 
+        param student - attributes student send feedback session summary generates feedback submission confirmation email given   code session code student   
+        
+    
+       generates feedback submission confirmation email given   code session code instructor   
+        
+    
+       generates feedback session closing emails given   code session   
+        
+   course session cannot found one student case students not waste time looping through students 
+    
+       generates feedback session closed emails given   code session   
+        
+    
+       generates feedback session published emails given   code session   
+        
+    
+       generates feedback session published emails given   code session   
+        
+    
+       generates preamble emails sent students course   code courseid shown email copies sent instructors same course  
+        
+    
+       generates new instructor account join email given   code instructor   
+        
+    
+       generates course join email given   code student code course   
+        
+    
+       generates course re-join email given   code student code course   
+        
+    
+       generates course join email given   code instructor code course specifies contact information code inviter   
+        
+    
+       generates logs compilation email given   code logs   
+        
+    
+       generates generic email specified   code content     code subject code recipient   
+       teammates logic api EmailGenerator teammates logic api emailgenerator feedback_status_session_closed   
+             is now closed  you can still view your submission by going to the link sent earlier    
+               but you will not be able to edit existing responses or submit responses list emailwrapper  generatefeedbacksessionopeningemails feedbacksessionattributes session template   emailtemplates user_feedback_session  
+ 
+        courseattributes course   courseslogic getcourse session getcourseid isemailneeded   fslogic isfeedbacksessionforstudentstoanswer session   
+        list instructorattributes  instructors   isemailneeded 
+                                                 ? instructorslogic getinstructorsforcourse session getcourseid arraylist instructorattributes     
+        list studentattributes  students   isemailneeded 
+                                           ? studentslogic getstudentsforcourse session getcourseid arraylist studentattributes     
+ 
+        list emailwrapper  emails   generatefeedbacksessionemailbases course  session  students  instructors  template  
+                                                                      emailtype feedback_opening getsubject emailwrapper email   emails    
+            email setcontent email getcontent   replace  $ status    feedback_status_session_opening emails list emailwrapper  generatefeedbacksessionreminderemails  
+            feedbacksessionattributes session  list studentattributes  students  
+            list instructorattributes  instructorstoremind  list instructorattributes  instructorstonotify    
+ 
+        courseattributes course   courseslogic getcourse session getcourseid template   emailtemplates user_feedback_session replace  $ status    feedback_status_session_open   
+        list emailwrapper  emails   
+                generatefeedbacksessionemailbasesforinstructorreminders course  session  instructorstoremind  template  
+                        emailtype feedback_session_reminder getsubject     
+        emails addall generatefeedbacksessionemailbases course  session  students  instructorstonotify  template  
+                                                        emailtype feedback_session_reminder getsubject emails emailwrapper generatefeedbacksessionsummaryofcourse courseid  studentattributes student    
+ 
+        courseattributes course   courseslogic getcourse courseid   
+ 
+        list feedbacksessionattributes  sessions arraylist      
+        list feedbacksessionattributes  fsincourse   fslogic getfeedbacksessionsforcourse courseid feedbacksessionattributes fsa   fsincourse fsa isprivatesession       fsa issentopenemail      fsa issentpublishedemail       
+                sessions add fsa   
+              
+          
+ 
+        stringbuffer linksfragmentvalue stringbuffer 1000 joinurl   config getappurl student getregistrationurl    toabsolutestring joinfragmentvalue   isyettojoincourse student  
+                                   ? templates populatetemplate emailtemplates fragment_student_course_join  
+                                            $ joinurl    joinurl  
+                                            $ coursename    sanitizationhelper sanitizeforhtml course getname feedbacksessionattributes fsa   sessions submiturlhtml     feedback session is not yet opened reporturlhtml     feedback session is not yet published fsa isopened      fsa isclosed submiturl   config getappurl actionuris student_feedback_submission_edit_page  
+                         withcourseid course getid    
+                         withsessionname fsa getfeedbacksessionname    
+                         withregistrationkey stringhelper encrypt student key   
+                         withstudentemail student email  
+                         toabsolutestring    
+                submiturlhtml     a href \     submiturl    \      submiturl      a fsa ispublished reporturl   config getappurl actionuris student_feedback_results_page  
+                         withcourseid course getid    
+                         withsessionname fsa getfeedbacksessionname    
+                         withregistrationkey stringhelper encrypt student key   
+                         withstudentemail student email  
+                         toabsolutestring    
+                reporturlhtml     a href \     reporturl    \      reporturl      a    
+              
+ 
+            linksfragmentvalue append templates populatetemplate  
+                    emailtemplates fragment_single_feedback_session_links  
+                     $ feedbacksessionname    fsa getfeedbacksessionname    
+                     $ deadline    timehelper formattime12h fsa getendtime       fsa isclosed   ?    passed          
+                     $ submiturl    submiturlhtml  
+                     $ reporturl    reporturlhtml emailbody   templates populatetemplate emailtemplates user_feedback_session_resend_all_links  
+                 $ username    sanitizationhelper sanitizeforhtml student name   
+                 $ useremail    student email  
+                 $ coursename    sanitizationhelper sanitizeforhtml course getname     
+                 $ courseid    course getid    
+                 $ joinfragment    joinfragmentvalue  
+                 $ linksfragment    linksfragmentvalue tostring    
+                 $ coownersemails    generatecoownersemailsline courseid   
+                 $ supportemail    config support_email   
+ 
+        emailwrapper email   getemptyemailaddressedtoemail student email   
+        email setsubject format emailtype student_email_changed getsubject    course getname    course getid      
+        email setcontent emailbody email emailwrapper generatefeedbacksubmissionconfirmationemailforstudent  
+            feedbacksessionattributes session  studentattributes student  calendar timestamp    
+ 
+        courseattributes course   courseslogic getcourse session getcourseid submiturl   config getappurl actionuris student_feedback_submission_edit_page  
+                 withcourseid course getid    
+                 withsessionname session getfeedbacksessionname    
+                 withregistrationkey stringhelper encrypt student key   
+                 withstudentemail student email  
+                 toabsolutestring generatesubmissionconfirmationemail course  session  submiturl  student name  student email  timestamp emailwrapper generatefeedbacksubmissionconfirmationemailforinstructor  
+            feedbacksessionattributes session  instructorattributes instructor  calendar timestamp    
+ 
+        courseattributes course   courseslogic getcourse session getcourseid submiturl   config getappurl actionuris instructor_feedback_submission_edit_page  
+                 withcourseid course getid    
+                 withsessionname session getfeedbacksessionname    
+                 toabsolutestring generatesubmissionconfirmationemail course  session  submiturl  instructor name  instructor email  timestamp list emailwrapper  generatefeedbacksessionemailbasesforinstructorreminders  
+            courseattributes course  feedbacksessionattributes session  list instructorattributes  instructors template subject    
+ 
+        list emailwrapper  emails arraylist coownersline   generatecoownersemailsline course getid instructorattributes instructor   instructors    
+            emails add generatefeedbacksessionemailbaseforinstructorreminders course  session  instructor  
+                    template  subject  coownersline emails emailwrapper generatesubmissionconfirmationemail  
+            courseattributes course  feedbacksessionattributes session submiturl username useremail  calendar timestamp    
+        calendar time   timehelper converttousertimezone timestamp  session gettimezone template   emailtemplates user_feedback_submission_confirmation subject   emailtype feedback_submission_confirmation getsubject emailbody   templates populatetemplate template  
+                 $ username    sanitizationhelper sanitizeforhtml username   
+                 $ coursename    sanitizationhelper sanitizeforhtml course getname     
+                 $ courseid    sanitizationhelper sanitizeforhtml course getid     
+                 $ feedbacksessionname    sanitizationhelper sanitizeforhtml session getfeedbacksessionname     
+                 $ deadline    sanitizationhelper sanitizeforhtml timehelper formattime12h session getendtime      
+                 $ submiturl    submiturl  
+                 $ timestamp    sanitizationhelper sanitizeforhtml timehelper formattime12h time gettime      
+                 $ coownersemails    generatecoownersemailsline course getid     
+                 $ supportemail    config support_email   
+ 
+        emailwrapper email   getemptyemailaddressedtoemail useremail   
+        email setsubject format subject  course getname    session getfeedbacksessionname      
+        email setcontent emailbody email emailwrapper generatefeedbacksessionemailbaseforinstructorreminders  
+            courseattributes course  feedbacksessionattributes session  instructorattributes instructor template subject coownersline submiturl   config getappurl actionuris instructor_feedback_submission_edit_page  
+                                  withcourseid course getid    
+                                  withsessionname session getfeedbacksessionname    
+                                  toabsolutestring reporturl   config getappurl actionuris instructor_feedback_results_page  
+                                  withcourseid course getid    
+                                  withsessionname session getfeedbacksessionname    
+                                  toabsolutestring emailbody   templates populatetemplate template  
+                 $ username    sanitizationhelper sanitizeforhtml instructor name   
+                 $ coursename    sanitizationhelper sanitizeforhtml course getname     
+                 $ courseid    sanitizationhelper sanitizeforhtml course getid     
+                 $ feedbacksessionname    sanitizationhelper sanitizeforhtml session getfeedbacksessionname     
+                 $ deadline    sanitizationhelper sanitizeforhtml timehelper formattime12h session getendtime      
+                 $ instructorfragment        
+                 $ sessioninstructions    session getinstructionsstring    
+                 $ submiturl    submiturl  
+                 $ reporturl    reporturl  
+                 $ coownersemails    coownersline  
+                 $ supportemail    config support_email  
+                 $ additionalinstructions        
+                 $ feedbackaction    feedback_action_submit   
+ 
+        emailwrapper email   getemptyemailaddressedtoemail instructor email   
+        email setsubject format subject  course getname    session getfeedbacksessionname      
+        email setcontent emailbody email list emailwrapper  generatefeedbacksessionclosingemails feedbacksessionattributes session    
+ 
+        list studentattributes  students arraylist isemailneeded   fslogic isfeedbacksessionforstudentstoanswer session isemailneeded    
+            list studentattributes  studentsforcourse   studentslogic getstudentsforcourse session getcourseid studentattributes student   studentsforcourse fslogic isfeedbacksessionfullycompletedbystudent session getfeedbacksessionname    
+                            session getcourseid    student email     
+                        students add student entitydoesnotexistexception e    
+                    log severe  course     session getcourseid       does not exist or   
+                                  session     session getfeedbacksessionname       does not exist template   emailtemplates user_feedback_session_closing 
+                 replace  $ status    feedback_status_session_closing   
+        courseattributes course   courseslogic getcourse session getcourseid     
+        list instructorattributes  instructors   isemailneeded 
+                                                 ? instructorslogic getinstructorsforcourse session getcourseid arraylist instructorattributes generatefeedbacksessionemailbases course  session  students  instructors  template  
+                emailtype feedback_closing getsubject list emailwrapper  generatefeedbacksessionclosedemails feedbacksessionattributes session session isprivatesession arraylist      
+          
+ 
+        courseattributes course   courseslogic getcourse session getcourseid isemailneededforstudents isemailneededforstudents   fslogic isfeedbacksessionhasquestionforstudents  
+                    session getfeedbacksessionname    session getcourseid entitydoesnotexistexception e    
+            log severe  course     session getcourseid       does not exist or   
+                       session     session getfeedbacksessionname       does not exist    
+          
+        list instructorattributes  instructors   instructorslogic getinstructorsforcourse session getcourseid     
+        list studentattributes  students   isemailneededforstudents 
+                                           ? studentslogic getstudentsforcourse session getcourseid arraylist studentattributes template   emailtemplates user_feedback_session 
+                 replace  $ status    feedback_status_session_closed generatefeedbacksessionemailbases course  session  students  instructors  template  
+                emailtype feedback_closed getsubject    emailtemplates fragment_closed_session_additional_instructions  
+                feedback_action_view list emailwrapper  generatefeedbacksessionpublishedemails feedbacksessionattributes session template   emailtemplates user_feedback_session_published  
+ 
+        courseattributes course   courseslogic getcourse session getcourseid isemailneeded   fslogic isfeedbacksessionviewabletostudents session   
+        list instructorattributes  instructors   isemailneeded 
+                                                 ? instructorslogic getinstructorsforcourse session getcourseid arraylist instructorattributes     
+        list studentattributes  students   isemailneeded 
+                                           ? studentslogic getstudentsforcourse session getcourseid arraylist studentattributes generatefeedbacksessionemailbases course  session  students  instructors  template  
+                emailtype feedback_published getsubject list emailwrapper  generatefeedbacksessionunpublishedemails feedbacksessionattributes session template   emailtemplates user_feedback_session_unpublished  
+ 
+        courseattributes course   courseslogic getcourse session getcourseid isemailneeded   fslogic isfeedbacksessionviewabletostudents session   
+        list instructorattributes  instructors   isemailneeded 
+                                                 ? instructorslogic getinstructorsforcourse session getcourseid arraylist instructorattributes     
+        list studentattributes  students   isemailneeded 
+                                           ? studentslogic getstudentsforcourse session getcourseid arraylist studentattributes generatefeedbacksessionemailbases course  session  students  instructors  template  
+                emailtype feedback_unpublished getsubject list emailwrapper  generatefeedbacksessionemailbases  
+            courseattributes course  feedbacksessionattributes session  list studentattributes  students  
+            list instructorattributes  instructors template subject generatefeedbacksessionemailbases course  session  students  instructors  template  subject      
+                feedback_action_submit list emailwrapper  generatefeedbacksessionemailbases  
+            courseattributes course  feedbacksessionattributes session  list studentattributes  students  
+            list instructorattributes  instructors template subject additionalinstructions feedbackaction    
+ 
+        list emailwrapper  emails arraylist coownersline   generatecoownersemailsline course getid studentattributes student   students    
+            emails add generatefeedbacksessionemailbaseforstudents course  session  student  
+                    template  subject  coownersline  additionalinstructions  feedbackaction instructorattributes instructor   instructors    
+            emails add generatefeedbacksessionemailbaseforinstructors course  session  instructor  
+                    template  subject  coownersline  additionalinstructions  feedbackaction emails emailwrapper generatefeedbacksessionemailbaseforstudents  
+            courseattributes course  feedbacksessionattributes session  studentattributes student template subject coownersline additionalinstructions feedbackaction submiturl   config getappurl actionuris student_feedback_submission_edit_page  
+                                  withcourseid course getid    
+                                  withsessionname session getfeedbacksessionname    
+                                  withregistrationkey stringhelper encrypt student key   
+                                  withstudentemail student email  
+                                  toabsolutestring reporturl   config getappurl actionuris student_feedback_results_page  
+                                  withcourseid course getid    
+                                  withsessionname session getfeedbacksessionname    
+                                  withregistrationkey stringhelper encrypt student key   
+                                  withstudentemail student email  
+                                  toabsolutestring emailbody   templates populatetemplate template  
+                 $ username    sanitizationhelper sanitizeforhtml student name   
+                 $ coursename    sanitizationhelper sanitizeforhtml course getname     
+                 $ courseid    sanitizationhelper sanitizeforhtml course getid     
+                 $ feedbacksessionname    sanitizationhelper sanitizeforhtml session getfeedbacksessionname     
+                 $ deadline    sanitizationhelper sanitizeforhtml timehelper formattime12h session getendtime      
+                 $ instructorfragment        
+                 $ sessioninstructions    session getinstructionsstring    
+                 $ submiturl    submiturl  
+                 $ reporturl    reporturl  
+                 $ coownersemails    coownersline  
+                 $ supportemail    config support_email  
+                 $ additionalinstructions    additionalinstructions  
+                 $ feedbackaction    feedbackaction   
+ 
+        emailwrapper email   getemptyemailaddressedtoemail student email   
+        email setsubject format subject  course getname    session getfeedbacksessionname      
+        email setcontent emailbody email generateinstructorpreamble courseid coursename courseidentifier         sanitizationhelper sanitizeforhtml courseid         
+                  sanitizationhelper sanitizeforhtml coursename p the email below has been sent to students of course    
+              courseidentifier      br eol 
+                br eol 
+                   email message as seen by the students      p eol emailwrapper generatefeedbacksessionemailbaseforinstructors  
+            courseattributes course  feedbacksessionattributes session  instructorattributes instructor template subject coownersline additionalinstructions feedbackaction instructorfragment   generateinstructorpreamble course getid    course getname emailbody   templates populatetemplate template  
+                 $ username    sanitizationhelper sanitizeforhtml instructor name   
+                 $ coursename    sanitizationhelper sanitizeforhtml course getname     
+                 $ courseid    sanitizationhelper sanitizeforhtml course getid     
+                 $ feedbacksessionname    sanitizationhelper sanitizeforhtml session getfeedbacksessionname     
+                 $ deadline    sanitizationhelper sanitizeforhtml timehelper formattime12h session getendtime      
+                 $ instructorfragment    instructorfragment  
+                 $ sessioninstructions    session getinstructionsstring    
+                 $ submiturl      in the actual email sent to the students will be the unique link    
+                 $ reporturl      in the actual email sent to the students will be the unique link    
+                 $ coownersemails    coownersline  
+                 $ supportemail    config support_email  
+                 $ additionalinstructions    additionalinstructions  
+                 $ feedbackaction    feedbackaction   
+ 
+        emailwrapper email   getemptyemailaddressedtoemail instructor email   
+        email setsubject format subject  course getname    session getfeedbacksessionname      
+        email setcontent emailbody email isyettojoincourse studentattributes student student googleid student googleid isempty emailwrapper generatenewinstructoraccountjoinemail instructoremail instructorshortname joinurl emailbody   templates populatetemplate emailtemplates new_instructor_account_welcome  
+                 $ username    sanitizationhelper sanitizeforhtml instructorshortname   
+                 $ joinurl    joinurl   
+ 
+        emailwrapper email   getemptyemailaddressedtoemail instructoremail   
+        email setbcc config support_email   
+        email setsubject format emailtype new_instructor_account getsubject    instructorshortname    
+        email setcontent emailbody email emailwrapper generatestudentcoursejoinemail courseattributes course  studentattributes student emailbody   templates populatetemplate  
+                fillupstudentjoinfragment student  emailtemplates user_course_join   
+                 $ username    sanitizationhelper sanitizeforhtml student name   
+                 $ coursename    sanitizationhelper sanitizeforhtml course getname     
+                 $ coownersemails    generatecoownersemailsline course getid     
+                 $ supportemail    config support_email   
+ 
+        emailwrapper email   getemptyemailaddressedtoemail student email   
+        email setsubject format emailtype student_course_join getsubject    
+                                       course getname    course getid      
+        email setcontent emailbody email emailwrapper generatestudentcourserejoinemailaftergoogleidreset  
+            courseattributes course  studentattributes student emailbody   templates populatetemplate  
+                fillupstudentrejoinaftergoogleidresetfragment student  emailtemplates user_course_join   
+                 $ username    sanitizationhelper sanitizeforhtml student name   
+                 $ coursename    sanitizationhelper sanitizeforhtml course getname     
+                 $ coownersemails    generatecoownersemailsline course getid     
+                 $ supportemail    config support_email   
+ 
+        emailwrapper email   getemptyemailaddressedtoemail student email   
+        email setsubject format emailtype student_course_rejoin_after_google_id_reset getsubject    
+                                       course getname    course getid      
+        email setcontent emailbody email emailwrapper generateinstructorcoursejoinemail accountattributes inviter  
+            instructorattributes instructor  courseattributes course emailbody   templates populatetemplate  
+                fillupinstructorjoinfragment instructor  emailtemplates user_course_join   
+                 $ username    sanitizationhelper sanitizeforhtml instructor getname     
+                 $ coursename    sanitizationhelper sanitizeforhtml course getname     
+                 $ invitername    sanitizationhelper sanitizeforhtml inviter getname     
+                 $ inviteremail    sanitizationhelper sanitizeforhtml inviter getemail     
+                 $ supportemail    config support_email   
+ 
+        emailwrapper email   getemptyemailaddressedtoemail instructor getemail     
+        email setsubject format emailtype instructor_course_join getsubject    
+                                       course getname    course getid      
+        email setcontent emailbody email fillupstudentjoinfragment studentattributes student emailbody joinurl   config getappurl student getregistrationurl    toabsolutestring templates populatetemplate emailbody  
+                 $ joinfragment    emailtemplates fragment_student_course_join  
+                 $ joinurl    joinurl fillupstudentrejoinaftergoogleidresetfragment studentattributes student emailbody joinurl   config getappurl student getregistrationurl    toabsolutestring templates populatetemplate emailbody  
+                 $ joinfragment    emailtemplates fragment_student_course_rejoin_after_google_id_reset  
+                 $ joinurl    joinurl  
+                 $ supportemail    config support_email fillupinstructorjoinfragment instructorattributes instructor emailbody joinurl   config getappurl actionuris instructor_course_join  
+                                withregistrationkey stringhelper encrypt instructor key   
+                                toabsolutestring templates populatetemplate emailbody  
+                 $ joinfragment    emailtemplates fragment_instructor_course_join  
+                 $ joinurl    joinurl emailwrapper generatecompiledlogsemail list applogline  logs    
+        stringbuilder emailbody stringbuilder i   0  i   logs size    i      
+            emailbody append generatesevereerrorlogline i  logs get i     
+          
+ 
+        emailwrapper email   getemptyemailaddressedtoemail config support_email   
+        email setsubject format emailtype severe_logs_compilation getsubject    config getappversion      
+        email setcontent emailbody tostring email generatesevereerrorlogline index  applogline logline templates populatetemplate  
+                emailtemplates severe_error_log_line  
+                 $ index valueof index   
+                 $ errortype    logline getloglevel   tostring    
+                 $ errormessage    logline getlogmessage   replace  \n     br emailwrapper generateadminemail content subject recipient    
+        emailwrapper email   getemptyemailaddressedtoemail recipient   
+        email setsubject subject   
+        email setcontent content email emailwrapper getemptyemailaddressedtoemail recipient    
+        emailwrapper email emailwrapper    
+        email setrecipient recipient   
+        email setsenderemail config email_senderemail   
+        email setsendername config email_sendername   
+        email setreplyto config email_replyto email generatecoownersemailsline courseid    
+        list instructorattributes  coowners   instructorslogic getcoownersforcourse courseid coowners isempty no contactable instructors found    
+          
+        stringbuilder coownersemailsline stringbuilder instructorattributes coowner   coowners    
+            coownersemailsline 
+                     append coowner getname    
+                     append ' '  
+                     append coowner getemail    
+                     append coownersemailsline substring 0  coownersemailsline length   - 2   
+      
+ 
+ teammates logic api EmailGenerator

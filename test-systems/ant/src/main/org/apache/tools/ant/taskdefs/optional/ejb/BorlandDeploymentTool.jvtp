@@ -1,0 +1,271 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   borlanddeploymenttool dedicated borland application server 4 5 4 5 1 task generates compiles stubs skeletons ejb described deployment descriptor  builds jar file including support files verify 
+   whether produced jar valid not supported options ul  
+    li debug   boolean       turn debug mode generation stubs skeletons  default false   li  
+    li verify  boolean       turn verification end jar 
+                             production   default true    li  
+    li verifyargs  string    add optional argument verify command 
+                              see vbj com inprise ejb util verify   li  
+    li basdtd  string        location bas dtd   li  
+    li generateclient  boolean    turn client jar file generation   li  
+    li version  int          tell borland appserver version 4 5   li  
+     ul  
+   
+   pre  
+   
+         lt ejbjar srcdir  quot $ build classes  quot  
+                 basejarname  quot vsmp quot  
+                 descriptordir  quot $ rsc dir  hrmanager quot  gt  
+           lt borland destdir  quot tstlib quot  gt  
+             lt classpath refid  quot classpath quot    gt  
+           lt  borland gt  
+           lt include name  quot   \ejb-jar xml quot   gt  
+           lt support dir  quot $ build classes  quot  gt  
+             lt include name  quot demo\smp\  class quot   gt  
+             lt include name  quot demo\helper\  class quot   gt  
+            lt  support gt  
+        lt  ejbjar gt  
+    pre  
+   
+    
+    borland 1 1 ejb id    
+  inprise corporation  dtd enterprise javabeans 1 1  en   
+    java2iiop executable     
+    verify class    
+    instance variable stores suffix borland jarfile     
+    instance variable stores location borland dtd file     
+    instance variable determines whether debug mode store additional param java2iiop command used build ejb stubs    
+    instance variable determines whether client jar file generated    
+    borland enterprise server   version 5    
+    borland application server inprise application server    version 4    
+    borland appserver version 4 5    
+    
+       instance variable determines whether necessary verify produced jar 
+        
+    
+       set debug mode java2iiop  default false  
+        param debug setting use  
+         
+    
+       set verify  mode produced jar  default true  
+        param verify setting use  
+         
+    
+       setter used store suffix generated borland jar file  
+        param instring string use suffix  
+        
+    
+       sets some additional args send verify command 
+        param args additional command line parameters 
+        
+    
+       setter used store location borland dtd file system resource classpath  
+        param instring string use dtd location  
+        
+    
+       setter used store whether task include generate client task  
+        see   borlandgenerateclient task  
+        param b true generate client task  
+        
+    
+       setter used store borland appserver version  4 5  
+        param version app server version 4 5 filled params added java2iiop command  
+        ex  -no_warn_missing_define  
+        param params additional params java2iiop borland descriptor handler  
+        param srcdir source directory  
+        return descriptor filename vendor specific descriptor 
+  trim meta_inf file name 
+    
+       add any vendor specific files included ejb jar  
+        param ejbfiles map add files param ddprefix prefix use  
+        
+  choose right vendor dd vendor specific name jar output modification date jar checked against dependent bean classes  
+        
+    
+       verify produced jar file invoking borland verify tool 
+        param sourcejar java io file representing produced jar file 
+        
+    
+       verify produced jar file invoking borland iastool tool 
+        param sourcejar java io file representing produced jar file 
+        
+  classpath 
+   ejb jar file verify catch semantics calling main   
+    
+       verify produced jar file invoking borland verify tool 
+        param sourcejar java io file representing produced jar file delete file not valid file  
+    
+       generate client jar corresponding jar file passed parameter method uses borlandgenerateclient task  
+        param sourcejar java io file representing produced jar file delete file not valid file  
+    
+       generate stubs   skeleton each home found dd 
+       add generate class file ejb files 
+        param ithomes   iterator home class 
+        
+  debug ? 
+  set classpath 
+  list file tie classes 
+  root dir 
+  compiling order 
+  add home class 
+    
+       method used encapsulate writing jar file  iterates over filenames java io files hashtable stored instance variable 
+       ejbfiles  
+        param basename base name  
+        param jarfile jar file write param files files write jar  
+        param publicid id use  
+        throws buildexception error  
+        
+  build home classes list  
+  remove  class extension 
+  add gen files collection 
+    
+       convert class file name b c toto class class name b c toto 
+        
+  remove class 
+    
+       convert file name b c toto java class name b c toto class 
+        
+  remove class 
+   implementation org apache tools ant taskdefs executestreamhandler interface 
+      inheritdoc      
+      inheritdoc      
+      inheritdoc      
+    
+       set output stream process  
+        param input stream  
+        throws ioexception error  
+        
+    
+       set error stream process  
+        param input stream  
+        throws ioexception error  
+       org apache tools ant taskdefs optional ejb BorlandDeploymentTool org apache tools ant taskdefs optional ejb borlanddeploymenttool genericdeploymenttool executestreamhandler publicid_borland_ejb default_bas45_ejb11_dtd_location 
+        com inprise j2ee xml dtds ejb-jar dtd default_bas_dtd_location 
+        com inprise j2ee xml dtds ejb-inprise dtd bas_dd    ejb-inprise xml bes_dd    ejb-borland xml java2iiop    java2iiop verify    com inprise ejb util verify bes         5 bas         4 setdebug debug java2iiopdebug   debug setverify verify verify   verify setsuffix instring jarsuffix   instring setverifyargs args verifyargs   args setbasdtd instring borlanddtd   instring setgenerateclient b generateclient   b setversion version version   version setjava2iiopparams params java2iioparams   params descriptorhandler getborlanddescriptorhandler file srcdir    
+        descriptorhandler handler descriptorhandler gettask    srcdir processelement currentelement equals  type-storage filenamewithmeta   currenttext filename 
+                                  filenamewithmeta substring meta_dir length    
+                                    filenamewithmeta length     
+                            file descriptorfile file srcdir  filename   
+ 
+                            ejbfiles put filenamewithmeta  descriptorfile   
+                          
+                      
+                   
+        handler registerdtd publicid_borland_ejb  
+                            borlanddtd default_bas_dtd_location   borlanddtd iterator i   getconfig   dtdlocations iterator    i hasnext       
+            ejbjar dtdlocation dtdlocation    ejbjar dtdlocation  i next    
+            handler registerdtd dtdlocation getpublicid    dtdlocation getlocation handler addvendorfiles hashtable ejbfiles ddprefix version    bes    version    bas buildexception  version     version     is not supported dd    version    bes ? bes_dd   bas_dd   
+ 
+        log  vendor file       ddprefix   dd  project msg_debug   
+ 
+        file borlanddd file getconfig   descriptordir  ddprefix   dd borlanddd exists      
+            log  borland specific file found     borlanddd   project msg_verbose   
+            ejbfiles put meta_dir   dd    borlanddd log  unable to locate borland deployment descriptor    
+                   it was expected to be in   
+                  borlanddd getpath    project msg_warn file getvendoroutputjarfile basename file getdestdir    basename    jarsuffix verifyborlandjar file sourcejar version    bas    
+            verifyborlandjarv4 sourcejar version    bes    
+            verifyborlandjarv5 sourcejar log  verify jar skipped because the version is invalid    
+              version        project msg_warn verifyborlandjarv5 file sourcejar    
+        log  verify bes     sourcejar  project msg_info exectask exectask exectask exectask gettask     
+            exectask setdir file        
+            exectask setexecutable  iastool getcombinedclasspath exectask createarg   setvalue  -vbjclasspath    
+                exectask createarg   setvalue getcombinedclasspath   tostring java2iiopdebug    
+                exectask createarg   setvalue  -debug    
+              
+            exectask createarg   setvalue  -verify    
+            exectask createarg   setvalue  -src    
+              
+            exectask createarg   setvalue sourcejar getpath     
+            log  calling iastool   project msg_verbose   
+            exectask execute exception e msg    exception calling generateclient details    
+                  e tostring buildexception msg  e verifyborlandjarv4 file sourcejar    
+        org apache tools ant taskdefs java javatask log  verify bas     sourcejar  project msg_info args   verifyargs  
+            args          sourcejar getpath    
+ 
+            javatask java gettask     
+            javatask settaskname  verify    
+            javatask setclassname verify   
+            commandline argument arguments   javatask createarg    
+            arguments setline args   
+            path classpath   getcombinedclasspath classpath javatask setclasspath classpath   
+                javatask setfork log  calling     verify sourcejar tostring    
+                project msg_verbose   
+            javatask execute exception e msg    exception calling     verify     details    
+                  e tostring buildexception msg  e generateclient file sourcejar    
+        gettask   getproject   addtaskdefinition  internal_bas_generateclient   
+            org apache tools ant taskdefs optional ejb borlandgenerateclient org apache tools ant taskdefs optional ejb borlandgenerateclient gentask log  generate client sourcejar  project msg_info project project   gettask   getproject    
+            gentask 
+                   borlandgenerateclient  project createtask  internal_bas_generateclient    
+            gentask setejbjar sourcejar   
+            gentask setdebug java2iiopdebug   
+            path classpath   getcombinedclasspath classpath gentask setclasspath classpath   
+              
+            gentask setversion version   
+            gentask settaskname  generate client    
+            gentask execute exception e msg    exception calling     verify     details    
+                  e tostring buildexception msg  e buildborlandstubs iterator ithomes    
+        execute exectask exectask execute project project   gettask   getproject    
+        exectask setantrun project   
+        exectask setworkingdirectory project getbasedir     
+ 
+        commandline commandline commandline    
+        commandline setexecutable java2iiop java2iiopdebug    
+            commandline createargument   setvalue  -vbjdebug    
+          
+          
+        commandline createargument   setvalue  -vbjclasspath    
+        commandline createargument   setpath getcombinedclasspath     
+          
+        commandline createargument   setvalue  -list_files    
+          
+        commandline createargument   setvalue  -no_tie java2iioparams log  additional      java2iioparams     to java2iiop    0   
+            commandline createargument   setvalue java2iioparams   
+          
+ 
+ 
+          
+        commandline createargument   setvalue  -root_dir    
+        commandline createargument   setvalue getconfig   srcdir getabsolutepath     
+          
+        commandline createargument   setvalue  -compile ithomes hasnext      
+            commandline createargument   setvalue ithomes next   tostring log  calling java2iiop   project msg_verbose   
+            log commandline describecommand    project msg_debug   
+            exectask setcommandline commandline getcommandline result   exectask execute execute isfailure result msg    failed executing java2iiop  ret code is   
+                      result buildexception msg  gettask   getlocation java io ioexception e    
+            log  java2iiop exception      e getmessage    project msg_err buildexception e  gettask   getlocation writejar basename  file jarfile  hashtable files publicid buildexception   
+          
+        vector homes vector    
+        iterator it   files keyset   iterator it hasnext clazz it next clazz endswith  home home   toclass clazz   
+                homes add home   
+                log   home     home  project msg_verbose   
+              
+          
+ 
+        buildborlandstubs homes iterator     
+ 
+          
+        files putall genfiles writejar basename  jarfile  files  publicid verify    
+            verifyborlandjar jarfile generateclient    
+            generateclient jarfile toclass filename classname   filename substring 0  filename lastindexof classname   classname replace classname toclassfile filename classfile   filename substring 0  filename lastindexof   java     
+        classfile   classfile classfile start ioexception stop setprocessinputstream outputstream param1 ioexception setprocessoutputstream inputstream is ioexception bufferedreader reader bufferedreader inputstreamreader is javafile javafile   reader readline javafile endswith   java classfile   toclassfile javafile key   classfile substring  
+                        getconfig   srcdir getabsolutepath   length     1   
+                    genfiles put key file classfile    
+                  
+              
+            reader close exception e msg    exception parsing  java2iiop output  details      e tostring buildexception msg  e setprocesserrorstream inputstream is ioexception   
+        bufferedreader reader bufferedreader inputstreamreader is s   reader readline s log   java2iiop      s  project msg_err   
+          
+      
+  
+org apache tools ant taskdefs optional ejb BorlandDeploymentTool

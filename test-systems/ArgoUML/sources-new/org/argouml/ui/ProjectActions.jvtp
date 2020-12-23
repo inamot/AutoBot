@@ -1,0 +1,95 @@
+ 
+   $id$ 
+   copyright  c  2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications  
+    
+   class manage project related actions need historically managed singletons  
+    
+   todo s unclear whether actually managed singletons now ve moved projectbrowser tfm 
+    
+    author tom morris action undo last user interaction action redo last undone action  
+        
+    
+       singleton retrieval method projectbrowser  lazely instantiates projectbrowser  
+        return singleton instance projectbrowser action remove current selected figs diagram action undo last user interaction project  
+        return undo action action redo last undone action  
+        return redo action action removes selected figs diagram  
+        return remove diagram action  
+        
+   
+        see org argouml ui targetmanager targetlistener#targetadded org argouml ui targetmanager targetevent  
+        
+   
+        see org argouml ui targetmanager targetlistener#targetremoved org argouml ui targetmanager targetevent  
+        
+   
+        see org argouml ui targetmanager targetlistener#targetset org argouml ui targetmanager targetevent  
+        
+    
+       enabled remove action item selected anything activity state diagrams  
+        
+    
+       given list targets  displays according diagram method jumps diagram showing targets scrolls make visible  
+       
+        param targets collection targets show 
+         
+   todo  move different class? 
+   making possible jump modelroots finally  adjust scrollbars show figorg argouml ui ProjectActions org argouml ui projectactions targetlistener  propertychangelistener projectactions undoaction actionundo  
+                translator localize  action undo    
+                resourceloaderwrapper lookupicon  undo     
+        undoaction setenabled redoaction actionredo  
+                translator localize  action redo    
+                resourceloaderwrapper lookupicon  redo     
+        redoaction setenabled targetmanager getinstance   addtargetlistener projectmanager getmanager   getcurrentproject   getundomanager   
+             addpropertychangelistener projectactions getinstance theinstance theinstance projectactions theinstance actionremovefromdiagram removefromdiagram actionremovefromdiagram  
+                translator localize  action remove-from-diagram abstractaction getundoaction undoaction abstractaction getredoaction redoaction abstractaction getremovefromdiagramaction removefromdiagram targetadded targetevent e    
+        determineremoveenabled targetremoved targetevent e    
+        determineremoveenabled targetset targetevent e    
+        determineremoveenabled determineremoveenabled     
+        editor editor   globals cureditor    
+        collection figs   editor getselectionmanager   getfigs removeenabled    figs isempty    
+        graphmodel gm   editor getgraphmodel gm umlmutablegraphsupport    
+            removeenabled   
+                  umlmutablegraphsupport  gm  isremovefromdiagramallowed figs   
+          
+        removefromdiagram setenabled removeenabled jumptodiagramshowing list targets targets targets size      0 object first   targets get 0 first diagram    targets size     1    
+            settarget first   
+            settarget targets get 1 first diagram    targets size      1    
+            settarget first list argodiagram  diagrams   
+            projectmanager getmanager   getcurrentproject   getdiagramlist    
+        object target   targetmanager getinstance   gettarget target diagram  
+                 diagram  target  countcontained targets     targets size      
+            settarget first argodiagram bestdiagram bestnumcontained   0 argodiagram d   diagrams nc   d countcontained targets nc   bestnumcontained    
+                bestnumcontained   nc  
+                bestdiagram   d nc    targets size bestdiagram projectmanager getmanager   getcurrentproject   
+                     getactivediagram   equals bestdiagram     
+                settarget bestdiagram   
+              
+            settarget first projectmanager getmanager   getcurrentproject   getroots   
+                 contains first     
+            settarget first   
+          
+ 
+          
+        project p   projectmanager getmanager   getcurrentproject p object f   targetmanager getinstance   getfigtarget f fig    
+                globals cureditor   scrolltoshow  fig  f settarget object o    
+        targetmanager getinstance   settarget o propertychange propertychangeevent evt evt getsource undomanager    
+            swingutilities invokelater runnable run undolabel  equals evt getpropertyname       
+                        undoaction putvalue abstractaction name  evt 
+                                 getnewvalue redolabel  equals evt getpropertyname       
+                        redoaction putvalue abstractaction name  evt 
+                                 getnewvalue undoable  equals evt getpropertyname       
+                        undoaction setenabled evt getnewvalue redoable  equals evt getpropertyname       
+                        redoaction setenabled evt getnewvalue     
+                      
+                  
+                
+          
+      
+ org argouml ui ProjectActions

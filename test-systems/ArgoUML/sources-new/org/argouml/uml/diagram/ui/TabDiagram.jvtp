@@ -1,0 +1,262 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications tabdiagram tab multieditorpane holds diagram tabdiagram consists jgraph figs toolbar used possible past versions argouml spawn objects class dialog via spawn method parent  
+    p  
+   note tab unlike others acts bridge forward 
+   received diagram events targetmanager    not sure functionality duplicated elsewhere - tfm 20070924  
+    
+    
+       logger diagram object gef jgraph figs painted  
+        
+    
+       prevents target event cycles between targetmanager toolbar positioned above diagram containing drawing tools  
+        
+    
+       default constructor  
+        
+    
+       constructor  
+       
+        param tag type diagram creating  
+        
+   todo update size diagram contents clone method clone jgraph s contents toolbar s contents both jgraph toolbar coming gef framework  cloning hard work actually not placed here clone method jgraph toolbar  
+        see java lang object#clone   
+        
+   next statement gives clone jgraph not cloned toolbar 
+    
+       sets target tab target always instance umldiagram  
+        
+        param t target perfectly normal happens things 
+   within call setdiagram  below   
+   note listener needs always active  
+   even tab isn't visible 
+   
+        see org argouml ui tabtarget#gettarget   
+        
+    
+       getter toolbar  
+       
+        return toolbar  
+        
+   
+        see org argouml ui tabtarget#refresh   
+        
+   
+        see org argouml ui tabtarget#shouldbeenabled java lang object  
+        
+    
+       getter link jgraph   
+       
+        return jgraph  
+        
+   
+        see java awt component#setvisible boolean  
+        
+                                                                 
+   events selectionchanged method not only selection diagram set selection projectbrowser  
+       
+        param gse event  
+        
+   todo actioncopy longer singleton shall work? 
+   
+               actionpaste getinstance   setenabled  globals clipboard 
+                  null     globals clipboard isempty old selection 
+   remains selected 
+   add selection 
+   optimize normal case minimize target changes 
+    
+        param listener listener removed 
+        
+   
+        see org tigris gef event modechangelistener#modechange org tigris gef event modechangeevent _target instanceof umldiagram    
+                
+    
+        param listener listener removed 
+        
+    
+       sets toolbar   adds toolbar north borderlayout 
+       position diagram  p  
+       
+        param toolbar toolbar set  
+        
+   
+        see org argouml ui targetmanager targetlistener#targetadded  
+                targetevent  
+        
+   
+        see org argouml ui targetmanager targetlistener#targetremoved  
+                targetevent handle empty target lists? 
+   probably tabdiagram only show empty pane case 
+   
+        see org argouml ui targetmanager targetlistener#targetset  
+                org argouml ui targetmanager targetevent uid argouml editor  
+    
+    
+       constructor editor  
+       
+        param d diagram editor works constructor editor  
+       
+        param gm graphmodel  
+        param c component  
+        
+   
+        see java awt event mouselistener#mouseentered java awt event mouseevent  
+        
+   
+        see java awt event mousemotionlistener#mousemoved java awt event mouseevent  
+        
+  - redrawmanager lock redrawmanager unlock    
+  - _redrawer repairdamage    
+   
+       overridden set argo-specific renderinghints determine whether not antialiasing turned see org tigris gef base editor#paint java awt graphics  
+        
+  getlayermanager   getactivelayer   paint g   
+    
+       construct new set renderinghints reflect current user 
+       settings uid  
+       org argouml uml diagram ui TabDiagram org argouml uml diagram ui tabdiagram abstractargojpanel tabmodeltarget  graphselectionlistener  modechangelistener  
+    propertychangelistener tabdiagram diagram tabdiagram tag tag   
+        setlayout borderlayout     
+        graph dndjgraph    
+        graph setdrawingsize  612 - 30    2   792 - 55 - 20    2   
+          
+ 
+        globals setstatusbar statusbaradapter     
+         
+        jpanel p jpanel    
+        p setlayout borderlayout     
+        p setborder etchedborder etchedborder lowered    
+        p add graph  borderlayout center   
+        add p  borderlayout center   
+        graph addgraphselectionlistener graph addmodechangelistener override object clone     
+          
+        tabdiagram newpanel tabdiagram target newpanel settarget target   
+          
+        toolbarfactory factory toolbarfactory target getactions     
+        factory setrollover factory setfloatable newpanel settoolbar factory createtoolbar     
+        settoolbar factory createtoolbar newpanel settarget object t t umldiagram     
+              
+              
+            log debug  target is in set target or   
+		         not an instance of umldiagram umldiagram newtarget    umldiagram  t target target removepropertychangelistener  remove newtarget addpropertychangelistener  remove settoolbar newtarget getjtoolbar     
+ 
+          
+          
+        graph removegraphselectionlistener graph setdiagram newtarget   
+        graph addgraphselectionlistener target   newtarget object gettarget target jtoolbar gettoolbar toolbar refresh     
+        settarget target shouldbeenabled object newtarget newtarget argodiagram jgraph getjgraph graph setvisible b setvisible b   
+        getjgraph   setvisible b selectionchanged graphselectionevent gse updatingselection    
+            updatingselection list fig  selections   gse getselections    
+            actioncut getinstance   setenabled  
+                    selections selections isempty     
+ 
+              
+              
+            actioncopy getinstance   
+                     setenabled selections selections isempty     
+              
+              
+            collection currentselection   
+                targetmanager getinstance   gettargets    
+ 
+            list removedtargets arraylist currentselection   
+            list addedtargets arraylist object selection   selections    
+                object owner   targetmanager getinstance   getowner selection currentselection contains owner     
+                    removedtargets remove owner addedtargets add owner addedtargets size      1 
+                       removedtargets size      currentselection size      
+                  
+                targetmanager getinstance   settarget addedtargets get 0 object o   removedtargets    
+                    targetmanager getinstance   removetarget o object o   addedtargets    
+                    targetmanager getinstance   addtarget o   
+                  
+              
+            updatingselection removegraphselectionlistener graphselectionlistener listener    
+        graph removegraphselectionlistener listener modechange modechangeevent mce    
+        log debug  tabdiagram got mode change event globals getsticky      globals mode modeselect    
+  
+	    target deselectalltools removemodechangelistener modechangelistener listener    
+        graph removemodechangelistener listener settoolbar jtoolbar toolbar arrays aslist getcomponents    contains toolbar target remove   umldiagram  gettarget    getjtoolbar     
+              
+            add toolbar  borderlayout north   
+            toolbar   toolbar  
+            invalidate    
+            validate    
+            repaint targetadded targetevent e    
+        settarget e getnewtarget     
+        select e getnewtargets targetremoved targetevent e    
+          
+          
+        settarget e getnewtarget     
+        select e getnewtargets targetset targetevent e    
+        settarget e getnewtarget     
+        select e getnewtargets select object   targets    
+        layermanager manager   graph geteditor   getlayermanager    
+        list fig  figlist arraylist fig i   0  i   targets length  i targets i fig thetarget targets i fig 
+		           manager getactivelayer   getcontents   contains  
+		                targets i      
+		    thetarget    fig  targets i thetarget   manager presentationfor targets i thetarget figlist contains thetarget     
+                    figlist add thetarget figlist equals graph selectedfigs       
+            graph deselectall    
+            graph select vector fig  figlist propertychange propertychangeevent arg0 remove  equals arg0 getpropertyname       
+            argodiagram diagram   projectmanager getmanager   
+                 getcurrentproject   getactivediagram    
+            targetmanager getinstance   settarget diagram argoeditor editor argoeditor diagram d d   
+        setuprenderinghints argoeditor graphmodel gm  jcomponent c gm  c   
+        setuprenderinghints    
+      
+ 
+      
+     override mouseentered mouseevent me getactivetexteditor getactivetexteditor   requestfocus    
+          
+	translatemouseevent me   
+	globals cureditor pushmode  figmodifyingmode  globals mode     
+	setundermouse me   
+	_modemanager mouseentered me   
+      
+ 
+      
+     override mousemoved mouseevent me    
+	  
+	translatemouseevent me   
+	globals cureditor setundermouse me   
+        fig currentfig   getcurrentfig currentfig globals getshowfigtips tip   currentfig gettipstring me tip getjcomponent jcomponent c   getjcomponent c gettooltiptext c gettooltiptext   equals tip      
+	            c settooltiptext tip getjcomponent getjcomponent   gettooltiptext getjcomponent   settooltiptext _selectionmanager mousemoved me   
+	_modemanager mousemoved me   
+	  
+	  
+      
+ 
+      
+     override paint graphics g shouldpaint g graphics2d    
+            graphics2d g2    graphics2d  g  
+            g2 setrenderinghints argorenderinghints scale   getscale    
+            g2 scale scale  scale   
+          
+        getlayermanager   paint g _canselectelements    
+            _selectionmanager paint g   
+            _modemanager paint g setuprenderinghints     
+        argorenderinghints renderinghints argorenderinghints put renderinghints key_fractionalmetrics  
+            renderinghints value_fractionalmetrics_on configuration getboolean argo key_smooth_edges argorenderinghints put renderinghints key_rendering  
+                renderinghints value_render_quality   
+            argorenderinghints put renderinghints key_antialiasing  
+                renderinghints value_antialias_on   
+            argorenderinghints put renderinghints key_text_antialiasing  
+                renderinghints value_text_antialias_on argorenderinghints put renderinghints key_rendering  
+                renderinghints value_render_speed   
+            argorenderinghints put renderinghints key_antialiasing  
+                renderinghints value_antialias_off   
+            argorenderinghints put renderinghints key_text_antialiasing  
+                renderinghints value_text_antialias_off   
+          
+      
+ 
+      
+  
+ org argouml uml diagram ui TabDiagram

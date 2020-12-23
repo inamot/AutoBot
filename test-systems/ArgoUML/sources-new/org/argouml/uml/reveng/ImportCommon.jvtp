@@ -1,0 +1,257 @@
+ 
+   $id$ 
+   copyright  c  2006-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications  
+    
+   source language import class - gui independent superclass  
+   
+   specific swing swt eclipse importers extend class  
+   
+    author tom morris maximum progress required preparing import maximum progress required import  
+        
+    
+       keys module name  values pluggableimport instance  
+        
+    
+       current language module  
+        
+    
+       imported directory  
+        
+    
+       create interface current diagram  
+        
+    java default module 
+   
+        see org argouml uml reveng importsettings#getimportlevel   
+        
+   
+        see org argouml uml reveng importsettings#getdiagraminterface   
+        
+    
+       compute cache current diagram interface  
+        
+    
+       set target diagram  p  
+       
+        return selected diagram class diagram return null  
+        
+   
+        see org argouml uml reveng importsettings#getinputsourceencoding   
+        
+   
+        see org argouml uml reveng importsettings#isattributeselected   
+        
+   
+        see org argouml uml reveng importsettings#isdatatypeselected   
+        
+   
+        see org argouml uml reveng importsettings#getimportsession files old style modules asks module list new style modules generate ourselves based specified 
+       file suffixes  
+        param monitor progress monitor used cancel long running  
+       request 
+        return list files imported 
+        
+   filter out unchanged files 
+    
+       set path processed directory  
+       
+        param path given path 
+        
+    
+        return path processed directory  
+        
+   
+       create taggedvalue tag type matching source module 
+       filename value file's last modified timestamp  
+       
+       todo functionality needs moved someplace useful s needed  otherwise deleted  - tfm - 20070217 
+        
+   set lastmodified value 
+   
+        see org argouml uml reveng importsettings#iscreatediagramsselected   
+        
+   
+        see org argouml uml reveng importsettings#isminimisefigsselected   
+        
+   
+        see org argouml uml reveng importsettingsinternal#isdiagramlayoutselected   
+        
+   
+        see org argouml uml reveng importsettingsinternal#isdescendselected   
+        
+   
+        see org argouml uml reveng importsettingsinternal#ischangedonlyselected   
+        
+    
+       returns possible languages user import sources  
+        return list strings names languages available flag descend directories recursively asked gui initialization  
+        return flag stored key_import_general_settings_flags key true null flag changed new files only asked gui initialization  
+        return flag stored key_import_general_settings_flags key true null flag create diagrams imported code asked gui initialization  
+        return flag stored key_import_general_settings_flags key true null flag minimise class icons diagrams asked gui initialization  
+        return flag stored key_import_general_settings_flags key true null flag perform automatic diagram layout asked gui initialization  
+        return flag stored key_import_general_settings_flags key true null default encoding asked gui initialization  
+        return encoding stored argo key_input_source_encoding key null default system encoding 
+        
+  $non-nls-1$ 
+  $non-nls-1$ 
+    
+       gets import classpaths asked gui initialization  
+        return list strings representing classpaths 
+        
+  $non-nls-1$ 
+    
+       layouts diagrams  
+       
+        param monitor progress meter   null not progress updates desired  
+        param startingprogress actual progress until now 
+        
+   argoeclipse implementation monitor    null    
+              monitor updatesubtask importsmessages layoutingaction   
+            
+            iss setvalue countfiles 1    10   
+    
+       import selected source modules  
+       
+        param monitor progressmonitor both receive progress updates polled user requests cancel  
+        
+   roughly equivalent derived old import dofile import  
+        param filesleft files parse 
+        param monitor progress meter 
+        param progress actual progress until now 
+        throws importexception exception thrown import module 
+        
+   new style importers don't create diagrams ll based list newelements created 
+   todo  skip layout problems during import? 
+   todo  monitor getting dismissed before layout complete 
+  $non-nls-1$ 
+  $non-nls-1$ 
+  $non-nls-1$ 
+    
+       create diagram figures collection model elements  
+       
+        param newelements collection elements figures created  
+        
+   select correct diagram  implicitly creates add element diagram 
+    
+       return fully qualified name model element java  dot 
+       separated  format  
+        p  
+       todo really need language independent format here  perhaps list names form hierarchy? - tfm 
+        
+   
+       print exception trace string buffer 
+       org argouml uml reveng ImportCommon org argouml uml reveng importcommon importsettingsinternal max_progress_prepare   1 max_progress_import   99 importcommon modules hashtable importinterface importinterface importer   importermanager getinstance   
+                 getimporters      
+            modules put importer getname    importer modules size      0 runtimeexception  internal error    
+                       no importer modules found     
+          
+ 
+          
+        currentmodule   modules get  java currentmodule runtimeexception  internal error module not found getimportlevel diagraminterface getdiagraminterface diagraminterface initcurrentdiagram     
+        diagraminterface   getcurrentdiagram diagraminterface getcurrentdiagram     
+        diagraminterface result globals cureditor   getgraphmodel classdiagramgraphmodel    
+            result diagraminterface globals cureditor result getinputsourceencoding isattributeselected isdatatypeselected importcommon getimportsession list getfilelist progressmonitor monitor    
+        list files  
+        files   
+                fileimportutils getlist  
+                        getselectedfile    isdescendselected    currentmodule 
+                                 getsuffixfilters    monitor getselectedfile   isdirectory      
+            setsrcpath getselectedfile   getabsolutepath setsrcpath ischangedonlyselected      
+              
+            object model   
+                projectmanager getmanager   getcurrentproject   getmodel i   files size   - 1  i    0  i--    
+                file f    file  files get i fn   f getabsolutepath lm valueof f lastmodified lm equals  
+                        model getfacade   gettaggedvaluevalue model  fn      
+                    files remove i files setsrcpath path    
+        srcpath   path getsrcpath srcpath setlastmodified project project  file file fn   file getabsolutepath lm valueof file lastmodified lm model getcorehelper   
+                 settaggedvalue project getmodel    fn  lm iscreatediagramsselected isminimizefigsselected isdiagramlayoutselected isdescendselected ischangedonlyselected hashtable importinterface  getmodules modules setselectedfile file file    
+        selectedfile   file file getselectedfile selectedfile setcurrentmodule importinterface module    
+        currentmodule   module importinterface getcurrentmodule currentmodule list getlanguages collections unmodifiablelist arraylist modules keyset isdescend flags   
+                configuration getstring  
+                        argo key_import_general_settings_flags flags flags length     0    
+            stringtokenizer st stringtokenizer flags st hasmoretokens      st nexttoken   equals false ischangedonly flags   
+                configuration getstring argo key_import_general_settings_flags flags flags length     0    
+            stringtokenizer st stringtokenizer flags st hasmoretokens    st nexttoken st hasmoretokens      st nexttoken   equals false iscreatediagrams flags   
+                configuration getstring  
+                        argo key_import_general_settings_flags flags flags length     0    
+            stringtokenizer st stringtokenizer flags st hasmoretokens    st nexttoken st hasmoretokens    st nexttoken st hasmoretokens      st nexttoken   equals false isminimizefigs flags   
+                configuration getstring  
+                        argo key_import_general_settings_flags flags flags length     0    
+            stringtokenizer st stringtokenizer flags st hasmoretokens    st nexttoken st hasmoretokens    st nexttoken st hasmoretokens    st nexttoken st hasmoretokens      st nexttoken   equals false isdiagramlayout flags   
+                configuration getstring  
+                        argo key_import_general_settings_flags flags flags length     0    
+            stringtokenizer st stringtokenizer flags st hasmoretokens    st nexttoken st hasmoretokens    st nexttoken st hasmoretokens    st nexttoken st hasmoretokens    st nexttoken st hasmoretokens      st nexttoken   equals false getencoding enc   configuration getstring argo key_input_source_encoding enc enc trim   equals          
+            enc   system getproperty  file encoding enc list getimportclasspath     
+        list list arraylist url   urls   importclassloader geturls configuration getstring  
+                argo key_user_import_classpath url url   urls    
+            list add url getfile list layoutdiagrams progressmonitor monitor startingprogress    
+ 
+          
+        diagraminterface di   getdiagraminterface di list argodiagram  diagrams   di getmodifieddiagramlist total   startingprogress   diagrams size   
+                  10 i   0  i   diagrams size    i      
+            argodiagram diagram   diagrams get i   
+            classdiagramlayouter layouter classdiagramlayouter diagram   
+            layouter layout act   startingprogress    i   1    10 progress   max_progress_prepare 
+                      max_progress_import   act   total monitor monitor updateprogress progress doimport progressmonitor monitor    
+          
+        monitor setmaximumprogress max_progress_prepare   max_progress_import progress   0  
+        monitor updatesubtask translator localize  dialog preimport     
+        list files   getfilelist monitor   
+        progress    max_progress_prepare  
+        monitor updateprogress progress files size      0    
+            monitor notifynullaction model getpump   stoppumpingevents criticthreadwason   designer thedesigner   getautocritique criticthreadwason    
+            designer thedesigner   setautocritique doimportinternal files  monitor  progress criticthreadwason    
+                designer thedesigner   setautocritique explorereventadaptor getinstance   structurechanged    
+            model getpump   startpumpingevents doimportinternal list filesleft progressmonitor monitor progress    
+        project project    projectmanager getmanager   getcurrentproject    
+        initcurrentdiagram stringbuffer problems stringbuffer    
+        collection newelements hashset newelements addall currentmodule parsefiles  
+                    project  filesleft monitor importexception e    
+            problems append printtobuffer e iscreatediagramsselected      
+            addfigurestodiagrams newelements isdiagramlayoutselected      
+              
+            monitor updatemaintask  
+                    translator localize  dialog postimport     
+            monitor updatesubtask  
+                    translator localize  dialog layoutaction     
+            layoutdiagrams monitor  progress   filesleft size     
+          
+        monitor updatemaintask translator localize  dialog done     
+        monitor updatesubtask        
+        monitor updateprogress max_progress_prepare 
+                  max_progress_import problems problems length     0    
+            monitor notifymessage  
+                    translator localize  
+                             dialog title problems      
+                            translator localize  
+                             label problems             
+                            problems tostring monitor close addfigurestodiagrams collection newelements object element   newelements model getfacade   isaclassifier element  
+                       model getfacade   isapackage element     
+ 
+                object ns   model getfacade   getnamespace element ns diagraminterface createrootclassdiagram packagename   getqualifiedname ns packagename packagename equals        
+                        diagraminterface selectclassdiagram ns  
+                                packagename diagraminterface createrootclassdiagram model getfacade   isainterface element     
+                        diagraminterface addinterface element  
+                                isminimizefigsselected model getfacade   isaclass element     
+                        diagraminterface addclass element  
+                                isminimizefigsselected model getfacade   isapackage element     
+                        diagraminterface addpackage element getqualifiedname object element    
+        stringbuffer sb stringbuffer    
+         
+        object ns   element ns name   model getfacade   getname ns name name       
+              
+            sb insert 0  name   
+            ns   model getfacade   getnamespace ns ns sb insert 0 sb tostring stringbuffer printtobuffer exception e    
+        stringwriter sw stringwriter    
+        printwriter pw java io printwriter sw   
+        e printstacktrace pw sw getbuffer    
+      
+ 
+ org argouml uml reveng ImportCommon

@@ -1,0 +1,220 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   generates file current directory xml description happened during build default filename log xml overridden property  code xmllogger file  code implementation assumes sanity checking only one 
+   thread runs particular target task time enforced way parallel builds antcalls done indeed simplest tasks run problems executed parallel  
+   
+    see project#addbuildlistener buildlistener  
+    
+    documentbuilder use creating document start returns default documentbuilder instance throws exceptionininitializererror t created  
+       
+        return default documentbuilder instance  
+        
+    xml element name build     
+    xml element name target     
+    xml element name task     
+    xml element name message     
+    xml attribute name name     
+    xml attribute name time     
+    xml attribute name message priority     
+    xml attribute name file location     
+    xml attribute name error description     
+    xml element name stack trace complete log document build     
+    mapping tasks started  task timedelement      
+    mapping targets started  task timedelement      
+    
+       mapping threads stacks elements 
+        thread stack timedelement build started  
+        
+    utility class representing time element started     
+    
+           start time milliseconds returned code system currenttimemillis    code    
+            
+    element created start time     
+    
+        constructs new buildlistener logs build events xml file  
+        
+    
+       fired build starts builds top-level element document remembers time start build  
+       
+        param event ignored  
+        
+    
+       fired build finishes adds time taken any 
+       error stacktrace build element writes document disk  
+       
+        param event event any relevant extra information not code null  code   
+        
+   print stacktrace build file always useful    
+   better much info not enough  
+   specify output utf8 otherwise accented characters blow 
+   up everything 
+   ignore 
+    
+       returns stack timed elements current thread  
+        return stack timed elements current thread debugging purposes uncomment  
+        org w3c dom comment s   doc createcomment  stack     threadstack   
+        buildelement element appendchild s   
+            
+    
+       fired target starts building pushes timed element target onto stack elements current thread  
+       remembering current time name target  
+       
+        param event event any relevant extra information not code null  code   
+        
+    
+       fired target finishes building adds time taken any error stacktrace appropriate target element log  
+       
+        param event event any relevant extra information not code null  code   
+        
+    
+       fired task starts building pushes timed element task onto stack elements current thread  
+       remembering current time name task  
+       
+        param event event any relevant extra information not code null  code   
+        
+    
+       fired task finishes building adds time taken any error stacktrace appropriate task element log  
+       
+        param event event any relevant extra information not code null  code timedelement associated task task not found directly  search unknown elements may hiding real task 
+        
+    
+       fired message logged adds message element most appropriate parent element  task  target build records priority text message  
+       
+        param event event any relevant extra information not code null  code parentelement    null    
+            stack threadstack 
+                       stack  threadstacks thread currentthread threadstack    null threadstack empty      
+                    parentelement    timedelement  threadstack peek    
+                  
+              
+          
+           
+   -------------------------------------------------- buildlogger interface 
+    
+       set logging level using logger 
+       
+        param level logging level - 
+              see   link org apache tools ant project#msg_err project  
+              class level definitions 
+        
+    
+       set output stream logging output sent operating logger  
+       
+        param output output printstream  
+        
+    
+       ignore emacs mode meaning xml format 
+       
+        param emacsmode true logger produce emacs compatible 
+              output 
+        
+    
+       ignore error print stream output written either xml log file printstream provided setoutputprintstream 
+       
+        param err stream going ignore  
+       org apache tools ant XmlLogger org apache tools ant xmllogger buildlogger documentbuilder getdocumentbuilder documentbuilderfactory newinstance   newdocumentbuilder exception exc exceptionininitializererror exc timedelement tostring element gettagname           element getattribute  name xmllogger buildstarted buildevent event    
+        buildelement timedelement    
+        buildelement starttime   system currenttimemillis    
+        buildelement element   doc createelement build_tag buildfinished buildevent event totaltime   system currenttimemillis   - buildelement starttime  
+        buildelement element setattribute time_attr  
+                defaultlogger formattime totaltime event getexception buildelement element setattribute error_attr  
+                    event getexception   tostring     
+              
+              
+            throwable t   event getexception    
+            text errtext   doc createcdatasection stringutils getstacktrace t    
+            element stacktrace   doc createelement stacktrace_tag   
+            stacktrace appendchild errtext   
+            buildelement element appendchild stacktrace outfilename   event getproject   getproperty  xmllogger file outfilename outfilename    log xml xsluri 
+                  event getproject   getproperty  ant xmllogger stylesheet uri xsluri xsluri    log xsl   
+          
+        writer out outputstream stream   outstream stream stream fileoutputstream outfilename   
+              
+            out outputstreamwriter stream   utf8    
+            out write   ?xml version \ 1 0\  encoding \ utf-8\ ? \n xsluri length     0    
+                out write   ?xml-stylesheet type \ text xsl\  href \   
+                          xsluri    \ ? \n\n domelementwriter    write buildelement element  out  0   \t    
+            out flush ioexception exc buildexception  unable to write log file   exc out out close ioexception e    
+                      
+                  
+              
+          
+        buildelement stack getstack     
+        stack threadstack    stack  threadstacks get thread currentthread threadstack threadstack stack    
+            threadstacks put thread currentthread    threadstack threadstack targetstarted buildevent event    
+        target target   event gettarget    
+        timedelement targetelement timedelement    
+        targetelement starttime   system currenttimemillis    
+        targetelement element   doc createelement target_tag   
+        targetelement element setattribute name_attr  target getname     
+        targets put target  targetelement   
+        getstack   push targetelement targetfinished buildevent event    
+        target target   event gettarget    
+        timedelement targetelement    timedelement  targets get target targetelement totaltime 
+                      system currenttimemillis   - targetelement starttime  
+            targetelement element setattribute time_attr  
+                    defaultlogger formattime totaltime    
+ 
+            timedelement parentelement stack threadstack   getstack threadstack empty      
+                timedelement poppedstack    timedelement  threadstack pop poppedstack    targetelement runtimeexception  mismatch - popped element     
+                              poppedstack 
+                                finished target element     
+                              targetelement threadstack empty      
+                    parentelement    timedelement  threadstack peek parentelement buildelement element appendchild targetelement element parentelement element appendchild targetelement element   
+              
+          
+        targets remove target taskstarted buildevent event    
+        timedelement taskelement timedelement    
+        taskelement starttime   system currenttimemillis    
+        taskelement element   doc createelement task_tag   
+ 
+        task task   event gettask name   event gettask   gettaskname name name       
+          
+        taskelement element setattribute name_attr  name   
+        taskelement element setattribute location_attr  
+                event gettask   getlocation   tostring     
+        tasks put task  taskelement   
+        getstack   push taskelement taskfinished buildevent event    
+        task task   event gettask    
+        timedelement taskelement    timedelement  tasks get task taskelement totaltime   system currenttimemillis   - taskelement starttime  
+            taskelement element setattribute time_attr  
+                    defaultlogger formattime totaltime    
+            target target   task getowningtarget    
+            timedelement targetelement target targetelement    timedelement  targets get target targetelement buildelement element appendchild taskelement element targetelement element appendchild taskelement element   
+              
+            stack threadstack   getstack threadstack empty      
+                timedelement poppedstack    timedelement  threadstack pop poppedstack    taskelement runtimeexception  mismatch - popped element     
+                              poppedstack     finished task element     
+                              taskelement   
+                  
+              
+            tasks remove task runtimeexception  unknown task     task     not in     tasks timedelement gettaskelement task task    
+        timedelement element    timedelement  tasks get task element element enumeration e   tasks keys    e hasmoreelements       
+            task key    task  e nextelement key unknownelement unknownelement  key  gettask      task timedelement  tasks get key messagelogged buildevent event priority   event getpriority priority   msgoutputlevel element messageelement   doc createelement message_tag name    debug event getpriority project msg_err  
+                name    error project msg_warn  
+                name    warn project msg_info  
+                name    info name    debug messageelement setattribute priority_attr  name   
+ 
+        throwable ex   event getexception project msg_debug    msgoutputlevel    ex text errtext   doc createcdatasection stringutils getstacktrace ex    
+            element stacktrace   doc createelement stacktrace_tag   
+            stacktrace appendchild errtext   
+            buildelement element appendchild stacktrace   
+          
+        text messagetext   doc createcdatasection event getmessage     
+        messageelement appendchild messagetext   
+ 
+        timedelement parentelement task task   event gettask    
+ 
+        target target   event gettarget task parentelement   gettaskelement task parentelement target parentelement    timedelement  targets get target parentelement parentelement element appendchild messageelement buildelement element appendchild messageelement setmessageoutputlevel level    
+        msgoutputlevel   level setoutputprintstream printstream output outstream printstream output setemacsmode emacsmode seterrorprintstream printstream err    
+      
+ 
+ org apache tools ant XmlLogger

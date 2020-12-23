@@ -1,0 +1,237 @@
+ 
+   $id$ 
+   copyright  c  2005-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications  
+    
+   uml notation body state  
+    
+    author mvw tigris org constructor  
+       
+        param state state represented notation 
+        
+   
+        see org argouml uml notation notationprovider#parse java lang object  java lang string  
+        
+   
+        see org argouml uml notation notationprovider#getparsinghelp   
+        
+   
+        see org argouml uml notation notationprovider#tostring java lang object  java util map  
+        
+   todo good way handling nested notation?    
+    
+       parse user input state bodies assign individual lines according actions transistions user input consists multiple 
+       lines pre  
+         action-label   action-expression 
+         pre format regular 
+       transition - see parsetransition     p  
+       
+        action-label  stands one entry exit words  entry exit case-independent  
+       
+        param st state object  
+        param s string parse  
+        throws parseexception syntax problem  
+               e g  non-matching brackets generate existing internal transitions compare text newly entered ones  
+            
+   now s check new line already present old list internal transitions mark old one retained e not create new one isn't  continue parsing  
+                
+   todo next line trows exception remainder parsed parsed lines? 
+                        
+   todo good way handling nested notation following fails tests  
+                       new transitionnotationuml t  parse line   
+                        
+   add new one mark retained     
+   process final list internal transitions hook state class manages list uml modelelements existed 
+       before parsexxxxx   function called knowledge deal additions removals  
+       
+        author mvw list maintain item list  maintains info one uml object generated version e  textual representation needs retained parsing  p  
+           
+            author mvw constructor  
+                param obj uml object constructor  
+               
+                param obj uml object  
+                param r 
+                
+    
+                return generated string representation 
+                
+    
+                return uml object 
+                
+    
+               retain uml object  
+                
+    
+                return true uml object retained  
+                       false deleted constructor  
+           
+            param c collection uml objects present before 
+            
+    
+            param obj uml object 
+            param r true uml object needs retained 
+            
+    
+           check given textual description already present list retain param line given textual description 
+            return true item already present list 
+            
+    
+           finish procedure deleting uml model items not retained return collection ones retained method only called once  
+            return uml objects survive  
+            
+   don't forget remove old internals  
+   make next accesses instance predictable hook new ones  
+    
+       parse line form   entry  action create action not need check presence word  entry done caller  
+       
+        param st state object 
+        param s string parsed 
+        
+    
+       parse line form   exit  action create action not need check presence word  exit done caller  
+       
+        param st state object 
+        param s string parsed 
+        
+    
+       parse line form action create action not need check presence word done caller  
+       
+        param st state object 
+        param s string parsed builds callaction default attributes without operation  
+       
+        author mvw 
+        param s 
+                  string representing script action 
+        return newly created callaction  
+        
+    
+       update existing action new script  
+       
+        author mvw 
+        param old action 
+        param s string representing new script actionexpression actionexpression deletes modelelements swallows null without barking  
+       
+        author mvw tigris org 
+        param obj modelelement deleted 
+       org argouml notation providers uml StateBodyNotationUml org argouml notation providers uml statebodynotationuml statebodynotation statebodynotationuml object state state parse object modelelement text parsestatebody modelelement  text parseexception pe msg    statusmsg bar error parsing statebody   
+            object   args     
+                pe getlocalizedmessage    
+                integer valueof pe geterroroffset     
+               
+            argoeventpump fireevent argohelpevent  
+                    argoeventtypes help_changed translator messageformat msg  args getparsinghelp parsing help fig-statebody tostring object modelelement  map args    
+        stringbuffer s stringbuffer    
+ 
+        object entryaction   model getfacade   getentry modelelement   
+        object exitaction   model getfacade   getexit modelelement   
+        object doaction   model getfacade   getdoactivity modelelement entryaction entrystr    
+                notationutilityuml generateactionsequence entryaction   
+            s append  entry     append entrystr doaction dostr   notationutilityuml generateactionsequence doaction s length     0    
+                s append  \n    
+              
+            s append append dostr exitaction exitstr    
+                notationutilityuml generateactionsequence exitaction s length     0    
+                s append  \n    
+              
+            s append  exit     append exitstr   
+          
+        collection internaltrans   
+            model getfacade   getinternaltransitions modelelement internaltrans iterator iter   internaltrans iterator iter hasnext s length     0    
+                    s append  \n    
+                  
+                object trans   iter next    
+                  
+                s append transitionnotationuml trans   
+                             tostring trans s tostring parsestatebody object st s parseexception foundentry foundexit founddo modelelementinfolist internalsinfo modelelementinfolist  
+                    model getfacade   getinternaltransitions st    
+ 
+        stringtokenizer lines stringtokenizer s   \n\r lines hasmoretokens line   lines nexttoken   trim internalsinfo checkretain line line tolowercase   startswith  entry   
+                           line substring 5  trim   startswith         
+                    parsestateentryaction st  line   
+                    foundentry line tolowercase   startswith  exit   
+                           line substring 4  trim   startswith         
+                    parsestateexitaction st  line   
+                    foundexit line tolowercase   startswith line substring 2  trim   startswith         
+                    parsestatedoaction st  line   
+                    founddo object t   
+                        model getstatemachinesfactory   
+                                 buildinternaltransition st t transitionnotationuml t  parsetransition t  line   
+                      
+                    internalsinfo add t foundentry    
+            delete model getfacade   getentry st foundexit    
+            delete model getfacade   getexit st founddo    
+            delete model getfacade   getdoactivity st    
+          
+ 
+          
+        model getstatemachineshelper   setinternaltransitions st  
+                internalsinfo finalisedlist modelelementinfolist infoitem   
+  
+  
+  
+ 
+              
+            infoitem object obj    
+                umlobject   obj  
+                generator transitionnotationuml obj   
+              
+ 
+              
+            infoitem object obj r obj   
+                retainit   r getgenerated generator tostring    
+              
+ 
+              
+            object getumlobject umlobject retain     
+                retainit isretained retainit  
+              
+          
+ 
+          
+        modelelementinfolist collection c    
+            thelist arraylist    
+            iterator i   c iterator i hasnext      
+                thelist add infoitem i next add object obj r    
+            thelist add infoitem obj  r checkretain line    
+            iterator i   thelist iterator i hasnext      
+                infoitem tinfo   
+                     infoitem  i next tinfo getgenerated   equals line     
+                    tinfo retain collection finalisedlist     
+              
+            collection newmodelelementslist arraylist    
+            iterator i   thelist iterator i hasnext      
+                infoitem tinfo   
+                     infoitem  i next tinfo isretained      
+                    newmodelelementslist add tinfo getumlobject delete tinfo getumlobject     
+                  
+              
+              
+            thelist clear newmodelelementslist parsestateentryaction object st s s indexof        -1    
+            s   s substring s indexof        1  trim    
+          
+        object oldentry   model getfacade   getentry st oldentry model getstatemachineshelper   setentry st  buildnewcallaction s updateaction oldentry  s parsestateexitaction object st s s indexof        -1    
+            s   s substring s indexof        1  trim    
+          
+        object oldexit   model getfacade   getexit st oldexit model getstatemachineshelper   setexit st  buildnewcallaction s updateaction oldexit  s parsestatedoaction object st s s indexof        -1    
+            s   s substring s indexof        1  trim    
+          
+        object olddo   model getfacade   getdoactivity st olddo model getstatemachineshelper   setdoactivity st  
+                    buildnewcallaction s updateaction olddo  s object buildnewcallaction s    
+        object a   
+            model getcommonbehaviorfactory   createcallaction    
+        object ae   
+            model getdatatypesfactory   createactionexpression  java   s   
+        model getcommonbehaviorhelper   setscript a  ae   
+        model getcorehelper   setname a   anon a updateaction object old s    
+        object ae   model getfacade   getscript old language    java ae language   model getdatatypeshelper   getlanguage ae body model getfacade   getbody ae body equals s ae   model getdatatypesfactory   createactionexpression language  s   
+        model getcommonbehaviorhelper   setscript old  ae delete object obj obj projectmanager getmanager   getcurrentproject   movetotrash obj   
+          
+      
+ 
+ org argouml notation providers uml StateBodyNotationUml

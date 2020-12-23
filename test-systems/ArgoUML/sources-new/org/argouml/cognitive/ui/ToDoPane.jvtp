@@ -1,0 +1,288 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications lower-left pane main argouml window shows list active critics todo items   p pane shows list tree items designer consider   p class similar navigatorpane uses same treemodel class jtree implementation   p  
+   
+   perspectives now built here   p  
+   
+   future plans may involve  ol  
+    li  decisionmodellistener implementation 
+    li  goallistener implementation 
+     ol  
+   
+   pre  
+   possible future additions  
+    todoperspective difficulty   new todobydifficulty    
+    todoperspective skill   new todobyskill    
+    pre  
+    
+    
+       logger  
+        
+                                                                 
+   constants 
+                                                                 
+   instance variables 
+    
+       list treemodels  
+        
+                                                                 
+   constructors constructor  
+       
+        param splash true show progress splash 
+        
+   next line coming projectbrowser 
+                                                                 
+   accessors 
+    
+        param r root 
+        
+    
+        return root 
+        
+    
+        return perspectives treemodels 
+        deprecated 0 25 4 tfmorris   use   link #getperspectivelist     
+        
+    
+        return perspectives treemodels 
+        
+    
+        param pers perspectives 
+        
+    
+        return current perspectives 
+        
+    
+        param per current perspective 
+        
+    
+        return last  code object  code first selected node's 
+             code treepath  code code null  code nothing selected 
+        
+    
+        param item item selected 
+        
+   ------------ itemlistener implementation ---------------------- 
+    
+       called user selects perspective perspective 
+       combo   p  
+         inheritdoc  
+        
+   -------------treeselectionlistener implementation ----------- 
+   
+        see javax swing event treeselectionlistener#valuechanged javax swing event treeselectionevent  
+        
+  todo fire event projectbrowser register listener 
+   ------------- mouselistener implementation --------------- 
+   
+        see java awt event mouselistener#mousepressed java awt event mouseevent  
+        
+   empty implementation  
+   
+        see java awt event mouselistener#mousereleased java awt event mouseevent  
+        
+   empty implementation  
+   
+        see java awt event mouselistener#mouseentered java awt event mouseevent  
+        
+   empty implementation  
+   
+        see java awt event mouselistener#mouseexited java awt event mouseevent  
+        
+   empty implementation  
+   
+        see java awt event mouselistener#mouseclicked java awt event mouseevent  
+        
+                                                                 
+   todolistlistener implementation 
+   
+        see org argouml cognitive todolistlistener#todoitemschanged org argouml cognitive todolistevent  
+        
+   
+        see org argouml cognitive todolistlistener#todoitemsadded org argouml cognitive todolistevent  
+        
+   keep nagging until user solves problem seems nice way nag  
+   only interrupt one todoitem 
+   
+        see org argouml cognitive todolistlistener#todoitemsremoved org argouml cognitive todolistevent  
+        
+   
+        see org argouml cognitive todolistlistener#todolistchanged org argouml cognitive todolistevent methods 
+   todo  indicate direction     
+    
+       update count label  
+        
+    
+       update todo tree  
+        
+   blinks? 
+    
+       called user clicks once item tree   p  
+       
+       q difference between single double click?  p a single click selects todo item tree  
+       shows red indication diagram selects todo tab details panel double click additionally 
+       selects offender explorer selects offender diagram  blue selection selects properties tab details panel both cases focus keyboard actions  remains todo tree  
+       
+        param row selected row tree 
+        param path path tree selected item 
+        
+    
+       called user clicks twice item tree  
+       mydoubleclick invoke action todoitem  
+       
+        param row selected row tree 
+        param path path tree selected item 
+        
+  todo fire event projectbrowser 
+  todo register listener perspectives chosen combobox built here  
+        
+   add perspectives list combobox uid  
+       org argouml cognitive ui ToDoPane org argouml cognitive ui todopane jpanel itemlistener  
+        treeselectionlistener  
+        mouselistener  
+        todolistlistener todopane splashscreen splash    
+ 
+        setlayout borderlayout     
+ 
+        combo jcombobox    
+        tree displaytexttree    
+ 
+        perspectives arraylist todoperspective     
+ 
+        countlabel jlabel formatcountlabel 999    
+        countlabel setborder borderfactory createemptyborder 0  4  0  4    
+ 
+        jpanel toolbarpanel jpanel borderlayout     
+        toolbarpanel add countlabel  borderlayout east   
+        toolbarpanel add combo  borderlayout center   
+        add toolbarpanel  borderlayout north   
+ 
+        add jscrollpane tree   borderlayout center   
+ 
+        combo additemlistener tree addtreeselectionlistener tree setcellrenderer todotreerenderer     
+        tree addmouselistener setroot designer thedesigner   gettodolist     
+        designer thedesigner   gettodolist   addtodolistlistener splash splash getstatusbar   showstatus  
+	            translator localize  statusmsg bar making-todopane     
+            splash getstatusbar   showprogress 25   
+          
+ 
+        setperspectives buildperspectives     
+ 
+        setminimumsize dimension 120  100    
+ 
+        dimension preferredsize   getpreferredsize    
+        preferredsize height   120  
+        setpreferredsize preferredsize setroot todolist r    
+        root   r  
+        updatetree todolist getroot root    
+ 
+      
+     deprecated vector todoperspective  getperspectives vector todoperspective  perspectives list todoperspective  getperspectivelist perspectives setperspectives list todoperspective  pers    
+        perspectives   pers pers isempty      
+            curperspective curperspective   pers get 0 todoperspective tdp   perspectives    
+            combo additem tdp pers isempty      
+            curperspective pers contains curperspective     
+            setcurperspective curperspective setcurperspective perspectives get 0    
+          
+        updatetree todoperspective getcurperspective curperspective setcurperspective treemodel per perspectives perspectives contains per combo setselecteditem per   
+        todoperspectiveschanged object getselectedobject tree getlastselectedpathcomponent selectitem todoitem item    
+        object   path object 3   
+        object category size   curperspective getchildcount root i   0  i   size  i      
+            category   curperspective getchild root  i curperspective getindexofchild category  item     -1 category path 0    root  
+        path 1    category  
+        path 2    item  
+        treepath trpath treepath path   
+        tree expandpath trpath   
+        tree scrollpathtovisible trpath   
+        tree setselectionpath trpath itemstatechanged itemevent e e getsource      combo    
+	    updatetree valuechanged treeselectionevent e    
+        log debug  todopane valuechanged    
+          
+          
+        object sel   getselectedobject    
+        projectbrowser getinstance   settodoitem sel   
+        log debug  lastselection      lastsel   
+	log debug  sel      sel lastsel todoitem    
+	      todoitem  lastsel  deselect sel todoitem    
+	      todoitem  sel  select    
+	  
+        lastsel   sel mousepressed mouseevent e mousereleased mouseevent e mouseentered mouseevent e mouseexited mouseevent e mouseclicked mouseevent e row   tree getrowforlocation e getx    e gety     
+        treepath path   tree getpathforlocation e getx    e gety row    -1 e getclickcount      2    
+                mydoubleclick row  path mysingleclick row  path   
+              
+          
+        e consume todoitemschanged todolistevent tde curperspective todolistlistener    
+              todolistlistener  curperspective  todoitemschanged tde todoitemsadded todolistevent tde curperspective todolistlistener    
+              todolistlistener  curperspective  todoitemsadded tde   
+	  
+        list todoitem  items   tde gettodoitemlist todoitem todo   items todo getpriority      todoitem interruptive_priority    
+                  
+                  
+                selectitem todo updatecountlabel todoitemsremoved todolistevent tde curperspective todolistlistener    
+              todolistlistener  curperspective  todoitemsremoved tde   
+	  
+        updatecountlabel todolistchanged todolistevent tde curperspective todolistlistener    
+              todolistlistener  curperspective  todolistchanged tde   
+	  
+        updatecountlabel formatcountlabel size size 0 translator localize  label todopane no-items 1 messageformat  
+		format translator localize  label todopane item object     
+			   integer valueof size messageformat  
+		format translator localize  label todopane items object     
+			   integer valueof size updatecountlabel size   designer thedesigner   gettodolist   size    
+        countlabel settext formatcountlabel size    
+        countlabel setopaque size   warn_threshold   
+        countlabel setbackground  size    alarm_threshold  ? alarm_color 
+				    warn_color updatetree     
+        todoperspective tm    todoperspective  combo getselecteditem    
+        curperspective   tm curperspective tree setvisible log debug  todopane setting tree model    
+            curperspective setroot root   
+            tree setshowsroothandles tree setmodel curperspective   
+            tree setvisible mysingleclick  
+             suppresswarnings  unused row   
+             suppresswarnings  unused   treepath path    
+        clicksintodopane mydoubleclick  
+             suppresswarnings  unused row   
+             suppresswarnings  unused   treepath path    
+        dblclicksintodopane getselectedobject object sel   getselectedobject sel todoitem    
+              todoitem  sel  action    
+          
+ 
+          
+          
+        log debug  2      getselectedobject   tostring list todoperspective  buildperspectives     
+ 
+        todoperspective priority todobypriority    
+        todoperspective decision todobydecision    
+        todoperspective goal todobygoal    
+        todoperspective offender todobyoffender    
+        todoperspective poster todobyposter    
+        todoperspective type todobytype    
+ 
+          
+        list todoperspective  perspectives arraylist todoperspective     
+ 
+        perspectives add priority   
+        perspectives add decision   
+        perspectives add goal   
+        perspectives add offender   
+        perspectives add poster   
+        perspectives add type   
+ 
+        perspectivesupport registerrule golisttodecisionstoitems     
+        perspectivesupport registerrule golisttogoalstoitems     
+        perspectivesupport registerrule golisttoprioritytoitem     
+        perspectivesupport registerrule golisttotypetoitem     
+        perspectivesupport registerrule golisttooffendertoitem     
+        perspectivesupport registerrule golisttopostertoitem perspectives  
+      
+ 
+      
+  
+ org argouml cognitive ui ToDoPane

@@ -1,0 +1,97 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   import com type library net framework  
+    p task wrapper net's tlbimport imports tlb file net assembly generating binary assembly   dll contains binding 
+   metadata uses date timestamps minimise rebuilds  
+    p  
+   example 
+    pre  
+        lt importtypelib 
+         srcfile  xerces tlb  
+         destfile  xerces dll  
+         namespace  apache xerces   gt  
+     pre ant 1 6 
+    ant task category  dotnet  
+    
+    
+       input file  precedes options 
+        
+    
+        out file 
+        
+    
+         namespace  string  
+        
+    
+        sysarray 
+        
+    
+        unsafe 
+        
+    
+       extra commands method names output file operation required performed  
+        param destfile output file method sets namespace typelib operation required performed  
+        param namespace namespace use method sets source  tlb file operation required performed  
+        param srcfile source file want unsafe code  
+        param unsafe code boolean  code  value  
+        
+    
+       set map com safearray system array class 
+        param usesysarray code boolean  code  value  
+        
+    
+       set any extra options not supported task  
+        param extraoptions options use  
+        
+    
+       validation code 
+        throws  buildexception validation failed 
+        
+    
+       test disassembly being needed  use existence granularity 
+       correct date stamps 
+        return true iff rebuild required  
+        
+    
+       create typelib command 
+        exception buildexception something goes wrong build 
+        
+  ant apache org antlibs dotnet index html   
+  rebuild unless dest file newer source file 
+  fill argsorg apache tools ant taskdefs optional dotnet ImportTypelib org apache tools ant taskdefs optional dotnet importtypelib task setdestfile file destfile destfile   destfile setnamespace namespace namespace   namespace setsrcfile file srcfile srcfile   srcfile setunsafe unsafe unsafe   unsafe setusesysarray usesysarray usesysarray   usesysarray setextraoptions extraoptions extraoptions   extraoptions validate buildexception destfile buildexception  destination file must be specified destfile isdirectory buildexception  
+                     destination file is a directory srcfile srcfile exists buildexception  
+                     source file does not exist srcfile isdirectory buildexception  
+                     source file is a directory namespace buildexception  no namespace isexecuteneeded destfile exists      
+            log  destination file does not exist  a build is required   
+                    project msg_verbose sourcetime   srcfile lastmodified desttime   destfile lastmodified sourcetime    desttime   file_utils getfiletimestampgranularity       
+            log  source file is newer than the dest file  a rebuild is required   
+                    project msg_verbose log  the output file is up to date   project msg_verbose execute buildexception   
+        log task is deprecated and will be removed in a future version\n  
+               of ant   it is now part of the  net antlib \n  
+               http   
+            project msg_warn   
+        validate    
+        log  importing typelib     srcfile 
+                to assembly     destfile 
+                in namespace     namespace  project msg_verbose isexecuteneeded netcommand command netcommand importtypelib    tlbimp    
+        command setfailonerror command addargument srcfile tostring     
+          
+        command addargument   nologo    
+        command addargument   out     destfile   
+        command addargument   namespace    namespace usesysarray    
+            command addargument   sysarray unsafe    
+            command addargument   unsafe    
+          
+        command addargument extraoptions   
+        command runcommand    
+      
+ org apache tools ant taskdefs optional dotnet ImportTypelib

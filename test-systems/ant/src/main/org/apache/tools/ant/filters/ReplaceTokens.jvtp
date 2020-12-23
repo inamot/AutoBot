@@ -1,0 +1,164 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   replaces tokens original input user-supplied values  
+   
+   example  
+   
+    pre  lt replacetokens begintoken  quot # quot  endtoken  quot # quot  gt  
+      lt token key  quot date quot  value  quot $ today  quot   gt  
+    lt  replacetokens gt   pre pre  lt filterreader classname  org apache tools ant filters replacetokens  gt  
+      lt param type  tokenchar  name  begintoken  value  #   gt  
+      lt param type  tokenchar  name  endtoken  value  #   gt  
+      lt param type  token  name  date  value  $ today    gt  
+    lt  filterreader gt   pre  
+   
+    
+    default  begin token  character     
+    default  end token  character     
+    data used before reading stream again    
+    replacement test token    
+    index replacement data    
+    index queue data    
+    hashtable hold replacee-replacer pairs  string string      
+    character marking beginning token     
+    character marking end token     
+    
+       constructor dummy  instances  
+       
+        see basefilterreader#basefilterreader   
+        
+    
+       creates new filtered reader  
+       
+        param reader object providing underlying stream  
+                 must not code null  code   
+        
+    
+       returns next character filtered stream  replacing tokens original stream  
+       
+        return next character resulting stream 1 end resulting stream reached 
+       
+        exception ioexception underlying stream throws ioexception 
+       during reading 
+        
+    
+       sets begin token  character  
+       
+        param begintoken character used denote beginning token 
+        
+    
+       returns begin token  character  
+       
+        return character used denote beginning token 
+        
+    
+       sets end token  character  
+       
+        param endtoken character used denote end token 
+        
+    
+       returns end token  character  
+       
+        return character used denote end token 
+        
+    
+       adds token element map tokens replace  
+       
+        param token token add map replacements  
+                    must not code null  code   
+        
+    
+       returns properties specified properties file  
+       
+        param filename file load properties sets map tokens replace  
+       
+        param hash map  string- string token keys replacement 
+       values  must not code null  code   
+        
+    
+       returns map tokens replaced  
+       
+        return map  string- string token keys replacement 
+       values 
+        
+    
+       creates new replacetokens using passed reader instantiation  
+       
+        param rdr reader object providing underlying stream  
+                  must not code null  code   
+       
+        return new filter based configuration filtering specified reader 
+        
+    
+       initializes tokens loads replacee-replacer hashtable  
+        
+    
+       holds token 
+        
+    token key    
+    token value    
+    
+           sets token key 
+           
+            param key key token  must not code null  code   
+            
+    
+           sets token value 
+           
+            param value value token  must not code null  code   
+            
+    
+           returns key token  
+           
+            return key token 
+            
+    
+           returns value token  
+           
+            return value token 
+           org apache tools ant filters ReplaceTokens org apache tools ant filters replacetokens baseparamfilterreader chainablereader replacetokens replacetokens reader in in getnextchar ioexception queueindex    -1 ch   queueddata charat queueindex queueindex    queueddata length      
+                queueindex   -1 ch in read read ioexception getinitialized      
+            initialize    
+            setinitialized replaceindex    -1 ch   replacedata charat replaceindex replaceindex    replacedata length      
+                replaceindex   -1 ch ch   getnextchar ch    begintoken stringbuffer key stringbuffer ch   getnextchar ch    -1    
+                    key append ch ch    endtoken ch    -1 queueddata queueindex    -1    
+                    queueddata   key tostring queueddata 
+                          key tostring     queueddata substring queueindex   
+                  
+                queueindex   0 begintoken key setlength key length   - 1 replacewith hash get key tostring replacewith replacewith length     0    
+                        replacedata   replacewith  
+                        replaceindex   0 read newdata   key tostring     endtoken queueddata queueindex    -1    
+                        queueddata   newdata queueddata   newdata   queueddata substring queueindex   
+                      
+                    queueindex   0 begintoken ch setbegintoken begintoken begintoken   begintoken getbegintoken begintoken setendtoken endtoken endtoken   endtoken getendtoken endtoken addconfiguredtoken token token    
+        hash put token getkey    token getvalue properties getpropertiesfromfile filename    
+        fileinputstream in properties props properties in fileinputstream filename   
+            props load in ioexception ioe    
+            ioe printstacktrace fileutils close in props settokens hashtable hash hash   hash hashtable gettokens hash reader chain reader rdr    
+        replacetokens newfilter replacetokens rdr   
+        newfilter setbegintoken getbegintoken     
+        newfilter setendtoken getendtoken     
+        newfilter settokens gettokens     
+        newfilter setinitialized newfilter initialize     
+        parameter   params   getparameters params i   0  i   params length  i params i type   params i  gettype tokenchar  equals type name   params i  getname value   params i  getvalue begintoken  equals name value length      0 buildexception  begin token cannot   
+                                       be empty    
+                              
+                            begintoken   params i  getvalue   charat 0 endtoken  equals name value length      0 buildexception  end token cannot   
+                                       be empty    
+                              
+                            endtoken   params i  getvalue   charat 0 token  equals type name   params i  getname value   params i  getvalue    
+                        hash put name  value propertiesfile  equals type     
+                        properties props   getpropertiesfromfile params i  getvalue enumeration e   props keys    e hasmoreelements key e nextelement value   props getproperty key   
+                            hash put key  value token setkey key key   key setvalue value value   value getkey key getvalue value  
+          
+      
+ org apache tools ant filters ReplaceTokens

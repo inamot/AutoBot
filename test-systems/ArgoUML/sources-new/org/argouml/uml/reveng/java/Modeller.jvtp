@@ -1,0 +1,1173 @@
+ 
+   $id$ 
+   copyright  c  2003-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications  
+    
+   modeller maps java source code parsed recognised antlr uml model 
+   elements applies some semantics jsr-26   note  jsr-26 withdrawn march  2004 obviously provides guidance recent language features java 5  
+   
+    author marcus andersson 
+    
+    
+       logger  p  
+        
+    
+       current working model  
+        
+   todo removed sure external users functionality   diagram creation moved importcommon single implementation shared importers  - tfm 20061209 
+    
+       current import settings package currentclassifier belongs last package name used addpackage null classes not packaged  
+       used popclassifier create diagram package  
+        
+    
+       keeps data varies during parsing  
+        
+    
+       stack up state descending inner classes  
+        
+    
+       only attributes generated  
+        
+    
+       arrays modelled unique datatypes name file being parsed  
+        
+    
+       arbitrary attributes  
+        
+    
+       list names parsed method calls  
+        
+    
+       hashmap parsed local variables  indexed variable name string 
+       representation type stored value  
+        
+    
+       new model elements created during reverse engineering session  
+       todo want stronger type here argouml treats elements simple objects  
+        
+    
+       create new modeller  
+       
+        param themodel model work param settings settings use import 
+        param thefilename current file name 
+        
+    
+        param key key attribute return value attribute 
+        
+    
+        param key key attribute 
+        param value value attribute mapping java compilation unit uml component  
+       classes resident component  
+       imports relationships between components classes 
+         packages  p  
+       
+       see jsr 26  p  
+       
+       adding components little messy 2 cases  
+       
+        ol  
+        li source file package statement added several times lookup addcomponent   only looks model package namespace not known  
+       
+        li source file not package statement  component added model namespace package statement lookup always work  
+       
+         ol  
+       therefore case 1 need delete duplicate components addpackage   method  p either case need add package don't know advance package statement  p  
+        
+   try find component current package cope repeated imports never work package statmeent exists package statement parsed component identified  
+   remove java specific ending  per jsr 26 t component confused class same name invoking 
+   model getfacade   lookupin object string filename endswith   java    
+	      filename   filename substring 0  filename length  -5   
+               
+   set namespace component event source file not package stmt 
+    
+       called parser package clause found  
+       
+        param name name package  
+        
+   add package figure package owner's class 
+   diagram s not diagram class diagrams up top level need 
+   diagrams packages  
+   save src_path upper package 
+   todo  rework don't need importsession here  
+   perhaps move common import code  - tfm 
+   find create package model element package  
+   set current package following source code  
+   delay diagram creation until any classifier  class interface found 
+  set namespace component 
+   check see already component defined  
+   set namespace component component already exists delete latest one duplicate  
+   change parse state existing one  
+    
+       called parser import clause found  
+       
+        param name name import end called parser import clause found  
+       
+        param name name import end param forceit force addition creating s missing  
+        
+   only imports 2nd pass  
+   todo case inner class probably want either qualified name both outer inner class names outer class name 
+   import demand 
+   single type import must guess s class interface class 
+   todo better strategy defer creating until enough information determine build java import equivalent uml  first search existing 
+       permission  create new one not found  
+        
+   todo use uml permission non-standard  
+   change dependency javaimport   stereotype something tfm - 20070802 
+   didn't find s create one  
+   note isn't localized m not sure without side effects - tfm - 20070410 
+    
+       called parser class declaration found  
+       
+        param name name class  
+        param modifiers sequence class modifiers  
+        param superclassname zero one string name superclass fully qualified simple class name  
+        param interfaces zero strings names implemented 
+              interfaces fully qualified simple interface name  
+        param javadoc javadoc comment  null comment available  
+        
+    
+       called parser class declaration found  
+       
+        param name name class  
+        param modifiers sequence class modifiers  
+        param superclassname zero one string name superclass fully qualified simple class name  
+        param interfaces zero strings names implemented 
+              interfaces fully qualified simple interface name  
+        param javadoc javadoc comment  null comment available  
+        param forceit force addition creating s missing  
+        
+   only generalizations realizations 2nd pass  
+    
+       called parser anonymous inner class found  
+       
+        param type type anonymous class  
+        
+    
+       called parser anonymous inner class found  
+       
+        param type type anonymous class  
+        param forceit force addition creating s missing  
+        
+   must add anyway class popping mismatch  
+    
+       add interface model  
+        
+       todo method preserves historical public api used reverse engineering modules classfile module really needs decoupled  
+        
+        param name name interface  
+        param modifiers sequence interface modifiers  
+        param interfaces 
+                  zero strings names extended interfaces fully qualified simple interface name  
+        param javadoc javadoc comment comment available  
+        
+    
+       called parser interface declaration found  
+       
+        param name name interface  
+        param modifiers sequence interface modifiers  
+        param interfaces zero strings names extended 
+       interfaces fully qualified simple interface name  
+        param javadoc javadoc comment comment available  
+        param forceit force addition creating s missing  
+        
+   only generalizations realizations 2nd pass  
+    
+       called parser enumeration declaration found  
+       
+        param name name class  
+        param modifiers sequence class modifiers  
+        param interfaces zero strings names implemented 
+              interfaces fully qualified simple interface name  
+        param javadoc javadoc comment  null comment available  
+        param forceit force addition creating s missing type params now 
+   abstract enums illegal java s error explicitly use final' keyword enum 
+   declaration 
+   enums implicitly final unless contain class body won't know until process constants 
+   only realizations 2nd pass  
+    
+        param mclass 
+        param interfaces 
+        param forceit 
+        
+   todo use model api's buildabstraction - tfm 
+    
+       called parser enumeration literal found  
+       
+        param name name enumerationliteral  
+        
+   add enum   stereotype distinguish fields class  body?     
+   
+       recognizer enumeration world enumeration class enumeration   stereotype applied   
+        
+    
+       add annotation declaration 
+       
+        param name identifier annotation definition  
+        param modifiers sequence modifiers  
+        param javadoc javadoc comment  null comment available  
+        param forceit force addition creating s missing  
+        
+    
+       called parser annotation declaration found  
+       
+        param name identifier annotation  
+        
+    
+       done adding annotation  
+        
+   todo  placeholder use popclassifier here? 
+   todo  not implemented 
+    
+       common code used addclass addinterface  
+ 
+        param newclassifier supply one none found model  
+        param name name classifier  
+        param modifiers string modifiers  
+        param javadoc javadoc comment  null comment available  
+        return newly created found classifier new classifier java inner class new classifier top level java class classifier not found model found delete any existing tagged values  
+   todo  rewrite existing elements instead? - tfm 
+   set up component residency  only top level classes  
+   set classifier resident component  
+    before push new parse state stack test carried over previous implementation m not sure already set - tfm 
+   change parse state classifier parse state 
+   add classifier documentation tags during first only  pass only 
+    
+       return current import pass level  
+        
+        return 0  1 2 depending current import level pass processing  returns -1 level isn't defined  
+        
+    
+       called parser classifier completely parsed  
+       
+   now create diagram doesn't exists project class source file package declaration 
+   create new diagram root classifier without package 
+   add current classifier diagram  
+   remove operations attributes not source 
+   remove inner classes not source 
+    
+       add operation current model 
+        
+        param modifiers sequence operation modifiers  
+        param returntype return type operation  
+        param name name operation string 
+        param parameters list parameter declarations containing types names  
+        param javadoc javadoc comment  null comment available  
+        return operation  
+        
+    
+       called parser operation found  
+        
+        param modifiers sequence operation modifiers  
+        param returntype return type operation  
+        param name name operation string 
+        param parameters number lists  each representing parameter  
+        param javadoc javadoc comment  null comment available  
+        param forceit 
+                  force addition creating s missing  
+        return operation  
+        
+   constructor 
+   todo type name trailing       represents variable length parameter list only last parameter gets converted array method invocation perhaps model way  ie convert  foo foo      - tfm - 20070329 type resolution failed find valid classifier  
+    
+       warn user information available input source not reflected accurately model  
+        
+        param name 
+                  name classifiere wasn't found 
+        param e exception - 
+        param operation string indicating type operation being attempted 
+        
+    
+       add error message log shown user  
+        p  
+       todo currently writes error log needs return 
+       errors some place user see deal need way line column numbers help user 
+       track problem down  
+        
+    
+       called parser class field parsed occur class block indicates method body to added operation operation exactly one java body occur enum declaration  not currently supported   
+        
+       todo  support use enum declaration 
+        
+        param op operation  
+        param body method body occur s class field enum definition 
+   add method s specification  
+   add method feature classifier owns operation  
+    
+       called parser attribute found  
+       
+        param modifiers sequence attribute modifiers  
+        param typespec attribute's type  
+        param name name attribute  
+        param initializer initial value attribute  
+        param javadoc javadoc comment  null comment available  
+        
+    
+       called parser attribute found  
+       
+        param modifiers sequence attribute modifiers  
+        param typespec attribute's type  
+        param name name attribute  
+        param initializer initial value attribute  
+        param javadoc javadoc comment  null comment available  
+        param forceit force addition creating s missing attribute type attribute type want create uml attribute  
+   todo already done buildattribute type resolution failed find valid classifier  
+   set initial value attribute must remove line endings tabs intializer 
+   strings  otherwise classes display horribly want create uml association java attribute equal getassociationend name  mclassifier return wrong assoc end hand navigability already set correctly least case next line not necessary   maybe never necessary?  - thn 
+    
+       find generalization model not exist new generalization created  
+ 
+        param mpackage look package  
+        param parent superclass  
+        param child subclass  
+        return generalization found created  
+       
+    
+       find abstraction  realize model not 
+       exist new abstraction created  
+       
+        param parent superclass  
+        param child subclass  
+        return abstraction found created  
+        
+    
+       find package model not exist new 
+       package created  
+ 
+        param name name package  
+        return package found created  
+       
+   todo redundant - tfm 
+   find owner package  
+    
+       search recursively nested packages model pass package org argouml kernel method searches package 
+       kernel owned package argouml owned package org method required nest parsed packages  
+       
+        param name fully qualified package name package searching return found package null not model  
+        
+    
+       find operation currentclassifier operation not found new created  
+ 
+        param name name operation  
+        return operation found created  
+       
+    
+       find operation currentclassifier operation not found new created  
+ 
+        param name name method  
+        return method found created  
+       
+    
+       build new attribute current classifier  
+        
+        param classifier model reverse engineering param type the type new attribute 
+        param name name attribute  
+        return attribute found created  
+        
+    
+       find associationend binary association currentclassifier type specified not found new created  
+        
+        param name name attribute  
+        param mclassifier association ends  
+        return attribute found created causes problem mclassifier not only one assoc end one right one stereotype specific name  
+ 
+        param name name stereotype  
+        return stereotype line really safe wouldn't return first 
+   model element same name whether not stereotype piece code may create existing stereotype error  
+    
+       find first suitable stereotype baseclass given object  
+       
+        param param name 
+        param baseclass 
+        return stereotype found 
+       
+        throws illegalargumentexception desired stereotypes modelelement baseclass not found not created stereotype created  
+        
+   instead failing create any stereotypes requires   most likely cause failure stereotype isn't 
+   included profile being used  - tfm 20060224 never happen return tagged value specific tag  
+ 
+        param element tagged value belongs param name tag  
+        return found tag new created not found classifier earlier generated reference now time parsed clean out remnants  
+       
+        param element removed package name fully specified classifier name  
+ 
+        param name fully specified classifier name  
+        return package name  
+       
+   todo  fix handling inner classes along lines following last element begins uppercase character  assume ve really class  not package better strategy defer until disambiguate better now common case inner 
+   classes character isuppercase getrelativepackagename pkgname  charat 0      
+              return getpackagename pkgname return pkgname relative package name fully qualified 
+       package name parameter org argouml kernel method supposed return 'kernel package 
+       kernel package 'org argouml'   
+       
+        param packagename fully qualified package name  
+        return relative package name relative package name corresponds classifier name fully qualified 
+   classifier simply use method classifier name fully specified classifier name  
+ 
+        param name fully specified classifier name  
+        return classifier name  
+       
+    
+       set visibility model element  
+ 
+        param element model element  
+        param modifiers sequence modifiers may contain 
+       'private'  'protected public'  
+       
+   default java visibility package  
+    
+       set owner scope feature  
+ 
+        param feature feature  
+        param modifiers sequence modifiers may contain 
+       'static'  
+       
+    
+       set target scope association end  
+ 
+        param massociationend end  
+        param modifiers sequence modifiers may contain 
+       'static'  
+       
+   todo  review trying replaced target scope gone uml 2 x - tfm 20070529 context classifier name may may not fully qualified  
+ 
+        param name classifier name  
+       
+    
+       add contents single standard javadoc tag model element  
+       usually added tagged value called link #adddocumentationtag  only  
+       
+        param model element add param stagname name javadoc tag 
+        param stagdata contents javadoc tag 
+        
+   add ocl constraint 
+   add invariant constraint note checking constraint syntax performed    bad  
+   apparently namespace management not supported model elements not seem cause problems ll leave moment    
+   multiple stereotype support  
+   make one stereotype tag many stereotype tags 
+   now eliminate multiple entries comma separated list 
+    
+       add javadocs tagged value 'documentation model 
+       element comment delimiters removed prior adding comment  
+       
+       added 2001-10-05 steffen zschaler  
+       
+        param modelelement model element add documentation 
+        param sjavadocs documentation comment add null java docs  
+        
+   skip leading     
+	    boolean fhadasterisk   true nstartpos   sjavadocs length      
+		switch  sjavadocs charat  nstartpos     
+		case ' '  
+		    fhadasterisk   true  
+		    nstartpos    
+		    break  
+		case white space  hope didn't miss any  -  
+		case '\t'  
+		       ignore white space before first asterisk fhadasterisk    
+			nstartpos    
+			break  
+		      
+		default  
+		       normal comment text standard tag 
+		       check ahead tag 
+		    int j   nstartpos j   sjavadocs length    
+			        sjavadocs charat  j     ' '  
+			           sjavadocs charat  j     '\t'      
+			j j   sjavadocs length sjavadocs charat  j last javadoc last line new line found  causing indexoutofboundexception  
+			    int lineendpos   0 sjavadocs indexof '\n'  j    0    
+				lineendpos   sjavadocs length   - 2 lineendpos   sjavadocs indexof '\n'  j    1  
+			      
+			    sbpuredocs append sjavadocs substring j  
+								  lineendpos    
+			       start standard tag potentially add 
+			       current tag set tagged values scurrenttagname    null    
+				addjavadoctagcontents  modelelement  
+						       scurrenttagname  
+						       scurrenttagdata   
+			      
+			       open new tag 
+			    int ntemp   sjavadocs indexof  ' '  j   1 ntemp    -1    
+				ntemp   sjavadocs length   - 1  
+			      
+			    scurrenttagname   sjavadocs substring j   1  
+								  ntemp   
+			    int ntemp1   sjavadocs indexof  '\n'    ntemp ntemp1    -1    
+				ntemp1   sjavadocs length ntemp1    
+			      
+			    scurrenttagdata   
+				sjavadocs substring  ntemp  ntemp1   
+			    nstartpos   ntemp1 continue standard tag comment text 
+			    int ntemp   sjavadocs indexof  '\n'  nstartpos ntemp    -1    
+				ntemp   sjavadocs length ntemp scurrenttagname    null    
+				sbpuredocs append sjavadocs substring nstartpos  
+								      ntemp    
+				scurrenttagdata    
+				        
+				      sjavadocs substring  nstartpos  ntemp sbpuredocs append sjavadocs substring nstartpos  
+								      ntemp    
+			      
+			    nstartpos   ntemp  
+			  
+		      
+		    fhadasterisk   false  
+		  
+	      
+            sjavadocs   sbpuredocs tostring documentation text s still trailing ' ' left  either end actual comment text end last tag  
+                
+   handle last tag any  strip trailing slash now store documentation text tagged value 
+   
+       remove trailing slash  including entire line s only thing line tagged value named 'stereotype'  make real 
+       stereotype remove tagged value allow multiple instances tagged value parse single instance multiple stereotypes 
+        
+    
+       manage collection parsed method calls  used reverse engineering interactions  
+        
+    
+       add parsed method call collection method calls  
+        param methodname method name called collection method calls  
+        return list containing collected method calls 
+        
+    
+       clear collected method calls  
+        
+    
+       add local variable declaration list variables  
+       
+        param type type declared variable 
+        param name name declared variable 
+        
+    
+       return collected set local variable declarations  
+       
+        return hashtable containing local variable declarations  
+        
+    
+       clear set local variable declarations elements created reverse engineering file  
+        
+        return collection elements 
+       org argouml uml reveng Modeller org argouml uml reveng java modeller hashtable object  attributes hashtable object hashtable string  localvariables hashtable string modeller object themodel  importsettings settings thefilename    
+        model   themodel  
+        noassociations   settings isattributeselected    
+        arraysasdatatype   settings isdatatypeselected    
+        currentpackage model  
+        newelements hashset object     
+        parsestate parsestate model  getpackage java_package    
+        parsestatestack stack parsestate     
+        filename   thefilename object getattribute key attributes get key setattribute key  object value    
+        attributes put key  value addcomponent     
+ 
+          
+          
+          
+          
+          
+        object component   model getfacade   lookupin currentpackage  filename component component   model getcorefactory   createcomponent    
+            model getcorehelper   setname component  filename   
+            newelements add component   
+          
+ 
+        parsestate addcomponent component   
+ 
+          
+          
+        model getcorehelper   setnamespace parsestate getcomponent    model addpackage name ownerpackagename  currentname   name  
+        ownerpackagename   getpackagename currentname equals ownerpackagename diagram importsession importsession iscreatediagramsselected   
+	               diagram isdiagraminproject ownerpackagename     
+ 
+	        diagram selectclassdiagram getpackage ownerpackagename   
+	                ownerpackagename   
+	        diagram addpackage getpackage currentname    
+ 
+	      
+	    currentname   ownerpackagename  
+            ownerpackagename   getpackagename currentname   
+	  
+	  
+          
+          
+	object mpackage   getpackage currentname importsession importsession getsrcpath model getfacade   gettaggedvalue mpackage  
+                        importinterface source_path_tag model getcorehelper   
+                     settaggedvalue mpackage  importinterface source_path_tag  
+  
+	  
+ 
+	  
+	mpackage   getpackage name   
+        currentpackagename   name  
+ 
+	  
+	currentpackage   mpackage  
+	parsestate addpackagecontext mpackage   
+ 
+          
+          
+ 
+          
+          
+        object component   model getfacade   lookupin currentpackage  filename component model getcorehelper   setnamespace  
+                    parsestate getcomponent    
+                    currentpackage object oldcomponent   parsestate getcomponent    
+            model getumlfactory   delete oldcomponent   
+            newelements remove oldcomponent   
+          
+            parsestate addcomponent component addimport name    
+        addimport name addimport name forceit getlevel      0 packagename   getpackagename name classifiername   getclassifiername name   
+        object mpackage   getpackage packagename classifiername equals         
+	    parsestate addpackagecontext mpackage   
+	    object srcfile   parsestate getcomponent    
+            buildimport mpackage  srcfile object mclassifier mclassifier packagecontext mpackage   get classifiername classifiernotfoundexception e forceit    classifiername mpackage log info  modeller java     
+                               forced creation of unknown classifier   
+                              classifiername   
+                      
+                      
+                    mclassifier   model getcorefactory   buildclass  
+                            classifiername  mpackage   
+                    newelements add mclassifier warnclassifiernotfound classifiername  e  
+                             an imported classifier mclassifier parsestate addclassifiercontext mclassifier   
+		object srcfile   parsestate getcomponent    
+		buildimport mclassifier  srcfile object buildimport object element  object srcfile    
+          
+          
+          
+        collection dependencies   model getcorehelper   getdependencies  
+                element  srcfile object dependency   dependencies model getfacade   isapermission dependency dependency  
+              
+          
+         
+          
+        object pkgimport   model getcorefactory   buildpermission srcfile  
+                element newname   makepermissionname srcfile  element   
+        model getcorehelper   setname pkgimport  newname   
+        newelements add pkgimport pkgimport makeabstractionname object child  object parent makefromtoname child  parent makeassociationname object from  object to makefromtoname from  to makegeneralizationname object child  object parent makefromtoname child  parent makepermissionname object from  object to makefromtoname from  to makefromtoname object from  object to makefromtoname  
+                model getfacade   getname from    
+                model getfacade   getname to makefromtoname from to from     -      to addclass name modifiers superclassname  
+                         list interfaces javadoc    
+        addclass name  modifiers  collections empty_list  superclassname  
+                interfaces  javadoc addclass name modifiers  
+                         list typeparameters superclassname  
+                         list interfaces javadoc forceit typeparameters typeparameters size     0    
+            logerror  type parameters not supported on name   
+          
+        object mclass   
+	    addclassifier model getcorefactory   createclass    
+			  name  modifiers  javadoc  typeparameters   
+ 
+        model getcorehelper   setabstract  
+                mclass  
+                 modifiers   javarecognizer acc_abstract    0   
+        model getcorehelper   setleaf  
+                mclass  
+                 modifiers   javarecognizer acc_final    0   
+        model getcorehelper   setroot mclass newelements add mclass getlevel      0 superclassname object parentclass parentclass   
+		    getcontext superclassname  
+		         get getclassifiername superclassname    
+		getgeneralization currentpackage  parentclass  mclass classifiernotfoundexception e forceit    superclassname model log info  modeller java  forced creation of unknown superclassname packagename   getpackagename superclassname classifiername   getclassifiername superclassname   
+	            object mpackage    packagename length     0   
+                            ? getpackage packagename  
+	                      model  
+	            parentclass   model getcorefactory   buildclass  
+	                    classifiername  mpackage   
+                    newelements add parentclass   
+	            getgeneralization currentpackage  parentclass  mclass warnclassifiernotfound superclassname  e  
+	                     a generalization interfaces addinterfaces mclass  interfaces  forceit addanonymousclass type    
+        addanonymousclass type addanonymousclass type forceit name   parsestate anonymousclass object mclassifier   getcontext type  get getclassifiername type    
+            list interfaces arraylist model getfacade   isainterface mclassifier     
+                interfaces add type   
+              
+            addclass name 0  
+                     collections empty_list  
+		     model getfacade   isaclass mclassifier  ? type interfaces  
+		         
+                     forceit classifiernotfoundexception e    
+              
+            addclass name 0  collections empty_list collections empty_list      forceit   
+            log info  modeller java  an anonymous was created   
+		        although it could not be found in the classpath addinterface name modifiers  
+                             list interfaces javadoc    
+        addinterface name  modifiers  collections empty_list  interfaces  
+                javadoc addinterface name modifiers  
+                             list typeparameters  
+                             list interfaces javadoc forceit typeparameters typeparameters size     0    
+            logerror  type parameters not supported on name   
+          
+        object minterface   
+	    addclassifier model getcorefactory   createinterface    
+			  name  
+			  modifiers  
+			  javadoc  
+                          typeparameters getlevel      0 interfacename   interfaces    
+            object parentinterface parentinterface   
+		    getcontext interfacename  
+		         getinterface getclassifiername interfacename    
+                getgeneralization currentpackage  parentinterface  minterface classifiernotfoundexception e forceit    interfacename model log info  modeller java     
+                               forced creation of unknown interfacename packagename   getpackagename interfacename classifiername   getclassifiername interfacename   
+                    object mpackage    packagename length     0   
+                            ? getpackage packagename  
+                              model  
+                    parentinterface   model getcorefactory   buildinterface  
+                            classifiername  mpackage   
+                    newelements add parentinterface   
+                    getgeneralization currentpackage  parentinterface  
+                            minterface warnclassifiernotfound interfacename  e   
+                             a generalization addenumeration name modifiers  
+                         list interfaces javadoc forceit    
+        object mclass   
+            addclassifier model getcorefactory   createclass    
+                          name  modifiers  javadoc   
+                          collections empty_list     
+         
+        model getcorehelper   addstereotype  
+                mclass  
+                getstereotype  enumeration modifiers   javarecognizer acc_abstract    0    
+              
+            logerror  illegal modifier on name model getcorehelper   setabstract mclass modifiers   javarecognizer acc_final    0    
+              
+              
+            logerror  illegal modifier on name model getcorehelper   setleaf mclass model getcorehelper   setroot mclass getlevel      0 interfaces addinterfaces mclass  interfaces  forceit addinterfaces object mclass  list interfaces forceit interfacename   interfaces    
+            object minterface minterface   
+                    getcontext interfacename  
+                         getinterface getclassifiername interfacename classifiernotfoundexception e forceit    interfacename model log info  modeller java     
+                               forced creation of unknown interfacename packagename   getpackagename interfacename classifiername   
+                            getclassifiername interfacename   
+                    object mpackage    
+                         packagename length     0   
+                                    ? getpackage packagename  
+                                      model  
+                    minterface   
+                            model getcorefactory   buildinterface  
+                                    classifiername  mpackage   
+                    newelements add minterface warnclassifiernotfound interfacename  e  
+                             an abstraction minterface object mabstraction   
+                    getabstraction minterface  mclass model getfacade   getsuppliers mabstraction  size   
+                           0    
+                    model getcorehelper   addsupplier  
+                            mabstraction  
+                            minterface   
+                    model getcorehelper   addclient mabstraction  mclass   
+                  
+                model getcorehelper   setnamespace  
+                        mabstraction  
+                        currentpackage   
+                model getcorehelper   addstereotype  
+                        mabstraction  
+                        getstereotype corefactory realize_stereotype    
+                newelements add mabstraction addenumerationliteral name    
+        object enumeration   parsestate getclassifier isaenumeration enumeration parsestateexception  not an enumeration mod   javarecognizer acc_public   javarecognizer acc_final 
+                  javarecognizer acc_static  
+         
+        addattribute mod name null isaenumeration object element model getfacade   isaclass element object stereotype   model getfacade   getstereotypes element enumeration  equals model getfacade   getname stereotype addannotationdefinition name modifiers javadoc forceit    
+        logerror   java 5 annotation definitions not supported         name addannotation name    
+        logerror   java 5 annotations not supported         name endannotation addtypeparameters     
+          
+        logerror  unsupported java 5 type parameters object addclassifier object newclassifier name modifiers javadoc   
+                                 list typeparameters    
+        object mclassifier  
+        object mnamespace parsestate getclassifier mclassifier   
+        	model getfacade   lookupin parsestate getclassifier    name   
+            mnamespace   parsestate getclassifier parsestate outerclassifier    
+            mclassifier   model getfacade   lookupin currentpackage  name   
+            mnamespace   currentpackage mclassifier log isinfoenabled      
+                log info  created classifier name   
+              
+            mclassifier   newclassifier  
+            model getcorehelper   setname mclassifier  name   
+            model getcorehelper   setnamespace mclassifier  mnamespace   
+            newelements add mclassifier log isinfoenabled      
+                log info  found existing classifier name   
+              
+              
+            cleanmodelelement mclassifier   
+          
+ 
+        parsestate innerclassifier mclassifier parsestate getclassifier model getfacade   getelementresidences mclassifier  isempty      
+                object resident   model getcorefactory   
+                         createelementresidence    
+                model getcorehelper   setresident resident  mclassifier   
+                model getcorehelper   setcontainer resident  
+                        parsestate getcomponent     
+              
+          
+ 
+          
+        parsestatestack push parsestate   
+        parsestate parsestate parsestate  mclassifier  currentpackage   
+ 
+        setvisibility mclassifier  modifiers getlevel      0    
+            adddocumentationtag mclassifier  javadoc mclassifier getlevel     
+        object level getattribute  level level integer  level  intvalue 1 popclassifier diagram importsession importsession iscreatediagramsselected currentpackagename diagram selectclassdiagram currentpackage  
+	                currentpackagename diagram createrootclassdiagram    
+	      
+	      
+	    object classifier   parsestate getclassifier model getfacade   isainterface classifier     
+	        diagram addinterface classifier model getfacade   isaclass classifier     
+	        diagram addclass classifier  
+  
+	      
+	  
+ 
+          
+        parsestate removeobsoletefeatures    
+ 
+          
+        parsestate removeobsoleteinnerclasses    
+ 
+        parsestate   parsestatestack pop object addoperation modifiers returntype name  
+                                list parameterdeclaration  parameters javadoc addoperation modifiers  collections empty_list  returntype  name  
+                parameters  javadoc object addoperation modifiers  
+                                list typeparameters returntype name  
+                                list parameterdeclaration  parameters javadoc forceit typeparameters typeparameters size     0    
+            logerror  type parameters not supported on operation type    
+                    name   
+          
+	object moperation   getoperation name   
+	parsestate feature moperation   
+ 
+	model getcorehelper   setabstract moperation  
+				 modifiers   javarecognizer acc_abstract    0   
+	model getcorehelper   setleaf moperation  
+			     modifiers   javarecognizer acc_final    0   
+	model getcorehelper   setroot moperation setownerscope moperation  modifiers   
+	setvisibility moperation  modifiers modifiers   javarecognizer acc_synchronized    0    
+	    model getcorehelper   setconcurrency moperation  
+	            model getconcurrencykind   getguarded model getfacade   getconcurrency moperation  
+		      model getconcurrencykind   getguarded      
+	    model getcorehelper   setconcurrency moperation  
+	            model getconcurrencykind   getsequential     
+	  
+ 
+        collection c arraylist model getfacade   
+                 getparameters moperation object parameter   c    
+	    model getcorehelper   removeparameter moperation  parameter   
+	  
+ 
+	object mparameter typename  
+	object mclassifier returntype equals returntype  
+                   name equals model getfacade   getname parsestate 
+                         getclassifier         
+	      
+	    model getcorehelper   addstereotype moperation  
+                getstereotype moperation   create    behavioralfeature mclassifier   
+		    getcontext returntype  get getclassifiername returntype classifiernotfoundexception e forceit    returntype model log info  modeller java     
+                               forced creation of unknown classifier   
+                              returntype packagename   getpackagename returntype classifiername   getclassifiername returntype   
+                    object mpackage   
+                             packagename length     0  ? getpackage packagename  
+                                      model  
+                    mclassifier   model getcorefactory   buildclass  
+                            classifiername  mpackage   
+                    newelements add mclassifier warnclassifiernotfound returntype  e  
+                             operation type mclassifier mparameter   buildreturnparameter moperation  mclassifier parameterdeclaration parameter   parameters    
+	    typename   parameter gettype typename endswith           
+                logerror  unsupported variable length parameter list notation   
+                        parameter getname     
+              
+            mclassifier mclassifier   
+		    getcontext typename  get getclassifiername typename classifiernotfoundexception e forceit    typename model log info  modeller java     
+                               forced creation of unknown classifier   
+                              typename packagename   getpackagename typename classifiername   getclassifiername typename   
+                    object mpackage   
+                             packagename length     0  ? getpackage packagename  
+                                      model  
+                    mclassifier   model getcorefactory   buildclass  
+                            classifiername  mpackage   
+                    newelements add mclassifier warnclassifiernotfound typename  e  
+                             operation params mclassifier mparameter   buildinparameter moperation  mclassifier  
+                        parameter getname model getfacade   isaclassifier mclassifier     
+                      
+                    logerror  modeller java  a valid type a parameter   
+			        could not be resolved \n   
+			        in file      filename operation    
+			       model getfacade   getname moperation parameter     
+			     model getfacade   getname mparameter    
+                  
+	      
+	  
+ 
+	adddocumentationtag  moperation  javadoc moperation object buildinparameter object operation  object classifier name    
+        object parameter   buildparameter operation  classifier  name   
+        model getcorehelper   setkind  
+                parameter  model getdirectionkind   getinparameter parameter object buildreturnparameter object operation  object classifier    
+        object parameter   buildparameter operation  classifier model getcorehelper   setkind  
+                parameter  model getdirectionkind   getreturnparameter parameter object buildparameter object operation  object classifier name    
+        object parameter   
+                model getcorefactory   buildparameter operation  classifier   
+        model getcorehelper   setname parameter  name parameter warnclassifiernotfound name  throwable e operation    
+        logerror  modeller java  a classifier      name 
+                     that was in the source   
+                   file could not be generated in the model    operation logerror message identifier    
+        log warn message           identifier addbodytooperation object op body op model getfacade   isaoperation op parsestateexception  
+                     found body in context other than a body body length      0 object method   getmethod model getfacade   getname op    
+        parsestate feature method   
+        model getcorehelper   setbody method  
+			    model getdatatypesfactory   
+			    	 createprocedureexpression  java   
+			    	        		   body    
+	  
+        model getcorehelper   addmethod op  method   
+ 
+          
+          
+        model getcorehelper   addfeature model getfacade   getowner op   
+                method addattribute modifiers typespec name initializer javadoc    
+        addattribute modifiers  typespec  name  initializer  javadoc addattribute modifiers typespec name initializer javadoc forceit multiplicity    1_1   
+        object mclassifier typespec arraysasdatatype    typespec indexof ' '     -1    
+                typespec   typespec substring 0  typespec indexof ' '    
+                multiplicity    1_n mclassifier   
+                        getcontext typespec  get getclassifiername typespec classifiernotfoundexception e forceit    typespec model log info  modeller java  forced creation of  
+                                unknown classifier     typespec packagename   getpackagename typespec classifiername   getclassifiername typespec   
+                    object mpackage   
+                             packagename length     0  ? getpackage packagename  
+                              model  
+                    mclassifier   
+                            model getcorefactory   buildclass  
+                                    classifiername  mpackage   
+                    newelements add mclassifier warnclassifiernotfound typespec  e   an attribute mclassifier logerror  failed to find or create type   typespec mclassifier noassociations 
+                   model getfacade   isadatatype mclassifier  
+                    model getfacade   getnamespace mclassifier   
+                           getpackage java_package      
+ 
+            object mattribute   parsestate getattribute name mattribute mattribute   buildattribute parsestate getclassifier    
+                        mclassifier  name   
+              
+            parsestate feature mattribute   
+ 
+            setownerscope mattribute  modifiers   
+            setvisibility mattribute  modifiers   
+            model getcorehelper   setmultiplicity mattribute  multiplicity model getfacade   isaclassifier mclassifier     
+                  
+                model getcorehelper   settype mattribute  mclassifier logerror  modeller java  a valid type a parameter   
+			    could not be resolved \n   
+			    in file      filename attribute     
+			 model getfacade   getname mattribute initializer initializer   initializer replace '\n'  ' '   
+                initializer   initializer replace '\t'  ' '   
+ 
+		object newinitialvalue   
+		    model getdatatypesfactory   
+		         createexpression  java   
+					  initializer   
+                model getcorehelper   setinitialvalue  
+                        mattribute  
+                        newinitialvalue modifiers   javarecognizer acc_final    0    
+                model getcorehelper   setreadonly mattribute model getfacade   isreadonly mattribute     
+                model getcorehelper   setreadonly mattribute adddocumentationtag mattribute  javadoc object massociationend   getassociationend name  mclassifier   
+            settargetscope massociationend  modifiers   
+            setvisibility massociationend  modifiers   
+            model getcorehelper   setmultiplicity  
+                    massociationend  
+                    multiplicity   
+            model getcorehelper   settype massociationend  mclassifier   
+            model getcorehelper   setname massociationend  name modifiers   javarecognizer acc_final    0    
+                model getcorehelper   setreadonly massociationend mclassifier equals parsestate getclassifier       
+                  
+                  
+                  
+                  
+                  
+                model getcorehelper   setnavigable massociationend adddocumentationtag massociationend  javadoc object getgeneralization object mpackage  
+                                     object parent  
+                                     object child    
+        object mgeneralization    
+            model getfacade   getgeneralization child  parent mgeneralization mgeneralization   
+                    model getcorefactory   buildgeneralization  
+                            child  parent  
+                            makegeneralizationname child  parent    
+            newelements add mgeneralization mgeneralization model getcorehelper   setnamespace mgeneralization  mpackage mgeneralization object getabstraction object parent  
+                                  object child    
+        object mabstraction iterator i   
+                model getfacade   getclientdependencies child  iterator    
+	     i hasnext       
+            mabstraction   i next    
+            collection c   model getfacade   getsuppliers mabstraction c c size      0    
+                model getcorehelper   
+                	 removeclientdependency child  mabstraction parent    c toarray   0     
+                    mabstraction mabstraction mabstraction   model getcorefactory   buildabstraction  
+                   makeabstractionname child  parent   
+                   parent  
+                   child   
+            newelements add mabstraction mabstraction object getpackage name    
+	object mpackage   searchpackageinmodel name mpackage mpackage   
+		model getmodelmanagementfactory   
+		     buildpackage getrelativepackagename name   name   
+            newelements add mpackage   
+              
+	    model getcorehelper   setnamespace mpackage  model equals getpackagename name      
+		model getcorehelper   addownedelement model  mpackage model getcorehelper   addownedelement  
+		        getpackage getpackagename name    
+		        mpackage mpackage object searchpackageinmodel name equals getpackagename name model getfacade   lookupin model  name   
+	  
+        object owner   searchpackageinmodel getpackagename name owner null 
+              model getfacade   lookupin owner  getrelativepackagename name object getoperation name    
+        object moperation   parsestate getoperation name moperation log info  getting the existing operation     name log info  creating a operation     name   
+            object cls   parsestate getclassifier    
+            object returntype   projectmanager getmanager   
+                 getcurrentproject   getdefaultreturntype    
+            moperation   model getcorefactory   buildoperation2 cls  returntype  
+                    name   
+            newelements add moperation moperation object getmethod name    
+        object method   parsestate getmethod name method log info  getting the existing method     name log info  creating a method     name   
+            method   model getcorefactory   buildmethod name   
+            newelements add method   
+            model getcorehelper   addfeature  
+                    parsestate getclassifier    
+                    method method object buildattribute object classifier  object type name    
+        object mattribute    
+            model getcorefactory   buildattribute2 classifier  type   
+        newelements add mattribute   
+        model getcorehelper   setname mattribute  name mattribute object getassociationend name  object mclassifier    
+        object massociationend iterator i   model getfacade   getassociationends mclassifier  
+                 iterator    i hasnext       
+            object ae   i next    
+            object assoc   model getfacade   getassociation ae name equals model getfacade   getname ae   
+                       model getfacade   getconnections assoc  size      2 
+                   model getfacade   gettype  
+                            model getfacade   getnextend ae   
+                       parsestate getclassifier      
+                massociationend   ae massociationend noassociations newname   
+                    makeassociationname parsestate getclassifier     
+                            mclassifier   
+ 
+            object massociation   builddirectedassociation  
+                        newname  parsestate getclassifier    mclassifier   
+              
+              
+            massociationend   
+                model getfacade   getassociationend  
+                        mclassifier  
+                        massociation massociationend object builddirectedassociation name  
+	    object sourceclassifier   
+	    object destclassifier model getcorefactory   buildassociation  
+                destclassifier sourceclassifier name object getstereotype name    
+        log debug  trying to find a stereotype of name       name          
+          
+          
+        object stereotype   model getfacade   lookupin model  name stereotype log debug  couldn't find so creating it model getextensionmechanismsfactory   
+                     buildstereotype name  model model getfacade   isastereotype stereotype     
+              
+              
+            log debug  found something that isn't a stereotype so creating it model getextensionmechanismsfactory   
+                     buildstereotype name  model   
+          
+ 
+        log debug  found it stereotype object getstereotype object me name baseclass    
+        collection models   
+            projectmanager getmanager   getcurrentproject   getmodels    
+        collection stereos   
+                model getextensionmechanismshelper   getallpossiblestereotypes  
+                        models  me   
+        object stereotype stereos stereos size     0    
+            iterator iter   stereos iterator iter hasnext      
+                stereotype   iter next model getextensionmechanismshelper   
+                         isstereotypeinh stereotype  name  baseclass     
+                    log info  returning the existing stereotype of     
+                              model getfacade   getname stereotype stereotype  
+                  
+              
+          
+          
+          
+          
+        stereotype   getstereotype name stereotype model getextensionmechanismshelper   addbaseclass stereotype  me stereotype illegalargumentexception  could not find   
+               a suitable stereotype model getfacade   getname me  
+                -  stereotype        name 
+                  base      baseclass object gettaggedvalue object element name    
+        object tv   model getfacade   gettaggedvalue element  name tv tv   
+                    model getextensionmechanismsfactory   buildtaggedvalue  
+                            name       
+            model getextensionmechanismshelper   addtaggedvalue element  tv tv cleanmodelelement object element    
+        object tv   
+                model getfacade   gettaggedvalue element  facade generated_tag tv model getumlfactory   delete tv   
+            tv   
+                    model getfacade   gettaggedvalue  
+                            element  facade generated_tag getpackagename name lastdot   name lastindexof lastdot    -1 pkgname   name substring 0  lastdot pkgname getrelativepackagename packagename getclassifiername packagename getclassifiername name lastdot   name lastindexof lastdot    -1 name name substring lastdot   1 setvisibility object element modifiers modifiers   javarecognizer acc_private    0    
+	    model getcorehelper   setvisibility  
+	            element  
+	            model getvisibilitykind   getprivate modifiers   javarecognizer acc_protected    0    
+	    model getcorehelper   setvisibility  
+	            element  
+	            model getvisibilitykind   getprotected modifiers   javarecognizer acc_public    0    
+	    model getcorehelper   setvisibility  
+	            element  
+	            model getvisibilitykind   getpublic model getcorehelper   setvisibility  
+                    element  
+                    model getvisibilitykind   getpackage setownerscope object feature modifiers    
+        model getcorehelper   setstatic  
+                feature   modifiers   javarecognizer acc_static    0 settargetscope object massociationend modifiers modifiers   javarecognizer acc_static    0    
+            model getcorehelper   settargetscope  
+                    massociationend  
+                    model getscopekind   getclassifier model getcorehelper   settargetscope  
+                    massociationend  
+                    model getscopekind   getinstance context getcontext name    
+	context context   parsestate getcontext packagename   getpackagename name equals packagename     
+	    context packagecontext context  getpackage packagename context addjavadoctagcontents object me stagname stagdata colonpos    stagdata stagdata indexof ' '    -1 colonpos    -1       invariant  equals stagname   
+	         pre-condition  equals stagname   
+	         post-condition  equals stagname scontext   oclutil getcontextstring me name   stagdata substring 0  colonpos body stagname equals   invariant      
+		  
+		  
+		body   scontext     inv     stagdata stagname equals   pre-condition      
+		body   scontext     pre     stagdata body   scontext     post     stagdata  
+	      
+	    object bexpr   
+		model getdatatypesfactory   
+		     createbooleanexpression  ocl   body   
+	    object mc   
+		model getcorefactory   buildconstraint name  bexpr   
+	    model getcorehelper   addconstraint me  mc model getfacade   getnamespace me model getcorehelper   addownedelement  
+		        model getfacade   getnamespace me   
+		        mc stereotype  equals stagname     
+                  
+                  
+                object tv   gettaggedvalue me  stagname tv sstereotype   model getfacade   getvalueoftag tv sstereotype sstereotype length     0    
+                        stagdata   sstereotype   ' '   stagdata  
+                      
+                  
+                  
+                hashset stset hashset stringtokenizer st stringtokenizer stagdata st hasmoretokens      
+                    stset add st nexttoken   trim     
+                  
+                stringbuffer sb stringbuffer    
+                iterator iter   stset iterator iter hasnext sb length     0    
+                        sb append ' '   
+                      
+                    sb append iter next     
+                  
+                stagdata   sb tostring    
+ 
+              
+             
+            object tv   model getfacade   gettaggedvalue me  stagname tv model getextensionmechanismshelper   addtaggedvalue  
+                        me  
+                        model getextensionmechanismsfactory   buildtaggedvalue  
+                                stagname  stagdata model getextensionmechanismshelper   
+                         setvalueoftag tv  stagdata adddocumentationtag object modelelement sjavadocs sjavadocs sjavadocs trim   length      5     
+	    stringbuffer sbpuredocs stringbuffer 80 scurrenttagname scurrenttagdata nstartpos   3    
+            sjavadocs   removetrailingslash sjavadocs scurrenttagname scurrenttagdata   removetrailingslash scurrenttagdata   
+		addjavadoctagcontents  modelelement  scurrenttagname  
+				       scurrenttagdata   
+	      
+ 
+	      
+	    model getextensionmechanismshelper   addtaggedvalue  
+                    modelelement  
+                    model getextensionmechanismsfactory   buildtaggedvalue  
+                            argo documentation_tag  sjavadocs    
+	    addstereotypes modelelement removetrailingslash s s endswith  \n s substring 0  s length   - 2 s endswith s substring 0  s length   - 1 s addstereotypes object modelelement    
+        object tv   model getfacade   
+                 gettaggedvalue modelelement   stereotype tv stereo   model getfacade   getvalueoftag tv stereo stereo length     0    
+                stringtokenizer st stringtokenizer stereo st hasmoretokens      
+                    model getcorehelper   addstereotype modelelement  
+                            getstereotype st nexttoken   trim      
+                  
+              
+            model getumlfactory   delete tv addcall methodname    
+        methodcalls add methodname list getmethodcalls methodcalls clearmethodcalls     
+        methodcalls clear addlocalvariabledeclaration type name    
+        localvariables put name  type hashtable getlocalvariabledeclarations localvariables clearlocalvariabledeclarations     
+        localvariables clear collection getnewelements newelements  
+      
+ org argouml uml reveng Modeller

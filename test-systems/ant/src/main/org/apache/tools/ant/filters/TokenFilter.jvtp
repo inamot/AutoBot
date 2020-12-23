@@ -1,0 +1,295 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license splits up input tokens passes tokens sequence filters ant 1 6 
+    see basefilterreader 
+    see chainablereader 
+    see org apache tools ant dynamicconfigurator 
+    
+    
+       string filters implement interface 
+        
+    
+           filter modify string 
+           
+            param string string filter 
+            return modified string null string not pass filter 
+            
+    string filters tokenizer use input stream output token termination current string token input stream position current string token    
+    
+       constructor dummy  instances  
+       
+        see basefilterreader#basefilterreader   
+        
+    
+       creates new filtered reader  
+       
+        param reader object providing underlying stream  
+                 must not code null  code   
+        
+    
+       returns next character filtered stream  only including 
+       lines original stream match specified 
+       regular expressions  
+       
+        return next character resulting stream 1 end resulting stream reached 
+       
+        exception ioexception underlying stream throws ioexception 
+       during reading 
+        
+    
+       creates new tokenfilter using passed reader instantiation  
+       
+        param reader reader object providing underlying stream  
+       
+        return new filter based configuration 
+        
+    
+       set output delimiter  
+        param delimoutput replaces delim string returned tokenizer present  
+        
+   ----------------------------------------- 
+    predefined tokenizers 
+   ----------------------------------------- 
+    
+       add line tokenizer default  
+        param tokenizer line tokenizer 
+        
+    
+       add string tokenizer 
+        param tokenizer string tokenizer 
+        
+    
+       add file tokenizer 
+        param tokenizer file tokenizer 
+        
+    
+       add arbitrary tokenizer 
+        param tokenizer tokenizer only one allowed 
+        
+   ----------------------------------------- 
+    predefined filters 
+   ----------------------------------------- 
+    
+       replace string filter 
+        param filter replace string filter 
+        
+    
+       contains string filter 
+        param filter contains string filter 
+        
+    
+       replace regex filter 
+        param filter replace regex filter 
+        
+    
+       contains regex filter 
+        param filter contains regex filter 
+        
+    
+       trim filter 
+        param filter trim filter 
+        
+    
+       ignore blank filter 
+        param filter ignore blank filter 
+        
+    
+       delete chars 
+        param filter delete characters filter 
+        
+    
+       add arbitrary filter 
+        param filter filter add 
+        
+   -------------------------------------------- 
+   
+        tokenizer classes  impls moved oata util  
+   
+   -------------------------------------------- 
+    
+       class read complete input string 
+        
+    
+       class tokenize input areas separated white space specified list delim characters  behaves java util stringtokenizer stream starts delim characters first 
+       token empty string  unless treat delims tokens flag set   
+        
+   -------------------------------------------- 
+   
+        filter classes 
+   
+   -------------------------------------------- 
+    
+       abstract class converts derived filter classes chainablereaderfilter's 
+        
+    
+           set whether use filetokenizer line tokenizer 
+            param byline true use linetokenizer  default  otherwise 
+                         use filetokenizer 
+            
+    
+           chain tokenfilter reader reader  
+           
+            param reader input reader object 
+            return chained reader object 
+            
+    
+       simple replace string filter attribute 
+           
+            param string replace attribute 
+           
+            param string replace filter string 'line' replacing c p replace task  
+            param line string filtered 
+            return filtered line 
+            
+   write everything up write replacement search again 
+   write remaining characters 
+    
+       simple filter filter lines contains strings contains attribute 
+            param contains string token contain 
+            
+    
+           filter strings contain contains attribute 
+           
+            param string string filtered 
+            return null string not contain  contains   
+                        string otherwise 
+            
+    
+       filter replace regex attribute 
+            param regex string attribute 
+            param replacement string 
+            
+    
+            param flags regex flags 
+            
+    
+            param line string modify 
+            return modified string 
+            
+    
+       filter filter tokens matching regular expressions  
+        
+    
+            param regex pattern 
+            
+    
+            param replacement string 
+            
+    
+            param flags regex flags 
+            
+    
+           apply regex substitution string 
+            param string string apply filter return filtered string 
+            
+    filter trim white space    
+    
+            param line string trimmed 
+            return trimmed string 
+            
+    filter remove empty tokens    
+    
+            param line line modify 
+            return trimmed line 
+            
+    
+       filter delete characters 
+        
+   attributes list characters remove input    
+    
+           set list characters delete 
+            param deletechars list characters 
+            
+    
+           remove characters string 
+            param string string remove characters return converted string 
+            
+    
+           factory method provide reader removes characters reader part filter 
+           chain 
+            param reader reader object 
+            return chained reader object 
+            
+    
+                    return next non delete character 
+                    
+    check character c deleted    
+   -------------------------------------------------------- 
+    static utility methods placed somewhere xml not c interpretation strings e  \n\r\t etc method processes \n  \r  \t  \f subs \s -    \n\r\t\f trailing ignored 
+       
+        param input raw string possible embedded '\'s 
+        return converted string 
+        
+    
+       convert regex option flag characters regex options 
+        dl  
+          li g -  regexp replace_all  li  
+          li regexp match_case_insensitive  li  
+          li m -  regexp match_multiline  li  
+          li s -  regexp match_singleline  li  
+         dl  
+        param flags string containing flags 
+        return regexp option bits 
+       org apache tools ant filters TokenFilter org apache tools ant filters tokenfilter basefilterreader chainablereader filter filter string tokenfilter tokenfilter reader in in read ioexception tokenizer tokenizer linetokenizer line line length      0    
+            line   tokenizer gettoken in line 1 enumeration e   filters elements    e hasmoreelements       
+                filter filter    filter  e nextelement    
+                line   filter filter line line linepos   0 line tokenizer getposttoken   length      0 delimoutput line   line   delimoutput line   line   tokenizer getposttoken ch   line charat linepos   
+        linepos linepos    line length      
+            line ch reader chain reader reader    
+        tokenfilter newfilter tokenfilter reader   
+        newfilter filters   filters  
+        newfilter tokenizer   tokenizer  
+        newfilter delimoutput   delimoutput  
+        newfilter setproject getproject newfilter setdelimoutput delimoutput delimoutput   resolvebackslash delimoutput addlinetokenizer linetokenizer tokenizer    
+        add tokenizer addstringtokenizer stringtokenizer tokenizer    
+        add tokenizer addfiletokenizer filetokenizer tokenizer    
+        add tokenizer add tokenizer tokenizer tokenizer buildexception  only one tokenizer allowed tokenizer   tokenizer addreplacestring replacestring filter    
+        filters addelement filter addcontainsstring containsstring filter    
+        filters addelement filter addreplaceregex replaceregex filter    
+        filters addelement filter addcontainsregex containsregex filter    
+        filters addelement filter addtrim trim filter    
+        filters addelement filter addignoreblank ignoreblank filter    
+        filters addelement filter adddeletecharacters deletecharacters filter    
+        filters addelement filter add filter filter    
+        filters addelement filter filetokenizer org apache tools ant util filetokenizer stringtokenizer org apache tools ant util stringtokenizer chainablereaderfilter projectcomponent chainablereader  filter setbyline byline byline   byline reader chain reader reader    
+            tokenfilter tokenfilter tokenfilter reader byline    
+                tokenfilter add filetokenizer     
+              
+            tokenfilter add tokenfilter replacestring chainablereaderfilter setfrom from from   from setto to to   to filter line from buildexception  missing from in stringreplace    
+              
+            stringbuffer ret stringbuffer start   0 found   line indexof from found    0 found   start    
+                    ret append line substring start  found to ret append to   
+                  
+ 
+                  
+                start   found   from length    
+                found   line indexof from  start line length     start    
+                ret append line substring start  line length ret tostring containsstring projectcomponent filter setcontains contains contains   contains filter string contains buildexception  missing contains in containsstring indexof contains    -1 replaceregex chainablereaderfilter setpattern from from   from setreplace to to   to setflags flags flags   flags initialize initialized options   convertregexoptions flags from buildexception  missing pattern in replaceregex    
+              
+            regularexpression regularexpression    
+            regularexpression setpattern from   
+            regexp   regularexpression getregexp getproject to to       
+              
+            substitution substitution    
+            substitution setexpression to filter line    
+            initialize regexp matches line  options line regexp substitute  
+                line  substitution getexpression getproject     options containsregex chainablereaderfilter setpattern from from   from setreplace to to   to setflags flags flags   flags initialize initialized options   convertregexoptions flags from buildexception  missing from in containsregex    
+              
+            regularexpression regularexpression    
+            regularexpression setpattern from   
+            regexp   regularexpression getregexp getproject to substitution substitution    
+            substitution setexpression to filter string    
+            initialize regexp matches options substitution regexp substitute substitution getexpression getproject     options trim chainablereaderfilter filter line line trim ignoreblank chainablereaderfilter filter line line trim   length      0 line deletecharacters projectcomponent filter  chainablereader setchars deletechars deletechars   resolvebackslash deletechars filter string    
+            stringbuffer output stringbuffer length i   0  i length      i ch charat i isdeletecharacter ch      
+                    output append ch output tostring reader chain reader reader basefilterreader reader read ioexception c   in read c    -1 c isdeletecharacter c c isdeletecharacter c d   0  d   deletechars length      d deletechars charat d      c resolvebackslash input stringutils resolvebackslash input convertregexoptions flags flags 0 options   0 flags indexof 'g'     -1    
+            options    regexp replace_all flags indexof 'i'     -1    
+            options    regexp match_case_insensitive flags indexof 'm'     -1    
+            options    regexp match_multiline flags indexof 's'     -1    
+            options    regexp match_singleline options  
+      
+ org apache tools ant filters TokenFilter

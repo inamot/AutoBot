@@ -1,0 +1,172 @@
+ 
+   $id$ 
+   copyright  c  2005-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications class some similar functions persistencemanager   p centralizes knowledge different graphical formats class only one supposed know complete list supported graphics formats  
+   
+    author mvw tigris org configuration key preferred graphics format configuration key save graphics  file location configuration key save graphics  file location configuration key export graphics resolution default file format list file formats singleton instance constructor  
+        
+    
+        param suffix extension new default file-format 
+        
+    
+        param f new default file-format 
+        
+   
+                see java util comparator#compare t  t  
+                
+    
+        return returns singleton function allows add new filters done e g modules  p  
+       
+        param f filter 
+        
+    
+        param chooser filechooser filters set 
+        param defaultname default filename show chooser displayed class listens changes selected filefilter user changes filefilter 
+        e g changes gif png filename field emptied before introduced class  
+       now new filename made up  based diagram name new extension  suffix   
+       
+        author mvw tigris org 
+        
+    
+           constructor  
+            param c 
+            param name 
+            
+   
+            see java beans propertychangelistener#propertychange java beans propertychangeevent next line not work     
+   chooser setselectedfile new file filename s hard way     
+    
+               constructor  
+               
+                param fn filename  
+                
+   
+                see java lang runnable#run   
+                
+    
+        param name filename 
+        return filter 
+        
+    
+        return extension default filter text  not param input file path name may may not recognised extension 
+        return amended file pathname  guaranteed recognised extension 
+        
+    
+        param suffix suffix  extension filename corresponds graphics format used 
+        return command save 
+        deprecated 0 25 3 tfmorris - use 
+                     link #getsaveactionbysuffix string   
+        
+    
+        param suffix suffix  extension filename corresponds graphics format used 
+        return action save 
+        
+    
+        return complete collection suffixfilters first one default one 
+        
+    
+   class adjust   link org tigris gef base cmdsaveeps purpuses  p  
+   
+   todo doing refactoring  february 2004 unclear linus 
+   tolke modification link org tigris gef base cmdsaveeps  
+   behavior needed bug gef added feature old comment override gef default cope scaling  
+    
+   todo behavior need replicated link saveepsaction well? - tfm - 20070511 
+    
+   
+        see org tigris gef base cmdsavegraphics#savegraphics  
+               java io outputstream  org tigris gef base editor  
+               java awt rectangle uid  
+       org argouml uml ui SaveGraphicsManager org argouml uml ui savegraphicsmanager configurationkey key_default_graphics_filter   
+        configuration makekey  graphics filter configurationkey key_save_graphics_path   
+        configuration makekey  graphics    save    path configurationkey key_saveall_graphics_path   
+        configuration makekey  graphics    save-all    path configurationkey key_graphics_resolution   
+        configuration makekey  graphics    export    resolution savegraphicsmanager     
+        defaultfilter   filefilters png_filter  
+        otherfilters add filefilters gif_filter   
+        otherfilters add filefilters svg_filter   
+        otherfilters add filefilters ps_filter   
+        otherfilters add filefilters eps_filter   
+        setdefaultfilterbysuffix configuration getstring  
+                key_default_graphics_filter  
+                defaultfilter getsuffix setdefaultfilterbysuffix suffix    
+        iterator i   otherfilters iterator i hasnext      
+            suffixfilter sf    suffixfilter  i next sf getsuffix   equalsignorecase suffix     
+                setdefaultfilter sf setdefaultfilter suffixfilter f    
+        otherfilters remove f otherfilters contains defaultfilter     
+            otherfilters add defaultfilter   
+          
+        defaultfilter   f  
+        configuration setstring  
+                key_default_graphics_filter  
+                f getsuffix     
+ 
+        collections sort otherfilters comparator compare object arg0  object arg1 suffixfilter  arg0  getsuffix   comparetoignorecase  
+                          suffixfilter  arg1  getsuffix savegraphicsmanager getinstance instance instance savegraphicsmanager instance register suffixfilter f    
+        otherfilters add f setfilechooserfilters  
+            jfilechooser chooser defaultname    
+        chooser addchoosablefilefilter defaultfilter   
+        iterator iter   otherfilters iterator iter hasnext      
+            chooser addchoosablefilefilter  suffixfilter  iter next     
+          
+        chooser setfilefilter defaultfilter filename   defaultname         defaultfilter getsuffix    
+        chooser setselectedfile file filename    
+        chooser addpropertychangelistener  
+                jfilechooser file_filter_changed_property filefilterchangedlistener chooser  defaultname filefilterchangedlistener propertychangelistener filefilterchangedlistener jfilechooser c name    
+            chooser   c  
+            defaultname   name propertychange propertychangeevent evt    
+            suffixfilter filter    suffixfilter  evt getnewvalue filename   defaultname         filter getsuffix    
+              
+              
+              
+            swingutilities invokelater anonymous1 filename anonymous1 runnable   
+  
+              
+            anonymous1 fn    
+                filename   fn run     
+                chooser setselectedfile file filename suffixfilter getfilterfromfilename name name tolowercase   
+             endswith       defaultfilter getsuffix defaultfilter  
+          
+        iterator iter   otherfilters iterator iter hasnext      
+            suffixfilter filter    suffixfilter  iter next name tolowercase   endswith       filter getsuffix filter getdefaultsuffix defaultfilter getsuffix fixextension in getfilterfromfilename in in          getdefaultsuffix in  
+      
+ 
+      
+     suppresswarnings  deprecation cmdsavegraphics getsavecommandbysuffix suffix    
+        cmdsavegraphics cmd filefilters ps_filter getsuffix   equals suffix     
+            cmd cmdsaveps filefilters eps_filter getsuffix   equals suffix     
+            cmd actionsavegraphicscmdsaveeps filefilters png_filter getsuffix   equals suffix     
+            cmd cmdsavepng filefilters gif_filter getsuffix   equals suffix     
+            cmd cmdsavegif filefilters svg_filter getsuffix   equals suffix     
+            cmd cmdsavesvg cmd savegraphicsaction getsaveactionbysuffix suffix    
+        savegraphicsaction cmd filefilters ps_filter getsuffix   equals suffix     
+            cmd savepsaction translator localize  action save-ps filefilters eps_filter getsuffix   equals suffix     
+            cmd saveepsaction translator localize  action save-eps filefilters png_filter getsuffix   equals suffix     
+            cmd savepngaction translator localize  action save-png filefilters gif_filter getsuffix   equals suffix     
+            cmd savegifaction translator localize  action save-gif filefilters svg_filter getsuffix   equals suffix     
+            cmd savesvgaction translator localize  action save-svg cmd collection getsettingslist     
+        collection c arraylist    
+        c add defaultfilter   
+        iterator iter   otherfilters iterator iter hasnext      
+            c add  iter next c actionsavegraphicscmdsaveeps cmdsaveeps savegraphics outputstream s  editor ce  
+                                rectangle drawingarea ioexception editorscale   ce getscale x drawingarea x   editorscale y drawingarea y   editorscale h drawingarea height   editorscale w drawingarea width   editorscale   
+        drawingarea rectangle x  y  w  h   
+ 
+        postscriptwriter ps postscriptwriter s  drawingarea   
+ 
+        ps scale editorscale  editorscale   
+ 
+        ce print ps   
+        ps dispose    
+      
+ 
+      
+  
+  
+org argouml uml ui SaveGraphicsManager

@@ -1,0 +1,170 @@
+ 
+   $id$ 
+   copyright  c  2005-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications pgml parser  
+    
+    
+       logger  
+        
+    
+       constructor  
+        param modelelementsbyuuid map model elements indexed unique string identifier  
+        
+   todo  use stylesheet convert wait till use fig 
+   factories diagram subsystem last version used fignote? 
+   convert class reference string name class removed 
+   
+        see org tigris gef persistence pgml handlerfactory#gethandler  
+               handlerstack  object  string  string  string  attributes  
+        
+   ignore non-private elements within fignode groups 
+   handle itemuid container contents 
+   
+        see org tigris gef persistence pgml pgmlstackparser#setattrs  
+               org tigris gef presentation fig  org xml sax attributes  
+        
+   discard class name  x y w h 
+   todo  attempt move following code gef 
+   assign nodes immediately edges later  see issue 4310 stringtokenizer expected positioned start string style identifiers format name value name value name value     
+       each name value pair interpreted fig configured accordingly value optional default value applicable name current applicable names operationsvisible attributesvisible used show hide compartments within class interface default values true  
+        param st strinktokenizer positioned first style identifier 
+        return map attributes 
+        
+    
+       set fig style attributes move render factories described issue 859  
+        param fig fig style  
+        param attributemap map name value pairs called nodes edges read placed diagram method attaches edges correct node  
+       including nodes contained within edges allowing edge edge 
+       connections comment edges  association classes dependencies  
+        param d diagram 
+        
+   once edges connected compute route each make 
+   sure annotations edge port positioned correctly 
+   only edges connected compute route 
+   requires edges connected nodes  
+   todo  move gef 
+   todo  move gef fignode fig id represents  
+       
+        param figid form figx y z  
+        return fignode given id 
+        throws illegalstateexception figid supplied not fignode dot must top level fig assumed fignode id not look top-level fig assume id figedgeport inside some figedge extract figedgeport figedge return fignode  
+   todo  move gef fig fignode port  
+       
+        param fignode fignode 
+        return fig port given fignode 
+        
+   todo every time need bob 
+   todo  move geforg argouml persistence PGMLStackParser org argouml persistence pgmlstackparser org tigris gef persistence pgml pgmlstackparser logger log   
+        logger getlogger pgmlstackparser pgmlstackparser map modelelementsbyuuid modelelementsbyuuid   
+          
+          
+          
+        addtranslation  org argouml uml diagram ui fignote   
+        	 org argouml uml diagram static_structure ui figcomment    
+        addtranslation  org argouml uml diagram static_structure ui fignote   
+             org argouml uml diagram static_structure ui figcomment    
+        addtranslation  org argouml uml diagram state ui figstate   
+             org argouml uml diagram state ui figsimplestate    
+        addtranslation  org argouml uml diagram ui figcommentport   
+             org argouml uml diagram ui figedgeport    
+          
+        addtranslation  
+                figmnodeinstance getname    
+                fignodeinstance getname defaulthandler gethandler handlerstack stack  
+                                             object container uri localname qname  
+                                             attributes attributes saxexception href   attributes getvalue  href    
+        object owner href owner   findowner href owner log warn  found href of    
+                	  href 
+                	    with no matching element in model container figgrouphandler    
+            figgroup group     figgrouphandler  container  getfiggroup group fignode     qname equals qname equals container container privatehandler container  container   
+          
+ 
+        defaulthandler handler gethandler stack  container  uri  localname  qname  
+                    attributes handler figedgehandler org argouml persistence figedgehandler figedgehandler  handler  getfigedge handler setattrs fig f  attributes attrlist saxexception f figgroup    
+            figgroup group    figgroup  f clsnamebounds   attrlist getvalue  description clsnamebounds stringtokenizer st stringtokenizer clsnamebounds st hasmoreelements      
+                    st nexttoken st hasmoreelements      
+                    st nexttoken st hasmoreelements      
+                    st nexttoken st hasmoreelements      
+                    st nexttoken st hasmoreelements      
+                    st nexttoken    
+                  
+ 
+                map attributemap   interpretstyle st   
+                setstyleattributes group  attributemap name   attrlist getvalue  name name name equals        
+            registerfig f  name   
+          
+ 
+        setcommonattrs f  attrlist href   attrlist getvalue  href href href equals        
+            object modelelement   findowner href modelelement log error  can't find href of     href saxexception  found href of     href 
+				           with no matching element in model f getowner      modelelement f figedge    
+                    modelelementsbyfigedge put f  modelelement f setowner modelelement log debug  ignoring href on     f getclass   getname   
+			     as it's already set map interpretstyle stringtokenizer st    
+        map map hashmap name value st hasmoreelements namevaluepair   st nexttoken equalspos   namevaluepair indexof equalspos   0    
+                name   namevaluepair  
+                value name   namevaluepair substring 0  equalspos   
+                value   namevaluepair substring equalspos   1   
+              
+ 
+            map put name  value map setstyleattributes fig fig  map attributemap name value  
+        iterator it   attributemap entryset   iterator it hasnext      
+            map entry entry    map entry  it next    
+            name entry getkey    
+            value entry getvalue operationsvisible  equals name     
+                  operationscompartmentcontainer  fig  
+                     setoperationsvisible value equalsignorecase attributesvisible  equals name     
+                  attributescompartmentcontainer  fig  
+                     setattributesvisible value equalsignorecase stereotypevisible  equals name     
+                  stereotypecontainer  fig  
+                     setstereotypevisible value equalsignorecase visibilityvisible  equals name     
+                  visibilitycontainer  fig  
+                 setvisibilityvisible value equalsignorecase pathvisible  equals name     
+                  pathcontainer  fig  
+                     setpathvisible value equalsignorecase extensionpointvisible  equals name     
+                  extensionscompartmentcontainer  fig  
+                     setextensionpointvisible value equalsignorecase diagram readdiagram inputstream is closestream saxexception   
+        diagram d readdiagram is  closestream   
+         
+        attachedges d d attachedges diagram d iterator it   figedges iterator    it hasnext        
+            edgedata edgedata    edgedata  it next    
+            figedge edge   edgedata getfigedge    
+             
+            object modelelement   modelelementsbyfigedge get edge modelelement edge setowner modelelement iterator it   figedges iterator    it hasnext        
+            edgedata edgedata    edgedata  it next    
+            figedge edge   edgedata getfigedge    
+             
+            fig sourceportfig fig destportfig fignode sourcefignode fignode destfignode sourceportfig   findfig edgedata getsourceportfig     
+            destportfig   findfig edgedata getdestportfig     
+            sourcefignode   getfignode edgedata getsourcefignode     
+            destfignode   getfignode edgedata getdestfignode sourceportfig sourcefignode sourceportfig   getportfig sourcefignode destportfig destfignode destportfig   getportfig destfignode sourceportfig destportfig sourcefignode destfignode log error  can't find nodes figedge    
+                          edge getid         
+                          edge tostring     
+                edge removefromdiagram edge setsourceportfig sourceportfig   
+                edge setdestportfig destportfig   
+                edge setsourcefignode sourcefignode   
+                edge setdestfignode destfignode iterator it   d getlayer   getcontentsedgesonly   iterator    
+                it hasnext        
+              figedge  it next    computerouteimpl addfigedge figedge figedge sourceportfig destportfig sourcefignode destfignode    
+        figedges add edgedata figedge  sourceportfig  destportfig   
+                sourcefignode  destfignode fignode getfignode figid illegalstateexception figid indexof ' '    0    
+              
+              
+            fig f   findfig figid f fignode fignode  f log error  figid     figid     is not a node  edge ignored figid   figid substring 0  figid indexof ' '    
+        figedgemodelelement edge    figedgemodelelement  findfig figid edge illegalstateexception  
+                     can't find a fignode with id     figid   
+          
+        edge makeedgeport edge getedgeport fig getportfig fignode fignode fignode figedgeport fignode fig  fignode getportfigs   get 0 edgedata edgedata figedge edge sourceport destport sourcenode destnode figedge   edge sourceportfig   sourceport destportfig   destport sourcefignode   sourcenode destfignode   destnode getdestfignode destfignode getdestportfig destportfig figedge getfigedge figedge getsourcefignode sourcefignode getsourceportfig sourceportfig  
+          
+      
+ 
+     override fig constructfig classname href  rectangle bounds saxexception   
+	 
+	fig f classname equals figpool getname       
+            f figpool bounds f constructfig classname  href  bounds f  
+      
+ org argouml persistence PGMLStackParser

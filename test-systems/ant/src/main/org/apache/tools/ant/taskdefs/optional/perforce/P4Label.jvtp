@@ -1,0 +1,109 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+   
+   portions software based upon public domain software 
+   originally written national center supercomputing applications  
+   university illinois  urbana-champaign  
+    
+    
+    creates new perforce label set contents reflect current 
+    client file revisions  
+   
+    label name defaults antlabel none set  
+   
+   example usage  
+    pre  
+      lt p4label name  mylabel-$ tstamp -$ dstamp   desc  auto build label    gt  
+     pre  
+   
+    ant task category  scm  
+    
+   checkstyle visibilitymodifier bc 
+   checkstyle visibilitymodifier name label  optional  default  antlabel  
+        param name name label 
+        
+    
+      label description  optional 
+        param desc description label set locked   perforce lock label once created  optional  
+        param lock only admissible value  locked work 
+        throws buildexception failonerror set true perforce fails 
+        
+  depot       project msg_warn   
+  depot create unlocked label first 
+  now lock required 
+  read back label spec perforce  
+  replace options 
+  submit back perforceorg apache tools ant taskdefs optional perforce P4Label org apache tools ant taskdefs optional perforce p4label p4base name desc lock setname name name   name setdesc desc desc   desc setlock lock lock   lock execute buildexception   
+        log  p4label exec    project msg_info p4view p4view length     1    
+            log  view not set  assuming   
+            p4view p4view   stringutils replace p4view        \n\t    
+            p4view   stringutils replace p4view        \n\t desc desc length     1    
+            log  label description not set  assuming 'antlabel'   
+                project msg_warn   
+            desc    antlabel lock lock equalsignorecase  locked      
+            log  lock attribute invalid - ignoring   project msg_warn name name length     1    
+            simpledateformat formatter simpledateformat  yyyy mm dd-hh mm    
+            date now date    
+            name    antlabel-    formatter format now   
+            log  name not set  assuming '    name    '   project msg_warn newlabel   
+                 label      name 
+                   \ndescription      desc 
+                   \noptions  unlocked  
+                   \nview  \n\t    p4view  
+ 
+        p4handler handler p4handleradapter process line    
+                log line  project msg_verbose   
+              
+           
+ 
+        handler setoutput newlabel   
+ 
+        execp4command  label -i   handler   
+ 
+        execp4command  labelsync -l     name p4handleradapter process line    
+                log line  project msg_verbose   
+              
+            
+ 
+ 
+        log  created label     name          desc      with view \n    p4view  
+            project msg_info lock lock equalsignorecase  locked      
+ 
+            log  modifying lock status to 'locked'   project msg_info stringbuffer labelspec stringbuffer    
+ 
+              
+              
+              
+ 
+            handler p4handleradapter process line    
+                    log line  project msg_verbose util match   ^options     line     
+                        line    options      lock  
+                      
+ 
+                    labelspec append line    \n    
+                  
+               
+ 
+ 
+            execp4command  label -o     name  handler   
+            log labelspec tostring    project msg_debug   
+ 
+            log  now locking label      project msg_verbose   
+            handler p4handleradapter process line    
+                    log line  project msg_verbose   
+                  
+               
+ 
+            handler setoutput labelspec tostring     
+            execp4command  label -i   handler   
+          
+      
+ org apache tools ant taskdefs optional perforce P4Label

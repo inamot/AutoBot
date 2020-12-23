@@ -1,0 +1,222 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   examines output cvs rdiff between two tags produces xml output representing list changes  
+    pre  
+    lt  -- root element -- gt  
+    lt  element tagdiff   entry     gt  
+    lt  -- start tag report -- gt  
+    lt  attlist tagdiff starttag nmtoken #implied  gt  
+    lt  -- end tag report -- gt  
+    lt  attlist tagdiff endtag nmtoken #implied  gt  
+    lt  -- start date report -- gt  
+    lt  attlist tagdiff startdate nmtoken #implied  gt  
+    lt  -- end date report -- gt  
+    lt  attlist tagdiff enddate nmtoken #implied  gt  
+   
+    lt  -- cvs tag entry -- gt  
+    lt  element entry   file    gt  
+    lt  -- file added  changed removed -- gt  
+    lt  element file   name  revision?  prevrevision?    gt  
+    lt  -- name file -- gt  
+    lt  element name   #pcdata    gt  
+    lt  -- revision number -- gt  
+    lt  element revision   #pcdata    gt  
+    lt  -- previous revision number -- gt  
+    lt  element prevrevision   #pcdata    gt  
+     pre ant 1 5 
+    ant task name  cvstagdiff  
+    
+    
+       used create temp file cvs log 
+        
+    stateless helper writing xml document    
+    
+       token identify word file rdiff log 
+        
+    
+       token identify word file rdiff log 
+        
+    
+       token identify new file rdiff log 
+        
+    
+       token identify revision 
+        
+    
+       token identify modified file rdiff log 
+        
+    
+       token identify removed file rdiff log cvs package module analyse earliest tag diffs included report latest tag diffs included report earliest date diffs included report latest date diffs included report file write diff report package module analyze  
+        param p name package analyse 
+        
+    
+       set start tag  
+       
+        param s start tag  
+        
+    
+       set start date  
+       
+        param s start date  
+        
+    
+       set end tag  
+       
+        param s end tag  
+        
+    
+       set end date  
+       
+        param s end date  
+        
+    
+       set output file diff  
+       
+        param f output file diff  
+        
+    
+       execute task  
+       
+        exception buildexception error occurs 
+        
+   validate input parameters 
+   build rdiff command 
+   support multiple packages 
+   force command not null 
+   run cvs command 
+   parse rdiff 
+   write tag diff 
+    
+       parse tmpfile return array cvstagentry written output  
+       
+        param tmpfile file containing output cvs rdiff command 
+        return entries output 
+        exception buildexception error occurs 
+        
+   parse output command 
+   entries form  
+  cvs 1 11 
+   file module filename new  current revision 1 1 
+  cvs 1 11 9 
+   file module filename new  cvstag_2003_11_03_2  revision 1 1 file module filename changed revision 1 4 1 6 file module filename removed  not included release tag skinlf_12 
+  cvs 1 11 9 
+   file testantoine antoine bat removed  testantoine_1 revision 1 1 1 1 rid file module new file 
+   set revision not prevrevision modified file 
+   set revision prevrevision removed file 
+    
+       write rdiff log  
+       
+        param entries code cvstagentry    code  value 
+        exception buildexception error occurs 
+        
+    
+       write single entry given writer  
+       
+        param doc document used create elements  
+        param writer code printwriter  code  value 
+        param entry code cvstagentry  code  value 
+        
+    
+       validate parameters specified task  
+       
+        exception buildexception parameter not correctly set 
+       org apache tools ant taskdefs cvslib CvsTagDiff org apache tools ant taskdefs cvslib cvstagdiff abstractcvstask file_string    file to_string     to file_is_new     is revision    revision file_has_changed     changed from revision file_was_removed     is removed setpackage p    
+        mypackage   p setstarttag s    
+        mystarttag   s setstartdate s    
+        mystartdate   s setendtag s    
+        myendtag   s setenddate s    
+        myenddate   s setdestfile file f    
+        mydestfile   f execute buildexception   
+          
+        validate    
+ 
+          
+        addcommandargument  rdiff    
+        addcommandargument  -s mystarttag addcommandargument  -r    
+            addcommandargument mystarttag addcommandargument  -d    
+            addcommandargument mystartdate myendtag addcommandargument  -r    
+            addcommandargument myendtag addcommandargument  -d    
+            addcommandargument myenddate   
+          
+          
+        stringtokenizer mytokenizer stringtokenizer mypackage mytokenizer hasmoretokens      
+            addcommandargument mytokenizer nexttoken     
+          
+          
+        setcommand      
+        file tmpfile tmpfile   file_utils createtempfile  cvstagdiff     log tmpfile deleteonexit    
+            setoutput tmpfile execute    
+ 
+              
+            cvstagentry   entries   parserdiff tmpfile   
+ 
+              
+            writetagdiff entries tmpfile tmpfile delete cvstagentry   parserdiff file tmpfile buildexception   
+          
+        bufferedreader reader reader bufferedreader filereader tmpfile toberemoved   file_string   mypackage headerlength   toberemoved length    
+            vector entries vector line   reader readline index  
+            cvstagentry entry null    line line length     headerlength line startswith toberemoved     
+                        line   line substring headerlength line   line substring file_string length index   line indexof file_is_new      -1 filename   line substring 0  index rev indexrev   -1 indexrev   line indexof revision  index      -1    
+                            rev   line substring indexrev   revision length     
+                          
+                        entry cvstagentry filename  rev   
+                        entries addelement entry   
+                        log entry tostring    project msg_verbose index   line indexof file_has_changed      -1 filename   line substring 0  index revseparator   line indexof   to    index prevrevision   
+                            line substring index   file_has_changed length    
+                                revseparator revision   line substring revseparator   to_string length     
+                        entry cvstagentry filename  
+                            revision  
+                            prevrevision   
+                        entries addelement entry   
+                        log entry tostring    project msg_verbose index   line indexof file_was_removed      -1 filename   line substring 0  index rev indexrev   -1 indexrev   line indexof revision  index      -1    
+                            rev   line substring indexrev   revision length     
+                          
+                        entry cvstagentry filename rev   
+                        entries addelement entry   
+                        log entry tostring    project msg_verbose   
+                      
+                  
+                line   reader readline    
+              
+ 
+            cvstagentry   array cvstagentry entries size     
+            entries copyinto array array ioexception e buildexception  error in parsing   e reader reader close ioexception e    
+                    log e tostring    project msg_err writetagdiff cvstagentry   entries buildexception   
+        fileoutputstream output output fileoutputstream mydestfile   
+            printwriter writer printwriter outputstreamwriter output   utf-8     
+            writer println   ?xml version \ 1 0\  encoding \ utf-8\ ?     
+            document doc   domutils newdocument    
+            element root   doc createelement  tagdiff mystarttag root setattribute  starttag   mystarttag root setattribute  startdate   mystartdate myendtag root setattribute  endtag   myendtag root setattribute  enddate   myenddate   
+              
+ 
+            root setattribute  cvsroot   getcvsroot     
+            root setattribute mypackage   
+            dom_writer openelement root  writer  0   \t    
+            writer println i   0  c   entries length  i   c  i      
+                writetagentry doc  writer  entries i    
+              
+            dom_writer closeelement root  writer  0   \t writer flush    
+            writer close unsupportedencodingexception uee    
+            log uee tostring    project msg_err ioexception ioe buildexception ioe tostring    ioe output output close ioexception ioe    
+                    log ioe tostring    project msg_err writetagentry document doc  printwriter writer  
+                               cvstagentry entry ioexception   
+        element ent   doc createelement  entry    
+        element f   domutils createchildelement ent   file    
+        domutils appendcdataelement f   name   entry getfile entry getrevision domutils appendtextelement f   revision   entry getrevision entry getpreviousrevision domutils appendtextelement f   prevrevision   
+                                       entry getpreviousrevision     
+          
+        dom_writer write ent  writer  1   \t validate buildexception mypackage buildexception module must be set mydestfile buildexception  destfile must be set mystarttag mystartdate buildexception  start tag or start date must be set mystarttag mystartdate buildexception  only one of start tag and start date   
+                                        must be set myendtag myenddate buildexception  end tag or end date must be set myendtag myenddate buildexception  only one of end tag and end date must   
+                                        be set     
+          
+      
+ org apache tools ant taskdefs cvslib CvsTagDiff

@@ -1,0 +1,245 @@
+ 
+   $id  profileselectiontab java 13040 2007-07-10 20 00 25z linus $ 
+   copyright  c  2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications tab containing global settings profiles 
+   
+    author marcos aurélio default constructor class 
+        
+               
+             
+      
+  added 
+   
+        see java awt event actionlistener#actionperformed java awt event actionevent  
+        
+    
+        return internationalization key containing name tab 
+        see org argouml application api guisettingstabinterface#gettabkey   
+        
+    
+        return panel containing tab 
+        see org argouml application api guisettingstabinterface#gettabpanel   
+       org argouml ui SettingsTabProfile org argouml ui settingstabprofile jpanel guisettingstabinterface  actionlistener jbutton loadfromfile jbutton translator 
+	     localize  tab profiles userdefined load jbutton unregisterprofile jbutton translator 
+	     localize  tab profiles userdefined unload jbutton adddirectory jbutton translator 
+             localize  tab profiles directories add jbutton removedirectory jbutton translator 
+             localize  tab profiles directories remove jbutton refreshprofiles jbutton translator 
+             localize  tab profiles directories refresh jlabel stereolabel jlabel translator localize  menu popup stereotype-view settingstabprofile     
+	setlayout boxlayout boxlayout y_axis    
+ 
+          
+         
+        jpanel setdefstereov jpanel    
+        setdefstereov setlayout flowlayout             
+         
+        stereolabel setlabelfor stereofield   
+        setdefstereov add stereolabel   
+        setdefstereov add stereofield   
+ 
+        defaultcomboboxmodel cmodel defaultcomboboxmodel    
+        stereofield setmodel cmodel   
+         
+        cmodel addelement translator 
+                 localize  menu popup stereotype-view textual     
+        cmodel addelement translator 
+                 localize  menu popup stereotype-view big-icon     
+        cmodel addelement translator 
+                 localize  menu popup stereotype-view small-icon     
+         
+        stereofield additemlistener itemlistener itemstatechanged itemevent e    
+                object src   e getsource src    stereofield    
+                    object item   e getitem    
+                    defaultcomboboxmodel model    
+                         defaultcomboboxmodel  stereofield getmodel idx   model getindexof item idx 0  
+                        configuration setinteger  
+                            profileconfiguration key_default_stereotype_view  
+                            fignodemodelelement stereotype_view_textual 1  
+                        configuration setinteger  
+                            profileconfiguration key_default_stereotype_view  
+                            fignodemodelelement stereotype_view_big_icon 2  
+                        configuration setinteger  
+                            profileconfiguration key_default_stereotype_view  
+                            fignodemodelelement stereotype_view_small_icon add setdefstereov   
+                 
+          
+         
+        directorylist setprototypecellvalue  
+                 123456789012345678901234567890123456789012345678901234567890    
+        directorylist setminimumsize dimension 50  50    
+         
+        jpanel sdirpanel jpanel    
+        sdirpanel setlayout boxlayout sdirpanel  boxlayout y_axis    
+         
+        jpanel dlist jpanel    
+        dlist setlayout borderlayout     
+                 
+        jpanel lcb jpanel    
+        lcb setlayout boxlayout lcb  boxlayout y_axis    
+         
+        lcb add adddirectory   
+        lcb add removedirectory   
+ 
+        adddirectory addactionlistener removedirectory addactionlistener dlist add jscrollpane directorylist   borderlayout center   
+        dlist add lcb  borderlayout east   
+         
+        sdirpanel add jlabel translator 
+                 localize  tab profiles directories desc      
+        sdirpanel add dlist   
+ 
+        add sdirpanel   
+         
+          
+         
+	jpanel configpanel jpanel    
+	configpanel setlayout boxlayout configpanel  boxlayout x_axis    
+ 
+	availablelist setprototypecellvalue  12345678901234567890    
+	defaultlist setprototypecellvalue  12345678901234567890    
+ 
+	availablelist setminimumsize dimension 50  50    
+	defaultlist setminimumsize dimension 50  50    
+ 
+        refreshlists    
+        	 
+	jpanel leftlist jpanel    
+	leftlist setlayout borderlayout     
+	leftlist add jlabel translator 
+		 localize  tab profiles userdefined available     
+		borderlayout north   
+	leftlist add jscrollpane availablelist   borderlayout center   
+	configpanel add leftlist   
+ 
+	jpanel centerbuttons jpanel    
+	centerbuttons setlayout boxlayout centerbuttons  boxlayout y_axis    
+	centerbuttons add addbutton   
+	centerbuttons add removebutton   
+	configpanel add centerbuttons   
+ 
+	jpanel rightlist jpanel    
+	rightlist setlayout borderlayout     
+	rightlist add jlabel translator 
+		 localize  tab profiles userdefined borderlayout north          
+         
+	rightlist add jscrollpane defaultlist   borderlayout center   
+	configpanel add rightlist   
+ 
+	addbutton addactionlistener removebutton addactionlistener add configpanel   
+ 
+	jpanel lffpanel jpanel    
+	lffpanel setlayout flowlayout     
+	lffpanel add loadfromfile   
+	lffpanel add unregisterprofile   
+	lffpanel add refreshprofiles           
+         
+	loadfromfile addactionlistener unregisterprofile addactionlistener refreshprofiles addactionlistener add lffpanel refreshlists     
+        availablelist setmodel defaultcomboboxmodel getavailableprofiles   
+                 toarray      
+        defaultlist setmodel defaultcomboboxmodel getusedprofiles   
+                 toarray      
+        directorylist setmodel defaultcomboboxmodel profilefacade 
+                 getmanager   getsearchpathdirectories   toarray list profile  getusedprofiles arraylist profile  profilefacade getmanager   
+                 getdefaultprofiles list profile  getavailableprofiles     
+        list profile  used   getusedprofiles    
+        list profile  ret arraylist profile profile profile   profilefacade getmanager   
+                 getregisteredprofiles used contains profile     
+                ret add profile ret actionperformed actionevent arg0    
+        mutablecomboboxmodel modelavl     mutablecomboboxmodel  availablelist 
+                 getmodel     
+        mutablecomboboxmodel modelusd     mutablecomboboxmodel  defaultlist 
+                 getmodel arg0 getsource      addbutton availablelist getselectedindex      -1    
+                profile selected    profile  modelavl getelementat availablelist 
+                         getselectedindex     
+                modelusd addelement selected   
+                modelavl removeelement selected arg0 getsource      removebutton defaultlist getselectedindex      -1    
+                profile selected    profile  modelusd getelementat defaultlist 
+                         getselectedindex     
+                modelusd removeelement selected   
+                modelavl addelement selected arg0 getsource      unregisterprofile availablelist getselectedindex      -1    
+                profile selected    profile  modelavl getelementat availablelist 
+                         getselectedindex selected userdefinedprofile    
+                    profilefacade getmanager   removeprofile selected   
+                    modelavl removeelement selected joptionpane showmessagedialog translator 
+                             localize  tab profiles cannotdelete arg0 getsource      loadfromfile    
+	    jfilechooser filechooser jfilechooser    
+	    filechooser setfilefilter filefilter accept file file file isdirectory   
+                                file isfile       file getname   tolowercase   
+                                     endswith   xml      file getname   
+                                         tolowercase   endswith   xmi getdescription xmi ret   filechooser showopendialog ret    jfilechooser approve_option    
+		file file   filechooser getselectedfile userdefinedprofile profile userdefinedprofile file   
+ 
+                    profilefacade getmanager   registerprofile profile   
+ 
+                    modelavl addelement profile profileexception e    
+                    joptionpane showmessagedialog translator 
+                             localize  tab profiles userdefined errorloading arg0 getsource      removedirectory directorylist getselectedindex      -1 idx   directorylist getselectedindex    
+                  mutablecomboboxmodel  directorylist getmodel    
+                         removeelementat idx arg0 getsource      refreshprofiles refresh    joptionpane 
+                     showconfirmdialog translator 
+                                     localize  tab profiles confirmrefresh    
+                            translator 
+                                     localize  tab profiles confirmrefresh title    
+                            joptionpane yes_no_option     joptionpane yes_option refresh    
+                handlesettingstabsave    
+                profilefacade getmanager   refreshregisteredprofiles    
+                refreshlists arg0 getsource      adddirectory    
+            jfilechooser filechooser jfilechooser    
+            filechooser setfilefilter filefilter accept file file file isdirectory getdescription directories   
+                  
+ 
+                
+ 
+            filechooser setfileselectionmode jfilechooser directories_only ret   filechooser showopendialog ret    jfilechooser approve_option    
+                file file   filechooser getselectedfile path   file getabsolutepath    
+ 
+                  mutablecomboboxmodel  directorylist getmodel    
+                         addelement path   
+              
+             
+          
+         
+	availablelist validate    
+	defaultlist validate gettabkey tab profiles jpanel gettabpanel handleresettodefault     
+        refreshlists handlesettingstabcancel handlesettingstabrefresh     
+        refreshlists configuration getinteger  
+                profileconfiguration key_default_stereotype_view  
+                fignodemodelelement stereotype_view_textual fignodemodelelement stereotype_view_textual  
+            stereofield setselectedindex 0 fignodemodelelement stereotype_view_big_icon  
+            stereofield setselectedindex 1 fignodemodelelement stereotype_view_small_icon  
+            stereofield setselectedindex 2 handlesettingstabsave     
+        list profile  toremove arraylist profile             
+        list profile  useditens arraylist profile     
+ 
+        mutablecomboboxmodel modelusd     mutablecomboboxmodel  defaultlist 
+                 getmodel     
+        mutablecomboboxmodel modeldir     mutablecomboboxmodel  directorylist 
+                 getmodel i   0  i   modelusd getsize      i    
+            useditens add  profile  modelusd getelementat i profile profile   profilefacade getmanager   
+                 getdefaultprofiles useditens contains profile     
+                toremove add profile profile profile   toremove    
+            profilefacade getmanager   removefromdefaultprofiles profile profile profile   useditens profilefacade getmanager   getdefaultprofiles   
+                     contains profile     
+                profilefacade getmanager   addtodefaultprofiles profile   
+              
+          
+    
+        list toremovedir arraylist list useditensdir arraylist i   0  i   modeldir getsize      i    
+            useditensdir add modeldir getelementat i direntry   profilefacade getmanager   
+                 getsearchpathdirectories useditensdir contains direntry     
+                toremovedir add direntry direntry   toremovedir    
+            profilefacade getmanager   
+                     removesearchpathdirectory direntry direntry   useditensdir profilefacade getmanager   getsearchpathdirectories   
+                     contains direntry     
+                profilefacade getmanager   addsearchpathdirectory  
+                        direntry   
+              
+          
+ 
+      
+ 
+ org argouml ui SettingsTabProfile

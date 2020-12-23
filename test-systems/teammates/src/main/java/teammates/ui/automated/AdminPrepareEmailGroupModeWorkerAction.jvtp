@@ -1,0 +1,41 @@
+ 
+    
+   task queue worker action  prepares admin email sent via task queue group mode e  using group receiver list retrieved google cloud storage  gcs   
+   teammates ui automated AdminPrepareEmailGroupModeWorkerAction teammates ui automated adminprepareemailgroupmodeworkeraction automatedaction   
+ 
+  
+ 
+     override getactiondescription override getactionmessage override execute     
+        log info  preparing admin email task queue in group mode emailid   getrequestparamvalue paramsnames admin_email_id   
+        assumption assertpostparamnotnull paramsnames admin_email_id  emailid groupreceiverlistfilekey   getrequestparamvalue paramsnames admin_email_group_receiver_list_file_key   
+        assumption assertpostparamnotnull paramsnames admin_email_group_receiver_list_file_key  groupreceiverlistfilekey indexofemaillisttoresumeasstring   
+                getrequestparamvalue paramsnames admin_group_receiver_email_list_index indexofemailtoresumeasstring   getrequestparamvalue paramsnames admin_group_receiver_email_index indexofemaillisttoresume   indexofemaillisttoresumeasstring 0 
+                                         integer parseint indexofemaillisttoresumeasstring indexofemailtoresume   indexofemailtoresumeasstring 0 
+                                     integer parseint indexofemailtoresumeasstring list list processedreceiveremails   
+                    googlecloudstoragehelper getgroupreceiverlist blobkey groupreceiverlistfilekey    
+            addadminemailtotaskqueue emailid  groupreceiverlistfilekey  processedreceiveremails  
+                                     indexofemaillisttoresume  indexofemailtoresume ioexception e    
+            log severe  unexpected error adding admin email tasks    
+                         teammatesexception tostringwithstacktrace e isneardeadline timeleftinmillis   apiproxy getcurrentenvironment   getremainingmillis timeleftinmillis   1000   100 addadminemailtotaskqueue emailid groupreceiverlistfilekey  
+            list list processedreceiveremails indexofemaillisttoresume indexofemailtoresume    
+        adminemailattributes adminemail   logic getadminemailbyid emailid   
+        assumption assertnotnull adminemail   
+ 
+        log info  resume adding group mail tasks mail with id     emailid     from list index    
+                   indexofemaillisttoresume     and email index      indexofemailtoresume indexoflastemaillist   0 indexoflastemail   0 i   indexofemaillisttoresume  i   processedreceiveremails size    i      
+            list currentemaillist   processedreceiveremails get i j   indexofemailtoresume  j   currentemaillist size    j receiveremail   currentemaillist get j   
+                taskqueuer scheduleadminemailforsending emailid  receiveremail  adminemail getsubject    
+                                                        adminemail getcontentvalue isneardeadline      
+                    taskqueuer scheduleadminemailpreparationingroupmode emailid  groupreceiverlistfilekey  i  j   
+                    log info  adding group mail tasks mail with id     emailid 
+                                 have been paused with list index      i     and email index      j indexoflastemail   j  
+              
+            indexoflastemaillist   i  
+          
+ 
+        log info  adding group mail tasks mail with id     emailid 
+                    was complete with last reached list index      indexoflastemaillist 
+                     and last reached email index      indexoflastemail   
+      
+ 
+ teammates ui automated AdminPrepareEmailGroupModeWorkerAction

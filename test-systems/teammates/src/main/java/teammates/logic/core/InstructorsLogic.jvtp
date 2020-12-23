@@ -1,0 +1,128 @@
+ 
+    
+   handles operations related instructors  
+   
+    see instructorattributes 
+    see instructorsdb 
+    
+   prevent initialization 
+                                        
+       methods related google search api 
+                                            
+        
+    
+       creates updates document given instructor  
+        param instructor put documents 
+        
+    
+       batch creates updates documents given instructors  
+        param instructors list instructors put documents 
+        
+    
+       removes document given instructor  
+        param instructor removed documents method used admin only searching not restrict visibility according logged user's google id used admin search instructors whole system  
+        return null result found 
+        
+                                        
+                                            
+        
+    
+       gets instructors datastore  
+       
+        deprecated not scalable  use only admin features  
+        
+    
+       returns whether instructor new user  according one following criteria  
+        ul  
+        li only sample course  created system instructor   li  
+        li any course instructor   li  
+         ul  
+        
+    
+       update name email address instructor specific google id  
+        param instructor instructorattributes object containing details updated 
+        
+   todo  either refactor constant remove check not null db 
+   cascade comments 
+    
+       update google id name instructor specific email  
+        param instructor instructorattributes object containing details updated validation isinstructor createdat fields  
+  cascade delete instructors method only being used course logic  cascade comments therefore not necessary it taken care deleting courseteammates logic core InstructorsLogic teammates logic core instructorslogic instructorslogic instructorslogic inst instance putdocument instructorattributes instructor    
+        instructorsdb putdocument instructor putdocuments list instructorattributes  instructors    
+        instructorsdb putdocuments instructors deletedocument instructorattributes instructor    
+        instructorsdb deletedocument instructor instructorsearchresultbundle searchinstructorsinwholesystem querystring instructorsdb searchinstructorsinwholesystem querystring instructorattributes createinstructor instructorattributes instructortoadd invalidparametersexception  entityalreadyexistsexception   
+ 
+        assumption assertnotnull  supplied parameter was instructortoadd   
+ 
+        log info  going to create instructor  \n    instructortoadd tostring instructorsdb createinstructor instructortoadd setarchivestatusofinstructor googleid courseid archivestatus invalidparametersexception  entitydoesnotexistexception   
+ 
+        instructorattributes instructor   instructorsdb getinstructorforgoogleid courseid  googleid   
+        instructor isarchived   archivestatus  
+        instructorsdb updateinstructorbygoogleid instructor instructorattributes getinstructorforemail courseid email instructorsdb getinstructorforemail courseid  email instructorattributes getinstructorforgoogleid courseid googleid instructorsdb getinstructorforgoogleid courseid  googleid instructorattributes getinstructorforregistrationkey encryptedkey instructorsdb getinstructorforregistrationkey encryptedkey list instructorattributes  getinstructorsforcourse courseid    
+        list instructorattributes  instructorreturnlist   instructorsdb getinstructorsforcourse courseid   
+        collections sort instructorreturnlist  instructorattributes comparebyname instructorreturnlist list instructorattributes  getinstructorsforgoogleid googleid getinstructorsforgoogleid googleid list instructorattributes  getinstructorsforgoogleid googleid omitarchived instructorsdb getinstructorsforgoogleid googleid  omitarchived getencryptedkeyforinstructor courseid email entitydoesnotexistexception   
+ 
+        verifyisemailofinstructorofcourse email  courseid   
+ 
+        instructorattributes instructor   getinstructorforemail courseid  email stringhelper encrypt instructor key list instructorattributes  getinstructorsforemail email instructorsdb getinstructorsforemail email   
+      
+ 
+      
+     deprecated list instructorattributes  getallinstructors instructorsdb getallinstructors isgoogleidofinstructorofcourse instructorid courseid instructorsdb getinstructorforgoogleid courseid  instructorid isemailofinstructorofcourse instructoremail courseid instructorsdb getinstructorforemail courseid  instructoremail isnewinstructor googleid    
+        list instructorattributes  instructorlist   getinstructorsforgoogleid googleid instructorlist isempty   
+                  instructorlist size      1    courseslogic issamplecourse instructorlist get 0  courseid verifyinstructorexists instructorid entitydoesnotexistexception accountslogic isaccountaninstructor instructorid entitydoesnotexistexception  instructor does not exist    
+                      instructorid verifyisemailofinstructorofcourse instructoremail courseid entitydoesnotexistexception isemailofinstructorofcourse instructoremail  courseid entitydoesnotexistexception  instructor     instructoremail 
+                        does not belong to course     courseid updateinstructorbygoogleid googleid  instructorattributes instructor invalidparametersexception  entitydoesnotexistexception   
+ 
+          
+        assumption assertnotnull  supplied parameter was instructor   
+ 
+        courseslogic verifycourseispresent instructor courseid   
+        verifyinstructorindbandcascadeemailchange googleid  instructor   
+        checkforupdatingrespondents instructor   
+ 
+        instructorsdb updateinstructorbygoogleid instructor checkforupdatingrespondents instructorattributes instructor invalidparametersexception  entitydoesnotexistexception   
+ 
+        instructorattributes currentinstructor   getinstructorforgoogleid instructor courseid  instructor googleid currentinstructor email equals instructor email     
+            fslogic updaterespondentsforinstructor currentinstructor email  instructor email  instructor courseid verifyinstructorindbandcascadeemailchange googleid  
+            instructorattributes instructor entitydoesnotexistexception   
+        instructorattributes instructorindb   instructorsdb getinstructorforgoogleid instructor courseid  googleid instructorindb entitydoesnotexistexception  instructor     googleid 
+                        does not belong to course     instructor courseid instructorindb email equals instructor email     
+            frclogic updatefeedbackresponsecommentsemails  
+                    instructor courseid  instructorindb email  instructor email updateinstructorbyemail email  instructorattributes instructor invalidparametersexception  entitydoesnotexistexception   
+ 
+        assumption assertnotnull  supplied parameter was instructor   
+ 
+        courseslogic verifycourseispresent instructor courseid   
+        verifyisemailofinstructorofcourse email  instructor courseid   
+ 
+        instructorsdb updateinstructorbyemail instructor list getinvalidityinfofornewinstructordata shortname name institute email    
+ 
+        fieldvalidator validator fieldvalidator    
+        list errors arraylist error  
+ 
+        error   validator getinvalidityinfoforpersonname shortname error isempty      
+            errors add error   
+          
+ 
+        error   validator getinvalidityinfoforpersonname name error isempty      
+            errors add error   
+          
+ 
+        error   validator getinvalidityinfoforemail email error isempty      
+            errors add error   
+          
+ 
+        error   validator getinvalidityinfoforinstitutename institute error isempty      
+            errors add error errors deleteinstructorcascade courseid email    
+        fslogic deleteinstructorfromrespondentslist getinstructorforemail courseid  email    
+        instructorsdb deleteinstructor courseid  email deleteinstructorsforgoogleidandcascade googleid    
+        list instructorattributes  instructors   instructorsdb getinstructorsforgoogleid googleid instructorattributes instructor   instructors    
+            deleteinstructorcascade instructor courseid  instructor email deleteinstructorsforcourse courseid    
+ 
+        instructorsdb deleteinstructorsforcourse courseid list instructorattributes  getcoownersforcourse courseid    
+        list instructorattributes  instructors   getinstructorsforcourse courseid   
+        list instructorattributes  instructorswithcoownerprivileges arraylist instructorattributes instructor   instructors instructor hascoownerprivileges instructorswithcoownerprivileges add instructor instructorswithcoownerprivileges  
+      
+ 
+ teammates logic core InstructorsLogic

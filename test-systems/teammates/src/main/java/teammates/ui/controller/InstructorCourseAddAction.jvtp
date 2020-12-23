@@ -1,0 +1,64 @@
+ 
+    
+   action  adding course instructor  
+    
+   check user right execute action    
+   create new course database    
+   prepare data refreshed page executing adding action list instructorattributes belong user corresponding courses instructors  
+   sort coursedetailsbundle lists course id error adding courseteammates ui controller InstructorCourseAddAction teammates ui controller instructorcourseaddaction action   
+  
+ 
+     override actionresult execute newcourseid   getrequestparamvalue paramsnames course_id   
+        assumption assertpostparamnotnull paramsnames course_id  newcourseid newcoursename   getrequestparamvalue paramsnames course_name   
+        assumption assertpostparamnotnull paramsnames course_name  newcoursename newcoursetimezone   getrequestparamvalue paramsnames course_time_zone   
+        assumption assertpostparamnotnull paramsnames course_time_zone  newcoursetimezone   
+ 
+          
+        gatekeeper verifyinstructorprivileges account   
+ 
+          
+        data instructorcoursespagedata account  sessiontoken   
+        courseattributes newcourse courseattributes newcourseid  newcoursename  newcoursetimezone   
+        createcourse newcourse   
+ 
+          
+        map instructorattributes  instructorsforcourses hashmap      
+        list courseattributes  activecourses arraylist      
+        list courseattributes  archivedcourses arraylist      
+ 
+          
+        list instructorattributes  instructorlist   logic getinstructorsforgoogleid data account googleid instructorattributes instructor   instructorlist    
+            instructorsforcourses put instructor courseid  instructor   
+          
+ 
+          
+        list courseattributes  allcourses   logic getcoursesforinstructor instructorlist   
+ 
+        list archivedcourseids   logic getarchivedcourseids allcourses  instructorsforcourses courseattributes course   allcourses archivedcourseids contains course getid       
+                archivedcourses add course activecourses add course   
+              
+          
+ 
+          
+        courseattributes sortbyid activecourses   
+        courseattributes sortbyid archivedcourses courseidtoshowparam coursenametoshowparam iserror      
+            courseidtoshowparam   sanitizationhelper sanitizeforhtml newcourse getid     
+            coursenametoshowparam   sanitizationhelper sanitizeforhtml newcourse getname     
+ 
+            list statusmessagetexts arraylist statusmessage msg   statustouser    
+                statusmessagetexts add msg gettext     
+              
+ 
+            statustoadmin   stringhelper tostring statusmessagetexts    br statustoadmin    course added       newcourse getid    
+            statustoadmin      br total courses      allcourses size    
+          
+ 
+        data init activecourses  archivedcourses  instructorsforcourses  courseidtoshowparam  coursenametoshowparam iserror ? createshowpageresult viewuris instructor_courses  data  
+                  createredirectresult actionuris instructor_courses_page createcourse courseattributes course logic createcourseandinstructor data account googleid  course getid    course getname    
+                                            course gettimezone statusmessage statusmessages course_added replace  $ courseenrolllink    
+                    data getinstructorcourseenrolllink course getid     replace  $ courseeditlink    
+                    data getinstructorcourseeditlink course getid      
+            statustouser add statusmessage statusmessage  statusmessagecolor success    
+            iserror entityalreadyexistsexception e    
+            setstatusforexception e statusmessages course_exists invalidparametersexception e    
+            setstatusforexception e iserror teammates ui controller InstructorCourseAddAction

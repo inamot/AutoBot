@@ -1,0 +1,1321 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   central representation ant project class defines ant project targets  tasks various properties provides mechanism kick build using particular target name  
+    p class encapsulates methods allow files referred using abstract path names translated native system 
+   file paths runtime  
+   
+    
+    message priority quot error quot      
+    message priority quot warning quot      
+    message priority quot information quot      
+    message priority quot verbose quot      
+    message priority quot debug quot      
+    
+       constant quot visiting quot  state  used traversing dfs target dependencies  
+        
+    
+       constant quot visited quot  state  used traversing dfs target dependencies  
+        
+    
+       version constant java 1 0   
+       
+        deprecated 1 5 x  
+                   use   link javaenvutils#java_1_0  instead  
+        
+    
+       version constant java 1 1   
+       
+        deprecated 1 5 x  
+                   use   link javaenvutils#java_1_1  instead  
+        
+    
+       version constant java 1 2   
+       
+        deprecated 1 5 x  
+                   use   link javaenvutils#java_1_2  instead  
+        
+    
+       version constant java 1 3   
+       
+        deprecated 1 5 x  
+                   use   link javaenvutils#java_1_3  instead  
+        
+    
+       version constant java 1 4   
+       
+        deprecated 1 5 x  
+                   use   link javaenvutils#java_1_4  instead  
+        
+    default filter start token     
+    default filter end token     
+    instance utility class use file operations     
+    name project     
+    description project any      
+    map references within project  paths etc   string object      
+    map id references - used indicating broken build files parent project old id resolution inheritreferences set     
+    name project's default target     
+    map target names targets  string target      
+    set global filters     
+   initialize globalfileset's project 
+    
+       wrapper around globalfilterset collection only contains one filterset wrapper needed order make easier use fileutils interface  
+        
+    project base directory     
+    list listeners notify build events ant core classloader--may code null  code using 
+       parent classloader  
+        
+    records latest task executed thread     
+    records latest task executed thread group     
+   threadgroup task    threadgrouptasks 
+    
+       called handle any input requests default input stream used read any input  
+        
+    
+       keep going flag  
+        
+    
+       flag catches listeners try use system out system err   
+        
+    
+       set input handler  
+       
+        param handler inputhandler instance use gathering input  
+        
+    
+       set default system input stream  normally stream set system inputstream used task input redirection being performed  
+       
+        param defaultinputstream default input stream use input requested ant 1 6 project's input stream  
+       
+        return inputstream instance use project instance read input  
+        
+    
+       retrieve current input handler  
+       
+        return inputhandler instance currently place project 
+               instance  
+        
+    
+       create new ant project  
+        
+    
+       create initialize subproject default subproject same type parent arg constructor unavailable code project  code  class used  
+        return project instance configured subproject project ant 1 7 
+        
+    
+       initialize subproject  
+        param subproject subproject initialize  
+        
+    
+       initialise project involves setting default task definitions loading system properties  
+       
+        exception buildexception default task list cannot loaded  
+        
+    
+       initializes properties  
+        exception buildexception vital property not set ant 1 7 
+        
+    
+       factory method create class loader loading classes given path  
+       
+        param path path classes loaded  
+       
+        return appropriate classloader  
+        
+    
+       factory method create class loader loading classes given path  
+       
+        param parent parent classloader new loader  
+        param path path classes loaded  
+       
+        return appropriate classloader  
+        
+    
+       set core classloader project code null  code  
+       classloader specified parent classloader used  
+       
+        param coreloader classloader use project  
+                         may code null  code   
+        
+    
+       return core classloader use project may code null  code   indicating parent classloader used  
+       
+        return core classloader use project  
+       
+        
+    
+       add build listener list listener notified build events project  
+       
+        param listener listener add list  
+                       must not code null  code listeners already listener nothing 
+   create new vector avoid concurrentmodificationexc listeners added removed fire 
+    
+       remove build listener list listener longer notified build events project  
+       
+        param listener listener remove list not code null  code   
+        
+   create new vector avoid concurrentmodificationexc listeners added removed fire 
+    
+       return copy list build listeners project  
+       
+        return list build listeners project 
+        
+    
+       write message log default log level msg_info   
+        param message text log not code null  code   
+        
+    
+       write project level message log given log level  
+        param message text log not code null  code   
+        param msglevel log priority level use  
+        
+    
+       write project level message log given log level  
+        param message text log not code null  code   
+        param throwable exception causing log  may code null  code   
+        param msglevel log priority level use 1 7 
+        
+    
+       write task level message log given log level  
+        param task task use log  must not code null  code   
+        param message text log not code null  code   
+        param msglevel log priority level use  
+        
+    
+       write task level message log given log level  
+        param task task use log  must not code null  code   
+        param message text log not code null  code   
+        param throwable exception causing log  may code null  code   
+        param msglevel log priority level use 1 7 
+        
+    
+       write target level message log given log level  
+        param target target use log  
+                     must not code null  code   
+        param message text log not code null  code   
+        param msglevel log priority level use  
+        
+    
+       write target level message log given log level  
+        param target target use log  
+                     must not code null  code   
+        param message text log not code null  code   
+        param throwable exception causing log  may code null  code   
+        param msglevel log priority level use 1 7 
+        
+    
+       return set global filters  
+       
+        return set global filters  
+        
+    
+       set property  any existing property same name overwritten  unless user property  
+        param name name property set  
+                   must not code null  code   
+        param value new value property  
+                    must not code null  code   
+        
+    
+       set property value currently exists property 
+       exists already message logged method returns effect  
+       
+        param name name property set  
+                   must not code null  code   
+        param value new value property  
+                    must not code null  code 1 5 
+        
+    
+       set user property cannot overwritten set unset property calls  any previous value overwritten  
+        param name name property set  
+                   must not code null  code   
+        param value new value property  
+                    must not code null  code   
+        see #setproperty string string  
+        
+    
+       set user property cannot overwritten set unset 
+       property calls  any previous value overwritten marks properties properties not come command line  
+       
+        param name name property set  
+                   must not code null  code   
+        param value new value property  
+                    must not code null  code   
+        see #setproperty string string  
+        
+    
+       set property unless already defined user property case method returns silently   
+       
+        param name name property  
+                   must not code null  code   
+        param value property value  must not code null  code   
+        
+    
+       return value property set  
+       
+        param propertyname name property  
+                   may code null  code case return value code null  code   
+        return property value code null  code match code null  code  name provided  
+        
+    
+       replace $   style constructions given value string value corresponding data types  
+       
+        param value string scanned property references  
+                    may code null  code   
+       
+        return given string embedded property names replaced values code null  code given string code null  code   
+       
+        exception buildexception given value unclosed 
+                                 property name  e g   code $ xxx  code   
+        
+    
+       return value user property set  
+       
+        param propertyname name property  
+                   may code null  code case return value code null  code   
+        return property value code null  code match code null  code  name provided  
+        
+    
+       return copy properties table  
+        return hashtable containing properties 
+                including user properties   
+        
+    
+       return copy user property hashtable  
+        return hashtable containing user properties  
+        
+    
+       copy user properties set command 
+       line gui tool instance project instance 
+       given argument  
+       
+        p copy quot user quot  properties call 
+         link #copyinheritedproperties copyinheritedproperties    p  
+       
+        param project copy properties must not null ant 1 5 
+        
+    
+       copy user properties not set command line gui tool instance project 
+       instance given argument  
+       
+        p copy quot user quot  properties call 
+         link #copyuserproperties copyuserproperties    p  
+       
+        param project copy properties must not null ant 1 5 
+        
+    
+       set default target project  
+       
+        param defaulttarget name default target project  
+                            may code null  code   indicating default target  
+       
+        deprecated 1 5 x  
+                   use setdefault  
+        see #setdefault string  
+        
+    
+       return name default target project  
+        return name default target code null  code default set  
+        
+    
+       set default target project  
+       
+        param defaulttarget name default target project  
+                            may code null  code   indicating default target  
+        
+    
+       set name project setting user 
+       property  code ant project name  code   
+       
+        param name name project  
+                   must not code null  code   
+        
+    
+       return project name one set  
+       
+        return project name code null  code hasn't set  
+        
+    
+       set project description  
+       
+        param description description project  
+                          may code null  code   
+        
+    
+       return project description one set  
+       
+        return project description code null  code hasn't set  
+        
+    
+       add filter set global filters  
+       
+        param token token filter  
+                    must not code null  code   
+        param value replacement value  
+                    must not code null  code   
+        deprecated 1 4 x  
+                   use getglobalfilterset   addfilter token value  
+       
+        see #getglobalfilterset   
+        see filterset#addfilter string string  
+        
+    
+       return hashtable global filters  mapping tokens values  
+       
+        return hashtable global filters  mapping tokens values 
+                string string   
+       
+        deprecated 1 4 x 
+                   use getglobalfilterset   getfilterhash    
+       
+        see #getglobalfilterset   
+        see filterset#getfilterhash need build hashtable dynamically 
+    
+       set base directory project  checking given filename exists directory  
+       
+        param based project base directory  
+                    must not code null  code   
+       
+        exception buildexception directory invalid  
+        
+    
+       set base directory project  checking given file exists directory  
+       
+        param basedir project base directory  
+                      must not code null  code   
+        exception buildexception specified file doesn't exist isn't directory  
+        
+    
+       return base directory project file object  
+       
+        return project base directory code null  code base directory not successfully set valid value  
+        
+    
+       set  quot keep-going quot  mode mode ant try execute many targets possible targets not depend failed target s executed keepgoing settor getter 
+       methods used conjunction code ant executor class  code  
+       property effect  
+        param keepgoingmode  quot keep-going quot  mode ant 1 6 
+        
+    
+       return keep-going mode keepgoing settor getter 
+       methods used conjunction code ant executor class  code  
+       property effect  
+        return  quot keep-going quot  mode ant 1 6 
+        
+    
+       return version java class running under  
+        return version java string  e g   1 1    
+        see org apache tools ant util javaenvutils#getjavaversion 
+        deprecated 1 5 x  
+                   use org apache tools ant util javaenvutils instead  
+        
+    
+       set code ant java version  code  property tests unsupported jvm versions version supported  
+       verbose log messages generated record java version operating system name  
+       
+        exception buildexception java version not supported  
+       
+        see org apache tools ant util javaenvutils#getjavaversion 
+        
+   sanity check 
+    
+       add system properties aren't already defined user properties project properties  
+        
+    
+       add new task definition project  
+       attempting override existing definition equivalent one e same classname  results verbose log message  attempting override existing definition different one results warning log message invalidates any tasks already created old definition  
+       
+        param taskname name task add  
+                       must not code null  code   
+        param taskclass full name class implementing task  
+                        must not code null  code   
+       
+        exception buildexception class unsuitable being ant 
+                                 task error level message logged before exception thrown  
+       
+        see #checktaskclass class  
+        
+    
+       check whether not class suitable serving ant task  
+       ant task implementation classes must public  concrete arg constructor  
+       
+        param taskclass class checked  
+                        must not code null  code   
+       
+        exception buildexception class unsuitable being ant 
+                                 task error level message logged before exception thrown  
+        
+   don't check public getconstructor finds public constructors only  
+    
+       return current task definition hashtable returned hashtable quot live quot not modified  
+       
+        return map task name implementing class 
+                string class   
+        
+    
+       add new datatype definition  
+       attempting override existing definition equivalent one e same classname  results verbose log message  attempting override existing definition different one results warning log message definition changed  
+       
+        param typename name datatype  
+                       must not code null  code   
+        param typeclass full name class implementing datatype  
+                        must not code null  code   
+        
+    
+       return current datatype definition hashtable returned 
+       hashtable quot live quot not modified  
+       
+        return map datatype name implementing class 
+                string class   
+        
+    
+       add em new  em  target project  
+       
+        param target target added project  
+                     must not code null  code   
+       
+        exception buildexception target already exists project 
+       
+        see project#addorreplacetarget target  
+        
+    
+       add em new  em  target project  
+       
+        param targetname name use target  
+                   must not code null  code   
+        param target target added project  
+                     must not code null  code   
+       
+        exception buildexception target already exists project  
+       
+        see project#addorreplacetarget string  target  
+        
+    
+       add target project replaces one same 
+       name  
+       
+        param target target added replaced project  
+                     must not code null  code   
+        
+    
+       add target project replaces one same 
+       name  
+       
+        param targetname name use target  
+                         must not code null  code   
+        param target target added replaced project  
+                     must not code null  code   
+        
+    
+       return hashtable targets returned hashtable quot live quot not modified  
+        return map name target  string target   
+        
+    
+       create new instance task  adding list created tasks later invalidation causes tasks remembered until containing project removed 
+        param tasktype name task create instance must not code null  code   
+       
+        return instance specified task code null  code task name not recognised  
+       
+        exception buildexception task name recognised task 
+                                 creation fails  
+        
+    
+       create new instance data type  
+       
+        param typename name data type create instance must not code null  code   
+       
+        return instance specified data type code null  code data type name not recognised  
+       
+        exception buildexception data type name recognised instance creation fails  
+        
+    
+       set executor instance project  
+        param e executor use project's executor  setting necessary   
+        return executor instance  
+        
+  try current classloader 
+    
+       execute specified sequence targets targets depend param names vector target name strings execute  
+                    must not code null  code   
+       
+        exception buildexception build failed  
+        
+    
+       demultiplex output each task receives appropriate 
+       messages current thread not currently executing task message logged directly  
+       
+        param output message handle not code null  code   
+        param iswarning whether text represents warning   code true  code information   code false  code    
+        
+    
+       read data default input stream default specified  system used  
+       
+        param buffer buffer data read  
+        param offset offset buffer data stored  
+        param length amount data read  
+       
+        return number bytes read  
+       
+        exception ioexception data cannot read ant 1 6 
+        
+    
+       demux input request correct task  
+       
+        param buffer buffer data read  
+        param offset offset buffer data stored  
+        param length amount data read  
+       
+        return number bytes read  
+       
+        exception ioexception data cannot read ant 1 6 
+        
+    
+       demultiplex flush operations each task receives appropriate 
+       messages current thread not currently executing task message logged directly ant 1 5 2 
+       
+        param output message handle not code null  code   
+        param iserror whether text represents error   code true  code information   code false  code    
+        
+    
+       execute specified target any targets depends param targetname name target execute  
+                         must not code null  code   
+       
+        exception buildexception build failed  
+        
+   sanity check ourselves ve asked build nothing complain 
+   sort run dependency tree  
+   sorting checks targets dependencies  
+   exist any cycle dependency 
+   graph  
+    
+       execute code vector  code sorted targets  
+        param sortedtargets aforementioned  code vector  code   
+        throws buildexception error  
+        
+   first build exception 
+   throw further 
+   only first build exception reported 
+    
+       return canonical form filename  
+        p specified file name relative resolved respect given root directory  
+       
+        param filename name file resolve  
+                       must not code null  code   
+       
+        param rootdir directory respective relative file names resolved  may code null  code case current directory used  
+       
+        return resolved file  
+       
+        deprecated 1 4 x 
+        
+    
+       return canonical form filename  
+        p specified file name relative resolved respect project's base directory  
+       
+        param filename name file resolve  
+                       must not code null  code   
+       
+        return resolved file  
+       
+        
+    
+       translate path native  platform specific  format  
+        p method uses pathtokenizer separate input path components handles dos style paths relatively 
+       sensible way file separators converted platform 
+       specific versions  
+       
+        param toprocess path translated  
+                        may code null  code   
+       
+        return native version specified path empty string path code null  code empty  
+       
+        deprecated 1 7 
+                   use fileutils translatepath instead  
+       
+        see pathtokenizer 
+        
+    
+       convenience method copy file source destination filtering performed  
+       
+        param sourcefile name file copy must not code null  code   
+        param destfile name file copy must not code null  code   
+       
+        exception ioexception copying fails  
+       
+        deprecated 1 4 x 
+        
+    
+       convenience method copy file source destination 
+       specifying token filtering used  
+       
+        param sourcefile name file copy must not code null  code   
+        param destfile name file copy must not code null  code   
+        param filtering whether not token filtering used during copy  
+       
+        exception ioexception copying fails  
+       
+        deprecated 1 4 x 
+        
+    
+       convenience method copy file source destination specifying token filtering used source files may overwrite newer destination files  
+       
+        param sourcefile name file copy must not code null  code   
+        param destfile name file copy must not code null  code   
+        param filtering whether not token filtering used during copy  
+        param overwrite whether not destination file overwritten already exists  
+       
+        exception ioexception copying fails  
+       
+        deprecated 1 4 x 
+        
+    
+       convenience method copy file source destination specifying token filtering used source files may overwrite newer destination files last modified time resulting file set source file  
+       
+        param sourcefile name file copy must not code null  code   
+        param destfile name file copy must not code null  code   
+        param filtering whether not token filtering used during copy  
+        param overwrite whether not destination file overwritten already exists  
+        param preservelastmodified whether not last modified time resulting file set source file  
+       
+        exception ioexception copying fails  
+       
+        deprecated 1 4 x 
+        
+    
+       convenience method copy file source destination filtering performed  
+       
+        param sourcefile file copy must not code null  code   
+        param destfile file copy must not code null  code   
+       
+        exception ioexception copying fails  
+       
+        deprecated 1 4 x 
+        
+    
+       convenience method copy file source destination 
+       specifying token filtering used  
+       
+        param sourcefile file copy must not code null  code   
+        param destfile file copy must not code null  code   
+        param filtering whether not token filtering used during copy  
+       
+        exception ioexception copying fails  
+       
+        deprecated 1 4 x 
+        
+    
+       convenience method copy file source destination specifying token filtering used source files may overwrite newer destination files  
+       
+        param sourcefile file copy must not code null  code   
+        param destfile file copy must not code null  code   
+        param filtering whether not token filtering used during copy  
+        param overwrite whether not destination file overwritten already exists  
+       
+        exception ioexception file cannot copied  
+       
+        deprecated 1 4 x 
+        
+    
+       convenience method copy file source destination specifying token filtering used source files may overwrite newer destination files last modified time resulting file set source file  
+       
+        param sourcefile file copy must not code null  code   
+        param destfile file copy must not code null  code   
+        param filtering whether not token filtering used during copy  
+        param overwrite whether not destination file overwritten already exists  
+        param preservelastmodified whether not last modified time resulting file set source file  
+       
+        exception ioexception file cannot copied  
+       
+        deprecated 1 4 x 
+        
+    
+       call file setlastmodified long time java above 1 1 logs warning java 1 1  
+       
+        param file file set last modified time must not code null  code   
+       
+        param time required modification time  
+       
+        deprecated 1 4 x 
+       
+        exception buildexception last modified time cannot set 
+                                 despite running platform version 
+                                 above 1 1  
+        
+    
+       return boolean equivalent string considered 
+        code true  code either  code code    code  true   code code  yes   code found  ignoring case  
+       
+        param s string convert boolean value  
+       
+        return  code true  code given string code code   
+                code  true   code code  yes   code code false  code  otherwise  
+        
+    
+       topologically sort set targets   equivalent calling 
+        code toposort new string    root   targets  true   code   
+       
+        param root name root target sort created way sequence targets up root 
+                   target minimum possible sequence  
+                   must not code null  code   
+        param targettable hashtable mapping names targets  
+                      must not code null  code   
+        return vector target objects sorted order  
+        exception buildexception cyclic dependency targets named target not exist  
+        
+    
+       topologically sort set targets   equivalent calling 
+        code toposort new string    root   targets  returnall   code   
+       
+        param root name root target sort created way sequence targets up root 
+                   target minimum possible sequence  
+                   must not code null  code   
+        param targettable hashtable mapping names targets  
+                      must not code null  code   
+        param returnall  code boolean  code  indicating whether return targets execution sequence only  
+        return vector target objects sorted order  
+        exception buildexception cyclic dependency targets named target not exist ant 1 6 3 
+        
+    
+       topologically sort set targets  
+       
+        param root  code string    code  containing names root targets sort created way ordered sequence targets minimum possible sequence specified 
+                   root targets  
+                   must not code null  code   
+        param targettable map names targets  string target   
+                      must not code null  code   
+        param returnall  code boolean  code  indicating whether return targets execution sequence only  
+        return vector target objects sorted order  
+        exception buildexception cyclic dependency targets named target not exist ant 1 6 3 first run dfs based sort using each root starting node creates minimum sequence targets root node s sort any remaining unvisited targets unnecessary doing build catches 
+   circular dependencies missing targets entire 
+   dependency tree  not targets depend build target  
+    
+       perform single step recursive depth-first-search traversal target dependency tree  
+        p current target first set quot visiting quot  state pushed onto quot visiting quot  stack  
+        p exception thrown any child current node visiting state implies circular dependency exception 
+       contains details cycle  using elements quot visiting quot  
+       stack  
+        p any child not already quot visited quot method called recursively p current target added ordered list targets  note performed children visited order correct order current target set quot visited quot  state  
+        p time method returns ordered list contains sequence targets up including current target  
+       
+        param root current target inspect  
+                   must not code null  code   
+        param targettable mapping names targets  string target   
+                      must not code null  code   
+        param state mapping target names states  string string states question quot visiting quot quot visited quot   must not code null  code   
+        param visiting stack targets currently being visited  
+                       must not code null  code   
+        param ret list add target names end up 
+                      containing complete list dependencies dependency order  
+                      must not code null  code   
+       
+        exception buildexception non-existent target specified circular dependency detected  
+        
+   make sure exist 
+   not visited 
+   currently visiting node cycle 
+    
+       build appropriate exception detailing specified circular 
+       dependency  
+       
+        param end dependency stop must not code null  code   
+        param stk stack dependencies  must not code null  code   
+       
+        return buildexception detailing specified circular dependency  
+        
+    
+       inherit id references  
+        param parent parent project project  
+        
+    
+       attempt resolve unknown reference using parsed id's bc  
+        
+    
+       add id reference  
+       used broken build files  
+        param id id set  
+        param value value set unknown element case  
+        
+    
+       add reference project  
+       
+        param referencename name reference  must not code null  code   
+        param value value reference warning not changing anything 
+    
+       return map references project  string object returned hashtable quot live quot must not modified  
+       
+        return map references project  string object   
+        
+    
+       look up reference key  id   
+       
+        param key key desired reference  
+                  must not code null  code   
+       
+        return reference specified id code null  code reference project  
+        
+   check old id behaviour 
+    
+       return description type given element special handling instances tasks data types  
+        p useful logging purposes  
+       
+        param element element describe  
+                      must not code null  code   
+       
+        return description element type 1 95  ant 1 5 
+        
+    
+       send quot build started quot  event build listeners project  
+        
+    
+       send quot build finished quot  event build listeners project  
+        param exception exception indicating reason build 
+                        failure  may code null  code   indicating successful build  
+        
+   inform ih clear cache 
+    
+       send quot subbuild started quot  event build listeners project ant 1 6 2 
+        
+    
+       send quot subbuild finished quot  event build listeners project  
+        param exception exception indicating reason build 
+                        failure  may code null  code   indicating successful build ant 1 6 2 
+        
+    
+       send quot target started quot  event build listeners project  
+       
+        param target target starting build  
+                     must not code null  code   
+        
+    
+       send quot target finished quot  event build listeners project  
+       
+        param target target finished building  
+                        must not code null  code   
+        param exception exception indicating reason build 
+                        failure  may code null  code   indicating successful build  
+        
+    
+       send quot task started quot  event build listeners project  
+       
+        param task target starting execute  
+                     must not code null  code   
+        
+   register current task current thread  
+    
+       send quot task finished quot  event build listeners project  
+       
+        param task task finished executing  
+                        must not code null  code   
+        param exception exception indicating reason build 
+                        failure  may code null  code   indicating successful build  
+        
+    
+       send quot message logged quot  event build listeners project  
+       
+        param event event send built up appropriate task target project caller method set message priority send event  must not code null  code   
+        param message message send not code null  code   
+        param priority priority message  
+        
+   
+                   one listeners attempted access 
+                   system err system out used throw exception case sometimes listeners t prevent log4jlistener invokes getlogger turn write console   
+                   
+                    see http   marc theaimsgroup com ?t 110538624200006 r 1 w 2 now  ant 1 7 1 6 3  simply swallow message  
+                    
+    
+       send quot message logged quot  project level event build listeners project  
+       
+        param project project generating event not code null  code   
+        param message message send not code null  code   
+        param priority priority message  
+        
+    
+       send quot message logged quot  project level event build listeners project  
+       
+        param project project generating event not code null  code   
+        param message message send not code null  code   
+        param throwable exception caused message  may code null  code   
+        param priority priority message 1 7 
+        
+    
+       send quot message logged quot  target level event build listeners project  
+       
+        param target target generating event  
+                       must not code null  code   
+        param message message send not code null  code   
+        param priority priority message  
+        
+    
+       send quot message logged quot  target level event build listeners project  
+       
+        param target target generating event  
+                       must not code null  code   
+        param message message send not code null  code   
+        param throwable exception caused message  may code null  code   
+        param priority priority message 1 7 
+        
+    
+       send quot message logged quot  task level event build listeners project  
+       
+        param task task generating event  
+                       must not code null  code   
+        param message message send not code null  code   
+        param priority priority message  
+        
+    
+       send quot message logged quot  task level event build listeners project  
+       
+        param task task generating event  
+                       must not code null  code   
+        param message message send not code null  code   
+        param throwable exception caused message  may code null  code   
+        param priority priority message 1 7 
+        
+    
+       register task current task thread task null thread's entry removed  
+       
+        param thread thread task registered  
+        param task task registered ant 1 5 current task associated thread any  
+       
+        param thread thread task required  
+        return task currently registered given thread null task registered move separate public class api add 
+   listeners  etc  
+    returns unmodified original object method called internally quot real quot  object normal method replacement unknownelement similar jdni 
+           refs behavior method reference table used hook dynamic references modify 
+           some references fly example delayed 
+           evaluation important make sure processing done inside not calling indirectly  
+           
+            param key lookup key  
+            return mapped value  
+            
+  system out println  antreftable key   
+   make sure set reference project parameterized object  
+       need set project before set add elements called  
+        param obj object invoke setproject ignore object not set project method method private protected  
+    
+       resolve file relative project's basedir return fileresource  
+        param name name file resolve  
+        return file resource ant 1 7 
+       org apache tools ant Project org apache tools ant project resourcefactory msg_err   0 msg_warn   1 msg_info   2 msg_verbose   3 msg_debug   4 java_1_0   javaenvutils java_1_0 java_1_1   javaenvutils java_1_1 java_1_2   javaenvutils java_1_2 java_1_3   javaenvutils java_1_3 java_1_4   javaenvutils java_1_4 token_start   filterset default_token_start token_end   filterset default_token_end  
+ 
+      
+  
+ 
+      
+  
+      
+  
+ 
+ 
+      
+  
+ 
+      
+  
+ 
+      
+  
+ 
+      
+  
+ 
+      
+  
+      
+  
+      
+          
+        globalfilterset setproject filtersetcollection globalfilters filtersetcollection globalfilterset map  
+          collections synchronizedmap weakhashmap setinputhandler inputhandler handler    
+        inputhandler   handler setdefaultinputstream inputstream defaultinputstream defaultinputstream   defaultinputstream inputstream getdefaultinputstream defaultinputstream inputhandler getinputhandler inputhandler project     
+        inputhandler defaultinputhandler project createsubproject     
+        project subproject subproject    project   getclass   newinstance exception e    
+            subproject project    
+          
+        initsubproject subproject subproject initsubproject project subproject    
+        componenthelper getcomponenthelper subproject  
+             initsubproject componenthelper getcomponenthelper subproject setdefaultinputstream getdefaultinputstream     
+        subproject setkeepgoingmode iskeepgoingmode     
+        subproject setexecutor getexecutor   getsubprojectexecutor init buildexception   
+        initproperties    
+ 
+        componenthelper getcomponenthelper initdefaultdefinitions initproperties buildexception   
+        setjavaversionproperty    
+        setsystemproperties    
+        setpropertyinternal magicnames ant_version  main getantversion     
+        setantlib setantlib     
+        file antlib   org apache tools ant launch locator getclasssource  
+            project antlib setpropertyinternal magicnames ant_lib  antlib getabsolutepath antclassloader createclassloader path path antclassloader  
+            getclass   getclassloader path antclassloader createclassloader  
+        classloader parent  path path antclassloader parent path setcoreloader classloader coreloader coreloader   coreloader classloader getcoreloader coreloader addbuildlistener buildlistener listener listeners contains listener vector newlisteners   getbuildlisteners    
+        newlisteners addelement listener   
+        listeners   newlisteners removebuildlistener buildlistener listener    
+          
+          
+        vector newlisteners   getbuildlisteners    
+        newlisteners removeelement listener   
+        listeners   newlisteners vector getbuildlisteners vector  listeners clone log message    
+        log message  msg_info log message msglevel    
+        log message msglevel log message  throwable throwable msglevel    
+        firemessagelogged message  throwable  msglevel log task task message msglevel    
+        firemessagelogged task  message msglevel log task task message  throwable throwable msglevel    
+        firemessagelogged task  message  throwable  msglevel log target target message msglevel    
+        log target  message msglevel log target target message  throwable throwable msglevel    
+        firemessagelogged target  message  throwable  msglevel filterset getglobalfilterset globalfilterset setproperty name value    
+        propertyhelper getpropertyhelper setproperty name  value setnewproperty name value    
+        propertyhelper getpropertyhelper setnewproperty name  
+                                                              value setuserproperty name value    
+        propertyhelper getpropertyhelper setuserproperty name  
+                                                               value setinheritedproperty name value    
+        propertyhelper ph   propertyhelper getpropertyhelper ph setinheritedproperty name  value setpropertyinternal name value    
+        propertyhelper ph   propertyhelper getpropertyhelper ph setproperty name  value getproperty propertyname    
+        propertyhelper ph   propertyhelper getpropertyhelper ph getproperty propertyname replaceproperties value buildexception   
+        propertyhelper ph   propertyhelper getpropertyhelper ph replaceproperties value getuserproperty propertyname    
+        propertyhelper ph   propertyhelper getpropertyhelper ph getuserproperty propertyname hashtable getproperties     
+        propertyhelper ph   propertyhelper getpropertyhelper ph getproperties hashtable getuserproperties     
+        propertyhelper ph   propertyhelper getpropertyhelper ph getuserproperties copyuserproperties project other    
+        propertyhelper ph   propertyhelper getpropertyhelper ph copyuserproperties other copyinheritedproperties project other    
+        propertyhelper ph   propertyhelper getpropertyhelper ph copyinheritedproperties other setdefaulttarget defaulttarget defaulttarget   defaulttarget getdefaulttarget defaulttarget setdefault defaulttarget defaulttarget   defaulttarget setname name    
+        setuserproperty  ant project name    name name   name getname name setdescription description description   description getdescription description description   description getdescription description addfilter token value token globalfilterset addfilter filterset filter token  value hashtable getfilters globalfilterset getfilterhash setbasedir based buildexception   
+        setbasedir file based setbasedir file basedir buildexception   
+        basedir   file_utils normalize basedir getabsolutepath basedir exists buildexception  basedir     basedir getabsolutepath   
+                    does not exist basedir isdirectory buildexception  basedir     basedir getabsolutepath   
+                    is not a directory basedir   basedir  
+        setpropertyinternal magicnames project_basedir basedir getpath msg    project base dir set to basedir  
+         log msg  msg_verbose file getbasedir basedir setbasedir buildexception ex    
+                ex printstacktrace basedir setkeepgoingmode keepgoingmode keepgoingmode   keepgoingmode iskeepgoingmode keepgoingmode getjavaversion javaenvutils getjavaversion setjavaversionproperty buildexception javaversion   javaenvutils getjavaversion    
+        setpropertyinternal magicnames ant_java_version  javaversion javaenvutils isjavaversion javaenvutils java_1_0  
+                   javaenvutils isjavaversion javaenvutils java_1_1 buildexception  ant cannot work on java 1 0   1 1    
+          
+        log  detected java version      javaversion     in    
+              system getproperty  java home    msg_verbose   
+ 
+        log  detected os      system getproperty  os name    msg_verbose setsystemproperties     
+        properties systemp   system getproperties    
+        enumeration e   systemp propertynames e hasmoreelements propertyname e nextelement value   systemp getproperty propertyname setpropertyinternal propertyname  value addtaskdefinition taskname taskclass buildexception   
+        componenthelper getcomponenthelper addtaskdefinition taskname  
+                taskclass checktaskclass taskclass buildexception   
+        componenthelper getcomponenthelper checktaskclass taskclass modifier ispublic taskclass getmodifiers message   taskclass     is not log message  project msg_err buildexception message modifier isabstract taskclass getmodifiers message   taskclass     is log message  project msg_err buildexception message taskclass getconstructor nosuchmethodexception e message    no no-arg constructor in   
+                  taskclass  
+            log message  project msg_err buildexception message linkageerror e message    could not load     taskclass          e  
+            log message  project msg_err buildexception message  e task isassignablefrom taskclass     
+            taskadapter checktaskclass taskclass hashtable gettaskdefinitions componenthelper getcomponenthelper gettaskdefinitions adddatatypedefinition typename typeclass    
+        componenthelper getcomponenthelper adddatatypedefinition typename  
+                typeclass hashtable getdatatypedefinitions componenthelper getcomponenthelper getdatatypedefinitions addtarget target target buildexception   
+        addtarget target getname    target addtarget targetname  target target buildexception targets get targetname buildexception  duplicate target  `    targetname    '    
+           
+         addorreplacetarget targetname  target addorreplacetarget target target    
+        addorreplacetarget target getname    target addorreplacetarget targetname  target target msg      target      targetname  
+        log msg  msg_debug   
+        target setproject targets put targetname  target hashtable gettargets targets task createtask tasktype buildexception componenthelper getcomponenthelper createtask tasktype object createdatatype typename buildexception componenthelper getcomponenthelper createdatatype typename setexecutor executor e    
+        addreference magicnames ant_executor_reference  e executor getexecutor     
+        object o   getreference magicnames ant_executor_reference o classname   getproperty magicnames ant_executor_classname classname classname   defaultexecutor getname    
+              
+            log  attempting to create object of type     classname  msg_debug o forname classname coreloader  newinstance classnotfoundexception seaenefex o forname classname  newinstance exception ex    
+                    log ex tostring    msg_err exception ex    
+                log ex tostring    msg_err o buildexception  
+                     unable to obtain a target executor instance     
+              
+            setexecutor  executor  o executor  o executetargets vector names buildexception   
+        getexecutor   executetargets names toarray names size demuxoutput output iswarning    
+        task task   getthreadtask thread currentthread task log output  iswarning ? msg_warn   msg_info iswarning    
+                task handleerroroutput output task handleoutput output defaultinput buffer offset length ioexception defaultinputstream system out flush defaultinputstream read buffer  offset  length eofexception  no input provided project demuxinput buffer offset length ioexception   
+        task task   getthreadtask thread currentthread task defaultinput buffer  offset  length task handleinput buffer  offset  length demuxflush output iserror    
+        task task   getthreadtask thread currentthread task firemessagelogged output  iserror ? msg_err   msg_info iserror    
+                task handleerrorflush output task handleflush output executetarget targetname buildexception targetname msg    no target specified buildexception msg   
+          
+ 
+          
+          
+          
+          
+        executesortedtargets toposort targetname  targets executesortedtargets vector sortedtargets buildexception   
+        set succeededtargets hashset    
+        buildexception buildexception enumeration iter   sortedtargets elements    
+             iter hasmoreelements       
+            target curtarget    target  iter nextelement canexecute enumeration depiter   curtarget getdependencies    
+                 depiter hasmoreelements dependencyname depiter nextelement succeededtargets contains dependencyname     
+                    canexecute log curtarget  
+                         cannot execute '    curtarget getname      ' - '  
+                          dependencyname    ' failed or was not executed    
+                        msg_err canexecute    
+                throwable thrownexception curtarget performtasks    
+                    succeededtargets add curtarget getname runtimeexception ex keepgoingmode ex    
+                      
+                    thrownexception   ex throwable ex keepgoingmode buildexception ex   
+                      
+                    thrownexception   ex thrownexception thrownexception buildexception    
+                        log curtarget  
+                             target '    curtarget getname   
+                               ' failed with message '  
+                              thrownexception getmessage      '    msg_err buildexception buildexception    buildexception  thrownexception log curtarget  
+                             target '    curtarget getname   
+                               ' failed with message '  
+                              thrownexception getmessage      '    msg_err   
+                        thrownexception printstacktrace system err buildexception buildexception buildexception thrownexception buildexception buildexception file resolvefile filename  file rootdir file_utils resolvefile rootdir  filename file resolvefile filename file_utils resolvefile basedir  filename translatepath toprocess fileutils translatepath toprocess copyfile sourcefile destfile ioexception   
+        file_utils copyfile sourcefile  destfile copyfile sourcefile destfile filtering ioexception   
+        file_utils copyfile sourcefile  destfile  
+            filtering ? globalfilters copyfile sourcefile destfile filtering overwrite ioexception   
+        file_utils copyfile sourcefile  destfile  
+            filtering ? globalfilters overwrite copyfile sourcefile destfile filtering overwrite preservelastmodified ioexception   
+        file_utils copyfile sourcefile  destfile  
+            filtering ? globalfilters overwrite  preservelastmodified copyfile file sourcefile  file destfile ioexception   
+        file_utils copyfile sourcefile  destfile copyfile file sourcefile  file destfile filtering ioexception   
+        file_utils copyfile sourcefile  destfile  
+            filtering ? globalfilters copyfile file sourcefile  file destfile filtering overwrite ioexception   
+        file_utils copyfile sourcefile  destfile  
+            filtering ? globalfilters overwrite copyfile file sourcefile  file destfile filtering overwrite preservelastmodified ioexception   
+        file_utils copyfile sourcefile  destfile  
+            filtering ? globalfilters overwrite  preservelastmodified setfilelastmodified file file time buildexception   
+        file_utils setfilelastmodified file  time   
+        log  setting modification time file  msg_verbose toboolean s on  equalsignorecase s equalsignorecase s  
+                    yes  equalsignorecase s vector toposort root  hashtable targettable buildexception toposort root   targettable vector toposort root  hashtable targettable returnall buildexception toposort root   targettable  returnall vector toposort root  hashtable targettable returnall buildexception   
+        vector ret vector    
+        hashtable state hashtable    
+        stack visiting stack i   0  i   root length  i st state get root i st tsort root i   targettable  state  visiting  ret st    visiting runtimeexception  unexpected node in visiting state    
+                      root i    
+              
+          
+        stringbuffer buf stringbuffer  build sequence target s j   0  j   root length  j      
+            buf append  j    0  ?   `       `   append root j   append '\''   
+          
+        buf append   is     ret   
+        log buf tostring    msg_verbose   
+ 
+        vector complete    returnall  ? ret vector ret enumeration en   targettable keys    en hasmoreelements curtarget en nextelement st state get curtarget st tsort curtarget  targettable  state  visiting  complete st    visiting runtimeexception  unexpected node in visiting state    
+                      curtarget   
+              
+          
+        log  complete build sequence is     complete  msg_verbose ret tsort root  hashtable targettable  
+                             hashtable state  stack visiting  
+                             vector ret buildexception   
+        state put root  visiting   
+        visiting push root   
+ 
+        target target    target  targettable get root target stringbuffer sb stringbuffer  target \     
+            sb append root   
+            sb append  \  does not exist in the project \     
+            sb append name   
+            sb append  \       
+            visiting pop visiting empty parent visiting peek    
+                sb append  it is used from target \     
+                sb append parent   
+                sb append buildexception sb enumeration en   target getdependencies    en hasmoreelements cur en nextelement m state get cur m tsort cur  targettable  state  visiting  ret m    visiting makecircularexception cur  visiting p visiting pop root    p runtimeexception  unexpected internal error  expected to   
+                   pop     root     but got     p   
+          
+        state put root  visited   
+        ret addelement target buildexception makecircularexception end  stack stk    
+        stringbuffer sb stringbuffer  circular dependency      
+        sb append end c c stk pop    
+            sb append    -     
+            sb append c c equals end buildexception sb inheritidreferences project parent    
+        parentidproject   parent object resolveidreference key  project callerproject    
+        unknownelement origue    unknownelement  idreferences get key origue parentidproject null 
+                  parentidproject resolveidreference key  callerproject   
+          
+        callerproject log  
+             warning  reference     key     has not been set at runtime   
+                but was found during    line_sep 
+               build file parsing  attempting to resolve   
+                future versions of ant may support    line_sep 
+                referencing ids defined in non-executed targets    msg_warn   
+        unknownelement copyue   origue copy callerproject   
+        copyue maybeconfigure copyue getrealthing addidreference id  object value    
+        idreferences put id  value addreference referencename  object value references    
+            object old     antreftable  references  getreal referencename old    value old old unknownelement     
+                log  overriding previous definition of reference to     referencename  
+                    msg_verbose   
+              
+            log  adding reference      referencename  msg_debug   
+            references put referencename  value hashtable getreferences references object getreference key    
+        object ret   references get key ret ret  
+          
+          
+        ret   resolveidreference key ret key equals magicnames refid_property_helper     
+            vector p vector    
+            propertyhelper getpropertyhelper parsepropertystring  
+                key vector    p p size      1    
+                log  unresolvable reference     key 
+                        might be a misuse of property expansion syntax    
+                    msg_warn ret getelementname object element componenthelper getcomponenthelper getelementname element firebuildstarted     
+        buildevent event buildevent iterator iter   listeners iterator iter hasnext      
+            buildlistener listener    buildlistener  iter next    
+            listener buildstarted event firebuildfinished throwable exception    
+        buildevent event buildevent event setexception exception   
+        iterator iter   listeners iterator iter hasnext      
+            buildlistener listener    buildlistener  iter next    
+            listener buildfinished event   
+          
+          
+        introspectionhelper clearcache firesubbuildstarted     
+        buildevent event buildevent iterator iter   listeners iterator iter hasnext      
+            object listener   iter next listener subbuildlistener    
+                  subbuildlistener  listener  subbuildstarted event firesubbuildfinished throwable exception    
+        buildevent event buildevent event setexception exception   
+        iterator iter   listeners iterator iter hasnext      
+            object listener   iter next listener subbuildlistener    
+                  subbuildlistener  listener  subbuildfinished event firetargetstarted target target    
+        buildevent event buildevent target   
+        iterator iter   listeners iterator iter hasnext      
+            buildlistener listener    buildlistener  iter next    
+            listener targetstarted event firetargetfinished target target  throwable exception    
+        buildevent event buildevent target   
+        event setexception exception   
+        iterator iter   listeners iterator iter hasnext      
+            buildlistener listener    buildlistener  iter next    
+            listener targetfinished event firetaskstarted task task    
+          
+        registerthreadtask thread currentthread    task   
+        buildevent event buildevent task   
+        iterator iter   listeners iterator iter hasnext      
+            buildlistener listener    buildlistener  iter next    
+            listener taskstarted event firetaskfinished task task  throwable exception    
+        registerthreadtask thread currentthread system out flush    
+        system err flush    
+        buildevent event buildevent task   
+        event setexception exception   
+        iterator iter   listeners iterator iter hasnext      
+            buildlistener listener    buildlistener  iter next    
+            listener taskfinished event firemessageloggedevent buildevent event message priority message endswith stringutils line_sep endindex   message length   - stringutils line_sep length    
+            event setmessage message substring 0  endindex   priority event setmessage message  priority loggingmessage loggingmessage iterator iter   listeners iterator iter hasnext      
+                    buildlistener listener    buildlistener  iter next    
+                    listener messagelogged event loggingmessage firemessagelogged project project message priority    
+        firemessagelogged project  message priority firemessagelogged project project message  
+            throwable throwable priority    
+        buildevent event buildevent project   
+        event setexception throwable   
+        firemessageloggedevent event  message  priority firemessagelogged target target message priority    
+        firemessagelogged target  message priority firemessagelogged target target message  
+            throwable throwable priority    
+        buildevent event buildevent target   
+        event setexception throwable   
+        firemessageloggedevent event  message  priority firemessagelogged task task message priority    
+        firemessagelogged task  message priority firemessagelogged task task message  
+            throwable throwable priority    
+        buildevent event buildevent task   
+        event setexception throwable   
+        firemessageloggedevent event  message  priority registerthreadtask thread thread  task task task threadtasks put thread  task   
+            threadgrouptasks put thread getthreadgroup    task threadtasks remove thread   
+            threadgrouptasks remove thread getthreadgroup task getthreadtask thread thread    
+        task task    task  threadtasks get thread task threadgroup group   thread getthreadgroup task group task    task  threadgrouptasks get group   
+                group   group getparent task antreftable hashtable   
+ 
+        antreftable object getreal object key get key object get object key    
+              
+            object o   getreal key o unknownelement    
+                  
+                unknownelement ue    unknownelement  o  
+                ue maybeconfigure    
+                o   ue getrealthing o setprojectreference object obj obj projectcomponent    
+              projectcomponent  obj  setproject method method   
+                obj getclass   getmethod  
+                     setproject project method method invoke obj object throwable e resource getresource name fileresource getbasedir    name   
+      
+ org apache tools ant Project

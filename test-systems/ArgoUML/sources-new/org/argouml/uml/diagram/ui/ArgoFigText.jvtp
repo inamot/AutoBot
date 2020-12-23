@@ -1,0 +1,86 @@
+ 
+   $id$ 
+   copyright  c  2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications  
+    
+   primitive fig text  
+   
+    author michiel 
+    
+   
+        see org tigris gef presentation fig#deletefrommodel   
+        
+   
+        see javax management notificationemitter#removenotificationlistener javax management notificationlistener  javax management notificationfilter  java lang object  
+        
+   
+        see javax management notificationbroadcaster#addnotificationlistener javax management notificationlistener  javax management notificationfilter  java lang object  
+        
+   
+        see javax management notificationbroadcaster#getnotificationinfo   
+        
+   
+        see javax management notificationbroadcaster#removenotificationlistener javax management notificationlistener optional method not implemented throw link unsupportedoperationexception used   figs added graphmodel turn  owned project  
+       
+        param project project 
+        see org argouml uml diagram ui argofig#setproject org argouml kernel project  
+        
+   todo  without fail draw e g class good solution layer not set constructor?    
+   todo above doesn't work reliably constructor need better way getting default fig settings owning project using project  
+                  manager singleton  - tfm 
+                   
+    
+       handles diagram font changing  
+        param e event 
+        see org argouml application events argodiagramappearanceeventlistener#diagramfontchanged org argouml application events argodiagramappearanceevent function figtexts   
+       recalculate font-style  plain  bold  italic  bold italic apply calling figtext setfont    
+        
+    
+       determines font style based uml model   
+       overrule figs show bold italic based uml model represent   
+       e g  abstract classes show name italic  
+        
+        return font style namefig  
+       org argouml uml diagram ui ArgoFigText org argouml uml diagram ui argofigtext figtext notificationemitter  argofig notificationbroadcastersupport notifier notificationbroadcastersupport argofigtext x y w h x  y  w  h argofigtext x y w h expandonly x  y  w  h  expandonly   
+      
+     
+      
+     override deletefrommodel deletefrommodel    
+        firepropchange  remove null   
+        notifier sendnotification notification  remove 0 removenotificationlistener notificationlistener listener  
+        notificationfilter filter  object handback listenernotfoundexception   
+        notifier removenotificationlistener listener  filter  handback addnotificationlistener notificationlistener listener   
+        notificationfilter filter  object handback illegalargumentexception   
+        notifier addnotificationlistener listener  filter  handback mbeannotificationinfo   getnotificationinfo notifier getnotificationinfo removenotificationlistener notificationlistener listener listenernotfoundexception   
+        notifier removenotificationlistener listener setproject project project unsupportedoperationexception project getproject     
+        layerperspective layer    layerperspective  getlayer layer editor editor   globals cureditor editor projectmanager getmanager   getcurrentproject    
+              
+            layer lay   editor getlayermanager   getactivelayer lay layerperspective    
+                layer    layerperspective  lay layer null  
+          
+        graphmodel gm   layer getgraphmodel gm umlmutablegraphsupport umlmutablegraphsupport  gm  getproject projectmanager getmanager   getcurrentproject diagramfontchanged argodiagramappearanceevent e    
+        updatefont    
+        setbounds getbounds     
+        damage updatefont style   getfigfontstyle    
+        project p   getproject p font f   getproject   getprojectsettings   getfont style   
+            setfont f getfigfontstyle font plain  
+      
+ 
+     override setowner object own setowner own   
+        updatelisteners own updatelisteners object oldowner  object newowner oldowner    newowner oldowner model getpump   removemodeleventlistener oldowner newowner model getpump   addmodeleventlistener newowner   remove    
+          
+      
+ 
+     override propertychange propertychangeevent pce propertychange pce remove  equals pce getpropertyname     
+                    pce getsource      getowner       
+            deletefrommodel    
+          
+      
+ 
+ org argouml uml diagram ui ArgoFigText

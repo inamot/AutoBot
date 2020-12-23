@@ -1,0 +1,69 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+   
+   portions software based upon public domain software 
+   originally written national center supercomputing applications  
+   university illinois  urbana-champaign  
+    
+    
+   adds specified files perforce  
+   
+    b example usage   b  
+    table border  1   
+    th function  th  th command  th  
+    tr  td add files using p4user  p4port p4client settings specified  td  
+    td  lt p4add  br p4view    projects foo main source       br p4user  fbloggs  
+    br p4port  km01 1666  
+    br p4client  fbloggsclient  gt  br  lt fileset basedir  dir  includes     #47   java  gt  br  
+    lt  p4add gt   td   tr  
+    tr  td add files using p4user  p4port p4client settings defined environment  td  td  
+    lt p4add p4view    projects foo main source        gt  br  lt fileset basedir  dir  
+   includes     #47   java  gt  br  lt  p4add gt   td   tr  
+    tr  td specify length command line arguments pass each invocation p4  td  
+    td  lt p4add commandlength  450  gt   td   tr  
+     table  
+   
+    ant task category  scm  
+    
+    
+         set maximum length commandline calling perforce add files  
+         defaults 450  higher values mean faster execution possible failures  
+          param len maximum length command line default 450  
+          throws buildexception trying set command line length 0 less specified open files associated specified pending changelist number  otherwise open files associated default changelist  
+       
+        param changelist change list number  
+       
+        throws buildexception trying set change list number  lt  0  
+        
+    
+       add fileset whose files added perforce  
+       
+        param set fileset one add perforce source control  
+        
+    
+       run task  
+       
+        throws buildexception execution perforce command fails  
+       org apache tools ant taskdefs optional perforce P4Add org apache tools ant taskdefs optional perforce p4add p4base setcommandlength len buildexception len    0 buildexception  p4add  commandlength should be a positive number cmdlength   len setchangelist changelist buildexception changelist    0 buildexception  p4add  changelist# should be a positive number changelist   changelist addfileset fileset set    
+        filesets addelement set execute buildexception p4view addcmd   p4view  
+          
+        p4cmdopts    changelist   0  ?   -c     changelist        
+ 
+        stringbuffer filelist stringbuffer i   0  i   filesets size    i      
+            fileset fs    fileset  filesets elementat i   
+            directoryscanner ds   fs getdirectoryscanner getproject srcfiles   ds getincludedfiles srcfiles j   0  j   srcfiles length  j      
+                    file f file ds getbasedir    srcfiles j    
+                    filelist append      append ' '  append f getabsolutepath    append filelist length     cmdlength    
+                        execp4add filelist   
+                        filelist stringbuffer filelist length     0    
+                    execp4add filelist log  no files specified to add    project msg_warn execp4add stringbuffer list    
+        log  execing add     p4cmdopts         addcmd   list  project msg_info   
+        execp4command  -s add     p4cmdopts         addcmd   list simplep4outputhandler org apache tools ant taskdefs optional perforce P4Add

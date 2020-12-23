@@ -1,0 +1,83 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications dialog appears selecting 
+    code generation -  settings generate project     code menu  p  
+   
+   provides support setting source path tagged value used java 
+   round trip engineering constructor  
+       
+        
+   hack  don't show first column model element object placed  
+                                                                 
+   event handlers 
+   
+        see java awt event actionlistener#actionperformed java awt event actionevent  
+        
+   ok button ------------------------------------------ 
+   delete button ok button pressed  
+        
+    
+       retrieve selected rows indexes  
+        
+    
+       delete source path settings selected table rows  
+        
+   find selected rows make list model elements selected 
+   confirm user delete  presenting list settings delete 
+   procede deletion model 
+   disable button row selected now 
+    
+       class listens selection events  
+        
+   end class sourcepathdialog   org argouml uml ui SourcePathDialog org argouml uml ui sourcepathdialog argodialog actionlistener sourcepathtablemodel srcpathtablemodel   
+        srcpathctrl getsourcepathsettings sourcepathdialog translator localize  action generate-code project    
+            argodialog ok_cancel_option srcpathtable jtable    
+        srcpathtable setmodel srcpathtablemodel   
+        srcpathtable setautoresizemode jtable auto_resize_last_column   
+          
+          
+        tablecolumn elemcol   srcpathtable getcolumnmodel   getcolumn 0   
+        elemcol setminwidth 0   
+        elemcol setmaxwidth 0   
+ 
+        delbutton jbutton translator localize  button delete     
+        delbutton setenabled addbutton delbutton  0   
+ 
+        rowsm   srcpathtable getselectionmodel    
+        rowsm addlistselectionlistener selectionlistener     
+        delbutton addactionlistener setcontent jscrollpane srcpathtable actionperformed actionevent e actionperformed e e getsource      getokbutton      
+            buttonokactionperformed e getsource      delbutton    
+            deleteselectedsettings buttonokactionperformed     
+        srcpathctrl setsourcepath srcpathtablemodel getselectedindexes firstselectedrow   rowsm getminselectionindex lastselectedrow   rowsm getmaxselectionindex    
+        linkedlist selectedindexeslist linkedlist numselectedrows   0 i   firstselectedrow  i    lastselectedrow  i rowsm isselectedindex i     
+                numselectedrows    
+                selectedindexeslist add integer valueof i indexes selectedindexeslist size     
+        java util iterator it   selectedindexeslist iterator i   0  i   indexes length    it hasnext    i      
+            indexes i      integer  it next    intvalue indexes deleteselectedsettings selectedindexes   getselectedindexes    
+ 
+          
+          
+        stringbuffer msg stringbuffer    
+        msg append translator localize  dialog source-path-del question i   0  i   selectedindexes length  i      
+            msg append  \n    
+            msg append srcpathtablemodel getmename selectedindexes i     
+            msg append        
+            msg append srcpathtablemodel getmetype selectedindexes i     
+            msg append res   joptionpane showconfirmdialog msg tostring    
+            translator localize  dialog title source-path-del    
+            joptionpane ok_cancel_option res    joptionpane ok_option firstsel   rowsm getminselectionindex i   0  i   selectedindexes length    firstsel    -1  i      
+                srcpathctrl deletesourcepath srcpathtablemodel 
+                         getmodelelement firstsel    
+                srcpathtablemodel removerow firstsel   
+                firstsel   rowsm getminselectionindex    
+              
+              
+            delbutton setenabled selectionlistener listselectionlistener valuechanged javax swing event listselectionevent e delbutton isenabled      
+                delbutton setenabled org argouml uml ui SourcePathDialog

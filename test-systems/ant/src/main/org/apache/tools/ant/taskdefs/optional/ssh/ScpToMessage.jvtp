@@ -1,0 +1,133 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   utility class carry out upload scp transfer  
+    
+    
+       constructor scptomessage 
+        param session ssh session use 
+        
+    
+       constructor scptomessage 
+        param verbose true verbose logging 
+        param session ssh session use ant 1 7 
+        
+    
+       constructor local file remote  
+        param verbose true verbose logging 
+        param session scp session use 
+        param alocalfile local file 
+        param aremotepath remote path ant 1 6 2 
+        
+    
+       constructor local directories remote  
+        param verbose true verbose logging 
+        param session scp session use 
+        param adirectorylist list directories 
+        param aremotepath remote path ant 1 6 2 
+        
+    
+       constructor scptomessage  
+        param verbose true verbose logging 
+        param session scp session use 
+        param aremotepath remote path ant 1 6 2 
+        
+    
+       constructor scptomessage  
+        param session scp session use 
+        param alocalfile local file 
+        param aremotepath remote path 
+        
+    
+       constructor scptomessage  
+        param session scp session use 
+        param adirectorylist list directories 
+        param aremotepath remote path 
+        
+    
+       carry out transfer  
+        throws ioexception o errors 
+        throws jschexception errors detected scp 
+        
+   send  c0644 filesize filename filename not include ' ' 
+   send content lfile 
+   only track progress files larger 100kb verbose mode filesize keeps decreasing store initial filesize local file 
+        return local file remote path 
+        return remote path 
+       org apache tools ant taskdefs optional ssh ScpToMessage org apache tools ant taskdefs optional ssh scptomessage abstractsshmessage scptomessage session session session scptomessage verbose  session session verbose  session scptomessage verbose  
+                        session session  
+                        file alocalfile aremotepath verbose  session  aremotepath localfile   alocalfile scptomessage verbose  
+                        session session  
+                        list adirectorylist aremotepath verbose  session  aremotepath directorylist   adirectorylist scptomessage verbose  
+                         session session aremotepath verbose  session remotepath   aremotepath scptomessage session session  
+                        file alocalfile aremotepath session  alocalfile  aremotepath scptomessage session session  
+                         list adirectorylist aremotepath session  adirectorylist  aremotepath execute ioexception  jschexception directorylist domultipletransfer localfile dosingletransfer    
+          
+        log  done \n dosingletransfer ioexception  jschexception cmd    scp -t     remotepath  
+        channel channel   openexecchannel cmd outputstream out   channel getoutputstream    
+            inputstream in   channel getinputstream    
+ 
+            channel connect    
+ 
+            waitforack in   
+            sendfiletoremote localfile  in  out channel channel disconnect domultipletransfer ioexception  jschexception   
+        channel channel   openexecchannel  scp -r -d -t     remotepath outputstream out   channel getoutputstream    
+            inputstream in   channel getinputstream    
+ 
+            channel connect    
+ 
+            waitforack in iterator i   directorylist iterator    i hasnext       
+                directory current    directory  i next    
+                senddirectory current  in  out channel channel disconnect senddirectory directory current  
+                               inputstream in  
+                               outputstream out ioexception iterator fileit   current filesiterator    fileit hasnext       
+            sendfiletoremote  file  fileit next    in  out iterator dirit   current directoryiterator    dirit hasnext       
+            directory dir    directory  dirit next    
+            senddirectorytoremote dir  in  out senddirectorytoremote directory directory  
+                                        inputstream in  
+                                        outputstream out ioexception command    d0755 0    
+        command    directory getdirectory   getname    
+        command     \n   
+ 
+        out write command getbytes     
+        out flush    
+ 
+        waitforack in   
+        senddirectory directory  in  out   
+        out write  e\n  getbytes     
+        waitforack in sendfiletoremote file localfile  
+                                   inputstream in  
+                                   outputstream out ioexception filesize   localfile length command    c0644     filesize        
+        command    localfile getname    
+        command     \n   
+ 
+        out write command getbytes     
+        out flush    
+ 
+        waitforack in   
+ 
+          
+        fileinputstream fis fileinputstream localfile buf buffer_size starttime   system currenttimemillis totallength   0 trackprogress   getverbose      filesize   102400 initfilesize   filesize percenttransmitted   0 getverbose      
+                log  sending      localfile getname             localfile length len   fis read buf  0  buf length len    0 out write buf  0  len   
+                totallength    len trackprogress    
+                    percenttransmitted   trackprogress initfilesize  
+                                                       totallength  
+                                                       percenttransmitted   
+                  
+              
+            out flush    
+            sendack out   
+            waitforack in getverbose endtime   system currenttimemillis    
+                logstats starttime  endtime  totallength   
+              
+            fis close file getlocalfile localfile getremotepath remotepath  
+      
+ org apache tools ant taskdefs optional ssh ScpToMessage

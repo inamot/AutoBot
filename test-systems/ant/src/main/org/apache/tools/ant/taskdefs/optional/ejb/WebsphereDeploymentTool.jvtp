@@ -1,0 +1,378 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   websphere deployment tool augments ejbjar task  
+   searches websphere specific deployment descriptors adds final ejb jar file  websphere two specific descriptors session 
+   beans  
+    ul  
+       li ibm-ejb-jar-bnd xmi  li  
+       li ibm-ejb-jar-ext xmi  li  
+     ul another two container managed entity beans  
+    ul  
+       li map mapxmi  li  
+       li schema dbxmi  li  
+     ul terms websphere generation container code stubs called  code deployment  code step performed websphere 
+   element part jar generation process switch 
+    code ejbdeploy  code ejbdeploy tool websphere toolset called every ejb-jar  unfortunately step only works use ibm jdk  otherwise rmic  called ejbdeploy  throws classformaterror sure switch ejbdeploy run ant sun jdk  
+   
+    
+    id ejb 1 1    
+  sun microsystems  inc   dtd enterprise javabeans 1 1  en   
+    id ejb 2 0    
+  sun microsystems  inc   dtd enterprise javabeans 2 0  en   
+    schema directory    
+    instance variable stores suffix websphere jarfile     
+    instance variable stores location ejb 1 1 dtd file     
+    instance variable determines whether generic ejb jars kept     
+    indicates old cmp location convention used classpath websphere classes db vendor name ejb persisted against name database create top-down mapping only name schema create top-down mappings only     
+    true - only generate deployment code not run rmic javac    
+    true - only output error messages  suppress informational messages    
+    true - disable validation steps    
+    true - disable warning informational messages    
+    true - disable informational messages    
+    true - enable internal tracing    
+    additional options rmic    
+    true- use websphere 3 5 compatible mapping rules scratchdir ejbdeploy operation home directory websphere classpath websphere classpaths  
+        return websphere classpath  
+        
+    
+       set websphere classpath  
+        param wasclasspath websphere classpath  
+        
+    sets db vendor entity bean mapping   optional  
+        p  
+       valid options obtained running following command  
+        code  
+        lt was_home gt  bin ejbdeploy  sh bat  -help 
+         code  
+         p  
+        p used determine name map mapxmi schema dbxmi files example account-db2udb_v81-map mapxmi account-db2udb_v81-schema dbxmi  
+         p  
+       
+        param dbvendor database vendor type 
+        
+    
+       sets name database create  optional  
+       
+        param dbname name database 
+        
+    
+       sets name schema create  optional  
+       
+        param dbschema name schema 
+        
+    
+       flag  default false only generate deployment 
+       code not run rmic javac 
+       
+        param codegen option 
+        
+    
+       flag  default true only output error messages  
+       
+        param quiet option 
+        
+    
+       flag disable validation steps  optional  default false  
+       
+        param novalidate option 
+        
+    
+       flag disable warning informational messages  optional  default false  
+       
+        param nowarn option 
+        
+    
+       flag disable informational messages  optional  default false  
+       
+        param noinform true disables informational messages 
+        
+    
+       flag enable internal tracing set  optional  default false  
+       
+        param trace code boolean  code  vaule  
+        
+    
+       set rmic options  
+       
+        param options options use  
+        
+    
+       flag use websphere 3 5 compatible mapping rules   optional  default false  
+       
+        param attr code boolean  code  value  
+        
+    
+       set rebuild flag false only update changes jar rerunning ejbdeploy  optional  default true  
+        param rebuild code boolean  code  value  
+        
+    
+       string value appended basename deployment 
+       descriptor create filename weblogic ejb 
+       jar file  optional  default ' jar'  
+        param instring string use suffix controls whether generic file used input ejbdeploy retained  optional  default false  
+        param invalue either 'true false'  
+        
+    
+       decide  wether ejbdeploy called not  
+       optional  default true  
+       
+        param ejbdeploy code boolean  code  value  
+        
+    
+       setter used store location sun's generic ejb dtd file system resource classpath  
+       
+        param instring string use dtd location  
+        
+    
+       set value oldcmp scheme antonym newcmp 
+        ant attribute ignore  true  
+        param oldcmp code boolean  code  value  
+        
+    
+       set value newcmp scheme old cmp scheme locates websphere cmp descriptor based naming convention websphere cmp file expected named bean name prefix  under scheme name cmp descriptor not match name actually used main websphere ejb descriptor descriptors contain multiple cmp references not used  
+        param newcmp code boolean  code  value directory ejbdeploy write temporary files  
+       optional  defaults _ejbdeploy_temp'  
+        param tempdir directory name use  
+        
+      inheritdoc      
+   register dtds  both ones known any supplied user description handler  
+        param srcdir source directory  
+        return handler  
+        
+    
+       add any vendor specific files included ejb jar  
+        param ejbfiles hashtable entryname -  file  
+        param basename prefix use extensions document attempt put map schema files cmp beans 
+   add map file 
+   theres nothing see here   keep moving sonny vendor specific name jar output modification date jar checked against dependent 
+       bean classes  
+        
+    
+       gets options ejb deploy operation 
+       
+        return string 
+        
+   set options 
+    
+       helper method invoked execute each websphere jar built  
+       encapsulates logic constructing java task calling 
+       websphere ejbdeploy executing param sourcejar java io file representing source  ejb1 1  jarfile  
+        param destjar java io file representing destination  websphere 
+            jarfile  
+        
+   set jvmargs 
+   set environment variable 
+   set working directory 
+   set java class name catch semantics calling main   
+      inheritdoc      
+   create generic jar required 
+   create output  jar required 
+   create undeployed  output  jar required 
+    
+       called validate tool parameters configured  
+        throws buildexception error  
+        
+    
+       helper method check see websphere ebj1 1 jar needs rebuilt using ejbdeploy  called writejar sees bean  
+       classes only thing needs updated either updates jar bean classfile returns true  saying whole 
+       websphere jar needs regened ejbdeploy allows faster 
+       build times working developers   p way websphere ejbdeploy works creates wrappers publicly defined methods exposed remote interface actual bean changes without changing the method signatures only bean classfile needs updated rest websphere jar file remain same interfaces  ie method signatures change xml deployment descriptors changed whole jar needs rebuilt ejbdeploy not strictly 
+       true xml files jndi name changes jar doesnt rebuild resources references change point websphere jar gets rebuilt xml files 
+       change param genericjarfile java io file generic jar file  
+        param webspherejarfile java io file websphere jar file check see needs rebuilt  
+        return true rebuild required  
+        
+   only go forward generic websphere file both exist 
+  open jar files list generic jar entries list websphere jar entries 
+  cycle through generic make sure websphere 
+   file name path match 
+   check files see same 
+  file different see object interface 
+  interface changed   rebuild jar  
+  object class changed   update it manifest ignore file class changed   rebuild file doesn't exist rebuild 
+  copy files old websphere jar 
+   update changed bean class 
+   use entry generic jar 
+  use fle original websphere jar 
+   need close files perhaps rename output 
+   ignore 
+   ignore 
+   ignore 
+    
+       helper method invoked isrebuildrequired classloader jar file passed param classjar java io file representing jar file classes return classloader jar file  
+        throws ioexception error  
+       org apache tools ant taskdefs optional ejb WebsphereDeploymentTool org apache tools ant taskdefs optional ejb webspheredeploymenttool genericdeploymenttool publicid_ejb11 publicid_ejb20 schema_dir    schema was_ext    ibm-ejb-jar-ext xmi was_bnd    ibm-ejb-jar-bnd xmi was_cmp_map    map mapxmi was_cmp_schema    schema dbxmi path createwasclasspath wasclasspath wasclasspath path gettask   getproject wasclasspath createpath setwasclasspath path wasclasspath wasclasspath   wasclasspath setdbvendor dbvendor dbvendor   dbvendor setdbname dbname dbname   dbname setdbschema dbschema dbschema   dbschema setcodegen codegen codegen   codegen setquiet quiet quiet   quiet setnovalidate novalidate novalidate   novalidate setnowarn nowarn nowarn   nowarn setnoinform noinform noinform   noinform settrace trace trace   trace setrmicoptions options rmicoptions   options setuse35 attr    
+        use35mappingrules   attr setrebuild rebuild alwaysrebuild   rebuild setsuffix instring jarsuffix   instring setkeepgeneric invalue keepgeneric   invalue setejbdeploy ejbdeploy ejbdeploy   ejbdeploy setejbdtd instring ejb11dtd   instring setoldcmp oldcmp newcmp    oldcmp setnewcmp newcmp newcmp   newcmp settempdir tempdir tempdir   tempdir descriptorhandler getdescriptorhandler file srcdir    
+        descriptorhandler handler descriptorhandler gettask    srcdir   
+          
+          
+        handler registerdtd publicid_ejb11  ejb11dtd iterator i   getconfig   dtdlocations iterator    i hasnext       
+            ejbjar dtdlocation dtdlocation    ejbjar dtdlocation  i next    
+ 
+            handler registerdtd dtdlocation getpublicid    dtdlocation getlocation handler descriptorhandler getwebspheredescriptorhandler file srcdir    
+        descriptorhandler handler descriptorhandler gettask    srcdir processelement iterator i   getconfig   dtdlocations iterator    i hasnext       
+            ejbjar dtdlocation dtdlocation    ejbjar dtdlocation  i next    
+ 
+            handler registerdtd dtdlocation getpublicid    dtdlocation getlocation handler addvendorfiles hashtable ejbfiles basename ddprefix    usingbasejarname   ?      basename dbprefix    dbvendor dbvendor    -   
+ 
+          
+        file websphereext file getconfig   descriptordir  ddprefix   was_ext websphereext exists      
+            ejbfiles put meta_dir   was_ext  
+                websphereext log  unable to locate websphere extensions    
+                   it was expected to be in   
+                  websphereext getpath    project msg_verbose   
+          
+ 
+        file webspherebnd file getconfig   descriptordir  ddprefix   was_bnd webspherebnd exists      
+            ejbfiles put meta_dir   was_bnd  
+                webspherebnd log  unable to locate websphere bindings    
+                   it was expected to be in   
+                  webspherebnd getpath    project msg_verbose newcmp    
+            log  the old method locating cmp files has been deprecated    
+                project msg_verbose   
+            log  please adjust your websphere descriptor and set   
+                   newcmp to use the cmp descriptor   
+                   inclusion mechanism     project msg_verbose file webspheremap file getconfig   descriptordir  
+                    ddprefix   dbprefix   was_cmp_map webspheremap exists      
+                    ejbfiles put meta_dir   was_cmp_map  
+                        webspheremap log  unable to locate the websphere map    
+                          webspheremap getpath    project msg_verbose   
+                  
+ 
+                file websphereschema file getconfig   descriptordir  
+                    ddprefix   dbprefix   was_cmp_schema websphereschema exists      
+                    ejbfiles put meta_dir   schema_dir   was_cmp_schema  
+                        websphereschema log  unable to locate the websphere schema    
+                          websphereschema getpath    project msg_verbose exception e msg    exception adding vendor specific files    
+                      e tostring buildexception msg  e   
+              
+          
+      
+ 
+ 
+      
+    file getvendoroutputjarfile basename file getdestdir    basename   jarsuffix getoptions     
+          
+        stringbuffer options stringbuffer dbvendor options append   -dbvendor    append dbvendor dbname options append   -dbname \    append dbname  append dbschema options append   -dbschema \    append dbschema  append codegen    
+            options append   -codegen quiet    
+            options append   -quiet novalidate    
+            options append   -novalidate nowarn    
+            options append   -nowarn noinform    
+            options append   -noinform trace    
+            options append   -trace use35mappingrules    
+            options append   -35 rmicoptions options append   -rmic \    append rmicoptions  append options tostring buildwebspherejar file sourcejar  file destjar ejbdeploy    
+                java javatask java gettask     
+                  
+                javatask createjvmarg   setvalue  -xms64m    
+                javatask createjvmarg   setvalue  -xmx128m    
+ 
+                  
+                environment variable environment variable setkey  websphere lib dir    
+                file libdir file webspherehome   lib setvalue libdir getabsolutepath     
+                javatask addsysproperty javatask setdir webspherehome   
+ 
+                  
+                javatask settaskname  ejbdeploy    
+                javatask setclassname  com ibm etools ejbdeploy ejbdeploy    
+ 
+                javatask createarg   setvalue sourcejar getpath     
+                javatask createarg   setvalue tempdir   
+                javatask createarg   setvalue destjar getpath     
+                javatask createarg   setline getoptions getcombinedclasspath getcombinedclasspath   tostring   length     0    
+                    javatask createarg   setvalue  -cp    
+                    javatask createarg   setvalue getcombinedclasspath   tostring     
+                  
+ 
+                path classpath   wasclasspath classpath classpath   getcombinedclasspath classpath javatask setclasspath classpath   
+                    javatask setfork javatask setfork log  calling websphere ejbdeploy sourcejar tostring    
+                    project msg_verbose   
+ 
+                javatask execute exception e msg    exception calling ejbdeploy  details      e tostring buildexception msg  e writejar basename  file jarfile  hashtable files publicid buildexception ejbdeploy    
+              
+            file genericjarfile getvendoroutputjarfile basename writejar basename  genericjarfile  files  publicid alwaysrebuild    isrebuildrequired genericjarfile  jarfile     
+                buildwebspherejar genericjarfile  jarfile keepgeneric    
+                log  deleting generic jar     genericjarfile tostring    
+                    project msg_verbose   
+                genericjarfile delete writejar basename  jarfile  files  publicid validateconfigured buildexception validateconfigured ejbdeploy home   gettask   getproject   getproperty  websphere home home buildexception  the 'websphere home' property must   
+                       be set when 'ejbdeploy webspherehome   gettask   getproject   resolvefile home isrebuildrequired file genericjarfile  file webspherejarfile rebuild jarfile genericjar jarfile wasjar file newwasjarfile jaroutputstream newjarstream log  checking websphere jar needs to be rebuilt jar   
+                  webspherejarfile getname    project msg_verbose genericjarfile exists      genericjarfile isfile   
+                    webspherejarfile exists      webspherejarfile isfile      
+                  
+                genericjar jarfile genericjarfile   
+                wasjar jarfile webspherejarfile   
+ 
+                hashtable genericentries hashtable    
+                hashtable wasentries hashtable    
+                hashtable replaceentries hashtable enumeration e   genericjar entries    e hasmoreelements       
+                    jarentry je    jarentry  e nextelement    
+ 
+                    genericentries put je getname   replace '\\'  ' '   je enumeration e   wasjar entries    e hasmoreelements       
+                    jarentry je    jarentry  e nextelement    
+ 
+                    wasentries put je getname    je   
+                  
+ 
+                  
+                classloader genericloader   getclassloaderfromjar genericjarfile enumeration e   genericentries keys    e hasmoreelements filepath e nextelement wasentries containskey filepath     
+                          
+                          
+                        jarentry genericentry    jarentry  genericentries get filepath   
+                        jarentry wasentry    jarentry  wasentries get filepath genericentry getcrc      wasentry getcrc    
+                                genericentry getsize      wasentry getsize genericentry getname   endswith classname 
+                                      genericentry getname   replace file separatorchar  ' '   
+ 
+                                classname   classname substring 0  classname lastindexof class genclass   genericloader loadclass classname genclass isinterface      
+                                      
+                                    log genclass getname   
+                                            has changed   project msg_verbose   
+                                    rebuild replaceentries put filepath  genericentry genericentry getname   equals  meta-inf manifest mf      
+                                      
+                                    log  non file     genericentry getname   
+                                            has changed   project msg_verbose   
+                                    rebuild log  file     filepath     not present in websphere jar   
+                            project msg_verbose   
+                        rebuild rebuild    
+                    log  no rebuild needed - updating jar   project msg_verbose   
+                    newwasjarfile file webspherejarfile getabsolutepath       temp newwasjarfile exists      
+                        newwasjarfile delete    
+                      
+ 
+                    newjarstream jaroutputstream fileoutputstream newwasjarfile    
+                    newjarstream setlevel 0 enumeration e   wasentries elements    e hasmoreelements buffer default_buffer_size bytesread  
+                        inputstream is  
+                        jarentry je    jarentry  e nextelement je getcompressedsize      -1 
+                               je getcompressedsize      je getsize      
+                            newjarstream setlevel 0 newjarstream setlevel jar_compress_level replaceentries containskey je getname       
+                            log  updating bean from generic jar     je getname    
+                                project msg_verbose   
+                              
+                            je    jarentry  replaceentries get je getname     
+                            is   genericjar getinputstream je is   wasjar getinputstream je   
+                          
+                        newjarstream putnextentry jarentry je getname bytesread   is read buffer      -1    
+                            newjarstream write buffer  0  bytesread   
+                          
+                        is close log  websphere jar rebuild needed due to changed or xml   project msg_verbose rebuild classnotfoundexception cnfe cnfmsg    classnotfoundexception processing ejb-jar file  
+                      details    
+                   cnfe getmessage buildexception cnfmsg  cnfe ioexception ioe msg    ioexception processing ejb-jar file   
+                      details    
+                   ioe getmessage buildexception msg  ioe genericjar genericjar close ioexception closeexception wasjar wasjar close ioexception closeexception newjarstream newjarstream close ioexception closeexception file_utils rename newwasjarfile  webspherejarfile ioexception renameexception    
+                    log renameexception getmessage    project msg_warn   
+                    rebuild rebuild classloader getclassloaderfromjar file classjar ioexception   
+        path lookuppath path gettask   getproject     
+ 
+        lookuppath setlocation classjar   
+ 
+        path classpath   getcombinedclasspath classpath lookuppath append classpath gettask   getproject   createclassloader lookuppath   
+      
+  
+org apache tools ant taskdefs optional ejb WebsphereDeploymentTool

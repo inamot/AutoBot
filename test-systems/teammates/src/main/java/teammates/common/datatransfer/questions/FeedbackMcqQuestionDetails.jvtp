@@ -1,0 +1,241 @@
+ 
+   todo change implementing please specify  field 
+   add two empty options default 
+  todo  check mcq options not repeat  needed?teammates common datatransfer questions FeedbackMcqQuestionDetails teammates common datatransfer questions feedbackmcqquestiondetails feedbackquestiondetails feedbackmcqquestiondetails feedbackquestiontype mcq numofmcqchoices   0 mcqchoices arraylist otherenabled generateoptionsfor   feedbackparticipanttype none getnumofmcqchoices numofmcqchoices list getmcqchoices mcqchoices feedbackparticipanttype getgenerateoptionsfor generateoptionsfor  
+      
+ 
+     override extractquestiondetails  
+            map string    requestparameters  
+            feedbackquestiontype questiontype numofmcqchoices   0  
+        list mcqchoices linkedlist mcqotherenabled on  equals httprequesthelper getvaluefromparammap  
+                                requestparameters paramsnames feedback_question_mcqotheroptionflag      
+            mcqotherenabled generatedmcqoptions   
+                httprequesthelper getvaluefromparammap requestparameters paramsnames feedback_question_generatedoptions generatedmcqoptions equals feedbackparticipanttype none tostring nummcqchoicescreatedstring   
+                    httprequesthelper getvaluefromparammap requestparameters paramsnames feedback_question_numberofchoicecreated   
+            assumption assertnotnull number of choice mcq   nummcqchoicescreatedstring nummcqchoicescreated   integer parseint nummcqchoicescreatedstring i   0  i   nummcqchoicescreated  i paramname paramsnames feedback_question_mcqchoice    -    i mcqchoice   httprequesthelper getvaluefromparammap requestparameters  paramname mcqchoice mcqchoice trim   isempty      
+                    mcqchoices add mcqchoice   
+                    numofmcqchoices    
+                  
+              
+ 
+            setmcqquestiondetails numofmcqchoices  mcqchoices  mcqotherenabled setmcqquestiondetails feedbackparticipanttype valueof generatedmcqoptions setmcqquestiondetails numofmcqchoices  
+            list mcqchoices otherenabled numofmcqchoices   numofmcqchoices mcqchoices   mcqchoices otherenabled   otherenabled generateoptionsfor   feedbackparticipanttype none setmcqquestiondetails feedbackparticipanttype generateoptionsfor numofmcqchoices   0 mcqchoices arraylist otherenabled generateoptionsfor   generateoptionsfor  
+        assumption asserttrue  can only generate students  teams or instructors   
+                generateoptionsfor    feedbackparticipanttype students 
+                   generateoptionsfor    feedbackparticipanttype teams 
+                   generateoptionsfor    feedbackparticipanttype instructors   
+      
+ 
+     override getquestiontypedisplayname feedbackquestiontypenames mcq getotherenabled otherenabled  
+      
+ 
+     override ischangesrequiresresponsedeletion feedbackquestiondetails newdetails    
+        feedbackmcqquestiondetails newmcqdetails    feedbackmcqquestiondetails  newdetails numofmcqchoices    newmcqdetails numofmcqchoices mcqchoices containsall newmcqdetails mcqchoices  
+                    newmcqdetails mcqchoices containsall mcqchoices generateoptionsfor    newmcqdetails generateoptionsfor otherenabled    newmcqdetails otherenabled  
+      
+ 
+     override getquestionwithexistingresponsesubmissionformhtml sessionisopen qnidx responseidx courseid totalnumrecipients  feedbackresponsedetails existingresponsedetails    
+        feedbackmcqresponsedetails existingmcqresponse    feedbackmcqresponsedetails  existingresponsedetails  
+        list choices   generateoptionlist courseid   
+ 
+        stringbuilder optionlisthtml stringbuilder optionfragmenttemplate   formtemplates mcq_submission_form_optionfragment isotherselected   existingmcqresponse isotheroptionanswer i   0  i   choices size    i optionfragment   
+                    templates populatetemplate optionfragmenttemplate  
+                            slots question_index  integer tostring qnidx   
+                            slots response_index  integer tostring responseidx   
+                            slots disabled  sessionisopen ?       disabled   
+                            slots checked  
+                                    existingmcqresponse getanswerstring   equals choices get i   ?  checked        
+                            slots feedback_response_text paramsnames feedback_response_text  
+                            slots mcq_choice_value  sanitizationhelper sanitizeforhtml choices get i     
+            optionlisthtml append optionfragment  append eol otherenabled otheroptionfragmenttemplate   formtemplates mcq_submission_form_otheroptionfragment otheroptionfragment   
+                    templates populatetemplate otheroptionfragmenttemplate  
+                            slots question_index  integer tostring qnidx   
+                            slots response_index  integer tostring responseidx   
+                            slots disabled  sessionisopen ?       disabled   
+                            slots text_disabled  sessionisopen    isotherselected ?       disabled   
+                            slots checked  isotherselected ?  checked        
+                            slots feedback_response_text paramsnames feedback_response_text  
+                            slots mcq_param_is_other_option_answer paramsnames feedback_question_mcq_isotheroptionanswer  
+                            slots mcq_choice_value  
+                                    sanitizationhelper sanitizeforhtml existingmcqresponse getotherfieldcontent     
+                            slots mcq_other_option_answer  isotherselected ?  1     0    
+            optionlisthtml append otheroptionfragment  append eol templates populatetemplate  
+                formtemplates mcq_submission_form  
+                slots mcq_submission_form_option_fragments  optionlisthtml tostring     
+      
+ 
+     override getquestionwithoutexistingresponsesubmissionformhtml sessionisopen qnidx responseidx courseid totalnumrecipients    
+        list choices   generateoptionlist courseid   
+ 
+        stringbuilder optionlisthtml stringbuilder optionfragmenttemplate   formtemplates mcq_submission_form_optionfragment i   0  i   choices size    i optionfragment   
+                    templates populatetemplate optionfragmenttemplate  
+                            slots question_index  integer tostring qnidx   
+                            slots response_index  integer tostring responseidx   
+                            slots disabled  sessionisopen ?       disabled   
+                            slots checked      
+                            slots feedback_response_text paramsnames feedback_response_text  
+                            slots mcq_choice_value  sanitizationhelper sanitizeforhtml choices get i     
+            optionlisthtml append optionfragment  append eol otherenabled otheroptionfragmenttemplate   formtemplates mcq_submission_form_otheroptionfragment otheroptionfragment   
+                       templates populatetemplate otheroptionfragmenttemplate  
+                            slots question_index  integer tostring qnidx   
+                            slots response_index  integer tostring responseidx   
+                            slots disabled  sessionisopen ?       disabled   
+                            slots text_disabled   disabled   
+                            slots checked      
+                            slots feedback_response_text paramsnames feedback_response_text  
+                            slots mcq_param_is_other_option_answer paramsnames feedback_question_mcq_isotheroptionanswer  
+                            slots mcq_choice_value      
+                            slots mcq_other_option_answer   0    
+            optionlisthtml append otheroptionfragment  append eol templates populatetemplate  
+                formtemplates mcq_submission_form  
+                slots mcq_submission_form_option_fragments  optionlisthtml tostring list generateoptionlist courseid    
+        list optionlist arraylist generateoptionsfor none  
+            optionlist   mcqchoices students  
+            list studentattributes  studentlist   studentslogic inst   getstudentsforcourse courseid studentattributes student   studentlist    
+                optionlist add student name          student team         
+              
+ 
+            collections sort optionlist teams list teamdetailsbundle  teamlist   courseslogic inst   getteamsforcourse courseid teamdetailsbundle team   teamlist    
+                    optionlist add team name   
+                  
+ 
+                collections sort optionlist entitydoesnotexistexception e    
+                assumption fail  course disappeared instructors  
+            list instructorattributes  instructorlist   
+                    instructorslogic inst   getinstructorsforcourse courseid instructorattributes instructor   instructorlist    
+                optionlist add instructor name   
+              
+ 
+            collections sort optionlist assumption fail  trying to generate options neither students  teams nor instructors optionlist  
+      
+ 
+     override getquestionspecificeditformhtml questionnumber    
+        stringbuilder optionlisthtml stringbuilder optionfragmenttemplate   formtemplates mcq_edit_form_optionfragment i   0  i   numofmcqchoices  i optionfragment   
+                    templates populatetemplate optionfragmenttemplate  
+                            slots iterator  integer tostring i   
+                            slots mcq_choice_value  sanitizationhelper sanitizeforhtml mcqchoices get i    
+                            slots mcq_param_choice paramsnames feedback_question_mcqchoice   
+ 
+            optionlisthtml append optionfragment  append eol templates populatetemplate  
+                formtemplates mcq_edit_form  
+                slots mcq_edit_form_option_fragments  optionlisthtml tostring    
+                slots question_number  integer tostring questionnumber   
+                slots number_of_choice_created paramsnames feedback_question_numberofchoicecreated  
+                slots mcq_num_of_mcq_choices  integer tostring numofmcqchoices   
+                slots checked_other_option_enabled  otherenabled ?  checked        
+                slots mcq_param_other_option paramsnames feedback_question_mcqotheroption  
+                slots mcq_param_other_option_flag paramsnames feedback_question_mcqotheroptionflag  
+                slots mcq_checked_generated_option  generateoptionsfor    feedbackparticipanttype none ?       checked   
+                slots generated_options paramsnames feedback_question_generatedoptions  
+                slots generate_options_for_value  generateoptionsfor tostring    
+                slots student_selected  generateoptionsfor    feedbackparticipanttype students ?  selected        
+                slots students_to_string  feedbackparticipanttype students tostring    
+                slots team_selected  generateoptionsfor    feedbackparticipanttype teams ?  selected        
+                slots teams_to_string  feedbackparticipanttype teams tostring    
+                slots instructor_selected  generateoptionsfor    feedbackparticipanttype instructors ?  selected        
+                slots instructors_to_string  feedbackparticipanttype instructors tostring     
+      
+ 
+     override getnewquestionspecificeditformhtml     
+          
+        numofmcqchoices   2  
+        mcqchoices add      
+        mcqchoices add div id \ mcqform\    
+                    getquestionspecificeditformhtml -1  
+                  div    
+      
+ 
+     override getquestionadditionalinfohtml questionnumber additionalinfoid    
+        stringbuilder optionlisthtml stringbuilder 200 optionfragmenttemplate   formtemplates mcq_additional_info_fragment generateoptionsfor    feedbackparticipanttype none optionhelptext format  
+                      br the options question is automatically generated from the list of all %s in course    
+                    generateoptionsfor tostring   tolowercase     
+            optionlisthtml append optionhelptext numofmcqchoices   0    
+            optionlisthtml append   ul style \ list-style-type  disc margin-left  20px i   0  i   numofmcqchoices  i optionfragment   
+                        templates populatetemplate optionfragmenttemplate  
+                                slots mcq_choice_value  sanitizationhelper sanitizeforhtml mcqchoices get i     
+ 
+                optionlisthtml append optionfragment otherenabled optionfragment   
+                    templates populatetemplate optionfragmenttemplate  slots mcq_choice_value   others    
+            optionlisthtml append optionfragment   
+          
+        optionlisthtml append    ul additionalinfo   templates populatetemplate  
+                formtemplates mcq_additional_info  
+                slots question_type_name getquestiontypedisplayname    
+                slots mcq_additional_info_fragments  optionlisthtml tostring templates populatetemplate  
+                formtemplates feedback_question_additional_info  
+                slots more    more    
+                slots less    less    
+                slots question_number  integer tostring questionnumber   
+                slots additional_info_id  additionalinfoid  
+                slots question_additional_info  additionalinfo   
+      
+ 
+     override getquestionresultstatisticshtml list feedbackresponseattributes  responses  
+            feedbackquestionattributes question studentemail  
+            feedbacksessionresultsbundle bundle view student  equals view     responses isempty stringbuilder fragments stringbuilder    
+        map integer  answerfrequency linkedhashmap option   mcqchoices    
+            answerfrequency put option  0 otherenabled    
+            answerfrequency put  other   0 feedbackresponseattributes response   responses answerstring   response getresponsedetails   getanswerstring isotheroptionanswer   
+                      feedbackmcqresponsedetails  response getresponsedetails    isotheroptionanswer isotheroptionanswer answerfrequency containskey  other      
+                    answerfrequency put  other   0   
+                  
+                answerfrequency put  other   answerfrequency get  other     1 answerfrequency containskey answerstring     
+                    answerfrequency put answerstring  0   
+                  
+                answerfrequency put answerstring  answerfrequency get answerstring    1   
+              
+          
+ 
+        decimalformat df decimalformat entry integer  entry   answerfrequency entryset      
+            fragments append templates populatetemplate formtemplates mcq_result_stats_optionfragment  
+                    slots mcq_choice_value  sanitizationhelper sanitizeforhtml entry getkey     
+                    slots count  entry getvalue   tostring    
+                    slots percentage  df format 100 entry getvalue     responses size templates populatetemplate formtemplates mcq_result_stats  
+                slots fragments  fragments tostring     
+      
+ 
+     override getquestionresultstatisticscsv  
+            list feedbackresponseattributes  responses  
+            feedbackquestionattributes question  
+            feedbacksessionresultsbundle bundle responses isempty stringbuilder fragments stringbuilder    
+        map integer  answerfrequency linkedhashmap option   mcqchoices    
+            answerfrequency put option  0 otherenabled    
+            answerfrequency put  other   0 feedbackresponseattributes response   responses answerstring   response getresponsedetails   getanswerstring isotheroptionanswer   
+                      feedbackmcqresponsedetails  response getresponsedetails    isotheroptionanswer isotheroptionanswer answerfrequency containskey  other      
+                    answerfrequency put  other   0   
+                  
+                answerfrequency put  other   answerfrequency get  other     1 answerfrequency containskey answerstring     
+                    answerfrequency put answerstring  0   
+                  
+                answerfrequency put answerstring  answerfrequency get answerstring    1   
+              
+          
+ 
+        decimalformat df decimalformat entry integer  entry   answerfrequency entryset      
+            fragments append sanitizationhelper sanitizeforcsv entry getkey     append ' '  
+                      append entry getvalue   tostring    append ' '  
+                      append df format 100 entry getvalue     responses size     append eol choice  response count  percentage eol 
+                 fragments tostring    
+      
+ 
+     override getcsvheader feedback   
+      
+ 
+     override getquestiontypechoiceoption li data-questiontype   \ mcq\   a href \ javascript feedbackquestiontypenames mcq      a   li    
+      
+ 
+     override list validatequestiondetails     
+        list errors arraylist generateoptionsfor    feedbackparticipanttype none 
+                   numofmcqchoices feedbackquestion mcq_min_num_of_choices    
+            errors add feedbackquestion mcq_error_not_enough_choices feedbackquestion mcq_min_num_of_choices errors  
+      
+ 
+     override list validateresponseattributes  
+            list feedbackresponseattributes  responses numrecipients    
+        list errors arraylist feedbackresponseattributes response   responses    
+            feedbackmcqresponsedetails frd    feedbackmcqresponsedetails  response getresponsedetails otherenabled    generateoptionsfor    feedbackparticipanttype none 
+                        mcqchoices contains frd getanswerstring       
+                errors add frd getanswerstring feedbackquestion mcq_error_invalid_option errors  
+      
+ 
+     override comparator instructorfeedbackresultsresponserow  getresponserowssortorder override validategiverrecipientvisibility feedbackquestionattributes feedbackquestionattributes teammates common datatransfer questions FeedbackMcqQuestionDetails

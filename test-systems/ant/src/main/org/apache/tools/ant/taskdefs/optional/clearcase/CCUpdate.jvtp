@@ -1,0 +1,184 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   performs clearcase update command  
+   
+    p following attributes interpreted  
+    table border  1   
+      tr  
+        th attribute  th  
+        th values  th  
+        th required  th  
+       tr  
+      tr  
+         td viewpath  td  
+         td path clearcase view file directory command operate td  
+         td td  
+      tr  
+      tr  
+         td graphical  td  
+         td displays graphical dialog during update  td  
+         td td  
+      tr  
+      tr  
+         td log  td  
+         td specifies log file clearcase write td  
+         td td  
+      tr  
+      tr  
+         td overwrite  td  
+         td specifies whether overwrite hijacked files not  td  
+         td td  
+      tr  
+      tr  
+         td rename  td  
+         td specifies hijacked files renamed keep extension  td  
+         td td  
+      tr  
+      tr  
+         td currenttime  td  
+         td specifies modification time written current 
+            time  either currenttime preservetime specified   td  
+         td td  
+      tr  
+      tr  
+         td preservetime  td  
+         td specifies modification time preserved vob 
+            time  either currenttime preservetime specified   td  
+         td td  
+      tr  
+      tr  
+         td failonerr  td  
+         td throw exception command fails  default true  td  
+         td td  
+      tr  
+     table  
+   
+    
+    
+       executes task  
+        p  
+       builds command line execute cleartool calls exec's run method execute command line  
+        throws buildexception command fails failonerr set true 
+        
+   default viewpath basedir not specified 
+   build command line format cleartool update  options      viewpath specified cleartool exe help 
+   check command line options debugging 
+    
+       check command line options  
+        
+   clearcase items 
+   -graphical 
+   -overwrite 
+   -rename 
+   -noverwrite 
+   -ctime 
+   -ptime 
+   -log logname 
+   viewpath true  displays graphical dialog during update  
+       
+        param graphical status set flag graphical flag status 
+       
+        return boolean containing status graphical flag true  overwrite hijacked files  
+       
+        param ow status set flag overwrite hijacked files status 
+       
+        return boolean containing status overwrite flag true  hijacked files renamed keep extension  
+       
+        param ren status set flag rename hijacked files status 
+       
+        return boolean containing status rename flag true  modification time written current time  
+       either currenttime preservetime specified  
+       
+        param ct status set flag current time status 
+       
+        return boolean containing status current time flag true  modification time preserved vob time  
+       either currenttime preservetime specified  
+       
+        param pt status set flag preserve time status 
+       
+        return boolean containing status preserve time flag 
+        
+    
+       sets log file cleartool records status command  
+       
+        param log path log file log file 
+       
+        return string containing path log file log' command 
+       
+        param cmd containing command line string without log flag path appended make two separate commands here space inserted between flag value treated windows filename space enclosed double 
+               quotes breaks clearcase  
+               
+    
+        -graphical flag -- display graphical dialog during update operation 
+        
+    
+       -log flag -- file log status overwrite flag -- overwrite hijacked files 
+        
+    
+       -noverwrite flag not overwrite hijacked files 
+        
+    
+       -rename flag -- rename hijacked files keep extension 
+        
+    
+       -ctime flag -- modified time written current time 
+        
+    
+       -ptime flag -- modified time written vob time 
+       org apache tools ant taskdefs optional clearcase CCUpdate org apache tools ant taskdefs optional clearcase ccupdate clearcase execute buildexception   
+        commandline commandline commandline    
+        project aproj   getproject result   0 getviewpath setviewpath aproj getbasedir   getpath     
+          
+ 
+          
+          
+          
+        commandline setexecutable getcleartoolcommand     
+        commandline createargument   setvalue command_update   
+ 
+          
+        checkoptions commandline   
+ 
+          
+        getproject   log commandline tostring    project msg_debug getfailonerr      
+            getproject   log  ignoring any errors that occur getviewpathbasename    project msg_verbose   
+          
+        result   run commandline execute isfailure result     getfailonerr msg    failed executing      commandline tostring buildexception msg  getlocation checkoptions commandline cmd getgraphical      
+              
+            cmd createargument   setvalue flag_graphical getoverwrite      
+                  
+                cmd createargument   setvalue flag_overwrite getrename      
+                      
+                    cmd createargument   setvalue flag_rename cmd createargument   setvalue flag_noverwrite getcurrenttime      
+                  
+                cmd createargument   setvalue flag_currenttime getpreservetime      
+                      
+                    cmd createargument   setvalue flag_preservetime   
+                  
+              
+ 
+              
+            getlogcommand cmd   
+          
+ 
+          
+        cmd createargument   setvalue getviewpath setgraphical graphical    
+        mgraphical   graphical getgraphical mgraphical setoverwrite ow    
+        moverwrite   ow getoverwrite moverwrite setrename ren    
+        mrename   ren getrename mrename setcurrenttime ct    
+        mctime   ct getcurrenttime mctime setpreservetime pt    
+        mptime   pt getpreservetime mptime setlog log    
+        mlog   log getlog mlog getlogcommand commandline cmd getlog cmd createargument   setvalue flag_log   
+            cmd createargument   setvalue getlog flag_graphical    -graphical flag_log    -log flag_overwrite    -overwrite flag_noverwrite    -noverwrite flag_rename    -rename flag_currenttime    -ctime flag_preservetime    -ptime   
+ 
+  
+org apache tools ant taskdefs optional clearcase CCUpdate

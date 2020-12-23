@@ -1,0 +1,139 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications  
+    
+   class help users reverse engineer class information arbitrary 
+    jar  class file resources import classpath  p used follows  
+   
+    pre  
+    code  
+   try   
+       importclassloader loader   importclassloader getinstance    
+          add paths    
+       loader addfile new file   opt lib myjar jar     
+   
+       class clazz   loader loadclass  org xyz myexception    
+       object ex   clazz newinstance    
+       cat info  loaded class ok    
+     catch exception e    
+       cat warn  error loading class    e tostring     
+     
+     code  
+     pre supports adding removing files import classpath saving loading path users properties file  p possible make system class loader haven't work pre  
+    code  
+   final urlclassloader urlclassloader   new urlclassloader urls  cl   
+     create new custom class default classloader parent 
+   try   
+       eventqueue eq   toolkit getdefaulttoolkit   getsystemeventqueue    
+       eq invokeandwait new runnable     
+           public void run     
+               thread currentthread   setcontextclassloader urlclassloader replace default system class loader new custom classloader jvm use new custom classloader lookup class 
+             
+           
+             
+     code  
+     pre  
+   
+    author alexb 
+    
+    
+       logger constructor  
+       
+        param urls array urls  
+        
+    
+       try return existing instance one exists  
+       
+        return instance 
+        throws malformedurlexception url bad default constructor urlclassloader provide 
+       urls creating instance crate new instance method  
+       
+        param urls urls 
+        return instance class 
+        throws malformedurlexception url bad 
+        
+    
+        param f file added 
+        throws malformedurlexception url bad 
+        
+       todo  either method signature implementation needs changed make behavior consistent - tfm 
+        
+    
+       remove given file t remove last file  
+       
+        param f file removed 
+        
+  geturls t remove last file t remove existing one create new one  
+    
+       add file path given  
+       
+        param path path string format 
+        
+    
+       add files paths given return url format  
+        param path paths string format 
+        return urls 
+        
+    
+        param paths paths files added user-configured path  
+        
+    
+       store user-configured path  
+        
+   try  
+    importclassloader loader   importclassloader getinstance    
+       add paths    
+    loader addfile new file   opt hibernate hibernate-2 1 lib odmg jar     
+   
+      class clazz   loader loadclass  org odmg odmgexception    
+     object db   clazz newinstance    
+      cat info  loaded class ok    
+     catch exception e  cat warn  error loading class    e tostring     org argouml uml reveng ImportClassLoader org argouml uml reveng importclassloader urlclassloader importclassloader url   urls urls importclassloader getinstance malformedurlexception instance path   
+                configuration getstring argo key_user_import_classpath  
+                    system getproperty  user dir getinstance geturls path instance importclassloader getinstance url   urls malformedurlexception importclassloader urls instance addfile file f malformedurlexception addurl f touri   tourl malformedurlexception e    
+	    log warn  could not add file    e removefile file f    
+ 
+        url url url   f touri   tourl malformedurlexception e    
+	    log warn  could not remove file    e list urls arraylist i   0  i geturls   length  i url equals geturls   i      
+                urls add geturls   i urls size      0 instance importclassloader  url    urls toarray setpath path    
+ 
+        stringtokenizer st stringtokenizer path        
+        st counttokens st hasmoretokens token   st nexttoken addfile file token malformedurlexception e    
+		log warn  could not set path    e url   geturls path    
+ 
+        java util list urllist arraylist    
+ 
+        stringtokenizer st stringtokenizer path st hasmoretokens token   st nexttoken urllist add file token  touri   tourl malformedurlexception e    
+		log error e   
+	      
+          
+ 
+        url   urls url urllist size i   0  i   urls length  i      
+            urls i     url  urllist get i urls setpath object   paths i   0  i   paths length  i addfile file paths i  tostring exception e    
+		log warn  could not set path    e loaduserpath     
+        setpath configuration getstring argo key_user_import_classpath saveuserpath     
+	configuration setstring argo key_user_import_classpath tostring tostring     
+ 
+        url   urls geturls    
+        stringbuilder path stringbuilder i   0  i   urls length  i      
+            path append urls i  getfile i   urls length - 1    
+                path append path tostring    
+      
+  
+ 
+  
+  
+  
+  
+  
+  
+  
+  
+ org argouml uml reveng ImportClassLoader

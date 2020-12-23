@@ -1,0 +1,544 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   runs external program ant 1 2 
+   
+    
+    invalid exit code  
+       set link integer#max_value  
+        
+  todo  nothing appears read set using public setter  
+    controls whether vm used launch commands possible     
+    used destroy processes vm exits     
+    used replacing env variables    
+   
+       builds command launcher os jvm running under  
+        
+   try using jdk 1 3 launcher 
+   ignore keep trying 
+   mac 
+   os 2 
+   windows xp 2000 nt 
+   windows 98 95 - need use auxiliary script 
+   openvms 
+   ignore keep trying 
+   generic 
+    
+       set whether not want process spawned  
+       default not spawned  
+       
+        param spawn true not want ant wait end process ant 1 6 
+        
+    
+       find list environment variables process  
+       
+        return vector containing environment variables vector elements strings formatted variable   value  
+        
+   make sure not recurse forever try use chunk part previous env var  unix env vars contain embedded new lines   
+   new env var   append previous one we  look ahead  before adding s one last env var try see much operation environment notorious troublespot pre-java1 5 approached extreme caution  
+        return 
+        
+   os 2 - use same mechanism windows 2000 
+   determine re running under xp 2000 nt 98 95 
+   windows 98 95 
+   windows xp 2000 nt 2003 most systems one use   bin sh -c env 
+   some systems bin env  others  usr bin env try 
+   rely path 
+   rely path 
+   mac os 9 previous 
+  todo idea someone must fix bytearrayoutputstream#tostring doesn't seem work reliably os 390 least not way use execution 
+       context  
+       
+        param bos output stream one read  
+        return output stream string  read special encodings case z os os 400 ant 1 5 
+        
+  noop default encoding used 
+  noop default encoding used 
+    
+       creates new execute object using  code pumpstreamhandler  code stream handling  
+        
+    
+       creates new execute object  
+       
+        param streamhandler stream handler used handle input output streams subprocess  
+        
+    
+       creates new execute object  
+       
+        param streamhandler stream handler used handle input output streams subprocess  
+        param watchdog watchdog subprocess code null  code to disable timeout subprocess default  use shell launcher vms 
+   
+    
+       set stream handler use  
+        param streamhandler executestreamhandler ant 1 6 
+        
+    
+       returns commandline used create subprocess  
+       
+        return commandline used create subprocess  
+        
+    
+       sets commandline subprocess launch  
+       
+        param commandline commandline subprocess launch  
+        
+    
+       set whether propagate default environment not  
+       
+        param newenv whether propagate process environment  
+        
+    
+       returns environment used create subprocess  
+       
+        return environment used create subprocess  
+        
+    
+       sets environment variables subprocess launch  
+       
+        param env array strings  each element environment variable settings format  em key value  em   
+        
+    
+       sets working directory process execute  
+       
+        p emulated using antrun scripts unless os windows nt case cmd exe spawned mrj setting user dir works jdk 1 3 official support java lang runtime  
+       
+        param wd working directory process  
+        
+    
+       return working directory  
+        return directory file ant 1 7 
+        
+    
+       set name antrun script using project's value  
+       
+        param project current project  
+       
+        throws buildexception not clear going throw exception method's signature  
+        
+    
+       launch execution through vm possible through os's shell some cases operating systems using shell allow shell perform additional processing associating executable script  etc  
+       
+        param usevmlauncher true exec launch through vm  
+                         false shell used launch command  
+        
+    
+       creates process runs command  
+       
+        param project project  only used logging purposes  may null  
+        param command command run  
+        param env environment command  
+        param dir working directory command  
+        param usevm use built exec command jdk 1 3 available  
+        return process started  
+        throws ioexception forwarded particular launcher used ant 1 5 
+        
+    
+       runs process defined command line returns exit status  
+       
+        return exit status subprocess code invalid  code   
+        exception java io ioexception exception thrown launching subprocess failed  
+        
+   add process list those destroy vm exits 
+   
+   #31928  forcibly kill before continuing  
+   remove process list those destroy vm exits 
+   
+    
+       starts process defined command line  
+       ant not wait process log output  
+       
+        throws java io ioexception exception thrown launching subprocess failed ant 1 6 
+        
+    
+       wait given process  
+       
+        param process process one wait set exit value  
+       
+        param value exit value process  
+        
+    
+       query exit value process  
+        return exit value execute invalid exit value received  
+        
+    
+       checks whether  code exitvalue  code  signals failure current 
+       system  os specific   
+       
+        p  b note  b method relies conventions os return false results application running doesn't follow conventions   one notable 
+       exception java vm provided hp openvms return 0 successful any platform signals failure openvms execute new java vm openvms cannot trust method   p  
+       
+        param exitvalue exit value  return code checked  
+        return  code true  code code exitvalue  code  signals failure openvms even exit value signals failure platforms nonzero exit value signals failure execute return failure  
+        see #isfailure int  
+        return true only exit code interpreted failure ant1 7 
+        
+    
+       test untimely death process  
+        return true watchdog kill process ant 1 5 
+        
+    
+       patch current environment new values user  
+        return patched environment openvms runtime#exec   doesn't support environment array only return new values set generated dcl script  inheriting parent process environment key including     
+   nb  using default locale key env name 
+   find key current enviroment copy remove use original casiness key 
+   add key enviromnent copy utility method runs external command   writes output error streams command project log  
+       
+        param task task command part used logging 
+        param cmdline command execute  
+       
+        throws buildexception command not exit successfully  
+        
+    
+       close streams belonging given process  
+        param process code process  code method vms specific used getprocenvironment    
+       
+       parses vms logicals code code adds code environment  code     code code expected output show logical method takes care parsing output 
+       correctly well making sure logical defined multiple 
+       tables only gets added highest order table   logicals multiple equivalence names mapped variable multiple 
+       values separated comma      
+        
+   parse vms logicals required format   var val  val2    
+   further equivalence name previous logical 
+   new logical? 
+   already logical higher order table look ahead  before adding s one last env var command launcher particular jvm os platform class general purpose command launcher only launch commands current working directory  
+        
+    
+           launches given command new process  
+           
+            param project project command part param cmd command execute  
+            param env environment new process null environment current process used  
+            return created process  
+            throws ioexception attempting run command specific directory  
+            
+    
+           launches given command new process given working 
+           directory  
+           
+            param project project command part param cmd command execute  
+            param env environment new process null environment current process used  
+            param workingdir directory start command null current directory used  
+            return created process  
+            throws ioexception trying change directory command launcher jdk jre 1 3 higher    uses built runtime exec   command  
+        
+   locate method runtime exec string   cmdarray  
+                              string   envp  file dir  
+    
+           launches given command new process given working 
+           directory  
+            param project ant project  
+            param cmd command line execute array strings  
+            param env environment set array strings  
+            param workingdir working directory command run  
+            return created process  
+            throws ioexception probably forwarded runtime#exec arguments     new object    cmd  env  workingdir    
+   illegalaccess  illegalargument  classcast command launcher proxies another command launcher  
+       
+       sub-classes override exec args  env  workdir   
+        
+    
+           launches given command new process   delegates method proxied launcher  
+            param project ant project  
+            param cmd command line execute array strings  
+            param env environment set array strings  
+            return created process  
+            throws ioexception forwarded exec method command launcher command launcher os 2 uses 'cmd exe launching 
+       commands directories current working 
+       directory  
+       
+        p unlike windows nt friends  os 2's cd doesn't support d switch change drives directories one go   p  
+        
+    
+           launches given command new process given working 
+           directory  
+            param project ant project  
+            param cmd command line execute array strings  
+            param env environment set array strings  
+            param workingdir working directory command run  
+            return created process  
+            throws ioexception forwarded exec method command launcher  
+            
+   use cmd exe change specified drive directory before running command command launcher windows xp 2000 nt uses 'cmd exe launching commands directories current working 
+       directory  
+        
+    
+           launches given command new process given working 
+           directory  
+            param project ant project  
+            param cmd command line execute array strings  
+            param env environment set array strings  
+            param workingdir working directory command run  
+            return created process  
+            throws ioexception forwarded exec method command launcher  
+            
+   use cmd exe change specified directory before running command command launcher mac uses dodgy mechanism change 
+       working directory before launching commands  
+        
+    
+           launches given command new process given working 
+           directory  
+            param project ant project  
+            param cmd command line execute array strings  
+            param env environment set array strings  
+            param workingdir working directory command run  
+            return created process  
+            throws ioexception forwarded exec method command launcher command launcher uses auxiliary script launch commands directories current working directory  
+        
+    
+           launches given command new process given working 
+           directory  
+            param project ant project  
+            param cmd command line execute array strings  
+            param env environment set array strings  
+            param workingdir working directory command run  
+            return created process  
+            throws ioexception forwarded exec method command launcher  
+            
+   locate auxiliary script 
+   build command command launcher uses auxiliary perl script launch commands directories current working directory  
+        
+    
+           launches given command new process given working 
+           directory  
+            param project ant project  
+            param cmd command line execute array strings  
+            param env environment set array strings  
+            param workingdir working directory command run  
+            return created process  
+            throws ioexception forwarded exec method command launcher  
+            
+   locate auxiliary script 
+   build command command launcher vms writes command temporary dcl 
+       script before launching commands due limitations both dcl interpreter java vm implementation  
+        
+    
+           launches given command new process  
+            param project ant project  
+            param cmd command line execute array strings  
+            param env environment set array strings  
+            return created process  
+            throws ioexception forwarded exec method command launcher  
+            
+    
+           launches given command new process given working 
+           directory   note under java 1 3 1  1 4 0 1 4 1 vms method only works code workingdir  code null logical 
+           java$fork_support_chdir needs set true  
+            param project ant project  
+            param cmd command line execute array strings  
+            param env environment set array strings  
+            param workingdir working directory command run  
+            return created process  
+            throws ioexception forwarded exec method command launcher  
+            
+   
+           writes command temporary dcl script returns corresponding file object script deleted exit  
+            param cmd command line execute array strings  
+            param env environment set array strings  
+            return command file  
+            throws ioexception errors encountered creating file  
+            
+   add environment logicals dcl script 
+  ignoreorg apache tools ant taskdefs Execute org apache tools ant taskdefs execute invalid   integer max_value os isfamily  os 2      
+                vmlauncher java13commandlauncher nosuchmethodexception exc os isfamily  mac       os isfamily  unix      
+              
+            shelllauncher maccommandlauncher commandlauncher os isfamily  os 2      
+              
+            shelllauncher os2commandlauncher commandlauncher os isfamily  windows      
+            environmentcaseinsensitive commandlauncher baselauncher commandlauncher os isfamily  win9x      
+                  
+                shelllauncher winntcommandlauncher baselauncher shelllauncher scriptcommandlauncher  bin antrun bat   baselauncher os isfamily  netware      
+ 
+            commandlauncher baselauncher commandlauncher    
+ 
+            shelllauncher perlscriptcommandlauncher  bin antrun pl   baselauncher os isfamily  openvms shelllauncher vmscommandlauncher nosuchmethodexception exc shelllauncher scriptcommandlauncher  bin antrun commandlauncher setspawn spawn spawn   spawn vector getprocenvironment procenvironment procenvironment  
+          
+        procenvironment vector bytearrayoutputstream out bytearrayoutputstream    
+            execute exe execute pumpstreamhandler out    
+            exe setcommandline getprocenvcommand     
+              
+            exe setnewenvironment retval   exe execute retval    0    
+                  
+              
+            bufferedreader in bufferedreader stringreader tostring out os isfamily  openvms      
+                procenvironment   addvmslogicals procenvironment  in procenvironment line  linesep   stringutils line_sep line   in readline line indexof ' '     -1 var   linesep   line linesep   line procenvironment addelement var   line procenvironment addelement java io ioexception exc    
+            exc printstacktrace procenvironment getprocenvcommand os isfamily  os 2 cmd     c    set os isfamily  windows os isfamily  win9x command com     c    set cmd     c    set os isfamily  z os      os isfamily  unix cmd 1 file   bin env   canread      
+                cmd 0      bin env file   usr bin env   canread      
+                cmd 0      usr bin env cmd 0     env cmd os isfamily  netware      os isfamily  os 400 env os isfamily  openvms show    logical tostring bytearrayoutputstream bos os isfamily  z os bos tostring  cp1047 java io unsupportedencodingexception e os isfamily  os 400 bos tostring  cp500 java io unsupportedencodingexception e bos tostring execute pumpstreamhandler execute executestreamhandler streamhandler streamhandler execute executestreamhandler streamhandler  
+                   executewatchdog watchdog    
+        setstreamhandler streamhandler watchdog   watchdog os isfamily  openvms      
+            usevmlauncher setstreamhandler executestreamhandler streamhandler streamhandler   streamhandler getcommandline cmdl setcommandline commandline    
+        cmdl   commandline setnewenvironment newenv    
+        newenvironment   newenv getenvironment env newenvironment  
+            ? env   patchenvironment setenvironment env env   env setworkingdirectory file wd    
+        workingdirectory   
+             wd wd getabsolutepath   equals antworkingdirectory wd file getworkingdirectory workingdirectory file antworkingdirectory  
+                                          workingdirectory setantrun project project buildexception project   project setvmlauncher usevmlauncher usevmlauncher   usevmlauncher process launch project project command env  file dir usevm ioexception dir dir exists buildexception dir     doesn't exist     
+          
+        commandlauncher launcher 
+                usevm    vmlauncher vmlauncher   shelllauncher launcher exec project  command  env  dir execute ioexception workingdirectory workingdirectory exists buildexception workingdirectory     doesn't exist process process   launch project  getcommandline    
+                                       getenvironment    workingdirectory  
+                                       usevmlauncher streamhandler setprocessinputstream process getoutputstream     
+            streamhandler setprocessoutputstream process getinputstream     
+            streamhandler setprocesserrorstream process geterrorstream ioexception e    
+            process destroy e  
+          
+        streamhandler start processdestroyer add process watchdog watchdog start process   
+              
+            waitfor process watchdog watchdog stop    
+              
+            streamhandler stop    
+            closestreams process watchdog watchdog checkexception getexitvalue threaddeath t    
+              
+            process destroy t processdestroyer remove process spawn ioexception workingdirectory workingdirectory exists buildexception workingdirectory     doesn't exist process process   launch project  getcommandline    
+                                       getenvironment    workingdirectory  
+                                       usevmlauncher os isfamily  windows thread sleep 1000 interruptedexception e    
+                project log  interruption in the sleep after having spawned a  
+                                process   project msg_verbose   
+              
+          
+        outputstream dummyout outputstream write b ioexception   
+              
+           
+ 
+        executestreamhandler handler pumpstreamhandler dummyout   
+        handler setprocesserrorstream process geterrorstream     
+        handler setprocessoutputstream process getinputstream     
+        handler start    
+        process getoutputstream   close    
+ 
+        project log  spawned process     process tostring    
+                    project msg_verbose waitfor process process process waitfor    
+            setexitvalue process exitvalue interruptedexception e    
+            process destroy setexitvalue value    
+        exitvalue   value getexitvalue exitvalue isfailure exitvalue os isfamily  openvms   
+            ?  exitvalue % 2    0     exitvalue    0 isfailure isfailure getexitvalue killedprocess watchdog watchdog killedprocess patchenvironment os isfamily  openvms env  
+          
+        vector osenv    vector  getprocenvironment   clone i   0  i   env length  i keyvalue   env i key   keyvalue substring 0  keyvalue indexof ' '    1 environmentcaseinsensitive    
+                  
+                key   key tolowercase size   osenv size j   0  j   size  j osenvitem osenv elementat j converteditem   environmentcaseinsensitive 
+                    ? osenvitem tolowercase     osenvitem converteditem startswith key     
+                    osenv removeelementat j environmentcaseinsensitive    
+                          
+                        keyvalue   osenvitem substring 0  key length    
+                              keyvalue substring key length osenv addelement keyvalue osenv toarray osenv size runcommand task task cmdline buildexception task log commandline describecommand cmdline   
+                     project msg_verbose   
+            execute exe execute logstreamhandler task  project msg_info  project msg_err    
+            exe setantrun task getproject     
+            exe setcommandline cmdline retval   exe execute isfailure retval buildexception cmdline 0  
+                        failed with code     retval  task getlocation java io ioexception exc buildexception  could not launch     cmdline 0         
+                  exc  task getlocation closestreams process process    
+        fileutils close process getinputstream     
+        fileutils close process getoutputstream     
+        fileutils close process geterrorstream vector addvmslogicals vector environment  bufferedreader in ioexception   
+        hashmap logicals hashmap logname logvalue newlogname line line   in readline line startswith  \t logname logvalue          line substring 4  line length   - 1 line startswith logname logicals put logname  logvalue eqindex   line indexof ' '   
+                newlogname   line substring 3  eqindex - 2 logicals containskey newlogname     
+                      
+                    logname logname   newlogname  
+                    logvalue   line substring eqindex   3  line length   - 1 logname logicals put logname  logvalue iterator i   logicals keyset   iterator    i hasnext logical i next    
+            environment add logical         logicals get logical environment commandlauncher process exec project project cmd env ioexception project project log  execute commandlauncher    
+                      commandline describecommand cmd   project msg_debug runtime getruntime   exec cmd  env process exec project project cmd env  
+                            file workingdir ioexception workingdir exec project  cmd  env ioexception  cannot execute a process in different   
+                   directory under jvm java13commandlauncher commandlauncher java13commandlauncher nosuchmethodexception   
+              
+              
+            myexecwithcwd   runtime getmethod  exec string file process exec project project cmd env  
+                            file workingdir ioexception project project log  execute java13commandlauncher    
+                          commandline describecommand cmd   project msg_debug process  myexecwithcwd invoke runtime getruntime invocationtargetexception exc    
+                throwable realexc   exc gettargetexception realexc threaddeath threaddeath  realexc realexc ioexception ioexception  realexc buildexception  unable to execute command   
+                                             realexc exception exc buildexception  unable to execute command   exc commandlauncherproxy commandlauncher   
+  
+ 
+        commandlauncherproxy commandlauncher launcher    
+            mylauncher   launcher process exec project project cmd env ioexception mylauncher exec project  cmd  env os2commandlauncher commandlauncherproxy   
+        os2commandlauncher commandlauncher launcher launcher process exec project project cmd env  
+                            file workingdir ioexception   
+            file commanddir   workingdir workingdir project commanddir   project getbasedir exec project  cmd  env precmdlength   7 cmddir   commanddir getabsolutepath newcmd cmd length   precmdlength   
+            newcmd 0     cmd   
+            newcmd 1      c   
+            newcmd 2    cmddir substring 0  2   
+            newcmd 3          
+            newcmd 4     cd   
+            newcmd 5    cmddir substring 2   
+            newcmd 6          
+            system arraycopy cmd  0  newcmd  precmdlength  cmd length exec project  newcmd  env winntcommandlauncher commandlauncherproxy   
+        winntcommandlauncher commandlauncher launcher launcher process exec project project cmd env  
+                            file workingdir ioexception   
+            file commanddir   workingdir workingdir project commanddir   project getbasedir exec project  cmd  env precmdlength   6 newcmd cmd length   precmdlength   
+            newcmd 0     cmd   
+            newcmd 1      c   
+            newcmd 2     cd   
+            newcmd 3      d   
+            newcmd 4    commanddir getabsolutepath    
+            newcmd 5          
+            system arraycopy cmd  0  newcmd  precmdlength  cmd length exec project  newcmd  env maccommandlauncher commandlauncherproxy   
+        maccommandlauncher commandlauncher launcher launcher process exec project project cmd env  
+                            file workingdir ioexception workingdir exec project  cmd  env   
+              
+            system getproperties   put  user dir   workingdir getabsolutepath exec project  cmd  env system getproperties   put  user dir   antworkingdirectory scriptcommandlauncher commandlauncherproxy   
+        scriptcommandlauncher script  commandlauncher launcher launcher   
+            myscript   script process exec project project cmd env  
+                            file workingdir ioexception project workingdir exec project  cmd  env ioexception  cannot locate antrun script    
+                       no project provided anthome   project getproperty magicnames ant_home anthome ioexception  cannot locate antrun script    
+                       property '    magicnames ant_home    ' not found antrun   
+                file_utils resolvefile project getbasedir    
+                        anthome   file separator   myscript  tostring    
+ 
+              
+            file commanddir   workingdir workingdir project commanddir   project getbasedir newcmd cmd length   2   
+            newcmd 0    antrun  
+            newcmd 1    commanddir getabsolutepath    
+            system arraycopy cmd  0  newcmd  2  cmd length exec project  newcmd  env perlscriptcommandlauncher commandlauncherproxy   
+  
+ 
+        perlscriptcommandlauncher script  commandlauncher launcher launcher   
+            myscript   script process exec project project cmd env  
+                            file workingdir ioexception project workingdir exec project  cmd  env ioexception  cannot locate antrun script    
+                       no project provided anthome   project getproperty magicnames ant_home anthome ioexception  cannot locate antrun script    
+                       property '    magicnames ant_home    ' not found antrun   
+                file_utils resolvefile project getbasedir    
+                        anthome   file separator   myscript  tostring    
+ 
+              
+            file commanddir   workingdir workingdir project commanddir   project getbasedir newcmd cmd length   3   
+            newcmd 0     perl   
+            newcmd 1    antrun  
+            newcmd 2    commanddir getabsolutepath    
+            system arraycopy cmd  0  newcmd  3  cmd length exec project  newcmd  env vmscommandlauncher java13commandlauncher vmscommandlauncher nosuchmethodexception process exec project project cmd env ioexception   
+            file cmdfile   createcommandfile cmd  env   
+            process p exec project cmdfile getpath     env   
+            deleteafter cmdfile  p p process exec project project cmd env  
+                            file workingdir ioexception   
+            file cmdfile   createcommandfile cmd  env   
+            process p exec project cmdfile getpath     
+                                   env  workingdir   
+            deleteafter cmdfile  p p file createcommandfile cmd env ioexception   
+            file script   file_utils createtempfile  ant     com script deleteonexit    
+            printwriter out out printwriter filewriter script env eqindex i   0  i   env length  i      
+                        eqindex   env i  indexof eqindex    -1    
+                            out print  $ define nolog     
+                            out print env i  substring 0  eqindex    
+                            out print   \     
+                            out print env i  substring eqindex   1    
+                            out println '\ '   
+                          
+                      
+                  
+                out print  $     cmd 0 i   1  i   cmd length  i      
+                    out println   -    
+                    out print cmd i out out close script deleteafter file f process p thread run p waitfor interruptedexception e    
+                          
+                      
+                    fileutils delete f   
+                  
+              
+             start    
+          
+      
+ org apache tools ant taskdefs Execute

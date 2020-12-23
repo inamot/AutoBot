@@ -1,0 +1,668 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   compiles ejb stubs skeletons iplanet application 
+   server  ias class read standard ejb descriptor well ejb descriptor specific iplanet application server identify one ejbs process search ejb  source  classes remote 
+    interface  home interface ejb implementation class ejb stubs skeletons specified destination directory   only stubs skeletons cannot found re out date iplanet 
+   application server ejbc utility run  
+    p class s assorted inner classes  may bundled iplanet application server distribution some point removed ant distribution class written independent ant-specific classes reason avoid cluttering apache ant source files utility packaged single source file  
+    p information ant tasks iplanet application server  see code iplanetdeploymenttool  code code iplanetejbctask  code  classes  
+   
+    see    iplanetdeploymenttool 
+    see    iplanetejbctask 
+    ant task ignore  true  
+    
+   constants used beantype  attribute    
+   filenames standard ejb descriptor ias-specific descriptor    
+   
+       directory source  ejb files stored stubs skeletons written  
+        
+   classpath used ias ejbc called    
+   options passed ias ejbc    
+   ias installation directory  used ejbc isn't user's path     
+   parser handler used process both ejb descriptor files hashtable maintains list ejb class files processed ejbc 
+       utility  both  source  class files well stubs skeletons key hashtable string representing path class file 
+        relative destination directory value hashtable file object reference actual class file  
+        
+   value display-name element read standard ejb descriptor    
+    
+       constructs instance may used process ejb descriptors generate ejb stubs skeletons needed  
+       
+        param stddescriptor file referencing standard ejb descriptor  
+        param iasdescriptor file referencing ias-specific ejb descriptor  
+        param destdirectory file referencing base directory both 
+                            ejb  source  files found stubs skeletons written  
+        param classpath     string representation classpath used ias ejbc utility  
+        param parser        saxparser used process both ejb 
+                            descriptors  
+        todo classpathelements not needed here never used least idea tells parse classpath s individual elements store results classpathelements  instance variable true java source files generated ejbc process retained  
+       
+        param retainsource boolean indicating java source files stubs skeletons retained  
+        todo not documented html purpose true  enables debugging output ejbc executed  
+       
+        param debugoutput boolean indicating debugging output generated 
+        
+    
+       registers location local dtd file resource registering local dtd  ejb descriptors parsed even remote servers contain public  dtds cannot accessed  
+       
+        param publicid public dtd identifier found xml document  
+        param location file resource name appropriate dtd stored local machine  
+        
+    
+       may used specify home  directory ias installation directory specified typically code  install-location  iplanet ias6 ias  code   
+       
+        param iashomedir home directory user's ias installation  
+        
+    
+       returns hashtable contains list ejb class files processed ejbc utility  both  source  class files well stubs skeletons key hashtable string representing path class file  relative destination directory value hashtable file object reference actual class file  
+       
+        return list ejb files processed ejbc utility  
+        
+    
+       returns display-name element read standard ejb descriptor  
+       
+        return ejb-jar display name  
+        
+    
+       returns list cmp descriptors referenced ejb descriptors  
+       
+        return array cmp descriptors  
+        
+    
+       main application method iplanet application server ejbc utility application run commandline arguments usage 
+       statement printed user  
+       
+        param args commandline arguments passed application classpath flag isn't specified  use system classpath d flag isn't specified  use working directory destination directory 
+            
+   construct saxparser used process descriptors    
+   saxexception parserconfigurationexception may thrown 
+   build populate instance ejbc utility    
+   execute ejbc utility -- stubs skeletons rebuilt needed    
+    
+       print usage statement  
+        
+    
+       compiles stub skeletons specified ejbs need updated  
+       
+        throws ejbcexception ejbc utility cannot correctly configured one ejb  source  classes 
+                             cannot found destination directory 
+        throws ioexception parser encounters problem reading xml 
+                             file 
+        throws saxexception parser encounters problem processing xml descriptor may wrap another exception  
+        
+   throws ejbcexception unsuccessful 
+   returns list ejbs processing 
+   throws ejbcexception 
+    
+       executes iplanet application server ejbc command-line utility  
+       
+        param arguments command line arguments passed ejbc utility  
+        
+   concatenate command line arguments single string ias home directory specified  prepend commmand    
+   
+           use runtime object execute external command   use redirectoutput inner class direct standard error output command jre's standard output nothing 
+    
+       verifies user selections valid  
+       
+        throws ejbcexception user selections invalid  
+        
+    
+       parses ejb descriptors returns list ejbs may need compiled  
+       
+        return array objects describe ejbs processed  
+        throws ioexception parser encounters problem reading xml 
+                             files 
+        throws saxexception parser encounters problem processing xml descriptor may wrap another exception ejb information gathered standard xml ejb descriptor ias-specific xml ejb descriptor using sax parser  
+            
+    
+       based object's instance variables well ejb processed correct flags parameters set ejbc 
+       command-line utility  
+        param ejb ejb stubs skeletons compiled  
+        return array strings command-line parameters for ejbc utility  
+        
+   optional command line parameters beantype flag needed entity bean    
+   required command line parameters    
+   convert list array return convenience method used print messages user debugging 
+       messages enabled  
+       
+        param msg string print standard output  
+        
+   inner classes follow inner class used signal any problems during execution ejbc compiler  
+       
+        
+    
+           constructs exception given descriptive message  
+           
+            param msg description exception occurred  
+            
+   end ejbcexception inner class inner class xml document handler used parse ejb 
+       descriptors  both standard ejb descriptor well ias-specific 
+       descriptor stores additional values ias    once descriptors processed list ejbs found obtained calling code getejbs    code  method  
+       
+        see    iplanetejbc ejbinfo 
+        
+    ejb 1 1 id    
+  sun microsystems  inc   dtd enterprise javabeans 1 1  en   
+    iplanet id    
+  sun microsystems  inc   dtd ias enterprise javabeans 1 0  en   
+    ejb 1 1 location    
+    ias60 location    
+   
+           two maps used track local dtds used case remote copies dtds cannot accessed key map dtds public id value local location dtd 
+            
+   list ejbs found xml 
+   one item within map doc ias ejb descriptor 
+   tracks current element 
+   tracks current text data 
+    session entity  
+    
+           constructs new instance handler registers local copies standard ejb 1 1 descriptor dtd well ias's ejb 
+           descriptor dtd  
+            
+    
+           returns list ejb objects found during processing standard ejb 1 1 descriptor ias-specific ejb descriptor  
+           
+            return array ejbs found during descriptor 
+                   parsing  
+            
+    
+           returns value display-name element found standard 
+           ejb 1 1 descriptor  
+           
+            return string display-name value  
+            
+    
+           registers local dtd used parsing ejb 
+           descriptor dtd's public identifier found xml 
+           document parser reference local dtd remote dtd enables xml documents processed even public dtd isn't available  
+           
+            param publicid dtd's public identifier  
+            param location location local dtd copy location 
+                           may either resource found classpath local file  
+            
+    
+           resolves external entity found during xml processing public 
+           id found registered handler code  
+           inputsource  code returned refers local copy public id hasn't registered error occurs superclass implementation used  
+           
+            param publicid dtd's public identifier  
+            param systemid location dtd found xml document  
+            
+   search resource map not found  file map    
+    
+           receive notification start xml element found  
+           
+            param name string name element found  
+            param atts attributelist attributes included element any   
+            throws saxexception parser cannot process document need push element onto string  currentloc always represents current location xml document new element started reset text being captured    
+    
+           receive notification character data found xml 
+           document 
+           
+            param ch array characters found document  
+            param start starting index data found document  
+            param len number characters found document  
+            throws saxexception parser cannot process document  
+            
+    
+           receive notification end xml element found  
+           
+            param name string name element  
+            throws saxexception parser cannot process document standard ejb 1 1 descriptor looking one 
+               set data ias-specific descriptor re 
+               looking different set data   hand processing appropriate method need pop element string  currentloc always represents current location xml document  
+                
+   add one receive notification character data found standard 
+           ejb 1 1 descriptor re interested retrieving home 
+           interface  remote interface  implementation class type bean bean uses cmp  
+           
+            param value string data found xml document  
+            
+    
+           receive notification character data found ias-specific descriptor re interested retrieving data 
+           indicating whether bean must support rmi iiop access  whether bean must provide highly available stubs skeletons case stateful session beans bean uses additional 
+           cmp xml descriptors case entity beans cmp   
+           
+            param value string data found xml document  
+            
+   end ejbchandler inner class inner class represents ejb compiled using ejbc  
+       
+        
+   ejb's display name 
+   ejb's home interface name 
+   ejb's remote interface name 
+   ejb's implementation class 
+   ejb's primary key class stateful stateless ejb support cmp ejb support iiop ejb require failover? 
+   cmp descriptor list 
+    
+           construct new ejbinfo object given name  
+           
+            param name display name ejb  
+            
+    
+           returns display name ejb display name not set returns ejb implementation classname implementation class not set returns   unnamed     
+           
+            return display name ejb  
+            
+   
+           below getter's setter's each instance variables  
+           note addition supporting setters same type instance variable setter provided takes string 
+           argument provided xml document handler set ejb values using strings parses  
+            
+    
+           verifies ejb valid invalid exception thrown 
+           
+           
+            param builddir directory ejb remote interface  home 
+                           interface implementation class must found  
+            throws ejbcexception ejb invalid  
+            
+   check specified instance variables valid    
+   check ejb  source  classes exist    
+    
+           determines ejbc utility needs run not stubs skeletons found destination directory timestamps recent ejb source classes 
+            home  remote implementation classes method returns 
+            code false  code    otherwise method returns  code true  code   
+           
+            param destdir directory ejb source classes  stubs skeletons located  
+            return boolean indicating whether not ejbc utility needs run bring stubs skeletons up date  
+            
+    
+           examines each ejb source classes  home  remote implementation returns modification timestamp oldest  class  
+           
+            param classpath classpath used find source ejb 
+                            classes code null  code system classpath used  
+            return modification timestamp oldest  ejb source class  
+            throws buildexception one ejb source classes cannot found classpath timestamp newest  class 
+   timestamp given class 
+   file remote interface class 
+   file home interface class 
+   file ejb implementation class 
+   file ejb primary key class 
+   check timestamp remote interface    
+   check timestamp home interface    
+   check timestamp primary key class    
+   check timestamp ejb implementation class  
+               
+               note only implementation class changed s not 
+               necessary rebuild ejb stubs skeletons reason ensure file exists  using lastmodified above don't compare s timestamp timestamps home remote interfaces s irrelevant determining ejbc must run  
+                
+    
+           examines each ejb stubs skeletons destination 
+           directory returns modification timestamp oldest  
+           class one stubs skeletons cannot found   code -1 
+             code returned  
+           
+            param dest directory ejb stubs skeletons stored  
+            return modification timestamp oldest  ejb stub skeleton one classes cannot found   code -1 
+                     code returned  
+            throws buildexception canonical path destination 
+                                  directory cannot found  
+            
+   list stubs   skels 
+   earliest mod time each found? 
+   
+               loop through each stub skeleton class must generated determine exist file most recent timestamp 
+                
+   
+                   add each stub skeleton class list ejb files   note each class added even doesn't exist now  
+                    
+   keep track oldest modification timestamp    
+    
+           builds array class names represent stubs skeletons need generated given ejb class 
+           names fully qualified   nine classes generated ejbs additional six classes generated beans requiring 
+           rmi iiop access  
+           
+            return array strings representing fully-qualified class 
+                   names stubs skeletons generated  
+            
+    
+           convenience method creates string representation instance variables ejbinfo object  
+           
+            return string representing ejbinfo instance  
+            
+   end ejbinfo inner class 
+    
+       convenience class used represent fully qualified name java 
+       class provides easy way retrieve components class name format convenient building ias stubs skeletons  
+       
+        
+   fully qualified name java class 
+   name package class 
+   name class without package constructor builds object represents name java 
+           class  
+           
+            param qualifiedname string representing fully qualified class 
+                                name java class  
+            
+    
+           gets fully qualified name java class  
+           
+            return string representing fully qualified class name  
+            
+    
+           gets package name java class  
+           
+            return string representing package name class  
+            
+    
+           gets java class name without package structure  
+           
+            return string representing name class  
+            
+    
+           gets fully qualified name java class underscores 
+           separating components class name periods format used naming some stub skeleton classes iplanet application server  
+           
+            return string representing fully qualified class name using 
+                   underscores instead periods  
+            
+    
+           returns file references class relative specified 
+           directory   note class file may may not exist  
+           
+            param  directory file referencing base directory containing 
+                             class files  
+            return file referencing class  
+            
+    
+           string representation class name returns fully 
+           qualified class name  
+           
+            return string representing fully qualified class name  
+            
+   end classname inner class 
+    
+       thread class used redirect output code inputstream  code jre standard output class may used redirect output external process standard output  
+       
+        
+   stream read redirect standard output 
+    
+           constructs new instance redirect output specified stream standard output  
+           
+            param stream inputstream read redirected standard output  
+            
+    
+           reads text input stream redirects standard output 
+           using separate thread nothing 
+   end redirectoutput inner classorg apache tools ant taskdefs optional ejb IPlanetEjbc org apache tools ant taskdefs optional ejb iplanetejbc iplanetejbc file stddescriptor  
+                       file iasdescriptor  
+                       file destdirectory classpath  
+                       saxparser parser stddescriptor   stddescriptor iasdescriptor        iasdescriptor destdirectory        destdirectory classpath            classpath parser               parser  
+ 
+          
+        list elements arraylist classpath stringtokenizer st stringtokenizer classpath  
+                                                        file pathseparator st hasmoretokens      
+                elements add st nexttoken     
+              
+            classpathelements elements toarray elements size setretainsource retainsource retainsource   retainsource setdebugoutput debugoutput debugoutput   debugoutput registerdtd publicid location    
+        handler registerdtd publicid  location setiashomedir file iashomedir iashomedir   iashomedir hashtable getejbfiles ejbfiles getdisplayname displayname getcmpdescriptors     
+        list returnlist arraylist    
+ 
+        ejbinfo   ejbs   handler getejbs i   0  i   ejbs length  i      
+            list descriptors    list  ejbs i  getcmpdescriptors    
+            returnlist addall descriptors returnlist toarray returnlist size main args    
+        file        stddescriptor  
+        file        iasdescriptor  
+        file        destdirectory classpath saxparser   parser debug retainsource iplanetejbc ejbc args length   min_num_args      args length   max_num_args     
+            usage stddescriptor file args args length - 2    
+        iasdescriptor file args args length - 1 i   0  i   args length - 2  i args i  equals  -classpath      
+                classpath   args   i args i  equals  -d      
+                destdirectory file args   i args i  equals  -debug      
+                debug args i  equals  -keepsource      
+                retainsource usage classpath properties props   system getproperties    
+            classpath   props getproperty  java path destdirectory properties props   system getproperties    
+            destdirectory file props getproperty  user dir     
+          
+ 
+          
+        saxparserfactory parserfactory   saxparserfactory newinstance    
+        parserfactory setvalidating parser   parserfactory newsaxparser exception e    
+              
+            system out println  an exception was generated trying to     
+            system out println  create a saxparser     
+            e printstacktrace ejbc iplanetejbc stddescriptor  iasdescriptor  destdirectory  
+                                classpath  parser   
+        ejbc setdebugoutput debug   
+        ejbc setretainsource retainsource ejbc execute ioexception e    
+            system out println  an ioexception has occurred reading the   
+                       xml descriptors      e getmessage saxexception e    
+            system out println  a saxexception has occurred reading the   
+                       xml descriptors      e getmessage iplanetejbc ejbcexception e    
+            system out println  an error has occurred executing the ejbc   
+                       utility      e getmessage usage     
+        system out println  java org apache tools ant taskdefs optional ejb iplanetejbc \\    
+        system out println     options   ejb 1 1 descriptor   ias ejb descriptor     
+        system out println      
+        system out println  where options are     
+        system out println    -debug additional debugging output    
+        system out println    -keepsource -- to retain java source files generated    
+        system out println    -classpath  classpath  -- classpath used compilation    
+        system out println    -d  destination directory  -- directory compiled classes    
+        system out println      
+        system out println a classpath is not specified  the system classpath    
+        system out println  will be used a destination directory is not specified     
+        system out println  the current working directory will be used  classes will    
+        system out println  still be placed in subfolders which correspond to their    
+        system out println name      
+        system out println      
+        system out println  the ejb home remote and implementation    
+        system out println must be found in the destination directory   in    
+        system out println  addition  the destination will look the stubs and skeletons    
+        system out println  in the destination directory to ensure they are up to date execute ejbcexception  ioexception  saxexception   
+ 
+        checkconfiguration        
+ 
+        ejbinfo   ejbs   getejbs i   0  i   ejbs length  i      
+            log  ejbinfo       
+            log ejbs i  tostring i   0  i   ejbs length  i      
+            ejbinfo ejb   ejbs i   
+ 
+            ejb checkconfiguration destdirectory ejb mustberecompiled destdirectory     
+                log ejb getname       must be recompiled using ejbc arguments   buildargumentlist ejb   
+                callejbc arguments log ejb getname       is up to date callejbc arguments    
+ 
+          
+        stringbuffer args stringbuffer i   0  i   arguments length  i      
+            args append arguments i   append command iashomedir command command   iashomedir tostring     file separator    bin  
+                                                          file separator  
+          
+        command     ejbc    
+ 
+        log command   args process p   runtime getruntime   exec command   args   
+            redirectoutput output redirectoutput p getinputstream     
+            redirectoutput error redirectoutput p geterrorstream     
+            output start    
+            error start    
+            p waitfor    
+            p destroy ioexception e    
+            log  an ioexception has occurred trying to execute ejbc     
+            e printstacktrace interruptedexception e checkconfiguration ejbcexception msg stddescriptor msg     a standard xml descriptor file must be specified iasdescriptor msg     an ias-specific xml descriptor file must be specified classpath msg     a classpath must be specified parser msg     an xml parser must be specified destdirectory msg     a destination directory must be specified destdirectory exists      
+            msg     the destination directory specified does not exist destdirectory isdirectory      
+            msg     the destination specified is not a directory msg length     0 ejbcexception msg ejbinfo   getejbs ioexception  saxexception   
+        ejbinfo   ejbs parser parse stddescriptor  handler   
+        parser parse iasdescriptor  handler   
+        ejbs   handler getejbs ejbs buildargumentlist ejbinfo ejb    
+ 
+        list arguments arraylist debugoutput    
+            arguments add  -debug ejb getbeantype   equals stateless_session     
+            arguments add  -sl ejb getbeantype   equals stateful_session     
+            arguments add  -sf ejb getiiop      
+            arguments add  -iiop ejb getcmp      
+            arguments add  -cmp retainsource    
+            arguments add  -gs ejb gethasession      
+            arguments add  -fo    
+          
+ 
+          
+ 
+        arguments add  -classpath    
+        arguments add classpath   
+ 
+        arguments add  -d    
+        arguments add destdirectory tostring     
+ 
+        arguments add ejb gethome   getqualifiedclassname     
+        arguments add ejb getremote   getqualifiedclassname     
+        arguments add ejb getimplementation   getqualifiedclassname arguments toarray arguments size log msg debugoutput    
+            system out println msg ejbcexception exception ejbcexception msg msg ejbchandler handlerbase publicid_ejb11 publicid_iplanet_ejb_60 default_ias60_ejb11_dtd_location   
+             ejb-jar_1_1 dtd default_ias60_dtd_location   
+             iasejb_jar_1_0 dtd ejbchandler     
+            registerdtd publicid_ejb11  default_ias60_ejb11_dtd_location   
+            registerdtd publicid_iplanet_ejb_60  default_ias60_dtd_location ejbinfo   getejbs ejbinfo    ejbs values   toarray ejbinfo ejbs size getdisplayname displayname registerdtd publicid location    
+            log  registering      location publicid location classloader getsystemresource location log  found resource      location   
+                resourcedtds put publicid  location file dtdfile file location dtdfile exists      dtdfile isfile      
+                    log  found file      location   
+                    filedtds put publicid  location inputsource resolveentity publicid systemid saxexception   
+            inputstream inputstream location resourcedtds get publicid location inputstream 
+                          classloader getsystemresource location  openstream location filedtds get publicid location inputstream fileinputstream location ioexception e resolveentity publicid  systemid inputstream resolveentity publicid  systemid inputsource inputstream startelement name  attributelist atts saxexception   
+ 
+              
+            currentloc     \\    name  
+ 
+              
+            currenttext currentloc equals  \\ejb-jar      
+                iasdescriptor currentloc equals  \\ias-ejb-jar      
+                iasdescriptor name equals  session        name equals  entity       
+                ejbtype   name characters ch start len saxexception   
+ 
+            currenttext ch  substring start  start   len endelement name saxexception iasdescriptor    
+                iascharacters currenttext stdcharacters currenttext namelength   name length     1 loclength    currentloc length    
+ 
+            currentloc   currentloc substring 0  loclength - namelength stdcharacters value currentloc equals  \\ejb-jar\\display-name      
+                displayname   value base    \\ejb-jar\\enterprise-beans\\    ejbtype currentloc equals base    \\ejb-name      
+                currentejb    ejbinfo  ejbs get value currentejb currentejb ejbinfo value   
+                    ejbs put value  currentejb currentloc equals base    \\home      
+                currentejb sethome value currentloc equals base    \\remote      
+                currentejb setremote value currentloc equals base    \\ejb currentejb setimplementation value currentloc equals base    \\prim-key currentejb setprimarykey value currentloc equals base    \\session-type      
+                currentejb setbeantype value currentloc equals base    \\persistence-type      
+                currentejb setcmp value iascharacters value base    \\ias-ejb-jar\\enterprise-beans\\    ejbtype currentloc equals base    \\ejb-name      
+                currentejb    ejbinfo  ejbs get value currentejb currentejb ejbinfo value   
+                    ejbs put value  currentejb currentloc equals base    \\iiop      
+                currentejb setiiop value currentloc equals base    \\failover-required      
+                currentejb sethasession value currentloc equals base    \\persistence-manager  
+                                                 \\properties-file-location      
+                currentejb addcmpdescriptor value ejbinfo ejbinfo name name   name getname name implementation unnamed implementation getclassname name sethome home    
+            sethome classname home sethome classname home home   home classname gethome home setremote remote    
+            setremote classname remote setremote classname remote remote   remote classname getremote remote setimplementation implementation    
+            setimplementation classname implementation setimplementation classname implementation implementation   implementation classname getimplementation implementation setprimarykey primarykey    
+            setprimarykey classname primarykey setprimarykey classname primarykey primarykey   primarykey classname getprimarykey primarykey setbeantype beantype beantype   beantype tolowercase getbeantype beantype setcmp cmp cmp   cmp setcmp cmp    
+            setcmp cmp equals  container getcmp cmp setiiop iiop iiop   iiop setiiop iiop    
+            setiiop iiop equals getiiop iiop sethasession hasession hasession   hasession sethasession hasession    
+            sethasession hasession equals gethasession hasession addcmpdescriptor descriptor    
+            cmpdescriptors add descriptor list getcmpdescriptors cmpdescriptors checkconfiguration file builddir ejbcexception home ejbcexception  a home was not found the     name     ejb remote ejbcexception  a remote was not found the     name     ejb implementation ejbcexception  an ejb implementation was not   
+                               found the     name     ejb beantype equals entity_bean   
+                             beantype equals stateless_session   
+                             beantype equals stateful_session ejbcexception  the beantype found      beantype        
+                               isn't valid in the     name     ejb cmp      beantype equals entity_bean      
+                system out println  cmp stubs and skeletons may not be generated a session bean -- the \ cmp\  attribute will be  
+                        ignoredfor the     name     ejb hasession      beantype equals stateful_session      
+                system out println  highly available stubs and skeletons may   
+                       only be generated a stateful session bean -- the   
+                       \ hasession\  attribute will be ignored the   
+                      name     ejb remote getclassfile builddir  exists ejbcexception  the remote remote getqualifiedclassname       could not be   
+                               found home getclassfile builddir  exists ejbcexception  the home home getqualifiedclassname       could not be   
+                               found implementation getclassfile builddir  exists ejbcexception  the ejb implementation implementation getqualifiedclassname       could   
+                               not be found mustberecompiled file destdir sourcemodified   sourceclassesmodified destdir destmodified   destclassesmodified destdir destmodified   sourcemodified sourceclassesmodified file builddir latestmodified modified          
+            file remotefile        
+            file homefile          
+            file implfile          
+            file pkfile            
+ 
+              
+            remotefile   remote getclassfile builddir   
+            modified   remotefile lastmodified modified    -1    
+                system out println  the remote getqualifiedclassname       couldn't   
+                                   be found on the classpath 1  
+              
+            latestmodified   modified  
+ 
+              
+            homefile   home getclassfile builddir   
+            modified   homefile lastmodified modified    -1    
+                system out println  the home getqualifiedclassname       couldn't be   
+                                   found on the classpath 1  
+              
+            latestmodified   math max latestmodified  modified primarykey pkfile   primarykey getclassfile builddir   
+                modified   pkfile lastmodified modified    -1    
+                    system out println  the primarykey getqualifiedclassname      couldn't be   
+                                       found on the classpath 1  
+                  
+                latestmodified   math max latestmodified  modified pkfile implfile   implementation getclassfile builddir   
+            modified   implfile lastmodified modified    -1    
+                system out println  the implementation getqualifiedclassname   
+                                    couldn't be found on the classpath 1 pathtofile   remote getqualifiedclassname    
+            pathtofile   pathtofile replace ' '  file separatorchar ejbfiles put pathtofile  remotefile   
+ 
+            pathtofile   home getqualifiedclassname    
+            pathtofile   pathtofile replace ' '  file separatorchar ejbfiles put pathtofile  homefile   
+ 
+            pathtofile   implementation getqualifiedclassname    
+            pathtofile   pathtofile replace ' '  file separatorchar ejbfiles put pathtofile  implfile pkfile pathtofile   primarykey getqualifiedclassname    
+                pathtofile   pathtofile replace ' '  file separatorchar ejbfiles put pathtofile  pkfile latestmodified destclassesmodified file destdir classnames   classestogenerate destclassesmodified date   gettime allclassesfound i   0  i   classnames length  i pathtoclass   
+                        classnames i  replace ' '  file separatorchar file classfile file destdir  pathtoclass   
+ 
+                  
+                ejbfiles put pathtoclass  classfile   
+ 
+                allclassesfound   allclassesfound    classfile exists allclassesfound filemod   classfile lastmodified    
+ 
+                      
+                    destclassesmodified   math min destclassesmodified  filemod allclassesfound  ? destclassesmodified   -1 classestogenerate classnames    iiop num_classes_with_iiop num_classes_without_iiop remotepkg       remote getpackagename remoteclass     remote getclassname homepkg         home getpackagename homeclass       home getclassname implpkg         implementation getpackagename implfullclass   implementation getqualifiedwithunderscores index   0  
+ 
+            classnames index      implpkg    ejb_fac_    implfullclass  
+            classnames index      implpkg    ejb_home_    implfullclass  
+            classnames index      implpkg    ejb_skel_    implfullclass  
+            classnames index      remotepkg    ejb_kcp_skel_    remoteclass  
+            classnames index      homepkg    ejb_kcp_skel_    homeclass  
+            classnames index      remotepkg    ejb_kcp_stub_    remoteclass  
+            classnames index      homepkg    ejb_kcp_stub_    homeclass  
+            classnames index      remotepkg    ejb_stub_    remoteclass  
+            classnames index      homepkg    ejb_stub_    homeclass iiop classnames  
+              
+ 
+            classnames index       org omg stub     remotepkg    _  
+                                      remoteclass    _stub   
+            classnames index       org omg stub     homepkg    _  
+                                      homeclass    _stub   
+            classnames index       org omg stub     remotepkg 
+                                       _ejb_rmicorbabridge_  
+                                      remoteclass    _tie   
+            classnames index       org omg stub     homepkg 
+                                       _ejb_rmicorbabridge_  
+                                      homeclass    _tie   
+ 
+            classnames index      remotepkg    ejb_rmicorbabridge_  
+                                                          remoteclass  
+            classnames index      homepkg    ejb_rmicorbabridge_    homeclass classnames tostring s    ejb name      name 
+                           \n\r              home           home 
+                           \n\r              remote         remote 
+                           \n\r              impl           implementation 
+                           \n\r              primarykey      primarykey 
+                           \n\r              beantype       beantype 
+                           \n\r              cmp            cmp 
+                           \n\r              iiop           iiop 
+                           \n\r              hasession      hasession  
+ 
+            iterator i   cmpdescriptors iterator i hasnext      
+                s     \n\r              cmp descriptor      i next s classname classname qualifiedname qualifiedname qualifiedname   qualifiedname index   qualifiedname lastindexof index    -1    
+                classname   qualifiedname  
+                packagename packagename   qualifiedname substring 0  index   
+                classname     qualifiedname substring index   1 getqualifiedclassname qualifiedname getpackagename packagename getclassname classname getqualifiedwithunderscores qualifiedname replace ' '  '_ file getclassfile file directory pathtofile   qualifiedname replace ' '  file separatorchar file directory  pathtofile tostring getqualifiedclassname redirectoutput thread redirectoutput inputstream stream stream   stream run     
+            bufferedreader reader bufferedreader inputstreamreader stream text text   reader readline system out println text ioexception e    
+                e printstacktrace reader close ioexception e    
+                      
+                  
+              
+          
+         
+ 
+ org apache tools ant taskdefs optional ejb IPlanetEjbc

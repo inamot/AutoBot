@@ -1,0 +1,103 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications  
+    
+  actionaddexistingnode enables pasting existing node diagram uml object added diagram location drop node  
+        
+    
+       0 1st element dropped here  
+       n n 1 -th element dropped here constructor  
+       
+        param o uml modelelement added constructor  
+       
+        param o uml modelelement added 
+        param event droptargetdropevent caused code null  code acceptable 
+        param cnt 0 1st element dropped here  
+                  n n 1 -th element dropped here  
+        
+    
+        param o uml modelelement added 
+        param droplocation point drop node code null  code acceptable  
+        param cnt 0 1st element dropped here  
+                  n n 1 -th element dropped here  
+        
+   
+        see org tigris gef base command#execute   
+        
+   calculate drop location place every n-th element offset proportional n  
+                
+   take canvas scrolling account implementation below place element correctly canvas scrolled  
+                
+   simulate press mouse above calculated point     
+   simulate release mouse     
+   set size object's fig minimum  
+               see issue 3410 binds use command current diagram current project  
+                
+                                                                 
+   graphfactory implementation 
+   
+        see org tigris gef graph graphfactory#makegraphmodel   
+        
+   
+        see org tigris gef graph graphfactory#makeedge   
+        
+   
+        see org tigris gef graph graphfactory#makenode   
+       org argouml uml diagram ui AddExistingNodeCommand org argouml uml diagram ui addexistingnodecommand command  graphfactory addexistingnodecommand object o    
+        object   o addexistingnodecommand object o  droptargetdropevent event cnt    
+        object   o  
+        location   event getlocation    
+        count   cnt addexistingnodecommand object o  point droplocation cnt    
+        object   o  
+        location   droplocation  
+        count   cnt execute     
+        editor ce   globals cureditor    
+        graphmodel gm   ce getgraphmodel gm mutablegraphmodel instructions object instructions   
+                translator localize  
+                     misc message click-on-diagram-to-add object     
+                            model getfacade   tostring object   
+                        
+            globals showstatus instructions   
+          
+        modeplace placemode modeplace instructions   
+        placemode setaddrelatededges location globals mode placemode point p point  
+                    location x    count   100   
+                    location y   
+              
+            rectangle r   ce getjcomponent   getvisiblerect    
+            p translate r x  r y   
+              
+            mouseevent me mouseevent  
+                    ce getjcomponent    
+                    0  
+                    0  
+                    0  
+                    p x  
+                    p y  
+                    0 placemode mousepressed me   
+              
+            me mouseevent  
+                    ce getjcomponent    
+                    0  
+                    0  
+                    0  
+                    p x  
+                    p y  
+                    0 placemode mousereleased me   
+ 
+              
+            argodiagram diagram   
+                projectmanager getmanager   
+                     getcurrentproject   getactivediagram    
+            fig afig   diagram presentationfor object   
+            afig setsize afig getpreferredsize graphmodel makegraphmodel object makeedge object makenode object  
+      
+ 
+ org argouml uml diagram ui AddExistingNodeCommand

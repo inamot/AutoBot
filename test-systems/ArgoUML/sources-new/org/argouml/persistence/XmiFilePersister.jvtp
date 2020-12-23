@@ -1,0 +1,155 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications persist xmi file storage  
+   
+    author bob tarling 
+    
+    
+       logger constructor  
+        
+   
+        see org argouml persistence abstractfilepersister#getextension   
+        
+   
+        see org argouml persistence abstractfilepersister#getdesc   
+        
+   
+        see org argouml persistence abstractfilepersister#issaveenabled   
+        
+    
+       save project file xmi format  
+       
+        param project project save  
+        param file file write  
+        throws saveexception anything goes wrong  
+        throws interruptedexception thread interrupted save not raise exception name  #  exists move name name correct backup file 
+   frank case exception 
+   delete name mv name  #  back name name  #  exists rollback old file give message user set system unsaved  
+    
+       write output project given stream  
+       
+        param project project output  
+        param stream stream write param progressmgr progress manager monitor any null progress reported  
+        throws saveexception something goes wrong  
+        throws interruptedexception thread interrupted method creates project specified url 
+       
+       unlike constructor forces argo extension method attempt load raw xmi file method fail several different ways  either throwing exception having argoparser singleton getlastloadstatus   set not true  
+       
+        param file file load project return newly loaded project  
+        throws openexception file not opened 
+        throws interruptedexception thread interrupted 
+       
+        see org argouml persistence projectfilepersister#doload java io file  
+        
+   make sure file doesn't exist user prompted choose new name 
+    
+       returns true argo specific files icon  
+        
+        see org argouml persistence abstractfilepersister#hasanicon   
+        
+    
+       parse string xml xmi extension contents implementation simply stores xml strings process one hit standard xmi read  
+        see org argouml persistence xmiextensionparser#parse java lang string  java lang string  
+        
+    
+       parse extensions found reading xmi 
+        
+        param project 
+        exception openexception 
+       org argouml persistence XmiFilePersister org argouml persistence xmifilepersister abstractfilepersister xmiextensionparser logger log   
+        logger getlogger xmifilepersister xmifilepersister getextension xmi getdesc translator localize  combobox filefilter xmi issaveenabled dosave project project  file file saveexception  interruptedexception   
+ 
+        progressmgr progressmgr progressmgr    
+        progressmgr setnumberofphases 4   
+        progressmgr nextphase    
+         
+        file lastarchivefile file file getabsolutepath      ~    
+        file tempfile tempfile   createtempfile file filenotfoundexception e saveexception  
+                     failed to archive the previous file version   e ioexception e saveexception  
+                     failed to archive the previous file version   e   
+          
+ 
+        outputstream stream stream fileoutputstream file   
+            writeproject project  stream  progressmgr   
+            stream close lastarchivefile exists      
+                lastarchivefile delete tempfile exists       lastarchivefile exists      
+                tempfile renameto lastarchivefile tempfile exists      
+                tempfile delete interruptedexception exc stream close ioexception ex exc exception e    
+            log error  exception occured during save attempt   e stream close ioexception ex      
+ 
+              
+              
+              
+            file delete    
+            tempfile renameto file saveexception e   
+          
+        progressmgr nextphase writeproject project project   
+            outputstream stream   
+            progressmgr progressmgr saveexception   
+            interruptedexception size   project getmembers   size i   0  i   size  i      
+            projectmember projectmember   
+                 projectmember  project getmembers   get i projectmember gettype   equalsignorecase getextension log isinfoenabled      
+                    log info  saving member of type    
+                                projectmember  project getmembers   
+                                     get i   gettype     
+                  
+                memberfilepersister persister modelmemberfilepersister    
+                persister save projectmember  stream progressmgr progressmgr nextphase project doload file file openexception  interruptedexception   
+ 
+        log info  loading with xmifilepersister project p   projectfactory getinstance   createproject length   file length phasespace   100000 phases length   phasespace phases   10    
+                phasespace   length   10  
+                phases   10  
+              
+            log info  file length is     length     phase space is   
+                      phasespace     phases is     phases   
+            progressmgr progressmgr progressmgr    
+            progressmgr setnumberofphases phases   
+            threadutils checkifinterrupted    
+             
+            inputsource source inputsource xmiinputstream file 
+                     touri   tourl   openstream phasespace  
+                    progressmgr    
+            source setsystemid file touri   tourl   tostring     
+             
+            modelmemberfilepersister modelpersister modelmemberfilepersister    
+             
+            modelpersister readmodels source   
+            object model   modelpersister getcurmodel    
+            progressmgr nextphase    
+            model getumlhelper   addlistenerstomodel model   
+            p setuuidrefs modelpersister getuuidrefs     
+            p addmember model   
+            parsexmiextensions p   
+            modelpersister registerdiagrams p   
+             
+            p setroot model   
+            p setroots modelpersister getelementsread     
+            file defaultprojectfile file file getpath       zargo i   0  i   99  i defaultprojectfile exists defaultprojectfile file file getpath           i     zargo    
+              
+            p seturi defaultprojectfile touri     
+            progressmgr nextphase    
+            projectmanager getmanager   setsaveenabled p ioexception e openexception e hasanicon parse label xmiextensionstring label equals  pgml      
+            pgmlstrings add xmiextensionstring label equals  argo      
+            argostring   xmiextensionstring label equals  todo      
+            todostring   xmiextensionstring parsexmiextensions project project openexception argostring log info  parsing argostring     argostring length     
+            stringreader inputstream stringreader argostring   
+            argoparser parser argoparser parser readproject project  inputstream exception e openexception  exception caught   e project addmember projectmembertodolist     project pgml   pgmlstrings    
+            log info  parsing pgml     pgml length     
+            inputstream inputstream bytearrayinputstream pgml getbytes     
+            memberfilepersister persister   
+                persistencemanager getinstance   
+                         getdiagrammemberfilepersister    
+            persister load project  inputstream todostring log info  parsing todostring     todostring length     
+            inputstream inputstream bytearrayinputstream todostring getbytes     
+            memberfilepersister persister persister todolistmemberfilepersister    
+            persister load project  inputstream project addmember projectmembertodolist     project    
+          
+      
+ org argouml persistence XmiFilePersister

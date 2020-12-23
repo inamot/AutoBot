@@ -1,0 +1,77 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   patches file applying diff' file requires  patch execution path ant 1 1 
+   
+    ant task category  utility file patch  optional inferred diff file 
+        param file file patch name file send output instead patching file s place  optional  
+        param file file send output ant 1 6 file containing diff output  required  
+        param file file containing diff output 
+        
+    
+       flag create backups  optional  default false 
+        param backups true create backups 
+        
+    
+       flag ignore whitespace differences  default false 
+        param ignore true ignore whitespace differences 
+        
+    
+       strip smallest prefix containing num leading slashes filenames  
+       
+        p patch's p option  
+        param num number lines strip 
+        exception buildexception num 0 errors 
+        
+    
+       work silently unless error occurs  optional  default false 
+        param q true suppress set s option patch command 
+        
+    
+       assume patch created old new files swapped  optional  
+       default false 
+        param r true set r option patch command directory run patch command defaults project's base directory  
+        param directory directory run patch command ant 1 5 
+        
+    
+       execute patch 
+        throws buildexception goes bit pear shaped 
+       org apache tools ant taskdefs Patch org apache tools ant taskdefs patch task setoriginalfile file file    
+        originalfile   file setdestfile file file file cmd createargument   setvalue  -o    
+            cmd createargument   setfile file setpatchfile file file file exists buildexception  patchfile     file     doesn\'t exist   
+                                     getlocation     
+          
+        cmd createargument   setvalue  -i    
+        cmd createargument   setfile file   
+        havepatchfile setbackups backups backups    
+            cmd createargument   setvalue  -b setignorewhitespace ignore ignore    
+            cmd createargument   setvalue  -l setstrip num buildexception num   0 buildexception  strip has to be    0   getlocation     
+          
+        cmd createargument   setvalue  -p    num setquiet q q    
+            cmd createargument   setvalue  -s setreverse r r    
+            cmd createargument   setvalue  -r setdir file directory directory   directory execute buildexception havepatchfile buildexception  patchfile argument is required   
+                                     getlocation     
+          
+        commandline toexecute    commandline  cmd clone    
+        toexecute setexecutable  patch originalfile toexecute createargument   setfile originalfile   
+          
+ 
+        execute exe execute logstreamhandler project msg_info  
+                                                       project msg_warn exe setcommandline toexecute getcommandline directory directory exists      directory isdirectory      
+                exe setworkingdirectory directory directory isdirectory buildexception directory     is not a directory    
+                                         getlocation buildexception  directory     directory 
+                                             doesn\'t exist   getlocation exe setworkingdirectory getproject   getbasedir     
+          
+ 
+        log toexecute describecommand    project msg_verbose exe execute ioexception e buildexception e  getlocation     
+          
+      
+ org apache tools ant taskdefs Patch

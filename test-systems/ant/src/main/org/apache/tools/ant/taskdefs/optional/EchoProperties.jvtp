@@ -1,0 +1,195 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+    displays current properties build output sent file desired   p  
+   
+    attribute  destfile  defines file send properties processed standard property file later   p  
+   
+    attribute  prefix  defines prefix used filter properties 
+    only those properties starting prefix echoed   p default failonerror  attribute enabled error occurs writing properties file attribute enabled buildexception thrown disabled io errors reported log statement error thrown   p  
+   
+    examples   pre  
+     lt echoproperties    gt  
+     pre  report current properties log   p  
+   
+     pre  
+     lt echoproperties destfile properties    gt  
+     pre  report current properties file properties fail build file not created written p  
+   
+     pre  
+     lt echoproperties destfile properties  failonerror  false  
+        prefix  ant    gt  
+     pre  report properties beginning ant file properties log message file not created written still allow build continue ant 1 5 properties element property element  
+        
+    
+       name attribute property  testcase testsuite elements  
+        
+    
+       value attribute property elements input file  
+        
+    
+        file object pointing output file null output project log  not file true errors generated during file output become 
+        build errors false errors logged not 
+        thrown ant 1 7 
+        
+    
+       sets input file  
+       
+        param file input file 
+        
+    
+        set file store property output never specified output sent ant log  
+       
+       param destfile file store property output true task fail error occurs writing properties 
+       file  otherwise errors logged  
+       
+       param  failonerror   tt true  tt io exceptions reported build 
+            exceptions tt false  tt io exceptions ignored prefix set only properties start prefix string recorded regex not set never set set empty string tt null  tt properties recorded   p example attribute set pre  lt echoproperties  prefix  ant     gt   pre property  ant home recorded ant-example not  
+       
+        param  prefix new prefix value regex set only properties whose names match recorded prefix not set never set set empty string tt null  tt properties recorded  p example attribute set pre  lt echoproperties  prefix    ant      gt   pre properties  ant home user variant recorded ant-example not  
+       
+        param  regex new regex value ant 1 7 set properties write  
+        param ps property set write ant 1 6 
+        
+    
+       set output format - xml text  
+        param ea enumerated  code formatattribute  code  value enumerated type format attribute values xml text   
+        
+    
+            see enumeratedattribute#getvalues   
+            return accepted values 
+            
+    
+        run task  
+       
+       exception  buildexception  trouble  probably file io 
+        
+  copy properties file 
+   load properties file specified  otherwise 
+        use ant's properties    
+   add ant properties 
+  ignore 
+    
+        send key value pairs hashtable given output stream  
+        only those properties matching tt prefix  tt  constraint sent output stream output stream closed method returns  
+       
+        param  allprops         propfile save 
+        param  os               output stream 
+        throws ioexception output errors 
+        throws buildexception errors tuple sort list  
+        
+    
+           compares object specified object order  
+            param o object compared  
+            return negative integer  zero positive integer object less equal greater specified object  
+            throws classcastexception specified object's type prevents being compared object  
+            
+  sort list  makes scm manual diffs easier  
+    
+       output properties xml output  
+        param props properties save 
+        param os output stream write note gets closed  
+        throws ioexception error writing stream 
+        
+   create xml document 
+   output properties 
+    
+        jdk 1 2 allows safer method 
+         tt properties store outputstream  string   tt throws tt ioexception  tt output error  
+       
+       param props properties record 
+       param os record properties output stream 
+       param header prepend header property output 
+       exception ioexception o error during write  
+        
+    
+       uses documentbuilderfactory documentbuilder instance  
+       
+        return documentbuilder instance 
+       org apache tools ant taskdefs optional EchoProperties org apache tools ant taskdefs optional echoproperties task setsrcfile file file    
+        infile   file setdestfile file destfile destfile   destfile setfailonerror failonerror failonerror   failonerror setprefix prefix prefix prefix length      0 prefix   prefix  
+            propertyset ps propertyset    
+            ps setproject getproject     
+            ps appendprefix prefix   
+            addpropertyset ps setregex regex regex regex length      0 regex   regex  
+            propertyset ps propertyset    
+            ps setproject getproject     
+            ps appendregex regex   
+            addpropertyset ps addpropertyset propertyset ps    
+        propertysets addelement ps setformat formatattribute ea    
+        format   ea getvalue formatattribute enumeratedattribute getvalues formats execute buildexception prefix regex buildexception  please specify either prefix  
+                        or regex  but not both   getlocation     
+          
+          
+        hashtable allprops hashtable infile propertysets size      0    
+              
+            allprops putall getproject   getproperties infile infile exists      infile isdirectory message    srcfile is a directory failonerror buildexception message  getlocation log message  project msg_err infile exists       infile canread message    can not read from the specified srcfile failonerror buildexception message  getlocation log message  project msg_err fileinputstream in in fileinputstream infile   
+                properties props properties    
+                props load in   
+                allprops putall props filenotfoundexception fnfe message   
+                     could not find file     infile getabsolutepath failonerror buildexception message  fnfe  getlocation log message  project msg_warn ioexception ioe message   
+                     could not read file     infile getabsolutepath failonerror buildexception message  ioe  getlocation log message  project msg_warn fileutils close in   
+              
+          
+ 
+        enumeration e   propertysets elements e hasmoreelements      
+            propertyset ps    propertyset  e nextelement    
+            allprops putall ps getproperties     
+          
+ 
+        outputstream os destfile os bytearrayoutputstream    
+                saveproperties allprops  os   
+                log os tostring    project msg_info destfile exists      destfile isdirectory message    destfile is a directory failonerror buildexception message  getlocation log message  project msg_err destfile exists       destfile canwrite message   
+                         can not write to the specified destfile failonerror buildexception message  getlocation log message  project msg_err os fileoutputstream destfile   
+                saveproperties allprops  os ioexception ioe failonerror buildexception ioe  getlocation log ioe getmessage    project msg_info os os close ioexception ex saveproperties hashtable allprops  outputstream os ioexception  buildexception list keylist arraylist allprops keyset     
+        collections sort keylist   
+        properties props properties enumeration keys collectionutils asenumeration keylist iterator set entryset     
+                set result entryset javaenvutils iskaffe      
+                    treeset t treeset comparator compare object o1  object o2 key1 map entry  o1  getkey key2 map entry  o2  getkey key1 compareto key2   
+                          
+                        
+                    t addall result   
+                    result   t result i   0  i   keylist size    i name   keylist get i  tostring value   allprops get name  tostring    
+            props setproperty name  value text  equals format     
+            jdksaveproperties props  os   ant properties xml  equals format     
+            xmlsaveproperties props  os tuple comparable tuple key value key   key value   value compareto object o    
+            tuple that    tuple  o key compareto that key list sortproperties properties props    
+          
+        list sorted arraylist props size     
+        enumeration e   props propertynames e hasmoreelements name e nextelement    
+            sorted add tuple name  props getproperty name     
+          
+        collections sort sorted sorted xmlsaveproperties properties props  
+                                     outputstream os ioexception   
+          
+        document doc   getdocumentbuilder   newdocument    
+        element rootelement   doc createelement properties   
+ 
+        list sorted   sortproperties props   
+ 
+ 
+          
+        iterator iten   sorted iterator iten hasnext      
+            tuple tuple    tuple  iten next    
+            element propelement   doc createelement property   
+            propelement setattribute attr_name  tuple key   
+            propelement setattribute attr_value  tuple value   
+            rootelement appendchild propelement   
+          
+ 
+        writer wri wri outputstreamwriter os   utf8    
+            wri write   ?xml version \ 1 0\  encoding \ utf-8 domelementwriter    write rootelement  wri  0   \t    
+            wri flush ioexception ioe buildexception  unable to write xml file   ioe fileutils close wri jdksaveproperties properties props  outputstream os header ioexception props store os  header ioexception ioe buildexception ioe  getlocation os os close ioexception ioex    
+                   log  failed to close output stream documentbuilder getdocumentbuilder documentbuilderfactory newinstance   newdocumentbuilder exception e exceptionininitializererror e   
+          
+      
+  
+org apache tools ant taskdefs optional EchoProperties

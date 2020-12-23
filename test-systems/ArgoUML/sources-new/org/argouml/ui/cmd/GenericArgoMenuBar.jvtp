@@ -1,0 +1,774 @@
+ 
+   $id genericargomenubar java 13104 2007-07-21 18 29 31z mvw $ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications  
+    
+   genericargomenubar defines menu bar operating systems not explicitly ask different kind menu bar mac os x  
+    p  
+    
+   menu's mnemonics menu's menuitems separated propertyresourcebundle  em menu properties  em   
+    p  
+    
+   menu items separated propertyresourcebundle 
+    em action properties  em   
+    p key's menu properties following structure  
+    
+    pre  
+     menu                      file   name menu  
+      e g                     menu file 
+    
+     mnemonics menu's       file   name menu  mnemonic 
+      e g                     menu file mnemonic 
+    
+     mnemonics menuitems    file   flag item   name menuitem  mnemonic 
+      e g                     menu item new mnemonic 
+     pre  
+    
+   todo  add registration new menu items zoom factor - defaults 90% 110% 
+        
+    
+       name preparekey-strings i18n menu properties  prefix menu-keys  
+        
+    
+       prefix menuitem-keys toolbars  
+        
+    
+       most recently used project list  
+        
+    
+       edit menu select menu submenu edit  
+        
+    
+       view under goto diagram  find  zoom  adjust grid etc  
+        
+    
+       toolbar create diagram  
+        
+    
+       currently not used core argouml  
+        
+    
+       supports java generation  modules php html javadocs planned 
+       feel free contribute here invoked automatically importing sources critique menu needs currently only system information text  hyperlinking online docs argouml org considered basic improvement constructor user specified option  new laws handicapped people cannot use mouse require software developers make components user interface accessible through keyboard 
+        
+        param item jmenuitem param key key param key key localize 
+        return localized string 
+        
+    
+        param key key localize 
+        return localized string 
+        
+    
+       construct ordinary purpose argo menu bar  
+        
+    
+       build menu  file   
+        
+   add last recently used list _before_ exit menu exit menu entry starting separator   
+   exit shortcut not user configurable  
+    
+       build menu  edit   
+        
+   jmenuitem cutitem   edit add actioncut getinstance     
+   setmnemonic cutitem   cut    
+   setaccelerator cutitem  ctrlx   
+   
+   jmenuitem copyitem   edit add actioncopy getinstance     
+   setmnemonic copyitem   copy    
+   setaccelerator copyitem  ctrlc   
+   
+   jmenuitem pasteitem   edit add actionpaste getinstance     
+   setmnemonic pasteitem   paste    
+   setaccelerator pasteitem  ctrlv   
+   
+   edit addseparator    
+    
+       build menu  view   
+        
+    
+       build menu  create toolbar diagram creation build together guarantee same items present both same sequence  
+        p sequence items determined issue 1821  
+        
+    
+       build menu  arrange used deferred s only 30-40 msec work  
+    
+       initialize submenus align menu  
+        
+        param align align menu 
+        
+    
+       initialize submenus distribute menu  
+        
+        param distribute distribute menu 
+        
+    
+       initialize submenus reorder menu  
+        
+        param reorder main reorder menu 
+        
+    
+       build menu  generation   
+        
+   keystroke f7   keystroke getkeystroke keyevent vk_f7  0   
+   generate add actions generateweb   
+    
+       build menu  critique   
+        
+    
+       build menu  tools   
+        
+   todo  add empty placeholder here?         
+    
+       build menu  help   
+        
+   sethelpmenu help create diagram toolbar  
+        
+        return value property _creatediagramtoolbar create diagram menu  provided allow plugins appeand actions menu  
+        
+        return value property creatediagrammenu edit toolbar  
+        
+        return edit toolbar  
+        
+   create edit toolbar based menu menuitems icon presumed based upon action actions used toolbar      
+    
+       getter file toolbar  
+        
+        return file toolbar  
+        
+        
+    
+       getter view toolbar  
+        
+        return view toolbar  
+        
+  component action 
+    
+       prepares one part key menu menuitem-mnemonics used menu properties method changes parameter str lower cases  spaces parameter str changed hyphens  
+        
+        param str 
+        return prepared str 
+        
+    
+       adds entry mru list  
+        
+        param filename project 
+                   
+       todo listen file save events being called  
+       directly - tfm  
+        
+    
+       getter tools menu  
+        
+        return tools menu uid  
+        
+    
+       target changed - update actions depend target  
+       org argouml ui cmd GenericArgoMenuBar org argouml ui cmd genericargomenubar jmenubar targetlistener list action  modulecreatediagramactions arraylist action zoom_factor   0 9 genericargomenubar     
+        initactions    
+        initmenus    
+        initmodulesui initactions     
+        navigatetargetforwardaction navigatetargetforwardaction    
+        navigatetargetbackaction navigatetargetbackaction    
+        targetmanager getinstance   addtargetlistener setmnemonic jmenuitem item key propertykey item jmenu    
+            propertykey   menu   preparekey key      mnemonic propertykey   menuitem   preparekey key      mnemonic localmnemonic   translator localize propertykey mnemonic localmnemonic localmnemonic length      1    
+            mnemonic   localmnemonic charat 0   
+          
+        item setmnemonic mnemonic menulocalize key translator localize menu   preparekey key menuitemlocalize key translator localize menuitem   preparekey key initmenus     
+        initmenufile    
+        initmenuedit    
+        initmenuview    
+        initmenucreate    
+        initmenuarrange    
+        initmenugeneration    
+        initmenucritique    
+        initmenutools    
+        initmenuhelp initmodulesui      
+        initmodulesmenus    
+        initmodulesactions initmenufile     
+        collection action  toolbartools arraylist action     
+        jmenu file jmenu menulocalize  file     
+        add file   
+        setmnemonic file   file    
+        jmenuitem newitem   file add actionnew     
+        setmnemonic newitem shortcutmgr assignaccelerator newitem  shortcutmgr action_new_project   
+        toolbartools add actionnew      
+        jmenuitem openprojectitem   file add actionopenproject     
+        setmnemonic openprojectitem   open    
+        shortcutmgr assignaccelerator openprojectitem  
+                shortcutmgr action_open_project   
+        toolbartools add actionopenproject     
+        file addseparator    
+ 
+        jmenuitem saveprojectitem   file add projectbrowser getinstance   
+                 getsaveaction     
+        setmnemonic saveprojectitem   save    
+        shortcutmgr assignaccelerator saveprojectitem  
+                shortcutmgr action_save_project   
+        toolbartools add  projectbrowser getinstance   getsaveaction      
+        jmenuitem saveprojectasitem   file add actionsaveprojectas     
+        setmnemonic saveprojectasitem   saveas    
+        shortcutmgr assignaccelerator saveprojectasitem  
+                shortcutmgr action_save_project_as   
+        jmenuitem reverttosaveditem   file add actionreverttosaved     
+        setmnemonic reverttosaveditem   revert to saved    
+        shortcutmgr assignaccelerator reverttosaveditem  
+                shortcutmgr action_revert_to_saved   
+        file addseparator    
+ 
+        shortcutmgr assignaccelerator file add actionimportxmi     
+                shortcutmgr action_import_xmi   
+        shortcutmgr assignaccelerator file add actionexportxmi     
+                shortcutmgr action_export_xmi   
+ 
+        jmenuitem importfromsources   file add actionimportfromsources 
+                 getinstance     
+        setmnemonic importfromsources shortcutmgr assignaccelerator importfromsources  
+                shortcutmgr action_import_from_sources   
+        file addseparator    
+ 
+        action a actionprojectsettings    
+        toolbartools add a   
+ 
+        jmenuitem pagesetupitem   file add actionpagesetup     
+        setmnemonic pagesetupitem   pagesetup    
+        shortcutmgr assignaccelerator pagesetupitem  
+                shortcutmgr action_page_setup   
+ 
+        jmenuitem printitem   file add actionprint     
+        setmnemonic printitem   print    
+        shortcutmgr assignaccelerator printitem  shortcutmgr action_print   
+        toolbartools add actionprint      
+        jmenuitem savegraphicsitem   file add actionsavegraphics     
+        setmnemonic savegraphicsitem   savegraphics    
+        shortcutmgr assignaccelerator savegraphicsitem  
+                shortcutmgr action_save_graphics   
+ 
+        shortcutmgr assignaccelerator file add actionsaveallgraphics     
+                shortcutmgr action_save_all_graphics   
+ 
+        file addseparator    
+ 
+        jmenu notation    jmenu  file add actionnotation   getmenu     
+        setmnemonic notation   notation    
+ 
+        jmenuitem propertiesitem   file add actionprojectsettings     
+        setmnemonic propertiesitem   properties    
+        shortcutmgr assignaccelerator propertiesitem  
+                shortcutmgr action_project_settings   
+ 
+        file addseparator    
+ 
+          
+        mrulist lastrecentlyusedmenulist file   
+ 
+          
+        file addseparator    
+        jmenuitem exititem   file add actionexit     
+        setmnemonic exititem   exit    
+          
+        exititem setaccelerator keystroke getkeystroke keyevent vk_f4  
+              inputevent alt_mask    
+ 
+        filetoolbar toolbarfactory toolbartools   createtoolbar    
+        filetoolbar setname translator localize  misc toolbar file     
+        filetoolbar setfloatable initmenuedit     
+ 
+        edit   add jmenu menulocalize  edit      
+        setmnemonic edit   edit    
+         
+        initcommandstackitems edit   
+ 
+        jmenuitem undoitem   edit add  
+                projectactions getinstance   getundoaction     
+        setmnemonic undoitem   undo    
+        shortcutmgr assignaccelerator undoitem  shortcutmgr action_undo   
+ 
+        jmenuitem redoitem   edit add  
+                projectactions getinstance   getredoaction     
+        setmnemonic redoitem   redo    
+        shortcutmgr assignaccelerator redoitem  shortcutmgr action_redo   
+ 
+        edit addseparator    
+ 
+        select jmenu menulocalize  select     
+        setmnemonic select   select    
+        edit add select   
+ 
+        jmenuitem selectallitem   select add selectallaction menuitemlocalize  select all      
+        setmnemonic selectallitem   select all    
+        shortcutmgr assignaccelerator selectallitem  
+                shortcutmgr action_select_all   
+        select addseparator    
+        jmenuitem backitem   select add navigatetargetbackaction   
+        setmnemonic backitem   navigate back    
+        shortcutmgr assignaccelerator backitem  
+                shortcutmgr action_navigate_back   
+        jmenuitem forwarditem   select add navigatetargetforwardaction   
+        setmnemonic forwarditem   navigate forward    
+        shortcutmgr assignaccelerator forwarditem  
+                shortcutmgr action_navigate_forward   
+        select addseparator    
+ 
+        jmenuitem selectinvert   select add selectinvertaction menuitemlocalize  invert selection      
+        setmnemonic selectinvert   invert selection    
+        shortcutmgr assignaccelerator selectinvert  
+                shortcutmgr action_select_invert   
+ 
+        edit addseparator    
+ 
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+ 
+        action removefromdiagram   projectactions getinstance   
+                 getremovefromdiagramaction    
+        jmenuitem removeitem   edit add removefromdiagram   
+ 
+        setmnemonic removeitem   remove from diagram    
+        shortcutmgr assignaccelerator removeitem  
+                shortcutmgr action_remove_from_diagram   
+ 
+        jmenuitem deleteitem   edit add actiondeletemodelelements 
+                 gettargetfollower     
+        setmnemonic deleteitem   delete from model    
+        shortcutmgr assignaccelerator deleteitem  
+                shortcutmgr action_delete_model_elements   
+ 
+        edit addseparator    
+ 
+        shortcutmgr assignaccelerator edit add actionperspectiveconfig     
+                shortcutmgr action_perspective_config   
+ 
+        jmenuitem settingsitem   edit add actionsettings     
+        setmnemonic settingsitem   settings    
+        shortcutmgr 
+                 assignaccelerator settingsitem  shortcutmgr action_settings initcommandstackitems jmenu menu model getcommandstack   iscommandstackcapabilityavailable jmenuitem undo jmenuitem  undo    
+        undo setenabled menu add undo   
+ 
+        undo addactionlistener actionlistener actionperformed actionevent e    
+                model getcommandstack   undo jmenuitem redo jmenuitem  redo    
+        redo setenabled menu add redo   
+ 
+        redo addactionlistener actionlistener actionperformed actionevent e    
+                model getcommandstack   redo    
+              
+ 
+            
+ 
+        propertychangelistener listener propertychangelistener propertychange propertychangeevent evt    
+                updateundoredo undo  redo   
+              
+ 
+           
+ 
+        model getpump   addclassmodeleventlistener listener  
+                model getmetatypes   getmodelelement model getpump   addmodeleventlistener listener  
+                commandstack command_stack_update_event menu addseparator updateundoredo jmenuitem undo  jmenuitem redo model getcommandstack   canundo      
+            undo settext  undo    
+            undo setenabled undo settext  undo      model getcommandstack   getundolabel     
+            undo setenabled model getcommandstack   canredo      
+            redo settext  redo    
+            redo setenabled redo settext  redo      model getcommandstack   getredolabel     
+            redo setenabled initmenuview     
+ 
+        view    argojmenu  add argojmenu menu   preparekey  view      
+        setmnemonic view   view    
+ 
+        jmenuitem gotodiagram   view add actiongotodiagram     
+        setmnemonic gotodiagram diagram    
+        shortcutmgr assignaccelerator gotodiagram  
+                shortcutmgr action_go_to_diagram   
+ 
+        jmenuitem finditem   view add actionfind     
+        setmnemonic finditem   find    
+        shortcutmgr assignaccelerator finditem  shortcutmgr action_find   
+ 
+        view addseparator    
+ 
+        jmenu zoom    jmenu  view add jmenu menulocalize  zoom      
+        setmnemonic zoom   zoom    
+ 
+        zoomaction zoomoutaction zoomaction zoom_factor   
+        jmenuitem zoomout   zoom add zoomoutaction   
+        setmnemonic zoomout   zoom out    
+        shortcutmgr assignaccelerator zoomout  shortcutmgr action_zoom_out   
+ 
+        jmenuitem zoomreset   zoom add zoomaction 0 0    
+        setmnemonic zoomreset   zoom reset    
+        shortcutmgr assignaccelerator zoomreset  shortcutmgr action_zoom_reset   
+ 
+        zoomaction zoominaction zoomaction  1 0     zoom_factor    
+        jmenuitem zoomin   zoom add zoominaction   
+        setmnemonic zoomin   zoom in    
+        shortcutmgr assignaccelerator zoomin  shortcutmgr action_zoom_in   
+ 
+        view addseparator    
+         
+        jmenu grid    jmenu  view add jmenu menulocalize  adjust grid      
+        setmnemonic grid   grid    
+        list gridactions   actionadjustgrid createadjustgridactions buttongroup groupgrid buttongroup    
+        actionadjustgrid setgroup groupgrid   
+        iterator i   gridactions iterator i hasnext      
+            action cmdag    action  i next    
+            jradiobuttonmenuitem mi jradiobuttonmenuitem cmdag   
+            groupgrid add mi   
+            jmenuitem adjustgrid   grid add mi   
+            setmnemonic adjustgrid cmdag getvalue action name    
+            shortcutmgr assignaccelerator adjustgrid  
+                    shortcutmgr action_adjust_grid   cmdag getvalue  id     
+          
+ 
+        jmenu snap    jmenu  view add jmenu menulocalize  adjust snap      
+        setmnemonic snap   snap    
+        list snapactions   actionadjustsnap createadjustsnapactions    
+        buttongroup groupsnap buttongroup    
+        actionadjustsnap setgroup groupsnap   
+        i   snapactions iterator i hasnext      
+            action cmdas    action  i next    
+            jradiobuttonmenuitem mi jradiobuttonmenuitem cmdas   
+            groupsnap add mi   
+            jmenuitem adjustsnap   snap add mi   
+            setmnemonic adjustsnap cmdas getvalue action name    
+            shortcutmgr assignaccelerator adjustsnap  
+                    shortcutmgr action_adjust_guide   cmdas getvalue  id     
+          
+ 
+        jmenuitem adjustpagebreaks   view add adjustpagebreaksaction     
+        setmnemonic adjustpagebreaks   adjust pagebreaks    
+        shortcutmgr assignaccelerator adjustpagebreaks  
+                shortcutmgr action_adjust_page_breaks   
+ 
+        view addseparator    
+        jmenu menutoolbars   argotoolbarmanager getinstance   getmenu    
+        menutoolbars settext menulocalize  toolbars     
+        setmnemonic menutoolbars   toolbars    
+        view add menutoolbars   
+        view addseparator    
+ 
+        jmenuitem showsaved   view add actionshowxmldump     
+        setmnemonic showsaved   show saved    
+        shortcutmgr assignaccelerator showsaved  
+                shortcutmgr action_show_xml_dump initmenucreate     
+        collection action  toolbartools arraylist action     
+        creatediagrammenu   add jmenu menulocalize  create diagram      
+        setmnemonic creatediagrammenu   create diagram    
+        jmenuitem usecasediagram   creatediagrammenu 
+                 add actionusecasediagram     
+        setmnemonic usecasediagram   usecase diagram    
+        toolbartools add actionusecasediagram      
+        shortcutmgr assignaccelerator usecasediagram  
+                shortcutmgr action_use_case_diagram   
+ 
+        jmenuitem classdiagram   
+            creatediagrammenu add actionclassdiagram     
+        setmnemonic classdiagram diagram    
+        toolbartools add actionclassdiagram      
+        shortcutmgr assignaccelerator classdiagram  
+                shortcutmgr action_class_diagram   
+ 
+        jmenuitem sequenzdiagram   
+            creatediagrammenu add actionsequencediagram     
+        setmnemonic sequenzdiagram   sequenz diagram    
+        toolbartools add actionsequencediagram      
+        shortcutmgr assignaccelerator sequenzdiagram  
+                shortcutmgr action_sequence_diagram   
+ 
+        jmenuitem collaborationdiagram   
+            creatediagrammenu add actioncollaborationdiagram     
+        setmnemonic collaborationdiagram   collaboration diagram    
+        toolbartools add actioncollaborationdiagram      
+        shortcutmgr assignaccelerator collaborationdiagram  
+                shortcutmgr action_collaboration_diagram   
+ 
+        jmenuitem statediagram   
+            creatediagrammenu add actionstatediagram     
+        setmnemonic statediagram   statechart diagram    
+        toolbartools add actionstatediagram      
+        shortcutmgr assignaccelerator statediagram  
+                shortcutmgr action_state_diagram   
+ 
+        jmenuitem activitydiagram   
+            creatediagrammenu add actionactivitydiagram     
+        setmnemonic activitydiagram   activity diagram    
+        toolbartools add actionactivitydiagram      
+        shortcutmgr assignaccelerator activitydiagram  
+                shortcutmgr action_activity_diagram   
+ 
+        jmenuitem deploymentdiagram   
+            creatediagrammenu add actiondeploymentdiagram     
+        setmnemonic deploymentdiagram   deployment diagram    
+        toolbartools add actiondeploymentdiagram      
+        shortcutmgr assignaccelerator deploymentdiagram  
+                shortcutmgr action_deployment_diagram   
+ 
+        creatediagramtoolbar toolbarfactory toolbartools   createtoolbar    
+        creatediagramtoolbar setname  
+                translator localize  misc toolbar create-diagram     
+        creatediagramtoolbar setfloatable initmenuarrange     
+        arrange    argojmenu  add argojmenu menu   preparekey  arrange      
+        setmnemonic arrange   arrange    
+ 
+        jmenu align    jmenu  arrange add jmenu menulocalize  align      
+        setmnemonic align   align    
+        jmenu distribute    jmenu  arrange add jmenu  
+                menulocalize  distribute      
+        setmnemonic distribute   distribute    
+        jmenu reorder    jmenu  arrange add jmenu menulocalize  reorder      
+        setmnemonic reorder   reorder    
+ 
+        jmenuitem preferredsize   arrange add cmdsetpreferredsize     
+        setmnemonic preferredsize   preferred size    
+        shortcutmgr assignaccelerator preferredsize  
+                shortcutmgr action_preferred_size   
+ 
+        arrange add actionlayout     
+ 
+          
+        initalignmenu align   
+        initdistributemenu distribute   
+        initreordermenu reorder initalignmenu jmenu align    
+        alignaction a alignaction alignaction align_tops   
+        a putvalue action small_icon   
+                resourceloaderwrapper lookupicon  aligntops     
+        jmenuitem aligntops   align add a   
+        setmnemonic aligntops   align tops    
+        shortcutmgr assignaccelerator aligntops  shortcutmgr action_align_tops   
+ 
+        a alignaction  
+                alignaction align_bottoms   
+        a putvalue action small_icon   
+                resourceloaderwrapper lookupicon  alignbottoms     
+        jmenuitem alignbottoms   align add a   
+        setmnemonic alignbottoms   align bottoms    
+        shortcutmgr assignaccelerator alignbottoms  
+                shortcutmgr action_align_bottoms   
+ 
+        a alignaction  
+                alignaction align_rights   
+        a putvalue action small_icon   
+                resourceloaderwrapper lookupicon  alignrights     
+        jmenuitem alignrights   align add a   
+        setmnemonic alignrights   align rights    
+        shortcutmgr assignaccelerator alignrights  
+                shortcutmgr action_align_rights   
+ 
+        a alignaction  
+                alignaction align_lefts   
+        a putvalue action small_icon   
+                resourceloaderwrapper lookupicon  alignlefts     
+        jmenuitem alignlefts   align add a   
+        setmnemonic alignlefts   align lefts    
+        shortcutmgr assignaccelerator alignlefts  
+                shortcutmgr action_align_lefts   
+ 
+        a alignaction  
+                alignaction align_h_centers   
+        a putvalue action small_icon   
+                resourceloaderwrapper lookupicon  alignhorizontalcenters     
+        jmenuitem alignhcenters   align add a   
+        setmnemonic alignhcenters  
+                 align horizontal centers    
+        shortcutmgr assignaccelerator alignhcenters  
+                shortcutmgr action_align_h_centers   
+ 
+        a alignaction  
+                alignaction align_v_centers   
+        a putvalue action small_icon   
+                resourceloaderwrapper lookupicon  alignverticalcenters     
+        jmenuitem alignvcenters   align add a   
+        setmnemonic alignvcenters   align vertical centers    
+        shortcutmgr assignaccelerator alignvcenters  
+                shortcutmgr action_align_v_centers   
+ 
+        a alignaction  
+                alignaction align_to_grid   
+        a putvalue action small_icon   
+                resourceloaderwrapper lookupicon  aligntogrid     
+        jmenuitem aligntogrid   align add a   
+        setmnemonic aligntogrid   align to grid    
+        shortcutmgr assignaccelerator aligntogrid  
+                shortcutmgr action_align_to_grid initdistributemenu jmenu distribute    
+        distributeaction a distributeaction  
+                distributeaction h_spacing   
+        a putvalue action small_icon   
+                resourceloaderwrapper lookupicon  
+                         distributehorizontalspacing     
+        jmenuitem distributehspacing   distribute add a   
+        setmnemonic distributehspacing  
+                 distribute horizontal spacing    
+        shortcutmgr assignaccelerator distributehspacing  
+                shortcutmgr action_distribute_h_spacing   
+ 
+        a distributeaction  
+                distributeaction h_centers   
+        a putvalue action small_icon   
+                resourceloaderwrapper lookupicon  
+                         distributehorizontalcenters     
+        jmenuitem distributehcenters   distribute add a   
+        setmnemonic distributehcenters  
+                 distribute horizontal centers    
+        shortcutmgr assignaccelerator distributehcenters  
+                shortcutmgr action_distribute_h_centers   
+ 
+        a distributeaction  
+                distributeaction v_spacing   
+        a putvalue action small_icon   
+                resourceloaderwrapper lookupicon  distributeverticalspacing     
+        jmenuitem distributevspacing   distribute add a   
+        setmnemonic distributevspacing  
+                 distribute vertical spacing    
+        shortcutmgr assignaccelerator distributevspacing  
+                shortcutmgr action_distribute_v_spacing   
+ 
+        a distributeaction  
+                distributeaction v_centers   
+        a putvalue action small_icon   
+                resourceloaderwrapper lookupicon  distributeverticalcenters     
+        jmenuitem distributevcenters   distribute add a   
+        setmnemonic distributevcenters  
+                 distribute vertical centers    
+        shortcutmgr assignaccelerator distributevcenters  
+                shortcutmgr action_distribute_v_centers initreordermenu jmenu reorder    
+        jmenuitem reorderbringforward   reorder add reorderaction  
+                translator localize  action bring-forward    
+                resourceloaderwrapper lookupicon  forward    
+                reorderaction bring_forward    
+        setmnemonic reorderbringforward  
+                 reorder bring forward    
+        shortcutmgr assignaccelerator reorderbringforward  
+                shortcutmgr action_reorder_forward   
+ 
+        jmenuitem reordersendbackward   reorder add reorderaction  
+                translator localize  action send-backward    
+                resourceloaderwrapper lookupicon  backward    
+                reorderaction send_backward    
+        setmnemonic reordersendbackward  
+                 reorder send backward    
+        shortcutmgr assignaccelerator reordersendbackward  
+                shortcutmgr action_reorder_backward   
+ 
+        jmenuitem reorderbringtofront   reorder add reorderaction  
+                translator localize  action bring-to-front    
+                resourceloaderwrapper lookupicon  tofront    
+                reorderaction bring_to_front    
+        setmnemonic reorderbringtofront  
+                 reorder bring to front    
+        shortcutmgr assignaccelerator reorderbringtofront  
+                shortcutmgr action_reorder_to_front   
+ 
+        jmenuitem reordersendtoback   reorder add reorderaction  
+                translator localize  action send-to-back    
+                resourceloaderwrapper lookupicon  toback    
+                reorderaction send_to_back    
+        setmnemonic reordersendtoback  
+                 reorder send to back    
+        shortcutmgr assignaccelerator reordersendtoback  
+                shortcutmgr action_reorder_to_back initmenugeneration     
+ 
+          
+ 
+        generate   add jmenu menulocalize  generation      
+        setmnemonic generate   generation    
+        jmenuitem genone   generate add actiongenerateone     
+        setmnemonic genone   generate selected classes    
+        shortcutmgr assignaccelerator genone  shortcutmgr action_generate_one   
+        jmenuitem genallitem   generate add actiongenerateall     
+        setmnemonic genallitem   generate all classes    
+        shortcutmgr assignaccelerator genallitem  
+                shortcutmgr action_generate_all_classes   
+        generate addseparator    
+        jmenuitem genproject   generate add actiongenerateprojectcode     
+        setmnemonic genproject   generate code project    
+        shortcutmgr assignaccelerator genproject  
+                shortcutmgr action_generate_project_code   
+        jmenuitem generationsettings   generate 
+                 add actiongenerationsettings     
+        setmnemonic generationsettings   settings project code generation    
+        shortcutmgr assignaccelerator generationsettings  
+                shortcutmgr action_generation_settings initmenucritique     
+        critique   
+             argojmenu  add argojmenu menu   preparekey  critique      
+        setmnemonic critique   critique    
+        jmenuitem toggleautocritique   critique 
+                 addcheckitem actionautocritique     
+        setmnemonic toggleautocritique   toggle auto critique    
+        shortcutmgr assignaccelerator toggleautocritique  
+                shortcutmgr action_auto_critique   
+        critique addseparator    
+        jmenuitem designissues   critique add actionopendecisions     
+        setmnemonic designissues   design issues    
+        shortcutmgr assignaccelerator designissues  
+                shortcutmgr action_open_decisions   
+        jmenuitem designgoals   critique add actionopengoals     
+        setmnemonic designgoals   design goals    
+        shortcutmgr assignaccelerator designgoals  
+                shortcutmgr action_open_goals   
+        jmenuitem browsecritics   critique add actionopencritics     
+        setmnemonic browsecritics   browse critics    
+        shortcutmgr assignaccelerator designissues  
+                shortcutmgr action_open_critics initmenutools     
+        tools jmenu menulocalize  tools     
+        setmnemonic tools   tools    
+ 
+          
+         
+        add tools initmenuhelp     
+        help jmenu menulocalize  help     
+        setmnemonic help   help help getitemcount     0    
+            help insertseparator 0   
+          
+ 
+        jmenuitem systeminfo   help add actionsysteminfo     
+        setmnemonic systeminfo   system information    
+        shortcutmgr assignaccelerator systeminfo  
+                shortcutmgr action_system_information   
+        help addseparator    
+        jmenuitem aboutargouml   help add actionaboutargouml     
+        setmnemonic aboutargouml   about argouml    
+        shortcutmgr assignaccelerator aboutargouml  
+                shortcutmgr action_about_argouml   
+ 
+          
+        add help initmodulesmenus jmenu menu   modulemenus    
+            add menu initmodulesactions action action   modulecreatediagramactions                
+            creatediagramtoolbar add action jtoolbar getcreatediagramtoolbar creatediagramtoolbar jmenu getcreatediagrammenu creatediagrammenu jtoolbar getedittoolbar edittoolbar collection action  c arraylist action object mi   edit getmenucomponents mi jmenuitem jmenuitem  mi  geticon c add   jmenuitem  mi  getaction     
+                      
+                  
+              
+            edittoolbar toolbarfactory c   createtoolbar    
+            edittoolbar setname translator localize  misc toolbar edit     
+            edittoolbar setfloatable edittoolbar jtoolbar getfiletoolbar filetoolbar jtoolbar getviewtoolbar viewtoolbar collection object  c arraylist object     
+              
+            c add actionfind     
+            c add zoomsliderbutton     
+            viewtoolbar toolbarfactory c   createtoolbar    
+            viewtoolbar setname translator localize  misc toolbar view     
+            viewtoolbar setfloatable viewtoolbar preparekey str str tolowercase   replace addfilesaved filename    
+        mrulist addentry filename jmenu gettools tools settarget     
+        navigatetargetforwardaction setenabled navigatetargetforwardaction 
+                 isenabled     
+        navigatetargetbackaction setenabled navigatetargetbackaction 
+                 isenabled targetadded targetevent e    
+        settarget targetremoved targetevent e    
+        settarget targetset targetevent e    
+        settarget registermenuitem jmenu menu    
+        modulemenus add menu registercreatediagramaction action action    
+        modulecreatediagramactions add action   
+      
+ org argouml ui cmd GenericArgoMenuBar

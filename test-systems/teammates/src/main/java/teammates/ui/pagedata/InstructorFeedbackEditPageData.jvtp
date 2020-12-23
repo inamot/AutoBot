@@ -1,0 +1,128 @@
+ 
+    
+       returns string html containing list options selecting question type  
+       used instructorfeedbackedit jsp selecting question type new question question specific edit forms  
+        
+    
+       retrieves link submit request copy session contains feedback page link return action  
+        return form submit action link 
+       teammates ui pagedata InstructorFeedbackEditPageData teammates ui pagedata instructorfeedbackeditpagedata pagedata instructorfeedbackeditpagedata accountattributes account sessiontoken account  sessiontoken init feedbacksessionattributes feedbacksession  list feedbackquestionattributes  questions  
+                     map questionhasresponses  
+                     list studentattributes  studentlist  list instructorattributes  instructorlist  
+                     instructorattributes instructor shouldloadineditmode    
+        assumption assertnotnull feedbacksession   
+ 
+        buildfsform feedbacksession   
+ 
+        qnforms arraylist i   0  i   questions size    i      
+            feedbackquestionattributes question   questions get i   
+            buildexistingquestionform feedbacksession getfeedbacksessionname    
+                                      questions size    questionhasresponses  
+                                      instructor courseid  question  i   1   
+          
+ 
+        buildnewquestionform feedbacksession  questions size     1   
+ 
+        buildpreviewform feedbacksession  studentlist  instructorlist shouldloadineditmode   shouldloadineditmode buildpreviewform feedbacksessionattributes feedbacksession  
+                                    list studentattributes  studentlist  
+                                    list instructorattributes  instructorlist    
+        previewform feedbacksessionpreviewform feedbacksession getcourseid    feedbacksession getfeedbacksessionname    
+                                                     getpreviewasstudentoptions studentlist   
+                                                     getpreviewasinstructoroptions instructorlist buildfsform feedbacksessionattributes feedbacksession    
+        buildbasicfsform feedbacksession  buildfsformadditionalsettings feedbacksession buildbasicfsform feedbacksessionattributes fsa  
+                                  feedbacksessionsadditionalsettingsformsegment additionalsettings fsdeletelink   getinstructorfeedbackdeletelink fsa getcourseid    fsa getfeedbacksessionname actionuris instructor_feedback_sessions_page copytolink   getinstructorfeedbackeditcopylink    
+ 
+        fsform   feedbacksessionsform getfsformforexistingfs fsa  additionalsettings  
+                                                             fsdeletelink  copytolink feedbacksessionsadditionalsettingsformsegment 
+            buildfsformadditionalsettings feedbacksessionattributes newfeedbacksession feedbacksessionsadditionalsettingsformsegment getformsegmentwithexistingvalues newfeedbacksession buildexistingquestionform feedbacksessionname questionssize  
+                                           map questionhasresponses courseid  feedbackquestionattributes question questionindex    
+        feedbackquestioneditform qnform feedbackquestioneditform    
+        qnform setaction actionuris instructor_feedback_question_edit   
+        qnform setcourseid courseid   
+ 
+        feedbackquestiondetails questiondetails   question getquestiondetails    
+        qnform setfeedbacksessionname feedbacksessionname   
+        qnform setquestiontext questiondetails getquestiontext     
+        text questiondescription   question getquestiondescription    
+        qnform setquestiondescription questiondescription null   questiondescription getvalue     
+        qnform setquestionindex questionindex   
+        qnform setquestionid question getid     
+        qnform setquestiontypedisplayname questiondetails getquestiontypedisplayname     
+        qnform setquestiontype question questiontype   
+ 
+        qnform setquestionnumberoptions getquestionnumberoptions questionssize    
+ 
+        feedbackquestionfeedbackpathsettings feedbackpathsettings   
+                configurefeedbackpathsettings question   
+        qnform setfeedbackpathsettings feedbackpathsettings   
+ 
+        feedbackquestionvisibilitysettings visibilitysettings   configurevisibilitysettings question   
+        qnform setvisibilitysettings visibilitysettings   
+ 
+        qnform setquestionhasresponses questionhasresponses get question getid      
+ 
+        qnform setquestionspecificeditformhtml questiondetails getquestionspecificeditformhtml questionindex    
+        qnform seteditable qnforms add qnform feedbackquestionvisibilitysettings configurevisibilitysettings feedbackquestionattributes question    
+        map isgivernamevisiblefor hashmap feedbackparticipanttype givertype   question showgivernameto    
+            isgivernamevisiblefor put givertype name map isrecipientnamevisiblefor hashmap feedbackparticipanttype recipienttype   question showrecipientnameto    
+            isrecipientnamevisiblefor put recipienttype name map isresponsesvisiblefor hashmap feedbackparticipanttype participanttype   question showresponsesto    
+            isresponsesvisiblefor put participanttype name dropdownmenulabel   getdropdownmenulabel question feedbackquestionvisibilitysettings question getvisibilitymessage    isresponsesvisiblefor  
+                                                      isgivernamevisiblefor  isrecipientnamevisiblefor  dropdownmenulabel getdropdownmenulabel feedbackquestionattributes question isvisibilitysettoanonymoustorecipientandinstructors question feedbackquestion common_visibility_options get  anonymous_to_recipient_and_instructors isvisibilitysettoanonymoustorecipientvisibletoinstructors question feedbackquestion common_visibility_options get  anonymous_to_recipient_visible_to_instructors isvisibilitysettoanonymoustorecipientandteamvisibletoinstructors question feedbackquestion common_visibility_options 
+                                          get  anonymous_to_recipient_and_team_visible_to_instructors isvisibilitysettovisibletoinstructorsonly question feedbackquestion common_visibility_options get  visible_to_instructors_only isvisibilitysettovisibletorecipientandinstructors question feedbackquestion common_visibility_options get  visible_to_recipient_and_instructors custom visibility option isvisibilitysettoanonymoustorecipientandinstructors feedbackquestionattributes question isresponsesvisibleonlytorecipientandinstructors   question showresponsesto size      2 
+                   question showresponsesto contains feedbackparticipanttype instructors  
+                   question showresponsesto contains feedbackparticipanttype receiver isgivernamevisibletonoone   question showgivernameto isempty isresponsesvisibleonlytorecipientandinstructors    isgivernamevisibletonoone isvisibilitysettoanonymoustorecipientvisibletoinstructors feedbackquestionattributes question isresponsesvisibleonlytorecipientandinstructors   question showresponsesto size      2 
+                   question showresponsesto contains feedbackparticipanttype instructors  
+                   question showresponsesto contains feedbackparticipanttype receiver isgivernamevisibleonlytoinstructors   question showgivernameto size      1 
+                   question showgivernameto contains feedbackparticipanttype instructors isresponsesvisibleonlytorecipientandinstructors    isgivernamevisibleonlytoinstructors isvisibilitysettoanonymoustorecipientandteamvisibletoinstructors feedbackquestionattributes question isresponsesvisibleonlytorecipientteamandinstructors   question showresponsesto size      4 
+                   question showresponsesto contains feedbackparticipanttype receiver  
+                   question showresponsesto contains feedbackparticipanttype own_team_members  
+                   question showresponsesto contains feedbackparticipanttype receiver_team_members  
+                   question showresponsesto contains feedbackparticipanttype instructors isgivernamevisibleonlytoinstructors   question showgivernameto size      1 
+                   question showgivernameto contains feedbackparticipanttype instructors isresponsesvisibleonlytorecipientteamandinstructors    isgivernamevisibleonlytoinstructors isvisibilitysettovisibletoinstructorsonly feedbackquestionattributes question isresponsesvisibleonlytoinstructors   question showresponsesto size      1 
+                   question showresponsesto contains feedbackparticipanttype instructors isgivernamevisibleonlytoinstructors   question showgivernameto size      1 
+                   question showgivernameto contains feedbackparticipanttype instructors isrecipientnamevisibleonlytoinstructors   question showrecipientnameto size      1 
+                   question showrecipientnameto contains feedbackparticipanttype instructors isresponsesvisibleonlytoinstructors    isgivernamevisibleonlytoinstructors 
+                   isrecipientnamevisibleonlytoinstructors isvisibilitysettovisibletorecipientandinstructors feedbackquestionattributes question isresponsesvisibleonlytorecipientandinstructors   question showresponsesto size      2 
+                   question showresponsesto contains feedbackparticipanttype instructors  
+                   question showresponsesto contains feedbackparticipanttype receiver isgivernamevisibleonlytorecipientandinstructors   question showgivernameto size      2 
+                   question showgivernameto contains feedbackparticipanttype instructors  
+                   question showgivernameto contains feedbackparticipanttype receiver isrecipientnamevisibleonlytorecipientandinstructors   question showresponsesto size      2 
+                   question showrecipientnameto size      2 
+                   question showrecipientnameto contains feedbackparticipanttype instructors  
+                   question showrecipientnameto contains feedbackparticipanttype receiver isresponsesvisibleonlytorecipientandinstructors    isgivernamevisibleonlytorecipientandinstructors 
+                   isrecipientnamevisibleonlytorecipientandinstructors feedbackquestionfeedbackpathsettings configurefeedbackpathsettings  
+            feedbackquestionattributes question    
+        feedbackquestionfeedbackpathsettings settings feedbackquestionfeedbackpathsettings    
+        settings setselectedgiver question givertype   
+        settings setselectedrecipient question recipienttype isnumberofentitiestogivefeedbacktochecked   
+                question numberofentitiestogivefeedbackto max_possible_recipients  
+        settings setnumberofentitiestogivefeedbacktochecked isnumberofentitiestogivefeedbacktochecked   
+        settings setnumofentitiestogivefeedbacktovalue isnumberofentitiestogivefeedbacktochecked 
+                                                       ? question numberofentitiestogivefeedbackto 
+                                                         1 iscommongiver feedbackquestion common_feedback_paths containskey question givertype iscommonpath   
+                    iscommongiver feedbackquestion common_feedback_paths get question givertype  
+                                                            contains question recipienttype   
+        settings setcommonpathselected iscommonpath settings buildnewquestionform feedbacksessionattributes feedbacksession nextqnnum doneeditinglink   config getappurl actionuris instructor_feedback_sessions_page  
+                                 withuserid account googleid  
+                                 withcourseid feedbacksession getcourseid    
+                                 withsessionname feedbacksession getfeedbacksessionname    
+                                 tostring    
+        newqnform   feedbackquestioneditform getnewqnform doneeditinglink  feedbacksession  
+                                                          getquestiontypechoiceoptions    
+                                                          getquestionnumberoptions nextqnnum   
+                                                          getnewquestionspecificeditformhtml list elementtag  getquestionnumberoptions numquestions    
+        list elementtag  options arraylist opt   1  opt   numquestions   1  opt      
+            elementtag option   createoption valueof opt valueof opt options add option options getquestiontypechoiceoptions     
+        stringbuilder options stringbuilder feedbackquestiontype type   feedbackquestiontype values      
+            options append type getfeedbackquestiondetailsinstance   getquestiontypechoiceoption options tostring getnewquestionspecificeditformhtml     
+        stringbuilder newquestionspecificeditforms stringbuilder feedbackquestiontype type   feedbackquestiontype values      
+            newquestionspecificeditforms append  
+                    type getfeedbackquestiondetailsinstance   getnewquestionspecificeditformhtml newquestionspecificeditforms tostring list elementtag  getpreviewasinstructoroptions list instructorattributes  instructorlist    
+        list elementtag  results arraylist instructorattributes instructor   instructorlist    
+            elementtag option   createoption instructor name  instructor email   
+            results add option results list elementtag  getpreviewasstudentoptions list studentattributes  studentlist    
+        list elementtag  results arraylist studentattributes student   studentlist    
+            elementtag option   createoption       student team          student name  student email   
+            results add option results feedbacksessionsform getfsform fsform list feedbackquestioneditform  getqnforms qnforms feedbackquestioneditform getnewqnform newqnform feedbacksessionpreviewform getpreviewform previewform getstatusforajax statusforajax setstatusforajax statusforajax statusforajax   statusforajax geteditcopyactionlink getinstructorfeedbackeditcopyactionlink actionuris instructor_feedback_sessions_page gethaserror haserror sethaserror value haserror   value getshouldloadineditmode shouldloadineditmode  
+      
+ teammates ui pagedata InstructorFeedbackEditPageData

@@ -1,0 +1,128 @@
+ 
+   $id$ 
+   copyright  c  1996-2006 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications persist zipped xmi file storage  
+   
+    author bob tarling 
+    author ludovic ma icirc tre 
+    
+    
+       logger constructor  
+        
+   
+        see org argouml persistence abstractfilepersister#getextension   
+        
+   
+        see org argouml persistence abstractfilepersister#getdesc   
+        
+   
+        see org argouml persistence xmifilepersister#issaveenabled being considered save out individual xmi's individuals 
+       diagrams make easier modularize output argo  
+       
+        param file file write  
+        param project project save 
+        throws saveexception anything goes wrong 
+       
+        see org argouml persistence projectfilepersister#save  
+            org argouml kernel project  java io file  
+        
+  project setfile file save not raise exception name  #  exists move name name correct backup file 2nd error ignore frank case exception 
+   delete name mv name  #  back name name  #  exists rollback old file give message user set system unsaved memberfilepersister based given projectmember  
+       
+        param pm project member 
+        return persister 
+        
+   
+        see org argouml persistence projectfilepersister#doload java io file  
+        
+   todo progressmgr used here come open zipinputstream first file found given extension  
+       
+        param url url zip file  
+        param ext required extension  
+        return zip stream positioned required location  
+        throws ioexception problem opening file  
+        
+    
+       returns false  only argo specific files icon  
+        
+        see org argouml persistence abstractfilepersister#hasanicon   
+       org argouml persistence ZipFilePersister org argouml persistence zipfilepersister xmifilepersister logger log   
+        logger getlogger zipfilepersister zipfilepersister getextension zip getdesc translator localize  combobox filefilter zip issaveenabled dosave project project  file file saveexception   
+ 
+        log info  receiving file '    file getname      '    
+ 
+        file lastarchivefile file file getabsolutepath      ~    
+        file tempfile tempfile   createtempfile file filenotfoundexception e saveexception  
+                     failed to archive the previous file version   e ioexception e saveexception  
+                     failed to archive the previous file version   e   
+          
+ 
+        outputstream bufferedstream zipoutputstream stream zipoutputstream fileoutputstream file filename   file getname    
+            zipentry xmientry zipentry filename substring 0  filename lastindexof         
+            stream putnextentry xmientry   
+            bufferedstream bufferedoutputstream stream size   project getmembers   size i   0  i   size  i      
+                projectmember projectmember   
+                     projectmember  project getmembers   get i projectmember gettype   equalsignorecase  xmi log isinfoenabled      
+                        log info  saving member of type    
+                                  projectmember  project getmembers   
+                                     get i   gettype     
+                      
+                    memberfilepersister persister modelmemberfilepersister    
+                    persister save projectmember  bufferedstream   
+                  
+              
+            stream close lastarchivefile exists      
+                lastarchivefile delete tempfile exists       lastarchivefile exists      
+                tempfile renameto lastarchivefile tempfile exists      
+                tempfile delete exception e    
+            log error  exception occured during save attempt   e bufferedstream close ioexception ex    
+                  
+              
+ 
+              
+              
+              
+            file delete    
+            tempfile renameto file saveexception e bufferedstream close ioexception ex    
+            log error  failed to close save output writer   ex memberfilepersister getmemberfilepersister projectmember pm    
+        memberfilepersister persister pm projectmemberdiagram    
+            persister   
+                persistencemanager getinstance   
+                     getdiagrammemberfilepersister pm profileconfiguration    
+            persister profileconfigurationfilepersister pm projectmembertodolist    
+            persister todolistmemberfilepersister pm projectmembermodel    
+            persister modelmemberfilepersister persister project doload file file openexception   
+ 
+        log info  receiving file '    file getname project p   projectfactory getinstance   createproject filename   file getname extension   
+                filename substring  
+                        filename indexof ' '   
+                        filename lastindexof ' '    
+            inputstream stream   openzipstreamat file touri   tourl    
+                    extension   
+ 
+              
+              
+            inputsource is inputsource xmiinputstream stream 100000 is setsystemid file touri   tourl   toexternalform     
+ 
+            modelmemberfilepersister modelpersister modelmemberfilepersister    
+             
+            modelpersister readmodels is   
+            object model   modelpersister getcurmodel    
+            model getumlhelper   addlistenerstomodel model   
+            p setuuidrefs modelpersister getuuidrefs     
+            p addmember model   
+            parsexmiextensions p   
+            modelpersister registerdiagrams p   
+ 
+            p setroot model   
+            p setroots modelpersister getelementsread     
+            projectmanager getmanager   setsaveenabled p ioexception e openexception e zipinputstream openzipstreamat url url ext ioexception   
+        zipinputstream zis zipinputstream url openstream     
+        zipentry entry   zis getnextentry entry entry getname   endswith ext     
+            entry   zis getnextentry zis hasanicon org argouml persistence ZipFilePersister

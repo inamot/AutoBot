@@ -1,0 +1,118 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications main class java reverse engineering s based antlr java example  
+   
+    author andreas rueckert  a_rueckert gmx net  
+    
+    logger    
+    
+       new model elements added 
+        
+   
+        see org argouml uml reveng importinterface#parsefiles org argouml kernel project  java util collection  org argouml uml reveng importsettings  org argouml application api progressmonitor single import pass single file  
+        
+        param p project 
+        param f source file 
+        param settings user provided import settings 
+        param pass 
+                  current import pass - 0   single pass  1   pass 1 2  2   
+                  pass 2 2 
+        
+   create scanner reads input stream 
+   fall back default encoding use special argo token stores preceding 
+   whitespaces  
+   create parser reads scanner 
+   pass    0 means single pass recognition 
+   create modeller parser 
+   print name current file associate 
+   exceptions file  
+   start parsing compilationunit rule ignore ll use simple file name 
+   
+        see org argouml uml reveng importinterface#getsuffixfilters   
+        
+   
+        see org argouml uml reveng importinterface#isparseable java io file  
+        
+   
+        see org argouml moduleloader moduleinterface#getname   
+        
+   
+        see org argouml moduleloader moduleinterface#getinfo int  
+        
+   
+        see org argouml moduleloader moduleinterface#disable permanently enabled 
+   
+        see org argouml moduleloader moduleinterface#enable   
+        
+    
+       enable importer  
+        
+   
+        see org argouml uml reveng importinterface#getimportsettings   
+       org argouml uml reveng JavaImport org argouml uml reveng java javaimport importinterface collection parsefiles project p  collection files  
+            importsettings settings  progressmonitor monitor importexception   
+ 
+        newelements hashset    
+        monitor updatemaintask translator localize  dialog pass1 settings getimportlevel      importsettings detail_classifier_feature 
+                   settings getimportlevel      importsettings detail_full    
+            monitor setmaximumprogress files size     2   
+            doimportpass p  files  settings  monitor  0  1 monitor iscanceled      
+                monitor updatemaintask  
+                        translator localize  dialog pass2     
+                doimportpass p  files  settings  monitor  files size    2 monitor setmaximumprogress files size     2   
+            doimportpass p  files  settings  monitor  0  0   
+          
+        monitor close newelements doimportpass project p  collection files  
+            importsettings settings  progressmonitor monitor startcount pass importexception count   startcount iterator it   files iterator    it hasnext monitor iscanceled      
+                monitor updatesubtask  
+                        translator localize  dialog cancelled object file   it next file file    
+                parsefile p   file  file  settings  pass   
+                monitor updateprogress count     
+                monitor updatesubtask translator localize  
+                         dialog parsingaction object      file  file  getabsolutepath importexception  object isn't a file     file parsefile project p  file f  importsettings settings pass importexception encoding   settings getinputsourceencoding    
+            fileinputstream in fileinputstream f   
+            inputstreamreader isr isr inputstreamreader in  encoding unsupportedencodingexception e    
+                  
+                isr inputstreamreader in   
+              
+            javalexer lexer javalexer bufferedreader isr    
+ 
+              
+              
+            lexer settokenobjectclass  org argouml uml reveng java argotoken    
+ 
+              
+            javarecognizer parser javarecognizer lexer parsermode   
+                    javarecognizer mode_import_pass1 
+                              javarecognizer mode_import_pass2 pass    1    
+                parsermode   javarecognizer mode_import_pass1 pass    2    
+                parsermode   javarecognizer mode_import_pass2  
+              
+            parser setparsermode parsermode   
+ 
+              
+            modeller modeller modeller p getmodel    
+                    settings  
+                    f getname     
+ 
+              
+              
+            log info  parsing     f getabsolutepath     
+ 
+            modeller setattribute  level    
+                    integer valueof pass parser compilationunit modeller  lexer exception e errorstring   builderrorstring f   
+                log error e getclass   getname   
+                          errorstring  e importexception errorstring  e   
+              
+            newelements addall modeller getnewelements     
+            in close ioexception e importexception builderrorstring f   e builderrorstring file f path path   f getcanonicalpath ioexception e exception in file      path         f getname suffixfilter   getsuffixfilters     
+	suffixfilter   result    filefilters java_file_filter result isparseable file file fileimportutils matchessuffix file  getsuffixfilters getname java getinfo type type description is a module from java files author marcus andersson  thomas neustupny  andreas rückert version 1 0 disable enable     
+        init init     
+	importermanager getinstance   addimporter list getimportsettings org argouml uml reveng JavaImport

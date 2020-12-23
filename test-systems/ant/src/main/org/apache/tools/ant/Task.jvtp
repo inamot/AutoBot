@@ -1,0 +1,248 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   base class tasks  
+   
+   use project createtask create new task instance using class directly construction  
+   
+    see project#createtask 
+    
+   checkstyle visibilitymodifier bc 
+    
+       target task belongs any  
+        deprecated 1 6 x not accessing variable directly  
+                   please use link #getowningtarget    method  
+        
+    
+       name task used logging purposes defaults same type may overridden user instance name  java  
+       isn't terribly descriptive task used within 
+       another task outer task code probably 
+       provide better one  
+        deprecated 1 6 x not accessing variable directly  
+                   please use link #gettaskname    method  
+        
+    
+       type task  
+       
+        deprecated 1 6 x not accessing variable directly  
+                   please use link #gettasktype    method  
+        
+    
+       wrapper object  used configure runtime  
+       
+        deprecated 1 6 x not accessing variable directly  
+                   please use link #getwrapper    method  
+        
+   checkstyle visibilitymodifier whether not task invalid task becomes invalid conflicting class specified implementation type  
+        
+    sole constructor     
+    
+       sets target container task  
+       
+        param target target whose scope task belongs  
+                     may code null  code   indicating top-level task  
+        
+    
+       returns container target task  
+       
+        return target containing task code null  code task top-level task  
+        
+    
+       sets name use logging messages  
+       
+        param name name use logging messages not code null  code   
+        
+    
+       returns name use logging messages  
+       
+        return name use logging messages  
+        
+    
+       sets name task invoked  
+       
+        param type name task invoked not code null  code   
+        
+    
+       called project task initialize properly default implementation op  
+       
+        exception buildexception something goes wrong build 
+        
+    
+       called project task work method may called once task invoked once example target1 target2 both depend target3 running 
+        ant target1 target2 run tasks target3 twice  
+       
+        exception buildexception something goes wrong build  
+        
+    
+       returns wrapper used runtime configuration  
+       
+        return wrapper used runtime configuration method generate new wrapper cache one isn't set already  
+        
+    
+       sets wrapper used runtime configuration method used only projecthelper ant internals public allow helper plugins operate tasks  normal tasks never use param wrapper wrapper used runtime configuration  
+                      may code null  code case next call getruntimeconfigurablewrapper generate new 
+                      wrapper  
+        
+   xxx   jon skeet comment hasn't done already  may 
+   not strictly true  wrapper maybeconfigure   won't configure same 
+   attributes text once may well add children again  
+   unless ve missed something  
+    
+       configures task hasn't done already task invalidated replaced unknownelement task uses new definition project  
+       
+        exception buildexception task cannot configured  
+        
+    
+       force task reconfigured runtimeconfigurable  
+        
+    
+       handles output logging info priority  
+       
+        param output output log not code null  code   
+        
+    
+       handles output logging info priority  
+       
+        param output output log not code null  code ant 1 5 2 
+        
+    
+       handle input request task  
+       
+        param buffer buffer data read  
+        param offset offset buffer data stored  
+        param length amount data read  
+       
+        return number bytes read  
+       
+        exception ioexception data cannot read ant 1 6 
+        
+    
+       handles error output logging warn priority  
+       
+        param output error output log not code null  code   
+        
+    
+       handles error line logging warn priority  
+       
+        param output error output log not code null  code ant 1 5 2 
+        
+    
+       logs message default  info  priority  
+       
+        param msg message logged not code null  code   
+        
+    
+       logs message given priority delegates actual logging project  
+       
+        param msg message logged not code null  code   
+        param msglevel message priority message logged  
+        
+    
+       logs message given priority delegates actual logging project  
+       
+        param t exception logged not code null  code   
+        param msglevel message priority message logged 1 7 
+        
+    
+       logs message given priority delegates actual logging project  
+       
+        param msg message logged not code null  code   
+        param t exception logged  may code null  code   
+        param msglevel message priority message logged 1 7 
+        
+    
+       performs task s still valid gets replacement 
+       version performs otherwise  
+       
+       performing task consists firing task started event  
+       configuring task  executing firing task finished 
+       event runtime exception thrown task finished event still fired exception cause  
+        
+    
+       marks task invalid  any further use task go through replacement updated definition task marked invalid? 
+       
+        return true task longer valid new task configured case ant 1 5 
+        
+    
+       replacement element used task invalidated  
+        
+    
+       creates unknownelement used replace task  
+       once created once cached returned future calls  
+       
+        return unknownelement instance new definition task  
+        
+    
+       recursively adds unknownelement instance each child 
+       element replacement ant 1 5 1 
+        
+    
+       return type task  
+       
+        return type task  
+        
+    
+       return runtime configurable structure task  
+       
+        return runtime structure task  
+        
+    
+       bind task another  use configuring newly created 
+       task work behalf another  
+       project  owningtarget  taskname  location description copied 
+       
+       important method not call   link task#init creating task delegate work call   link task#init initialize param owner owning target ant1 7 
+       org apache tools ant Task org apache tools ant task projectcomponent target target taskname tasktype runtimeconfigurable wrapper task setowningtarget target target target   target target getowningtarget target settaskname name taskname   name gettaskname taskname settasktype type tasktype   type init buildexception execute buildexception runtimeconfigurable getruntimeconfigurablewrapper wrapper wrapper runtimeconfigurable gettaskname wrapper setruntimeconfigurablewrapper runtimeconfigurable wrapper wrapper   wrapper maybeconfigure buildexception invalid wrapper wrapper maybeconfigure getproject getreplacement reconfigure wrapper wrapper reconfigure getproject handleoutput output    
+        log output  project msg_info handleflush output    
+        handleoutput output handleinput buffer offset length ioexception getproject   defaultinput buffer  offset  length handleerroroutput output    
+        log output  project msg_warn handleerrorflush output    
+        handleerroroutput output log msg    
+        log msg  project msg_info log msg msglevel getproject getproject   log msg  msglevel log msg  msglevel log throwable t msglevel t log t getmessage    t  msglevel log msg  throwable t msglevel getproject getproject   log msg  t  msglevel log msg  msglevel perform invalid    
+            getproject   firetaskstarted throwable reason maybeconfigure    
+                dispatchutils execute buildexception ex ex getlocation      location unknown_location    
+                    ex setlocation getlocation     
+                  
+                reason   ex ex exception ex    
+                reason   ex  
+                buildexception be buildexception ex   
+                be setlocation getlocation be error ex    
+                reason   ex ex getproject   firetaskfinished reason unknownelement ue   getreplacement    
+            task task   ue gettask    
+            task perform markinvalid     
+        invalid isinvalid invalid unknownelement getreplacement replacement replacement unknownelement tasktype   
+            replacement setproject getproject     
+            replacement settasktype tasktype   
+            replacement settaskname taskname   
+            replacement setlocation location   
+            replacement setowningtarget target   
+            replacement setruntimeconfigurablewrapper wrapper   
+            wrapper setproxy replacement   
+            replacechildren wrapper  replacement   
+            target replacechild replacement   
+            replacement maybeconfigure replacement replacechildren runtimeconfigurable wrapper  
+                                 unknownelement parentelement    
+        enumeration e   wrapper getchildren e hasmoreelements      
+            runtimeconfigurable childwrapper   
+                 runtimeconfigurable  e nextelement    
+            unknownelement childelement unknownelement childwrapper getelementtag     
+            parentelement addchild childelement   
+            childelement setproject getproject     
+            childelement setruntimeconfigurablewrapper childwrapper   
+            childwrapper setproxy childelement   
+            replacechildren childwrapper  childelement gettasktype tasktype runtimeconfigurable getwrapper wrapper bindtoowner task owner    
+        setproject owner getproject     
+        setowningtarget owner getowningtarget     
+        settaskname owner gettaskname     
+        setdescription owner getdescription     
+        setlocation owner getlocation     
+        settasktype owner gettasktype     
+      
+ org apache tools ant Task

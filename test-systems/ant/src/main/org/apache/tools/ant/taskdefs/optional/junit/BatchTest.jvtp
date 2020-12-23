@@ -1,0 +1,84 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+    p  create run  code junittest  code 's based list files 
+       given fileset attribute  
+   
+    p  every  code  java  code code  class  code  file fileset assumed testcase code junittest  code created each named classes basic setup inherited parent  code batchtest  code   
+   
+    see junittest reference project list filesets containing testcase filename rules    
+    
+       create new batchtest instance 
+        param project project depends add new fileset instance batchtest  whatever fileset only filename tt  java  tt tt  class  tt considered candidates'  
+        param     fs new fileset containing rules testcases one here changes support resourcecollections broken magic's junittesttask task adds fileset batchtest instance using java api without telling fileset project 
+   instance original code pass project call getdirectoryscanner now hidden deep resources iterator not reachable  
+    
+       add new resourcecollection instance batchtest  whatever collection only names tt  java  tt tt  class  tt considered candidates'  
+        param rc new resourcecollection containing rules testcases ant 1 7 
+        
+    
+       return tt junittest  tt  instances obtain applying fileset rules  
+        return enumeration elements batchtest tt junittest  tt  instance  
+        
+    
+       convenient method merge tt junittest  tt s batchtest tt vector  tt   
+        param v vector added individual tests batch test  
+        
+    
+       create tt junittest  tt s based filesets  each instance configured match instance properties  
+        return array tt junittest  tt s belongs batch  
+        
+    
+       iterate over filesets return filename files end tt  java  tt tt  class  tt avoid 
+       wrapping tt junittest  tt  over xml file example testcase obviously java file  compiled not   
+        return array filenames without extension normally taken root  filenames match fully 
+       qualified class name not case fail running test class  tt org apache whatever class  tt return  tt org apache whatever  tt   
+        
+    
+       convenient method convert pathname without extension fully qualified classname example  tt org apache whatever  tt converted tt org apache whatever  tt  
+        param filename filename convert classname  
+        return classname matching filename  
+        
+    
+       create tt junittest  tt same property tt batchtest  tt  instance  
+        param classname name class run tt junittest  tt must fully qualified name  
+        return tt junittest  tt  over given classname  
+       org apache tools ant taskdefs optional junit BatchTest org apache tools ant taskdefs optional junit batchtest basetest batchtest project project project   project addfileset fileset fs    
+        add fs fs getproject fs setproject project add resourcecollection rc    
+        resources add rc enumeration elements     
+        junittest   tests   createalljunittest enumerations fromarray tests addteststo vector v    
+        junittest   tests   createalljunittest    
+        v ensurecapacity v size     tests length i   0  i   tests length  i      
+            v addelement tests i junittest   createalljunittest filenames   getfilenames    
+        junittest   tests junittest filenames length i   0  i   tests length  i classname   javatoclass filenames i    
+            tests i    createjunittest classname tests getfilenames     
+        vector v vector    
+        iterator iter   resources iterator iter hasnext      
+            resource r    resource  iter next r isexists pathname   r getname pathname endswith   java      
+                    v addelement pathname substring 0  pathname length   -   java  length pathname endswith v addelement pathname substring 0  pathname length length files v size     
+        v copyinto files files javatoclass filename filename replace file separatorchar  ' '  replace ' '  ' '  
+             replace junittest createjunittest classname    
+        junittest test junittest    
+        test setname classname   
+        test sethaltonerror haltonerror   
+        test sethaltonfailure haltonfail   
+        test setfiltertrace filtertrace   
+        test setfork fork   
+        test setif ifproperty   
+        test setunless unlessproperty   
+        test settodir destdir   
+        test setfailureproperty failureproperty   
+        test seterrorproperty errorproperty   
+        enumeration list formatters elements list hasmoreelements      
+            test addformatter  formatterelement  list nextelement test  
+      
+ 
+ org apache tools ant taskdefs optional junit BatchTest

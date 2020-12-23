@@ -1,0 +1,523 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+    p data type provides catalog resource locations dtds xml entities   based href  http   oasis-open org committees entity spec-2001-08-06 html   
+   oasis  open catalog  standard catalog entries used 
+   both entity resolution uri resolution accordance link org xml sax entityresolver entityresolver link 
+   javax xml transform uriresolver uriresolver  interfaces defined href  http   java sun com xml jaxp  java api xml 
+   processing specification p  
+   
+    p resource locations specified either line external catalog file s both order use external 
+   catalog file xml-commons resolver library   resolver jar   
+   must classpath   external catalog files may either href  http   oasis-open org committees entity background 9401 html   
+   plain text format href  http   www oasis-open org committees entity spec-2001-08-06 html   
+   xml format xml-commons resolver library not found classpath  external catalog files  specified code  lt catalogpath gt   code  paths ignored warning logged case processing inline entries proceed 
+   normally   p  
+   
+    p currently  only  code  lt dtd gt   code code  lt entity gt   code  elements may specified inline correspond oasis catalog entry types  code public  code code uri  code  respectively   p  
+   
+    p following usage example   p  
+   
+    code  
+    lt xmlcatalog gt  br  
+    nbsp  nbsp  lt dtd publicid    location   path file jar    gt  br  
+    nbsp  nbsp  lt dtd publicid    location   path file2 jar    gt  br  
+    nbsp  nbsp  lt entity publicid    location   path file3 jar    gt  br  
+    nbsp  nbsp  lt entity publicid    location   path file4 jar    gt  br  
+    nbsp  nbsp  lt catalogpath gt  br  
+    nbsp  nbsp  nbsp  nbsp  lt pathelement location   etc sgml catalog   gt  br  
+    nbsp  nbsp  lt  catalogpath gt  br  
+    nbsp  nbsp  lt catalogfiles dir   opt catalogs   includes    \catalog xml    gt  br  
+    lt  xmlcatalog gt  br  
+     code  
+    p  
+   tasks wishing use  code  lt xmlcatalog gt   code  must provide method called 
+    code createxmlcatalog  code returns instance code xmlcatalog  code   nested dtd entity definitions handled xmlcatalog object must labeled  code dtd  code code entity  code  respectively   p  
+   
+    p following description resolution algorithm  
+   entities uris dtds looked up each following contexts  
+   stopping valid readable resource found  
+    ol  
+    li local filesystem  li  
+    li classpath  li  
+    li using apache xml-commons resolver available   li  
+    li url-space  li  
+     ol  
+     p  
+   
+    p see   link 
+   org apache tools ant taskdefs optional xmlvalidatetask 
+   xmlvalidatetask example task integrated 
+   support xmlcatalogs   p  
+   
+    p possible future extension provide additional oasis 
+   entry types specified inline   p  
+   
+    
+    helper some file tourl connversions    
+  -- fields ---------------------------------------------------------------- 
+    holds dtd entity objects until needed     
+    
+       classpath attempt resolve resources  
+        
+    
+       path listing external catalog files search resolving entities name bridge apache xml-commons resolver 
+       class  used determine whether resolver jar present classpath  
+        
+    
+       resolver base class 
+        
+  -- methods --------------------------------------------------------------- 
+    
+       default constructor 
+        
+    
+       returns elements catalog - resourcelocation objects  
+       
+        return elements catalog - resourcelocation objects 
+        
+    
+       returns classpath attempt resolve resources  
+       
+        return classpath 
+        
+    
+       allows nested classpath elements  not allowed catalog itself reference another catalog catalog 
+       cannot both refer another  em em  contain elements attributes  
+       
+        return path instance configured  
+        
+    
+       allows simple classpath string   not allowed catalog itself reference another catalog catalog 
+       cannot both refer another  em em  contain elements attributes  
+       
+        param classpath classpath use look up entities  
+        
+    
+       allows classpath reference   not allowed catalog itself reference another catalog catalog 
+       cannot both refer another  em em  contain elements attributes  
+       
+        param r ant reference containing classpath  
+        
+    creates nested  code  lt catalogpath gt   code  element  
+       not allowed catalog itself reference another 
+       catalog catalog cannot both refer another 
+        em em  contain elements attributes  
+       
+        return path configured catalog path  
+        exception buildexception reference nested elements allowed  
+        
+    
+       allows catalogpath reference   not allowed catalog itself reference another catalog catalog 
+       cannot both refer another  em em  contain elements attributes  
+       
+        param r ant reference containing classpath used catalog path  
+        
+    
+       returns catalog path attempt resolve dtds  
+       
+        return catalog path 
+        
+    
+       creates nested  code  lt dtd gt   code  element   not 
+       allowed catalog itself reference another 
+       catalog catalog cannot both refer another 
+        em em  contain elements attributes  
+       
+        param dtd information public resource mapping added catalog 
+        exception buildexception reference nested 
+             elements allowed  
+        
+    
+       creates nested  code  lt entity gt   code  element     not 
+       allowed catalog itself reference another 
+       catalog catalog cannot both refer another 
+        em em  contain elements attributes  
+       
+        param entity information uri resource mapping added catalog  
+        exception buildexception reference nested 
+             elements allowed  
+        
+    
+       loads nested  code  lt xmlcatalog gt   code definition   not allowed catalog itself reference another catalog catalog cannot both refer another  em em  contain elements attributes  
+       
+        param catalog nested xmlcatalog 
+        
+   add nested elements catalog 
+   append classpath nested catalog 
+   append catalog path nested catalog 
+    
+       makes instance effect reference another xmlcatalog 
+       instance  
+       
+        p must not set another attribute nest elements inside element make reference catalog 
+       cannot both refer another  em em  contain elements attributes   p  
+       
+        param r reference catalog instance associated 
+        exception buildexception instance already configured  
+        
+    
+       implements entityresolver resolveentity   interface method  
+        param publicid public id resolve  
+        param systemid system id resolve  
+        throws saxexception parsing problem  
+        throws ioexception io problem  
+        return resolved entity  
+        see org xml sax entityresolver#resolveentity 
+        
+    
+       implements uriresolver resolve   interface method  
+        param href href attribute  
+        param base base uri  
+        return source object null href cannot resolved  
+        throws transformerexception error occurs  
+        see javax xml transform uriresolver#resolve 
+        
+   
+   cannot return null source call 
+   setentityresolver  see setentityresolver javadoc comment point probably failure mode try use bare uri last gasp ant 1 6 instance catalogresolver strategy use  
+        
+    
+       factory method creating appropriate catalogresolver 
+       strategy implementation  
+        p  until query classpath don't know whether apache 
+       resolver  norm walsh's library xml-commons available not method determines whether library available creates appropriate implementation catalogresolver based answer   p  
+        p application gang four strategy pattern 
+       combined template method   p apache resolver present - need check seen catalog resolver class  start getting actual loader 
+   load base class through loader find actual loader loader being used load catalogresolver see apacheresolver base resolver only create apacheresolver see doesn't use context loader  
+   
+   success xml-commons resolver library available use xml-commons resolver library not 
+   available t use p called uriresolver set entityresolver sax parser used new xml documents encountered result document   function  xsl import xsl include done xslt processor calls 
+       out saxparserfactory itself create new saxparser parse new document new parser not automatically 
+       inherit entityresolver original  although arguably see below   p  
+       
+        tt application set errorhandler entityresolver xmlreader used during transformation use uriresolver return saxsource provides getxmlreader reference xmlreader   tt  
+       
+        p    quoted page 118 java api xml 
+       processing 1 1 specification  p  
+       
+        
+    
+       find resourcelocation instance given publicid  
+       
+        param publicid publicid resource local information required  
+        return resourcelocation instance information local location resource null information available  
+        
+    
+       utility method remove trailing fragment uri example  
+        code http   java sun com index html#chapter1  code return  code http   java sun com index html  code   
+       
+        param uri uri process may may not contain fragment  
+        return uri sans fragment  
+        
+    
+       utility method lookup resourcelocation filesystem  
+       
+        return inputsource reading file code null  code file not exist not readable following line seems necessary windows under jdk 1 2 resourcelocation may specify relative path location attribute resolved using appropriate 
+   base processing useful under windows location dtd given absolute path 
+   see bugzilla report 23913 
+   ignore 
+    
+       utility method lookup resourcelocation classpath  
+       
+        return inputsource reading resource code null  code resource not exist classpath not readable classpath lookup ignore base directory 
+   
+    
+       utility method lookup resourcelocation url-space  
+       
+        return inputsource reading resource code null  code resource not identify valid url not readable resourcelocation may specify relative url location attribute resolved using appropriate 
+   base  
+   
+   ignore 
+   ignore 
+    
+       interface implemented both internalresolver strategy externalresolver strategy internalresolver strategy used apache resolver 
+       library  norm walsh's library xml-commons not 
+       available case  external catalog files ignored  
+       
+        
+   
+   use passed base preference base matchingentry either null directory external catalog file obtained located make copy matchingentry's original base untouched standard behavior per reading jaxp xml catalog specs   cks 11 7 2002 
+   
+   ignore externalresolver strategy used apache resolver 
+       library  norm walsh's library xml-commons available classpath externalresolver essentially superset internalresolver instance apachecatalogresolver bridge class method instances each methods need call resolverimpl using reflection t 
+   call directly require xml-commons resolver library may not available classpath didn't match resourcelocation only support public uri entry types internally still possible another entry external catalog match call 
+   apache resolver's resolveentity method cover possibility  
+   
+   
+   use passed base preference base matchingentry either null directory external catalog file obtained located make copy matchingentry's original base untouched course base need make copy standard behavior per reading jaxp xml catalog specs   cks 11 7 2002 
+   
+   ignore didn't match resourcelocation only support public uri entry types internally still possible another entry external catalog match call 
+   apache resolver's resolveentity method cover possibility  
+   
+    
+           process each external catalog file specified code  lt catalogpath gt   code parsed resolver library individual elements added back controlling 
+           xmlcatalog instance  via callback mechanism  
+            
+   parse each catalog listed nested  catalogpath  elements 
+  -- xmlcatalogorg apache tools ant types XMLCatalog org apache tools ant types xmlcatalog datatype cloneable  entityresolver  uriresolver apache_resolver 
+           org apache tools ant types resolver apachecatalogresolver catalog_resolver 
+           org apache xml resolver tools catalogresolver xmlcatalog     
+        setchecked vector getelements getref   elements path getclasspath getref   classpath path createclasspath isreference nochildrenallowed classpath classpath path getproject     
+          
+        setchecked classpath createpath setclasspath path classpath isreference toomanyattributes classpath classpath   classpath classpath append classpath   
+          
+        setchecked setclasspathref reference r isreference toomanyattributes    
+          
+        createclasspath   setrefid r   
+        setchecked path createcatalogpath isreference nochildrenallowed catalogpath catalogpath path getproject     
+          
+        setchecked catalogpath createpath setcatalogpathref reference r isreference toomanyattributes    
+          
+        createcatalogpath   setrefid r   
+        setchecked path getcatalogpath getref   catalogpath adddtd resourcelocation dtd buildexception isreference nochildrenallowed    
+          
+ 
+        getelements   addelement dtd   
+        setchecked addentity resourcelocation entity buildexception   
+        adddtd entity addconfiguredxmlcatalog xmlcatalog catalog isreference nochildrenallowed    
+          
+ 
+          
+        vector newelements   catalog getelements    
+        vector ourelements   getelements    
+        enumeration e   newelements elements e hasmoreelements      
+            ourelements addelement e nextelement     
+          
+ 
+          
+        path nestedclasspath   catalog getclasspath    
+        createclasspath   append nestedclasspath   
+ 
+          
+        path nestedcatalogpath   catalog getcatalogpath    
+        createcatalogpath   append nestedcatalogpath   
+        setchecked setrefid reference r buildexception elements isempty toomanyattributes setrefid r inputsource resolveentity publicid systemid saxexception  ioexception isreference getref   resolveentity publicid  systemid   
+          
+ 
+        dieoncircularreference    
+ 
+        log  resolveentity  '    publicid    '  '    systemid    '   
+            project msg_debug   
+ 
+        inputsource inputsource   
+            getcatalogresolver   resolveentity publicid  systemid inputsource log  no matching catalog entry found  parser will use  '  
+                  systemid    '   project msg_debug inputsource source resolve href base transformerexception isreference getref   resolve href  base   
+          
+ 
+        dieoncircularreference    
+ 
+        saxsource source uri   removefragment href   
+ 
+        log  resolve  '    uri    ' with base  '    base    '   project msg_debug   
+ 
+        source    saxsource  getcatalogresolver   resolve uri  base source log  no matching catalog entry found  parser will use  '  
+                  href    '   project msg_debug   
+              
+              
+              
+              
+            source saxsource    
+            url baseurl base baseurl   file_utils getfileurl getproject   getbasedir baseurl url base   
+                  
+                url url    uri length      0 ? baseurl url baseurl  uri    
+                source setinputsource inputsource url tostring malformedurlexception ex    
+                  
+                  
+                source setinputsource inputsource uri    
+              
+          
+ 
+        setentityresolver source source xmlcatalog getref isreference xmlcatalog  getcheckedref xmlcatalog xmlcatalog catalogresolver getcatalogresolver catalogresolver antclassloader loader loader   getproject   createclassloader path systemclasspath clazz forname apache_resolver loader   
+ 
+                  
+                  
+                  
+                classloader apacheresolverloader   clazz getclassloader baseresolverclass forname catalog_resolver apacheresolverloader   
+ 
+                  
+                classloader baseresolverloader 
+                      baseresolverclass getclassloader    
+ 
+                  
+                  
+                  
+                  
+                clazz forname apache_resolver baseresolverloader   
+ 
+                object obj    clazz newinstance    
+                  
+                  
+                  
+                  
+                catalogresolver externalresolver clazz  obj throwable ex    
+                  
+                  
+                  
+                  
+                catalogresolver internalresolver getcatalogpath getcatalogpath   list   length    0    
+                        log  warning  xml resolver not found  external catalogs  
+                                will be ignored   project msg_warn   
+                      
+                log  failed to load apache resolver      ex  project msg_debug catalogresolver setentityresolver saxsource source transformerexception   
+ 
+        xmlreader reader   source getxmlreader reader saxparserfactory spfactory   saxparserfactory newinstance    
+            spfactory setnamespaceaware reader   spfactory newsaxparser   getxmlreader parserconfigurationexception ex transformerexception ex saxexception ex transformerexception ex   
+              
+          
+        reader setentityresolver source setxmlreader reader resourcelocation findmatchingentry publicid    
+        enumeration e   getelements   elements    
+        resourcelocation element e hasmoreelements      
+            object o   e nextelement o resourcelocation    
+                element    resourcelocation  o element getpublicid   equals publicid element removefragment uri result   uri hashpos   uri indexof hashpos    0    
+            result   uri substring 0  hashpos result inputsource filesystemlookup resourcelocation matchingentry uri   matchingentry getlocation    
+          
+        uri   uri replace file separatorchar  ' '   
+        url baseurl matchingentry getbase baseurl   matchingentry getbase baseurl   file_utils getfileurl getproject   getbasedir malformedurlexception ex buildexception  project basedir cannot be converted to a url    
+              
+          
+ 
+        inputsource source url url url url baseurl  uri malformedurlexception ex    
+              
+              
+              
+            file testfile file uri testfile exists      testfile canread      
+                log  uri   '  
+                      uri    ' matches a readable file   project msg_debug url   file_utils getfileurl testfile malformedurlexception ex1 buildexception  
+                         could not find an url testfile getabsolutepath log  uri   '  
+                      uri    ' does not match a readable file   project msg_debug url url getprotocol   equals  file filename   file_utils fromuri url tostring filename log  filename     filename  project msg_debug   
+                file resfile file filename resfile exists      resfile canread source inputsource fileinputstream resfile sysid   jaxputils getsystemid resfile   
+                        source setsystemid sysid   
+                        log  catalog entry matched a readable file  '  
+                              sysid    '   project msg_debug ioexception ex source inputsource classpathlookup resourcelocation matchingentry    
+ 
+        inputsource source antclassloader loader path cp   classpath cp cp   classpath concatsystemclasspath  ignore cp path getproject     concatsystemclasspath  last    
+          
+        loader   getproject   createclassloader cp   
+ 
+          
+          
+          
+        inputstream is 
+              loader getresourceasstream matchingentry getlocation is source inputsource is   
+            url entryurl   loader getresource matchingentry getlocation sysid   entryurl toexternalform    
+            source setsystemid sysid   
+            log  catalog entry matched a resource in the classpath  '  
+                  sysid    '   project msg_debug source inputsource urllookup resourcelocation matchingentry uri   matchingentry getlocation    
+        url baseurl matchingentry getbase baseurl   matchingentry getbase baseurl   file_utils getfileurl getproject   getbasedir malformedurlexception ex buildexception  project basedir cannot be converted to a url    
+              
+          
+ 
+        inputsource source url url url url baseurl  uri malformedurlexception ex url inputstream is   url openstream is source inputsource is sysid   url toexternalform    
+                    source setsystemid sysid   
+                    log  catalog entry matched as a url  '  
+                          sysid    '   project msg_debug ioexception ex source catalogresolver uriresolver  entityresolver   
+ 
+        inputsource resolveentity publicid systemid   
+ 
+        source resolve href base transformerexception internalresolver catalogresolver internalresolver     
+            log  apache resolver library not found  internal resolver will be used   
+                project msg_verbose inputsource resolveentity publicid systemid    
+            inputsource result resourcelocation matchingentry   findmatchingentry publicid matchingentry log  matching catalog entry found publicid  '  
+                      matchingentry getpublicid      ' location  '  
+                      matchingentry getlocation      '   
+                    project msg_debug   
+ 
+                result   filesystemlookup matchingentry result result   classpathlookup matchingentry result result   urllookup matchingentry result source resolve href base transformerexception   
+ 
+            saxsource result inputsource source resourcelocation matchingentry   findmatchingentry href matchingentry log  matching catalog entry found uri  '  
+                      matchingentry getpublicid      ' location  '  
+                      matchingentry getlocation      '   
+                    project msg_debug   
+ 
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                resourcelocation entrycopy   matchingentry base url baseurl url base   
+                        entrycopy resourcelocation    
+                        entrycopy setbase baseurl malformedurlexception ex    
+                          
+                      
+                  
+                entrycopy setpublicid matchingentry getpublicid     
+                entrycopy setlocation matchingentry getlocation     
+ 
+                source   filesystemlookup entrycopy source source   classpathlookup entrycopy source source   urllookup entrycopy source result saxsource source result externalresolver catalogresolver externalresolver resolverimplclass  
+                              object resolverimpl resolverimpl   resolverimpl setxmlcatalog   
+                    resolverimplclass getmethod  setxmlcatalog xmlcatalog parsecatalog   
+                    resolverimplclass getmethod  parsecatalog resolveentity   
+                    resolverimplclass getmethod  resolveentity string resolve   
+                    resolverimplclass getmethod  resolve string nosuchmethodexception ex buildexception ex   
+              
+ 
+            log  apache resolver library found  xml-commons resolver will be used   
+                project msg_verbose inputsource resolveentity publicid systemid    
+            inputsource result processexternalcatalogs    
+ 
+            resourcelocation matchingentry   findmatchingentry publicid matchingentry log  matching catalog entry found publicid  '  
+                      matchingentry getpublicid      ' location  '  
+                      matchingentry getlocation      '   
+                    project msg_debug   
+ 
+                result   filesystemlookup matchingentry result result   classpathlookup matchingentry result result   
+                             inputsource  resolveentity invoke resolverimpl object    publicid  systemid exception ex buildexception ex result   
+                         inputsource  resolveentity invoke resolverimpl object    publicid  systemid exception ex buildexception ex result source resolve href base transformerexception   
+ 
+            saxsource result inputsource source processexternalcatalogs    
+ 
+            resourcelocation matchingentry   findmatchingentry href matchingentry log  matching catalog entry found uri  '  
+                      matchingentry getpublicid      ' location  '  
+                      matchingentry getlocation      '   
+                    project msg_debug   
+ 
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                resourcelocation entrycopy   matchingentry base url baseurl url base   
+                        entrycopy resourcelocation    
+                        entrycopy setbase baseurl malformedurlexception ex    
+                          
+                      
+                  
+                entrycopy setpublicid matchingentry getpublicid     
+                entrycopy setlocation matchingentry getlocation     
+ 
+                source   filesystemlookup entrycopy source source   classpathlookup entrycopy source result saxsource source result   
+                             saxsource  resolve invoke resolverimpl object    href  base exception ex buildexception ex result   
+                         saxsource  resolve invoke resolverimpl object    href  base exception ex buildexception ex result processexternalcatalogs externalcatalogsprocessed setxmlcatalog invoke resolverimpl object    xmlcatalog exception ex buildexception ex   
+                  
+ 
+                  
+                path catpath   getcatalogpath catpath log  using catalogpath '    getcatalogpath      '   
+                        project msg_debug catpathlist   getcatalogpath   list i   0  i   catpathlist length  i      
+                        file catfile file catpathlist i    
+                        log  parsing     catfile  project msg_debug parsecatalog invoke resolverimpl object    catfile getpath exception ex buildexception ex   
+                          
+                      
+                  
+              
+            externalcatalogsprocessed org apache tools ant types XMLCatalog

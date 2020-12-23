@@ -1,0 +1,68 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   runs jjdoc compiler compiler  
+   
+    
+   keys optional attributes 
+   required attributes 
+    
+       sets text bnf documentation option  
+        param plaintext code boolean  code  value  
+        
+    
+       sets one_table documentation option  
+        param onetable code boolean  code  value outputfile write generated bnf documentation file not set file written same name javacc grammar file suffix  html txt  
+        param outputfile name output file javacc grammar file process  
+        param target grammar file directory containing javacc distribution  
+        param javacchome home directory  
+        
+    
+       constructor task  
+        throws buildexception error  
+        
+   load command line optional attributes 
+   use directory containing target output directoryorg apache tools ant taskdefs optionalcc JJDoc org apache tools ant taskdefs optional javacc jjdoc task settext plaintext    
+        optionalattrs put text  plaintext plaintext   plaintext setonetable onetable    
+        optionalattrs put one_table  onetable setoutputfile outputfile outputfile   outputfile settarget file target targetfile   target setjavacchome file javacchome javacchome   javacchome jjdoc     
+        cmdl setvm javaenvutils getjreexecutable  java execute buildexception   
+ 
+          
+        enumeration iter   optionalattrs keys iter hasmoreelements name iter nextelement    
+            object value   optionalattrs get name   
+            cmdl createargument   
+                 setvalue  -    name         value tostring targetfile targetfile isfile buildexception  invalid target      targetfile outputfile cmdl createargument    setvalue  -    output_file       
+                                              outputfile replace '\\'  ' '    
+          
+ 
+          
+        file javafile file createoutputfilename targetfile  outputfile  
+                                                      plaintext javafile exists   
+                targetfile lastmodified     javafile lastmodified      
+            log  target is already built - skipping      targetfile        
+                project msg_verbose cmdl createargument   setvalue targetfile getabsolutepath path classpath   cmdl createclasspath getproject file javaccjar   javacc getarchivefile javacchome   
+        classpath createpathelement   setpath javaccjar getabsolutepath     
+        classpath addjavaruntime    
+ 
+        cmdl setclassname javacc getmainclass classpath  
+                                              javacc taskdef_type_jjdoc commandline argument arg   cmdl createvmargument    
+        arg setvalue  -mx140m    
+        arg setvalue  -dinstall root     javacchome getabsolutepath execute process execute logstreamhandler project msg_info  
+                                             project msg_info log cmdl describecommand    project msg_verbose   
+        process setcommandline cmdl getcommandline process execute      0 buildexception  jjdoc failed ioexception e buildexception  failed to launch jjdoc   e createoutputfilename file destfile optionaloutputfile plain suffix   default_suffix_html javaccfile   destfile getabsolutepath   replace plain    
+            suffix   default_suffix_text optionaloutputfile optionaloutputfile equals filepos   javaccfile lastindexof filepos    0    
+                javaccfile   javaccfile substring filepos   1 suffixpos   javaccfile lastindexof suffixpos    -1    
+                optionaloutputfile   javaccfile   suffix currentsuffix   javaccfile substring suffixpos currentsuffix equals suffix     
+                    optionaloutputfile   javaccfile   suffix optionaloutputfile   javaccfile substring 0  suffixpos  
+                          suffix optionaloutputfile   optionaloutputfile replace getproject   getbasedir           optionaloutputfile  
+             replace '\\'  ' '   
+      
+ org apache tools ant taskdefs optionalcc JJDoc

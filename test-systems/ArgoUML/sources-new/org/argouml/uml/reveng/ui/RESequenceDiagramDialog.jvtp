@@ -1,0 +1,451 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications dialog starts reverse engineering operations  p  
+   
+   todo  subsequent parsing further operation bodies  p  
+   todo  suppressing multiple creation already created messages p  
+   todo  processing non-constructor-calls classifiers p  
+   todo  i18n p  
+    
+    
+       logger  
+        
+    
+       constructor  
+       
+        param oper operation reverse engineered  
+        
+    
+       constructor  
+       
+        param oper operation reverse engineered  
+        param figmessage message figure result drawn todo being ignored? - tfm 
+   maybe easier way find current diagram see java awt event actionlistener#actionperformed java awt event actionevent  
+        
+   remove sd clean up everything 
+   remove model 
+   
+        see java awt event itemlistener#itemstatechanged java awt event itemevent  
+        
+    
+       gets object target given target deleted model  
+       
+        param target target delete 
+        return object  
+        
+    
+       gets content panel  containing gui  
+        return constructed panel 
+        
+    
+       gets panel automatically tab  
+        return constructed panel 
+        
+    
+       gets panel manually tab  
+       
+        return constructed panel 
+        
+    
+       builds sequence diagram classifier  
+        
+    
+       gets builds figure classifier role given classifier object name  
+        
+   first check fig classifier role already exists 
+   yes found returned 
+   classifier role not exists create new one 
+   location must set correct automatic layouting funny  
+   otherwise new classifier role not rightmost 
+   todo  send event instead calling event adapter directly 
+    
+       parses body actual operation  
+        
+   todo being ignored? 
+    
+       gets first  body operation  
+        
+    
+       builds complete action target 
+       classifier role not existing   
+        
+   call method class call method class prefixed super creator  constructor  call type    null    
+   call method local object call static method classifier unknown type 
+     
+    
+       builds edge figure action  
+        
+    
+       gets builds classifier role type type classifier 
+       name  either fully qualified whole package path not ensures association actual classifier  
+        
+   full package path given s model 
+   package classifier missing create one 
+   must package 
+   must classifier s assume class 
+   classifier without package information given 
+   first s look namespace actual classifier s search imports  component dependencies  
+   not found any matching classifier create one put namespace actual classifier 
+    
+       checks directed association between two classifiers creates one necessary classifier given name permission 
+        null not found   
+        
+   todo use new corehelper getpackageimports   
+   todo m not sure trying probably isn't thinks supplier import going package not classifier   perhaps intends process ownedelements package  - tfm - 20070803 
+    
+       fixed import settings class use uid  
+       org argouml uml reveng ui RESequenceDiagramDialog org argouml uml reveng ui resequencediagramdialog argodialog actionlistener  itemlistener logger log   
+        logger getlogger resequencediagramdialog resequencediagramdialog object oper oper resequencediagramdialog object oper  figmessage figmessage not functional      
+                  translator localize  
+                         dialog title reverse-engineer-sequence-diagram   
+                   oper model getfacade   getname oper          
+                                       
+                argodialog ok_cancel_option setresizable operation   oper  
+        model   projectmanager getmanager   getcurrentproject   getmodel modeller modeller model dummysettings exception ex     
+              
+            log warn  exception ignored   ex   
+          
+ 
+        classifier   model getfacade   getowner operation figmessage isnewsequencediagram graphmodel   
+                 sequencediagramgraphmodel  globals cureditor   getgraphmodel    
+            collaboration   graphmodel getcollaboration    
+              
+              
+            project p   projectmanager getmanager   getcurrentproject    
+            iterator argodiagram  iter   p getdiagramlist   iterator iter hasnext      
+                diagram   iter next graphmodel    diagram getgraphmodel classifierrole   getclassifierrole classifier   obj    
+            portcnt   
+                sequencediagramlayer getnodeindex  
+                    figmessage getdestmessagenode   getfigmessageport   gety     
+            iterator fig  it   diagram getfigiterator it hasnext      
+                fig f   it next f figclassifierrole x   f getx maxxpos   x    
+                        maxxpos   x model getfacade   getname f getowner    
+                             startswith  anon      
+                        anoncnt f figmessage port   
+                        sequencediagramlayer getnodeindex  
+                              figmessage  f  getdestmessagenode   
+                                 getfigmessageport   gety maxport   port    
+                        maxport   port isnewsequencediagram buildsequencediagram classifier   
+            classifierrole   getclassifierrole classifier   obj    
+            maxxpos   classifierrole getx    
+          
+        parsebody    
+ 
+        jpanel contentpanel   getcontentpanel    
+        setcontent contentpanel actionperformed actionevent e actionperformed e e getsource      getokbutton i   0  i   calltable getrowcount    i equals calltable getvalueat i  1      
+                    buildaction calltable getvalueat i  0 e getsource      getcancelbutton   
+                   isnewsequencediagram    
+              
+            project p   projectmanager getmanager   getcurrentproject    
+            object newtarget actiondeletemodelelements sureremove diagram     
+                  
+                newtarget   getnewtarget diagram   
+                p movetotrash diagram   
+                p movetotrash collaboration newtarget targetmanager getinstance   settarget newtarget itemstatechanged itemevent e modechoice getselectedindex      1    
+            changingpanel remove autopanel   
+            changingpanel add manupanel  borderlayout center   
+            pack changingpanel remove manupanel   
+            changingpanel add autopanel  borderlayout center   
+            pack object getnewtarget object target    
+        project p   projectmanager getmanager   getcurrentproject    
+        object newtarget target fig    
+            target     fig  target  getowner model getfacade   isamodelelement target  
+                   model getfacade   getnamespace target newtarget   model getfacade   getnamespace target target diagram    
+            diagram firstdiagram    diagram  p getdiagramlist   get 0 target    firstdiagram    
+                newtarget   firstdiagram p getdiagramlist   size     1    
+                    newtarget   p getdiagramlist   get 1 newtarget   p getroot newtarget   p getroot newtarget jpanel getcontentpanel     
+        jpanel content jpanel    
+        content setlayout gridbaglayout     
+ 
+        gridbagconstraints constraints gridbagconstraints    
+        constraints anchor   gridbagconstraints west  
+        constraints fill   
+            gridbagconstraints horizontal  
+        constraints gridx   0  
+        constraints gridy   0  
+ 
+        constraints insets insets 2  2  2  2   
+        content add jlabel  mode     constraints   
+ 
+        constraints gridy   1  
+        modechoice jcombobox    
+        modechoice additem  manually select calls of operation    
+        modechoice additem  traverse calls automatically with a chosen depth    
+        modechoice additemlistener content add modechoice  constraints   
+ 
+        manupanel   getmanuallytab    
+        autopanel   getautomaticallytab    
+ 
+        constraints gridy   2  
+        changingpanel jpanel borderlayout 0  0    
+        changingpanel add manupanel  borderlayout center   
+        content add changingpanel  constraints content jpanel getautomaticallytab     
+        jpanel top jpanel    
+        top setlayout gridbaglayout     
+ 
+        gridbagconstraints labelconstraints gridbagconstraints    
+        labelconstraints anchor   gridbagconstraints west  
+        labelconstraints gridy   0  
+        labelconstraints gridx   0  
+        labelconstraints insets insets 10  2  2  2   
+ 
+        gridbagconstraints fieldconstraints gridbagconstraints    
+        fieldconstraints anchor   gridbagconstraints west  
+        fieldconstraints fill   gridbagconstraints none  
+        fieldconstraints gridy   0  
+        fieldconstraints gridx   1  
+        fieldconstraints weightx   1 0  
+        fieldconstraints insets insets 4  2  2  2   
+ 
+        jpanel depthpanel jpanel flowlayout     
+        jradiobutton unlimited jradiobutton  unlimited    
+        jradiobutton limited jradiobutton  limit to buttongroup group buttongroup    
+        group add unlimited   
+        group add limited   
+        depthpanel add limited   
+        depthpanel add jspinner spinnernumbermodel 1  0  999  1     
+        depthpanel add unlimited   
+ 
+        labelconstraints gridy   0  
+        fieldconstraints gridy   0  
+        top add jlabel  depth     labelconstraints   
+        top add depthpanel  fieldconstraints   
+ 
+        labelconstraints gridy   1  
+        fieldconstraints gridy   1  
+        top add jlabel  assumption table     labelconstraints   
+        top add jbutton  update    fieldconstraints   
+ 
+        list assumptions arraylist assumptions add  calls hasmoreelements      
+        assumptions add  methods methods isempty      
+        object   data jtable table jtable checkboxtablemodel  
+                    assumptions toarray    
+                    data  
+                     conditions   
+                     assume table setshowverticallines fieldconstraints gridx   0  
+        fieldconstraints gridy   2  
+        fieldconstraints gridwidth   2  
+        fieldconstraints anchor   gridbagconstraints center  
+        fieldconstraints fill   gridbagconstraints both  
+        fieldconstraints weighty   1 0  
+        top add jscrollpane table   fieldconstraints   
+ 
+        fieldconstraints insets insets 0  2  0  2   
+        jcheckbox checkbox1 jcheckbox  also process create calls fieldconstraints gridy   3  
+        top add checkbox1  fieldconstraints   
+        jcheckbox checkbox2 jcheckbox  also process local calls fieldconstraints gridy   4  
+        top add checkbox2  fieldconstraints   
+        jcheckbox checkbox3 jcheckbox  also process calls inside fieldconstraints gridy   5  
+        top add checkbox3  fieldconstraints top jpanel getmanuallytab     
+        jpanel top jpanel    
+        top setlayout gridbaglayout     
+ 
+        gridbagconstraints labelconstraints gridbagconstraints    
+        labelconstraints anchor   gridbagconstraints west  
+        labelconstraints gridx   0  
+        labelconstraints gridy   0  
+        labelconstraints insets insets 10  2  2  2   
+ 
+        gridbagconstraints fieldconstraints gridbagconstraints    
+        fieldconstraints anchor   gridbagconstraints west  
+        fieldconstraints fill   gridbagconstraints none  
+        fieldconstraints gridx   1  
+        fieldconstraints gridy   0  
+        fieldconstraints weightx   1 0  
+        fieldconstraints insets insets 4  2  2  2   
+ 
+        top add jlabel  method call table     labelconstraints   
+ 
+        calltable checkboxtablemodel  
+                    calls toarray    
+                    calldata toarray    
+                     method calls   
+                     enable    
+        jtable table jtable calltable   
+        table setshowverticallines fieldconstraints gridx   0  
+        fieldconstraints gridy   1  
+        fieldconstraints gridwidth   2  
+        fieldconstraints anchor   gridbagconstraints center  
+        fieldconstraints fill   gridbagconstraints both  
+        fieldconstraints weighty   1 0  
+        top add jscrollpane table   fieldconstraints   
+ 
+        fieldconstraints insets insets 0  2  0  2   
+        jcheckbox checkbox1 jcheckbox   un check create calls fieldconstraints gridy   2  
+        top add checkbox1  fieldconstraints   
+        jcheckbox checkbox2 jcheckbox   un check local calls fieldconstraints gridy   3  
+        top add checkbox2  fieldconstraints   
+        jcheckbox checkbox3 jcheckbox   un check calls fieldconstraints gridy   4  
+        top add checkbox3  fieldconstraints   
+        jcheckbox checkbox4 jcheckbox   un check far calls fieldconstraints gridy   5  
+        top add checkbox4  fieldconstraints top buildsequencediagram object theclassifier    
+        project p   projectmanager getmanager   getcurrentproject    
+ 
+        collaboration   
+            model getcollaborationsfactory   buildcollaboration  
+                model getfacade   getnamespace theclassifier   
+                theclassifier   
+        diagram   
+            diagramfactory getinstance   creatediagram  
+                diagramtype sequence  
+                collaboration graphmodel    sequencediagramgraphmodel  diagram getgraphmodel    
+        p addmember diagram   
+        targetmanager getinstance   settarget diagram figclassifierrole getclassifierrole  
+            object theclassifier objname    
+        figclassifierrole crfig collection coll   diagram getlayer   getcontents    
+        iterator iter   coll coll iterator iter iter hasnext      
+            object fig   iter next fig figclassifierrole    
+                object elem     figclassifierrole  fig  getowner    
+                collection bases   model getfacade   getbases elem model getfacade   isaclassifierrole elem  
+                        model getfacade   getname elem  equals objname  
+                        bases bases contains theclassifier     
+                      
+                    crfig    figclassifierrole  fig crfig object node   
+                model getcollaborationsfactory   
+                     buildclassifierrole collaboration objname model getcorehelper   setname node  objname model getcorehelper   setname node   anon       anoncnt    
+              
+            coll arraylist    
+            coll add theclassifier   
+            model getcollaborationshelper   setbases node  coll   
+            crfig figclassifierrole node   
+ 
+              
+              
+            maxxpos    x_offset  
+            crfig setlocation maxxpos  0   
+ 
+            diagram add crfig   
+            graphmodel addnode node   
+              
+            explorereventadaptor getinstance   modelelementchanged  
+                model getfacade   getnamespace classifier crfig parsebody     
+        javalexer lexer javarecognizer parser calls clear    
+        types clear    
+        modeller clearmethodcalls    
+        modeller clearlocalvariabledeclarations lexer javalexer stringreader ' '   getbody operation    ' '    
+            lexer settokenobjectclass  org argouml uml reveng java argotoken    
+            parser javarecognizer lexer   
+            parser setmodeller modeller   
+            parser setparsermode javarecognizer mode_reveng_sequence exception ex     
+              
+            log warn  exception ignored   ex modeller parser parser compoundstatement exception ex    
+                log debug  parsing method body failed    ex   
+              
+            collection methodcalls   modeller getmethodcalls methodcalls calls addall methodcalls modeller getlocalvariabledeclarations types putall modeller getlocalvariabledeclarations getbody object operation body collection methods   model getfacade   getmethods operation methods methods isempty      
+            object expression   
+                model getfacade   getbody methods iterator   next     
+            body model getfacade   getbody expression body body body object buildaction call    
+        object action stringbuffer sb stringbuffer call findpos   sb lastindexof createpos   sb indexof iscreate   
+            createpos    -1 
+                createpos    0    sb charat createpos - 1 iscreate    findpos    -1    
+              
+            action   
+                buildedge call  classifierrole  classifierrole  
+                        model getmetatypes   getcallaction iscreate 
+                   findpos    5 
+                    call startswith call startswith action   
+                buildedge call  classifierrole  classifierrole  
+                        model getmetatypes   getcallaction type iscreate    
+                  
+                type   sb substring createpos   4 objname   
+                    createpos    2 ? sb substring 0  createpos - 1 object cls   getclassifierfrommodel type  objname   
+                figclassifierrole endfig   getclassifierrole cls  objname   
+                action   
+                    buildedge  
+                            sb substring createpos   
+                            classifierrole  
+                            endfig  
+                            model getmetatypes   getcreateaction teststring   call substring 0  findpos   
+                type types get teststring type object cls   getclassifierfrommodel type  teststring   
+                    figclassifierrole endfig   
+                        getclassifierrole cls  teststring   
+                    action   
+                        buildedge call  classifierrole  endfig  
+                                model getmetatypes   getcallaction action figmessage buildedge call  
+            figclassifierrole startfig  
+            figclassifierrole endfig  
+            object calltype    
+        figmessage figedge sequencediagramlayer lay    sequencediagramlayer  diagram getlayer n   startfig    endfig ? 2   1 portcnt   maxport    
+            lay expanddiagram portcnt   1  n   
+          
+        messagenode startport   startfig getnode portcnt   1   
+        messagenode foundport   endfig getnode portcnt   n   
+        portcnt    n  
+        maxport    n  
+        fig startportfig   startfig getportfig startport   
+        fig destportfig   endfig getportfig foundport   
+        object edgetype   model getmetatypes   getmessage    
+        editor ce   globals cureditor    
+        hashtable args hashtable    
+        args put  action   calltype   
+        mode mode   ce getmodemanager   top    
+        mode setargs args   
+        object newedge   graphmodel connect startport  foundport  edgetype newedge    
+            model getcorehelper   setname newedge  call   
+            figedge    figmessage  lay presentationfor newedge   
+            figedge setsourceportfig startportfig   
+            figedge setsourcefignode startfig   
+            figedge setdestportfig destportfig   
+            figedge setdestfignode endfig   
+            endfig updateedges startfig    endfig    
+                startfig updateedges figedge object getclassifierfrommodel type objname    
+        object theclassifier pos   type lastindexof pos    -1    
+              
+            object namespace   model  
+            pos   0  
+            stringtokenizer st stringtokenizer type st hasmoretokens s   st nexttoken    
+                pos    s length    
+                object element   model getfacade   lookupin namespace  s element st hasmoretokens      
+                          
+                        element   
+                            model getmodelmanagementfactory   
+                                 buildpackage s  type substring 0  pos element   model getcorefactory   buildclass s   
+                      
+                    model getcorehelper   setnamespace element  namespace   
+                    model getcorehelper   addownedelement namespace  element   
+                  
+                namespace   element  
+                pos    
+              
+            theclassifier   namespace object namespace   model getfacade   getnamespace classifier   
+            theclassifier   model getfacade   lookupin namespace  type model getfacade   isaclassifier theclassifier     
+                theclassifier collection sdeps   
+                    model getfacade   getsupplierdependencies classifier   
+                iterator iter1   sdeps sdeps iterator theclassifier iter1 iter1 hasnext      
+                    object dep   iter1 next model getfacade   isadependency dep     
+                        collection clients   model getfacade   getclients dep   
+                        iterator iter2   
+                            clients clients iterator theclassifier iter2 iter2 hasnext      
+                            object comp   iter2 next model getfacade   isacomponent comp     
+                                theclassifier   permissionlookup comp  type theclassifier theclassifier   model getcorefactory   buildclass type   
+            object namespace   model getfacade   getnamespace classifier   
+            model getcorehelper   setnamespace theclassifier  namespace   
+            model getcorehelper   addownedelement namespace  theclassifier   
+          
+        ensuredirectedassociation classifier  theclassifier theclassifier ensuredirectedassociation object fromcls  object tocls fromname   model getfacade   getname fromcls toname   model getfacade   getname tocls   
+        object assocend iterator i   
+                model getfacade   getassociationends tocls  iterator    
+             i hasnext       
+            object ae   i next    
+            object assoc   model getfacade   getassociation ae model getfacade   getconnections assoc  size      2 
+                       model getfacade   gettype  
+                            model getfacade   getnextend ae      fromcls 
+                       model getfacade   getname ae model getfacade   isnavigable ae     
+                assocend   ae assocend assocname   fromname     -      toname  
+            modeller builddirectedassociation assocname  fromcls  tocls object permissionlookup object comp clsname    
+        object theclassifier collection cdeps   model getfacade   getclientdependencies comp   
+        iterator iter1   cdeps cdeps iterator theclassifier iter1 iter1 hasnext      
+            object perm   iter1 next model getfacade   isapermission perm     
+                collection suppliers   model getfacade   getsuppliers perm   
+                iterator iter2   
+                    suppliers suppliers iterator theclassifier iter2 iter2 hasnext      
+                    object elem   iter2 next model getfacade   isaclassifier elem  
+                            clsname equals model getfacade   getname elem      
+                        theclassifier   elem theclassifier dummysettings importsettings getimportlevel importsettings detail_classifier getinputsourceencoding isattributeselected iscreatediagramsselected isdatatypeselected isminimizefigsselected org argouml uml reveng ui RESequenceDiagramDialog

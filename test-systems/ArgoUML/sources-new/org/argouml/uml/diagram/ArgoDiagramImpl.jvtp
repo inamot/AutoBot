@@ -1,0 +1,178 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications class represents diagrams within argouml based upon gef diagram  p adds namespace capability delete itself namespace deleted   p  
+    
+   todo  mvw not sure following  p namespace diagram e g  used creating new elements shown diagram namespace set 
+   according not necessarily equal owner    p  
+   
+   mvw doubt following namespace diagram e g  used register listener uml model notified element removed imply diagram deleted p  
+    
+   hence namespace e g collaboration diagram represented classifier case represented operation classifier owns operation namespace statechart diagram namespace statemachine  
+    
+    
+       logger constructor  
+        
+   really dirty hack remove unwanted listeners project diagram contained constructor  
+       
+        param diagramname name diagram 
+        
+   next line patch issue 596  hopefully uid  
+        
+   maybe modelelement part some fig classes diagram 
+   repeat until faults fixed 
+   1  make sure figs diagrams layer refer back layer report fix 
+   2  make sure figs visible report fix 
+   3  make sure figedges attached valid fignode report 
+   4  make sure fignodes figedges owner report fix 
+   5  make sure fignodes figedges valid owner report fix 
+   4  make sure only figgroups diagram fignodes report fix 
+    
+       generate description fig most meaningful developer user used repair routines describe fig repaired 
+        ul  
+        li figcomment text within body compartment fig 
+        li fignodemodelelement text within name compartment fignode 
+        li figedgemodelelement text within name compartment figedge descriptions adjoining fignodes 
+         ul  
+        param f fig describe 
+        return description string  
+        
+   todo  move gef nothing  override subclass  
+   add diagram listener namespace namespace removed diagram deleted listening only remove  events not work     
+           todo  check works now new event pump - tfm re not provided namespace diagram root haven't succeeded getting namespace abort re trying set namespace existing value don't any work  
+   todo  move associations correct owner  namespace e  issue 2151 
+               org argouml uml diagram ArgoDiagramImpl org argouml uml diagram argodiagramimpl diagram propertychangelistener  argodiagram  iitemuid argodiagramimpl undomanager getinstance diagramundomanager     
+            undomanager setinstance diagramundomanager     
+            log info  setting diagram undo manager log info  diagram undo manager already set    
+          
+          
+        getlayer   getgraphmodel   removegrapheventlistener getlayer object namespace argodiagramimpl diagramname diagramname undomanager getinstance diagramundomanager     
+            undomanager setinstance diagramundomanager     
+            log info  setting diagram undo manager log info  diagram undo manager already set setname diagramname propertyvetoexception pve setname n propertyvetoexception setname n   
+        mutablegraphsupport enablesaveaction setitemuid itemuid i    
+        id   i itemuid getitemuid id serialversionuid   -401219134410459387l getvetomessage propertyname propertyname equals  name name of diagram may not exist already fig getcontainingfig object obj    
+        fig fig presentationfor obj fig model getfacade   isaumlelement obj model getfacade   isaoperation obj  
+                       model getfacade   isareception obj  
+                       model getfacade   isaattribute obj presentationfor model getfacade   getowner obj fig damage getlayer getlayer   geteditors iterator it   getlayer   geteditors   iterator it hasnext      
+                  editor  it next    damageall list getedges getgraphmodel getgraphmodel   getedges getedges list getnodes getgraphmodel getgraphmodel   getnodes getnodes tostring diagram      getname repair     
+        stringbuffer report stringbuffer 500 faultfixed faultfixed list fig  figs arraylist fig  getlayer   getcontentsnoedges fig f   figs repairfig f  report     
+                    faultfixed figs arraylist fig  getlayer   getcontentsedgesonly fig f   figs repairfig f  report     
+                    faultfixed faultfixed report tostring repairfig fig f  stringbuffer report    
+        log info  checking     figdescription f    f getowner faultfixed figdescription getlayer   equals f getlayer figdescription figdescription   figdescription f   
+                report append figdescription f getlayer report append  -- fixed  layer was n report append  -- fixed  refered to wrong layer\n    
+              
+            faultfixed f setlayer getlayer f isvisible figdescription figdescription   figdescription f   
+                report append figdescription   
+              
+              
+            report append  -- fixed  a fig must be visible\n    
+            faultfixed f setvisible f figedge    
+              
+              
+            figedge fe    figedge  f  
+            fignode destfig   fe getdestfignode    
+            fignode sourcefig   fe getsourcefignode destfig figdescription figdescription   figdescription f   
+                    report append figdescription   
+                  
+                faultfixed report append  -- removed  as it has no dest fig\n    
+                f removefromdiagram sourcefig figdescription figdescription   figdescription f   
+                    report append figdescription   
+                  
+                faultfixed report append  -- removed  as it has no source fig\n    
+                f removefromdiagram sourcefig getowner figdescription figdescription   figdescription f   
+                    report append figdescription   
+                  
+                faultfixed report append  -- removed  as its source fig has no owner\n    
+                f removefromdiagram destfig getowner figdescription figdescription   figdescription f   
+                    report append figdescription   
+                  
+                faultfixed report append  
+                         -- removed  as its destination fig has no owner\n    
+                f removefromdiagram model getumlfactory   isremoved  
+                    sourcefig getowner figdescription figdescription   figdescription f   
+                    report append figdescription   
+                  
+                faultfixed report append  -- removed  as its source figs owner is no   
+                       longer in the repository\n    
+                f removefromdiagram model getumlfactory   isremoved  
+                    destfig getowner figdescription figdescription   figdescription f   
+                    report append figdescription   
+                  
+                faultfixed report append  -- removed  as its destination figs owner   
+                       is no longer in the repository\n    
+                f removefromdiagram f fignode    f figedge  
+                   f getowner f figpool figdescription figdescription   figdescription f   
+                report append figdescription   
+              
+              
+              
+            faultfixed report append  -- removed  owner was n    
+              
+            f removefromdiagram f fignode    f figedge  
+                    model getfacade   isaumlelement f getowner    
+                    model getumlfactory   isremoved f getowner figdescription figdescription   figdescription f   
+                report append figdescription   
+              
+              
+              
+            faultfixed report append  
+                     -- removed  model element no longer in the repository\n    
+              
+            f removefromdiagram f figgroup      f fignode figdescription figdescription   figdescription f   
+                report append figdescription   
+              
+              
+              
+              
+            faultfixed report append  
+                     -- removed  a figgroup should not be on the diagram\n    
+              
+            f removefromdiagram faultfixed figdescription fig f description    \n    f getclass   getname f figcomment    
+            description      \       figcomment  f  getbody f fignodemodelelement    
+            description      \       fignodemodelelement  f  getname f figedgemodelelement    
+            figedgemodelelement fe    figedgemodelelement  f  
+            description      \     fe getname source fe getsourcefignode source source   
+                      fignodemodelelement  fe getsourcefignode    getname dest fe getdestfignode dest dest     fignodemodelelement  fe getdestfignode    getname    
+              
+            description           source          dest description    \n list presentationsfor object obj    
+        list fig  presentations arraylist fig figcount   getlayer   getcontents   size figindex   0  figindex   figcount    figindex    
+            fig fig    fig  getlayer   getcontents   get figindex fig getowner      obj    
+                presentations add fig presentations remove     
+        list fig  contents arraylist fig  getlayer   getcontents size   contents size i   0  i   size    i    
+            fig f   contents get i   
+            f removefromdiagram    
+          
+        firepropertychange  remove null remove setproject project p    
+	project   p project getproject project encloserchanged  
+            fignode enclosed  fignode oldencloser  fignode newencloser object getdependentelement object getnamespace namespace setnamespace object ns model getfacade   isanamespace ns     
+            log error  not a namespace    
+            log error ns illegalargumentexception  given object not a namespace namespace namespace    ns     
+            model getpump   removemodeleventlistener namespace   
+          
+        object oldns   namespace  
+        namespace   ns  
+        firepropertychange namespace_key  oldns  ns   
+     
+          
+          
+          
+        model getpump   addmodeleventlistener namespace   remove setmodelelementnamespace object modelelement  object ns modelelement ns getnamespace ns   getnamespace ns   getproject   getroot ns model getfacade   getnamespace modelelement     ns corehelper corehelper   model getcorehelper    
+        modelmanagementhelper modelhelper   model getmodelmanagementhelper modelhelper iscyclicownership ns  modelelement  
+                   corehelper isvalidnamespace modelelement  ns     
+             
+            corehelper setmodelelementcontainer modelelement  ns propertychange propertychangeevent evt evt getsource      namespace  
+                    evt deleteinstanceevent  
+                    remove  equals evt getpropertyname       
+ 
+            model getpump   removemodeleventlistener namespace   remove    
+ 
+            getproject   movetotrash object getowner getnamespace iterator fig  getfigiterator enumerationiterator elements     
+      
+     
+ org argouml uml diagram ArgoDiagramImpl

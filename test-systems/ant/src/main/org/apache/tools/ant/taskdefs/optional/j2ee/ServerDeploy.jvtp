@@ -1,0 +1,76 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+    controls hot deployment tools j2ee servers class used framework creation vendor specific 
+    hot deployment tools  
+   
+     see org apache tools ant taskdefs optional j2ee hotdeploymenttool 
+     see org apache tools ant taskdefs optional j2ee abstracthotdeploymenttool 
+     see org apache tools ant taskdefs optional j2ee generichotdeploymenttool 
+     see org apache tools ant taskdefs optional j2ee weblogichotdeploymenttool action performed   ie   deploy    delete   etc source  fully-qualified path component being deployed vendor specific tool deploying component     
+                                                                            
+   
+   place vendor specific tool creations here  
+   
+                                                                            
+    
+        creates generic deployment tool  
+         p ant calls method creation handle embedded  generic  elements serverdeploy task  
+         param tool instance generichotdeployment tool  passed ant  
+        
+    
+        creates weblogic deployment tool deployment weblogic servers  
+         p ant calls method creation handle embedded  weblogic  elements serverdeploy task  
+         param tool instance weblogichotdeployment tool  passed ant  
+        
+    
+        creates jonas deployment tool deployment jonas servers  
+         p ant calls method creation handle embedded  jonas  elements serverdeploy task  
+         param tool instance jonashotdeployment tool  passed ant  
+        
+                                                                            
+   
+   execute method 
+   
+                                                                            
+    
+        execute task  
+         p method calls deploy   method each vendor-specific tools code vendortools  code  collection performs actual 
+        process deployment each tool  
+         exception org apache tools ant buildexception attributes invalid incomplete failure occurs deployment process  
+        
+                                                                            
+   
+   set methods 
+   
+                                                                            
+    
+        returns action field  
+         return string representing action  attribute action performed  usually  deploy   required  
+         some tools support additional actions delete    list    undeploy    update     
+         param action string representing action  attribute  
+        
+    
+        returns source field path filename component deployed  
+         return file object representing source  attribute filename component deployed  optional 
+        depending upon tool action  
+         param source string representing source  attribute  
+       org apache tools ant taskdefs optional j2ee ServerDeploy org apache tools ant taskdefs optional j2ee serverdeploy task addgeneric generichotdeploymenttool tool    
+        tool settask vendortools addelement tool addweblogic weblogichotdeploymenttool tool    
+        tool settask vendortools addelement tool addjonas jonashotdeploymenttool tool    
+        tool settask vendortools addelement tool execute buildexception enumeration e   vendortools elements    
+             e hasmoreelements       
+            hotdeploymenttool tool    hotdeploymenttool  e nextelement    
+            tool validateattributes    
+            tool deploy getaction action setaction action action   action file getsource source setsource file source source   source  
+      
+  
+org apache tools ant taskdefs optional j2ee ServerDeploy

@@ -1,0 +1,235 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications  
+    
+   umladddialog allows user multiple select list choices separate dialog dialog two possible uses  
+    ol  
+    li dialog described above custom cellrenderer default 
+   cellrenderer  
+    li dialog umlcellrenderer  cells choices list selected 
+   list presented name instead tostring function  
+     ol choices user preselected choices selected choices  
+       todo switched list link #getselected removed needs remain vector now preserve semantics link #getselected returns vector 
+       itself  not copy gui list choices gui list selected choices returnvalue method showdialog  returnvalue either 
+       joptionpane ok_option joptionpane cancel_option 
+        
+    
+       constructs umladddialog umllistcellrenderer  modelelements represented names choices list selected list  
+       
+        param thechoices list containing choices user param preselected list containing preselected choices 
+        param thetitle title dialog 
+        param multiselectallowed 
+                  true user may select multiple choices 
+        param exclusive 
+                  true choices selected list may not appear choices list true preselected choices removed choices list  
+        
+    
+       constructs umladddialog given umllistcellrenderer  
+       
+        param thechoices list containing choices user param preselected list containing preselected choices 
+        param thetitle title dialog 
+        param renderer cellrenderer choices list selected list 
+        param multiselectallowed 
+                  true user may select multiple choices 
+        param exclusive 
+                  true choices selected list may not appear choices list true preselected choices removed choices list  
+        
+   buttonbox add box createrigidarea new dimension 0  20     
+   upperpanel setborder borderfactory createetchedborder     
+   
+        see java awt event actionlistener#actionperformed actionevent  
+        
+    
+       updates add remove button  sets enabled disabled   called 
+       whenever model changed  
+        
+    
+       utility method construct defaultlistmodel list 
+       
+        param vec given list 
+        return defaultlistmodel 
+        
+    
+       shows dialog  first dialog must constructed using one constructors class method called actually show dialog method returns either 
+       joptionpane ok_option user select choices joptionpane cancel_option not want param parent parent frame dialog  
+        return int returnvalue either joptionpane ok_option joptionpane cancel_option 
+        
+   string title   getui   getdialogtitle return choices user make  
+       
+        return list choices 
+        
+    
+       returns choices user make  
+       
+        return vector 
+        deprecated 0 25 4 tfmorris  use   link #getselectedchoiceslist     
+        
+    
+       returns selected elements selected list 
+       
+        return list elements 
+        
+    
+       returns selected elements selected list 
+       
+        return vector 
+        deprecated 0 25 4 tfmorris  use   link #getselectedchoiceslist     
+        
+    
+       returns the user selected elements method called selected choices known  
+       
+        return vector 
+        deprecated 0 25 4 tfmorris   use   link #getselectedlist     
+        
+   todo return internal data directly t copy list vector keep same semantics 
+   return new vector selected   
+    
+       returns the user selected elements method called selected choices known  
+       
+        return list 
+        
+    
+       adds selected elements choices list selected list  
+       updates gui removes selected elements selected list adds choices list  updates gui called okbutton pressed  closes dialog sets returnvalue joptionpane ok_option  
+        
+    
+       called cancel button pressed  closes dialog sets returnvalue joptionpane cancel_option  resets selected list originally preselection one  otherwise selected list emptied  
+       org argouml uml ui UMLAddDialog org argouml uml ui umladddialog jpanel actionlistener umladddialog list thechoices  list preselected thetitle multiselectallowed exclusive thechoices  preselected  thetitle umllistcellrenderer2 multiselectallowed  exclusive umladddialog list thechoices  list preselected thetitle  
+            listcellrenderer renderer multiselectallowed exclusive    
+        multiselectallowed   multiselectallowed thechoices illegalargumentexception  
+                     there should allways be choices in umladddialog exclusive    preselected preselected isempty      
+            thechoices removeall preselected   
+          
+        choices   thechoices  
+        preselected   preselected  
+        selected vector thetitle title   thetitle title preselected selected addall preselected   
+          
+ 
+        setlayout borderlayout     
+ 
+        jpanel upperpanel jpanel    
+        jpanel panelchoices jpanel borderlayout     
+        jpanel panelselected jpanel borderlayout     
+ 
+        choiceslist jlist constructlistmodel thechoices    
+        choiceslist setminimumsize dimension 150  300 renderer choiceslist setcellrenderer renderer multiselectallowed    
+            choiceslist setselectionmode  
+                    listselectionmodel multiple_interval_selection choiceslist setselectionmode listselectionmodel single_selection   
+          
+        choiceslist setvisiblerowcount 15   
+        jscrollpane choicesscroll jscrollpane choiceslist   
+        panelchoices add jlabel translator localize  label choices     
+                borderlayout north   
+        panelchoices add choicesscroll  borderlayout center   
+ 
+        addbutton jbutton resourceloaderwrapper 
+                 lookupiconresource  navigateforward     
+        addbutton addactionlistener removebutton jbutton resourceloaderwrapper 
+                 lookupiconresource  navigateback     
+        removebutton addactionlistener box buttonbox   box createverticalbox    
+          
+        buttonbox add addbutton   
+        buttonbox add box createrigidarea dimension 0  5     
+        buttonbox add removebutton   
+ 
+        selectedlist jlist constructlistmodel selected    
+        selectedlist setminimumsize dimension 150  300 renderer selectedlist setcellrenderer renderer   
+          
+        selectedlist 
+                 setselectionmode  
+                        listselectionmodel multiple_interval_selection   
+        selectedlist setvisiblerowcount 15   
+        jscrollpane selectedscroll jscrollpane selectedlist   
+        panelselected add jlabel translator localize  label selected     
+                borderlayout north   
+        panelselected add selectedscroll  borderlayout center   
+ 
+        upperpanel add panelchoices   
+        upperpanel add box createrigidarea dimension 5  0     
+        upperpanel add buttonbox   
+        upperpanel add box createrigidarea dimension 5  0     
+        upperpanel add panelselected   
+          
+ 
+        add upperpanel  borderlayout north   
+ 
+        jpanel okcancelpanel jpanel flowlayout flowlayout right    
+ 
+        okbutton jbutton translator localize  button ok     
+        okbutton addactionlistener cancelbutton jbutton translator localize  button cancel     
+        cancelbutton addactionlistener okcancelpanel add okbutton   
+        okcancelpanel add cancelbutton   
+        okcancelpanel setborder borderfactory createemptyborder 10  0  10  10    
+ 
+        add okcancelpanel  borderlayout south   
+        setborder borderfactory createemptyborder 20  10  20  10    
+        update actionperformed actionevent e    
+        object source   e getsource source equals addbutton     
+            addselection    
+            update source equals removebutton     
+            removeselection    
+            update source equals okbutton     
+            ok source equals cancelbutton     
+            cancel update choices size      0    
+            addbutton setenabled addbutton setenabled selected size      0    
+            removebutton setenabled removebutton setenabled selected size     1     multiselectallowed    
+            addbutton setenabled okbutton setenabled addbutton setenabled okbutton setenabled defaultlistmodel constructlistmodel list list    
+        defaultlistmodel model defaultlistmodel object o   list    
+            model addelement o model showdialog component parent    
+        frame frame   parent frame ?  frame  parent 
+                   frame  swingutilities 
+                         getancestorofclass frame parent   
+ 
+          
+ 
+        dialog jdialog frame  title container contentpane   dialog getcontentpane    
+        contentpane setlayout borderlayout     
+        contentpane add borderlayout center   
+ 
+        dialog setdefaultcloseoperation windowconstants do_nothing_on_close   
+        dialog addwindowlistener windowadapter windowclosing windowevent we    
+                cancel    
+              
+            
+ 
+        dialog pack    
+        dialog setlocationrelativeto parent   
+ 
+        dialog setvisible returnvalue list getchoiceslist     
+        list result arraylist    
+        getchoiceslistinternal result result vector getchoices     
+        vector result vector    
+        getchoiceslistinternal result result getchoiceslistinternal list result index   choiceslist getselectedindices      
+            result add choices get index list getselectedchoiceslist     
+        list result arraylist    
+        getselectedchoicesinternal result result vector getselectedchoices     
+        vector result vector    
+        getselectedchoicesinternal result result getselectedchoicesinternal list result selectedlist selected index   selectedlist getselectedindices      
+                result add selected get index vector getselected selected list getselectedlist selected addselection     
+        list thechoices   getchoiceslist    
+        choices removeall thechoices i   0  i   thechoices size    i      
+              defaultlistmodel  choiceslist getmodel    
+                     removeelement thechoices get i    
+          
+        selected addall thechoices i   0  i   thechoices size    i      
+              defaultlistmodel  selectedlist getmodel    addelement thechoices 
+                     get i removeselection     
+        list thechoices   getselectedchoiceslist    
+        selected removeall thechoices i   0  i   thechoices size    i      
+              defaultlistmodel  selectedlist getmodel    
+                     removeelement thechoices get i    
+          
+        choices addall thechoices i   0  i   thechoices size    i      
+              defaultlistmodel  choiceslist getmodel    addelement thechoices 
+                     get i ok dialog dialog setvisible returnvalue   joptionpane ok_option cancel     
+        selected clear preselected selected addall preselected dialog dialog setvisible returnvalue   joptionpane cancel_option  
+          
+      
+ org argouml uml ui UMLAddDialog

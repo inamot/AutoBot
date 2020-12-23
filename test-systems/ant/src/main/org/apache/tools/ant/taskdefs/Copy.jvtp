@@ -1,0 +1,434 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   copies file directory new file directory   files only copied source file newer destination file destination file not 
+   exist possible explicitly overwrite existing files   p  
+   
+    p implementation based arnout kuiper's initial design 
+   document following mailing list discussions copyfile copydir tasks   p ant 1 2 
+   
+    ant task category  filesystem  
+    
+   checkstyle visibilitymodifier bc source file destination file destination directory 
+   checkstyle visibilitymodifier copy task constructor fileutils task  
+        return fileutils object  
+        
+    
+       set single source file copy  
+        param file file copy  
+        
+    
+       set destination file  
+        param destfile file copy set destination directory  
+        param destdir destination directory  
+        
+    
+       add filterchain  
+        return filter chain object  
+        
+    
+       add filterset  
+        return filter set object  
+        
+    
+       give copied files same last modified time original files  
+        param preserve boolean string  
+        deprecated 1 5 x  
+                   setpreservelastmodified string deprecated replaced setpreservelastmodified boolean consistently introspection mechanism work  
+        
+    
+       give copied files same last modified time original files  
+        param preserve true preserve modified time  default false whether give copied files same last modified time original files  
+        return whether destination files inherit modification 
+               times corresponding source files 1 32  ant 1 5 filtersets being applied operation  
+       
+        return vector filterset objects filterchains being applied operation  
+       
+        return vector filterchain objects  
+        
+    
+       set filtering mode  
+        param filtering true enable filtering  default false  
+        
+    
+       set overwrite mode regarding existing destination file s   
+        param overwrite true force overwriting destination file s  
+                        even destination file s younger corresponding source file  default false  
+        
+    
+       set whether files copied directory trees flattened single directory multiple files same name source directory tree  only first 
+       file copied flattened  directory  unless forceoverwrite attribute true  
+        param flatten true flatten destination directory  default false  
+        
+    
+       set verbose mode  used force listing names copied files  
+        param verbose whether output names copied files  
+                      default false  
+        
+    
+       set whether copy empty directories  
+        param includeempty true copy empty directories  default true  
+        
+    
+       set method handling mappers return multiple 
+       mappings given source path  
+        param enablemultiplemappings true task copy mappings given source path false  only first file directory processed default setting false provide backward 
+              compatibility earlier releases ant 1 6 whether multiple mapping enabled  
+        return true multiple mapping enabled  false otherwise  
+        
+    
+       set whether fail errors encountered false  note errors output keep going  default true  
+        param failonerror true false  
+        
+    
+       add set files copy  
+        param set set files copy  
+        
+    
+       add collection files copy  
+        param res resource collection copy ant 1 7 
+        
+    
+       define mapper map source destination files  
+        return mapper configured  
+        exception buildexception one mapper defined  
+        
+    
+       add nested filenamemapper  
+        param filenamemapper mapper add ant 1 6 3 
+        
+    
+       set character encoding  
+        param encoding character encoding 1 32  ant 1 5 character encoding used  
+        return character encoding   code null  code not set 1 32  ant 1 5 
+        
+    
+       set character encoding output files  
+        param encoding output character encoding ant 1 6 character encoding output files  
+        return character encoding output files  
+        code null  code not set ant 1 6 
+        
+    
+       set number milliseconds leeway give before deciding target out date  
+       
+        p default 1 second 2 seconds dos systems   p  
+        param granularity granularity used decide target out date ant 1 6 2 
+        
+    
+       perform copy operation  
+        exception buildexception error occurs  
+        
+   may altered validateattributes removed validateattributes 
+   make sure don't illegal set options 
+   deal single file 
+   deal resourcecollections historical performance reasons things complex way  
+ 
+                1  move optimized move directories fileset included completely  therefore filesets need special treatment required support failonerror semantice  skip filesets broken 
+               basedir handle remaining collections   
+ 
+                2 carry around few protected methods work basedirs arrays names optimize stuff resources same basedir collected separate lists each list handled one go  
+               
+   step  1  - beware zipfileset 
+   not fileset contains non-file resources 
+   copying dirs trivial done non-file resources well real 
+   files not-directory file resource 
+   needs special treatment copy operations now    
+   restrict out date resources 
+   clean up again instance used second 
+   time 
+                                                                          
+         protected private methods 
+                                                                               
+    
+       ensure consistent legal set attributes set 
+       any internal flags necessary based different combinations attributes  
+        exception buildexception error occurs  
+        
+    
+       compares source files destination files see copied  
+       
+        param fromdir source directory  
+        param todir destination directory  
+        param files list files copy  
+        param dirs list directories copy  
+        
+    
+       compares source resources destination files see copied  
+       
+        param fromresources source resources  
+        param todir destination directory  
+       
+        return map out date resources keys array target file names values ant 1 7 
+        
+    
+       add map files directories copy  
+       
+        param fromdir source directory  
+        param todir destination directory  
+        param names list filenames  
+        param mapper code filenamemapper  code  value  
+        param map map source file array destination files  
+        
+   reuse array created mapper 
+    
+       create map resources copy  
+       
+        param fromresources source resources  
+        param todir destination directory  
+        param mapper code filenamemapper  code  value  
+        return map source resource array destination files ant 1 7 
+        
+   reuse array created mapper 
+    
+       actually file possibly empty directory  copies good method subclasses override  
+        
+    
+       actually resource copies good method subclasses override  
+        param map map source resource array destination files ant 1 7 
+        
+    
+       whether task deal non-file resources  
+       
+        p  lt copy gt lt move gt t don't 
+       know remove non-file resources   p  
+       
+        p implementation returns true only task lt copy gt    any subclass class support non-file resources needs override method need backwards compatibility reasons t expect subclasses support resources   p  
+        return true task supports non file resources ant 1 7 
+        
+    
+       adds given strings list contained given map file key map  
+        
+    
+       adds given string list contained given map file key map  
+        
+    
+       either returns argument plaeholder argument null  
+        
+    
+       returns mapper use based nested elements flatten attribute  
+        
+    
+       handle getmessage exceptions  
+        param ex exception handle 
+        return ex getmessage ex getmessage not null 
+               otherwise return ex tostring   
+        
+    
+       returns reason failure based exception thrown exception not ioexception output class name  
+       output message exception malformedinput add little note  
+       org apache tools ant taskdefs Copy org apache tools ant taskdefs copy task file null_file_placeholder file   null_file line_separator   system getproperty  line separator file file file destfile file destdir vector rcs vector filtering preservelastmodified forceoverwrite flatten verbosity   project msg_verbose includeempty failonerror hashtable filecopymap hashtable hashtable dircopymap hashtable hashtable completedirmap hashtable mapper mapperelement fileutils fileutils copy     
+        fileutils   fileutils getfileutils    
+        granularity   fileutils getfiletimestampgranularity fileutils getfileutils fileutils setfile file file file   file settofile file destfile destfile   destfile settodir file destdir destdir   destdir filterchain createfilterchain     
+        filterchain filterchain filterchain    
+        filterchains addelement filterchain filterchain filterset createfilterset     
+        filterset filterset filterset    
+        filtersets addelement filterset filterset setpreservelastmodified preserve    
+        setpreservelastmodified project toboolean preserve setpreservelastmodified preserve    
+        preservelastmodified   preserve getpreservelastmodified preservelastmodified vector getfiltersets filtersets vector getfilterchains filterchains setfiltering filtering filtering   filtering setoverwrite overwrite forceoverwrite   overwrite setflatten flatten flatten   flatten setverbose verbose verbosity   verbose ? project msg_info   project msg_verbose setincludeemptydirs includeempty includeempty   includeempty setenablemultiplemappings enablemultiplemappings enablemultiplemappings   enablemultiplemappings isenablemultiplemapping enablemultiplemappings setfailonerror failonerror failonerror   failonerror addfileset fileset set    
+        add set add resourcecollection res    
+        rcs add res mapper createmapper buildexception mapperelement buildexception  cannot define more than one mapper   
+                                     getlocation     
+          
+        mapperelement mapper getproject mapperelement add filenamemapper filenamemapper    
+        createmapper   add filenamemapper setencoding encoding inputencoding   encoding outputencoding outputencoding   encoding getencoding inputencoding setoutputencoding encoding outputencoding   encoding getoutputencoding outputencoding setgranularity granularity granularity   granularity execute buildexception   
+        file savedfile   file    
+        file saveddestfile   destfile  
+        file saveddestdir   destdir  
+        resourcecollection savedrc file destfile rcs size      1    
+              
+            savedrc    resourcecollection  rcs elementat 0   
+          
+          
+        validateattributes file file exists destfile destfile file destdir  file getname forceoverwrite     destfile exists   
+                            file lastmodified   - granularity 
+                                  destfile lastmodified       
+                        filecopymap put file getabsolutepath destfile getabsolutepath log file     omitted as     destfile 
+                                is up to date    project msg_verbose message    warning  could not find file   
+                          file getabsolutepath       to copy failonerror    
+                        log message  project msg_err buildexception message   
+                      
+                  
+              
+              
+ 
+              
+ 
+            hashmap filesbybasedir hashmap    
+            hashmap dirsbybasedir hashmap    
+            hashset basedirs hashset    
+            arraylist nonfileresources arraylist i   0  i   rcs size    i      
+                resourcecollection rc    resourcecollection  rcs elementat i rc fileset    rc isfilesystemonly      
+                    fileset fs    fileset  rc  
+                    directoryscanner ds ds   fs getdirectoryscanner getproject buildexception e failonerror 
+                                getmessage e  endswith   not found e log  warning      getmessage e   project msg_err file fromdir   fs getdir getproject srcfiles   ds getincludedfiles srcdirs   ds getincludeddirectories flatten    mapperelement ds iseverythingincluded       fs haspatterns      
+                        completedirmap put fromdir  destdir   
+                      
+                    add fromdir  srcfiles  filesbybasedir   
+                    add fromdir  srcdirs  dirsbybasedir   
+                    basedirs add fromdir rc isfilesystemonly       supportsnonfileresources buildexception  
+                                    only filesystem resources are supported     
+                      
+ 
+                    iterator resources   rc iterator resources hasnext      
+                        resource r    resource  resources next r isexists file basedir   null_file_placeholder name   r getname r fileresource    
+                            fileresource fr    fileresource  r  
+                            basedir   getkeyfile fr getbasedir fr getbasedir name   fr getfile   getabsolutepath r isdirectory      r fileresource    
+                            add basedir  name  
+                                r isdirectory   ? dirsbybasedir 
+                                                  filesbybasedir   
+                            basedirs add basedir nonfileresources add r   
+                          
+                      
+                  
+              
+ 
+            iterator iter   basedirs iterator iter hasnext      
+                file f    file  iter next    
+                list files    list  filesbybasedir get f   
+                list dirs    list  dirsbybasedir get f srcfiles 0 files srcfiles files toarray srcfiles srcdirs 0 dirs srcdirs dirs toarray srcdirs   
+                  
+                scan f    null_file_placeholder f  destdir  srcfiles  
+                     srcdirs dofileoperations buildexception e failonerror    
+                    log  warning      getmessage e   project msg_err e nonfileresources size     0    
+                resource   nonfiles   
+                     resource    nonfileresources toarray resource nonfileresources size      
+                  
+                map map   scan nonfiles  destdir doresourceoperations map buildexception e failonerror    
+                        log  warning      getmessage e   project msg_err e file   savedfile  
+            destfile   saveddestfile  
+            destdir   saveddestdir savedrc rcs insertelementat savedrc  0   
+              
+            filecopymap clear    
+            dircopymap clear    
+            completedirmap clear validateattributes buildexception file rcs size      0 buildexception  
+                 specify at least one source--a file or a resource collection destfile destdir buildexception  
+                 only one of tofile and todir may be set destfile destdir buildexception  one of tofile or todir must be set file file isdirectory buildexception  use a resource collection to copy directories destfile rcs size     0 rcs size     1 buildexception  
+                     cannot concatenate multiple files into a single file resourcecollection rc    resourcecollection  rcs elementat 0 rc isfilesystemonly buildexception  only filesystem resources are  
+                                                 supported when concatenating  
+                                                 files rc size      0 buildexception  
+                         cannot perform operation from directory to file rc size      1    
+                    fileresource r    fileresource  rc iterator   next file file   r getfile    
+                        rcs removeelementat 0 buildexception  
+                             cannot concatenate multiple files into a single file buildexception  
+                         cannot concatenate multiple files into a single file destfile destdir   destfile getparentfile scan file fromdir  file todir files dirs    
+        filenamemapper mapper   getmapper    
+        buildmap fromdir  todir  files  mapper  filecopymap includeempty    
+            buildmap fromdir  todir  dirs  mapper  dircopymap map scan resource   fromresources  file todir buildmap fromresources  todir  getmapper buildmap file fromdir  file todir names  
+                            filenamemapper mapper  hashtable map tocopy forceoverwrite    
+            vector v vector i   0  i   names length  i mapper mapfilename names i v addelement names i    
+                  
+              
+            tocopy v size     
+            v copyinto tocopy sourcefilescanner ds sourcefilescanner tocopy   ds restrict names  fromdir  todir  mapper  granularity i   0  i   tocopy length  i      
+            file src file fromdir  tocopy i mappedfiles   mapper mapfilename tocopy i enablemultiplemappings    
+                map put src getabsolutepath file todir  mappedfiles 0   getabsolutepath k   0  k   mappedfiles length  k      
+                    mappedfiles k file todir  mappedfiles k   getabsolutepath    
+                  
+                map put src getabsolutepath    mappedfiles map buildmap resource   fromresources file todir  
+                           filenamemapper mapper    
+        hashmap map hashmap    
+        resource   tocopy forceoverwrite    
+            vector v vector i   0  i   fromresources length  i mapper mapfilename fromresources i  getname v addelement fromresources i    
+                  
+              
+            tocopy resource v size     
+            v copyinto tocopy tocopy   
+                resourceutils selectoutofdatesources fromresources  
+                                                     mapper resourcefactory resource getresource name fileresource todir  name   
+                             
+                                                        
+                                                     granularity i   0  i   tocopy length  i mappedfiles   mapper mapfilename tocopy i  getname enablemultiplemappings    
+                map put tocopy i file todir  mappedfiles 0   getabsolutepath k   0  k   mappedfiles length  k      
+                    mappedfiles k file todir  mappedfiles k   getabsolutepath    
+                  
+                map put tocopy i   mappedfiles map dofileoperations filecopymap size     0    
+            log  copying     filecopymap size   
+                    file     filecopymap size      1 ?       s   
+                    to     destdir getabsolutepath     
+ 
+            enumeration e   filecopymap keys e hasmoreelements fromfile e nextelement tofiles filecopymap get fromfile i   0  i   tofiles length  i tofile   tofiles i fromfile equals tofile     
+                        log  skipping self-copy of     fromfile  verbosity log  copying     fromfile     to     tofile  verbosity   
+ 
+                        filtersetcollection executionfilters filtersetcollection filtering    
+                            executionfilters 
+                                 addfilterset getproject   getglobalfilterset enumeration filterenum   filtersets elements    
+                            filterenum hasmoreelements       
+                            executionfilters 
+                                 addfilterset  filterset  filterenum nextelement     
+                          
+                        fileutils copyfile fromfile  tofile  executionfilters  
+                                           filterchains  forceoverwrite  
+                                           preservelastmodified  inputencoding  
+                                           outputencoding  getproject ioexception ioe msg    failed to copy     fromfile     to     tofile 
+                                due to     getdueto ioe   
+                        file targetfile file tofile targetfile exists       targetfile delete      
+                            msg      and i couldn't delete the corrupt     tofile failonerror buildexception msg  ioe  getlocation     
+                          
+                        log msg  project msg_err includeempty    
+            enumeration e   dircopymap elements createcount   0 e hasmoreelements dirs e nextelement i   0  i   dirs length  i      
+                    file d file dirs i d exists d mkdirs      
+                            log  unable to create directory   
+                                  d getabsolutepath    project msg_err createcount createcount   0    
+                log  copied     dircopymap size   
+                        empty director  
+                       dircopymap size      1 ?  y     ies   
+                        to     createcount 
+                        empty director  
+                       createcount    1 ?  y     ies       under   
+                      destdir getabsolutepath doresourceoperations map map map size     0    
+            log  copying     map size   
+                    resource     map size      1 ?       s   
+                    to     destdir getabsolutepath     
+ 
+            iterator iter   map keyset   iterator iter hasnext      
+                resource fromresource    resource  iter next tofiles map get fromresource i   0  i   tofiles length  i tofile   tofiles i log  copying     fromresource     to     tofile  
+                            verbosity   
+ 
+                        filtersetcollection executionfilters filtersetcollection filtering    
+                            executionfilters 
+                                 addfilterset getproject   getglobalfilterset enumeration filterenum   filtersets elements    
+                            filterenum hasmoreelements       
+                            executionfilters 
+                                 addfilterset  filterset  filterenum nextelement     
+                          
+                        resourceutils copyresource fromresource fileresource destdir  
+                                                                    tofile   
+                                                   executionfilters  
+                                                   filterchains  
+                                                   forceoverwrite  
+                                                   preservelastmodified  
+                                                   inputencoding  
+                                                   outputencoding  
+                                                   getproject ioexception ioe msg    failed to copy     fromresource 
+                                to     tofile 
+                                due to     getdueto ioe   
+                        file targetfile file tofile targetfile exists       targetfile delete      
+                            msg      and i couldn't delete the corrupt     tofile failonerror buildexception msg  ioe  getlocation     
+                          
+                        log msg  project msg_err supportsnonfileresources getclass   equals copy add file basedir names  map m names basedir   getkeyfile basedir   
+            list l    list  m get basedir l l arraylist names length   
+                m put basedir  l   
+              
+            l addall java util arrays aslist names add file basedir name  map m name add basedir name   m file getkeyfile file f f null_file_placeholder   f filenamemapper getmapper     
+        filenamemapper mapper mapperelement mapper   mapperelement getimplementation flatten    
+            mapper flatfilenamemapper mapper identitymapper mapper getmessage exception ex ex getmessage ex tostring     ex getmessage getdueto exception ex baseioexception   ex getclass      ioexception stringbuffer message stringbuffer baseioexception    ex getmessage message append ex getclass   getname ex getmessage baseioexception    
+                message append       
+              
+            message append ex getmessage ex getclass   getname   indexof  malformedinput      -1    
+            message append line_separator   
+            message append is normally due to the input file containing invalid    
+             message append line_separator   
+            message append  bytes the character encoding used       
+            message append  
+                 inputencoding fileutils getdefaultencoding     inputencoding    
+            message append line_separator message tostring    
+      
+ org apache tools ant taskdefs Copy

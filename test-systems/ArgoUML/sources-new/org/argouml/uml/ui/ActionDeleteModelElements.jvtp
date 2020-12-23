@@ -1,0 +1,128 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications  
+    
+   action removing objects model   
+   objects modelelements  diagrams  argodiagram s children   
+   figs without owner      
+    
+    
+       generated serial version rev 1 4 
+        
+    
+       constructor  
+        
+   set tooltip string  
+   
+        see java awt event actionlistener#actionperformed actionevent  
+        
+   todo  probably really want cancel editing 
+    figtexteditor  focusowner  cancelediting next line fixes issue 4276     
+   remove model utility method asks user sure remove selected 
+       target  p  
+       
+        param target object removed 
+        return boolean 
+        
+   usage sureremove method legacy integrated uml element not modelelement 
+   lets see diagram some figs diagram contains figs lets ask user sure content diagram delete figs figrects now delete commentedge now thanks issue 3643 utility method asks user sure remove selected 
+       model element  
+       
+        param modelelement may removed 
+        return boolean 
+        
+   todo namespace sub-classdiagrams deleted confirmstr    
+                translator localize  
+                     optionpane remove model remove-subdiagram    
+            doask   true  
+            
+    
+        return true tool enabled 
+        
+   todo catch block needs narrower something caught exception - tfm 20071120 
+   ignore cannot delete last diagram cannot delete model itself not delete top  state comes goes statemachine  issue 2655  
+               org argouml uml ui ActionDeleteModelElements org argouml uml ui actiondeletemodelelements undoableaction actiondeletemodelelements gettargetfollower targetfollower targetfollower actiondeletemodelelements    
+            targetmanager getinstance   addtargetlistener targetlistener targetadded targetevent e    
+                    settarget targetremoved targetevent e    
+                    settarget targetset targetevent e    
+                    settarget settarget     
+                    targetfollower setenabled targetfollower shouldbeenabled     
+                  
+                
+            targetfollower setenabled targetfollower shouldbeenabled targetfollower logger log   
+        logger getlogger actiondeletemodelelements actiondeletemodelelements translator localize  action delete-from-model    
+                resourceloaderwrapper lookupicon  action delete-from-model     
+          
+        putvalue action short_description   
+                translator localize  action delete-from-model     
+        putvalue action small_icon  
+                resourceloaderwrapper lookupicon  delete actionperformed actionevent ae actionperformed ae   
+        keyboardfocusmanager focusmanager   
+            keyboardfocusmanager getcurrentkeyboardfocusmanager    
+        component focusowner   focusmanager getfocusowner focusowner figtexteditor    
+              
+              
+              figtexteditor  focusowner  endediting focusowner jtable    
+            jtable table    jtable  focusowner table isediting      
+                tablecelleditor ce   table getcelleditor ce ce cancelcellediting    
+                  
+              
+          
+ 
+        project p   projectmanager getmanager   getcurrentproject    
+        object   targets   targetmanager getinstance   gettargets   toarray    
+          
+        targetmanager getinstance   settarget object target i   targets length - 1  i    0  i--    
+            target   targets i sureremove target target fig    
+                        object owner     fig  target  getowner owner target   owner model getfacade   isaconcurrentregion target actiondeleteconcurrentregion   
+                             actionperformed ae p movetotrash target invalidelementexception e    
+                log debug  model element deleted twice - ignoring 2nd delete sureremove object target sure model getfacade   isamodelelement target     
+            sure   sureremovemodelelement target model getfacade   isaumlelement target     
+              
+            sure target argodiagram    
+              
+            argodiagram diagram    argodiagram  target diagram getnodes   size     diagram getedges   size      0 confirmstr   
+                    messageformat format translator localize  
+                         optionpane remove-from-model-confirm-delete object     
+                            diagram getname text   
+                    translator localize  
+                         optionpane remove-from-model-confirm-delete-title response   
+                    joptionpane showconfirmdialog argoframe getinstance    
+                          confirmstr  
+                          text  
+                          joptionpane yes_no_option   
+                sure    response    joptionpane yes_option sure target fig model getfacade   isamodelelement   fig  target  getowner       
+                sure   sureremovemodelelement   fig  target  getowner sure target commentedge    
+              
+            sure sure sureremovemodelelement object me    
+        project p   projectmanager getmanager   getcurrentproject count   p getpresentationcountfor me doask confirmstr count   1    
+            confirmstr    translator localize  
+                 optionpane remove-from-model-will-remove-from-diagrams    
+            doask doask name   model getfacade   getname me name name equals        
+            name   translator localize  
+                 optionpane remove-from-model-anon-element-name    
+          
+ 
+        confirmstr   
+            messageformat format translator localize  
+                 optionpane remove-from-model-confirm-delete object     
+                    name  confirmstr response   
+            joptionpane showconfirmdialog  
+                    argoframe getinstance    
+                    confirmstr  
+                    translator localize  
+                     optionpane remove-from-model-confirm-delete-title    
+                    joptionpane yes_no_option response    joptionpane yes_option shouldbeenabled size   0 editor ce   globals cureditor    
+            list fig  figs   ce getselectionmanager   getfigs    
+            size   figs size exception e size   0 object target   targetmanager getinstance   gettarget target argodiagram projectmanager getmanager   getcurrentproject   
+                 getdiagramlist   size     1 model getfacade   isamodel target  
+          
+               target equals projectmanager getmanager   getcurrentproject   
+                  getmodel model getfacade   isaassociationend target model getfacade   getotherassociationends target  size     1 model getstatemachineshelper   istopstate target target org argouml uml ui ActionDeleteModelElements

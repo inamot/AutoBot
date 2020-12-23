@@ -1,0 +1,35 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   expands file compressed gzip 
+   algorithm  normally used compress non-compressed archives tar files ant 1 1 
+   
+    ant task category  packaging default extension  
+        return value   gz  
+        
+    
+       implement gunzipping  
+        
+    
+       whether task deal non-file resources  
+       
+        p implementation returns true only task lt gunzip gt    any subclass class support non-file resources needs override method need backwards compatibility reasons t expect subclasses support resources   p  
+        return true task supports non file resources ant 1 7 
+       org apache tools ant taskdefs GUnzip org apache tools ant taskdefs gunzip unpack getdefaultextension default_extension extract source lastmodified     dest lastmodified      
+            log  expanding     source getabsolutepath       to   
+                          dest getabsolutepath     
+ 
+            fileoutputstream out gzipinputstream zin inputstream fis out fileoutputstream dest   
+                fis   srcresource getinputstream    
+                zin gzipinputstream fis buffer 8   1024 count   0 out write buffer  0  count   
+                    count   zin read buffer  0  buffer length count    -1 ioexception ioe msg    problem expanding gzip     ioe getmessage buildexception msg  ioe  getlocation fileutils close fis   
+                fileutils close out   
+                fileutils close zin supportsnonfileresources getclass   equals gunzip org apache tools ant taskdefs GUnzip

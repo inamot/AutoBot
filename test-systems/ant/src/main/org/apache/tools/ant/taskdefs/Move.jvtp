@@ -1,0 +1,168 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   moves file directory new file directory default destination file overwritten already exists overwrite turned files only moved source file newer destination file destination file not exist  
+   
+    p source files directories only deleted file directory copied destination successfully   filtering works   p  
+   
+    p implementation based arnout kuiper's initial design 
+   document following mailing list discussions copyfile copydir tasks   p ant 1 2 
+   
+    ant task category  filesystem  
+    
+    
+       constructor object sets forceoverwrite attribute copy parent class true  
+       
+        
+      inheritdoc      
+                                                                           
+    protected private methods 
+                                                                           
+ 
+        
+       override copy's dofileoperations move files instead copying attempt complete directory renames any  first  
+   files move file still available moved last time through loop move not occur s want 
+   only try move last mapped file one mappings isn't itself 
+    
+       try move file via rename fails filtering enabled  copy file delete sourcefile  
+        
+    
+       copy fromfile tofile  
+        param fromfile 
+        param tofile 
+        param filtering 
+        param overwrite only ok delete directory tree files param d directory check 
+        return true deletion go ahead 
+        
+   maybe io error? 
+   found file 
+    
+       go delete directory tree  
+        param d directory delete 
+        
+    
+       go delete directory tree  
+        param d directory delete 
+        param deletefiles whether delete files io error list return null 
+    
+       attempts rename file source destination overwrite set true method overwrites existing file 
+       even destination file newer   otherwise source file renamed only destination file older method checks token filtering used method 
+       returns false assuming responsibility copyfile method  
+       
+        param sourcefile file rename 
+        param destfile destination file 
+        param filtering true  filtering operation  file copied deleted instead renamed 
+        param overwrite true force overwrite even destination file newer source file 
+        return true file renamed 
+        exception ioexception error occurs 
+        exception buildexception error occurs 
+        
+   ensure parent dir dest file exists org apache tools ant taskdefs Move org apache tools ant taskdefs move copy move setoverwrite validateattributes buildexception file file isdirectory destfile destdir destfile destdir buildexception  one and only one of tofile and todir   
+                                            must be set     
+              
+            destfile    destfile file destdir  file getname      destfile  
+            destdir    destdir destfile getparentfile     destdir  
+ 
+            completedirmap put file  destfile   
+            file validateattributes dofileoperations completedirmap size     0    
+            enumeration e   completedirmap keys e hasmoreelements      
+                file fromdir    file  e nextelement    
+                file todir    file  completedirmap get fromdir renamed log  attempting to rename dir      fromdir 
+                            to     todir  verbosity   
+                    renamed   
+                        renamefile fromdir  todir  filtering  forceoverwrite ioexception ioe msg    failed to rename dir     fromdir 
+                            to     todir 
+                            due to     ioe getmessage buildexception msg  ioe  getlocation renamed    
+                    fileset fs fileset    
+                    fs setproject getproject     
+                    fs setdir fromdir   
+                    addfileset fs   
+                    directoryscanner ds   fs getdirectoryscanner getproject files   ds getincludedfiles dirs   ds getincludeddirectories    
+                    scan fromdir  todir  files  dirs movecount   filecopymap size movecount   0        
+            log  moving     movecount     file  
+                    movecount    1  ?       s   
+                    to     destdir getabsolutepath     
+ 
+            enumeration e   filecopymap keys e hasmoreelements fromfile e nextelement    
+ 
+                file f file fromfile selfmove f exists tofiles filecopymap get fromfile i   0  i   tofiles length  i tofile tofiles i fromfile equals tofile     
+                            log  skipping self-move of     fromfile  verbosity   
+                            selfmove file d file tofile i   1     tofiles length     selfmove    
+                              
+                              
+                            movefile f  d  filtering  forceoverwrite copyfile f  d  filtering  forceoverwrite includeempty    
+            enumeration e   dircopymap keys createcount   0 e hasmoreelements fromdirname e nextelement todirnames dircopymap get fromdirname selfmove i   0  i   todirnames length  i fromdirname equals todirnames i      
+                        log  skipping self-move of     fromdirname  verbosity   
+                        selfmove file d file todirnames i d exists d mkdirs      
+                            log  unable to create directory   
+                                  d getabsolutepath    project msg_err createcount    
+                          
+                      
+                  
+ 
+                file fromdir file fromdirname selfmove    oktodelete fromdir     
+                    deletedir fromdir createcount   0    
+                log  moved     dircopymap size   
+                        empty director  
+                       dircopymap size      1 ?  y     ies   
+                        to     createcount 
+                        empty director  
+                       createcount    1 ?  y     ies       under   
+                      destdir getabsolutepath movefile file fromfile  file tofile filtering overwrite moved log  attempting to rename      fromfile 
+                    to     tofile  verbosity   
+            moved   renamefile fromfile  tofile  filtering  forceoverwrite ioexception ioe msg    failed to rename     fromfile 
+                    to     tofile 
+                    due to     ioe getmessage buildexception msg  ioe  getlocation moved    
+            copyfile fromfile  tofile  filtering  overwrite fromfile delete buildexception  unable to delete   
+                                           file   
+                                          fromfile getabsolutepath copyfile file fromfile  file tofile filtering overwrite log  copying     fromfile     to     tofile  
+                verbosity   
+ 
+            filtersetcollection executionfilters filtersetcollection filtering    
+                executionfilters 
+                     addfilterset getproject   getglobalfilterset enumeration filterenum   
+                    getfiltersets   elements    
+                filterenum hasmoreelements       
+                executionfilters 
+                     addfilterset  filterset  filterenum 
+                                 nextelement     
+              
+ 
+            getfileutils   copyfile fromfile  tofile  executionfilters  
+                                    getfilterchains    
+                                    forceoverwrite  
+                                    getpreservelastmodified    
+                                    getencoding    
+                                    getoutputencoding    
+                                    getproject ioexception ioe msg    failed to copy     fromfile 
+                    to     tofile 
+                    due to     ioe getmessage buildexception msg  ioe  getlocation oktodelete file d list   d list list i   0  i   list length  i s   list i   
+            file f file d  s f isdirectory oktodelete f false deletedir file d    
+        deletedir d deletedir file d deletefiles list   d list list i   0  i   list length  i s   list i   
+            file f file d  s f isdirectory      
+                deletedir f deletefiles      f delete buildexception  unable to delete file   
+                                           f getabsolutepath buildexception  unexpected error - the file   
+                                           f getabsolutepath   
+                                             should not exist     
+              
+          
+        log  deleting directory     d getabsolutepath    verbosity d delete buildexception  unable to delete directory   
+                                       d getabsolutepath renamefile file sourcefile  file destfile filtering overwrite ioexception  buildexception renamed getfiltersets   size     getfilterchains   size      0  
+                 filtering    destfile isdirectory       
+              
+            file parent   destfile getparentfile parent parent exists      
+                parent mkdirs destfile isfile       destfile equals sourcefile  
+                    destfile delete buildexception  unable to remove existing   
+                                            file     destfile   
+              
+            renamed   sourcefile renameto destfile renamed  
+      
+ org apache tools ant taskdefs Move

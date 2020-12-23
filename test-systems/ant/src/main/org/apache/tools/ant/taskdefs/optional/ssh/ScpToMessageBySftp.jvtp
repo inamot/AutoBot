@@ -1,0 +1,90 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   utility class carry out upload sftp  
+    
+  abstractsshmessage     
+    
+       constructor local file remote  
+        param verbose true verbose logging 
+        param session scp session use 
+        param alocalfile local file 
+        param aremotepath remote path ant 1 7 
+        
+    
+       constructor local directories remote  
+        param verbose true verbose logging 
+        param session scp session use 
+        param adirectorylist list directories 
+        param aremotepath remote path ant 1 7 
+        
+    
+       constructor scptomessage  
+        param verbose true verbose logging 
+        param session scp session use 
+        param aremotepath remote path ant 1 6 2 
+        
+    
+       constructor scptomessage  
+        param session scp session use 
+        param alocalfile local file 
+        param aremotepath remote path 
+        
+    
+       constructor scptomessage  
+        param session scp session use 
+        param adirectorylist list directories 
+        param aremotepath remote path 
+        
+    
+       carry out transfer  
+        throws ioexception o errors 
+        throws jschexception errors detected scp 
+        
+   dir not exist  
+   only track progress files larger 100kb verbose mode local file  
+        return local file remote path  
+        return remote path  
+       org apache tools ant taskdefs optional ssh ScpToMessageBySftp org apache tools ant taskdefs optional ssh scptomessagebysftp scptomessage scptomessagebysftp verbose  
+                              session session  
+                              file alocalfile aremotepath verbose  session  aremotepath localfile   alocalfile scptomessagebysftp verbose  
+                              session session  
+                              list adirectorylist aremotepath verbose  session  aremotepath directorylist   adirectorylist scptomessagebysftp verbose  
+                               session session aremotepath verbose  session remotepath   aremotepath scptomessagebysftp session session  
+                              file alocalfile aremotepath session  alocalfile  aremotepath scptomessagebysftp session session  
+                              list adirectorylist aremotepath session  adirectorylist  aremotepath execute ioexception  jschexception directorylist domultipletransfer localfile dosingletransfer    
+          
+        log  done \n dosingletransfer ioexception  jschexception   
+        channelsftp channel   opensftpchannel channel connect sendfiletoremote channel  localfile  remotepath sftpexception e jschexception e tostring channel channel disconnect domultipletransfer ioexception  jschexception   
+        channelsftp channel   opensftpchannel channel connect channel cd remotepath iterator i   directorylist iterator    i hasnext       
+                    directory current    directory  i next    
+                    senddirectory channel  current sftpexception e jschexception e tostring channel channel disconnect senddirectory channelsftp channel  
+                               directory current ioexception  sftpexception iterator fileit   current filesiterator    fileit hasnext       
+            sendfiletoremote channel   file  fileit next iterator dirit   current directoryiterator    dirit hasnext       
+            directory dir    directory  dirit next    
+            senddirectorytoremote channel  dir senddirectorytoremote channelsftp channel  
+                                       directory directory ioexception  sftpexception dir   directory getdirectory   getname channel stat dir sftpexception e e id    channelsftp ssh_fx_no_such_file    
+                channel mkdir dir   
+              
+          
+        channel cd dir   
+        senddirectory channel  directory   
+        channel cd sendfiletoremote channelsftp channel  
+                                  file localfile remotepath ioexception  sftpexception filesize   localfile length remotepath remotepath   localfile getname starttime   system currenttimemillis totallength   filesize trackprogress   getverbose      filesize   102400  
+ 
+        sftpprogressmonitor monitor trackprogress    
+            monitor   getprogressmonitor getverbose      
+                log  sending      localfile getname             filesize   
+              
+            channel put localfile getabsolutepath    remotepath  monitor getverbose endtime   system currenttimemillis    
+                logstats starttime  endtime totallength file getlocalfile localfile getremotepath remotepath  
+      
+ org apache tools ant taskdefs optional ssh ScpToMessageBySftp

@@ -1,0 +1,144 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   ant task sending files remote machine over ssh scp ant 1 6 
+    
+    
+       sets file transferred either remote 
+       file local file   remote files take form  br user password host  directory path file example br  
+       files transfer include wildcard include files remote directory example  br user password host  directory path br  
+        param afromuri string representing file transfer  
+        
+    
+       sets location files transferred either remote directory local directory  
+       remote directories take form br user password host  directory path br parameter required  
+ 
+        param atouri string representing target copy  
+        
+    
+       similiar link #setfile setfile explicitly states file local file only way specify local file character  
+        param afromuri string representing source copy ant 1 6 2 
+        
+    
+       similiar link #setfile setfile explicitly states file remote file  
+        param afromuri string representing source copy ant 1 6 2 
+        
+    
+       similiar link #settodir settodir explicitly states directory local only way specify local directory character  
+        param atouri string representing target copy ant 1 6 2 
+        
+    
+       similiar link #settodir settodir explicitly states directory remote  
+        param atouri string representing target copy ant 1 6 2 
+        
+    
+       changes file name given name receiving only useful receiving single file  
+        param atouri string representing target copy ant 1 6 2 
+        
+    
+       changes file name given name sending only useful sending single file  
+        param atouri string representing target copy ant 1 6 2 
+        
+    
+       setting true use sftp protocol  
+       
+        param yesorno true sftp protocol used  
+        
+    
+       adds fileset tranfer remote host   note  either 
+       addfileset setfile required not both  
+       
+        param set fileset send remote host  
+        
+    
+       initialize task  
+        throws buildexception error 
+        
+    
+       execute task  
+        throws buildexception error 
+        
+   user password host  path notation password require passphrase 
+   skiporg apache tools ant taskdefs optional ssh Scp org apache tools ant taskdefs optional ssh scp sshbase from_attrs     
+         file    localfile    remotefile to_attrs     
+         todir    localtodir    remotetodir    localtofile    remotetofile setfile afromuri    
+        setfromuri afromuri isfromremote   isremoteuri fromuri settodir atouri    
+        settouri atouri istoremote   isremoteuri touri setlocalfile afromuri    
+        setfromuri afromuri isfromremote setremotefile afromuri    
+        setfromuri afromuri isfromremote setlocaltodir atouri    
+        settouri atouri istoremote setremotetodir atouri    
+        settouri atouri istoremote setlocaltofile atouri    
+        settouri atouri istoremote setremotetofile atouri    
+        settouri atouri istoremote setsftp yesorno    
+        issftp   yesorno addfileset fileset set filesets filesets linkedlist    
+          
+        filesets add set init buildexception init touri fromuri filesets execute buildexception touri exactlyone to_attrs fromuri filesets exactlyone from_attrs   one or more nested filesets isfromremote     istoremote    
+                download fromuri  touri isfromremote    istoremote filesets upload filesets  touri upload fromuri  touri isfromremote    istoremote buildexception  
+                     copying from a remote server to a remote server is not supported buildexception  'todir' and 'file' attributes   
+                       must have syntax like the following    
+                       user password host  path exception e getfailonerror buildexception e log  caught exception      e getmessage    project msg_err download fromsshuri topath jschexception  ioexception file   parseuri fromsshuri   
+ 
+        session session session   opensession    
+            scpfrommessage message issftp    
+                message scpfrommessage getverbose    session  file  
+                                       getproject   resolvefile topath   
+                                       fromsshuri endswith message scpfrommessagebysftp getverbose    session  file  
+                                             getproject   resolvefile topath   
+                                             fromsshuri endswith        
+              
+            log  receiving file      file   
+            message setloglistener message execute session session disconnect upload list fileset tosshuri ioexception  jschexception file   parseuri tosshuri   
+ 
+        session session list list arraylist fileset size iterator i   fileset iterator    i hasnext       
+                fileset set    fileset  i next    
+                directory d   createdirectory set d list add d list isempty      
+                session   opensession    
+                scptomessage message issftp    
+                    message scptomessage getverbose    session  
+                                               list  file message scptomessagebysftp getverbose    session  
+                                                     list  file   
+                  
+                message setloglistener message execute session session disconnect upload frompath tosshuri ioexception  jschexception file   parseuri tosshuri   
+ 
+        session session session   opensession    
+            scptomessage message issftp    
+                message scptomessage getverbose    session  
+                                     getproject   resolvefile frompath   file message scptomessagebysftp getverbose    session  
+                                           getproject   resolvefile frompath   
+                                           file   
+              
+            message setloglistener message execute session session disconnect parseuri uri indexofat   uri lastindexof indexofcolon   uri indexof indexofcolon   -1    indexofcolon   indexofat    
+              
+            setusername uri substring 0  indexofcolon    
+            setpassword uri substring indexofcolon   1  indexofat setusername uri substring 0  indexofat getuserinfo   getpassword getuserinfo   getpassphrase buildexception  neither password nor passphrase user   
+                                       getuserinfo   getname       has been   
+                                        given   can't authenticate indexofpath   uri indexof ' '  indexofat   1 indexofpath    -1 buildexception  no remote path in     uri   
+          
+ 
+        sethost uri substring indexofat   1  indexofpath remotepath   uri substring indexofpath   1 remotepath equals        
+            remotepath remotepath isremoteuri uri isremote indexofat   uri indexof indexofat   0    
+            isremote isremote directory createdirectory fileset set    
+        directoryscanner scanner   set getdirectoryscanner getproject     
+        directory root directory scanner getbasedir files   scanner getincludedfiles files length    0 j   0  j   files length  j path   directory getpath files j    
+                directory current   root  
+                file currentparent   scanner getbasedir i   0  i   path length  i      
+                    file file file currentparent  path i file isdirectory      
+                        current adddirectory directory file    
+                        current   current getchild file   
+                        currentparent   current getdirectory file isfile      
+                        current addfile file root root setfromuri fromuri fromuri exactlyone from_attrs fromuri   fromuri settouri touri touri exactlyone to_attrs touri   touri buildexception exactlyone attrs exactlyone attrs buildexception exactlyone attrs alt    
+        stringbuffer buf stringbuffer  exactly one of    append  
+                ' '  append attrs 0 i   1  i   attrs length  i      
+            buf append ' '  append attrs i    
+          
+        buf append alt buf append   or    append alt buildexception buf append   is required    tostring     
+      
+ org apache tools ant taskdefs optional ssh Scp

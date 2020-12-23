@@ -1,0 +1,98 @@
+ method loops through instructors given course until registered instructor found returns google id found instructor  
+        return empty string available instructor google id found 
+       teammates ui controller AdminSessionsPageAction teammates ui controller adminsessionspageaction action   
+ 
+  
+ 
+  
+ 
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+ 
+     override actionresult execute     
+ 
+        gatekeeper verifyadminprivileges account   
+        data adminsessionspagedata account  sessiontoken   
+ 
+        isshowall   getrequestparamasboolean  all    
+ 
+        actionresult result   createshowpageresultifparametersinvalid result result  
+          
+ 
+        list feedbacksessionattributes  allopenfeedbacksessionslist   
+                logic getallopenfeedbacksessions rangestart rangeend zone   
+ 
+        result   createshowpageresultifnoongoingsession allopenfeedbacksessionslist result result  
+          
+ 
+        result   createadminsessionpageresult allopenfeedbacksessionslist result putintounknownlist  
+            map list feedbacksessionattributes   map  feedbacksessionattributes fs map get  unknown list feedbacksessionattributes  newlist arraylist      
+            newlist add fs   
+            map put  unknown   newlist map get  unknown   add fs preparedefaultpagedata calendar calstart  calendar calend map hashmap totalongoingsessions   0 totalopenstatussessions   0 totalclosedstatussessions   0 totalopenstatussessions   0 totalinstitutes   0 rangestart   calstart gettime rangeend   calend gettime actionresult createshowpageresultifparametersinvalid startdate   getrequestparamvalue paramsnames feedback_session_startdate enddate   getrequestparamvalue paramsnames feedback_session_enddate starthour   getrequestparamvalue paramsnames feedback_session_starthour endhour   getrequestparamvalue paramsnames feedback_session_endhour startmin   getrequestparamvalue paramsnames feedback_session_startminute endmin   getrequestparamvalue paramsnames feedback_session_endminute timezone   getrequestparamvalue paramsnames feedback_session_timezone   
+ 
+        date start  
+        date end zone   0 0  
+ 
+        calendar calstart   timehelper now zone   
+        calendar calend   timehelper now zone   
+        calstart add calendar day_of_year  -3   
+        calend add calendar day_of_year  4 checkallparameters start   calstart gettime    
+            end   calend gettime checkallparameters  notnull      
+ 
+            sanitizationhelper sanitizeforhtml startdate   
+            sanitizationhelper sanitizeforhtml enddate   
+            sanitizationhelper sanitizeforhtml starthour   
+            sanitizationhelper sanitizeforhtml endhour   
+            sanitizationhelper sanitizeforhtml startmin   
+            sanitizationhelper sanitizeforhtml endmin   
+            sanitizationhelper sanitizeforhtml timezone   
+ 
+            zone parsedouble timezone   
+ 
+            start   timehelper converttodate timehelper converttorequiredformat startdate  starthour  startmin    
+            end   timehelper converttodate timehelper converttorequiredformat enddate  endhour  endmin start after end     
+                iserror statustouser add statusmessage  the filter range is not valid   
+                                     end time should be after start time    statusmessagecolor danger    
+                statustoadmin    admin sessions page load br   
+                                  span bold\   error  invalid filter range  span    
+ 
+                preparedefaultpagedata calstart  calend   
+                data init map sessiontoinstructoridmap totalongoingsessions totalopenstatussessions totalclosedstatussessions totalwaittoopenstatussessions totalinstitutes rangestart rangeend zone isshowall createshowpageresult viewuris admin_sessions  data iserror statustouser add statusmessage  error  missing parameters   statusmessagecolor danger    
+            statustoadmin    admin sessions page load br   
+                              span bold\   error  missing parameters  span    
+ 
+            preparedefaultpagedata calstart  calend   
+            data init map sessiontoinstructoridmap totalongoingsessions totalopenstatussessions totalclosedstatussessions totalwaittoopenstatussessions totalinstitutes rangestart rangeend zone isshowall createshowpageresult viewuris admin_sessions  data rangestart   start rangeend   end zone   zone actionresult createshowpageresultifnoongoingsession  
+            list feedbacksessionattributes  allopenfeedbacksessionslist allopenfeedbacksessionslist isempty      
+ 
+            iserror statustouser add statusmessage  currently no ongoing sessions   statusmessagecolor warning    
+            statustoadmin    admin sessions page load br   
+                              span bold\   no ongoing sessions  span map hashmap totalongoingsessions   0 totalopenstatussessions   0 totalclosedstatussessions   0 totalwaittoopenstatussessions   0 totalinstitutes   0  
+            data init map sessiontoinstructoridmap totalongoingsessions totalopenstatussessions totalclosedstatussessions totalwaittoopenstatussessions totalinstitutes rangestart rangeend zone isshowall createshowpageresult viewuris admin_sessions  data actionresult createadminsessionpageresult list feedbacksessionattributes  allopenfeedbacksessionslist    
+        hashmap list feedbacksessionattributes   map hashmap totalongoingsessions   allopenfeedbacksessionslist size totalopenstatussessions   gettotalnumofopenstatussession allopenfeedbacksessionslist totalclosedstatussessions   gettotalnumofclosestatussession allopenfeedbacksessionslist totalwaittoopenstatussessions   gettotalnumofwaittoopenstatussession allopenfeedbacksessionslist feedbacksessionattributes fs   allopenfeedbacksessionslist    
+ 
+            list instructorattributes  instructors   logic getinstructorsforcourse fs getcourseid instructors isempty      
+                putintounknownlist map  fs accountattributes account   getregisteredinstructoraccountfrominstructors instructors account putintounknownlist map  fs map get account institute list feedbacksessionattributes  newlist arraylist      
+                    newlist add fs   
+                    map put account institute  newlist map get account institute  add fs map   map totalinstitutes   gettotalinstitutes map   
+        statustoadmin    admin sessions page load br   
+                          span bold\  total ongoing sessions   span totalongoingsessions 
+                          span bold\  total opened sessions   span totalopenstatussessions  
+ 
+        constructsessiontoinstructoridmap    
+        data init map sessiontoinstructoridmap totalongoingsessions totalopenstatussessions totalclosedstatussessions totalwaittoopenstatussessions totalinstitutes rangestart rangeend zone isshowall createshowpageresult viewuris admin_sessions  data constructsessiontoinstructoridmap map entry list feedbacksessionattributes   entry map entryset feedbacksessionattributes fs   entry getvalue googleid   findavailableinstructorgoogleidforcourse fs getcourseid sessiontoinstructoridmap put fs getidentificationstring    googleid findavailableinstructorgoogleidforcourse courseid instructorattributes instructor   logic getinstructorsforcourse courseid instructor googleid instructor googleid accountattributes getregisteredinstructoraccountfrominstructors list instructorattributes  instructors instructorattributes instructor   instructors instructor googleid logic getaccount instructor googleid gettotalnumofopenstatussession list feedbacksessionattributes  allopenfeedbacksessionslist numoftotal   0 feedbacksessionattributes sessionattributes   allopenfeedbacksessionslist sessionattributes isopened      
+                numoftotal    1 numoftotal gettotalnumofclosestatussession list feedbacksessionattributes  allopenfeedbacksessionslist numoftotal   0 feedbacksessionattributes sessionattributes   allopenfeedbacksessionslist sessionattributes isclosed      
+                numoftotal    1 numoftotal gettotalnumofwaittoopenstatussession list feedbacksessionattributes  allopenfeedbacksessionslist numoftotal   0 feedbacksessionattributes sessionattributes   allopenfeedbacksessionslist sessionattributes iswaitingtoopen      
+                numoftotal    1 numoftotal gettotalinstitutes map list feedbacksessionattributes   map numoftotal   0 key   map keyset key equals unknown_institution     
+                numoftotal    1 numoftotal checkallparameters condition startdate   getrequestparamvalue paramsnames feedback_session_startdate enddate   getrequestparamvalue paramsnames feedback_session_enddate starthour   getrequestparamvalue paramsnames feedback_session_starthour endhour   getrequestparamvalue paramsnames feedback_session_endhour startmin   getrequestparamvalue paramsnames feedback_session_startminute endmin   getrequestparamvalue paramsnames feedback_session_endminute timezone   getrequestparamvalue paramsnames feedback_session_timezone condition contentequals startdate enddate starthour endhour startmin endmin timezone condition contentequals  notnull startdate enddate starthour endhour startmin endmin timezone startdate trim   isempty       enddate trim   isempty       starthour trim   isempty   
+                       endhour trim   isempty       startmin trim   isempty   
+                       endmin trim   isempty       timezone trim   isempty teammates ui controller AdminSessionsPageAction

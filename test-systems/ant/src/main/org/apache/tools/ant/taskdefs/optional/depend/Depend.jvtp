@@ -1,0 +1,368 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   generates dependency file given set classes class  struct  user manage information class file class file stored file system java class name class source file containing class user warned file not having source file path source files exist path compiled class files exist directory contains dependency cache list source paths derived srcpath field map gives every class list class affects map gives information class map gives list jars classes classpath class depends upon list classes out date     
+    
+       indicates dependency relationships extended beyond 
+       direct dependencies include classes directly affects 
+       b b directly affects c indirectly affects c  
+        
+    
+       flag enable warning encounter rmi stubs 
+        
+    
+       flag controls whether reversed dependencies dumped log classpath look additional dependencies    
+    constants used cache file    
+    string used separate classnames dependency file    
+    
+       set classpath used dependency check  
+       
+        param classpath classpath used checking dependencies elements classpath 
+        
+    
+       gets classpath used dependency check  
+       
+        return current dependency classpath 
+        
+    
+       adds classpath used dependency check  
+       
+        return path object configured ant 
+        
+    
+       adds reference classpath defined elsewhere  
+       
+        param r reference path object used depend 
+            classpath 
+        
+    
+       flag set true want dependency issues rmi 
+       stubs appear warning level  
+        param warnonrmistubs true set dependency issues appear warning level ant1 7 
+        
+    
+       read dependencies cache file 
+       
+        return collection class dependencies 
+        exception ioexception dependency file cannot read 
+        
+    
+       write dependencies cache file 
+       
+        param dependencymap map dependencies written out  
+        exception ioexception dependency file cannot written out classpath dependency checking method removes dest dirs given dependency classpath 
+        
+    
+       determine dependencies between classes  class dependencies determined examining class references class file classes method sets up following fields 
+        ul  
+          li affectedclassmap list classes each class affects  li  
+          li classfileinfomap - information each class  li  
+          li classpathdependencies list jars classes classpath each class depends upon   li  
+         ul required dependencies written cache  
+       
+        exception ioexception either dependencies cache class 
+            files cannot read written 
+        
+   read dependency cache disk 
+   try read dependency info map not out date 
+   depfile exists newer class file 
+   need dependency list map  
+   not cached need read directly class file class depends each class dependency list each 
+   one those  add class affected classes list 
+   now determine jars each class depends upon need add jar list class  
+   write dependency cache disk 
+    
+       delete class files out date way dependency class out date 
+       
+        return number files deleted  
+        
+    
+       delete class files classes depend given class 
+       
+        param classname name class whose dependent classes deleted 
+        return number class files removed 
+        
+   without closure may delete inner class not top level class not trigger recompile  
+   need delete main class 
+    
+       warn class out date not deleted source unknown  
+       msg_warn normal level downgrade msg_verbose rmi files link #warnonrmistubs false  
+        param affectedclassinfo info affectd class 
+        param affectedclass name affected  class file 
+        param classname file triggering out dateness 
+        
+  downgrade warnings rmi stublike classes generated rmic need tell user source missing  
+    
+       test being rmi stub 
+        param affectedclass  class being tested 
+        param classname      possible origin rmi stub 
+        return whether class affectedclass rmi stub 
+        
+    
+       dump dependency information loaded classes ant log 
+        
+   now check classpath file dependencies info class may deleted already using cached info work  
+       
+        exception buildexception thrown case unrecoverable error  
+        
+    
+       scans directory looking source files newer class files results returned class variable 
+       compilelist 
+       
+        param srcdir source directory 
+        param files names files source dir checked class file  add class list list class files going analyse  
+       
+        param classlocations path structure containing directories classes found  
+        return vector containing classes analyse  
+        
+   break classlocations components  
+    
+       find source file given class 
+       
+        param classname classname slash format  
+        
+   search various source path entries 
+    
+       add list class files given directory class 
+       file vector  including any subdirectories  
+       
+        param classfilelist list classfileinfo objects files directory tree 
+        param dir directory tree searched  recursively class 
+            files 
+        param root root source tree used determine absolute class name relative position source tree 
+        
+    
+       set directories path find java source files  
+       
+        param srcpath source path 
+        
+    
+       set destination directory compiled java files exist  
+       
+        param destpath destination areas build files written 
+        
+    
+       sets dependency cache file  
+       
+        param cache dependency cache file true  transitive dependencies followed until closure dependency set reached not set depend task only follow 
+       direct dependencies between classes  
+       
+        param closure indicate dependency closure required true dependency information written debug level log  
+       
+        param dump set true dump dependency information log 
+       org apache tools ant taskdefs optional depend Depend org apache tools ant taskdefs optional depend depend matchingtask classfileinfo setclasspath path classpath dependclasspath dependclasspath   classpath dependclasspath append classpath path getclasspath dependclasspath path createclasspath dependclasspath dependclasspath path getproject dependclasspath createpath setclasspathref reference r    
+        createclasspath   setrefid r setwarnonrmistubs warnonrmistubs warnonrmistubs   warnonrmistubs hashtable readcacheddependencies file depfile ioexception   
+        hashtable dependencymap hashtable    
+ 
+        bufferedreader in in bufferedreader filereader depfile line vector dependencylist classname prependlength   classname_prepend length line   in readline line startswith classname_prepend     
+                    dependencylist vector    
+                    classname   line substring prependlength   
+                    dependencymap put classname  dependencylist dependencylist addelement line in in close dependencymap writecacheddependencies hashtable dependencymap ioexception cache printwriter pw cache mkdirs    
+                file depfile file cache  cache_file_name   
+ 
+                pw printwriter filewriter depfile    
+                enumeration e   dependencymap keys e hasmoreelements classname e nextelement    
+ 
+                    pw println classname_prepend   classname   
+ 
+                    vector dependencylist 
+                            vector  dependencymap get classname size   dependencylist size x   0  x   size  x      
+                        pw println dependencylist elementat x pw pw close path getcheckclasspath dependclasspath null destpathelements   destpath list classpathelements   dependclasspath list checkpath i   0  i   classpathelements length    i element   classpathelements i indestpath j   0  j   destpathelements length     indestpath    j    
+                indestpath   destpathelements j  equals element indestpath checkpath length      0    
+                    checkpath   element checkpath          element checkpath length      0 path getproject    checkpath determinedependencies ioexception   
+        affectedclassmap hashtable    
+        classfileinfomap hashtable cachedirty hashtable dependencymap hashtable    
+        file cachefile cachefileexists cachelastmodified max_value cache cachefile file cache  cache_file_name   
+            cachefileexists   cachefile exists    
+            cachelastmodified   cachefile lastmodified cachefileexists    
+                dependencymap   readcacheddependencies cachefile   
+              
+          
+        enumeration classfileenum   getclassfiles destpath  elements classfileenum hasmoreelements      
+            classfileinfo info    classfileinfo  classfileenum nextelement    
+            log  adding info info classname  project msg_debug   
+            classfileinfomap put info classname  info   
+ 
+            vector dependencylist cache cachefileexists 
+                       cachelastmodified   info absolutefile lastmodified      
+                      
+                      
+                    dependencylist    vector  dependencymap get info classname dependencylist dependencyanalyzer analyzer antanalyzer    
+                analyzer addrootclass info classname   
+                analyzer addclasspath destpath   
+                analyzer setclosure dependencylist vector    
+                enumeration depenum   analyzer getclassdependencies depenum hasmoreelements      
+                    dependencylist addelement depenum nextelement     
+                  
+                cachedirty dependencymap put info classname  dependencylist   
+              
+ 
+              
+              
+            enumeration depenum   dependencylist elements depenum hasmoreelements dependentclass depenum nextelement    
+ 
+                hashtable affectedclasses 
+                       hashtable  affectedclassmap get dependentclass affectedclasses affectedclasses hashtable    
+                    affectedclassmap put dependentclass  affectedclasses   
+                  
+ 
+                affectedclasses put info classname  info   
+              
+          
+ 
+        classpathdependencies path checkpath   getcheckclasspath checkpath classpathdependencies hashtable    
+            antclassloader loader   getproject   createclassloader checkpath   
+ 
+            hashtable classpathfilecache hashtable    
+            object nullfilemarker object enumeration e   dependencymap keys    e hasmoreelements classname e nextelement    
+                vector dependencylist    vector  dependencymap get classname   
+                hashtable dependencies hashtable    
+                classpathdependencies put classname  dependencies   
+                enumeration e2   dependencylist elements e2 hasmoreelements dependency e2 nextelement    
+                    object classpathfileobject 
+                          classpathfilecache get dependency classpathfileobject classpathfileobject   nullfilemarker dependency startswith  java    
+                                dependency startswith  javax       
+                            url classurl 
+                                  loader getresource dependency replace classurl classurl getprotocol   equals  jar jarfilepath   classurl getfile classmarker   jarfilepath indexof ' '   
+                                    jarfilepath   jarfilepath substring 0  classmarker jarfilepath startswith  file       
+                                        classpathfileobject file  
+                                            fileutils getfileutils   fromuri jarfilepath ioexception  
+                                             bizarre nested path in jar  protocol    
+                                              jarfilepath classurl getprotocol   equals  file      
+                                    classpathfileobject file  
+                                        fileutils getfileutils   
+                                         fromuri classurl toexternalform      
+                                  
+                                log classname 
+                                        depends on     classpathfileobject 
+                                        due to     dependency  project msg_debug   
+                              
+                          
+                        classpathfilecache put dependency  classpathfileobject classpathfileobject classpathfileobject    nullfilemarker    
+                          
+                        file jarfile    file  classpathfileobject  
+                        dependencies put jarfile  jarfile cache cachedirty    
+            writecacheddependencies dependencymap deleteallaffectedfiles count   0 enumeration e   outofdateclasses elements    e hasmoreelements classname e nextelement    
+            count    deleteaffectedfiles classname   
+            classfileinfo classinfo 
+                   classfileinfo  classfileinfomap get classname classinfo classinfo absolutefile exists      
+                classinfo absolutefile delete    
+                count count deleteaffectedfiles classname count   0  
+ 
+        hashtable affectedclasses    hashtable  affectedclassmap get classname affectedclasses count enumeration e   affectedclasses keys    e hasmoreelements affectedclass e nextelement    
+            classfileinfo affectedclassinfo 
+                   classfileinfo  affectedclasses get affectedclass affectedclassinfo absolutefile exists affectedclassinfo sourcefile warnoutofdatebutnotdeleted affectedclassinfo  affectedclass  classname log  deleting file     affectedclassinfo absolutefile getpath   
+                    since     classname     out of date   project msg_verbose   
+ 
+            affectedclassinfo absolutefile delete    
+            count closure    
+                count    deleteaffectedfiles affectedclass affectedclass indexof  $      -1 toplevelclassname 
+                       affectedclass substring 0  affectedclass indexof  $     
+                log  top level toplevelclassname  
+                    project msg_verbose   
+                classfileinfo toplevelclassinfo 
+                        classfileinfo  classfileinfomap get toplevelclassname toplevelclassinfo toplevelclassinfo absolutefile exists      
+                    log  deleting file   
+                          toplevelclassinfo absolutefile getpath   
+                            since one of its inner classes was removed   
+                        project msg_verbose   
+                    toplevelclassinfo absolutefile delete    
+                    count closure    
+                        count    deleteaffectedfiles toplevelclassname count warnoutofdatebutnotdeleted  
+            classfileinfo affectedclassinfo affectedclass classname affectedclassinfo isuserwarned level   project msg_warn warnonrmistubs isrmistub affectedclass  classname     
+                level   project msg_verbose  
+              
+          
+        log  the affectedclass     in file   
+              affectedclassinfo absolutefile getpath   
+                is out of date due to     classname 
+                but has not been deleted because its source file  
+                could not be determined   level   
+        affectedclassinfo isuserwarned isrmistub affectedclass classname isstub affectedclass  classname  defaultrmicadapter rmi_stub_suffix  
+                   isstub affectedclass  classname  defaultrmicadapter rmi_skel_suffix  
+                   isstub affectedclass  classname  wlrmic rmi_stub_suffix  
+                   isstub affectedclass  classname  wlrmic rmi_skel_suffix isstub affectedclass baseclass suffix baseclass   suffix  equals affectedclass dumpdependencies     
+        log  reverse dependency dump affectedclassmap size   
+                classes    project msg_debug   
+ 
+        enumeration classenum   affectedclassmap keys classenum hasmoreelements classname classenum nextelement    
+            log classname     affects    project msg_debug   
+            hashtable affectedclasses 
+                   hashtable  affectedclassmap get classname   
+            enumeration affectedclassenum   affectedclasses keys affectedclassenum hasmoreelements affectedclass affectedclassenum nextelement    
+                classfileinfo info 
+                       classfileinfo  affectedclasses get affectedclass   
+                log          affectedclass     in   
+                      info absolutefile getpath    project msg_debug classpathdependencies log  classpath file dependencies  forward     project msg_debug   
+ 
+            enumeration classpathenum   classpathdependencies keys classpathenum hasmoreelements classname classpathenum nextelement    
+                log classname     depends on    project msg_debug   
+                hashtable dependencies 
+                       hashtable  classpathdependencies get classname   
+ 
+                enumeration classpathfileenum   dependencies elements classpathfileenum hasmoreelements      
+                    file classpathfile    file  classpathfileenum nextelement    
+                    log          classpathfile getpath    project msg_debug determineoutofdateclasses     
+        outofdateclasses hashtable i   0  i   srcpathlist length  i      
+            file srcdir   getproject   resolvefile srcpathlist i srcdir exists      
+                directoryscanner ds getdirectoryscanner srcdir files   ds getincludedfiles    
+                scandir srcdir  files classpathdependencies enumeration classpathdepsenum   classpathdependencies keys classpathdepsenum hasmoreelements classname classpathdepsenum nextelement outofdateclasses containskey classname classfileinfo info 
+                   classfileinfo  classfileinfomap get classname info hashtable dependencies 
+                       hashtable  classpathdependencies get classname enumeration e2   dependencies elements    e2 hasmoreelements       
+                    file classpathfile    file  e2 nextelement classpathfile lastmodified   
+                          info absolutefile lastmodified      
+                        log classname 
+                                is out of date with respect to   
+                              classpathfile  project msg_debug   
+                        outofdateclasses put classname  classname execute buildexception start   system currenttimemillis srcpath buildexception  srcdir attribute must be set   
+                                         getlocation     
+              
+ 
+            srcpathlist   srcpath list srcpathlist length    0 buildexception  srcdir attribute must be non-empty   
+                                         getlocation destpath destpath   srcpath cache cache exists       cache isdirectory buildexception  the cache specified  must   
+                       point to a directory cache cache exists      
+                cache mkdirs    
+              
+ 
+            determinedependencies dump    
+                dumpdependencies    
+              
+            determineoutofdateclasses count   deleteallaffectedfiles duration    system currenttimemillis   - start    1000 summaryloglevel count   0    
+                summaryloglevel   project msg_info summaryloglevel   project msg_debug  
+              
+ 
+            log  deleted     count     out of date files in   
+                  duration     seconds   summaryloglevel exception e buildexception e scandir file srcdir files i   0  i   files length  i      
+            file srcfile file srcdir  files i files i  endswith   java filepath   srcfile getpath classname 
+                      filepath substring srcdir getpath   length     1  
+                        filepath length   -   java  length     
+                classname   classfileutils convertslashname classname   
+                classfileinfo info 
+                       classfileinfo  classfileinfomap get classname info outofdateclasses put classname  classname srcfile lastmodified   
+                          info absolutefile lastmodified      
+                        outofdateclasses put classname  classname vector getclassfiles path classlocations classlocationslist   classlocations list    
+ 
+        vector classfilelist vector i   0  i   classlocationslist length    i    
+            file dir file classlocationslist i dir isdirectory      
+                addclassfiles classfilelist  dir  dir classfilelist file findsourcefile classname sourcefilename   classname     java innerindex   classname indexof innerindex    -1    
+            sourcefilename   classname substring 0  innerindex      java i   0  i   srcpathlist length    i    
+            file sourcefile file srcpathlist i   sourcefilename sourcefile exists sourcefile addclassfiles vector classfilelist  file dir  file root filesindir   dir list filesindir length   filesindir length rootlength   root getpath   length i   0  i   length    i    
+            file file file dir  filesindir i file isdirectory      
+                addclassfiles classfilelist  file  root file getname   endswith classfileinfo info classfileinfo    
+                info absolutefile   file relativename   file getpath   substring rootlength   1  
+                    file getpath   length   - 6   
+                info classname 
+                      classfileutils convertslashname relativename   
+                info sourcefile   findsourcefile relativename   
+                classfilelist addelement info setsrcdir path srcpath srcpath   srcpath setdestdir path destpath destpath   destpath setcache file cache cache   cache setclosure closure closure   closure setdump dump dump   dump  
+      
+  
+org apache tools ant taskdefs optional depend Depend

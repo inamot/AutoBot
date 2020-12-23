@@ -1,0 +1,184 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license base class creating tasks executing commands sourceoffsite tasks inspired vss tasks  
+   
+    
+   checkstyle visibilitymodifier bc 
+    commandline executed     
+   checkstyle visibilitymodifier flag disable cache set  
+       required soshome set environment variable  
+       defaults false  
+       
+        param  nocache  true disable caching  
+        
+    
+       flag disable compression set  defaults false  
+       
+        param  nocompress  true disable compression directory soscmd  exe located  
+       soscmd must path omitted  
+       
+        param  dir new soscmd value sourcesafe username  
+       
+        param  username new username value  
+       
+        ant attribute group  required sourcesafe password  
+       
+        param  password new password value sourcesafe project path  
+       
+        param  projectpath new projectpath value  
+       
+        ant attribute group  required path location ss ini file  
+       
+        param  vssserverpath new vssserverpath value  
+       
+        ant attribute group  required  
+        
+    
+       path sourceoffsite home directory  
+       
+        param  soshome new soshome value address port sourceoffsite server example 192 168 0 1 8888  
+       
+        param  sosserverpath new sosserverpath value  
+       
+        ant attribute group  required  
+        
+    
+       override working directory specified path  
+       
+        param  path new localpath value  
+        
+    
+       enable verbose output  defaults false  
+       
+        param  verbose  true verbose output  
+        
+   special setters sub-classes 
+    
+       set file name  
+        param file filename use  
+        
+    
+       set recursive flag  
+        param recurse true use recursive flag command line  
+        
+    
+       set comment text  
+        param text comment text use  
+        
+    
+       set label  
+        param text label use  
+        
+    
+       set version  
+        param text version use executable run  add path specifed build file 
+       
+        return executable run comment 
+        return set  null not version 
+        return set  null not label 
+        return set  null not username 
+        return set  null not password 
+        return empty string wasn't set project path 
+        return set  null not vss server path 
+        return set  null not sos home directory  
+        return set  null not sos serve path  
+        return set  null not filename acted upon  
+        return set  null not nocompress flag  
+       
+        return nocompress' flag attribute true'  
+               otherwise empty string nocache flag  
+       
+        return nocache' flag attribute true'  otherwise empty string verbose' flag  
+       
+        return verbose' flag attribute true'  otherwise empty string recursive' flag  
+       
+        return recursive' flag attribute true'  otherwise empty string  
+        
+    
+       builds returns working directory  
+        p localpath created didn't exist  
+       
+        return absolute path working directory  
+        
+   make sure localdir exists  create it doesn't 
+    
+       subclasses implement logic required construct command line  
+       
+        return command line execute  
+        
+    
+       execute created command line  
+       
+        throws buildexception error exit status 
+    
+       execute created command line  
+       
+        param  cmd command line run  
+        return                  int exit code  
+        throws  buildexception 
+        
+   use os vm launcher environment variables 
+    sets executable add required attributes command line path soscmd  exe  
+   sos server address required 
+   login info required sos class knows sos server needs password flag  
+   even password send vss info required 
+   vss project required 
+    adds optional attributes command line     
+   -verbose 
+   disable compression 
+   path sourceoffsite home directory  home user  sos soshome not specified look nocache working directory specified add command lineorg apache tools ant taskdefs optional sos SOS org apache tools ant taskdefs optional sos sos task soscmd commandline commandline setnocache nocache    
+        nocache   nocache setnocompress nocompress    
+        nocompress   nocompress setsoscmd dir    
+        soscmddir   fileutils translatepath dir setusername username    
+        sosusername   username setpassword password    
+        sospassword   password setprojectpath projectpath projectpath startswith soscmd project_prefix     
+            projectpath   projectpath projectpath   soscmd project_prefix   projectpath setvssserverpath vssserverpath vssserverpath   vssserverpath setsoshome soshome soshome   soshome setsosserverpath sosserverpath sosserverpath   sosserverpath setlocalpath path path    
+        localpath   path tostring setverbose verbose verbose   verbose setinternalfilename file    
+        filename   file setinternalrecursive recurse    
+        recursive   recurse setinternalcomment text    
+        comment   text setinternallabel text    
+        label   text setinternalversion text    
+        version   text getsoscommand soscmddir command_sos_exe soscmddir   file separator   command_sos_exe getcomment comment getversion version getlabel label getusername sosusername getpassword sospassword getprojectpath projectpath getvssserverpath vssserverpath getsoshome soshome getsosserverpath sosserverpath getfilename filename getnocompress nocompress ? flag_no_compression getnocache nocache ? flag_no_cache getverbose verbose ? flag_verbose getrecursive recursive ? flag_recursion getlocalpath localpath getproject   getbasedir   getabsolutepath file dir   getproject   resolvefile localpath dir exists done   dir mkdirs done msg    directory     localpath     creation was not   
+                           successful an unknown reason buildexception msg  getlocation     
+                  
+                getproject   log  created dir      dir getabsolutepath dir getabsolutepath commandline buildcmdline execute buildexception result   0  
+        buildcmdline    
+        result   run commandline result    255 msg    failed executing      commandline tostring buildexception msg  getlocation run commandline cmd execute exe execute logstreamhandler project msg_info  
+                    project msg_warn    
+ 
+            exe setantrun getproject     
+            exe setworkingdirectory getproject   getbasedir     
+            exe setcommandline cmd getcommandline     
+            exe setvmlauncher exe execute java io ioexception e buildexception e  getlocation getrequiredattributes     
+          
+        commandline setexecutable getsoscommand getsosserverpath buildexception  sosserverpath attribute must be set    getlocation     
+          
+        commandline createargument   setvalue flag_sos_server   
+        commandline createargument   setvalue getsosserverpath getusername buildexception  username attribute must be set    getlocation     
+          
+        commandline createargument   setvalue flag_username   
+        commandline createargument   setvalue getusername     
+          
+          
+        commandline createargument   setvalue flag_password   
+        commandline createargument   setvalue getpassword getvssserverpath buildexception  vssserverpath attribute must be set    getlocation     
+          
+        commandline createargument   setvalue flag_vss_server   
+        commandline createargument   setvalue getvssserverpath getprojectpath buildexception  projectpath attribute must be set    getlocation     
+          
+        commandline createargument   setvalue flag_project   
+        commandline createargument   setvalue getprojectpath getoptionalattributes     
+          
+        commandline createargument   setvalue getverbose     
+          
+        commandline createargument   setvalue getnocompress getsoshome commandline createargument   setvalue getnocache commandline createargument   setvalue flag_sos_home   
+            commandline createargument   setvalue getsoshome getlocalpath commandline createargument   setvalue flag_working_dir   
+            commandline createargument   setvalue getlocalpath     
+          
+      
+ org apache tools ant taskdefs optional sos SOS

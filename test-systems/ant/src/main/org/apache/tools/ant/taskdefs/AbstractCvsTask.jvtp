@@ -1,0 +1,282 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   original cvs java 1 20 
+   
+    note implementation moved here cvs java addition some accessors extensibility   another task extend some customized output processing ant 1 5 
+    
+    
+       default compression level use compression enabled via 
+       setcompression  true    
+        
+    list commandline children cvsroot variable cvs_rsh variable package module check out tag default command cvs command execute  
+        
+    
+       suppress information messages  
+        
+    
+       suppress messages  
+        
+    
+       compression level use  
+        
+    
+       report only  don't change any files  
+        
+    
+       cvs port 
+        
+    
+       cvs password file directory checked out files placed  
+        
+    whether not append stdout stderr existing files file direct standard output command file direct standard error command true stop build cvs exits error  
+       default false   iulian  
+        
+    
+       create accessors following allow different handling output  
+        
+    empty arg constructor   
+    
+       sets handler 
+        param handler handler processing output error streams cvs exe 
+        
+    
+       find handler instantiate it not exist return handler output error streams 
+        
+    
+       sets stream output cvs executable sent 
+        param outputstream stream stdout cvs go 
+        
+    
+       access stream stdout cvs go stream already set returned stream not set attribute output set output stream go output file 
+       otherwise output go ant's logging system 
+        return output stream cvs' stdout go sets stream stderr cvs exe go 
+        param errorstream output stream willing process stderr 
+        
+    
+       access stream stderr cvs go stream already set returned stream not set attribute error set output stream go file denoted error attribute 
+       otherwise stderr output go ant's logging system 
+        return output stream cvs' stderr go sets up environment toexecute runs param toexecute command line execute 
+        throws buildexception failonerror set true cvs command fails 
+        
+   xxx use jcvs  www ice com jcvs  instead command line execution don't rely having 
+   native cvs stuff around  sm t ourselves jcvs gpled third party task 
+   outside jakarta repositories possible though  sb   
+    
+           need better cross platform integration cvspass use same filename call getexecutestreamhandler handle semantics instantiation retrieval  
+   
+  throw exception cvs exited error   iulian work 
+        throws buildexception failonerror set true cvs command fails  
+        
+   re-implement legacy behaviour cvsroot variable  
+       
+        param root cvsroot variable 
+        
+   check not real cvsroot    set null 
+    
+       access cvsroot variable 
+        return cvsroot cvs_rsh variable  
+       
+        param rsh cvs_rsh variable 
+        
+   check not real cvsrsh    set null 
+    
+       access cvs_rsh variable 
+        return cvs_rsh variable 
+        
+    
+       port used cvs communicate server  
+       
+        param port port cvs 
+        
+    
+       access port cvs 
+        return port cvs 
+        
+    
+       password file read passwords param passfile password file read passwords find password file 
+        return password file directory checked out files placed  
+       
+        p note different cvs's -d command line 
+       switch ant never shorten pathnames avoid empty 
+       directories   p  
+       
+        param dest directory checked out files placed file checked out files placed 
+       
+        return directory checked out files placed package module operate upon  
+       
+        param p package module operate upon 
+        
+    
+       access package module operate upon 
+       
+        return package module 
+        
+    
+       tag branch 
+        return tag branch ant 1 6 1 tag package module operate upon  
+        param p tag 
+        
+   check not real tag    set null needs public allow configuration commands externally  
+        param arg command argument method adds command line argument external command not understand method class ??? 
+       particularly not public ???? 
+       antoinell july 23d 2003 
+       
+        param c  command line one argument added 
+        param arg argument add 
+        
+    
+       use most recent revision later given date  
+        param p date string format cvs executable understand see man cvs cvs command execute deprecated better use commandline class ? 
+       antoinell july 23d 2003 
+       
+        param c command string 
+        
+    
+       accessor command line string deprecated 
+       antoinell july 23d 2003 
+       
+        return command line string true  suppress informational messages  
+        param q true  suppress informational messages true  suppress messages  
+        param q true  suppress messages ant 1 6 true  report only don't change any files  
+       
+        param ne true  report only not change any files file direct standard output command  
+        param output file stdout go file direct standard error command  
+       
+        param error file stderr go 
+        
+    
+       whether append output error redirecting file  
+        param value true indicated want append 
+        
+    
+       stop build process command exits return code 0  
+       defaults false  
+        param failonerror stop build process command exits return code 0 
+        
+    
+       configure commandline element things cvsroot  quiet  etc  
+        param c command line configured commandline initially null function noop 
+       otherwise function append commandline arguments concerning 
+        ul  
+        li  
+       cvs package 
+         li  
+        li  
+       compression 
+         li  
+        li  
+       quiet reallyquiet 
+         li  
+        li cvsroot  li  
+        li noexec  li  
+         ul  
+        
+    
+       remove particular command vector command lines 
+        param c command line removed 
+        
+    
+       adds direct command-line execute  
+        param c command line execute 
+        
+    
+       configures adds given commandline  
+        param c commandline insert 
+        param insertatstart true  c inserted beginning vector command lines set value 1-9 adds -zn cvs command line disables compression  
+        param level compression level 1 9 true same compressionlevel  3   
+       
+        param usecomp true  turns compression using default 
+       level  abstractcvstask default_compression_level  
+       org apache tools ant taskdefs AbstractCvsTask org apache tools ant taskdefs abstractcvstask task default_compression_level   3 abstractcvstask setexecutestreamhandler executestreamhandler handler executestreamhandler   handler executestreamhandler getexecutestreamhandler executestreamhandler setexecutestreamhandler pumpstreamhandler getoutputstream    
+                                                          geterrorstream executestreamhandler setoutputstream outputstream outputstream outputstream   outputstream outputstream getoutputstream outputstream output setoutputstream printstream bufferedoutputstream fileoutputstream output 
+                                                                  getpath    
+                                                                 append ioexception e buildexception e  getlocation setoutputstream logoutputstream project msg_info outputstream seterrorstream outputstream errorstream errorstream   errorstream outputstream geterrorstream errorstream error seterrorstream printstream bufferedoutputstream fileoutputstream error getpath    
+                                                                append ioexception e buildexception e  getlocation seterrorstream logoutputstream project msg_warn errorstream runcommand commandline toexecute buildexception   
+          
+          
+          
+ 
+          
+          
+ 
+        environment env environment port   0    
+            environment variable environment variable setkey  cvs_client_port setvalue valueof port    
+            env addvariable passfile file defaultpassfile file  
+                system getproperty  cygwin user home   
+                    system getproperty  user home    
+                  file separatorchar     cvspass defaultpassfile exists setpassfile defaultpassfile passfile passfile isfile      passfile canread      
+                environment variable environment variable setkey  cvs_passfile setvalue valueof passfile    
+                env addvariable log  using cvs passfile valueof passfile   
+                    project msg_verbose passfile canread      
+                log  cvs passfile valueof passfile  
+                        ignored as it is not readable   
+                    project msg_warn log  cvs passfile valueof passfile  
+                        ignored as it is not a file   
+                    project msg_warn cvsrsh environment variable environment variable setkey  cvs_rsh setvalue valueof cvsrsh    
+            env addvariable execute exe execute getexecutestreamhandler exe setantrun getproject dest dest   getproject   getbasedir dest exists      
+            dest mkdirs    
+          
+ 
+        exe setworkingdirectory dest   
+        exe setcommandline toexecute getcommandline     
+        exe setenvironment env getvariables actualcommandline   executetostring exe   
+            log actualcommandline  project msg_verbose retcode   exe execute    
+            log  retcode     retcode  project msg_debug failonerror    execute isfailure retcode buildexception  cvs exited with error code   
+                                           retcode 
+                                           stringutils line_sep 
+                                            command line was    
+                                           actualcommandline        
+                                         getlocation ioexception e failonerror buildexception e  getlocation     
+              
+            log  caught exception      e getmessage    project msg_warn buildexception e failonerror e   
+              
+            throwable t   e getexception t t   e  
+              
+            log  caught exception      t getmessage    project msg_warn exception e failonerror buildexception e  getlocation     
+              
+            log  caught exception      e getmessage    project msg_warn execute buildexception savedcommand   getcommand getcommand veccommandlines size      0 setcommand abstractcvstask default_command c getcommand    
+        commandline cloned c cloned    commandline  cmd clone    
+            cloned createargument setline c addconfiguredcommandline cloned i   0  i   veccommandlines size    i runcommand  commandline  veccommandlines elementat i cloned removecommandline cloned   
+              
+            setcommand savedcommand   
+            fileutils close outputstream   
+            fileutils close errorstream executetostring execute execute    
+ 
+        stringbuffer stringbuffer stringbuffer commandline describecommand execute 
+                                                          getcommandline newline   stringutils line_sep variablearray   execute getenvironment variablearray stringbuffer append newline   
+            stringbuffer append newline   
+            stringbuffer append  environment     
+            stringbuffer append newline z   0  z   variablearray length  z      
+                stringbuffer append newline   
+                stringbuffer append  \t    
+                stringbuffer append variablearray z stringbuffer tostring setcvsroot root root root trim   equals        
+                root cvsroot   root getcvsroot cvsroot setcvsrsh rsh rsh rsh trim   equals        
+                rsh cvsrsh   rsh getcvsrsh cvsrsh setport port port   port getport port setpassfile file passfile passfile   passfile file getpassfile passfile setdest file dest dest   dest file getdest dest setpackage p cvspackage   p getpackage cvspackage gettag tag settag p p p trim   length     0    
+            tag   p  
+            addcommandargument  -r    p addcommandargument arg addcommandargument cmd  arg addcommandargument commandline c arg    
+        c createargument   setvalue arg setdate p p p trim   length     0    
+            addcommandargument  -d    
+            addcommandargument p setcommand c command   c getcommand command setquiet q    
+        quiet   q setreallyquiet q    
+        reallyquiet   q setnoexec ne    
+        noexec   ne setoutput file output output   output seterror file error error   error setappend value append   value setfailonerror failonerror failonerror   failonerror configurecommandline commandline c c c setexecutable  cvs cvspackage c createargument   setline cvspackage compression   0 compression    maximum_comression_level    
+            c createargument setvalue  -z compression quiet     reallyquiet    
+            c createargument setvalue  -q reallyquiet    
+            c createargument setvalue  -q noexec    
+            c createargument setvalue  -n cvsroot c createargument setline  -d    cvsroot removecommandline commandline c    
+        veccommandlines removeelement c addconfiguredcommandline commandline c addconfiguredcommandline c addconfiguredcommandline commandline c insertatstart c configurecommandline c insertatstart    
+            veccommandlines insertelementat c  0 veccommandlines addelement c setcompressionlevel level compression   level setcompression usecomp    
+        setcompressionlevel usecomp 
+            ? abstractcvstask default_compression_level   0   
+      
+ 
+ org apache tools ant taskdefs AbstractCvsTask

@@ -1,0 +1,481 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   reimplementation link java util zip zipoutputstream 
+   java util zip zipoutputstream handle extended 
+   functionality package  especially internal external file 
+   attributes extra fields different layouts local file 
+   data central directory entries  
+   
+    p class try use   link java io randomaccessfile 
+   randomaccessfile know output going go file   p  
+   
+    p randomaccessfile cannot used implementation use data descriptor store size crc information link 
+   #deflated deflated  entries means don't need calculate yourself   unfortunately not possible link #stored stored  method  here setting crc uncompressed size information required before   link 
+   #putnextentry putnextentry called   p  
+   
+    
+    
+       compression method deflated entries 1 1 
+        
+    
+       default compression level deflated entries ant 1 7 
+        
+    
+       compression method stored entries 1 1 
+        
+    
+       current entry 1 1 file comment 1 1 
+        
+    
+       compression level next entry 1 1 compression level changed compared last 
+       entry 1 5 
+        
+    
+       default compression method next entry 1 1 
+        
+    
+       list zipentries written far 1 1 
+        
+    
+       crc instance avoid parsing deflated data twice 1 1 
+        
+    
+       count bytes written out 1 1 
+        
+    
+       data local header data 1 1 
+        
+    
+       offset crc entry local file header data current entry starts here 1 15 
+        
+    
+       start central directory 1 1 
+        
+    
+       length central directory 1 1 
+        
+    
+       helper 0 zipshort 1 1 
+        
+    
+       helper 0 ziplong 1 1 
+        
+    
+       holds offsets lfh starts each entry 1 1 encoding use filenames file comment  
+       
+        p list possible values see href  http   java sun com j2se 1 5 0 docs guide intl encoding doc html  http   java sun com j2se 1 5 0 docs guide intl encoding doc html defaults platform's default character encoding   p 1 3 
+        
+   checkstyle visibilitymodifier bc deflater object used output  
+       
+        p attribute only protected provide level api 
+       backwards compatibility class used extend   link 
+       java util zip deflateroutputstream deflateroutputstream  up revision 1 13   p 1 14 buffer servers deflater  
+       
+        p attribute only protected provide level api 
+       backwards compatibility class used extend   link 
+       java util zip deflateroutputstream deflateroutputstream  up revision 1 13   p 1 14 
+        
+   checkstyle visibilitymodifier optional random access output 1 14 
+        
+    
+       creates new zip outputstream filtering underlying stream  
+        param out outputstream zip 1 1 
+        
+    
+       creates new zip outputstream writing file use 
+       random access possible  
+        param file file zip 1 14 
+        throws ioexception error 
+        
+   ignore method indicates whether archive writing seekable stream e random 
+       access file   
+       
+        p seekable streams don't need calculate crc uncompressed size link #stored  entries before 
+       invoking   link #putnextentry   
+        return true seekable 1 17 encoding use filenames file comment  
+       
+        p list possible values see href  http   java sun com j2se 1 5 0 docs guide intl encoding doc html  http   java sun com j2se 1 5 0 docs guide intl encoding doc html defaults platform's default character encoding   p  
+        param encoding encoding value 1 3 encoding use filenames file comment  
+       
+        return null using platform's default character encoding 1 3 
+        
+    
+       finishs writing contents closes well underlying stream 1 1 
+        throws ioexception error 
+        
+    
+       writes necessary data entry 1 1 
+        throws ioexception error 
+        
+   method stored used randomaccessfile random access output  write local file header containing correct crc compressed uncompressed sizes 
+    
+       begin writing next entry  
+        param ze entry write 1 1 
+        throws ioexception error 
+        
+   not specified 
+   not specified 
+   size crc not required randomaccessfile used 
+    
+       set file comment  
+        param comment comment 1 1 
+        
+    
+       sets compression level subsequent entries  
+       
+        p default deflater default_compression   p  
+        param level compression level  
+        throws illegalargumentexception invalid compression level specified 1 1 
+        
+    
+       sets default compression method subsequent entries  
+       
+        p default deflated   p  
+        param method code int  code java util zip zipentry 1 1 
+        
+    
+       writes bytes zip entry  
+        param b byte array write 
+        param offset start position write param length number bytes write 
+        throws ioexception error 
+        
+    
+       writes single byte zip entry  
+       
+        p delegates three arg method   p  
+        param b byte write 1 14 
+        throws ioexception error 
+        
+    
+       closes output stream releases any system resources 
+       associated stream  
+       
+        exception  ioexception o error occurs 1 14 
+        
+    
+       flushes output stream forces any buffered output bytes written out stream  
+       
+        exception  ioexception o error occurs 1 14 
+        
+   
+       various zip constants 
+        
+    
+       local file header signature 1 1 
+        
+    
+       data descriptor signature 1 1 
+        
+    
+       central file header signature 1 1 
+        
+    
+       end central dir signature 1 1 
+        
+    
+       writes next block compressed data output stream  
+        throws ioexception error 1 14 
+        
+    
+       writes local file header entry 
+        param ze entry write 
+        throws ioexception error 1 1 
+        
+  store method local variable prevent multiple method calls 
+   version needed extract 
+   general purpose bit flag 
+   requires version 2 going store length info data descriptor 
+   bit3 set signal use data descriptor 
+   compression method 
+   last mod  time date 
+   crc 
+   compressed length 
+   uncompressed length 
+   file name length 
+   extra field length 
+   file name 
+   extra field 
+    
+       writes data descriptor entry  
+        param ze entry write 
+        throws ioexception error 1 1 
+        
+    
+       writes central file header entry  
+        param ze entry write 
+        throws ioexception error 1 1 
+        
+   version made version needed extract 
+   general purpose bit flag 
+   requires version 2 going store length info data descriptor 
+   bit3 set signal use data descriptor 
+   compression method 
+   last mod  time date 
+   crc 
+   compressed length 
+   uncompressed length 
+   file name length 
+   extra field length 
+   file comment length 
+   disk number start 
+   internal file attributes 
+   external file attributes 
+   relative offset lfh 
+   file name 
+   extra field 
+   file comment 
+    
+       writes quot end central dir record quot   
+        throws ioexception error 1 1 
+        
+   disk numbers 
+   number entries 
+   length location cd 
+   zip file comment 
+    
+       smallest date time zip handle 1 1 
+        
+    
+       convert date object dos date time field  
+        param time code date  code convert 
+        return date code ziplong  code 1 1 
+        
+    
+       convert date object dos date time field  
+       
+        p stolen infozip's  code fileio c  code   p  
+        param t number milliseconds epoch 
+        return date byte array 1 26 
+        
+    
+       retrieve bytes given string encoding set stream  
+        param name string bytes return bytes byte array 
+        throws zipexception error 1 3 
+        
+    
+       write bytes output random access file  
+        param data byte array write 
+        throws ioexception error 1 14 
+        
+    
+       write bytes output random access file  
+        param data byte array write 
+        param offset start position write param length number bytes write 
+        throws ioexception error 1 14 
+        
+    
+       assumes negative integer really positive integer wrapped around re-creates original value  
+        param value treat unsigned int  
+        return unsigned int long 1 34 
+       org apache tools zip ZipOutputStream org apache tools zip zipoutputstream filteroutputstream deflated   java util zip zipentry deflated default_compression   deflater default_compression stored   java util zip zipentry stored deflater def deflater level buf 512 zipoutputstream outputstream out out zipoutputstream file file ioexception raf randomaccessfile file   rw    
+            raf setlength 0 ioexception e raf raf close ioexception inner    
+                      
+                  
+                raf out fileoutputstream file isseekable raf setencoding encoding encoding   encoding getencoding encoding finish ioexception   
+        closeentry    
+        cdoffset   written i   0  entriessize   entries size    i   entriessize  i      
+            writecentralfileheader  zipentry  entries elementat i    
+          
+        cdlength   written - cdoffset  
+        writecentraldirectoryend    
+        offsets clear    
+        entries removeallelements closeentry ioexception entry realcrc   crc getvalue    
+        crc reset entry getmethod      deflated    
+            def finish def finished      
+                deflate    
+              
+ 
+            entry setsize adjusttolong def gettotalin      
+            entry setcompressedsize adjusttolong def gettotalout      
+            entry setcrc realcrc   
+ 
+            def reset    
+ 
+            written    entry getcompressedsize raf entry getcrc      realcrc zipexception  bad crc checksum entry   
+                                         entry getname tohexstring entry getcrc    
+                                           instead of tohexstring realcrc entry getsize      written - datastart zipexception  bad size entry   
+                                         entry getname          
+                                         entry getsize   
+                                           instead of   
+                                          written - datastart size   written - datastart  
+ 
+            entry setsize size   
+            entry setcompressedsize size   
+            entry setcrc realcrc raf save   raf getfilepointer    
+ 
+            raf seek localdatastart   
+            writeout ziplong getbytes entry getcrc      
+            writeout ziplong getbytes entry getcompressedsize      
+            writeout ziplong getbytes entry getsize      
+            raf seek save   
+          
+ 
+        writedatadescriptor entry   
+        entry putnextentry zipentry ze ioexception   
+        closeentry    
+ 
+        entry   ze  
+        entries addelement entry entry getmethod      -1      
+            entry setmethod method entry gettime      -1      
+            entry settime system currenttimemillis entry getmethod      stored    raf entry getsize      -1 zipexception  uncompressed size is required stored method when not writing to a  
+                                           file entry getcrc      -1 zipexception  crc checksum is required stored  
+                                           method when not writing to a file    
+              
+            entry setcompressedsize entry getsize entry getmethod      deflated    hascompressionlevelchanged    
+            def setlevel level   
+            hascompressionlevelchanged writelocalfileheader entry setcomment comment comment   comment setlevel level level   deflater default_compression 
+               level   deflater best_compression illegalargumentexception  
+                 invalid compression level      level   
+          
+        hascompressionlevelchanged level    level level   level setmethod method method   method write b offset length ioexception entry getmethod      deflated length   0 def finished      
+                    def setinput b  offset  length def needsinput      
+                        deflate writeout b  offset  length   
+            written    length  
+          
+        crc update b  offset  length write b ioexception buff 1   
+        buff 0 b   0xff   
+        write buff  0  1 close ioexception   
+        finish raf raf close out out close flush ioexception out out flush lfh_sig   ziplong getbytes 0x04034b50l dd_sig   ziplong getbytes 0x08074b50l cfh_sig   ziplong getbytes 0x02014b50l eocd_sig   ziplong getbytes 0x06054b50l deflate ioexception len   def deflate buf  0  buf length len   0    
+            writeout buf  0  len writelocalfileheader zipentry ze ioexception   
+        offsets put ze  ziplong getbytes written    
+ 
+        writeout lfh_sig   
+        written    4 zipmethod   ze getmethod zipmethod    deflated    raf writeout zipshort getbytes 20    
+ 
+              
+            writeout zipshort getbytes 8 writeout zipshort getbytes 10    
+            writeout zero   
+          
+        written    4  
+ 
+          
+        writeout zipshort getbytes zipmethod    
+        written    2  
+ 
+          
+        writeout todostime ze gettime      
+        written    4  
+ 
+          
+          
+          
+        localdatastart   written zipmethod    deflated    raf writeout lzero   
+            writeout lzero   
+            writeout lzero writeout ziplong getbytes ze getcrc      
+            writeout ziplong getbytes ze getsize      
+            writeout ziplong getbytes ze getsize      
+          
+        written    12 name   getbytes ze getname     
+        writeout zipshort getbytes name length    
+        written    2 extra   ze getlocalfiledataextra    
+        writeout zipshort getbytes extra length    
+        written    2  
+ 
+          
+        writeout name   
+        written    name length  
+ 
+          
+        writeout extra   
+        written    extra length  
+ 
+        datastart   written writedatadescriptor zipentry ze ioexception ze getmethod      deflated    raf writeout dd_sig   
+        writeout ziplong getbytes entry getcrc      
+        writeout ziplong getbytes entry getcompressedsize      
+        writeout ziplong getbytes entry getsize      
+        written    16 writecentralfileheader zipentry ze ioexception   
+        writeout cfh_sig   
+        written    4  
+ 
+          
+        writeout zipshort getbytes  ze getplatform      8    20    
+        written    2 ze getmethod      deflated    raf writeout zipshort getbytes 20    
+ 
+              
+            writeout zipshort getbytes 8 writeout zipshort getbytes 10    
+            writeout zero   
+          
+        written    4  
+ 
+          
+        writeout zipshort getbytes ze getmethod      
+        written    2  
+ 
+          
+        writeout todostime ze gettime      
+        written    4  
+ 
+          
+          
+          
+        writeout ziplong getbytes ze getcrc      
+        writeout ziplong getbytes ze getcompressedsize      
+        writeout ziplong getbytes ze getsize      
+        written    12 name   getbytes ze getname     
+        writeout zipshort getbytes name length    
+        written    2 extra   ze getcentraldirectoryextra    
+        writeout zipshort getbytes extra length    
+        written    2 comm   ze getcomment comm comm commentb   getbytes comm   
+        writeout zipshort getbytes commentb length    
+        written    2  
+ 
+          
+        writeout zero   
+        written    2  
+ 
+          
+        writeout zipshort getbytes ze getinternalattributes      
+        written    2  
+ 
+          
+        writeout ziplong getbytes ze getexternalattributes      
+        written    4  
+ 
+          
+        writeout offsets get ze    
+        written    4  
+ 
+          
+        writeout name   
+        written    name length  
+ 
+          
+        writeout extra   
+        written    extra length  
+ 
+          
+        writeout commentb   
+        written    commentb length writecentraldirectoryend ioexception   
+        writeout eocd_sig   
+ 
+          
+        writeout zero   
+        writeout zero num   zipshort getbytes entries size     
+        writeout num   
+        writeout num   
+ 
+          
+        writeout ziplong getbytes cdlength    
+        writeout ziplong getbytes cdoffset data   getbytes comment   
+        writeout zipshort getbytes data length    
+        writeout data ziplong todostime date time ziplong todostime time gettime todostime t    
+        date time date t year   time getyear     1900 year   1980 dos_time_min month   time getmonth     1 value      year - 1980     25  
+                       month    21  
+                       time getdate      16  
+                       time gethours      11  
+                       time getminutes      5  
+                       time getseconds      1 ziplong getbytes value getbytes name zipexception encoding name getbytes name getbytes encoding unsupportedencodingexception uee zipexception uee getmessage writeout data ioexception   
+        writeout data  0  data length writeout data offset length ioexception raf raf write data  offset  length out write data  offset  length adjusttolong i i   0 2 integer max_value    2   i i  
+          
+      
+ 
+ org apache tools zip ZipOutputStream

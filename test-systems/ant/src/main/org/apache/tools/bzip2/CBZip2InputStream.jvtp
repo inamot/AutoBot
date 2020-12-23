@@ -1,0 +1,276 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license package based work done keiron liddle  aftex software 
+    keiron aftexsw com ant project very grateful great code input stream decompresses bzip2 format  without file 
+   header chars read any stream  
+   
+    p decompression requires large amounts memory  thus call link #close   close    method soon possible force  tt cbzip2inputstream  tt release allocated memory   see   link cbzip2outputstream 
+   cbzip2outputstream information memory usage   p  
+   
+    p  tt cbzip2inputstream  tt  reads bytes compressed 
+   source stream via single byte   link java io inputstream#read   
+   read    method exclusively  thus consider use buffered source stream   p  
+    
+    p instances class not threadsafe   p clean way throw exception  
+  throw new ioexception  crc error print message previous versions class index last char block block size    last   1  
+        
+    
+       index zptr original string sorting  
+        
+    
+       always range 0    9 current block size 100000 number  
+        
+   variables used setup  methods exclusively memory intensive stuff field initialized initblock    
+        
+    
+       constructs new cbzip2inputstream decompresses bytes read specified stream  
+       
+        p although bzip2 headers marked magic 
+        tt  bz   tt constructor expects next byte stream first one magic   thus callers skip first two bytes  otherwise constructor throw exception    p  
+       
+        throws ioexception stream content malformed o error occurs  
+        throws nullpointerexception tt null  tt  
+        
+   end file 
+   '1' 
+   ' ' 
+   'y' 
+   ' ' 
+   's' 
+   'y' 
+    
+               allocate data here instead constructor not 
+               allocate input file empty  
+                
+   currblockno bad crc considered fatal error  
+   make next blocks readable without error 
+    repair feature  not documented  not tested  
+    
+       called createhuffmandecodingtables   exclusively  
+        
+   receive mapping table    
+   now selectors    
+   undo mtf values selectors     
+   nearly times v zero  4 most cases 
+   now coding tables    
+   finally create huffman tables 
+    
+       called recvdecodingtables   exclusively  
+        
+   
+          setting up unzftab entries here not strictly 
+          necessary save having later separate pass saves block's worth cache misses  
+           
+   inlined  
+   int zvec   bsr zn loop hammered during decompression  
+                  hence avoid native method call overhead system arraycopy very small ranges copy  
+                   
+   inlined  
+   int zvec   bsr zn   
+   not char not eof blocksize 900k  
+        256 byte 
+        256 byte 
+      18002 byte 
+      18002 byte 
+    
+           freq table collected save pass over data during 
+           decompression  
+            
+       1024 byte 
+       6192 byte 
+       6192 byte 
+       6192 byte 
+         24 byte 
+       1028 byte 
+        512 byte 
+       3096 byte 
+          6 byte 
+  --------------- 
+      60798 byte 
+    3600000 byte 
+     900000 byte 
+  --------------- 
+    4560782 byte 
+                  
+    
+           initializes link #tt  array method called required length array known don't initialize construction time avoid unneccessary memory allocation compressing small 
+           files  
+            
+   tt length always length theoretically happen compressor mixed small large 
+   blocks   normally only last block smaller others org apache tools bzip2 CBZip2InputStream org apache tools bzip2 cbzip2inputstream inputstream bzip2constants reportcrcerror ioexception   
+          
+          
+ 
+          
+        system err println  bzip2 crc error makemaps inuse data inuse seqtounseq data seqtounseq ninuseshadow   0 i   0  i   256  i inuse i   
+                seqtounseq ninuseshadow i ninuse   ninuseshadow cbzip2inputstream inputstream in ioexception in   in  
+        init read ioexception in read0 ioexception  stream closed read dest offs len ioexception offs   0 indexoutofboundsexception  offs     offs        0 len   0 indexoutofboundsexception  len     len        0 offs   len   dest length indexoutofboundsexception  offs     offs        len   
+                                                  len        dest length   
+                                                  dest length in ioexception  stream closed hi   offs   len destoffs   offs b   destoffs   hi       b   read0       0      
+            dest destoffs b destoffs    offs  ? -1    destoffs - offs read0 ioexception retchar currentchar currentstate eof 1 start_block_state illegalstateexception rand_part_a_state illegalstateexception rand_part_b_state  
+            setuprandpartb rand_part_c_state  
+            setuprandpartc no_rand_part_a_state illegalstateexception no_rand_part_b_state  
+            setupnorandpartb no_rand_part_c_state  
+            setupnorandpartc illegalstateexception retchar init ioexception magic2 in read magic2    'h ioexception  stream is not bzip2 formatted  expected 'h'  
+                                      as first but got magic2 blocksize in read blocksize   '1'      blocksize   '9 ioexception  stream is not bzip2 formatted  illegal   
+                                     blocksize blocksize blocksize100k   blocksize - '0'  
+ 
+        initblock    
+        setupblock initblock ioexception magic0   bsgetubyte magic1   bsgetubyte magic2   bsgetubyte magic3   bsgetubyte magic4   bsgetubyte magic5   bsgetubyte magic0    0x17    
+            magic1    0x72    
+            magic2    0x45    
+            magic3    0x38    
+            magic4    0x50    
+            magic5    0x90    
+            complete magic0    0x31      
+                   magic1    0x41      
+                   magic2    0x59      
+                   magic3    0x26      
+                   magic4    0x53      
+                   magic5    0x59 currentstate   eof ioexception  bad block header storedblockcrc   bsgetint blockrandomised   bsr 1     1 data data data blocksize100k   
+              
+ 
+              
+            getandmovetofrontdecode crc initialisecrc currentstate   start_block_state endblock ioexception computedblockcrc crc getfinalcrc storedblockcrc computedblockcrc computedcombinedcrc storedcombinedcrc    1 storedcombinedcrc     31 computedcombinedcrc storedblockcrc  
+ 
+            reportcrcerror computedcombinedcrc computedcombinedcrc    1 computedcombinedcrc     31 computedcombinedcrc computedblockcrc complete ioexception storedcombinedcrc   bsgetint currentstate   eof data storedcombinedcrc computedcombinedcrc    
+            reportcrcerror close ioexception   
+        inputstream inshadow in inshadow inshadow    system in    
+                    inshadow close data in bsr n ioexception bsliveshadow bslive bsbuffshadow bsbuff bsliveshadow   n inputstream inshadow in thech   inshadow read thech   0 ioexception  unexpected end of stream    
+                  
+ 
+                bsbuffshadow    bsbuffshadow    8    thech  
+                bsliveshadow    8 bsliveshadow   n bsbuff   bsbuffshadow bslive   bsliveshadow - n bsbuffshadow     bsliveshadow - n       1    n  - 1 bsgetbit ioexception bsliveshadow bslive bsbuffshadow bsbuff bsliveshadow   1 thech in read thech   0 ioexception  unexpected end of stream    
+              
+ 
+            bsbuffshadow    bsbuffshadow    8    thech  
+            bsliveshadow    8 bsbuff   bsbuffshadow bslive   bsliveshadow - 1 bsbuffshadow     bsliveshadow - 1     1     0 bsgetubyte ioexception bsr 8 bsgetint ioexception bsr 8     8    bsr 8      8    bsr 8      8    bsr 8 hbcreatedecodetables limit base perm length minlen maxlen alphasize i   minlen  pp   0  i    maxlen  i j   0  j   alphasize  j length j     i    
+                    perm pp      j i   max_code_len  --i   0     
+            base i    0  
+            limit i    0 i   0  i   alphasize  i      
+            base length i    1 i   1  b   base 0   i   max_code_len  i      
+            b    base i   
+            base i    b i   minlen  vec   0  b   base i   i    maxlen  i nb   base i   1   
+            vec    nb - b  
+            b   nb  
+            limit i    vec - 1  
+            vec     1 i   minlen   1  i    maxlen  i      
+            base i      limit i - 1    1     1  - base i recvdecodingtables ioexception data datashadow data inuse       datashadow inuse pos            datashadow recvdecodingtables_pos selector       datashadow selector selectormtf    datashadow selectormtf inuse16   0 i   0  i   16  i bsgetbit      
+                inuse16    1    i i   256  --i    0     
+            inuse i i   0  i   16  i inuse16    1    i      0 i16   i    4 j   0  j   16  j bsgetbit      
+                        inuse i16   j makemaps alphasize ninuse   2 ngroups   bsr 3 nselectors   bsr 15 i   0  i   nselectors  i j   0 bsgetbit      
+                j    
+              
+            selectormtf i j v   ngroups  --v    0     
+            pos v v i   0  i   nselectors  i v   selectormtf i    0xff tmp   pos v v   0    
+                  
+                pos v    pos v - 1   
+                v--  
+              
+            pos 0    tmp  
+            selector i    tmp len    datashadow temp_chararray2d t   0  t   ngroups  t curr   bsr 5 len_t   len t i   0  i   alphasize  i bsgetbit      
+                    curr    bsgetbit   ? -1   1  
+                  
+                len_t i curr  
+              
+          
+ 
+          
+        createhuffmandecodingtables alphasize  ngroups createhuffmandecodingtables alphasize ngroups data datashadow data len    datashadow temp_chararray2d minlens   datashadow minlens limit   datashadow limit base    datashadow base perm    datashadow perm t   0  t   ngroups  t minlen   32 maxlen   0 len_t   len t i   alphasize  --i    0 lent   len_t i lent   maxlen    
+                    maxlen   lent lent   minlen    
+                    minlen   lent  
+                  
+              
+            hbcreatedecodetables limit t   base t   perm t   len t   minlen  
+                                 maxlen  alphasize   
+            minlens t    minlen getandmovetofrontdecode ioexception origptr   bsr 24   
+        recvdecodingtables inputstream inshadow in data datashadow data ll8          datashadow ll8 unzftab       datashadow unzftab selector     datashadow selector seqtounseq   datashadow seqtounseq yy           datashadow getandmovetofrontdecode_yy minlens       datashadow minlens limit       datashadow limit base        datashadow base perm        datashadow perm limitlast blocksize100k   100000 i   256  --i    0     
+            yy i i  
+            unzftab i    0 groupno       0 grouppos      g_size - 1 eob ninuse   1 nextsym       getandmovetofrontdecode0 0 bsbuffshadow bsbuff bsliveshadow bslive lastshadow          -1 zt            selector groupno    0xff base_zt     base zt limit_zt    limit zt perm_zt     perm zt minlens_zt    minlens zt nextsym    eob nextsym    runa      nextsym    runb s   -1 n   1 n     1 nextsym    runa    
+                        s    n nextsym    runb    
+                        s    n    1 grouppos    0    
+                        grouppos      g_size - 1  
+                        zt            selector   groupno    0xff  
+                        base_zt       base zt   
+                        limit_zt      limit zt   
+                        perm_zt       perm zt   
+                        minlens_zt    minlens zt grouppos zn   minlens_zt bsliveshadow   zn thech   inshadow read thech    0    
+                            bsbuffshadow    bsbuffshadow    8    thech  
+                            bsliveshadow    8 ioexception  unexpected end of stream zvec    bsbuffshadow     bsliveshadow - zn       1    zn  - 1   
+                    bsliveshadow -  zn zvec   limit_zt zn     
+                        zn bsliveshadow   1 thech   inshadow read thech    0    
+                                bsbuffshadow    bsbuffshadow    8    thech  
+                                bsliveshadow    8 ioexception  unexpected end of stream    
+                              
+                          
+                        bsliveshadow--  
+                        zvec    zvec    1      bsbuffshadow    bsliveshadow    1   
+                      
+                    nextsym   perm_zt zvec - base_zt zn ch   seqtounseq yy 0    
+                unzftab ch   0xff     s   1 s--    0    
+                    ll8   lastshadow    ch lastshadow    limitlast ioexception  block overrun lastshadow    limitlast ioexception  block overrun tmp   yy nextsym - 1   
+                unzftab seqtounseq tmp    0xff     
+                ll8 lastshadow    seqtounseq tmp nextsym    16 j   nextsym - 1  j   0     
+                        yy j    yy --j system arraycopy yy  0  yy  1  nextsym - 1   
+                  
+ 
+                yy 0    tmp grouppos    0    
+                    grouppos      g_size - 1  
+                    zt            selector   groupno    0xff  
+                    base_zt       base zt   
+                    limit_zt      limit zt   
+                    perm_zt       perm zt   
+                    minlens_zt    minlens zt grouppos zn   minlens_zt bsliveshadow   zn thech   inshadow read thech    0    
+                        bsbuffshadow    bsbuffshadow    8    thech  
+                        bsliveshadow    8 ioexception  unexpected end of stream zvec    bsbuffshadow     bsliveshadow - zn       1    zn  - 1   
+                bsliveshadow -  zn zvec   limit_zt zn     
+                    zn bsliveshadow   1 thech   inshadow read thech    0    
+                            bsbuffshadow    bsbuffshadow    8    thech  
+                            bsliveshadow    8 ioexception  unexpected end of stream    
+                          
+                      
+                    bsliveshadow--  
+                    zvec    zvec    1      bsbuffshadow    bsliveshadow    1   
+                  
+                nextsym   perm_zt zvec - base_zt zn last   lastshadow bslive   bsliveshadow bsbuff   bsbuffshadow getandmovetofrontdecode0 groupno ioexception inputstream inshadow in data datashadow data zt            datashadow selector groupno    0xff limit_zt    datashadow limit zt zn   datashadow minlens zt zvec   bsr zn bsliveshadow bslive bsbuffshadow bsbuff zvec   limit_zt zn     
+            zn bsliveshadow   1 thech   inshadow read thech    0    
+                    bsbuffshadow    bsbuffshadow    8    thech  
+                    bsliveshadow    8 ioexception  unexpected end of stream    
+                  
+              
+            bsliveshadow--  
+            zvec    zvec    1      bsbuffshadow    bsliveshadow    1 bslive   bsliveshadow bsbuff   bsbuffshadow datashadow perm zt  zvec - datashadow base zt  zn setupblock ioexception data cftab data cftab tt data inittt last   1 ll8 data ll8  
+        cftab 0    0  
+        system arraycopy data unzftab  0  cftab  1  256 i   1  c   cftab 0   i    256  i      
+            c    cftab i   
+            cftab i    c i   0  lastshadow last  i    lastshadow  i      
+            tt cftab ll8 i    0xff       i origptr   0 origptr    tt length ioexception  stream corrupted su_tpos   tt origptr su_count   0 su_i2   0 su_ch2   256 blockrandomised su_rntogo   0 su_rtpos   0  
+            setuprandparta setupnorandparta setuprandparta ioexception su_i2 last su_chprev su_ch2 su_ch2shadow data ll8 su_tpos    0xff su_tpos data tt su_tpos su_rntogo    0 su_rntogo   bzip2constants rnums su_rtpos  - 1 su_rtpos    512 su_rtpos   0 su_rntogo su_ch2   su_ch2shadow su_rntogo    1  ? 1   0 su_i2 currentchar   su_ch2shadow currentstate   rand_part_b_state crc updatecrc su_ch2shadow endblock    
+            initblock    
+            setupblock setupnorandparta ioexception su_i2 last su_chprev su_ch2 su_ch2shadow data ll8 su_tpos    0xff su_ch2   su_ch2shadow su_tpos data tt su_tpos su_i2 currentchar   su_ch2shadow currentstate   no_rand_part_b_state crc updatecrc su_ch2shadow currentstate   no_rand_part_a_state  
+            endblock    
+            initblock    
+            setupblock setuprandpartb ioexception su_ch2 su_chprev currentstate   rand_part_a_state su_count   1  
+            setuprandparta su_count    4 su_z data ll8 su_tpos    0xff su_tpos data tt su_tpos su_rntogo    0 su_rntogo   bzip2constants rnums su_rtpos  - 1 su_rtpos    512 su_rtpos   0 su_rntogo su_j2   0 currentstate   rand_part_c_state su_rntogo    1 su_z ^  1  
+              
+            setuprandpartc currentstate   rand_part_a_state  
+            setuprandparta setuprandpartc ioexception su_j2 su_z currentchar su_ch2 crc updatecrc su_ch2 su_j2 currentstate   rand_part_a_state su_i2 su_count   0  
+            setuprandparta setupnorandpartb ioexception su_ch2 su_chprev su_count   1  
+            setupnorandparta su_count    4 su_z data ll8 su_tpos    0xff su_tpos data tt su_tpos su_j2   0  
+            setupnorandpartc setupnorandparta setupnorandpartc ioexception su_j2 su_z su_ch2shadow su_ch2 currentchar   su_ch2shadow crc updatecrc su_ch2shadow su_j2 currentstate   no_rand_part_c_state su_i2 su_count   0  
+            setupnorandparta data object inuse 256 seqtounseq 256 selector max_selectors selectormtf max_selectors unzftab 256 limit n_groups  max_alpha_size base n_groups  max_alpha_size perm n_groups  max_alpha_size minlens n_groups cftab 257 getandmovetofrontdecode_yy 256 temp_chararray2d n_groups  max_alpha_size recvdecodingtables_pos n_groups tt ll8                                                                      
+          
+          
+          
+ 
+        data blocksize100k ll8 blocksize100k   bzip2constants baseblocksize inittt length ttshadow tt ttshadow ttshadow length   length tt   ttshadow length ttshadow  
+          
+ 
+      
+  
+org apache tools bzip2 CBZip2InputStream

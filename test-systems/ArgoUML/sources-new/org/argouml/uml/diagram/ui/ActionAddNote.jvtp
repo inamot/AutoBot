@@ -1,0 +1,106 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications  
+    
+   action add note aka comment action adds comment 0    
+   modelelements   p modelelements present current diagram connected 
+   graphically others only annotated model default position  x y new fig distance  x y figs place constructor action not global never disabled  
+        
+   set tooltip string  
+                                                                 
+   main methods 
+   
+        see java awt event actionlistener#actionperformed java awt event actionevent  
+        
+  update tools' enabled status s build comment first  unlinked  
+  now link modelelements represented fignode 
+   prevent e g  associationclasses being added trice     
+  create node fig comment itself draw remember fig later 
+  create comment links draw place comment fig nicest spot diagram 
+  select new comment target 
+    
+       calculate position comment  based 1st target only  
+       
+        param diagram diagram working param firsttarget object element first found comment  
+        param notefig fig comment  
+        return position placed  
+        
+   todo need better algorithm uid  
+        
+   end class actionaddnote   org argouml uml diagram ui ActionAddNote org argouml uml diagram ui actionaddnote undoableaction actionaddnote translator localize  action comment    
+                resourceloaderwrapper lookupicon  action comment     
+          
+        putvalue action short_description   
+                translator localize  action comment     
+        putvalue action small_icon  resourceloaderwrapper 
+                 lookupiconresource note actionperformed actionevent ae actionperformed ae     
+        collection targets   targetmanager getinstance   getmodeltargets    
+ 
+          
+        argodiagram diagram   
+            projectmanager getmanager   getcurrentproject   getactivediagram    
+        object comment   
+            model getcorefactory   buildcomment diagram getnamespace     
+        mutablegraphmodel mgm    mutablegraphmodel  diagram getgraphmodel    
+ 
+          
+        object firsttarget iterator i   targets iterator i hasnext      
+            object obj   i next    
+            fig destfig   diagram presentationfor obj destfig figedgemodelelement    
+                figedgemodelelement destedge    figedgemodelelement  destfig  
+                destedge makeedgeport    
+                destfig   destedge getedgeport    
+                destedge calcbounds model getfacade   isamodelelement obj  
+                          model getfacade   isacomment obj firsttarget firsttarget   obj model getfacade   getannotatedelements comment  
+                         contains obj     
+                    model getcorehelper   addannotatedelement comment  obj   
+                  
+              
+          
+ 
+          
+        mgm addnode comment   
+          
+        fig notefig   diagram presentationfor comment   
+ 
+          
+        i   model getfacade   getannotatedelements comment  iterator i hasnext      
+            object obj   i next diagram presentationfor obj commentedge commentedge commentedge comment  obj   
+                mgm addedge commentedge   
+                figedge fe    figedge  diagram presentationfor commentedge   
+                figpoly fp    figpoly  fe getfig    
+                fp setcomplete notefig setlocation calculatelocation diagram  firsttarget  notefig    
+ 
+          
+        targetmanager getinstance   settarget notefig getowner point calculatelocation  
+            argodiagram diagram  object firsttarget  fig notefig    
+        point point point default_pos  default_pos firsttarget point  
+          
+ 
+        fig elemfig   diagram presentationfor firsttarget elemfig point elemfig figedgemodelelement    
+            elemfig     figedgemodelelement  elemfig  getedgeport elemfig fignode    
+              
+            point x   elemfig getx     elemfig getwidth     distance  
+            point y   elemfig gety    
+            rectangle drawingarea   
+                projectbrowser getinstance   geteditorpane   getbounds point x   notefig getwidth     drawingarea getx      
+                point x   elemfig getx   - notefig getwidth   - distance point x    0 point  
+                  
+ 
+                point x   elemfig getx    
+                point y   elemfig gety   - notefig getheight   - distance point y    0 point  
+                  
+ 
+                point y   elemfig gety     elemfig getheight     distance point y   notefig getheight     drawingarea getheight point 0  0 point  
+      
+ 
+      
+  
+   org argouml uml diagram ui ActionAddNote

@@ -1,0 +1,133 @@
+ 
+   $id$ 
+   copyright  c  2006 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications uid  
+        
+    
+       logger set activation figs  
+        
+    
+       constructor  
+       
+        param x 
+        param y 
+        
+   
+        see org tigris gef presentation fig#getminimumsize   
+        
+   
+        see org tigris gef presentation fig#setboundsimpl int  int  int  int  
+        
+   
+        see org tigris gef presentation fig#calcbounds   
+        
+    
+       removes fig both figs list activationfigs set insures removal indeed remove pointers object  p  
+       
+        see org tigris gef presentation figgroup#removefig fig  
+        
+    
+       change node point actual figmessageport  
+        
+   
+        see org tigris gef persistence pgml handlerfactory#gethandler  
+            org tigris gef persistence pgml handlerstack  java lang object  
+            java lang string  java lang string  java lang string  
+            org xml sax attributes  
+        
+    
+           constructor  
+           
+            param parser 
+            
+   
+            see org tigris gef persistence pgml basehandler#getelementhandler  
+                   org tigris gef persistence pgml handlerstack  
+                   java lang object  java lang string  java lang string  
+                   java lang string  org xml sax attributes  
+            
+   handle stereotype groups figsorg argouml uml diagram sequence ui FigLifeLine org argouml uml diagram sequence ui figlifeline argofiggroup handlerfactory logger log   
+        logger getlogger figlifeline width   20 height   1000  
+  
+  
+ 
+      
+  
+ 
+      
+    figlifeline x y rect figrect x  y  width  height   
+        rect setfilled rect setlinewidth 0   
+        line figline x   width   2  y  x   width   2  height  color black   
+        line setdashed addfig rect   
+        addfig line   
+        activationfigs hashset dimension getminimumsize dimension 20  100 setboundsimpl x y w h    
+        rect setbounds x  y  width  h   
+        line setlocation x   w   2  y iterator figit   getfigs   iterator    figit hasnext       
+            fig fig    fig  figit next activationfigs contains fig     
+                fig setlocation getx    y - gety     fig gety fig figmessageport    
+                fig setlocation getx    y - gety     fig gety     
+              
+          
+        calcbounds calcbounds     
+        _x   rect getx    
+        _y   rect gety    
+        _w   rect getwidth    
+        _h   rect getheight    
+        firepropchange  bounds null removeactivations     
+        list activations arraylist activationfigs   
+        activationfigs clear iterator it   activations iterator    it hasnext       
+            removefig  fig  it next     
+          
+        calcbounds addactivationfig fig f    
+        addfig f   
+        activationfigs add f removefig fig f    
+        log info  removing     f getclass   getname removefig f   
+        activationfigs remove f figmessageport createfigmessageport object message  tempfig tempfig messagenode node    messagenode  tempfig getowner figmessageport fmp figmessageport message  tempfig getx1    tempfig gety1    
+                   tempfig getx2     
+        node setfigmessageport fmp   
+        fmp setnode node   
+        addfig fmp fmp getycoordinate nodeindex nodeindex   sequencediagramlayer link_distance 
+                  gety   
+                  sequencediagramlayer link_distance   2 defaulthandler gethandler handlerstack stack  
+                               object container uri localname qname  
+                               attributes attributes saxexception   
+ 
+        pgmlstackparser parser    pgmlstackparser  stack  
+        stringtokenizer st stringtokenizer attributes getvalue  description st hasmoreelements      
+            st nexttoken xstr ystr wstr hstr st hasmoreelements      
+            xstr   st nexttoken    
+            ystr   st nexttoken    
+            wstr   st nexttoken    
+            hstr   st nexttoken xstr xstr equals x   integer parseint xstr y   integer parseint ystr w   integer parseint wstr h   integer parseint hstr   
+            setbounds x  y  w  h   
+          
+        pgmlstackparser setcommonattrs attributes ownerref   attributes getvalue  href ownerref object owner   parser findowner ownerref owner setowner owner   
+              
+          
+        parser registerfig attributes getvalue  name     
+          container  container  addobject figlifelinehandler parser figlifelinehandler figgrouphandler   
+          
+        figlifelinehandler pgmlstackparser parser  
+                figlifeline lifeline parser  lifeline defaulthandler getelementhandler  
+                handlerstack stack  
+                object container uri localname qname  
+                attributes attributes saxexception   
+ 
+            defaulthandler result description   attributes getvalue  description qname equals  group   
+                       description description startswith figmessageport getname       
+                pgmlstackparser parser    pgmlstackparser  stack ownerref   attributes getvalue  href    
+                object owner   parser findowner ownerref   
+                figmessageport fmp figmessageport owner   
+                  figgrouphandler  container  getfiggroup   addfig fmp   
+                result figgrouphandler  pgmlstackparser  stack  fmp   
+                pgmlstackparser setcommonattrs fmp  attributes   
+                parser registerfig fmp  attributes getvalue  name result unknownhandler stack result  
+          
+      
+ org argouml uml diagram sequence ui FigLifeLine

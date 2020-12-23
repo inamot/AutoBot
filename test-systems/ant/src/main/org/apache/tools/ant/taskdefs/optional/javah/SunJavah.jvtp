@@ -1,0 +1,54 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   adapter com sun tools javah oldjavah main com sun tools javah main ant 1 6 3 name javah adapter - sun    
+    
+       performs actual compilation  
+        param javah calling javah task  
+        return true compilation successful  
+        throws buildexception error ant 1 6 3 
+        
+   first search old  javah class 1 4 2 tools jar 
+   assume older 1 4 2 tools jarorg apache tools ant taskdefs optionalh SunJavah org apache tools ant taskdefs optional javah sunjavah javahadapter implementation_name    sun compile javah javah buildexception   
+        commandline cmd   setupjavahcommand javah   
+        executejava ej executejava c try   
+                  
+                c forname  com sun tools javah oldjavah main classnotfoundexception cnfe    
+                  
+                c forname  com sun tools javah main classnotfoundexception ex buildexception  
+                 can't load javah   ex  javah getlocation     
+          
+        cmd setexecutable c getname     
+        ej setjavacommand cmd   
+        file f   locator getclasssource c f ej setclasspath path javah getproject    f getpath ej fork javah     0 commandline setupjavahcommand javah javah    
+        commandline cmd commandline javah getdestdir cmd createargument   setvalue  -d    
+            cmd createargument   setfile javah getdestdir javah getoutputfile cmd createargument   setvalue  -o    
+            cmd createargument   setfile javah getoutputfile javah getclasspath cmd createargument   setvalue  -classpath    
+            cmd createargument   setpath javah getclasspath javah getverbose      
+            cmd createargument   setvalue  -verbose javah getold      
+            cmd createargument   setvalue  -old javah getforce      
+            cmd createargument   setvalue  -force javah getstubs       javah getold buildexception  
+                 stubs only available in old mode    javah getlocation javah getstubs      
+            cmd createargument   setvalue  -stubs    
+          
+        path bcp path javah getproject javah getbootclasspath bcp append javah getbootclasspath     
+          
+        bcp   bcp concatsystembootclasspath  ignore bcp size     0    
+            cmd createargument   setvalue  -bootclasspath    
+            cmd createargument   setpath bcp   
+          
+ 
+        cmd addarguments javah getcurrentargs     
+ 
+        javah logandaddfiles cmd cmd  
+      
+ 
+ org apache tools ant taskdefs optionalh SunJavah

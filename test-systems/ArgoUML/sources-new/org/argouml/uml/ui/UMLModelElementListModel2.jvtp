@@ -1,0 +1,212 @@
+ 
+   $id$ 
+   copyright  c  2002-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications model list contains modelelements state element still kept model subsystem itself list only used model some gui element umllinkedlist oct 2  2002 
+    author jaap branderhorst xs4all nl 
+    
+    
+       flag indicate wether list events fired 
+        
+    
+       flag indicate wether model being build type model elements list model designed hold  
+        
+    
+       indicates drops onto list connect opposite 
+       way standard  
+        
+    
+       constructor used subclass not depend melementlistener methods settarget method implemented class  
+        
+    
+       constructor umlmodelelementlistmodel2  
+       
+        param name name event listen triggers update list model uml data 
+        
+    
+       constructor umlmodelelementlistmodel2  
+       
+        param name name event listen triggers update list model uml data 
+        param metatype type model element list model designed contain  
+        
+    
+       constructor umlmodelelementlistmodel2  
+       
+        param name name event listen triggers update list model uml data 
+        param metatype type model element list model designed contain  
+        param reversedropconnection tells jlist reverse connection made drop during dnd type objects list model designed contain  
+        return metatype meta type  
+        
+    
+        param building buildingmodel set  
+        
+    
+        param t list target set 
+        
+   
+        see java beans propertychangelistener#propertychange java beans propertychangeevent  
+        
+       todo reviewed see improved view 
+       towards removing some overrriding methods used workarounds differences between nsuml mdr - tfm - 20060302 
+        
+   todo ordered list add right location     
+    
+       delete rebuild model list scratch throw exception target deleted don't want try locking repository called event delivery thread cause deadlock  instead catch exception leave model empty  
+                
+    
+       builds list elements  called targetchanged every time target proppanel changed  usually method setallelements called result  
+        
+    
+       utility method set elements list contents given collection  
+        param col given collection 
+        
+    
+       utility method add collection elements model 
+        param col given collection 
+        
+    
+       utility method target  sets target target null 
+       via method settarget    
+        return mmodelelement 
+        
+    
+       utility method changed element some event e 
+        param e event 
+        return object changed element 
+        
+   
+        see javax swing defaultlistmodel#contains java lang object  
+        
+    
+       sets target old target modelelement removes model element listener list target new target instanceof modelelement model added element listener new target   p function called user changes target   
+       hence shall not result any uml model changes  
+       hence block firing list events completely setting  
+       buildingmodel true duration function   p function looks lot one umlcomboboxmodel2  
+        
+        param thenewtarget new target 
+        
+   allow listening elements  
+   allow listening elements function allows subclasses listen modelelements given target guaranteed uml modelelement  
+        
+        param oldtarget uml modelelement nothing default function allows subclasses listen modelelements given target guaranteed uml modelelement  
+        
+        param newtarget uml modelelement nothing default     
+    
+       returns true given element valid e may added list elements  
+       
+        param element element tested 
+        return true valid 
+        
+    
+       returns true some event valid event valid element changed event valid determined via call isvalidelement method overriden subclasses cannot determine valid event checking changed element  
+       
+        param e event 
+        return boolean true valid 
+        
+   todo  considering delete events valid below going cause lots unecessary work some problems 
+   don't test changed element deleted tried remove value 
+   
+        see javax swing defaultlistmodel#addelement java lang object  
+        
+    
+       returns eventname method only here testing goals  
+        return string 
+        
+    
+       sets eventname eventname name melementevent list listen list registred umlmodeleventpump only gets events name eventname method called constructor every subclass  
+       
+        param theeventname eventname set 
+        
+   
+        see targetlistener#targetadded targetevent  
+        
+   
+        see targetlistener#targetremoved targetevent  
+        
+   
+        see targetlistener#targetset targetevent  
+        
+   
+        see javax swing abstractlistmodel#firecontentschanged  
+                object  int  int  
+        
+   
+        see javax swing abstractlistmodel#fireintervaladded  
+                object  int  int  
+        
+   
+        see javax swing abstractlistmodel#fireintervalremoved  
+                object  int  int  
+        
+    
+       override want popup menu  
+       see example umlmodelelementorderedlistmodel2  
+       
+        param popup popup menu 
+        param index selected item list moment mouse clicked 
+        return true popup menu created needs shown 
+       org argouml uml ui UMLModelElementListModel2 org argouml uml ui umlmodelelementlistmodel2 defaultlistmodel targetlistener  propertychangelistener logger log    
+        logger getlogger umlmodelelementlistmodel2 umlmodelelementlistmodel2 umlmodelelementlistmodel2 name eventname   name umlmodelelementlistmodel2 name  object metatype metatype   metatype  
+        eventname   name umlmodelelementlistmodel2 name   
+	    object metatype reversedropconnection metatype   metatype  
+        eventname   name reversedropconnection   reversedropconnection object getmetatype metatype isreversedropconnection reversedropconnection setbuildingmodel building buildingmodel   building setlisttarget object t listtarget   t propertychange propertychangeevent e e attributechangeevent isvalidevent e     
+                    rebuildmodellist invalidelementexception iee e addassociationevent isvalidevent e     
+                object o   getchangedelement e o collection    
+                    arraylist templist arraylist  collection  o   
+                    iterator it   templist iterator it hasnext      
+                        object o2   it next    
+                        addelement o2 addelement o e removeassociationevent valid getchangedelement e collection     
+                valid   contains getchangedelement e collection col    collection  getchangedelement e   
+                iterator it   col iterator    
+                valid it hasnext      
+                    object o   it next contains o     
+                        valid valid    
+                object o   getchangedelement e o collection    
+                    iterator it     collection  o  iterator it hasnext      
+                        object o3   it next    
+                        removeelement o3 removeelement o rebuildmodellist     
+        removeallelements    
+        buildingmodel buildmodellist invalidelementexception exception    
+              
+            log debug  buildmodellist threw exception target    
+                      gettarget          
+                      exception buildingmodel getsize     0    
+            fireintervaladded 0  getsize   - 1 buildmodellist setallelements collection col isempty    
+            removeallelements    
+        addall col addall collection col col size      0 iterator it   col iterator    
+        firelistevents intervalstart   getsize      0 ? 0   getsize   - 1 it hasnext      
+            object o   it next    
+            addelement o   
+          
+        firelistevents fireintervaladded intervalstart  getsize   - 1 object gettarget listtarget object getchangedelement propertychangeevent e e associationchangeevent associationchangeevent  e  getchangedvalue e attributechangeevent attributechangeevent  e  getsource e getnewvalue contains object elem contains elem elem collection    
+            iterator it     collection  elem  iterator it hasnext contains it next false settarget object thenewtarget    
+        thenewtarget   thenewtarget fig 
+            ?   fig  thenewtarget  getowner     thenewtarget model getfacade   isaumlelement thenewtarget  
+                   thenewtarget diagram model getfacade   isaumlelement listtarget     
+                model getpump   removemodeleventlistener listtarget  
+                        eventname   
+                  
+                removeothermodeleventlisteners listtarget model getfacade   isaumlelement thenewtarget     
+                listtarget   thenewtarget  
+                model getpump   addmodeleventlistener listtarget  
+                        eventname   
+                  
+                addothermodeleventlisteners listtarget   
+ 
+                rebuildmodellist listtarget removeallelements removeothermodeleventlisteners object oldtarget addothermodeleventlisteners object newtarget isvalidelement object element isvalidevent propertychangeevent e valid getchangedelement e collection e getnewvalue e getoldvalue isvalidelement getchangedelement e      
+                valid collection col    collection  getchangedelement e   
+            iterator it   col iterator col isempty      
+                valid it hasnext      
+                    object o   it next isvalidelement o     
+                        valid e getoldvalue collection 
+                          collection  e getoldvalue    isempty      
+                    valid valid addelement object obj obj contains obj addelement obj geteventname eventname seteventname theeventname    
+        eventname   theeventname targetadded targetevent e    
+        settarget e getnewtarget targetremoved targetevent e    
+        settarget e getnewtarget targetset targetevent e    
+        settarget e getnewtarget firecontentschanged object source index0 index1 firelistevents     buildingmodel firecontentschanged source  index0  index1 fireintervaladded object source index0 index1 firelistevents     buildingmodel fireintervaladded source  index0  index1 fireintervalremoved object source index0 index1 firelistevents     buildingmodel fireintervalremoved source  index0  index1 buildpopup jpopupmenu popup index org argouml uml ui UMLModelElementListModel2

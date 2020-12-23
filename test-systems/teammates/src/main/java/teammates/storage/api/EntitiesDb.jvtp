@@ -1,0 +1,133 @@
+ 
+    
+   base class classes performing crud operations against datastore  
+    param  e  specific entity class 
+    param specific attributes class 
+    
+    
+       preconditions  
+        br      code entitytoadd not null valid data  
+        
+    
+       creates multiple entities without checking existence calls   link #flush     
+       leading any previously deferred operations being written immediately  
+       
+        return list created entities  
+        
+   needs flush before returning 
+    
+       queues creation multiple entities actual writes done until   link #flush called  
+       note check existence - existing entities overwritten multiple entities same key queued  only last one queued created  
+       
+        return list created entities  
+        
+    
+       warning not use method unless previous update might cause 
+       adding new entity fail due entityalreadyexists exception 
+       preconditions  
+        br      code entitytoadd not null valid data  
+        
+   todo really need special identifiers use tostring  ? 
+   answer  yes use tostring  
+   todo  use method subclasses  
+    
+       note non-cascade delete  br  
+          br  fails silently object  
+        
+    
+       note method must overriden subclasses return entity matching entityattributes parameter  
+        return entity matches given   link entityattributes    code attributes  
+                   based default key identifiers  
+        
+    
+       note method must overriden subclasses return key query entity matching entityattributes parameter  
+        return key query entity matches given   link entityattributes    code attributes  
+                   based default key identifiers followings apis used teammates' search engineteammates storage api EntitiesDb teammates storage api entitiesdb e baseentity  a entityattributes e error_create_entity_already_exists    trying to create a %s that exists error_update_non_existent    trying to update non-existent entity error_update_non_existent_account    trying to update non-existent account error_update_non_existent_admin_email    trying to update non-existent admin email error_update_non_existent_student    trying to update non-existent student error_update_non_existent_student_profile    trying to update non-existent student profile error_update_non_existent_course    trying to update non-existent course error_update_non_existent_instructor_permission   
+             trying to update non-existing instructorpermission error_update_to_existent_instructor_permission   
+             trying to update to existent instructorpermission error_create_instructor_already_exists    trying to create a instructor that exists error_trying_to_make_non_existent_account_an_instructor   
+             trying to make an non-existent account an instructor e createentity a entitytoadd invalidparametersexception  entityalreadyexistsexception createentity entitytoadd list a  createentities collection a  entitiestoadd invalidparametersexception   
+        assumption assertnotnull statuscodes dblevel_null_input  entitiestoadd   
+ 
+        list a  entitiestoupdate arraylist      
+        list e  entities arraylist a entitytoadd   entitiestoadd    
+            entitytoadd sanitizeforsaving entitytoadd isvalid invalidparametersexception entitytoadd getinvalidityinfo hasentity entitytoadd     
+                entitiestoupdate add entitytoadd e entity   entitytoadd toentity    
+                entities add entity   
+              
+          
+ 
+        saveentities entities  entitiestoadd entitiestoupdate  
+      
+ 
+      
+     suppresswarnings  pmd unnecessarylocalbeforereturn list e  createentitieswithoutexistencecheck collection a  entitiestoadd invalidparametersexception   
+        list e  createdentities   createentitiesdeferred entitiestoadd   
+        flush createdentities list e  createentitiesdeferred collection a  entitiestoadd invalidparametersexception   
+        assumption assertnotnull statuscodes dblevel_null_input  entitiestoadd   
+ 
+        list e  entities arraylist a entitytoadd   entitiestoadd    
+            entitytoadd sanitizeforsaving entitytoadd isvalid invalidparametersexception entitytoadd getinvalidityinfo     
+              
+ 
+            e entity   entitytoadd toentity    
+            entities add entity   
+          
+ 
+        saveentitiesdeferred entities  entitiestoadd entities e createentitywithoutexistencecheck a entitytoadd invalidparametersexception createentity entitytoadd entityalreadyexistsexception e    
+            assumption fail  caught exception thrown by existence check even with existence check disabled e createentity a entitytoadd shouldcheckexistence invalidparametersexception  entityalreadyexistsexception   
+        assumption assertnotnull statuscodes dblevel_null_input  entitytoadd   
+ 
+        entitytoadd sanitizeforsaving entitytoadd isvalid invalidparametersexception entitytoadd getinvalidityinfo shouldcheckexistence    hasentity entitytoadd error format error_create_entity_already_exists  entitytoadd getentitytypeasstring    
+                      entitytoadd getidentificationstring    
+            log info error entityalreadyexistsexception error   
+          
+ 
+        e entity   entitytoadd toentity    
+ 
+        saveentity entity  entitytoadd entity saveentity e entitytosave    
+        assumption assertnotnull statuscodes dblevel_null_input  entitytosave   
+ 
+        saveentity entitytosave  makeattributes entitytosave saveentity e entitytosave  a entitytosaveattributesforlogging    
+        ofy   save   entity entitytosave  now    
+        log info entitytosaveattributesforlogging getbackupidentifier saveentities collection e  entitiestosave    
+        saveentities entitiestosave  makeattributes entitiestosave saveentities collection e  entitiestosave  collection a  entitiestosaveattributesforlogging a attributes   entitiestosaveattributesforlogging    
+            log info attributes getbackupidentifier     
+          
+        ofy   save   entities entitiestosave  now saveentitiesdeferred collection e  entitiestosave    
+        saveentitiesdeferred entitiestosave  makeattributes entitiestosave saveentitiesdeferred collection e  entitiestosave  collection a  entitiestosaveattributesforlogging a attributes   entitiestosaveattributesforlogging    
+            log info attributes getbackupidentifier     
+          
+        ofy   defer   save   entities entitiestosave flush     
+        ofy   flush deleteentity a entitytodelete    
+        assumption assertnotnull statuscodes dblevel_null_input  entitytodelete   
+ 
+        ofy   delete   keys getentityquerykeys entitytodelete   now    
+        log info entitytodelete getbackupidentifier deleteentities collection a  entitiestodelete    
+        assumption assertnotnull statuscodes dblevel_null_input  entitiestodelete   
+ 
+        list key e   keystodelete arraylist a entitytodelete   entitiestodelete    
+            key e  keytodelete   getentityquerykeys entitytodelete  first   now keytodelete keystodelete add keytodelete   
+            log info entitytodelete getbackupidentifier     
+          
+ 
+        ofy   delete   keys keystodelete  now deleteentitydirect e entitytodelete    
+        deleteentitydirect entitytodelete  makeattributes entitytodelete deleteentitydirect e entitytodelete  a entitytodeleteattributesforlogging    
+        ofy   delete   entity entitytodelete  now    
+        log info entitytodeleteattributesforlogging getbackupidentifier deleteentitiesdirect collection e  entitiestodelete    
+        deleteentitiesdirect entitiestodelete  makeattributes entitiestodelete deleteentitiesdirect collection e  entitiestodelete  collection a  entitiestodeleteattributesforlogging a attributes   entitiestodeleteattributesforlogging    
+            log info attributes getbackupidentifier     
+          
+        ofy   delete   entities entitiestodelete  now deletepicture blobkey key    
+        googlecloudstoragehelper deletefile key loadtype e  load e getentity a attributes querykeys e  getentityquerykeys a attributes hasentity a attributes getentityquerykeys attributes  first   now a makeattributes e entity a makeattributesornull e entity makeattributesornull entity a makeattributesornull e entity logmessage entity makeattributes entity logmessage log info logmessage list a  makeattributes collection e  entities    
+        list a  attributes linkedlist e entity   entities    
+            attributes add makeattributes entity attributes key e  makekeyornullfromwebsafestring websafestring websafestring null key create websafestring illegalargumentexception e putdocument indexname  searchdocument document searchmanager putdocument indexname  document build exception e    
+            log severe  failed to put searchable document in     indexname document tostring putdocuments indexname  list searchdocument  documents    
+        list document  searchdocuments arraylist searchdocument document   documents    
+            searchdocuments add document build searchmanager putdocuments indexname  searchdocuments exception e    
+            log severe  failed to batch put searchable documents in     indexname documents tostring results scoreddocument  searchdocuments indexname  searchquery query query getfiltersize     0 searchmanager searchdocuments indexname  query toquery searchqueryexception e    
+            log info  unsupported query query query tostring deletedocument indexname documentid searchmanager deletedocument indexname  documentid exception e    
+            log info  unable to delete document in the index      indexname     with document id     documentid   
+          
+      
+ 
+ teammates storage api EntitiesDb

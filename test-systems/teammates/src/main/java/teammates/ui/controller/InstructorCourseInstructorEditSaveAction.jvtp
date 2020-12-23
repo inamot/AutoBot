@@ -1,0 +1,80 @@
+ 
+   create redirection edit' page corresponding course id    
+    
+       checks any registered instructors modify instructors none instructor currently being edited granted privilege modifying instructors automatically  
+       
+        param courseid         id course  
+        param instructortoedit instructor edited may modified within method  
+        
+    
+       creates new instructor representing updated instructor information filled using request parameters includes basic information well custom privileges applicable   
+       
+        param courseid        id course instructor being added param instructorid    id instructor  
+        param instructorname  name instructor  
+        param instructoremail email instructor  
+        return updated instructor relevant info filled edits existing instructor's basic information consists everything apart custom privileges  
+       
+        param courseid              id course instructor being added param instructorid          id instructor  
+        param instructorname        name instructor  
+        param instructoremail       email instructor  
+        param instructorrole        role instructor  
+        param isdisplayedtostudents whether instructor visible students  
+        param displayedname         name visible students not code null  even code isdisplayedtostudents false  
+        return edited instructor updated basic info old custom privileges applicable  
+       teammates ui controller InstructorCourseInstructorEditSaveAction teammates ui controller instructorcourseinstructoreditsaveaction instructorcourseinstructorabstractaction   
+ 
+     override actionresult execute entitydoesnotexistexception courseid   getrequestparamvalue paramsnames course_id   
+        assumption assertpostparamnotnull paramsnames course_id  courseid instructorid   getrequestparamvalue paramsnames instructor_id instructorname   getrequestparamvalue paramsnames instructor_name   
+        assumption assertpostparamnotnull paramsnames instructor_name  instructorname instructoremail   getrequestparamvalue paramsnames instructor_email   
+        assumption assertpostparamnotnull paramsnames instructor_email  instructoremail   
+ 
+        instructorattributes instructor   logic getinstructorforgoogleid courseid  account googleid   
+        gatekeeper verifyaccessible instructor  logic getcourse courseid paramsnames instructor_permission_modify_instructor   
+ 
+        instructorattributes instructortoedit   
+                extractupdatedinstructor courseid  instructorid  instructorname  instructoremail   
+        updatetoensurevalidityofinstructorsforthecourse courseid  instructortoedit instructorid logic updateinstructorbyemail instructoremail  instructortoedit logic updateinstructorbygoogleid instructorid  instructortoedit   
+              
+ 
+            statustouser add statusmessage format statusmessages course_instructor_edited  instructorname   
+                                               statusmessagecolor success    
+            statustoadmin    instructor  span bold\       instructorname      span course  span bold\       courseid       span  edited  br name      instructorname     br email      instructoremail invalidparametersexception e    
+            setstatusforexception e   
+          
+ 
+          
+        redirectresult result   createredirectresult actionuris instructor_course_edit_page   
+        result addresponseparam paramsnames course_id  courseid result updatetoensurevalidityofinstructorsforthecourse courseid  instructorattributes instructortoedit    
+        list instructorattributes  instructors   logic getinstructorsforcourse courseid numofinstrcanmodifyinstructor   0  
+        instructorattributes instrwithmodifyinstructorprivilege instructorattributes instructor   instructors instructor isallowedforprivilege paramsnames instructor_permission_modify_instructor     
+                numofinstrcanmodifyinstructor    
+                instrwithmodifyinstructorprivilege   instructor islastreginstructorwithprivilege   numofinstrcanmodifyinstructor    1 
+                                                      instrwithmodifyinstructorprivilege instrwithmodifyinstructorprivilege isregistered   
+                                                              instrwithmodifyinstructorprivilege googleid 
+                                                                      equals instructortoedit googleid islastreginstructorwithprivilege    
+            instructortoedit privileges updateprivilege paramsnames instructor_permission_modify_instructor instructorattributes extractupdatedinstructor courseid instructorid instructorname instructoremail instructorrole   getrequestparamvalue paramsnames instructor_role_name   
+        assumption assertpostparamnotnull paramsnames instructor_role_name  instructorrole isdisplayedtostudents   getrequestparamvalue paramsnames instructor_is_displayed_to_student displayedname   getrequestparamvalue paramsnames instructor_display_name displayedname displayedname isempty      
+            displayedname   instructorattributes default_display_name  
+          
+        instructorrole   sanitizationhelper sanitizename instructorrole   
+        displayedname   sanitizationhelper sanitizename displayedname   
+ 
+        instructorattributes instructortoedit   
+                updatebasicinstructorattributes courseid  instructorid  instructorname  instructoremail  
+                                                instructorrole  isdisplayedtostudents  displayedname instructorrole equals instructorpermissionrolenames instructor_permission_role_custom     
+            updateinstructorcourselevelprivileges instructortoedit   
+          
+ 
+        updateinstructorwithsectionlevelprivileges courseid  instructortoedit   
+ 
+        instructortoedit privileges validateprivileges instructortoedit instructorattributes updatebasicinstructorattributes courseid instructorid instructorname instructoremail instructorrole isdisplayedtostudents displayedname    
+        instructorattributes instructortoedit instructorid instructortoedit   logic getinstructorforemail courseid  instructoremail instructortoedit   logic getinstructorforgoogleid courseid  instructorid   
+          
+        instructortoedit name   sanitizationhelper sanitizename instructorname   
+        instructortoedit email   sanitizationhelper sanitizeemail instructoremail   
+        instructortoedit role   sanitizationhelper sanitizename instructorrole   
+        instructortoedit displayedname   sanitizationhelper sanitizename displayedname   
+        instructortoedit isdisplayedtostudents   isdisplayedtostudents  
+        instructortoedit privileges instructorprivileges instructortoedit role instructortoedit  
+      
+ teammates ui controller InstructorCourseInstructorEditSaveAction

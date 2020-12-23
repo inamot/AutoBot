@@ -1,0 +1,97 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   examines removes out date target files any target files out date respect any source files target 
+   files removed useful dependencies cannot computed example  dynamically interpreted parameters files need stay synch not directly linked ant task question compute not example linked dtd xml file using xslt task   
+   
+   nested arguments  
+    ul  
+    li sources         resource union describing source resources examine  
+    li srcfileset      fileset describing source files examine  
+    li srcfilelist     filelist describing source files examine  
+    li targets         path describing target files examine  
+    li targetfileset   fileset describing target files examine  
+    li targetfilelist  filelist describing target files examine  
+     ul least one both source target entities required  
+    p task examine each sources against each target files any target files out date respect any sources targets removed any sources targets not exist targets removed  
+   hint missing files ignored  specify include patterns filesets using filelists  
+     p  p task attempts optimize speed dependency checking comparing only dates oldest target file newest source  
+     p  p  
+   example uses  
+    ul  li  
+   record fact xml file must up date respect xsd 
+    schema file   even though xml file itself includes reference xsd  
+     li  li  
+   record fact xsl stylesheet includes sub-stylesheets 
+     li  li  
+   record fact java files must recompiled ant build file changes 
+     li   ul  
+   
+    ant task category  filesystem ant 1 4 
+    
+  trick evoke  basedir not set null  
+    
+       create nested sources element  
+        return union instance  
+        
+    
+       add set source files  
+        param fs fileset add  
+        
+    
+       add list source files  
+        param fl filelist add  
+        
+    
+       create nested targets element  
+        return union instance  
+        
+    
+       add set target files  
+        param fs fileset add  
+        
+    
+       add list target files  
+        param fl filelist add  
+        
+    
+       execute task  
+        throws buildexception errors occur sources   nothing compare targets   nothing delete org apache tools ant taskdefs DependSet org apache tools ant taskdefs dependset matchingtask resourcecomparator date_asc org apache tools ant types resources comparators date nonexistent restrict nonexistent resourcecollection rc add rc add not_exists xest sort xest resourcecollection rc  resourcecomparator c add c add rc oldest xest oldest resourcecollection rc rc  date_asc newest xest newest resourcecollection rc rc  date_desc hidemissingbasedir resourcecollection hidemissingbasedir fileset fs fs   fs iterator iterator basedirexists   ? fs iterator     resources empty_iterator size basedirexists   ? fs size     0 isfilesystemonly basedirexists     
+            file basedir   fs getdir basedir basedir exists union createsources     
+        sources    sources union     sources sources addsrcfileset fileset fs    
+        createsources   add fs addsrcfilelist filelist fl    
+        createsources   add fl path createtargets     
+        targets    targets path getproject      targets targets addtargetfileset fileset fs    
+        createtargets   add hidemissingbasedir fs addtargetfilelist filelist fl    
+        createtargets   add fl execute buildexception sources buildexception  
+               at least one set of source resources must be specified targets buildexception  
+               at least one set of target files must be specified sources size     0    targets size     0     uptodate sources  targets     
+           log  deleting all target files    project msg_verbose   
+           delete delete delete    
+           delete bindtoowner delete add targets   
+           delete perform uptodate resourcecollection src  resourcecollection target    
+        org apache tools ant types resources selectors date datesel org apache tools ant types resources selectors date    
+        datesel setmillis system currenttimemillis     
+        datesel setwhen timecomparison after   
+        logfuture targets  datesel netargets nonexistent targets  size netargets   0    
+            log netargets     nonexistent targets   project msg_verbose fileresource oldesttarget    fileresource oldest targets  iterator   next     
+        log oldesttarget     is oldest target file   project msg_verbose   
+ 
+        logfuture sources  datesel nesources nonexistent sources  size nesources   0    
+            log nesources     nonexistent sources   project msg_verbose resource newestsource    resource newest sources  iterator   next     
+        log newestsource tolongstring       is newest source   project msg_verbose oldesttarget getlastmodified      newestsource getlastmodified logfuture resourcecollection rc  resourceselector rsel    
+        restrict r restrict    
+        r add rsel   
+        r add rc iterator i   r iterator    i hasnext       
+            log  warning      i next       modified in the future    project msg_warn   
+          
+      
+ org apache tools ant taskdefs DependSet

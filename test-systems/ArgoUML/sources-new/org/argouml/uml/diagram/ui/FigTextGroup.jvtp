@@ -1,0 +1,88 @@
+ 
+   $id$ 
+   copyright  c  2003-2006 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications  
+    
+   custom class group figtexts way don't 
+   overlap group shrinked fit whitespace group   
+   
+    author jaap branderhorst xs4all nl 
+    
+    
+       adds figtext list figs  makes sure figtexts not overlap  
+         inheritdoc  
+        
+    
+       updates figtexts  figtexts without text  equals not shown rest figtexts shown non-overlapping first figtext 
+       added  via addfig shown bottom figtextgroup  
+        
+   
+        see org tigris gef presentation fig#calcbounds widest textfigs 
+   calculate total height 
+   
+        see org tigris gef presentation fig#removefromdiagram   
+        
+   
+        see org tigris gef presentation fig#deletefrommodel   
+        
+                                                                 
+   event handlers - mouselistener implementation 
+   
+        see java awt event mouselistener#mousepressed java awt event mouseevent  
+        
+   ignored 
+   
+        see java awt event mouselistener#mousereleased java awt event mouseevent  
+        
+   ignored 
+   
+        see java awt event mouselistener#mouseentered java awt event mouseevent  
+        
+   ignored 
+   
+        see java awt event mouselistener#mouseexited java awt event mouseevent  
+        
+   ignored 
+    
+       handle mouse click user double clicks any part figgroup  pass down one internal figs allows user initiate direct text editing  
+        
+         inheritdoc  
+       org argouml uml diagram ui FigTextGroup org argouml uml diagram ui figtextgroup argofiggroup mouselistener   
+ 
+  
+ 
+      
+     override addfig fig f addfig f   
+        updatefigtexts    
+        calcbounds updatefigtexts     
+        iterator it   getfigs   iterator height   0 it hasnext      
+            fig fig    fig  it next figheight   fig getminimumsize   height  
+            fig setbounds getx    gety     height  fig getwidth    figheight   
+            fig endtrans    
+            height    fig getheight calcbounds     
+    	updatefigtexts supresscalcbounds calcbounds maxwidth   0 height   0  
+            iterator it   getfigs   iterator it hasnext      
+                fig fig    fig  it next fig getwidth     maxwidth    
+                    maxwidth   fig getwidth    
+                  
+                fig setheight fig getminimumsize   height   
+                height    fig getheight    
+              
+            _w   maxwidth  
+            _h   height removefromdiagram     
+        iterator it   getfigs   iterator it hasnext      
+              fig  it next    removefromdiagram removefromdiagram deletefrommodel     
+        iterator it   getfigs   iterator it hasnext      
+              fig  it next    deletefrommodel deletefrommodel mousepressed mouseevent me mousereleased mouseevent me mouseentered mouseevent me mouseexited mouseevent me mouseclicked mouseevent me me isconsumed me getclickcount      2    
+            fig f   hitfig rectangle me getx   - 2  me gety   - 2  4  4 f mouselistener  
+		  mouselistener  f  mouseclicked me   
+          
+        me consume    
+      
+ org argouml uml diagram ui FigTextGroup

@@ -1,0 +1,229 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   performs regular expression string replacements text 
+   file input file s  must properly processed reader instance must text only binary syntax regular expression depends implementation choose use system property  code ant regexp regexpimpl  code classname implementation used default code org apache tools ant util regexp jakartaororegexp  code requires jakarta oro package   
+   
+    pre jdk   lt   1 3 two available implementations  
+     org apache tools ant util regexp jakartaororegexp default  
+          requires jakarta-oro package 
+   
+     org apache tools ant util regexp jakartaregexpregexp 
+          requires jakarta-regexp package jdk  gt   1 4 additional implementation available  
+     org apache tools ant util regexp jdk14regexpregexp 
+          requires jdk 1 4 built regular expression package  
+   
+   usage  
+   
+     call syntax  
+   
+        lt replaceregexp file  file  
+                      match  pattern  
+                      replace  pattern  
+                      flags  options ? 
+                      byline  true false ?  gt  
+         regexp? 
+         substitution? 
+         fileset  
+        lt  replaceregexp gt  
+   
+      note must either file attribute specified least one fileset subelement operation may not file attribute specified nest fileset elements 
+      inside task cannot specify both match regular expression subelement same time specify replace attribute substitution subelement same time  
+   
+     attributes  
+   
+       file    -- gt single file operation mutually exclusive fileset subelements  
+       match   -- gt regular expression match 
+       replace -- gt expression replacement string 
+       flags   -- gt options give replacement 
+                   g   substitute occurrences  default replace only first one case insensitive match 
+   
+       byline  -- gt file processed single line time  default false  
+                    true  indicates perform replacement line line basis 
+                    false  indicates perform replacement whole file once  
+   
+    example following call used replace old property name properties  
+       file new name replace attribute refer any part match expression parenthesis using backslash followed number 1'  
+   
+        lt replaceregexp file  test properties  
+                      match  myproperty       
+                      replace  newproperty \1  
+                      byline  true    gt  
+   
+     pre  
+   
+    
+   keep jdk 1 1 compliant others use encoding assume files 
+        
+    default constructor     
+    
+       file regular expression replaced  
+       required unless nested fileset supplied  
+        param file file reg exp replaced regular expression pattern match file s   
+       required nested  lt regexp gt used 
+        param match match attribute substitution pattern place file s place regular expression  
+       required nested  lt substitution gt used 
+        param replace replace attribute flags use matching regular expression information  consult perl5 syntax  
+        ul  
+         li g   global replacement   replace occurrences found 
+         li case insensitive not consider case match 
+         li m   multiline   treat string multiple lines input  
+               using start end any line  respectively start end string  
+         li  s   singleline   treat string single line input  using match any character  including newline normally not match  
+        ul  
+        param flags flags attribute 
+        
+    
+       process file s  one line time  executing replacement one line time useful want only replace first occurrence regular expression each line not easy processing file whole  
+       defaults false td  
+        param byline byline attribute string 
+        deprecated 1 6 x  
+                   use setbyline boolean   
+        
+    
+       process file s  one line time  executing replacement one line time useful want only replace first occurrence regular expression each line not easy processing file whole  
+       defaults false td  
+        param byline byline attribute 
+        
+    
+       specifies encoding ant expects files defaults platforms default encoding  
+        param encoding encoding attribute ant 1 6 
+        
+    
+       list files apply replacement param set fileset element regular expression use element refer previously 
+       defined regular expression datatype instance 
+        return regular expression object configured element substitution pattern use element refer previously 
+       defined substitution pattern datatype instance  
+        return substitution pattern object configured element 
+        
+    
+       invoke regular expression  r string  input  using 
+       substitutions  s matching regex  
+       
+        param r regular expression 
+        param s substitution 
+        param input string replacement param options options regular expression 
+        return replacement result 
+        
+    
+        perform replacement file 
+       
+        param f file perform relacement param options regular expressions options 
+        exception ioexception error occurs 
+        
+   second cr -  eol   possibly empty line 
+   hascr still true second one  
+   first cr line 
+   lf -  eol 
+   any char 
+   mac-style linebreak eof both  
+    
+       execute task 
+       
+        throws buildexception problem task execution  
+       org apache tools ant taskdefs optional ReplaceRegExp org apache tools ant taskdefs optional replaceregexp task replaceregexp file filesets vector flags byline regex subs setfile file file file   file setmatch match regex buildexception  only one regular expression is allowed    
+          
+ 
+        regex regularexpression    
+        regex setpattern match setreplace replace subs buildexception  only one substitution expression is   
+                                        allowed    
+          
+ 
+        subs substitution    
+        subs setexpression replace setflags flags flags   flags setbyline byline res valueof byline res res byline   res booleanvalue setbyline byline byline   byline setencoding encoding encoding   encoding addfileset fileset set    
+        filesets addelement set regularexpression createregexp regex buildexception  only one regular expression is allowed     
+          
+ 
+        regex regularexpression regex substitution createsubstitution subs buildexception  only one substitution expression is   
+                                        allowed    
+          
+ 
+        subs substitution subs doreplace regularexpression r  
+                               substitution s input options res   input  
+        regexp regexp   r getregexp getproject regexp matches input  options     
+            log  found match  substituting   project msg_debug   
+            res   regexp substitute input  s getexpression getproject     
+                                    options res doreplace file f options ioexception   
+        file temp   file_utils createtempfile  replace     txt temp deleteonexit    
+ 
+        reader r writer w encoding r filereader f   
+                w filewriter temp r inputstreamreader fileinputstream f   encoding   
+                w outputstreamwriter fileoutputstream temp   
+                                           encoding   
+              
+ 
+            bufferedreader br bufferedreader r   
+            bufferedwriter bw bufferedwriter w   
+            printwriter pw printwriter bw changes log  replacing pattern '    regex getpattern getproject    
+                   ' with '    subs getexpression getproject    
+                   ' in '    f getpath      '     byline ?   by line        
+                   flags length     0 ?   with flags  '    flags    '        
+                       project msg_verbose byline    
+                stringbuffer linebuf stringbuffer line res c hascr c   br read c    '\r hascr    
+                              
+                            line   linebuf tostring    
+                            res    doreplace regex  subs  line  options res equals line     
+                                changes pw print res   
+                            pw print '\r'   
+ 
+                            linebuf stringbuffer hascr c    '\n'    
+                          
+                        line   linebuf tostring    
+                        res    doreplace regex  subs  line  options res equals line     
+                            changes pw print res hascr    
+                            pw print '\r'   
+                            hascr pw print '\n'   
+ 
+                        linebuf stringbuffer hascr      c   0     
+                              
+                            line   linebuf tostring    
+                            res    doreplace regex  subs  line  options res equals line     
+                                changes pw print res hascr    
+                                pw print '\r'   
+                                hascr linebuf stringbuffer c    0    
+                            linebuf append c c    0   
+ 
+                pw flush buf   fileutils readfully br buf buf res   doreplace regex  subs  buf  options res equals buf     
+                    changes pw print res   
+                pw flush    
+              
+ 
+            r close    
+            r w close    
+            w changes    
+                log  file has changed  saving the updated file   project msg_verbose file_utils rename temp  f   
+                    temp ioexception e buildexception  couldn't rename temporary file   
+                                               temp  getlocation log  no change made   project msg_debug fileutils close r   
+            fileutils close w temp temp delete execute buildexception regex buildexception  no expression to match subs buildexception  nothing to replace expression with file filesets size     0 buildexception  you cannot supply the 'file' attribute   
+                                        and filesets at the same time options   0 flags indexof 'g'     -1    
+            options    regexp replace_all flags indexof 'i'     -1    
+            options    regexp match_case_insensitive flags indexof 'm'     -1    
+            options    regexp match_multiline flags indexof 's'     -1    
+            options    regexp match_singleline file file exists doreplace file  options ioexception e    
+                log  an error occurred processing file  '  
+                      file getabsolutepath      '      e tostring    
+                    project msg_err file log  the following file is missing  '  
+                  file getabsolutepath      '   project msg_err sz   filesets size i   0  i   sz  i      
+            fileset fs    fileset   filesets elementat i    
+            directoryscanner ds   fs getdirectoryscanner getproject files   ds getincludedfiles j   0  j   files length  j      
+                file f file fs getdir getproject     files j f exists doreplace f  options exception e    
+                        log  an error occurred processing file  '  
+                              f getabsolutepath      '      e tostring    
+                            project msg_err log  the following file is missing  '  
+                          f getabsolutepath      '   project msg_err   
+                  
+              
+          
+      
+ 
+  
+ 
+org apache tools ant taskdefs optional ReplaceRegExp

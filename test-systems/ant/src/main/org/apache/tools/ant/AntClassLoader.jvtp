@@ -1,0 +1,668 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   used load classes within ant different classpath used start ant  note possible force class loader even class system classpath using forceloadclass method  any subsequent classes loaded class use loader system class loader  
+   
+    p  
+   note classloader feature allow loading reverse order isolation   
+   due fact number methods java lang classloader final least java 1 4 getresources means class fake given parent  
+     p enumeration resources given name found within classpath class loader enumeration used classloader findresources method turn used classloader getresources method  
+       
+        see antclassloader#findresources string  
+        see java lang classloader#getresources string name resource being searched index next classpath element search url next resource return enumeration field code null  code enumeration completed e elements return  
+            
+    
+           constructs new enumeration resources given name found 
+           within class loader's classpath  
+           
+            param name name resource search indicates whether elements enumeration return  
+           
+            return  code true  code elements enumeration   code false  code  otherwise  
+            
+    
+           returns next resource enumeration  
+           
+            return next resource enumeration 
+            
+    
+           locates next resource correct name classpath sets  code nextresource  code url resource resources found   code nextresource  code set code null  code   
+            
+   ignore path elements not valid relative project size buffers used classloader  
+        
+    
+       number array elements test array strings components classpath classloader searches classes project class loader belongs  
+        
+    
+       indicates whether parent class loader consulted before trying load class loader package roots loaded parent class 
+       loader regardless whether parent class loader being searched 
+       first not package roots loaded class loader 
+       regardless whether parent class loader being searched first not  
+        
+    
+       whether not classloader ignore base 
+       classloader t find class  
+       
+        see #setisolated boolean parent class loader one given determined hashtable zip files opened classloader  file zipfile   
+        
+    static map jar file time manifiest class-path entries context loader saved setting thread's current 
+       context loader  
+        
+    
+       whether not context loader currently saved  
+        
+    
+       create ant classloader given project parent classloader initial classpath ant 1 7  
+        param parent parent classloader  
+        param project project classloader belong  
+        param classpath classpath use load classes  
+        
+    
+       create ant class loader 
+        
+    
+       creates classloader given project using classpath given  
+       
+        param project project classloader belong  
+                      must not code null  code   
+        param classpath classpath use load classes combined system classpath manner 
+                      determined value build sysclasspath   
+                      may code null  code case path 
+                      elements set up start creates classloader given project using classpath given  
+       
+        param parent parent classloader unsatisfied loading 
+                     attempts delegated  may code null  code case classloader loaded class used parent  
+        param project project classloader belong  
+                      must not code null  code   
+        param classpath classpath use load classes  
+                        may code null  code case path 
+                        elements set up start param parentfirst code true  code   indicates parent 
+                          classloader consulted  before trying load class through loader  
+        
+    
+       creates classloader given project using classpath given  
+       
+        param project project classloader belong  
+                      must not code null  code   
+        param classpath classpath use load classes  may code null  code case path 
+                        elements set up start param parentfirst code true  code   indicates parent 
+                          classloader consulted before trying load class through loader  
+        
+    
+       creates empty class loader classloader configured path elements specify loader look classes  
+       
+        param parent parent classloader unsatisfied loading 
+                     attempts delegated  may code null  code case classloader loaded class used parent  
+        param parentfirst code true  code   indicates parent 
+                          classloader consulted before trying load class through loader  
+        
+    
+       set project associated class loader 
+       
+        param project project instance 
+        
+    
+       set classpath search classes load not changed once classloader starts server classes 
+       
+        param classpath search classpath consisting directories jar zip files  
+        
+   ignore path elements invalid 
+   relative project 
+    
+       set parent class loader class loader class loader delegate load classes 
+       
+        param parent parent class loader  
+        
+    
+       control whether class lookup delegated parent loader first loader  use extreme caution  setting false violates class loader hierarchy lead linkage errors 
+       
+        param parentfirst true  delegate initial class search parent 
+                          classloader  
+        
+    
+       logs message through project object one provided  
+       
+        param message message log not code null  code   
+       
+        param priority logging priority message system out println message   
+             
+    
+       sets current thread's context loader classloader  storing current loader value later resetting  
+        
+    
+       resets current thread's context loader original value  
+        
+    
+       adds element classpath searched  
+       
+        param pathelement path element add  must not code null  code   
+       
+        exception buildexception given path element cannot resolved 
+                                 against project  
+        
+    
+       add file path  
+       reads manifest available adds any additional class path jars 
+       specified manifest  
+       
+        param pathcomponent file added path class loader 
+       
+        throws ioexception data needed file cannot read  
+        
+   ignore 
+    
+       returns classpath classloader consult  
+       
+        return classpath used classloader elements 
+               separated path separator system  
+        
+    
+       sets whether classloader run isolated mode isolated mode  classes not found given classpath not referred parent class loader cause classnotfoundexception  
+       
+        param isolated whether not classloader run isolated mode  
+        
+    
+       forces initialization class jdk 1 1 compatible  albeit hacky 
+       way  
+       
+        param theclass class initialize  
+                       must not code null  code   
+       
+        deprecated 1 6 x  
+                   use class forname initialize true instead  
+        
+      hack ask vm create instance voluntarily providing illegal arguments force vm run class' static initializer same time not running valid constructor least one constructor guaranteed check anyway  
+   expecting exception thrown call  
+   illegalargumentexception  wrong number arguments 
+   ignore interested only side 
+   effect getting static initializers 
+   invoked not want call valid 
+   constructor side effect attempt made call hopefully 
+   invalid constructor - come nobody constructor takes 256 string arguments fact t - according jvm spec 
+   section 4 10 number method parameters limited 255 definition method descriptor  
+   constructors count methods here   
+    
+       adds package root list packages must loaded parent loader subpackages included  
+       
+        param packageroot root packages included not code null  code   
+        
+    
+       adds package root list packages must loaded using loader subpackages included  
+       
+        param packageroot root packages included not code null  code   
+        
+    
+       loads class through class loader even class available parent classpath ensures any classes loaded returned class use classloader  
+       
+        param classname name class loaded  
+                        must not code null  code   
+       
+        return required class object 
+       
+        exception classnotfoundexception requested class not exist loader's classpath  
+        
+    
+       loads class through class loader defer parent class 
+       loader ensures instances returned class compatible instances already loaded parent 
+       loader  
+       
+        param classname name class loaded  
+                        must not code null  code   
+       
+        return required class object 
+       
+        exception classnotfoundexception requested class not exist loader's classpath  
+        
+    
+       returns stream read requested resource name  
+       
+        param name name resource stream required  
+                   must not code null  code   
+       
+        return stream required resource code null  code resource cannot found loader's classpath  
+        
+    
+       returns stream read requested resource name loader  
+       
+        param name name resource stream required  
+                   must not code null  code   
+       
+        return stream required resource code null  code resource cannot found loader's classpath need search components path see find class want  
+    
+       finds system resource loaded parent 
+       classloader   
+       
+        param name name system resource load  
+                   must not code null  code   
+       
+        return stream named resource code null  code resource cannot found  
+        
+    
+       returns inputstream given resource given file may 
+       either directory zip file  
+       
+        param file file  directory jar search resource  must not code null  code   
+        param resourcename name resource stream required  must not code null  code   
+       
+        return stream required resource code null  code resource cannot found given file zip file cache 
+    
+       tests whether not parent classloader checked resource before one resource matches both use parent classloader first use classloader first  
+       lists latter takes priority  
+       
+        param resourcename name resource check  
+                           must not code null  code   
+       
+        return whether not parent classloader checked resource before one default global setting see class belongs package designated use specific loader first one parent one  
+   xxx - shouldn't always return false isolated mode? 
+    
+       used isolated resource seaching  
+        return root classloader antclassloader  
+        
+    
+       finds resource given name resource some data  images  audio  text  etc accessed class 
+       code way independent location code  
+       
+        param name name resource stream required  
+                   must not code null  code   
+       
+        return url reading resource code null  code resource not found caller doesn't adequate privileges resource need search components path see find class want  
+   try load loader parent either didn't find wasn't consulted loader first didn't find try parent 
+    
+       returns enumeration urls representing resources given name searching class loader's classpath  
+       
+        param name resource name search must not code null  code   
+        return enumeration urls resources 
+        exception ioexception o errors occurs t happen  
+        
+   url    findresources string name  throws ioexception   
+   url    mine   new resourceenumeration name   
+   url    base  
+   delegate parent  
+   note cause overlaps case classloader parent matches  
+   classloader parent already delegated classloader getresources need  
+   normal case  
+   inverted  
+    
+       returns url given resource given file may 
+       either directory zip file  
+       
+        param file file  directory jar search resource  must not code null  code   
+        param resourcename name resource stream required  must not code null  code   
+       
+        return stream required resource code null  code resource cannot found given file object  
+        
+    
+       loads class class loader class attempts load class order determined whether not class matches system loader package lists loader package list taking priority classloader isolated 
+       mode  failure load class loader result classnotfoundexception  
+       
+        param classname name class loaded  
+                        must not code null  code   
+        param resolve  code true  code classes upon class 
+                      depends loaded  
+       
+        return required class object 
+       
+        exception classnotfoundexception requested class not exist system classpath not isolated mode loader's 
+       classpath  
+        
+   'sync needed - otherwise 2 threads load same class 
+   twice  resulting linkageerror  duplicated class definition  
+   findloadedclass avoids without sync won't work  
+    
+       converts class dot notation filesystem equivalent searching purposes  
+       
+        param classname class name dot format  eg java lang integer   
+                        must not code null  code   
+       
+        return classname filesystem format  eg java lang integer class  
+        
+    
+       define class given bytes 
+       
+        param container container class data read 
+                        may directory jar zip file  
+       
+        param classdata bytecode data class 
+        param classname name class 
+       
+        return class instance created given data 
+       
+        throws ioexception class data cannot read  
+        
+   xxx instead make new protectiondomain codesource 
+   corresponding container touri   tourl same 
+   permissioncollection project class protectiondomain define package information associated class  
+       
+        param container file containing class definition  
+        param classname class name package information determined  
+       
+        exception ioexception package information cannot read container  
+        
+   already defined 
+   define package now manifest given jar indeed jar manifest 
+       
+        param container file manifest required  
+       
+        return jar's manifest null container not jar manifest  
+       
+        exception ioexception manifest cannot read  
+        
+    
+       define package information class comes jar manifest 
+       
+        param container jar file containing manifest 
+        param packagename name package being defined  
+        param manifest jar's manifest 
+        
+   ignore 
+    
+       reads class definition stream  
+       
+        param stream stream class read  
+                     must not code null  code   
+        param classname name class stream  
+                        must not code null  code   
+        param container file directory containing class  
+       
+        return class object read stream  
+       
+        exception ioexception problem reading class stream  
+        exception securityexception security problem reading class stream  
+        
+    
+       searches load class classpath class loader  
+       
+        param name name class loaded  must not code null  code   
+       
+        return required class object 
+       
+        exception classnotfoundexception requested class not exist loader's classpath  
+        
+    
+       indicate given file loader's path 
+       
+        param component file checked 
+       
+        return true file class path 
+        
+    
+       finds class given classpath  
+       
+        param name name class loaded  must not code null  code   
+       
+        return required class object 
+       
+        exception classnotfoundexception requested class not exist loader's classpath need search components path see find class want  
+   ioe printstacktrace    
+  ignore 
+    
+       finds system class loaded same classloader ant core jdk 1 1 compatibility uses findsystemclass method parent classloader specified  
+       
+        param name name class loaded  
+                   must not code null  code   
+       
+        return required class object 
+       
+        exception classnotfoundexception requested class not exist loader's classpath  
+        
+    
+       cleans up any resources held classloader  any open archive 
+       files closed  
+        
+   ignore 
+    
+       empty implementation satisfy buildlistener interface  
+       
+        param event buildstarted event 
+        
+   not significant class loader  
+    
+       cleans up any resources held classloader end build  
+       
+        param event buildfinished event 
+        
+    
+       cleans up any resources held classloader end subbuild created subbuild's project 
+       instance  
+       
+        param event buildfinished event ant 1 6 2 
+        
+    
+       empty implementation satisfy buildlistener interface  
+       
+        param event buildstarted event ant 1 6 2 
+        
+   not significant class loader  
+    
+       empty implementation satisfy buildlistener interface  
+       
+        param event targetstarted event 
+        
+   not significant class loader  
+    
+       empty implementation satisfy buildlistener interface  
+       
+        param event targetfinished event 
+        
+   not significant class loader  
+    
+       empty implementation satisfy buildlistener interface  
+       
+        param event taskstarted event 
+        
+   not significant class loader  
+    
+       empty implementation satisfy buildlistener interface  
+       
+        param event taskfinished event 
+        
+   not significant class loader  
+    
+       empty implementation satisfy buildlistener interface  
+       
+        param event messagelogged event 
+        
+   not significant class loader  
+    
+       add any libraries come different java versions 
+       here 
+        
+    
+       returns code string  code  representing loader  
+        return path classloader org apache tools ant AntClassLoader org apache tools ant antclassloader classloader subbuildlistener resourceenumeration enumeration   
+          
+  
+ 
+          
+  
+ 
+          
+  
+ 
+          
+        resourceenumeration name resourcename   name pathelementsindex   0  
+            findnextresource hasmoreelements nextresource object nextelement     
+            url ret nextresource  
+            findnextresource ret findnextresource     
+            url url pathelementsindex   pathcomponents size    
+                       url file pathcomponent 
+                           file  pathcomponents elementat pathelementsindex   
+                    url   getresourceurl pathcomponent resourcename   
+                    pathelementsindex buildexception e nextresource   url antclassloader  
+        classloader parent  project project  path classpath    
+        setparent parent   
+        setclasspath classpath   
+        setproject project antclassloader     
+        setparent antclassloader project project  path classpath    
+        setparent setproject project   
+        setclasspath classpath antclassloader classloader parent  project project  path classpath parentfirst project  classpath parent setparent parent   
+          
+        setparentfirst parentfirst   
+        addjavalibraries antclassloader project project  path classpath parentfirst project  classpath  parentfirst antclassloader classloader parent parentfirst    
+        setparent parent   
+        project parentfirst   parentfirst setproject project project project   project project project addbuildlistener setclasspath path classpath    
+        pathcomponents removeallelements classpath path actualclasspath   classpath concatsystemclasspath  ignore pathelements   actualclasspath list i   0  i   pathelements length    i addpathelement pathelements i buildexception e setparent classloader parent parent parent   antclassloader getclassloader parent   parent setparentfirst parentfirst parentfirst   parentfirst log message priority project project log message  priority setthreadcontextloader iscontextloadersaved buildexception  context loader has not been reset loaderutils iscontextloaderavailable      
+            savedcontextloader   loaderutils getcontextclassloader    
+            classloader loader project only  equals project getproperty  build sysclasspath       
+                loader getclass   getclassloader    
+              
+            loaderutils setcontextclassloader loader   
+            iscontextloadersaved resetthreadcontextloader loaderutils iscontextloaderavailable   
+               iscontextloadersaved    
+            loaderutils setcontextclassloader savedcontextloader   
+            savedcontextloader iscontextloadersaved addpathelement pathelement buildexception   
+        file pathcomponent 
+              project project resolvefile pathelement file pathelement addpathfile pathcomponent ioexception e buildexception e addpathfile file pathcomponent ioexception   
+        pathcomponents addelement pathcomponent pathcomponent isdirectory abspathplustimeandlength   
+            pathcomponent getabsolutepath     pathcomponent lastmodified      -  
+              pathcomponent length classpath pathmap get abspathplustimeandlength classpath zipfile jarfile inputstream manifeststream jarfile zipfile pathcomponent   
+                manifeststream 
+                      jarfile getinputstream zipentry  meta-inf manifest mf manifeststream reader manifestreader inputstreamreader manifeststream   utf-8    
+                org apache tools ant taskdefs manifest manifest org apache tools ant taskdefs manifest manifestreader   
+                classpath 
+                      manifest getmainsection   getattributevalue path org apache tools ant taskdefs manifestexception e manifeststream manifeststream close jarfile jarfile close classpath classpath       
+              
+            pathmap put abspathplustimeandlength  classpath equals classpath     
+            url baseurl   file_utils getfileurl pathcomponent   
+            stringtokenizer st stringtokenizer classpath st hasmoretokens classpathelement   st nexttoken    
+                url libraryurl url baseurl  classpathelement libraryurl getprotocol   equals  file      
+                    log  skipping jar library     classpathelement 
+                            since only relative urls are supported by loader   project msg_verbose decodedpath   locator decodeuri libraryurl getfile     
+                file libraryfile file decodedpath libraryfile exists       isinpath libraryfile     
+                    addpathfile libraryfile getclasspath     
+        stringbuffer sb stringbuffer firstpass enumeration componentenum   pathcomponents elements componentenum hasmoreelements firstpass    
+                sb append system getproperty  path separator firstpass sb append   file  componentenum nextelement    getabsolutepath sb tostring setisolated isolated    
+        ignorebase   isolated initializeclass theclass constructor   cons   theclass getdeclaredconstructors cons cons length   0    cons 0 strs number_of_strings cons 0  newinstance  object    strs exception e addsystempackageroot packageroot    
+        systempackages addelement packageroot 
+                                     packageroot endswith addloaderpackageroot packageroot    
+        loaderpackages addelement packageroot 
+                                     packageroot endswith forceloadclass classname classnotfoundexception   
+        log  force loading     classname  project msg_debug theclass   findloadedclass classname theclass theclass   findclass classname theclass forceloadsystemclass classname classnotfoundexception   
+        log  force system loading     classname  project msg_debug theclass   findloadedclass classname theclass theclass   findbaseclass classname theclass inputstream getresourceasstream name    
+ 
+        inputstream resourcestream isparentfirst name     
+            resourcestream   loadbaseresource name resourcestream log  resourcestream name 
+                        loaded from parent loader   project msg_debug resourcestream   loadresource name resourcestream log  resourcestream name 
+                            loaded from ant loader   project msg_debug resourcestream   loadresource name resourcestream log  resourcestream name 
+                        loaded from ant loader   project msg_debug resourcestream   loadbaseresource name resourcestream log  resourcestream name 
+                            loaded from parent loader   project msg_debug resourcestream log  couldn't load resourcestream name  
+                project msg_debug resourcestream inputstream loadresource name    
+          
+          
+        inputstream stream enumeration e   pathcomponents elements e hasmoreelements      stream file pathcomponent    file  e nextelement    
+            stream   getresourcestream pathcomponent  name stream inputstream loadbaseresource name parent getsystemresourceasstream name parent getresourceasstream name inputstream getresourcestream file file resourcename file exists file isdirectory      
+                file resource file file  resourcename resource exists fileinputstream resource zipfile zipfile    zipfile  zipfiles get file zipfile zipfile zipfile file   
+                    zipfiles put file  zipfile   
+                  
+                zipentry entry   zipfile getentry resourcename entry zipfile getinputstream entry exception e    
+            log  ignoring exception     e getclass   getname   
+                         e getmessage       reading resource     resourcename 
+                    from     file  project msg_verbose isparentfirst resourcename useparentfirst   parentfirst enumeration e   systempackages elements    e hasmoreelements packagename e nextelement resourcename startswith packagename     
+                useparentfirst enumeration e   loaderpackages elements    e hasmoreelements packagename e nextelement resourcename startswith packagename     
+                useparentfirst useparentfirst classloader getrootloader     
+        classloader ret   getclass   getclassloader ret ret getparent ret   ret getparent ret url getresource name    
+          
+          
+        url url isparentfirst name     
+            url    parent getresource name  
+                  parent getresource name url log  resource     name     loaded from parent loader   
+                project msg_debug enumeration e   pathcomponents elements e hasmoreelements      url file pathcomponent    file  e nextelement    
+                url   getresourceurl pathcomponent  name url log  resource     name 
+                            loaded from ant loader   
+                        project msg_debug url isparentfirst name ignorebase    
+                url    getrootloader null 
+                      getrootloader   getresource name url    parent getresource name  
+                      parent getresource name url log  resource     name     loaded from parent loader   
+                    project msg_debug url log  couldn't load resource     name  project msg_debug url enumeration  
+        enumeration  
+        enumeration parent parent    getparent      
+              
+            base   parent getresources name base collectionutils emptyenumeration isparentfirst name collectionutils append base  mine ignorebase getrootloader mine 
+                  collectionutils append  
+                    mine  getrootloader   getresources name collectionutils append mine  base url getresourceurl file file resourcename file exists file isdirectory      
+                file resource file file  resourcename resource exists file_utils getfileurl resource malformedurlexception ex zipfile zipfile    zipfile  zipfiles get file zipfile zipfile zipfile file   
+                    zipfiles put file  zipfile   
+                  
+ 
+                zipentry entry   zipfile getentry resourcename entry url  jar     file_utils getfileurl file  
+                                                entry malformedurlexception ex exception e    
+            e printstacktrace loadclass classname resolve classnotfoundexception theclass   findloadedclass classname theclass theclass isparentfirst classname theclass   findbaseclass classname   
+                log classname     loaded from parent loader   
+                        parentfirst    project msg_debug classnotfoundexception cnfe    
+                theclass   findclass classname   
+                log classname     loaded from ant loader   
+                        parentfirst    project msg_debug theclass   findclass classname   
+                log classname     loaded from ant loader   
+                    project msg_debug classnotfoundexception cnfe ignorebase cnfe  
+                  
+                theclass   findbaseclass classname   
+                log classname     loaded from parent loader   
+                    project msg_debug resolve    
+            resolveclass theclass theclass getclassfilename classname classname replace defineclassfromdata file container classdata classname ioexception   
+        definepackage container  classname defineclass classname  classdata  0  classdata length  
+                           project getprotectiondomain definepackage file container classname ioexception classindex   classname lastindexof classindex    -1 packagename   classname substring 0  classindex getpackage packagename manifest manifest   getjarmanifest container manifest definepackage packagename null null null definepackage container  packagename  manifest manifest getjarmanifest file container ioexception container isdirectory jarfile jarfile jarfile jarfile container jarfile getmanifest jarfile jarfile close definepackage file container packagename  
+                                 manifest manifest sectionname   packagename replace specificationtitle specificationvendor specificationversion implementationtitle implementationvendor implementationversion sealedstring url sealbase attributes sectionattributes   manifest getattributes sectionname sectionattributes specificationtitle 
+                  sectionattributes getvalue name specification_title   
+            specificationvendor 
+                  sectionattributes getvalue name specification_vendor   
+            specificationversion 
+                  sectionattributes getvalue name specification_version   
+            implementationtitle 
+                  sectionattributes getvalue name implementation_title   
+            implementationvendor 
+                  sectionattributes getvalue name implementation_vendor   
+            implementationversion 
+                  sectionattributes getvalue name implementation_version   
+            sealedstring 
+                  sectionattributes getvalue name sealed   
+          
+ 
+        attributes mainattributes   manifest getmainattributes mainattributes specificationtitle specificationtitle 
+                      mainattributes getvalue name specification_title specificationvendor specificationvendor 
+                      mainattributes getvalue name specification_vendor specificationversion specificationversion 
+                      mainattributes getvalue name specification_version implementationtitle implementationtitle 
+                      mainattributes getvalue name implementation_title implementationvendor implementationvendor 
+                      mainattributes getvalue name implementation_vendor implementationversion implementationversion 
+                      mainattributes getvalue name implementation_version sealedstring sealedstring 
+                      mainattributes getvalue name sealed sealedstring sealedstring equalsignorecase sealbase url fileutils getfileutils   touri container getabsolutepath malformedurlexception e    
+                  
+              
+          
+ 
+        definepackage packagename  specificationtitle  specificationversion  
+                      specificationvendor  implementationtitle  
+                      implementationversion  implementationvendor  sealbase getclassfromstream inputstream stream classname  
+                                     file container ioexception  securityexception   
+        bytearrayoutputstream baos bytearrayoutputstream bytesread   -1 buffer buffer_size bytesread   stream read buffer  0  buffer_size      -1    
+            baos write buffer  0  bytesread classdata   baos tobytearray defineclassfromdata container  classdata  classname findclass name classnotfoundexception   
+        log  finding name  project msg_debug findclassincomponents name isinpath file component enumeration e   pathcomponents elements    e hasmoreelements       
+            file pathcomponent    file  e nextelement pathcomponent equals component findclassincomponents name classnotfoundexception   
+          
+          
+        inputstream stream classfilename   getclassfilename name enumeration e   pathcomponents elements e hasmoreelements      
+                file pathcomponent    file  e nextelement stream   getresourcestream pathcomponent  classfilename stream log  loaded from     pathcomponent       
+                              classfilename  project msg_debug getclassfromstream stream  name  pathcomponent securityexception se se ioexception ioe    
+                      
+                    log  exception reading component     pathcomponent 
+                             reason      ioe getmessage          
+                        project msg_verbose classnotfoundexception name stream stream close ioexception e findbaseclass name classnotfoundexception parent findsystemclass name parent loadclass name cleanup enumeration e   zipfiles elements    e hasmoreelements       
+            zipfile zipfile    zipfile  e nextelement zipfile close ioexception ioe    
+                  
+              
+          
+        zipfiles hashtable project project removebuildlistener project buildstarted buildevent event buildfinished buildevent event    
+        cleanup subbuildfinished buildevent event event getproject      project    
+            cleanup subbuildstarted buildevent event targetstarted buildevent event targetfinished buildevent event taskstarted buildevent event taskfinished buildevent event messagelogged buildevent event addjavalibraries     
+        vector packages   javaenvutils getjrepackages    
+        enumeration e   packages elements e hasmoreelements packagename e nextelement    
+            addsystempackageroot packagename tostring antclassloader     getclasspath          
+      
+ 
+ org apache tools ant AntClassLoader

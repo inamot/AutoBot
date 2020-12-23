@@ -1,0 +1,151 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   writes build events printstream  currently only writes targets being executed any messages logged  
+   
+    
+    
+       size left-hand column right-justified task name  
+        see #messagelogged buildevent  
+        
+   checkstyle visibilitymodifier bc 
+    printstream write non-error messages printstream write error messages lowest level message write out    
+    time start build    
+   checkstyle constantnamecheck bc 
+    line separator    
+   checkstyle constantnamecheck whether not use emacs-style output    
+   checkstyle visibilitymodifier sole constructor  
+        
+    
+       sets highest level message logger respond only messages message level lower equal given level written log  
+        p  
+       constants message levels link project project  class order levels least most verbose code msg_err  code    code msg_warn  code   
+        code msg_info  code    code msg_verbose  code   
+        code msg_debug  code   
+        p default message level defaultlogger project msg_err  
+       
+        param level logging level logger  
+        
+    
+       sets output stream logger send output  
+       
+        param output output stream logger  
+                     must not code null  code   
+        
+    
+       sets output stream logger send error messages  
+       
+        param err error stream logger  
+                  must not code null  code   
+        
+    
+       sets logger produce emacs editor  friendly output  
+       
+        param emacsmode  code true  code output unadorned emacs editors parse files names  etc  
+        
+    
+       responds build being started remembering current time  
+       
+        param event ignored  
+        
+    
+       prints whether build succeeded failed  
+       any errors occurred during build long build took  
+       
+        param event event any relevant extra information  
+                    must not code null  code override point message indicates whether build failed  
+       subclasses change enhance message  
+        return classic  build failed override point message indicates build succeeded  
+       subclasses change enhance message  
+        return classic  build successful  
+        
+    
+       logs message target started logger allows information-level messages  
+       
+        param event event any relevant extra information  
+                    must not code null  code op implementation  
+       
+        param event ignored op implementation  
+       
+        param event ignored op implementation  
+       
+        param event ignored  
+        
+    
+       logs message priority suitable non-emacs mode  task level messages prefixed task name right-justified  
+       
+        param event buildevent containing message information  
+                    must not code null  code   
+        
+   filter out messages based priority 
+   print out name task re one 
+   shouldn't possible 
+    
+       convenience method format specified length time  
+       
+        param millis length time format milliseconds  
+       
+        return time formatted string  
+       
+        see dateutils#formatelapsedtime long  
+        
+    
+       prints message printstream  
+       
+        param message message print not code null  code   
+        param stream printstream print message must not code null  code   
+        param priority priority message  
+                        ignored implementation   
+        
+    
+       empty implementation allows subclasses receive same output generated here  
+       
+        param message message being logged not code null  code   
+       org apache tools ant DefaultLogger org apache tools ant defaultlogger buildlogger left_column_size   12 printstream out printstream err msgoutputlevel   project msg_err lsep   stringutils line_sep emacsmode defaultlogger setmessageoutputlevel level msgoutputlevel   level setoutputprintstream printstream output out printstream output seterrorprintstream printstream err err printstream err setemacsmode emacsmode emacsmode   emacsmode buildstarted buildevent event    
+        starttime   system currenttimemillis buildfinished buildevent event    
+        throwable error   event getexception    
+        stringbuffer message stringbuffer error message append stringutils line_sep   
+            message append getbuildsuccessfulmessage message append stringutils line_sep   
+            message append getbuildfailedmessage     
+            message append stringutils line_sep project msg_verbose    msgoutputlevel 
+                     error buildexception     
+                message append stringutils getstacktrace error message append error tostring    append lsep   
+              
+          
+        message append stringutils line_sep   
+        message append  total time      
+        message append formattime system currenttimemillis   - starttime msg   message tostring error printmessage msg  out  project msg_verbose printmessage msg  err  project msg_err   
+          
+        log msg getbuildfailedmessage build failed getbuildsuccessfulmessage build successful targetstarted buildevent event project msg_info    msgoutputlevel 
+                event gettarget   getname   equals msg   stringutils line_sep 
+                  event gettarget   getname          
+            printmessage msg  out  event getpriority     
+            log msg targetfinished buildevent event taskstarted buildevent event taskfinished buildevent event messagelogged buildevent event priority   event getpriority priority    msgoutputlevel    
+ 
+            stringbuffer message stringbuffer event gettask emacsmode name   event gettask   gettaskname label         name size   left_column_size - label length    
+                stringbuffer tmp stringbuffer i   0  i   size  i      
+                    tmp append       
+                  
+                tmp append label   
+                label   tmp tostring bufferedreader r bufferedreader stringreader event getmessage line   r readline first first line message append label message append stringutils line_sep   
+                          
+                        first message append label  append line   
+                        line   r readline line ioexception e    
+                      
+                    message append label  append event getmessage message append event getmessage     
+              
+            throwable ex   event getexception project msg_debug    msgoutputlevel    ex message append stringutils getstacktrace ex msg   message tostring priority    project msg_err    
+                printmessage msg  out  priority printmessage msg  err  priority   
+              
+            log msg formattime millis dateutils formatelapsedtime millis printmessage message printstream stream priority    
+        stream println message log message    
+      
+ org apache tools ant DefaultLogger

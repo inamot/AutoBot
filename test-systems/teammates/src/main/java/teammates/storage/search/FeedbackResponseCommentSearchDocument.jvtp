@@ -1,0 +1,271 @@
+ link searchdocument  object defines store   link document response comments  
+    
+   comment giver 
+   prepare response giver name recipient name s actually team name here 
+   populate related students instructors information case exceeding size limit document 
+   produce searchabletext feedback comment document contains courseid  coursename  feedback session name  question number  question title  
+   response answer commentgiveremail  commentgivername  related people's information commenttext data-migration use used filter documents visible certain instructor 
+   todo  some following fields not used anymore 
+    refer link feedbackresponsecommentsearchquery remove searchabletext createddate used match query string 
+   attribute field used convert doc back attribute 
+    
+       produces link feedbackresponsecommentsearchresultbundle code results scoreddocument   collection list link instructorattributes used filter out search result instructor's information feedbackresponsecomment results related response results related question results related session results giver recipient names old ver  name always visible 
+   comment giver always see 
+   giver always see 
+   todo need decrease size fr commentsearchresults studentsearchresultsteammates storage search FeedbackResponseCommentSearchDocument teammates storage search feedbackresponsecommentsearchdocument searchdocument feedbackresponsecommentsearchdocument feedbackresponsecommentattributes comment comment   comment  
+      
+ 
+     override preparedata comment relatedsession   fsdb getfeedbacksession comment courseid  comment feedbacksessionname   
+        relatedquestion   fqdb getfeedbackquestion comment feedbackquestionid   
+        relatedresponse   frdb getfeedbackresponse comment feedbackresponseid   
+        course   coursesdb getcourse comment courseid   
+        giverasinstructor   instructorsdb getinstructorforemail comment courseid  comment giveremail   
+        relatedinstructors arraylist      
+        relatedstudents arraylist      
+ 
+          
+        set addedemailset hashset relatedquestion givertype    feedbackparticipanttype instructors 
+                   relatedquestion givertype    feedbackparticipanttype self    
+            instructorattributes ins   instructorsdb getinstructorforemail comment courseid  relatedresponse giver ins addedemailset contains ins email     
+                responsegivername user_unknown_text relatedinstructors add ins   
+                addedemailset add ins email   
+                responsegivername   ins name          ins displayedname studentattributes stu   studentsdb getstudentforemail comment courseid  relatedresponse giver stu addedemailset contains stu email     
+                responsegivername user_unknown_text relatedstudents add stu   
+                addedemailset add stu email   
+                responsegivername   stu name          stu team relatedquestion recipienttype    feedbackparticipanttype instructors    
+            instructorattributes ins   instructorsdb getinstructorforemail comment courseid  relatedresponse recipient ins addedemailset contains ins email     
+                relatedinstructors add ins   
+                addedemailset add ins email   
+                responserecipientname   ins name          ins displayedname relatedquestion recipienttype    feedbackparticipanttype self    
+            responserecipientname   responsegivername relatedquestion recipienttype    feedbackparticipanttype none    
+            responserecipientname user_nobody_text studentattributes stu   studentsdb getstudentforemail comment courseid  relatedresponse recipient stu addedemailset contains stu email     
+                relatedstudents add stu   
+                addedemailset add stu email   
+                responserecipientname   stu name          stu team        
+              
+            list studentattributes  team   studentsdb getstudentsforteam relatedresponse recipient  comment courseid team responserecipientname   relatedresponse recipient studentattributes studentinteam   team addedemailset contains studentinteam email     
+                        relatedstudents add studentinteam   
+                        addedemailset add studentinteam email stu team responserecipientname user_unknown_text  
+              
+          
+      
+ 
+     override document todocument     
+ 
+          
+        stringbuilder relatedpeoplebuilder stringbuilder delim counter   0 studentattributes student   relatedstudents counter    25 relatedpeoplebuilder append student email  append delim  
+                 append student name  append delim  
+                 append student team  append delim  
+                 append student section  append delim   
+            counter    
+          
+        counter   0 instructorattributes instructor   relatedinstructors counter    25 relatedpeoplebuilder append instructor email  append delim  
+                 append instructor name  append delim  
+                 append instructor displayedname  append delim   
+            counter searchabletext   comment courseid   delim 
+                                   course course getname      delim 
+                                  relatedsession getfeedbacksessionname     delim 
+                                   question     relatedquestion questionnumber   delim 
+                                  relatedquestion getquestiondetails   getquestiontext     delim 
+                                  relatedresponse getresponsedetails   getanswerstring     delim 
+                                  comment giveremail   delim 
+                                   giverasinstructor giverasinstructor name    delim 
+                                  relatedpeoplebuilder tostring     delim 
+                                  comment commenttext getvalue isvisibilityfollowingfeedbackquestion   comment isvisibilityfollowingfeedbackquestion isvisibletogiver   isvisibilityfollowingfeedbackquestion 
+                                      comment isvisibleto feedbackparticipanttype giver isvisibletoreceiver   isvisibilityfollowingfeedbackquestion 
+                                    ? relatedquestion isresponsevisibleto feedbackparticipanttype receiver  
+                                      comment isvisibleto feedbackparticipanttype receiver isvisibletoinstructor   isvisibilityfollowingfeedbackquestion 
+                                      ? relatedquestion isresponsevisibleto feedbackparticipanttype instructors  
+                                        comment isvisibleto feedbackparticipanttype instructors displayedname   giverasinstructor comment giveremail 
+                                 giverasinstructor displayedname         giverasinstructor name document newbuilder   
+                  
+                  
+                  
+                 addfield field newbuilder   setname searchdocumentfield course_id  
+                                             settext comment courseid   
+                 addfield field newbuilder   setname searchdocumentfield feedback_response_comment_giver_email  
+                                             settext comment giveremail   
+                 addfield field newbuilder   setname searchdocumentfield giver_email  
+                                             settext relatedresponse giver   
+                 addfield field newbuilder   setname searchdocumentfield giver_section  
+                                             settext relatedresponse giversection   
+                 addfield field newbuilder   setname searchdocumentfield recipient_email  
+                                             settext relatedresponse recipient   
+                 addfield field newbuilder   setname searchdocumentfield recipient_section  
+                                             settext relatedresponse recipientsection   
+                 addfield field newbuilder   setname searchdocumentfield is_visible_to_giver  
+                                             settext tostring isvisibletogiver    
+                 addfield field newbuilder   setname searchdocumentfield is_visible_to_receiver  
+                                             settext tostring isvisibletoreceiver    
+                 addfield field newbuilder   setname searchdocumentfield is_visible_to_instructor  
+                                             settext tostring isvisibletoinstructor    
+                  
+                 addfield field newbuilder   setname searchdocumentfield searchable_text  
+                                             settext searchabletext   
+                 addfield field newbuilder   setname searchdocumentfield created_date  
+                                             setdate comment createdat   
+                  
+                 addfield field newbuilder   setname searchdocumentfield feedback_response_comment_attribute  
+                                             settext jsonutils tojson comment    
+                 addfield field newbuilder   setname searchdocumentfield feedback_response_attribute  
+                                             settext jsonutils tojson relatedresponse    
+                 addfield field newbuilder   setname searchdocumentfield feedback_response_giver_name  
+                                             settext jsonutils tojson responsegivername    
+                 addfield field newbuilder   setname searchdocumentfield feedback_response_receiver_name  
+                                             settext jsonutils tojson responserecipientname    
+                 addfield field newbuilder   setname searchdocumentfield feedback_question_attribute  
+                                             settext jsonutils tojson relatedquestion    
+                 addfield field newbuilder   setname searchdocumentfield feedback_session_attribute  
+                                             settext jsonutils tojson relatedsession    
+                 addfield field newbuilder   setname searchdocumentfield feedback_response_comment_giver_name  
+                                             settext jsonutils tojson displayedname    
+                 setid comment getid   tostring    
+                 build feedbackresponsecommentsearchresultbundle fromresults  
+            results scoreddocument  results  list instructorattributes  instructors    
+        feedbackresponsecommentsearchresultbundle bundle feedbackresponsecommentsearchresultbundle results bundle  
+          
+ 
+          
+        bundle instructoremails hashset      
+        set instructorcourseidlist hashset instructorattributes ins   instructors    
+            bundle instructoremails add ins email   
+            instructorcourseidlist add ins courseid   
+          
+ 
+        set isadded hashset      
+ 
+        list scoreddocument  filteredresults   filteroutcourseid results  instructors scoreddocument doc   filteredresults    
+              
+            feedbackresponsecommentattributes comment   jsonutils fromjson  
+                    doc getonlyfield searchdocumentfield feedback_response_comment_attribute  gettext    
+                    feedbackresponsecommentattributes frcdb getfeedbackresponsecomment comment getid frcdb deletedocument comment list feedbackresponsecommentattributes  commentlist   bundle comments get comment feedbackresponseid commentlist commentlist arraylist      
+                bundle comments put comment feedbackresponseid  commentlist   
+              
+            commentlist add comment   
+ 
+              
+            feedbackresponseattributes response   jsonutils fromjson  
+                    doc getonlyfield searchdocumentfield feedback_response_attribute  gettext    
+                    feedbackresponseattributes frdb getfeedbackresponse response getid frcdb deletedocument comment list feedbackresponseattributes  responselist   bundle responses get response feedbackquestionid responselist responselist arraylist      
+                bundle responses put response feedbackquestionid  responselist isadded contains response getid       
+                isadded add response getid     
+                responselist add response   
+              
+ 
+              
+            feedbackquestionattributes question   jsonutils fromjson  
+                    doc getonlyfield searchdocumentfield feedback_question_attribute  gettext    
+                    feedbackquestionattributes fqdb getfeedbackquestion question getid frcdb deletedocument comment list feedbackquestionattributes  questionlist   bundle questions get question feedbacksessionname questionlist questionlist arraylist      
+                bundle questions put question feedbacksessionname  questionlist isadded contains question getid       
+                isadded add question getid     
+                questionlist add question   
+              
+ 
+              
+            feedbacksessionattributes session   jsonutils fromjson  
+                    doc getonlyfield searchdocumentfield feedback_session_attribute  gettext    
+                    feedbacksessionattributes fsdb getfeedbacksession session getcourseid    session getsessionname frcdb deletedocument comment isadded contains session getfeedbacksessionname       
+                isadded add session getfeedbacksessionname     
+                bundle sessions put session getsessionname    session responsegivername   extractcontentfromquotedstring  
+                    doc getonlyfield searchdocumentfield feedback_response_giver_name  gettext     
+            bundle responsegivertable put response getid    
+                    getfilteredgivername bundle  instructorcourseidlist  response  responsegivername responserecipientname   extractcontentfromquotedstring  
+                    doc getonlyfield searchdocumentfield feedback_response_receiver_name  gettext     
+            bundle responserecipienttable put response getid    
+                    getfilteredrecipientname bundle  instructorcourseidlist  response  responserecipientname commentgivername   extractcontentfromquotedstring  
+                    doc getonlyfield searchdocumentfield feedback_response_comment_giver_name  gettext     
+            bundle commentgivertable put comment getid   tostring    
+                    getfilteredcommentgivername bundle  instructorcourseidlist  response  comment  commentgivername    
+            bundle instructoremailnametable put comment giveremail  commentgivername islasteditoremailinmap    comment lasteditoremail isempty   
+                       bundle instructoremailnametable containskey comment lasteditoremail islasteditoremailinmap    
+                instructorattributes instructor   
+                        instructorsdb getinstructorforemail response courseid  comment lasteditoremail commentlasteditorname   instructor displayedname         instructor name  
+                bundle instructoremailnametable put comment lasteditoremail  commentlasteditorname   
+              
+            bundle numberofresults list feedbackquestionattributes  questions   bundle questions values      
+            collections sort questions list feedbackresponseattributes  responses   bundle responses values      
+            feedbackresponseattributes sortfeedbackresponses responses list feedbackresponsecommentattributes  responsecomments   bundle comments values      
+            feedbackresponsecommentattributes sortfeedbackresponsecommentsbycreationtime responsecomments   
+          
+ 
+        bundle numberofresults   
+                filterfeedbackresponsecommentresults bundle  instructors  bundle numberofresults   
+        removequestionsandresponseswithoutcomments bundle bundle getfilteredcommentgivername feedbackresponsecommentsearchresultbundle bundle  
+                                                      set instructorcourseidlist  
+                                                      feedbackresponseattributes response  
+                                                      feedbackresponsecommentattributes comment name iscommentgivernamevisibletoinstructor  
+                bundle instructoremails  instructorcourseidlist  response  comment  ? name    anonymous getfilteredgivername feedbackresponsecommentsearchresultbundle bundle  
+                                               set instructorcourseidlist  
+                                               feedbackresponseattributes response name    
+        feedbackquestionattributes question   getfeedbackquestion bundle questions  response isnamevisibletoinstructor bundle instructoremails  instructorcourseidlist  
+                                       response  question showgivernameto  
+                   question givertype    feedbackparticipanttype self feedbacksessionresultsbundle getanonname question givertype  name name getfilteredrecipientname feedbackresponsecommentsearchresultbundle bundle  
+                                                   set instructorcourseidlist  
+                                                   feedbackresponseattributes response name    
+        feedbackquestionattributes question   getfeedbackquestion bundle questions  response isnamevisibletoinstructor bundle instructoremails  instructorcourseidlist  
+                                       response  question showrecipientnameto  
+                   question recipienttype    feedbackparticipanttype self 
+                   question recipienttype    feedbackparticipanttype none feedbacksessionresultsbundle getanonname question recipienttype  name name feedbackquestionattributes getfeedbackquestion  
+            map list feedbackquestionattributes   questions  feedbackresponseattributes response    
+        feedbackquestionattributes question feedbackquestionattributes qn   questions get response feedbacksessionname qn getid   equals response feedbackquestionid     
+                question   qn question iscommentgivernamevisibletoinstructor  
+            set instructoremails  set instructorcourseidlist  
+            feedbackresponseattributes response  feedbackresponsecommentattributes comment comment isvisibilityfollowingfeedbackquestion instructoremails contains comment giveremail list feedbackparticipanttype  shownameto   comment showgivernameto feedbackparticipanttype type   shownameto type    feedbackparticipanttype giver 
+                       instructoremails contains response giver type    feedbackparticipanttype instructors 
+                       instructorcourseidlist contains response courseid type    feedbackparticipanttype receiver 
+                       instructoremails contains response recipient isnamevisibletoinstructor  
+            set instructoremails  set instructorcourseidlist  
+            feedbackresponseattributes response  list feedbackparticipanttype  shownameto instructoremails contains response giver feedbackparticipanttype type   shownameto type    feedbackparticipanttype instructors 
+                       instructorcourseidlist contains response courseid type    feedbackparticipanttype receiver 
+                       instructoremails contains response recipient filterfeedbackresponsecommentresults  
+            feedbackresponsecommentsearchresultbundle frcommentsearchresults  
+            list instructorattributes  instructors totalresultssize    
+ 
+        iterator entry list feedbackresponseattributes    iterfr   
+                frcommentsearchresults responses entryset   iterator filteredresultssize   totalresultssize iterfr hasnext      
+            list feedbackresponseattributes  frs   iterfr next   getvalue    
+            iterator feedbackresponseattributes  fr   frs iterator fr hasnext      
+                feedbackresponseattributes response   fr next    
+                instructorattributes instructor   getinstructorforcourseid response courseid  instructors isvisibleresponse isnotallowedforinstructor   
+                        instructor instructor isallowedforprivilege  
+                                response giversection  response feedbacksessionname paramsnames instructor_permission_view_session_in_sections  
+                            instructor isallowedforprivilege  
+                                response recipientsection  response feedbacksessionname paramsnames instructor_permission_view_session_in_sections isnotallowedforinstructor    
+                    isvisibleresponse isvisibleresponse sizeofcommentlist   frcommentsearchresults comments get response getid    size    
+                    filteredresultssize -  sizeofcommentlist  
+                      
+                    frcommentsearchresults comments remove response getid     
+                    fr remove    
+                  
+              
+          
+ 
+        set emaillist   frcommentsearchresults instructoremails  
+        iterator entry list feedbackquestionattributes    iterqn   
+                frcommentsearchresults questions entryset   iterator iterqn hasnext fsname   iterqn next   getkey    
+            list feedbackquestionattributes  questionlist   frcommentsearchresults questions get fsname i   questionlist size   - 1  i    0  i--    
+                feedbackquestionattributes question   questionlist get i   
+                list feedbackresponseattributes  responselist   frcommentsearchresults responses get question getid j   responselist size   - 1  j    0  j--    
+                    feedbackresponseattributes response   responselist get j   
+                    list feedbackresponsecommentattributes  commentlist   
+                            frcommentsearchresults comments get response getid k   commentlist size   - 1  k    0  k--    
+                        feedbackresponsecommentattributes comment   commentlist get k emaillist contains comment giveremail isvisibilityfollowingfeedbackquestion   comment isvisibilityfollowingfeedbackquestion isvisibletogiver   isvisibilityfollowingfeedbackquestion 
+                                   comment isvisibleto feedbackparticipanttype giver isvisibletogiver    emaillist contains response giver isvisibletoreceiver   isvisibilityfollowingfeedbackquestion 
+                                ? question isresponsevisibleto feedbackparticipanttype receiver  
+                                  comment isvisibleto feedbackparticipanttype receiver isvisibletoreceiver    emaillist contains response recipient isvisibletoinstructor   isvisibilityfollowingfeedbackquestion 
+                                ? question isresponsevisibleto feedbackparticipanttype instructors  
+                                  comment isvisibleto feedbackparticipanttype instructors isvisibletoinstructor commentlist remove k commentlist isempty      
+                        responselist remove j responselist isempty      
+                    questionlist remove i questionlist isempty      
+                iterqn remove filteredresultssize instructorattributes getinstructorforcourseid courseid  list instructorattributes  instructors instructorattributes instructor   instructors instructor courseid equals courseid instructor removequestionsandresponseswithoutcomments  
+            feedbackresponsecommentsearchresultbundle frcommentsearchresults    
+        iterator entry list feedbackquestionattributes    fqsiter   
+                frcommentsearchresults questions entryset   iterator fqsiter hasnext      
+            iterator feedbackquestionattributes  fqiter   fqsiter next   getvalue   iterator fqiter hasnext      
+                feedbackquestionattributes fq   fqiter next frcommentsearchresults responses get fq getid    isempty      
+                    fqiter remove    
+                  
+              
+          
+      
+ teammates storage search FeedbackResponseCommentSearchDocument

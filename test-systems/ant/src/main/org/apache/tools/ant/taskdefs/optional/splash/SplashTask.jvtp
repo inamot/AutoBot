@@ -1,0 +1,91 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   creates splash screen splash screen displayed duration build includes handy progress bar well  use conjunction sound task provide interest 
+   whilst waiting builds complete ant1 5 url pointing image display  optional  default antlogo gif classpath  
+        param imgurl url string pointing image 
+        
+    
+       flag enable proxy settings  optional  deprecated   consider 
+       using  lt setproxy gt  instead 
+        param useproxy ture  enable proxy settings 
+        deprecated 1 5 x  
+                   use org apache tools ant taskdefs optional setproxy 
+        
+    
+       name proxy  optional  
+        param proxy name proxy host 
+        
+    
+       proxy port  optional  default 80  
+        param port proxy port 
+        
+    
+       proxy user  optional  default  none  
+        param user proxy user 
+        
+    
+       proxy password  required tt user  tt set  
+        param password proxy password long show splash screen milliseconds  
+       optional  default 5000 ms  
+        param duration spash duration milliseconds 
+        
+    
+       execute task  
+        throws buildexception error 
+        
+   converted sun internal classes new base64converter 
+   utility class extracted task 
+   catch everything - some above return nulls  
+   throw exceptions generally misbehave event problem etc 
+   swallow error before original error passed up 
+   ignore exceptionorg apache tools ant taskdefs optional splash SplashTask org apache tools ant taskdefs optional splash splashtask task setimageurl imgurl imgurl   imgurl setuseproxy useproxy useproxy   useproxy setproxy proxy proxy   proxy setport port port   port setuser user user   user setpassword password password   password setshowduration duration showduration   duration execute buildexception splash splash setvisible getproject   removebuildlistener splash   
+            splash dispose    
+            splash log  creating splashscreen   project msg_verbose   
+        inputstream in imgurl urlconnection conn useproxy     proxy proxy length     0  
+                        port port length     0     
+ 
+                    log  using proxied connection    project msg_debug   
+                    system getproperties   put  http proxyset system getproperties   put  http proxyhost   proxy   
+                    system getproperties   put  http proxyport   port   
+ 
+                    url url url imgurl   
+ 
+                    conn   url openconnection user user length     0 encodedcreds base64converter   encode user         password   
+                        conn setrequestproperty  proxy-authorization   
+                                                encodedcreds system getproperties   put  http proxyset system getproperties   put  http proxyhost        
+                    system getproperties   put  http proxyport        
+                    log  using direction http connection   project msg_debug   
+                    url url url imgurl   
+                    conn   url openconnection    
+                  
+                conn setdoinput conn setdooutput in   conn getinputstream throwable ioe    
+                log  unable to download image  trying ant logo   
+                    project msg_debug   
+                log   exception was \     ioe getmessage      \    
+                    project msg_debug in classloader cl   splashtask getclassloader cl in   cl getresourceasstream  images ant_logo_large gif in   classloader 
+                     getsystemresourceasstream  images ant_logo_large gif success in datainputstream din datainputstream in bytearrayoutputstream bout bytearrayoutputstream data data   din read       -1    
+                    bout write data   
+                  
+ 
+                log  got bytearray  creating splash    project msg_debug imageicon img imageicon bout tobytearray     
+                    splash splashscreen img   
+                    success throwable e    
+                    logheadless e exception e buildexception e din close ioexception ioe success buildexception ioe splash splashscreen  image unavailable     
+                success throwable e    
+                logheadless e success    
+            splash setvisible splash tofront    
+            getproject   addbuildlistener splash thread sleep showduration interruptedexception e logheadless throwable e    
+        log  failed to display splashscreen  caught   
+              e getclass   getname       with message      e getmessage    
+            project msg_warn   
+      
+ org apache tools ant taskdefs optional splash SplashTask

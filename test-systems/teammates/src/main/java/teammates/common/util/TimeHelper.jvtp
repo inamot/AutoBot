@@ -1,0 +1,222 @@
+ helper class hold time-related functions  e g   converting dates strings etc    
+   time zone assumed utc unless specifically mentioned time zone - city map created selecting major cities each time zone  
+      reference  http   en wikipedia org wiki list_of_utc_time_offsets map verified comparing world clock http   www timeanddate com worldclock  
+      note dst handled here  
+        
+   utility class 
+    
+       sets system time zone differs standard one defined link systemparams#time_zone   
+        
+    
+       returns current date time code calendar  object given timezone  
+        
+    
+       convert date string time string date object  returns null error  
+       
+        param inputdate date format dd mm yyyy 
+        param inputtimehours time number hours 
+        
+    
+       returns date object specified offset number days now  
+        
+    
+       returns date object specified offset number ms now chaining 
+    
+       converts code localdate code localtimezone utc through shifting offset  
+       
+        deprecated method removed once time data migrated utc  
+        
+    
+       formats date corresponding option value time' dropdowns hour midnight converted option 24 e   2359 shown user  23 59 converted 24 e   23 59-00 59 ---  24  
+        
+  todo  see eliminate method e   merge converttodisplayvalueintimedropdown  
+    
+       formats date format dd mm yyyy  
+        
+    
+       formats date format dd mmm yyyy  hh mm example  05 may 2012  
+       2 04 pm br  
+        
+    
+       formats date format d mmm h mm example  5 may 11 59 pm 
+        
+    
+       formats   code dateinutc  according iso8601 format  
+        
+    
+       converts date string date object  
+       
+        param dateinstringformat format   link systemparams#default_date_time_format  
+        
+    
+       returns date object representing next full hour now  
+       example now 1055 return 1100 
+        
+    
+       returns whether given date being used special representation  
+       signifying s face value not used without proper processing null date not special time  
+        
+    
+       returns true code time  falls within last hour exactly one hour less current time earlier current time  
+       precision millisecond level  
+        
+    
+       returns true code time1  falls within past 1 hour code time2 exactly one hour less time2 earlier time2  
+       precision millisecond level  
+        
+    
+       checks time falls between period specified  possible scenarios  
+        ul  
+         li   code starttime    time    endtime   li  
+         li   code starttime    time   endtime   li  
+         li   code starttime   time    endtime   li  
+         li   code starttime   time   endtime   li  
+         ul  
+        param starttime start time period 
+        param endtime end time period 
+        param time time checked 
+        param isstartinclusive true allow time fall start time 
+        param isendinclusive true allow time fall end time 
+        return true time falls between start end time 
+        
+   getoffset returns offset utc milliseconds need divide 1000   60   60 hours 
+   perform date manipulation 
+    
+       returns duration format m s ms  
+       
+        p example  1200 milliseconds ---  0 1 200  
+        
+    
+       combines separated date  hour minute string standard format  
+       
+        p required parameter format  
+       date  dd mm yyyy  hour  hh   min mm 
+       
+        return date string format   link systemparams#default_date_time_format   br  
+               example date 01 04 2014  hour 23  min 59  result 2014-04-01 11 59 pm utc  
+       teammates common util TimeHelper teammates common util timehelper map  -12 0    baker island  howland island    
+        map  -11 0    american samoa  niue    
+        map  -10 0    hawaii  cook islands    
+        map  -9 5    marquesas islands    
+        map  -9 0    gambier islands  alaska    
+        map  -8 0    los angeles  vancouver  tijuana    
+        map  -7 0    phoenix  calgary  ciudad juã¡rez    
+        map  -6 0    chicago  guatemala city  mexico city  san josã©  san salvador  tegucigalpa  winnipeg    
+        map  -5 0 york  lima  toronto  bogotã¡  havana  kingston    
+        map  -4 5    caracas    
+        map  -4 0    santiago  la paz  san juan de puerto rico  manaus  halifax    
+        map  -3 5    st  john's    
+        map  -3 0    buenos aires  montevideo  sã£o paulo    
+        map  -2 0    fernando de noronha  south georgia and the south sandwich islands    
+        map  -1 0    cape verde  greenland  azores islands    
+        map  0 0    accra  abidjan  casablanca  dakar  dublin  lisbon  london    
+        map  1 0    belgrade  berlin  brussels  lagos  madrid  paris  rome  tunis  vienna  warsaw    
+        map  2 0    athens  sofia  cairo  kiev  istanbul  beirut  helsinki  jerusalem  johannesburg  bucharest    
+        map  3 0    nairobi  baghdad  doha  khartoum  minsk  riyadh    
+        map  3 5    tehran    
+        map  4 0    baku  dubai  moscow    
+        map  4 5    kabul    
+        map  5 0    karachi  tashkent    
+        map  5 5    colombo  delhi    
+        map  5 75    kathmandu    
+        map  6 0    almaty  dhaka  yekaterinburg    
+        map  6 5    yangon    
+        map  7 0    jakarta  bangkok  novosibirsk  hanoi    
+        map  8 0    perth  beijing  manila  singapore  kuala lumpur  denpasar  krasnoyarsk    
+        map  8 75    eucla    
+        map  9 0    seoul  tokyo  pyongyang  ambon  irkutsk    
+        map  9 5    adelaide    
+        map  10 0    canberra  yakutsk  port moresby    
+        map  10 5    lord howe islands    
+        map  11 0    vladivostok  noumea    
+        map  12 0    auckland  suva    
+        map  12 75    chatham islands    
+        map  13 0    phoenix islands  tokelau  tonga    
+        map  14 0    line islands timehelper map timezone cities    
+        time_zone_cities_map put timezone  cities   
+        time_zone_values add parsedouble timezone setsystemtimezoneifrequired     
+        timezone originaltimezone   timezone getdefault systemparams time_zone equals originaltimezone timezone setdefault systemparams time_zone   
+        log info  time zone set to     systemparams time_zone getid        was     originaltimezone getid getcitiesfortimezone zone time_zone_cities_map get zone list gettimezonevalues arraylist   time_zone_values calendar now timezone timehelper converttousertimezone  
+                calendar getinstance systemparams time_zone   timezone date combinedatetime inputdate inputtimehours inputdate inputtimehours null inputtimeint   0 inputtimeint   integer parseint inputtimehours    100 numberformatexception nfe converttodate inputdate  inputtimeint date getdateoffsettocurrenttime offsetdays    
+        calendar cal   calendar getinstance systemparams time_zone   
+        cal settime cal gettime     
+        cal add calendar date   offsetdays cal gettime date getmsoffsettocurrenttime offsetmilliseconds    
+        calendar cal   calendar getinstance systemparams time_zone   
+        cal settime cal gettime     
+        cal add calendar millisecond   offsetmilliseconds cal gettime date getmsoffsettocurrenttimeinusertimezone offset timezone    
+        date d   getmsoffsettocurrenttime offset   
+        calendar c   calendar getinstance systemparams time_zone   
+        c settime d converttousertimezone c  timezone  gettime calendar converttousertimezone calendar time timezone    
+        calendar newtime    calendar  time clone    
+        newtime add calendar millisecond 60   60   1000   timezone newtime    
+      
+ 
+      
+     deprecated date convertlocaldatetoutc date localdate localtimezone localdate null  
+          
+        calendar localcal   datetocalendar localdate   
+        localcal add calendar minute 60    -localtimezone localcal gettime converttooptionvalueintimedropdown date date    
+          
+        calendar c   calendar getinstance systemparams time_zone   
+        c settime date hour   c get calendar hour_of_day minutes   c get calendar minute   
+        hour   hour    0 ? 24   hour  
+        hour   hour    23    minutes    59 ? 24   hour hour formatdate date date date simpledateformat sdf simpledateformat  dd mm yyyy    
+        sdf settimezone systemparams time_zone sdf format date formattime12h date date date simpledateformat sdf calendar c   calendar getinstance systemparams time_zone   
+        c settime date c get calendar hour_of_day     12    c get calendar minute     0    
+            sdf simpledateformat  eee  dd mmm yyyy  hh mm    
+            sdf settimezone systemparams time_zone sdf format date      noon   
+          
+        sdf simpledateformat  eee  dd mmm yyyy  hh mm a    
+        sdf settimezone systemparams time_zone sdf format date formatdatetimeforsessions date dateinutc sessiontimezone dateinutc simpledateformat sdf calendar c   calendar getinstance systemparams time_zone   
+        timezone timezone   gettimezonefromdoubleoffset sessiontimezone   
+        c settimezone timezone   
+        c settime dateinutc periodindicator   
+                c get calendar hour_of_day     12    c get calendar minute     0 ?  'noon'     a   
+        sdf simpledateformat  eee  dd mmm yyyy  hh mm     periodindicator     'utc'z    
+        sdf settimezone timezone sdf format dateinutc formatdatetimeforinstructorhomepage date date date simpledateformat sdf calendar c   calendar getinstance systemparams time_zone   
+        c settime date c get calendar hour_of_day     12    c get calendar minute     0    
+            sdf simpledateformat  d mmm h mm    
+            sdf settimezone systemparams time_zone sdf format date      noon   
+          
+        sdf simpledateformat  d mmm h mm a    
+        sdf settimezone systemparams time_zone sdf format date formatdatetoiso8601utc date dateinutc dateinutc simpledateformat sdf simpledateformat time_format_iso_8601_utc   
+        sdf settimezone systemparams time_zone sdf format dateinutc calendartostring calendar c c return simpledateformat  mm dd yyyy hh mm ss sss   format c gettime date converttodate dateinstringformat dateformat df simpledateformat systemparams default_date_time_format df parse dateinstringformat parseexception e    
+            assumption fail  date in is in wrong format calendar datetocalendar date date    
+        calendar c   calendar getinstance systemparams time_zone date c  
+          
+        c settime date c date getnexthour     
+        calendar cal   calendar getinstance systemparams time_zone   
+        cal add calendar hour_of_day  1   
+        cal set calendar minute  0   
+        cal set calendar second  0   
+        cal set calendar millisecond  0 cal gettime isspecialtime date date date date equals time_represents_follow_opening  
+                  date equals time_represents_follow_visible  
+                  date equals time_represents_later  
+                  date equals time_represents_never  
+                  date equals time_represents_now isolderthanayear date comparedate    
+        date currentdate date differenceindays  
+ 
+        differenceindays currentdate gettime   - comparedate gettime       1000   60   60   24 differenceindays   365 iswithinpasthourfromnow date time iswithinpasthour time date iswithinpasthour date time1  date time2    
+        calendar calendartime1   calendar getinstance systemparams time_zone   
+        calendartime1 settime time1   
+ 
+        calendar calendartime2   calendar getinstance systemparams time_zone   
+        calendartime2 settime time2 time1millis   calendartime1 gettimeinmillis time2millis   calendartime2 gettimeinmillis differencebetweennowandcal    time2millis - time1millis     60   60   1000 differencebetweennowandcal    0    calendartime2 after calendartime1 istimewithinperiod date starttime  date endtime  date time isstartinclusive isendinclusive starttime endtime time isafterstarttime   time after starttime     isstartinclusive    time equals starttime isbeforeendtime   time before endtime     isendinclusive    time equals endtime isafterstarttime    isbeforeendtime getlocaltimezonehouroffset timezone getdefault   getoffset date   gettime      1000 0   60 0   60 0 date converttodate date time    
+        simpledateformat sdf simpledateformat  dd mm yyyy    
+        sdf settimezone systemparams time_zone   
+        calendar calendar   calendar getinstance systemparams time_zone date newdate   sdf parse date   
+            calendar settime newdate time    2400    
+                calendar set calendar hour  23   
+                calendar set calendar minute  59 calendar set calendar hour  time   100   
+                calendar set calendar minute  time % 100 calendar gettime exception e converttostandardduration timeinmilliseconds timeinmilliseconds format  %d %d %d   
+                             timeinmilliseconds   60000  
+                             timeinmilliseconds   1000  
+                             timeinmilliseconds % 1000 converttorequiredformat date hour min date hour min null old_format    dd mm yyyy new_format    yyyy-mm-dd   
+ 
+        simpledateformat sdf simpledateformat old_format date d   sdf parse date   
+            sdf applypattern new_format inthour   integer parseint hour amorpm   inthour    12 ?  pm     am   
+            inthour   inthour    13 ? inthour - 12   inthour sdf format d          inthour         min         amorpm     utc parseexception e    
+            assumption fail  date in is in wrong format timezone gettimezonefromdoubleoffset sessiontimezone hours sessiontimezone minutes math abs sessiontimezone  - math floor math abs sessiontimezone      60 timezone gettimezone format  gmt% 03d %02d   hours  minutes    
+      
+ 
+ teammates common util TimeHelper

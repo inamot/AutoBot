@@ -1,0 +1,524 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   processes set xml documents via xslt useful building views xml based documentation ant 1 1 
+   
+    ant task name  xslt  category  xml  
+    
+    destination directory find source xml file  default project's basedir    
+    xsl stylesheet filename    
+    xsl stylesheet link org apache tools ant types resource     
+    extension files produced xsl processing    
+    name xsl parameter containing filename    
+    name xsl parameter containing file directory    
+    additional parameters passed stylesheets    
+    input xml document used    
+    output file name xsl processor use    
+    classpath use trying load xsl processor liason implementation use communicate xsl 
+        processor    
+    flag indicates stylesheet loaded processor    
+    force output target files even already exist    
+    xsl output properties used resolving entities dtds    
+    name trax liaison class    
+    utilities used file operations    
+    
+       whether style files included directories well ant 1 5 
+        
+    
+       factory element trax processors only ant 1 6 
+        
+    
+       whether reuse transformer transforming multiple files 1 5 2 
+        
+    
+       antclassloader nested  lt classpath gt set  
+       
+        p keep here order reset context classloader execute t use liaison getclass   getclassloader actual liaison class may loaded loader 
+       higher up  system classloader example    p ant 1 6 2 
+        
+    
+       mapper use set files gets processed ant 1 6 2 
+        
+    
+       additional resource collections process ant 1 7 
+        
+    
+       whether use implicit fileset ant 1 7 default processor trax ant 1 7 
+        
+    
+       creates new xsltprocess task  
+        
+  -- xsltprocess 
+    
+       whether style files included directories well  
+       optional  default true  
+       
+        param b true files included directories processed ant 1 5 
+        
+    
+       controls whether stylesheet reloaded every transform  
+       
+        p setting true may around bug certain 
+       xalan-j versions  default false   p  
+        param b code boolean  code  value ant 1 5 2 
+        
+    
+       defines mapper map source destination files  
+        param mapper mapper use 
+        exception buildexception one mapper defined ant 1 6 2 
+        
+    
+       adds collection resources style addition given file implicit fileset  
+       
+        param rc collection resources style ant 1 7 
+        
+    
+       add nested  lt style gt  element  
+        param rc configured resources object represented lt style gt ant 1 7 
+        
+    
+       api method set xsl resource  
+        param xslresource resource set stylesheet ant 1 7 
+        
+    
+       adds nested filenamemapper  
+        param filenamemapper mapper add 
+        exception buildexception one mapper defined ant 1 7 0 
+        
+    
+       executes task  
+       
+        exception buildexception execution problem  
+        todo validate either defined both check liaison log errors using logger enter here means stylesheet supplied 
+   via style attribute 
+   
+                       shouldn't throw out deprecation warnings before know wrong version used file out process here out not specified batch processing mode  
+                
+  -- make sure destination directory exists    
+   process files marked styling 
+   process directories marked styling 
+   only resource collections better some 
+    
+       set whether check dependencies always generate  
+       optional  default false  
+       
+        param force true always generate  
+        
+    
+       set base directory  
+       optional  default project's basedir  
+       
+        param dir base directory 
+         
+    
+       set destination directory xsl result 
+       files copied required  unless  tt tt tt out  tt specified  
+        param dir name destination directory 
+         
+    
+       set desired file extension used target  
+       optional  default html  
+        param name extension use 
+         
+    
+       name stylesheet use - given either relative project's basedir absolute path  required  
+       
+        param xslfile stylesheet use 
+        
+    
+       set optional classpath xsl processor 
+       
+        param classpath classpath use loading xsl processor 
+        
+    
+       set optional classpath xsl processor 
+       
+        return path instance configured ant core  
+        
+    
+       set reference optional classpath xsl processor 
+       
+        param r id ant path instance act classpath loading xsl processor 
+        
+    
+       set name xsl processor use  optional  default trax values xalan xalan1 
+       
+        param processor name xsl processor 
+        
+    
+       whether use implicit fileset  
+       
+        p set false want explicit control nested 
+       resource collections   p  
+        param useimplicitfileset set true want use implicit fileset ant 1 7 
+        
+    
+       add catalog internal catalog 
+       
+        param xmlcatalog xmlcatalog instance use look up dtds 
+        
+    
+       pass filename current processed file xsl parameter transformation value sets name xsl parameter  
+       
+        param filenameparameter name xsl parameter retrieving current file name 
+        
+    
+       pass directory name current processed file xsl parameter transformation value sets name xsl parameter  
+       
+        param filedirparameter name xsl parameter retrieving current file directory 
+        
+    
+       load processor here instead setprocessor called within execute access latest 
+       classpath  
+       
+        param proc name processor load  
+        exception exception processor cannot loaded  
+        
+  anything classname 
+    
+       load named class either via system classloader given 
+       custom classloader side effect loader set thread context classloader 
+        param classname name class load  
+        return requested class  
+        exception exception class not loaded  
+        
+    
+       specifies output name styled result tt tt  attribute  required tt tt set 
+       
+        param outfile output file instance  
+        
+    
+       specifies single xml document styled used tt out  tt  attribute    required tt out  tt set 
+       
+        param infile input file 
+        
+    
+       throws buildexception destination directory hasn't specified ant 1 7 
+        
+    
+       styles existing resources ant 1 7 
+        
+    
+       processes given input xml file stores result given resultfile  
+       
+        param basedir base directory resolving files  
+        param xmlfile input file 
+        param destdir destination directory 
+        param stylesheet stylesheet use  
+        exception buildexception processing fails failed process document  must delete target document not attempt process second time 
+  -- processxml 
+    
+       process input file output file given stylesheet  
+       
+        param infile input file process  
+        param outfile destination file  
+        param stylesheet stylesheet use  
+        exception buildexception processing fails  
+        
+    
+       ensure directory exists given file 
+       
+        param targetfile file directories required  
+        exception buildexception directories cannot created factory instance configured processor 
+       
+        return factory instance use xml catalog containing entity definitions 
+       
+        return xml catalog task enumeration outputproperties  
+        return outputproperties liason implementation use processing  
+       
+        return instance xsltliason interface processor wasn't specified  see trax available not  
+   default xalan  depending classpath 
+    
+       create instance xsl parameter configuration ant  
+       
+        return instance param class configured param inner class used store xsl parameters parameter name parameter's value    
+    
+           set current project 
+           
+            param project current project 
+            
+    
+           set parameter name  
+           
+            param name name parameter parameter value 
+           note intended xsl expression  
+            param expression parameter's value parameter name 
+           
+            return parameter name 
+            exception buildexception name not set parameter's value 
+           
+            return parameter value 
+            exception buildexception value not set  
+            
+    
+           set whether param used used property set  otherwise won't  
+            param ifproperty name property 
+            
+    
+           set whether param not used not used property set  otherwise used  
+            param unlessproperty name property 
+            
+    
+           ensures param passes conditions placed code code code unless  code  properties  
+            return true task passes unless  parameters 
+            
+   param 
+    
+       create instance output property configured  
+        return newly created output property ant 1 5 
+        
+    
+       specify result tree output specified href  http   www w3 org tr xslt#output   
+       specification ant 1 5 
+        
+    output property name    
+    output property value    
+    
+            return output property name  
+            
+    
+           set name property 
+            param name non-null string specifies output property name may namespace qualified  
+            
+    
+            return output property value  
+            
+    
+           set value property 
+            param value non-null string value output property  
+            
+    
+       initialize internal instance xmlcatalog 
+        throws buildexception error 
+        
+    
+       loads stylesheet set xsl param parameters  
+       
+        param stylesheet file load stylesheet  
+        exception buildexception stylesheet cannot loaded  
+        deprecated ant 1 7 
+        
+    
+       loads stylesheet set xsl param parameters  
+       
+        param stylesheet resource load stylesheet  
+        exception buildexception stylesheet cannot loaded ant 1 7 call liason configure liaison setstylesheet internal variables liaison set up here set stylesheet resource here cannot set stylesheet resource set file make attempt file 
+    
+       sets file parameter s directory filename attribute 
+       'filenameparameter filedirparameter set task  
+       
+        param  liaison change parameters param  infile additional file information throws exception exception occurs filename lookup ant 1 7 
+        
+   give always slash file separator stylesheet sure use dir     name not result absolute path 
+    
+       create factory element configure trax liaison  
+        return newly created factory element  
+        throws buildexception element created one time factory element configure transformer factory ant 1 6 factory class name use traxliaison list factory attributes use traxliaison 
+            
+    
+            return name factory  
+            
+    
+           set name factory 
+            param name name factory  
+            
+    
+           create instance factory attribute  
+            param attr newly created factory attribute 
+            
+    
+           return attribute elements  
+            return enumeration attributes jaxp factory attribute mostly processor specific example xalan 2 3 following attributes set  
+            ul  
+             li http   xml apache org xalan features optimize  true false    li  
+             li http   xml apache org xalan features incremental  true false    li  
+             ul  
+            
+    attribute name  mostly processor specific    
+    attribute value  often boolean string    
+    
+                return attribute name  
+                
+    
+                return output property value  
+                
+    
+               not used  
+                param name not used 
+                return null 
+                throws buildexception never 
+                
+    
+               set attribute  
+               only  name value supported names  
+                param name name attribute 
+                param value value attribute 
+                throws buildexception error 
+                
+   only 'name value' exist value must given type boolean integer string mostly used  
+   -- class attribute 
+   -- class factory 
+    
+       mapper implementation traditional  way  lt xslt gt  
+       mapped filenames  
+       
+        p file extension  chop append whatever user specified extension html    p ant 1 6 2 
+       org apache tools ant taskdefs XSLTProcess org apache tools ant taskdefs xsltprocess matchingtask xsltlogger trax_liaison_class   
+                         org apache tools ant taskdefs optional traxliaison processor_trax    trax xsltprocess setscanincludeddirectories b    
+        performdirectoryscan   b setreloadstylesheet b    
+        reuseloadedstylesheet    b addmapper mapper mapper mapperelement buildexception  cannot define more than one mapper   
+                                     getlocation     
+          
+        mapperelement   mapper add resourcecollection rc    
+        resources add rc addconfiguredstyle resources rc rc size      1 buildexception  the style element must be specified  
+                        with exactly one nested resource     
+          
+        setxslresource  resource  rc iterator   next setxslresource resource xslresource xslresource   xslresource add filenamemapper filenamemapper buildexception   
+       mapper mapper mapper getproject     
+       mapper add filenamemapper   
+       addmapper mapper execute buildexception style  equals gettasktype       
+            log  warning  the task name  style  is deprecated  use  xslt  instead    
+                    project msg_warn   
+          
+ 
+        file savedbasedir   basedir  
+ 
+        directoryscanner scanner list dirs xslresource xslfile buildexception  specify the   
+                   stylesheet either as a filename in style   
+                   attribute or as a nested resource   getlocation xslresource xslfile buildexception  specify the   
+                   stylesheet either as a filename in style   
+                   attribute or as a nested resource but not   
+                   as both   getlocation infile infile exists buildexception  
+                 input file     infile tostring       does not exist   getlocation basedir basedir   getproject   resolvefile       
+              
+ 
+            liaison   getliaison liaison xsltloggeraware    
+                  xsltloggeraware  liaison  setlogger log  using     liaison getclass   tostring    project msg_verbose xslfile file stylesheet   getproject   resolvefile xslfile stylesheet exists      
+                    stylesheet   file_utils resolvefile basedir  xslfile stylesheet exists      
+                        log  deprecated - the 'style' attribute should be relative   
+                                   to the project's    
+                        log               basedir  not the tasks's basedir     
+                      
+                  
+                fileresource fr fileresource    
+                fr setproject getproject     
+                fr setfile stylesheet   
+                xslresource   fr infile outfile process infile  outfile  xslresource checkdest useimplicitfileset    
+                scanner   getdirectoryscanner basedir   
+                log  transforming into     destdir  project msg_info   
+ 
+                  
+                list   scanner getincludedfiles i   0  i   list length    i    
+                    process basedir  list i   destdir  xslresource performdirectoryscan    
+                      
+                    dirs   scanner getincludeddirectories j   0  j   dirs length    j    
+                        list file basedir  dirs j   list i   0  i   list length    i    
+                            process basedir  dirs j    file separator   list i   
+                                    destdir  xslresource resources size      0 buildexception  no resources specified    
+                  
+              
+            processresources xslresource loader loader resetthreadcontextloader    
+                loader cleanup    
+                loader liaison stylesheetloaded basedir   savedbasedir setforce force force   force setbasedir file dir    
+        basedir   dir setdestdir file dir    
+        destdir   dir setextension name    
+        targetextension   name setstyle xslfile xslfile   xslfile setclasspath path classpath    
+        createclasspath   append classpath path createclasspath classpath classpath path getproject classpath createpath setclasspathref reference r    
+        createclasspath   setrefid r setprocessor processor processor   processor setuseimplicitfileset useimplicitfileset    
+        useimplicitfileset   useimplicitfileset addconfiguredxmlcatalog xmlcatalog xmlcatalog xmlcatalog addconfiguredxmlcatalog xmlcatalog setfilenameparameter filenameparameter filenameparameter   filenameparameter setfiledirparameter filedirparameter filedirparameter   filedirparameter resolveprocessor proc exception classname proc equals processor_trax     
+            classname   trax_liaison_class classname   proc clazz   loadclass classname   
+        liaison    xsltliaison  clazz newinstance loadclass classname exception classpath forname classname loader   getproject   createclassloader classpath   
+            loader setthreadcontextloader c forname classname loader c setout file outfile outfile   outfile setin file infile infile   infile checkdest destdir msg    destdir attributes must be set buildexception msg processresources resource stylesheet    
+        iterator iter   resources iterator iter hasnext      
+            resource r    resource  iter next r isexists file base   basedir name   r getname r fileresource    
+                fileresource f    fileresource  r  
+                base   f getbasedir base name   f getfile   getabsolutepath    
+                  
+              
+            process base  name  destdir  stylesheet process file basedir xmlfile  file destdir  
+                         resource stylesheet buildexception   
+ 
+        file   outf file   inf stylesheetlastmodified   stylesheet getlastmodified    
+            inf file basedir  xmlfile inf isdirectory      
+                log  skipping     inf     it is a directory    
+                    project msg_verbose filenamemapper mapper mapperelement mapper   mapperelement getimplementation mapper stylemapper outfilename   mapper mapfilename xmlfile outfilename outfilename length    0    
+                log  skipping     infile     it cannot get mapped to output    
+                    project msg_verbose outfilename outfilename length   1    
+                log  skipping     infile     its mapping is ambiguos    
+                    project msg_verbose outf file destdir  outfilename 0 force 
+                   inf lastmodified     outf lastmodified   
+                   stylesheetlastmodified   outf lastmodified      
+                ensuredirectoryfor outf   
+                log  processing     inf     to     outf   
+ 
+                configureliaison stylesheet   
+                setliaisondynamicfileparameters liaison  inf   
+                liaison transform inf  outf exception ex    
+              
+              
+            log  failed to process     infile  project msg_info outf outf delete buildexception ex process file infile  file outfile  resource stylesheet buildexception stylesheetlastmodified   stylesheet getlastmodified    
+            log  in file     infile     time      infile lastmodified    
+                project msg_debug   
+            log  out file     outfile     time      outfile lastmodified    
+                project msg_debug   
+            log  style file     xslfile     time      stylesheetlastmodified  
+                project msg_debug force    infile lastmodified      outfile lastmodified   
+                   stylesheetlastmodified    outfile lastmodified      
+                ensuredirectoryfor outfile   
+                log  processing     infile     to     outfile  
+                    project msg_info   
+                configureliaison stylesheet   
+                setliaisondynamicfileparameters liaison  infile   
+                liaison transform infile  outfile log  skipping input file     infile 
+                        because it is older than output file     outfile 
+                        and so is the stylesheet     stylesheet  project msg_debug exception ex    
+            log  failed to process     infile  project msg_info outfile outfile delete buildexception ex ensuredirectoryfor file targetfile buildexception   
+        file directory   targetfile getparentfile directory exists directory mkdirs buildexception  unable to create directory    
+                                           directory getabsolutepath factory getfactory factory xmlcatalog getxmlcatalog     
+        xmlcatalog setproject getproject xmlcatalog enumeration getoutputproperties outputproperties elements xsltliaison getliaison liaison processor resolveprocessor processor exception e buildexception e resolveprocessor processor_trax throwable e1    
+                    e1 printstacktrace buildexception e1 liaison param createparam     
+        param p param    
+        params addelement p p param setproject project project project   project setname name name   name setexpression expression expression   expression getname buildexception name buildexception  name attribute is missing name getexpression buildexception expression buildexception  expression attribute is missing expression setif ifproperty ifproperty   ifproperty setunless unlessproperty unlessproperty   unlessproperty shoulduse ifproperty project getproperty ifproperty unlessproperty project getproperty unlessproperty outputproperty createoutputproperty     
+        outputproperty p outputproperty    
+        outputproperties addelement p p outputproperty getname name setname name name   name getvalue value setvalue value value   value init buildexception init    
+        xmlcatalog setproject getproject configureliaison file stylesheet buildexception   
+        fileresource fr fileresource    
+        fr setproject getproject     
+        fr setfile stylesheet   
+        configureliaison fr configureliaison resource stylesheet buildexception stylesheetloaded    reuseloadedstylesheet stylesheetloaded log  loading stylesheet     stylesheet  project msg_info liaison xsltliaison2    
+                  xsltliaison2  liaison  configure liaison xsltliaison3    
+                  
+                  
+                  xsltliaison3  liaison  setstylesheet stylesheet stylesheet fileresource    
+                    liaison setstylesheet  
+                              fileresource  stylesheet  getfile buildexception liaison getclass   tostring   
+                                accepts the stylesheet only as a file   
+                            getlocation enumeration e   params elements    e hasmoreelements       
+                param p    param  e nextelement p shoulduse      
+                    liaison addparam p getname    p getexpression exception ex    
+            log  failed to transform using stylesheet     stylesheet  
+                 project msg_info buildexception ex setliaisondynamicfileparameters  
+        xsltliaison liaison  
+        file infile exception filenameparameter liaison addparam filenameparameter  infile getname filedirparameter filename   fileutils getrelativepath basedir  infile   
+            file file file filename   
+              
+              
+            liaison addparam  
+                filedirparameter  
+                 file getparent file getparent   replace factory createfactory buildexception factory buildexception  'factory' element must be unique    
+          
+        factory factory factory factory getname name setname name name   name addattribute attribute attr    
+            attributes addelement attr enumeration getattributes attributes elements attribute dynamicconfigurator getname name object getvalue value object createdynamicelement name buildexception setdynamicattribute name value buildexception name  equalsignorecase name name   value value  equalsignorecase name equalsignorecase value value equalsignorecase value value value integer value numberformatexception e value   value buildexception  unsupported attribute      name stylemapper filenamemapper setfrom from setto to mapfilename xmlfile dotpos   xmlfile lastindexof dotpos   0    
+                xmlfile   xmlfile substring 0  dotpos xmlfile   targetextension   
+          
+      
+ 
+ org apache tools ant taskdefs XSLTProcess

@@ -1,0 +1,160 @@
+ 
+   $id$ 
+   copyright  c  1996-2006 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications  
+    
+    author jim holt 
+    
+    
+       logger constructor  
+        
+   empty constructor 
+                                                                 
+   static variables 
+    
+       switching true gives some extra logging messages acts stack elements  p  
+       
+         link #startelement string  string  string  attributes   places item stack end   link #endelement string  string  string   
+       removes number items actually use elements stack acts stack elements  p  
+       
+         link #startelement string  string  string  attributes   places item stack end   link #endelement string  string  string   
+       removes accessors 
+    
+        param s true statistics shown 
+        
+    
+        return  true statistics shown 
+        
+    
+        return parsing time 
+        
+    
+        param reader reader read 
+        throws saxexception parsing xml 
+        
+    
+        param inputsource read 
+        throws saxexception parsing xml weren't given system id  attempt use url jar loaded tfm  
+                                                                 
+   abstract methods 
+    
+       implement concrete class handle reaching start tag element interest  
+        param e element  
+        throws saxexception any error parsing element  
+        
+    
+       implement concrete class handle reaching end tag element interest  
+        param e element  
+        throws saxexception any error parsing element  
+        
+                                                                 
+   non-abstract methods 
+   
+        see org xml sax contenthandler#startelement java lang string  
+               java lang string  java lang string  org xml sax attributes  
+        
+    
+       factory method return xmlelement reuse previously created elements possible  
+        param name element name  
+        param atts element attributes  
+        return element  
+        
+   
+        see org xml sax contenthandler#endelement java lang string  
+               java lang string  java lang string  
+        
+    
+       determine element given name interest parser base implementation assumes always true  
+       
+        param name element name  
+        return true element name interest  
+        
+   todo  remove code below characters removed 
+      private static final string    returnstring     \n         
+   
+        see org xml sax contenthandler#characters char    int  int  
+        
+   todo  remove old implementation 0 22 s 
+   demonstrated s not needed  - tfm text added elements stack? - tfm int 0 nelements xmlelement e   elements e length     0 seems wrong method called 
+                     multiple times parser's discretion - tfm 
+                  e addtext returnstring   
+                
+              e addtext ch  start  length   
+            
+   
+        see org xml sax entityresolver#resolveentity java lang string  
+               java lang string  
+        
+    
+        param cls class 
+        return jar 
+        
+  e g org argouml uml generator ui classgenerationdialog -  poseidon jar 
+                                                                 
+   convenience methods 
+    
+        param e element 
+        
+    
+        param e element 
+        
+   end class saxparserbase   org argouml persistence SAXParserBase org argouml persistence saxparserbase defaulthandler saxparserbase dbg setstats s    stats   s getstats stats getparsetime parsetime parse reader reader saxexception   
+        parse inputsource reader parse inputsource input saxexception start  end  
+ 
+        saxparserfactory factory   saxparserfactory newinstance    
+        factory setnamespaceaware factory setvalidating saxparser parser   factory newsaxparser input getsystemid input setsystemid getjarresource  org argouml kernel project     
+              
+ 
+            start   system currenttimemillis    
+            parser parse input end   system currenttimemillis    
+            parsetime   end - start ioexception e saxexception e parserconfigurationexception e saxexception e stats    log isinfoenabled      
+            log info  elapsed time       end - start      ms handlestartelement xmlelement e saxexception handleendelement xmlelement e saxexception startelement uri localname name  
+            attributes atts saxexception iselementofinterest name     
+ 
+            xmlelement element   createxmlelement name  atts log isdebugenabled      
+                stringbuffer buf stringbuffer    
+                buf append  start     append name  append ' '  append element i   0  i   atts getlength    i      
+            	    buf append     att     
+                         append atts getlocalname i   
+                             append ' '  
+                                 append atts getvalue i    
+                  
+                log debug buf tostring     
+              
+ 
+            elements nelements      element  
+            handlestartelement element xmlelement createxmlelement name  attributes atts nfreeelements    0 xmlelement name  atts   
+          
+        xmlelement e   freeelements --nfreeelements   
+        e setname name   
+        e setattributes atts   
+        e resettext e endelement uri localname name saxexception iselementofinterest name     
+            xmlelement e   elements --nelements log isdebugenabled      
+                stringbuffer buf stringbuffer    
+                buf append  end      e getname          
+            	         e gettext            e    \n i   0  i   e getnumattributes    i      
+                    buf append     att      e getattributename i        
+                    	     e getattributevalue i     \n    
+                  
+                log debug buf   
+              
+            handleendelement e iselementofinterest name characters ch start length saxexception   
+         
+        elements nelements - 1  addtext ch  start  length inputsource resolveentity publicid systemid saxexception url testit url systemid   
+            inputsource s inputsource testit openstream s exception e    
+            log info  note  could not open dtd     systemid 
+                        due to exception dtdname   systemid substring systemid lastindexof ' '    1 dtdpath     org argouml persistence     dtdname  
+            inputstream is   saxparserbase getresourceasstream dtdpath is is fileinputstream dtdpath substring 1 exception ex saxexception e inputsource is getjarresource cls jarfile filesep   system getproperty  file separator classfile   cls replace ' '  filesep charat 0 classloader thisclassloader getclass   getclassloader    
+        url url   thisclassloader getresource classfile url urlstring   url getfile idbegin   urlstring indexof  file idend   urlstring indexof idbegin   -1    idend   -1    idend   idbegin    
+                jarfile   urlstring substring idbegin   5  idend jarfile ignoreelement xmlelement e log isdebugenabled      
+            log debug  note  ignoring tag     e getname notimplemented xmlelement e log isdebugenabled      
+            log debug  note  element not implemented      e getname     
+          
+      
+   org argouml persistence SAXParserBase

@@ -1,0 +1,109 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license class used parse output cvs log command  
+   
+    
+  private static final int get_entry   0  
+   fixme formatters not thread-safe 
+    input format dates read cvs log    
+    
+       new formatter used parse cvs date timestamp following data used processing stdout cvs command 
+    rcs entries list rcs entries array  
+       
+        return list rcs entries array 
+        
+    
+       receive notification process writing standard output  
+        param line line process 
+        
+   make sure attributes reset working new' file nothing 
+    
+       process line get_comment  state  
+       
+        param line line ended changelog particular file save 1 1 
+    
+       process line get_file  state  
+       
+        param line line process 
+        
+    
+       process line revision  state  
+       
+        param line line process revisions changelog 
+  entry lets move onto next file 
+    
+       process line date  state  
+       
+        param line line process date format using format 1 12 9 1 12 9-  'date  yyyy mm dd hh mm ss   author  name ' 
+   1 12 9   'date  yyyy-mm-dd hh mm ss z   author  name' 
+  reset comment empty here accumulate multiple lines processcomment method 
+    
+       process line get_previous_revision  state  
+       
+        param line line process 
+        
+    
+       utility method saves current entry  
+        
+    
+       parse date out expected format  
+       
+        param date string holding date 
+        return date object null unknown date format 
+        
+    
+       reset internal attributes except status  
+       org apache tools ant taskdefs cvslib ChangeLogParser org apache tools ant taskdefs cvslib changelogparser simpledateformat input_date simpledateformat  yyyy mm dd hh mm ss   locale us simpledateformat cvs1129_input_date simpledateformat  yyyy-mm-dd hh mm ss z   locale us timezone utc   timezone gettimezone  utc    
+        input_date settimezone utc   
+        cvs1129_input_date settimezone utc cvsentry   getentrysetasarray cvsentry   array cvsentry  entries size i   0 enumeration e   entries elements    e hasmoreelements       
+            array i       cvsentry  e nextelement array stdout line status get_file  
+                  
+                  
+                reset    
+                processfile line get_revision  
+                processrevision line get_date  
+                processdate line get_comment  
+                processcomment line get_previous_rev  
+                processgetpreviousrevision line processcomment line lineseparator   system getproperty  line separator line equals end 
+                  comment length   - lineseparator length      
+            comment   comment substring 0  end   
+            saveentry    
+            status   get_file line equals end 
+                  comment length   - lineseparator length      
+            comment   comment substring 0  end   
+            status   get_previous_rev comment    line   lineseparator processfile line line startswith  working file       
+            file   line substring 14  line length     
+            status   get_revision processrevision line line startswith  revision      
+            revision   line substring 9   
+            status   get_date line startswith              
+              
+              
+            status   get_file processdate line line startswith  date endofdateindex   line indexof ' '   
+            date   line substring  date    length    endofdateindex startofauthorindex   line indexof  author     endofdateindex   1 endofauthorindex   line indexof ' '  startofauthorindex   1   
+            author   line substring  author    length     startofauthorindex  endofauthorindex   
+ 
+            status   get_comment  
+ 
+              
+              
+            comment processgetpreviousrevision line line startswith  revision illegalstateexception  unexpected line from cvs    
+                  line   
+          
+        previousrevision   line substring  revision   length     
+ 
+        saveentry    
+ 
+        revision   previousrevision  
+        status   get_date saveentry entrykey   date   author   comment  
+        cvsentry entry entries containskey entrykey     
+            date dateobject   parsedate date   
+            entry cvsentry dateobject  author  comment   
+            entries put entrykey  entry entry    cvsentry  entries get entrykey   
+          
+ 
+        entry addfile file  revision  previousrevision date parsedate date input_date parse date parseexception e cvs1129_input_date parse date parseexception e2 illegalstateexception  invalid date format      date reset file date author comment revision previousrevision org apache tools ant taskdefs cvslib ChangeLogParser

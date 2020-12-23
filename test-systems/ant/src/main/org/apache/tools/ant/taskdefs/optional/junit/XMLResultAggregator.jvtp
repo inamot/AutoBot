@@ -1,0 +1,150 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   aggregates lt junit gt  xml formatter testsuite data under specific directory transforms results via xslt not particulary clean helpful thinking another technique  
+   
+    p main problem due fact jvm forked testcase 
+   thus making impossible aggregate testcases listener obviously forked jvm solution write testlistener receive events testrunner via sockets imho simplest way to avoid file hacking thing  
+   
+    ant task name  junitreport  category  testing  
+    
+   checkstyle visibilitymodifier bc list filesets contains xml aggregate name result file directory write file default directory   tt  #046   tt resolved project directory default file name   tt tests-testsuites xml  tt current generated id    
+    
+       text checked tests    value  
+        
+    
+       text checked tests    value  
+        
+    
+       text checked tests    value  
+        
+   checkstyle visibilitymodifier generate report based document created merge  
+        return report 
+        
+    
+       set name aggregegated results file must relative tt todir  tt  attribute not set use   link #default_filename  
+        param  value name file  
+        see #settodir file  
+        
+    
+       set destination directory results written not 
+       set use   link #default_dir given relative directory resolve project directory  
+        param value directory write results  absolute relative  
+        
+    
+       add new fileset containing xml results aggregate 
+        param    fs new fileset xml results  
+        
+    
+       aggregate testsuites single document write specified directory file  
+        throws  buildexception  thrown serious error writing document  
+        
+   write document 
+   apply transformation full destination file write result made tt todir  tt tt tofile  tt  attributes  
+        return destination file written result file code  xml  code  files fileset  
+       
+        return files fileset end xml now methods related dom tree manipulation 
+    
+       write dom tree file  
+        param doc xml document dump disk  
+        param file filename write document obviouslly xml file  
+        throws ioexception thrown error writing content  
+        
+   writers not throw exceptions check p  create dom tree testsuites firstchild aggregates testsuite results exists base directory  
+        return root element dom tree aggregates testsuites  
+        
+   create dom tree files add document 
+   make sure really testsuite  
+  wrong root element name 
+   issue warning testcase might failed write zero-length document already failed hey     mm put warning 
+    
+        p  add new testsuite node document main difference split previous fully qualified name package name  
+        p example   tt org apache whatever  tt split tt org apache  tt tt whatever  tt   
+        param root root element tt testsuite  tt  node appended  
+        param testsuite element append given root slightly 
+              modify original node change name attribute add package one missing   might imply package don't fooled  
+   modify name attribute set package 
+    
+       create new document builder issue tt exceptioninitializererror  tt something going wrong fatal anyway  
+        todo factorize somewhere duplicated code  
+        return new document builder create dom 
+       org apache tools ant taskdefs optional junit XMLResultAggregator org apache tools ant taskdefs optional junit xmlresultaggregator task xmlconstants vector filesets vector tofile file todir vector transformers vector default_dir default_filename    tests-testsuites xml generatedid   0 warning_is_possibly_corrupted 
+            is not a valid xml document  it is possibly corrupted warning_invalid_root_element 
+            is not a valid testsuite xml document warning_empty_file 
+            is empty \nthis can be caused by the test jvm exiting unexpectedly aggregatetransformer createreport     
+        aggregatetransformer transformer aggregatetransformer transformers addelement transformer transformer settofile value    
+        tofile   value settodir file value    
+        todir   value addfileset fileset fs    
+        filesets addelement fs execute buildexception   
+        element rootelement   createdocument    
+        file destfile   getdestinationfile writedomtree rootelement getownerdocument    destfile ioexception e buildexception  unable to write test aggregate to '    destfile    '   e   
+          
+          
+        enumeration e   transformers elements e hasmoreelements      
+            aggregatetransformer transformer   
+                 aggregatetransformer  e nextelement    
+            transformer setxmldocument rootelement getownerdocument     
+            transformer transform file getdestinationfile tofile tofile   default_filename todir todir   getproject   resolvefile default_dir file todir  tofile file   getfiles     
+        vector v vector size   filesets size i   0  i   size  i      
+            fileset fs    fileset  filesets elementat i   
+            directoryscanner ds   fs getdirectoryscanner getproject     
+            ds scan f   ds getincludedfiles j   0  j   f length  j pathname   f j pathname endswith   xml      
+                    file file file ds getbasedir    pathname   
+                    file   getproject   resolvefile file getpath     
+                    v addelement file   
+                  
+              
+          
+ 
+        file   files file v size     
+        v copyinto files files writedomtree document doc  file file ioexception   
+        outputstream out printwriter wri out bufferedoutputstream fileoutputstream file    
+            wri printwriter outputstreamwriter out   utf8     
+            wri write   ?xml version \ 1 0\  encoding \ utf-8\  ? \n domelementwriter    write doc getdocumentelement    wri  0         
+            wri flush wri checkerror ioexception  error writing dom content fileutils close wri   
+            fileutils close out element createdocument     
+          
+        documentbuilder builder   getdocumentbuilder    
+        document doc   builder newdocument    
+        element rootelement   doc createelement testsuites   
+        doc appendchild rootelement   
+ 
+        generatedid   0  
+ 
+          
+        file   files   getfiles i   0  i   files length  i      
+            file file   files i log  parsing file  '    file    '   project msg_verbose file length     0    
+                    document testsuitedoc 
+                              builder parse  
+                                fileutils getfileutils   touri files i  getabsolutepath      
+                    element elem   testsuitedoc getdocumentelement testsuite equals elem getnodename       
+                        addtestsuite rootelement  elem   
+                        generatedid log  the file     file 
+                                  warning_invalid_root_element  
+                                project msg_warn log  the file     file 
+                              warning_empty_file  
+                            project msg_warn saxexception e    
+                  
+                  
+                log  the file     file   warning_is_possibly_corrupted  project msg_warn   
+                log stringutils getstacktrace e   project msg_debug ioexception e    
+                log  error accessing file     file        
+                      e getmessage    project msg_err rootelement addtestsuite element root  element testsuite fullclassname   testsuite getattribute attr_name pos   fullclassname lastindexof pkgname    pos    -1  ?      fullclassname substring 0  pos classname    pos    -1  ? fullclassname   fullclassname substring pos   1   
+        element copy    element  domutil importnode root  testsuite   
+ 
+          
+        copy setattribute attr_name  classname   
+        copy setattribute attr_package  pkgname   
+        copy setattribute attr_id  integer tostring generatedid documentbuilder getdocumentbuilder documentbuilderfactory newinstance   newdocumentbuilder exception exc exceptionininitializererror exc   
+          
+      
+ 
+ org apache tools ant taskdefs optional junit XMLResultAggregator

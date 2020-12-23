@@ -1,0 +1,44 @@
+teammates ui controller EntityModifiedLogsServlet teammates ui controller  
+ 
+  
+  
+  
+  
+ 
+  
+  
+  
+ 
+  
+  
+  
+  
+  
+ 
+  
+  
+ 
+ suppresswarnings  serial entitymodifiedlogsservlet httpservlet   
+ 
+  
+ 
+     override doget httpservletrequest req  httpservletresponse resp    
+        dopost req  resp   
+      
+ 
+     override dopost httpservletrequest req  httpservletresponse resp    
+        resp setcontenttype  application json printwriter writer   resp getwriter    
+            logservice logservice   logservicefactory getlogservice endtime date   gettime queryrange   1000   60   60   24 starttime   endtime - queryrange  
+ 
+            logquery q   logquery builder withdefaults   
+                                          includeapplogs starttimemillis starttime  
+                                          endtimemillis endtime   
+            iterable requestlogs  logs   logservice fetch q requestlogs requestlogs   logs    
+                list applogline  loglist   requestlogs getapploglines i   0  i   loglist size    i      
+                    applogline currentlog   loglist get i logmessage   currentlog getlogmessage logmessage contains  modified course tokens   logmessage split courseid   tokens 1   
+                        writer println courseid ioexception e    
+            log severe teammatesexception tostringwithstacktrace e    
+          
+      
+ 
+ teammates ui controller EntityModifiedLogsServlet

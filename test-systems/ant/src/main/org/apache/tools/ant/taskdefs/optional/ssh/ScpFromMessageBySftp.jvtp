@@ -1,0 +1,65 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license helper object representing scp download  
+    
+    
+       constructor scpfrommessagebysftp  
+        param verbose true log extra information 
+        param session scp session use 
+        param aremotefile remote file name 
+        param alocalfile local file 
+        param recursive true use recursion ant 1 7 
+        
+    
+       constructor scpfrommessagebysftp  
+        param session scp session use 
+        param aremotefile remote file name 
+        param alocalfile local file 
+        param recursive true use recursion 
+        
+    
+       carry out transfer  
+        throws ioexception o errors 
+        throws jschexception errors detected scp 
+        
+   ignoredorg apache tools ant taskdefs optional ssh ScpFromMessageBySftp org apache tools ant taskdefs optional ssh scpfrommessagebysftp scpfrommessage scpfrommessagebysftp verbose  
+                                session session aremotefile  
+                                file alocalfile recursive verbose  session verbose   verbose remotefile   aremotefile localfile   alocalfile isrecursive   recursive scpfrommessagebysftp session session aremotefile  
+                                file alocalfile recursive session  aremotefile  alocalfile  recursive execute ioexception  jschexception   
+        channelsftp channel   opensftpchannel channel connect sftpattrs attrs   channel stat remotefile attrs isdir       remotefile endswith         
+                    remotefile   remotefile sftpexception ee    
+                  
+              
+            getdir channel  remotefile  localfile sftpexception e jschexception e tostring channel channel disconnect    
+              
+          
+        log  done\n getdir channelsftp channel remotefile  
+                        file localfile ioexception  sftpexception pwd   remotefile remotefile lastindexof ' '     -1 remotefile length     1    
+                pwd   remotefile substring 0  remotefile lastindexof ' '    
+              
+          
+        channel cd pwd localfile exists      
+            localfile mkdirs    
+          
+        java util vector files   channel ls remotefile i   0  i   files size    i      
+            channelsftp lsentry le    channelsftp lsentry  files elementat i name   le getfilename le getattrs   isdir name equals         name equals getdir channel  
+                       channel pwd           name file localfile  le getfilename getfile channel  le  localfile   
+              
+          
+        channel cd getfile channelsftp channel  
+                         channelsftp lsentry le  
+                         file localfile ioexception  sftpexception remotefile   le getfilename localfile exists path   localfile getabsolutepath i   0 i   path lastindexof file pathseparator      -1 path length     file pathseparator length file path substring 0  i   mkdirs localfile isdirectory      
+            localfile file localfile  remotefile starttime   system currenttimemillis totallength   le getattrs   getsize    
+ 
+        sftpprogressmonitor monitor trackprogress   getverbose      totallength   102400 trackprogress    
+            monitor   getprogressmonitor log  receiving      remotefile           le getattrs   getsize     
+            channel get remotefile  localfile getabsolutepath    monitor endtime   system currenttimemillis    
+            logstats starttime  endtime totallength   
+          
+      
+ org apache tools ant taskdefs optional ssh ScpFromMessageBySftp

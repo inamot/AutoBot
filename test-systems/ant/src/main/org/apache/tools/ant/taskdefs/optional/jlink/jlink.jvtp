@@ -1,0 +1,175 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   jlink java links together multiple  jar files original code patrick 
+   beard  modifications work ant matthew kuperus heun  
+   
+    
+   checkstyle typenamecheck bc 
+    
+   jlink links together multiple  jar files  
+    
+   checkstyle visibilitymodifier bc 
+   checkstyle visibilitymodifier bc file created instance jlink  
+        param outfile file create  
+        
+    
+       adds file merged output  
+        param filetomerge file merge output  
+        
+    adds file added output  
+        param filetoadd file add output  
+        
+    
+       adds several files merged output  
+        param filestomerge array files merge output  
+        
+    
+       adds several file added output  
+        param filestoadd array files add output  
+        
+    
+       determines whether output compressed  
+        param compress true use compression  
+        
+    
+       performs linking files  addfiles added output example jar file added output jar file mergefiles first examined type jar zip 
+       file contents extracted mergefile entered output zip jar file encountered subdirectory added  not merged directory encountered becomes root entry files below thus provide 
+       multiple  disjoint directories addfiles added rational manner outfile  
+        throws exception error merge 
+  add file addfiles vector add later top level output file  
+  system out println jlink  adding directory contents f getpath nothing command line entry point jlink  
+        param args array arguments 
+        
+   jlink output input1     inputn maintain compatibility command-line version only add files merged  
+   
+       actually performs merging f output  
+       f zip jar file  
+        
+  check see file name  name  exists  
+  ignore manifest entries re bound cause conflicts between 
+  files being merged   user supply manifest file doing merge  
+  meta-inf not found name entry  go ahead process here trying put directory entry already exists example re trying write  com previous 
+  entry another mergefile called  com case ignore error go next entry duplicate entry hate admit don't know happened 
+   here   throw exception  
+   
+       adds contents directory output  
+        
+   
+       gets name entry file real name class name package class 
+       name appended  
+        
+   see file fact class file determine actual name nothing nothing 
+   
+       adds file output stream  
+        
+  make sure file exists convenience method several methods might call entry already exists go first one method work given entry mergefile big deal set right parameters zipentry output stream  
+        
+   
+          first  some notes mrj 2 2 2  getting size  compressed size crc32 zipinputstream not work compressed  deflated  files   those calls return -1 uncompressed  stored  files  those calls work using zipfile getentries   works both compressed uncompressed files  
+ 
+          now some simple testing seems value crc-32 independent compression setting easy pass information output entry nothing 
+  note  don't need specify size crc compressed files  
+   
+       necessary case add entry not compressed  
+        
+   
+       necessary case add entry not compressed  
+       org apache tools ant taskdefs optional jlink jlink org apache tools ant taskdefs optional jlink jlink buffer 8192 setoutfile outfile outfile outfile   outfile addmergefile filetomerge filetomerge mergefiles addelement filetomerge addaddfile filetoadd filetoadd addfiles addelement filetoadd addmergefiles filestomerge filestomerge i   0  i   filestomerge length  i      
+            addmergefile filestomerge i addaddfiles filestoadd filestoadd i   0  i   filestoadd length  i      
+            addaddfile filestoadd i setcompression compress compression   compress link exception   
+        zipoutputstream output zipoutputstream fileoutputstream outfile compression    
+            output setmethod zipoutputstream deflated   
+            output setlevel deflater default_compression output setmethod zipoutputstream stored   
+          
+ 
+        enumeration merges   mergefiles elements merges hasmoreelements path merges nextelement    
+            file f file path f getname   endswith   jar      f getname   endswith   zip      
+                  
+                mergezipjarcontents output  f addaddfile path   
+              
+          
+ 
+        enumeration adds   addfiles elements adds hasmoreelements name adds nextelement    
+            file f file name f isdirectory      
+                  
+                adddircontents output  f  f getname     ' '  compression addfile output  f      compression output output close ioexception ioe main args args length   2    
+            system out println  usage  jlink output input1     inputn    
+            system exit 1   
+          
+        jlink linker jlink    
+ 
+        linker setoutfile args 0 i   1  i   args length  i      
+            linker addmergefile args i linker link exception ex    
+            system err print ex getmessage mergezipjarcontents zipoutputstream output  file f ioexception f exists zipfile zipf zipfile f   
+        enumeration entries   zipf entries entries hasmoreelements      
+            zipentry inputentry    zipentry  entries nextelement inputentryname   inputentry getname index   inputentryname indexof  meta-inf index   0 output putnextentry processentry zipf  inputentry zipexception ex mess   ex getmessage mess indexof  duplicate      0 ex  
+                      
+                  
+ 
+                inputstream in   zipf getinputstream inputentry len   buffer length count   -1 count   in read buffer  0  len     0    
+                    output write buffer  0  count   
+                  
+                in close    
+                output closeentry    
+              
+          
+        zipf close adddircontents zipoutputstream output  file dir prefix compress ioexception contents   dir list i   0  i   contents length    i name   contents i   
+            file file file dir  name file isdirectory      
+                adddircontents output  file  prefix   name   ' '  compress addfile output  file  prefix  compress getentryname file file prefix name   file getname name endswith inputstream input input fileinputstream file classname   classnamereader getclassname input classname classname replace ioexception ioe input input close ioexception e    
+                          
+                      
+                  
+              
+          
+        system out println  from     file getpath       and prefix     prefix 
+                                creating entry     prefix   name prefix   name addfile zipoutputstream output  file file prefix compress ioexception file exists zipentry entry zipentry getentryname file  prefix    
+ 
+        entry settime file lastmodified     
+        entry setsize file length compress    
+            entry setcrc calcchecksum file    
+          
+        fileinputstream input fileinputstream file   
+ 
+        addtooutputstream output  input  entry addtooutputstream zipoutputstream output  inputstream input  
+                                   zipentry ze ioexception output putnextentry ze zipexception zipex    
+              
+            input close numbytes   -1 numbytes   input read buffer     0    
+            output write buffer  0  numbytes   
+          
+        output closeentry    
+        input close zipentry processentry zipfile zip  zipentry inputentry name   inputentry getname inputentry isdirectory      name endswith inputstream input   zip getinputstream zip getentry name classname   classnamereader getclassname input   
+ 
+                input close classname name   classname replace ioexception ioe    
+                  
+              
+          
+        zipentry outputentry zipentry name   
+ 
+        outputentry settime inputentry gettime     
+        outputentry setextra inputentry getextra     
+        outputentry setcomment inputentry getcomment     
+        outputentry settime inputentry gettime compression    
+            outputentry setmethod zipentry deflated outputentry setmethod zipentry stored   
+            outputentry setcrc inputentry getcrc     
+            outputentry setsize inputentry getsize outputentry calcchecksum file f ioexception   
+        bufferedinputstream in bufferedinputstream fileinputstream f calcchecksum in calcchecksum inputstream in ioexception   
+        crc32 crc crc32 len   buffer length count   -1 haveread   0 count   in read buffer  0  len     0    
+            haveread    count  
+            crc update buffer  0  count   
+          
+        in close crc getvalue    
+      
+ 
+ 
+  
+ 
+org apache tools ant taskdefs optional jlink jlink

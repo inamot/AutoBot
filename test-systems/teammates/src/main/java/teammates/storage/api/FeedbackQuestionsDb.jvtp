@@ -1,0 +1,128 @@
+ 
+    
+   handles crud operations feedback questions  
+   
+    see feedbackquestion 
+    see feedbackquestionattributes situation not tested replicating situation difficult during testing 
+    
+       creates multiple questions without checking existence calls   link #flush     
+       leading any previously deferred operations being written immediately needed update question entities actual question ids  
+       
+        returns list created   link feedbackquestionattributes  containing actual question ids  
+        
+    
+       preconditions   br parameters non-null  
+        return null not found  
+        
+    
+       preconditions   br parameters non-null  
+        return null not found  
+        
+    
+       preconditions   br parameters non-null  
+        return empty list questions found  
+        
+    
+       preconditions   br parameters non-null  
+        return empty list questions found  
+        
+    
+       preconditions   br parameters non-null  
+        return empty list questions found  
+        
+    
+       updates feedback question identified code newattributes getid changes code updatedat  timestamp time update remaining parameters existing value preserved parameter null  due keep existing' policy   br  
+       
+        p preconditions  
+         code newattributes getid non-null correspond existing feedback question  
+        
+    
+       updates feedback question identified code newattributes getid remaining parameters existing value preserved parameter null  due keep existing' policy   br timestamp code updatedat independent code newattributes depends value code keepupdatetimestamp  
+       preconditions   br  
+           code newattributes getid non-null correspond existing feedback question   br  
+        
+   todo  sanitize values update tests accordingly 
+  set true prevent changes last update timestamp 
+   gets question entity key  feedbackquestionid known  
+   gets feedbackquestion based feedbacksessionname questionnumber teammates storage api FeedbackQuestionsDb teammates storage api feedbackquestionsdb entitiesdb feedbackquestion  feedbackquestionattributes error_update_non_existent    trying to update non-existent feedback question createfeedbackquestions collection feedbackquestionattributes  questionstoadd invalidparametersexception   
+        list feedbackquestionattributes  questionstoupdate   createentities questionstoadd feedbackquestionattributes question   questionstoupdate updatefeedbackquestion question entitydoesnotexistexception e    
+                  
+                  
+                assumption fail  entity found be already existing and not existing simultaneously list feedbackquestionattributes  createfeedbackquestionswithoutexistencecheck  
+            collection feedbackquestionattributes  questions invalidparametersexception   
+        list feedbackquestion  createdquestions   createentitieswithoutexistencecheck questions makeattributes createdquestions feedbackquestionattributes getfeedbackquestion feedbackquestionid    
+        assumption assertnotnull statuscodes dblevel_null_input  feedbackquestionid makeattributesornull getfeedbackquestionentity feedbackquestionid   
+                 trying to get non-existent question      feedbackquestionid feedbackquestionattributes createfeedbackquestionwithoutexistencecheck  
+            feedbackquestionattributes entitytoadd invalidparametersexception makeattributes createentitywithoutexistencecheck entitytoadd feedbackquestionattributes getfeedbackquestion feedbacksessionname courseid questionnumber    
+        assumption assertnotnull statuscodes dblevel_null_input  feedbacksessionname   
+        assumption assertnotnull statuscodes dblevel_null_input  courseid   
+        assumption assertnotnull statuscodes dblevel_null_input  questionnumber makeattributesornull getfeedbackquestionentity feedbacksessionname  courseid  questionnumber   
+                 trying to get non-existent question      questionnumber         feedbacksessionname         courseid list feedbackquestionattributes  getfeedbackquestionsforsession feedbacksessionname courseid    
+        assumption assertnotnull statuscodes dblevel_null_input  feedbacksessionname   
+        assumption assertnotnull statuscodes dblevel_null_input  courseid makeattributes getfeedbackquestionentitiesforsession feedbacksessionname  courseid list feedbackquestionattributes  getfeedbackquestionsforgivertype feedbacksessionname courseid  feedbackparticipanttype givertype    
+        assumption assertnotnull statuscodes dblevel_null_input  feedbacksessionname   
+        assumption assertnotnull statuscodes dblevel_null_input  courseid   
+        assumption assertnotnull statuscodes dblevel_null_input  givertype makeattributes getfeedbackquestionentitiesforgivertype feedbacksessionname  courseid  givertype list feedbackquestionattributes  getfeedbackquestionsforcourse courseid    
+        assumption assertnotnull statuscodes dblevel_null_input  courseid makeattributes getfeedbackquestionentitiesforcourse courseid updatefeedbackquestion feedbackquestionattributes newattributes invalidparametersexception  entitydoesnotexistexception   
+        updatefeedbackquestion newattributes updatefeedbackquestion feedbackquestionattributes newattributes keepupdatetimestamp invalidparametersexception  entitydoesnotexistexception   
+        assumption assertnotnull statuscodes dblevel_null_input  newattributes newattributes isvalid invalidparametersexception newattributes getinvalidityinfo     
+          
+ 
+        feedbackquestion fq   getentity newattributes fq entitydoesnotexistexception error_update_non_existent   newattributes tostring     
+          
+ 
+        fq setquestionnumber newattributes questionnumber   
+        fq setquestiontext newattributes questionmetadata   
+        fq setquestiondescription newattributes questiondescription   
+        fq setquestiontype newattributes questiontype   
+        fq setgivertype newattributes givertype   
+        fq setrecipienttype newattributes recipienttype   
+        fq setshowresponsesto newattributes showresponsesto   
+        fq setshowgivernameto newattributes showgivernameto   
+        fq setshowrecipientnameto newattributes showrecipientnameto   
+        fq setnumberofentitiestogivefeedbackto newattributes numberofentitiestogivefeedbackto   
+ 
+          
+        fq keepupdatetimestamp   keepupdatetimestamp  
+ 
+        saveentity fq  newattributes deletefeedbackquestionsforcourse courseid    
+        assumption assertnotnull statuscodes dblevel_null_input  courseid   
+ 
+        deletefeedbackquestionsforcourses arrays aslist courseid deletefeedbackquestionsforcourses list courseids    
+        assumption assertnotnull statuscodes dblevel_null_input  courseids   
+ 
+        ofy   delete   keys load   filter  courseid in   courseids  keys    now feedbackquestion getfeedbackquestionentity feedbackquestionid    
+        assumption assertnotnull statuscodes dblevel_null_input  feedbackquestionid   
+ 
+        key feedbackquestion  key   makekeyornullfromwebsafestring feedbackquestionid key null ofy   load   key key  now feedbackquestion getfeedbackquestionentity feedbacksessionname courseid questionnumber load   
+                 filter  feedbacksessionname     feedbacksessionname  
+                 filter  courseid     courseid  
+                 filter  questionnumber     questionnumber  
+                 first   now list feedbackquestion  getfeedbackquestionentitiesforsession feedbacksessionname courseid load   
+                 filter  feedbacksessionname     feedbacksessionname  
+                 filter  courseid     courseid  
+                 list list feedbackquestion  getfeedbackquestionentitiesforcourse courseid load   
+                 filter  courseid     courseid  
+                 list list feedbackquestion  getfeedbackquestionentitiesforgivertype feedbacksessionname courseid  feedbackparticipanttype givertype load   
+                 filter  feedbacksessionname     feedbacksessionname  
+                 filter  courseid     courseid  
+                 filter  givertype     givertype  
+                 list    
+      
+ 
+     override loadtype feedbackquestion  load ofy   load   type feedbackquestion override feedbackquestion getentity feedbackquestionattributes attributes attributes getid getfeedbackquestionentity attributes getid getfeedbackquestionentity attributes feedbacksessionname  attributes courseid  attributes questionnumber   
+      
+ 
+     override querykeys feedbackquestion  getentityquerykeys feedbackquestionattributes attributes    
+        key feedbackquestion  key   makekeyornullfromwebsafestring attributes getid     
+ 
+        query feedbackquestion  query key query   load   
+                     filter  feedbacksessionname     attributes feedbacksessionname  
+                     filter  courseid     attributes courseid  
+                     filter  questionnumber     attributes questionnumber query   load   filterkey key query keys    
+      
+ 
+     override feedbackquestionattributes makeattributes feedbackquestion entity    
+        assumption assertnotnull statuscodes dblevel_null_input  entity feedbackquestionattributes entity   
+      
+ teammates storage api FeedbackQuestionsDb

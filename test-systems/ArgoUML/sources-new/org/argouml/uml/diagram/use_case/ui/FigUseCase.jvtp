@@ -1,0 +1,851 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications fig display use cases use case diagrams  p  
+   
+   realised solid oval containing name use 
+   case  optionally may split two compartments lower 
+   compartment displaying extension points use case  p  
+   
+   implements interfaces through superclasses  p some coordinate geometry done fit rectangular 
+   text boxes inside elipse rectangular text box contains name any extension points shown deemed height  em 2h  em width  em 2w  em allow margin em p  em  above top below bottom box know height elipse   em 2b  em     em 2h  em    
+    em 2p  em   p formula elipse width  em 2a  em height 
+    em 2b  em   centred origin p  
+   
+    em x  em ^2  em em ^2    em y  em ^2  em b  em ^2   1  p know corner rectangle coordinate 
+     em w  em   em h  em rectangle must centred origin fit within elipse  subsituting values em x  em em y  em formula above compute 
+    em em   half width elipse know 
+    em b  em   p  
+   
+    em em     em wb  em  sqrt  em b  em ^2 -  em h  em ^2   p em b  em defined terms height rectangle 
+   plus agreed padding top write  p  
+   
+    em em      em wh  em     em wb  em    
+                   sqrt 2 em hp  em     em p  em ^2  p  
+   
+   given now know  em em em b  em find coordinates any partition line required between use case name extension points  p  
+   
+   finally need transform coordinates recognise origin top left corner y coordinates reversed  p  
+    
+    
+       logger  
+        
+                                                                            
+   
+   constants minimum padding allowed above below rectangle use case name extension points top use 
+       case oval itself  p  
+        
+    
+       space above below line separating name extension 
+       points line takes further 1 pixel  p  
+        
+                                                                            
+   
+   instance variables 
+   
+                                                                            
+    
+       uml use cases not really ports define one big 
+       one users drag edges any point icon  p don't use _bigport actual graphics oval define identical oval sits top p line separating name extension points  p vector graphics extension points any   first one rectangle entire extension points box  p rectangle entire extension point box  p  
+        
+    
+       text highlighted mouse actions diagram  assumed belong extension point compartment  p  
+        
+                                                                            
+   
+   constructors 
+   
+                                                                            
+    
+       constructor new use case fig work out smallest 
+       oval fit round  p creation extension point box not showing consistency existing implementations show later  p  
+        
+   create things need use getminimumsize work out dimensions oval  
+   first main port ellipse cover identical size realize use arbitrary dimensions now  
+   mark text not box filled  mark name may 
+   use multiline text bit odd enter multi-line 
+   name separator  again arbitrary bounds now surrounding box extension points  again arbitrary 
+   bounds now made same width name field name field width dominate size calculations space double click new ep not filled 
+    although specify fill color creation surrounding line bounds allow one line empty same name box stage group extension points first entry group overall surrounding box itself group not filled any line first entry add epbigport now use getminiumsize work out dimensions ellipse need reset bounds everything size port cover ellipses 
+   space name  centred horizontally minimum 
+   size  _min_vert_padding top separator cheat here name extension points 
+   rectangles same size stage must midpoint elipse surrounding box extension points stage know separator 1 pixel wide midpoint _spacer 
+   below before extension box  
+   add figs fignode back front order 
+   having built figure  getbounds finds enclosing rectangle set bounds version constructor used associated fig particular model element object  p  
+       
+       used creation time usecase add diagram activated load routines use main constructor call setowner directly  p  
+       
+        param gm graph model associate fig  ignored implementation  
+       
+        param node model element object associate fig text string used default name new use 
+       case fig seems general immediately 
+       overwritten - presumably somewhere creation code object choses define name  p  
+       
+        em note  em   good uml probably prefer name starting capital spaces  p  
+       
+        return desired text default name  
+        
+    
+       make copy current fig  p  
+       
+       uses generic superclass clone gives list figs initialize instance variables list  p  
+       
+        return new copy the current fig  
+        
+    
+       build collection menu items relevant right-click 
+       popup menu use case  p  
+       
+       adds generic pop up items parent  p  
+       
+        param mouse event generated popup  
+       
+        return collection menu items 
+        
+   check multiple items selected parent vector first 
+   add menu add extension point note  placed one before last properties  entry always last  
+   modifier menu  placed one before last properties  entry always last  
+    
+       show menu display hide extension point compartment  
+        return menu 
+        see org argouml uml diagram ui fignodemodelelement#buildshowpopup   
+        
+    
+       used pgml tee  
+        return class name bounds together compartment 
+       visibility  
+        
+   
+        see org argouml uml diagram extensionscompartmentcontainer#isextensionpointvisible   
+        
+    
+       set visibility extension point compartment called outside class user sets visibility 
+       explicitly through style panel context sensitive 
+       pop-up menu  p don't change size use case mark extension point elements' visibility  
+         link #setbounds int  int  int  int relayout name middle p  
+       
+        param isvisible   code true  code compartment shown  
+                          code false  code  otherwise  
+       
+        see org argouml uml diagram extensionscompartmentcontainer#setextensionpointvisible boolean  
+        
+   move stereotype out way     
+   record current bounds later use 
+   tell gef starting make change  loop through epvec marking each element not visible  
+   mark vector itself separator not displayed 
+   redo bounds tell gef change finished 
+    
+       creates set handles dragging generalization specializations associations  p  
+       
+        return new selection object gef entity   
+        
+    
+       compute minimum acceptable size use case  p work out minimum size text box radii enclosing ellipse  p  
+       
+        return dimensions smallest size bounding box use 
+                case private utility routine calculate minimum size rectangle hold name extension points displayed   p  
+       
+        return dimensions rectangle 
+        
+   now allow extension points displayed 
+   allow separator  spacer each side   1 pixel width line  
+   loop through extension points find widest 
+   height allows one row each extension point private utility calculate bounding oval given 
+       rectangular text box  p sufficiently constrain problem define gap 
+       given parameter  code vertpadding  code  above top box top oval  p computations done double converted integer end  p  
+       
+        param rectsize dimensions rectangle bounded 
+       
+        param vertpadding padding between top box top ellipse  
+       
+        return dimensions required oval  
+        
+   work out radii ellipse b top right corner ellipse  cartesian coordinates  centred origin x y  
+   formula described overall class description  
+   result integers  rounded up ensure radii integers convenience  
+    
+       change boundary use case  p called less minimum size impose minimum size  p place name extension points centre rectangle  p  
+       
+       set bounds components fig  p  
+       
+        param x  x coordinate upper left corner 
+       
+        param y  y coordinate upper left corner 
+       
+        param w  width bounding box 
+       
+        param h  height bounding box 
+        
+   remember present tell gef later check big minimum size 
+   work out size name extension point rectangle hence vertical padding 
+   adjust alignment name  
+   place extension points showing 
+   curry tracks current vertical position each element separator _spacer pixels below name length calculated formula ellipse  
+   extension points 1 pixel line _spacer gap below separator 
+   move extension point figures now assume extension points width overall 
+   text rectangle  true unless name wider any ep   
+   set bounds bigport cover 
+   record changes instance variables parent  tell gef trigger edges reconsider themselves  
+    
+       calculates new size figgroup  based extensionpoints calculation new bounds sub-figs  considering minimal 
+       sizes  figgroup need not displayed update event fired used duplicate method figeditablecompartment   p  
+        
+       todo  follow improvements done similar code figeditablecompartment   
+       
+        param x 
+                  x 
+        param y 
+                  y 
+        param w 
+                  w 
+        param h 
+                  h 
+        
+   set new bounds included figs 
+   skip epbigport 
+   - 2     
+   calculate rectangle containing figtext objects  
+    
+       private utility routine work out positive  x coordinate point oval  given radii y coordinate  p  
+       
+        param radius x direction 
+        param b  radius y direction 
+        param y  y coordinate 
+        return   positive x coordinate given y coordinate 
+        
+    
+       set line colour use case oval  p involves setting _cover oval  not bigport  p  
+       
+        param col colour desired line colour use case oval  p involves getting _cover oval colour  not bigport  p  
+       
+        return colour use  
+        
+    
+       set fill colour use case oval  p involves setting _cover oval  not bigport  p  
+       
+        param col colour desired line colour use case oval  p involves getting _cover oval colour  not bigport  p  
+       
+        return colour use  
+        
+    
+       set whether use case oval filled  p involves setting _cover oval  not bigport  p  
+       
+        param f   code true  code oval filled  
+                  code false  code not whether use case oval filled  p involves getting _cover oval  not bigport  p  
+       
+        return   code true  code oval filled  
+                 code false  code not  
+        
+    
+       set line width use case oval  p involves setting _cover oval  not bigport  p  
+       
+        param w line width desired line width use case oval  p involves getting _cover oval colour  not bigport  p  
+       
+        return line width set  
+        
+    
+       figmycircle figcircle corrected connectionpoint method methods calculates connected edge ends  p  
+        
+    
+           constructor invokes parent constructor  p  
+           
+            param x       x coordinate upper left corner bounding 
+                          box  
+           
+            param y       y coordinate upper left corner bounding 
+                          box  
+           
+            param w       width bounding box  
+           
+            param h       height bounding box  
+           
+            param lcolor  line colour fig  
+           
+            param fcolor  fill colour fig  
+            
+    
+           compute border point elipse edge 
+             between stored upper left corner given parameter  p  
+           
+            param anotherpt remote point edge drawn  
+           
+            return connection point boundary elipse uid  
+            
+                                                                            
+   
+   event handlers 
+   
+                                                                            
+    
+       react mouse key being pressed  p  
+       
+        param mouse action caused invoked  
+        
+   deal anything parent first currently selected  turn draggable buttons each 
+   side unhighlight any currently selected extension points  
+   display extension point properties necessary  look see mouse  2x2 pixels  hit extension point compartment  use flag track work out extension point corresponds each ep 
+   takes rowheight pixels take difference between centre mouse gety   - 1 top epvec 
+    f gety integer divide rowheight range ep list size  avoids any nasty 
+   boundary overflows select ep entry  make entry target fig note target               
+    
+       react mouse key being clicked  p  
+       
+        param mouse action caused invoked  
+        
+    
+       deal mouse leaving fig  unhighlight fig  p  
+       
+        param mouse action caused invoked  
+        
+                                                                            
+   
+   internal methods 
+   
+                                                                            
+    
+       invoked text edited  p check one extension point compartments parse accordingly  p parameter ft fig text edited  
+       
+         inheritdoc parent anything first casu usecase name  
+   only works owner 
+   give up not one extension points 
+   parse text 
+   
+        see org argouml uml diagram ui fignodemodelelement#texteditstarted  
+            org tigris gef presentation figtext  
+        
+    
+       create new  feature   extension point use case fig  p  
+       
+       extension points not strictly features historical 
+         accident naming creates new entry extension point 
+         vector  p  
+       
+        param fg fig group applies must extension point vector   
+       
+        param ie input event triggered current 
+                  implementation mouse double click  
+        
+   give up don't owner 
+   invoke relevant action method create empty extension 
+   point start editor  assuming successfully created extension point  
+    
+       private utility unhighlight any currently selected extension 
+       point  p  
+       
+        return extension point unhighlighted  
+        
+   loop through list extension points  until find highlighted one  
+   none highlighted 
+   
+        see org argouml uml diagram ui fignodemodelelement#modelchanged java beans propertychangeevent superclass sort itself out first 
+   
+        see org argouml uml diagram ui fignodemodelelement#updatelisteners java lang object  java lang object  
+        
+   now s register events modelelements change name body text   
+            
+   register name changes  added extensionpoints abstract makes text italic figs need listen remove register extension points  
+   
+        see org argouml uml diagram ui fignodemodelelement#renderingchanged   
+        
+    
+       updates extensionpoints fig   p difference behaviour function 
+       compared similar  
+       figeditablecompartment populate extensionpoints not ordered features give up owner 
+   note current bounds 
+   loop through extension points  epcount keeps track fig's index go through extension points  
+   take each ep corresponding fig turn 
+   find fig ep don't fig ep ll need add 
+   one set bounds reset later one still useable s not remove now put text must handle case text null 
+   remove any spare figs now fewer extension 
+   points figs 
+   now recalculate bounds  using old bounds  
+   
+        see org argouml uml diagram ui fignodemodelelement#updatenametext   
+        
+   now things use case itself  put use case italics abstract  otherwise ordinary font  
+   
+       makes sure edges stick elipse fig usecase   p  
+        
+       todo function called way many times count 6x simply clicking usecase 20x clicking button selection right hand side usecase  
+       once problem solved  try increasing maxpoint  4-fold make edge attachment dragging much smoother  
+       
+        see org tigris gef presentation fig#getgravitypoints   
+        
+   
+        see org argouml uml diagram ui fignodemodelelement#updatestereotypetext list extension point figs  em without  em first fig bigport fig  
+        
+        return list extension point figs uid  
+       org argouml uml diagram use_case ui FigUseCase org argouml uml diagram use_case ui figusecase fignodemodelelement extensionscompartmentcontainer min_vert_padding   4 spacer   2 figusecase     
+ 
+          
+          
+ 
+          
+          
+ 
+        bigport figmycircle 0  0  100  60  color black  color white   
+        cover figmycircle 0  0  100  60  color black  color white   
+ 
+          
+          
+          
+ 
+        getnamefig   settextfilled getnamefig   setfilled getnamefig   setlinewidth 0   
+        getnamefig   setreturnaction figtext end_editing   
+ 
+          
+ 
+        epsep figline 0  30  100  100  color black   
+ 
+        epsep setvisible epbigport figrect 0  30  getnamefig   getbounds   width  20  
+			color black  color white   
+ 
+        epbigport setfilled epbigport setlinewidth 0   
+        epbigport setvisible epvec figgroup    
+ 
+        epvec setfilled epvec setlinewidth 0   
+        epvec setvisible epvec addfig epbigport   
+ 
+          
+          
+ 
+        dimension ellipse   getminimumsize    
+ 
+          
+ 
+        bigport setbounds 0  0  ellipse width  ellipse height   
+        cover setbounds 0  0  ellipse width  ellipse height   
+ 
+          
+          
+ 
+        dimension namesize   getnamefig   getminimumsize    
+ 
+        getnamefig   setbounds  ellipse width - namesize width    2  
+			       min_vert_padding  
+			       namesize width  
+			       namesize height   
+ 
+        getstereotypefig   setbounds 0  0  0  0   
+ 
+          
+          
+          
+ 
+        epsep setshape 0  
+			ellipse height   2  
+			ellipse width  
+			ellipse height   2   
+ 
+          
+          
+          
+ 
+        dimension epsize   epbigport getminimumsize    
+ 
+        epbigport setbounds  ellipse width - epsize width    2  
+			     ellipse height   2   1   spacer  
+			     epsize width  
+			     epsize height   
+ 
+        setbigport bigport   
+ 
+          
+        addfig bigport   
+        addfig cover   
+        addfig getnamefig     
+        addfig getstereotypefig     
+        addfig epsep   
+        addfig epvec   
+ 
+        updateextensionpoint    
+         
+          
+          
+        rectangle r   getbounds    
+        setbounds r x  r y  r width  r height figusecase graphmodel gm  object node setowner node   
+      
+ 
+      
+     override placestring use override object clone     
+        figusecase figclone    figusecase clone    
+        iterator it   figclone getfigs   iterator    
+ 
+        figclone bigport    figmycircle  it next    
+        figclone cover    figmycircle  it next    
+        figclone setnamefig  figtext  it next     
+        it next    
+        figclone epsep    figline  it next    
+        figclone epvec    figgroup  it next figclone  
+      
+ 
+      
+     override vector getpopupactions mouseevent me ms   targetmanager getinstance   gettargets   size     1  
+ 
+          
+        vector popupactions getpopupactions me   
+ 
+          
+          
+        argojmenu addmenu argojmenu  menu popup add ms    
+            addmenu add actionaddextensionpoint singleton     
+          
+        addmenu add actionaddnote     
+ 
+        popupactions add popupactions size   - getpopupaddoffset    addmenu   
+ 
+          
+          
+        popupactions add popupactions size   - getpopupaddoffset    
+                buildmodifierpopup leaf   root popupactions  
+      
+ 
+      
+     override argojmenu buildshowpopup     
+        argojmenu showmenu buildshowpopup    
+        iterator i   actioncompartmentdisplay getactions   iterator i hasnext      
+            showmenu add  action  i next showmenu  
+      
+ 
+      
+     override classnameandbounds classnameandbounds   
+                   extensionpointvisible     isextensionpointvisible isextensionpointvisible epvec isvisible setextensionpointvisible isvisible epvec isvisible        isvisible     
+            setextensionpointvisibleinternal epvec isvisible       isvisible    
+            setextensionpointvisibleinternal updatestereotypetext setextensionpointvisibleinternal visible    
+          
+        rectangle oldbounds   getbounds fig fig    list fig   epvec getfigs      
+            fig setvisible visible   
+          
+ 
+          
+        epvec setvisible visible   
+        epsep setvisible visible   
+ 
+          
+        setbounds oldbounds x  oldbounds y  
+                oldbounds width  
+                oldbounds height   
+        endtrans    
+      
+ 
+      
+     override selection makeselection selectionusecase override dimension getminimumsize     
+ 
+        dimension textsize   gettextsize    
+ 
+        dimension size   calcellipse textsize  min_vert_padding dimension math max size width  100   
+			     math max size height  60 dimension gettextsize     
+        dimension minsize   getnamefig   getminimumsize epvec isvisible      
+ 
+              
+            minsize height    2   spacer   1  
+ 
+              
+            list compartmentfigtext  figs   getepfigs compartmentfigtext f   figs elemwidth   f getminimumsize   width  
+                minsize width   math max minsize width  elemwidth rowheight   math max rowheight  minsize height   
+            minsize height    rowheight   math max 1  figs size minsize dimension calcellipse dimension rectsize vertpadding a b   rectsize height   2 0   vertpadding x   rectsize width   2 0 y   rectsize height   2 0  
+ 
+          
+ 
+        a    x   b    math sqrt b   b - y   y dimension math ceil a     2 math ceil b     2    
+      
+ 
+      
+     override setboundsimpl x y w h    
+ 
+          
+          
+        rectangle oldbounds   getbounds    
+        dimension minsize   getminimumsize neww    minsize width   w  ? minsize width   w newh    minsize height   h  ? minsize height   h  
+ 
+          
+          
+        dimension textsize   gettextsize vpadding    newh - textsize height    2  
+ 
+          
+        dimension namesize   getnamefig   getminimumsize    
+ 
+        getnamefig   setbounds x     neww - namesize width    2   
+			       y   vpadding  
+			       namesize width  
+			       namesize height epvec isvisible curry   y   vpadding   namesize height   spacer seplen   
+		2 calcx neww   2 0  
+				  newh   2 0  
+				  newh   2 0 -  curry - y     
+ 
+            epsep setshape x    neww - seplen    2  
+			    curry  
+			    x    neww   seplen    2  
+			    curry   
+ 
+              
+              
+            curry    1   spacer  
+ 
+              
+              
+              
+            updatefiggroupsize  
+               	   x     neww - textsize width    2   
+               	   curry  
+               	   textsize width  
+               	    textsize height - namesize height - spacer   2 - 1    
+          
+ 
+          
+        bigport setbounds x  y  neww  newh   
+        cover setbounds x  y  neww  newh   
+ 
+          
+          
+        _x   x  
+        _y   y  
+        _w   neww  
+        _h   newh  
+         
+        positionstereotypes    
+ 
+        firepropchange  bounds   oldbounds  getbounds     
+        updateedges updatefiggroupsize x y w h neww   w n   epvec getfigs   size   - 1 newh   
+            ischecksize   ? math max h  rowheight   math max 1  n    2  
+                  h  
+ 
+          
+        iterator figs   epvec iterator    
+        figs next      
+        fig fi fw  fh yy   y figs hasnext      
+            fi    fig  figs next    
+            fw   fi getminimumsize   width  
+            fh   fi getminimumsize   height ischecksize      fw   neww - 2    
+                fw   neww - 2  
+              
+            fi setbounds x   1  yy   1  fw  fh ischecksize      neww   fw   2    
+                neww   fw   2  
+              
+            yy    fh  
+          
+        epbigport setbounds x  y  neww  newh   
+          
+        epvec calcbounds calcx a b y a   math sqrt b   b - y   y     b  
+      
+ 
+      
+     override setlinecolor color col    
+        cover setlinecolor col   
+      
+ 
+      
+     override color getlinecolor cover getlinecolor    
+      
+ 
+      
+     override setfillcolor color col    
+        cover setfillcolor col   
+      
+ 
+      
+     override color getfillcolor cover getfillcolor    
+      
+ 
+      
+     override setfilled f    
+        cover setfilled f   
+      
+ 
+      
+     override getfilled cover isfilled    
+      
+ 
+     override isfilled cover isfilled    
+      
+ 
+      
+     override setlinewidth w    
+        cover setlinewidth w   
+      
+ 
+      
+     override getlinewidth cover getlinewidth figmycircle figcircle figmycircle x y w h  
+			   color lcolor  
+			   color fcolor x  y  w  h  lcolor  fcolor   
+          
+ 
+          
+         override point connectionpoint point anotherpt rx   _w   2 ry   _h   2 dx   anotherpt x -  _x   rx dy   anotherpt y -  _y   ry dd   ry   ry   dx   dx   rx   rx   dy   dy mu   rx   ry   math sqrt dd   
+ 
+            point res point mu   dx   _x   rx mu   dy   _y   ry    
+            log debug      returns     res x   ' '   res y res  
+          
+ 
+          
+  
+      
+ 
+      
+      
+      
+      
+      
+ 
+      
+     override mousepressed mouseevent me mousepressed me   
+ 
+          
+          
+        editor ce   globals cureditor    
+        selection sel   ce getselectionmanager   findselectionfor sel selectionusecase    
+              selectionusecase  sel  hidebuttons    
+          
+ 
+        unhighlight    
+ 
+          
+          
+          
+        rectangle r rectangle me getx   - 1  me gety   - 1  2  2   
+        fig f   hitfig r f    epvec i    me gety   - f gety   - 1    rowheight  
+ 
+            list compartmentfigtext  figs   getepfigs i    0      i   figs size       
+                highlightedfigtext   figs get i   
+                highlightedfigtext sethighlighted override mouseclicked mouseevent me mouseclicked me me isconsumed isextensionpointvisible      me gety     epsep gety1      
+	    getnamefig   mouseclicked me me getclickcount      2 
+		        me ispopuptrigger   
+			   me getmodifiers      inputevent button3_mask     
+	    createcontainedmodelelement epvec  me   
+	  
+      
+ 
+      
+     override mouseexited mouseevent me mouseexited me   
+        unhighlight    
+      
+ 
+      
+      
+      
+      
+      
+ 
+      
+     override textedited figtext ft propertyvetoexception textedited ft   
+ 
+          
+        object usecase   getowner usecase epvec getfigs   contains ft compartmentfigtext hlft    compartmentfigtext  ft  
+        hlft getnotationprovider   parse hlft getowner    ft gettext     
+        ft settext hlft getnotationprovider   tostring hlft getowner override texteditstarted figtext ft texteditstarted ft epvec getfigs   contains ft     
+            showhelp   compartmentfigtext  ft  
+                     getnotationprovider   getparsinghelp createcontainedmodelelement figgroup fg  inputevent ie getowner actionaddextensionpoint singleton   actionperformed compartmentfigtext ft   
+             compartmentfigtext  fg getfigs   get fg getfigs   size   - 1 ft ft starttexteditor ie   
+            ft sethighlighted highlightedfigtext   ft  
+          
+        ie consume compartmentfigtext unhighlight compartmentfigtext ft   getepfigs ft ishighlighted      
+                ft sethighlighted highlightedfigtext ft override modelchanged propertychangeevent mee modelchanged mee mee associationchangeevent  
+                   mee attributechangeevent    
+            renderingchanged    
+            updatelisteners getowner    getowner     
+          
+      
+ 
+      
+     override updatelisteners object oldowner  object newowner oldowner removeallelementlisteners newowner addelementlistener newowner remove    name    isabstract    
+                         extensionpoint    stereotype     
+              
+            iterator it   
+                model getfacade   getextensionpoints newowner  iterator it hasnext      
+                addelementlistener it next location    name     
+              
+            it   model getfacade   getstereotypes newowner  iterator it hasnext      
+                addelementlistener it next name     
+              
+          
+      
+ 
+      
+     override renderingchanged getowner updateextensionpoint renderingchanged updateextensionpoint     
+          
+        object usecase   getowner usecase rectangle oldbounds   getbounds    
+ 
+          
+          
+        collection eps   
+	    model getfacade   getextensionpoints usecase epcount   1 eps eps size     0 xpos   epbigport getx ypos   epbigport gety    
+ 
+              
+            iterator iter   eps iterator    
+            list compartmentfigtext  figs   getepfigs    
+            list compartmentfigtext  toberemoved arraylist compartmentfigtext  figs iter hasnext      
+                compartmentfigtext epfig object ep   iter next compartmentfigtext candidate   figs candidate getowner      ep    
+                        epfig   candidate epfig notationprovider np    
+                        notationproviderfactory2 getinstance   
+                             getnotationprovider  
+                                notationproviderfactory2 type_extension_point   
+                                ep   
+ 
+                    epfig compartmentfigtext  
+                            xpos  
+			    ypos    epcount - 1    rowheight  
+			    0  
+			    rowheight  
+			    epbigport  
+                            np   
+                     
+                    epfig setfilled epfig setlinewidth 0   
+                    epfig settextcolor color black   
+                    epfig setjustification figtext justify_left   
+                    epfig setreturnaction figtext end_editing   
+ 
+                    epvec addfig epfig toberemoved remove epfig eptext   epfig getnotationprovider   tostring ep eptext eptext       
+                  
+                epfig settext eptext   
+ 
+                epcount fig f   toberemoved    
+                epvec removefig f       
+              
+          
+ 
+          
+        setbounds oldbounds x  oldbounds y  oldbounds width  oldbounds height   
+      
+ 
+      
+     override updatenametext     
+        object usecase   getowner usecase rectangle oldbounds   getbounds updatenametext    
+        setbounds oldbounds x  oldbounds y  oldbounds width  oldbounds height   
+      
+ 
+      
+     override list getgravitypoints maxpoints   30  
+        list ret arraylist maxpoints cx   bigport getcenter   x cy   bigport getcenter   y radiusx   math round bigport getwidth     2    1 radiusy   math round bigport getheight     2    1  
+        point point i   0  i   maxpoints  i      
+            point point cx 
+				    math cos 2   math pi   maxpoints   i  
+				      radiusx cy 
+				    math sin 2   math pi   maxpoints   i  
+				      radiusy     
+            ret add point ret  
+      
+ 
+      
+     override updatestereotypetext updatestereotypetext getowner positionstereotypes    
+        damage positionstereotypes figgroup  getstereotypefig    getfigcount     0    
+            getstereotypefig   setbounds  
+        	     getx     getwidth     2 
+        		    - getstereotypefig   getwidth     2   
+        	     gety     bigport getheight     min_vert_padding   
+                    getstereotypefig   getwidth    
+                    getstereotypefig   getheight getstereotypefig   setbounds 0  0  0  0 list compartmentfigtext  getepfigs     
+        list compartmentfigtext  l arraylist compartmentfigtext  epvec getfigs     
+        l remove 0 l  
+      
+ 
+ 
+      
+  
+ org argouml uml diagram use_case ui FigUseCase

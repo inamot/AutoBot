@@ -1,0 +1,127 @@
+ 
+   $id$ 
+   copyright  c  2003-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications  
+    
+   menu extension last recently used files menu  p  
+   
+   functionality created link file- menu created reading content config information add entry method adds specific filename list  ensures bubbles top list already member list 
+   typically called savefile method 
+   lru added specific position creation time entries going inserted deletied 
+   
+    author  frank jelinek 9  november 2003  0 15 2  
+    
+    
+       default value maxcount configuration  
+        
+    
+       menu list bound recent loaded count  
+        
+    
+       maxcount read configuration  
+        
+    
+       index menu entries inserted 
+       -1 sure  adds end   
+        
+    
+       menuitems actually created added menu  
+        
+    
+       array conf keys accessing stored entries  
+        
+    
+       adds eventhandler menu renames entry  
+       
+        param filename text entry 
+        param addat location 
+        return menuitem text used event handler opening project 
+  jmenuitem item   _filemenu add new actionreopenproject filename    
+   set maximum length menu entry 
+   text short  tooltip long 
+    
+       creates new instance lastrecentlyusedmenulist respect menu lru bound param filemenu menu lru bound last entry added separator 
+       
+        
+   holds file menu 
+   init config 
+   read number  write result new default prepare keys 
+   create nessessary configuration keys lru 
+   read existing file names configuration 
+   empty entry stops reading --  last line recent count 
+    
+       adds new entry lru list removes last one if increases maxcount  
+       
+        param filename name link used represent 
+       _and_ reopen file already existing names menu actions 
+   real file names  not action names   
+   delete existing entries 
+   add new entry first entry 
+   add existing entries filter added one 
+   save count store configuration propsorg argouml ui cmd LastRecentlyUsedMenuList org argouml ui cmd lastrecentlyusedmenulist jmenuitem addeventhandler filename addat    
+          
+        file f file filename   
+          
+        jmenuitem item   
+            filemenu insert actionreopenproject filename   addat entryname   f getname entryname length     40    
+            entryname   entryname substring 0  40           
+          
+ 
+          
+        item settext entryname   
+        item settooltiptext filename item lastrecentlyusedmenulist jmenu filemenu newname i  
+ 
+          
+        filemenu   filemenu  
+        lrucount   0  
+        menuindex   filemenu getitemcount    
+ 
+          
+          
+        maxcount   
+            configuration getinteger argo key_number_last_recent_used  
+                                     max_count_default   
+        configuration setinteger argo key_number_last_recent_used  maxcount   
+        confkeys configurationkey maxcount   
+        menuitems jmenuitem maxcount i   0  i   maxcount  i      
+            confkeys i    
+		configuration makekey  project   
+				       mostrecent   
+				       filelist  concat integer tostring i     
+          
+ 
+          
+        i   0 readok i   maxcount    readok    
+            newname   configuration getstring confkeys i newname length     0    
+                menuitems i    addeventhandler newname  menuindex   i   
+                i readok lrucount   i addentry filename tempnames maxcount i   0  i   lrucount  i      
+            actionreopenproject action   
+                 actionreopenproject  menuitems i  getaction    
+            tempnames i    action getfilename i   0  i   lrucount  i      
+            filemenu remove menuitems i    
+          
+ 
+          
+        menuitems 0    addeventhandler filename  menuindex i  j  
+        i   0  
+	j   1 i   lrucount    j   maxcount tempnames i  equals filename      
+                menuitems j    addeventhandler tempnames i   menuindex   j   
+                j    
+              
+            i    
+          
+ 
+          
+        lrucount   j k   0  k   lrucount  k      
+            actionreopenproject action   
+                 actionreopenproject  menuitems k  getaction    
+            configuration setstring confkeys k   action getfilename     
+          
+      
+ org argouml ui cmd LastRecentlyUsedMenuList

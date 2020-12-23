@@ -1,0 +1,174 @@
+ 
+   $id$ 
+   copyright  c  1996-2006 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications class defines bridge between uml meta-model 
+   representation design graphmodel interface used gef class handles only uml collaboration diagrams  
+    
+    
+       logger  
+        
+    
+        param collaboration collaboration set diagram 
+        
+                                                                 
+   graphmodel implementation 
+   
+       return ports node edge  
+       
+        see org tigris gef graph graphmodel#getports java lang object  
+        
+   
+       return node edge owns given port  
+       
+        see org tigris gef graph basegraphmodel#getowner java lang object  
+        
+   
+       return edges going given port  
+       
+        see org tigris gef graph graphmodel#getinedges java lang object  
+        
+   
+       return edges going given port  
+       
+        see org tigris gef graph graphmodel#getoutedges java lang object  
+        
+   todo ? 
+                                                                 
+   mutablegraphmodel implementation 
+   
+       return true given object valid node graph  
+       
+        see org tigris gef graph mutablegraphmodel#canaddnode java lang object binary association not node reject  
+   
+       return true given object valid edge graph  
+       
+        see org tigris gef graph mutablegraphmodel#canaddedge java lang object  
+        
+   mgeneralization    edge  
+   both ends must defined nodes graph already  
+   
+       add given node graph valid  
+       
+        see org tigris gef graph mutablegraphmodel#addnode java lang object  
+        
+   todo  assumes public  user pref default visibility? 
+     mclassifier node  setnamespace _collab getnamespace     
+   
+       add given edge graph valid  
+       
+        see org tigris gef graph mutablegraphmodel#addedge java lang object  
+        
+   todo  assumes public 
+   
+        see org tigris gef graph mutablegraphmodel#addnoderelatededges java lang object  
+        
+   
+       return true two given ports connected kind edge determined ports  
+       
+        see org tigris gef graph mutablegraphmodel#canconnect java lang object  
+       java lang object  
+        
+                                                                 
+   vetoablechangelistener implementation 
+   
+        see java beans vetoablechangelistener#vetoablechange java beans propertychangeevent  
+        
+  throws propertyvetoexception 
+   melementimport    pce getnewvalue uid  
+        
+   end class collabdiagramgraphmodel   org argouml uml diagram collaboration CollabDiagramGraphModel org argouml uml diagram collaboration collabdiagramgraphmodel umlmutablegraphsupport vetoablechangelistener logger log   
+        logger getlogger collabdiagramgraphmodel setcollaboration object collaboration collaboration illegalargumentexception  
+                     a collaboration was supplied model getfacade   isacollaboration collaboration illegalargumentexception  
+                     expected a collaboration  the type received was   
+                      collaboration getclass   getname illegalargumentexception e    
+            log error  illegal argument to setcollaboration   e e  
+          
+        sethomemodel collaboration list getports object nodeoredge model getfacade   isaclassifierrole nodeoredge     
+	    list result arraylist    
+	    result add nodeoredge result collections empty_list object getowner object port port list getinedges object port model getfacade   isaclassifierrole port     
+	    object cr   port  
+	    collection ends   model getfacade   getassociationends cr ends collections empty_list  
+              
+	    list result arraylist object end   ends    
+		result add model getfacade   getassociation end collections empty_list list getoutedges object port collections empty_list    
+      
+ 
+      
+      
+ 
+      
+     override canaddnode object node node model getfacade   isaassociation node  
+                    model getfacade   isanaryassociation node containsnode node model getfacade   isaclassifierrole node  
+               model getfacade   isamessage node  
+               model getfacade   isacomment node    
+      
+ 
+      
+     override canaddedge object edge edge containsedge edge object end0 object end1 model getfacade   isaassociationrole edge     
+	    collection conns   model getfacade   getconnections edge   
+            iterator iter   conns iterator conns size     2 object associationendrole0   iter next    
+	    object associationendrole1   iter next associationendrole0 associationendrole1 end0   model getfacade   gettype associationendrole0   
+	    end1   model getfacade   gettype associationendrole1 model getfacade   isageneralization edge     
+	    object gen     
+	    end0   model getfacade   getgeneral gen   
+	    end1   model getfacade   getspecific gen model getfacade   isadependency edge     
+	    collection clients   model getfacade   getclients edge   
+	    collection suppliers   model getfacade   getsuppliers edge clients clients isempty    
+	               suppliers suppliers isempty end0   clients iterator   next    
+	    end1   suppliers iterator   next edge commentedge    
+	    end0     commentedge  edge  getsource    
+	    end1     commentedge  edge  getdestination end0 end1 log error  edge rejected  its ends are not attached to anything containsnode end0  
+                    containsedge end0     
+            log error  edge rejected  its source end is attached to     end0 
+                        but is not in the graph model containsnode end1  
+                    containsedge end1     
+            log error  edge rejected  its destination end is attached to   
+                      end1     but is not in the graph model override addnode object node    
+	log debug  adding mclassifierrole node canaddnode node getnodes   add node model getfacade   isaclassifier node     
+	    model getcorehelper   addownedelement gethomemodel    node   
+	      
+	  
+ 
+	firenodeadded node   
+      
+ 
+      
+     override addedge object edge    
+        log debug  adding edge canaddedge edge getedges   add edge model getfacade   isamodelelement edge  
+	       model getfacade   getnamespace edge model getcorehelper   addownedelement gethomemodel    edge   
+          
+        fireedgeadded edge   
+      
+ 
+      
+     override addnoderelatededges object node addnoderelatededges node model getfacade   isaclassifier node     
+	    collection ends   model getfacade   getassociationends node object end   ends canaddedge model getfacade   getassociation end      
+                    addedge model getfacade   getassociation end model getfacade   isageneralizableelement node     
+	    collection generalizations    
+	        model getfacade   getgeneralizations node object generalization   generalizations canaddedge generalization     
+		    addedge generalization collection specializations   model getfacade   getspecializations node object specialization   specializations canaddedge specialization     
+		    addedge specialization model getfacade   isamodelelement node     
+	    collection dependencies arraylist model getfacade   getclientdependencies node    
+	    dependencies addall model getfacade   getsupplierdependencies node object dependency   dependencies canaddedge dependency     
+		    addedge dependency override canconnect object fromp  object top model getfacade   isaclassifierrole fromp   
+	        model getfacade   isaclassifierrole top vetoablechange propertychangeevent pce ownedelement  equals pce getpropertyname       
+	    list oldowned    list  pce getoldvalue    
+	    object eo     
+	    object me   model getfacade   getmodelelement eo oldowned contains eo     
+		log debug  model removed     me model getfacade   isaclassifier me     
+                    removenode me model getfacade   isamessage me     
+                    removenode me model getfacade   isaassociation me     
+                    removeedge me log debug  model added     me   
+	      
+	  
+      
+ 
+      
+  
+   org argouml uml diagram collaboration CollabDiagramGraphModel

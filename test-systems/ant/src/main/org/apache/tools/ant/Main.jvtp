@@ -1,0 +1,511 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   command line entry point ant class entered via canonical `public static void main` entry point reads command line arguments assembles executes ant 
+   project  
+    p integrating ant some tool not class use entry point  please see source code class see manipulates ant project classes default build file name    value current message output status  follows project msg_xxx     
+    file using configuration     
+   null    
+    stream use logging     
+    stream using logging error messages build targets     
+    set properties used tasks     
+    names classes add listeners project     
+    file names property files load startup     
+    indicates whether build support interactive input    
+    keep going mode ant logger class may only one logger right use out' printstream class must implements buildlogger interface ant inputhandler class may only one input 
+       handler  
+        
+    
+       whether not output log unadorned  
+        
+    
+       whether not instance successfully constructed ready run  
+        
+    
+       whether not only parse display project help 
+       information  
+        
+    
+       whether not logfile being used used check output streams must closed  
+        
+    
+       optional thread priority 
+        
+    
+       proxy flag  default false 
+        
+    
+       prints message throwable message not 
+        code null  code   
+       
+        param t throwable print message must not code null  code   
+        
+    
+       creates new instance class using arguments specified  gives any extra user properties specified runs build using classloader provided  
+       
+        param args command line arguments  must not code null  code   
+        param additionaluserproperties any extra properties use build  may code null  code equivalent passing empty set properties  
+        param coreloader classloader used core classes  may code null  code case system classloader used  
+        
+    
+       start ant 
+        param args command line args 
+        param additionaluserproperties properties set beyond those may specified args list 
+        param coreloader - not used ant 1 6 
+        
+   expect worst operation expected call   link system#exit int base version possible something param exitcode code exit close logfiles writing ant 1 6 
+        
+    
+       command line entry point method kicks building project object executes build using either given 
+       target default target  
+       
+        param args command line arguments  must not code null  code   
+        
+    
+       constructor used creating main later arg processing startup 
+        
+    
+       sole constructor parses deals command line 
+       arguments  
+       
+        param args command line arguments  must not code null  code   
+       
+        exception buildexception specified build file doesn't exist directory  
+       
+        deprecated 1 6 x 
+        
+    
+       process command line arguments ant started launcher  launcher-only arguments doe not passed through routine  
+       
+        param args command line arguments ant 1 6 list lu 
+   cycle through given args 
+   interestingly enough here user 
+                   uses -dname value some cases os 
+                   goes ahead parses out args 
+                       -dname    value instead parsing make d  
+                   characters go away skip one argument forward don't know predict jdk going help not simply look equals sign  
+                    
+   set flag display targets quit 
+   eat up next arg present  default build xml 
+  catch script ant mismatch meaningful message ignore likely version problems stamp down configuration now don't any args recognize s arg may target buildfile not specified command line find search make sure buildfile exists 
+   make sure s not directory falls ultra 
+   paranoid lets check everything category 
+   load property files specified propertyfile 
+   ensure d properties take precedence 
+    
+       helper parent file given file  
+        p  
+       added simulate file getparentfile jdk 1 2  
+        deprecated 1 6 x 
+       
+        param file   file find parent must not code null  code   
+        return       parent file null none 
+        
+    
+       search parent directories build file  
+        p  
+       takes given target suffix append each 
+       parent directory search build file   once root file-system reached exception thrown  
+       
+        param start  leaf directory search  
+                     must not code null  code   
+        param suffix  suffix filename look parents  
+                      must not code null  code   
+       
+        return handle build file one found 
+       
+        exception buildexception build file found 
+        
+   check target file exists current directory 
+   change parent directory parent null root fs  
+   complain t find build file  
+   refresh file handle 
+    
+       executes build constructor instance failed 
+        e g  returned issuing warning method returns 
+       immediately  
+       
+        param coreloader classloader use find core classes  
+                         may code null  code case system classloader used  
+       
+        exception buildexception build fails 
+        
+   use system manager prevents system exit   
+  securitymanager not installed here backwards 
+  compatibility reasons  pd   needs loaded prior ant class going implement system setsecuritymanager new noexitsecuritymanager     
+   set thread priorities cannot set priority here  
+   set user-define properties 
+  proxy setup enabled 
+   make sure target execute 
+   put back original security manager following never eval true   pd  
+    
+       adds listeners specified command line arguments  
+       along default listener specified project  
+       
+        param project project add listeners must not code null  code   
+        
+   add default listener 
+    
+       creates inputhandler adds project  
+       
+        param project project instance  
+       
+        exception buildexception specified inputhandler 
+                                 implementation not loaded  
+        
+   xxx   jon skeet  any reason writing message using bare 
+   runtimeexception using buildexception here case message end up being written loggers loggers failed created due failure ? 
+    
+       creates default build logger sending build events ant 
+       log  
+       
+        return logger instance build  
+        
+    
+       prints usage information class code system out  code   
+        
+    
+       prints ant version information code system out  code   
+       
+        exception buildexception version information unavailable 
+        
+    
+       cache ant version information loaded  
+        
+    
+       returns ant version information available  once information loaded once s cached returned cache future 
+       calls  
+       
+        return ant version information string 
+                always non- code null  code   
+       
+        exception buildexception version information unavailable 
+        
+    
+        prints description project one code system out  code   
+        
+         param project project display description must not code null  code   
+         
+    
+       prints list targets specified project code system out  code   optionally including subtargets  
+       
+        param project project display description must not code null  code   
+        param printsubtargets whether not subtarget names printed  
+        
+   find target longest name 
+   split targets top-level sub-targets depending presence description 
+   maintain sorted list targets main targets list subtargets means nothing description 
+   shouldn't need check searches correct place insert name list keep list sorted alphabetically  
+       
+        param names current list names  must not code null  code   
+        param name name find place must not code null  code   
+       
+        return correct place list given name 
+        
+    
+       writes formatted list target names code system out  code optional description  
+       
+       
+        param project project instance  
+        param names names printed  
+                    must not code null  code   
+        param descriptions associated target descriptions  
+                           may code null  code case descriptions displayed non- code null  code many elements code names  code   
+        param heading heading display not code null  code   
+        param maxlen maximum length names targets descriptions given padded position line up long names really i  shorter now  start printing targets descriptions bit annoyed couldn't find pad functionorg apache tools ant Main org apache tools ant main antmain default_build_filename    build xml printmessage throwable t message   t getmessage message system err println message start args  properties additionaluserproperties  
+                             classloader coreloader    
+        main m main    
+        m startant args  additionaluserproperties  coreloader startant args  properties additionaluserproperties  
+                         classloader coreloader diagnostics validateversion    
+            processargs args throwable exc    
+            handlelogfile    
+            printmessage exc   
+            exit 1 additionaluserproperties enumeration e   additionaluserproperties keys    
+                    e hasmoreelements key e nextelement property   additionaluserproperties getproperty key   
+                definedprops put key  property exitcode   1 try   
+                runbuild coreloader   
+                exitcode   0 exitstatusexception ese    
+                exitcode   ese getstatus exitcode    0 ese buildexception be err    system err    
+                printmessage be throwable exc    
+            exc printstacktrace    
+            printmessage exc handlelogfile    
+          
+        exit exitcode exit exitcode    
+        system exit exitcode handlelogfile islogfileused    
+            fileutils close out   
+            fileutils close err main args    
+        start args null main main args buildexception   
+        processargs args processargs args searchforthis printstream logto hashmap launchcommands hashmap    
+        launchcommands put  -lib        
+        launchcommands put  -cp        
+        launchcommands put  -noclasspath        
+        launchcommands put  --noclasspath        
+        launchcommands put  -nouserlib        
+        launchcommands put  --nouserlib        
+        launchcommands put  -main i   0  i   args length  i arg   args i arg equals  -help      arg equals  -h      
+                printusage arg equals  -version      
+                printversion arg equals  -diagnostics      
+                diagnostics doreport system out arg equals  -quiet      arg equals  -q      
+                msgoutputlevel   project msg_warn arg equals  -verbose      arg equals  -v      
+                printversion    
+                msgoutputlevel   project msg_verbose arg equals  -debug      arg equals  -d      
+                printversion    
+                msgoutputlevel   project msg_debug arg equals  -noinput      
+                allowinput arg equals  -logfile      arg equals  -l file logfile file args i   1    
+                    i    
+                    logto printstream fileoutputstream logfile    
+                    islogfileused ioexception ioe msg    cannot write on the specified log file    
+                           make sure the path exists and you have write   
+                           permissions buildexception msg arrayindexoutofboundsexception aioobe msg    you must specify a log file when   
+                           using the -log argument buildexception msg arg equals  -buildfile      arg equals  -file   
+                          arg equals  -f buildfile file args i   1  replace ' '  file separatorchar    
+                    i arrayindexoutofboundsexception aioobe msg    you must specify a buildfile when   
+                           using the -buildfile argument buildexception msg arg equals  -listener listeners addelement args i   1    
+                    i arrayindexoutofboundsexception aioobe msg    you must specify a classname when   
+                           using the -listener argument buildexception msg arg startswith  -d name   arg substring 2  arg length value poseq   name indexof poseq   0    
+                    value   name substring poseq   1   
+                    name   name substring 0  poseq i   args length - 1    
+                    value   args   i buildexception  missing value property   
+                                               name   
+                  
+ 
+                definedprops put name  value arg equals  -logger loggerclassname buildexception  only one logger may   
+                            be specified loggerclassname   args   i arrayindexoutofboundsexception aioobe buildexception  you must specify a classname when  
+                                                 using the -logger argument arg equals  -inputhandler inputhandlerclassname buildexception  only one input handler may   
+                                                be specified inputhandlerclassname   args   i arrayindexoutofboundsexception aioobe buildexception  you must specify a classname when  
+                                                 using the -inputhandler  
+                                                 argument arg equals  -emacs      arg equals  -e      
+                emacsmode arg equals  -projecthelp      arg equals  -p      
+                  
+                projecthelp arg equals  -find      arg equals  -s i   args length - 1    
+                    searchforthis   args   i searchforthis   default_build_filename arg startswith  -propertyfile propertyfiles addelement args i   1    
+                    i arrayindexoutofboundsexception aioobe msg    you must specify a property filename when   
+                           using the -propertyfile argument buildexception msg arg equals  -k      arg equals  -keep-going      
+                keepgoingmode arg equals  -nice threadpriority   integer decode args i   1 arrayindexoutofboundsexception aioobe buildexception  
+                             you must supply a niceness value  1-10   
+                                after the -nice option numberformatexception e buildexception  unrecognized niceness value    
+                                               args i   1    
+                  
+                i threadpriority intvalue     thread min_priority 
+                       threadpriority intvalue     thread max_priority buildexception  
+                             niceness value is out of the range 1-10 launchcommands get arg msg    ant's main method is being handed   
+                           an option     arg     that is only the launcher nthis can be caused by a version mismatch between   
+                           the ant script  bat file and ant itself buildexception msg arg equals  -autoproxy      
+                proxy arg startswith msg    unknown argument      arg  
+                system err println msg   
+                printusage buildexception targets addelement arg buildfile searchforthis buildfile   findbuildfile system getproperty  user dir    
+                                          searchforthis buildfile file default_build_filename buildfile exists      
+            system out println  buildfile      buildfile     does not exist buildexception  build failed buildfile isdirectory      
+            system out println  what? buildfile      buildfile     is a dir buildexception  build failed propertyfileindex   0  
+             propertyfileindex   propertyfiles size    
+             propertyfileindex filename propertyfiles elementat propertyfileindex   
+            properties props properties    
+            fileinputstream fis fis fileinputstream filename   
+                props load fis ioexception e    
+                system out println  could not load property file   
+                     filename          e getmessage fileutils close fis   
+              
+ 
+              
+            enumeration propertynames   props propertynames propertynames hasmoreelements name propertynames nextelement definedprops getproperty name definedprops put name  props getproperty name msgoutputlevel    project msg_info    
+            system out println  buildfile      buildfile logto out   logto  
+            err   logto  
+            system setout out   
+            system seterr err   
+          
+        readytorun file getparentfile file file    
+        file parent   file getparentfile parent msgoutputlevel    project msg_verbose    
+            system out println  searching in     parent getabsolutepath parent file findbuildfile start suffix buildexception msgoutputlevel    project msg_info    
+            system out println  searching suffix            
+          
+ 
+        file parent file file start  getabsolutepath     
+        file file file parent  suffix file exists      
+              
+            parent   getparentfile parent parent buildexception  could not locate a build file     
+              
+ 
+              
+            file file parent  suffix file runbuild classloader coreloader buildexception readytorun project project project    
+        project setcoreloader coreloader   
+ 
+        throwable error addbuildlisteners project   
+            addinputhandler project   
+ 
+            printstream savederr   system err  
+            printstream savedout   system out  
+            inputstream savedin   system in  
+ 
+              
+            securitymanager oldsm oldsm   system getsecuritymanager allowinput    
+                    project setdefaultinputstream system in   
+                  
+                system setin demuxinputstream project    
+                system setout printstream demuxoutputstream project system seterr printstream demuxoutputstream project projecthelp    
+                    project firebuildstarted threadpriority project log  setting ant's thread priority to   
+                                  threadpriority  project msg_verbose   
+                        thread currentthread   setpriority threadpriority intvalue securityexception swallowed    
+                          
+                        project log  a security manager refused to set the -nice value    
+                      
+                  
+ 
+ 
+ 
+                project init    
+ 
+                  
+                enumeration e   definedprops keys e hasmoreelements arg e nextelement value definedprops get arg   
+                    project setuserproperty arg  value   
+                  
+ 
+                project setuserproperty magicnames ant_file  
+                                        buildfile getabsolutepath     
+ 
+                project setkeepgoingmode keepgoingmode proxy    
+                      
+                    proxysetup proxysetup proxysetup project   
+                    proxysetup enableproxies    
+                  
+ 
+                projecthelper configureproject project  buildfile projecthelp    
+                    printdescription project   
+                    printtargets project  msgoutputlevel   project msg_info targets size      0 project getdefaulttarget targets addelement project getdefaulttarget     
+                      
+                  
+ 
+                project executetargets targets oldsm system setsecuritymanager oldsm   
+                  
+ 
+                system setout savedout   
+                system seterr savederr   
+                system setin savedin runtimeexception exc    
+            error   exc exc error e    
+            error   e e projecthelp    
+                project firebuildfinished error error project log error tostring    project msg_err addbuildlisteners project project    
+ 
+          
+        project addbuildlistener createlogger i   0  i   listeners size    i classname listeners elementat i   
+            buildlistener listener   
+                     buildlistener  classpathutils newinstance classname  
+                            main getclassloader    buildlistener project project setprojectreference listener   
+              
+            project addbuildlistener listener addinputhandler project project buildexception   
+        inputhandler handler inputhandlerclassname handler defaultinputhandler handler    inputhandler  classpathutils newinstance  
+                    inputhandlerclassname  main getclassloader    
+                    inputhandler project project setprojectreference handler   
+              
+          
+        project setinputhandler handler buildlogger createlogger     
+        buildlogger logger loggerclassname logger    buildlogger  classpathutils newinstance  
+                        loggerclassname  main getclassloader    
+                        buildlogger buildexception e    
+                system err println  the specified logger loggerclassname 
+                        could not be used because     e getmessage runtimeexception logger defaultlogger    
+          
+ 
+        logger setmessageoutputlevel msgoutputlevel   
+        logger setoutputprintstream out   
+        logger seterrorprintstream err   
+        logger setemacsmode emacsmode logger printusage lsep   system getproperty  line separator    
+        stringbuffer msg stringbuffer    
+        msg append  ant  options   target  target2  target3           lsep   
+        msg append  options      lsep   
+        msg append    -help  -h              print message    lsep   
+        msg append    -projecthelp  -p       print project help information    lsep   
+        msg append    -version               print the version information and exit    lsep   
+        msg append    -diagnostics           print information that might be helpful to    lsep   
+        msg append                           diagnose or report problems     lsep   
+        msg append    -quiet  -q             be extra quiet    lsep   
+        msg append    -verbose  -v           be extra verbose    lsep   
+        msg append    -debug  -d             print debugging information    lsep   
+        msg append    -emacs  -e             produce logging information without adornments  
+                     lsep   
+        msg append    -lib  path             specifies a path to search jars and classes  
+                     lsep   
+        msg append    -logfile  file         use given file log    lsep   
+        msg append      -l      file                 ''    lsep   
+        msg append    -logger  classname     the which is to perform logging    lsep   
+        msg append    -listener  classname   add an instance of as a project listener  
+                     lsep   
+        msg append    -noinput not allow interactive input    lsep   
+        msg append    -buildfile  file       use given buildfile    lsep   
+        msg append      -file     file               ''    lsep   
+        msg append      -f        file               ''    lsep   
+        msg append    -d property   value    use value given property    lsep   
+        msg append    -keep-going  -k        execute all targets that not depend    lsep   
+        msg append                           on failed target s     lsep   
+        msg append    -propertyfile  name    load all properties from file with -d    lsep   
+        msg append                           properties taking precedence    lsep   
+        msg append    -inputhandler the which will handle input requests    lsep   
+        msg append    -find  file             s earch buildfile towards the root of    lsep   
+        msg append      -s   file            the filesystem and use it    lsep   
+        msg append    -nice  number          a niceness value the main thread     lsep 
+                                               1  lowest  to 10  highest   5 is the lsep   
+        msg append    -nouserlib             run ant without using the jar files from    lsep 
+                                               $ user home   ant lib    lsep   
+        msg append    -noclasspath           run ant without using classpath    lsep   
+        msg append    -autoproxy             java1 5   use the os proxy settings  
+                  lsep   
+        msg append    -main override ant's normal entry point    
+        system out println msg tostring printversion buildexception   
+        system out println getantversion getantversion buildexception antversion properties props properties    
+                inputstream in   
+                    main getresourceasstream   org apache tools ant version txt    
+                props load in   
+                in close    
+ 
+                stringbuffer msg stringbuffer    
+                msg append  apache ant version     
+                msg append props getproperty  version     
+                msg append   compiled on     
+                msg append props getproperty  date     
+                antversion   msg tostring ioexception ioe buildexception  could not load the version information   
+                                           ioe getmessage nullpointerexception npe buildexception  could not load the version information antversion printdescription project project project getdescription project log project getdescription printtargets project project printsubtargets maxlength   0  
+        enumeration ptargets   project gettargets   elements targetname targetdescription  
+        target currenttarget  
+          
+          
+        vector topnames vector    
+        vector topdescriptions vector    
+        vector subnames vector ptargets hasmoreelements      
+            currenttarget    target  ptargets nextelement    
+            targetname   currenttarget getname targetname equals targetdescription   currenttarget getdescription targetdescription pos   findtargetposition subnames  targetname   
+                subnames insertelementat targetname  pos pos   findtargetposition topnames  targetname   
+                topnames insertelementat targetname  pos   
+                topdescriptions insertelementat targetdescription  pos targetname length     maxlength    
+                    maxlength   targetname length    
+                  
+              
+          
+ 
+        printtargets project  topnames  topdescriptions   main targets    
+                     maxlength topnames size      0    
+            printsubtargets printsubtargets    
+            printtargets project  subnames other targets    0 defaulttarget   project getdefaulttarget defaulttarget equals defaulttarget     
+              
+            project log target      defaulttarget findtargetposition vector names name res   names size i   0  i   names size      res    names size    i name compareto names elementat i     0    
+                res   i res printtargets project project  vector names  
+                                     vector descriptions heading maxlen lsep   system getproperty  line separator spaces spaces length      maxlen    
+            spaces    spaces  
+          
+        stringbuffer msg stringbuffer    
+        msg append heading   lsep   lsep i   0  i   names size    i      
+            msg append       
+            msg append names elementat i descriptions msg append  
+                    spaces substring 0  maxlen names elementat i   length     2    
+                msg append descriptions elementat i    
+              
+            msg append lsep   
+          
+        project log msg tostring    project msg_warn   
+      
+ org apache tools ant Main

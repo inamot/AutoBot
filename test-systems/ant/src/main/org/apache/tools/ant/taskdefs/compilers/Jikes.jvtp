@@ -1,0 +1,95 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license implementation jikes compiler primarily cut paste original javac task before refactored ant 1 3 
+    
+    
+       performs compile using jikes compiler ibm  
+       mostly code identical doclassiccompile not support options extdirs  deprecation option jikes don't understand successfully tested jikes  gt 1 10  
+        return true compilation succeeded 
+        throws buildexception error sourcepath  use sourcepath  value present  
+   otherwise default srcdir  value buildfile specifies sourcepath don't 
+   output any sourcepath bootclasspath  therefore one java runtime bootclasspath stated default includejavaruntime false user stated bootclasspath include java runtime s head user set jikespath add contents well 
+    
+           xxx 
+           perhaps shouldn't use properties three options  emacs mode  warnings pedantic include javac directive? 
+            
+    
+           jikes nice feature print error 
+           messages form readable emacs emacs directly set cursor place error occurred  
+            
+    
+           jikes issues warnings javac example files classpath don't exist often case warning pretty annoying  
+            
+    
+           jikes issue pedantic warnings  
+            
+    
+           jikes supports something calls  full dependency 
+           checking   see jikes documentation differences 
+           between -depend f  
+            
+   support source 1 1 source 1 2 added jdk 1 4 2  jikes doesn't itorg apache tools ant taskdefs compilers Jikes org apache tools ant taskdefs compilers jikes defaultcompileradapter execute buildexception   
+        attributes log  using jikes compiler   project msg_verbose   
+ 
+        commandline cmd commandline    
+ 
+          
+          
+        path sourcepath compilesourcepath sourcepath   compilesourcepath sourcepath   src sourcepath size     0    
+            cmd createargument   setvalue  -sourcepath    
+            cmd createargument   setpath sourcepath   
+          
+ 
+        path classpath path project bootclasspath bootclasspath size      0    
+              
+            includejavaruntime classpath append getcompileclasspath jikespath   system getproperty  jikes path jikespath classpath append path project  jikespath extdirs extdirs size     0    
+            cmd createargument   setvalue  -extdirs    
+            cmd createargument   setpath extdirs exec   getjavac   getexecutable    
+        cmd setexecutable exec jikes    exec deprecation    
+            cmd createargument   setvalue  -deprecation destdir cmd createargument   setvalue  -d    
+            cmd createargument   setfile destdir   
+          
+ 
+        cmd createargument   setvalue  -classpath    
+        cmd createargument   setpath classpath encoding cmd createargument   setvalue  -encoding    
+            cmd createargument   setvalue encoding debug debuglevel   attributes getdebuglevel debuglevel cmd createargument   setvalue  -g     debuglevel cmd createargument   setvalue  -g cmd createargument   setvalue  -g none optimize    
+            cmd createargument   setvalue  -o verbose    
+            cmd createargument   setvalue  -verbose depend    
+            cmd createargument   setvalue  -depend target cmd createargument   setvalue  -target    
+            cmd createargument   setvalue target emacsproperty   project getproperty  build compiler emacs emacsproperty project toboolean emacsproperty     
+            cmd createargument   setvalue   e warningsproperty   
+            project getproperty  build compiler warnings warningsproperty attributes log     the build compiler warnings property is   
+                              deprecated       project msg_warn   
+            attributes log     use the nowarn attribute instead       
+                           project msg_warn project toboolean warningsproperty     
+                cmd createargument   setvalue  -nowarn attributes getnowarn      
+            cmd createargument   setvalue  -nowarn pedanticproperty   
+            project getproperty  build compiler pedantic pedanticproperty project toboolean pedanticproperty     
+            cmd createargument   setvalue   p fulldependproperty   
+            project getproperty  build compiler fulldepend fulldependproperty project toboolean fulldependproperty     
+            cmd createargument   setvalue   f attributes getsource cmd createargument   setvalue  -source source   attributes getsource source equals  1 1      source equals  1 2      
+                  
+                  
+                attributes log  jikes doesn't support '-source   
+                                 source    '  will use '-source 1 3' instead    
+                cmd createargument   setvalue  1 3 cmd createargument   setvalue source   
+              
+          
+ 
+        addcurrentcompilerargs cmd firstfilename   cmd size    
+ 
+        path boot   getbootclasspath boot size     0    
+            cmd createargument   setvalue  -bootclasspath    
+            cmd createargument   setpath boot   
+          
+ 
+        logandaddfilestocompile cmd executeexternalcompile cmd getcommandline    firstfilename     0  
+      
+ 
+ 
+ org apache tools ant taskdefs compilers Jikes

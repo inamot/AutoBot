@@ -1,0 +1,87 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications class copies diagram system clipboard functionality only work java1 4 compile 1 3 put gef generic  
+   
+    see href  http   java sun com docs books tutorial uiswing misc dnd html   
+        swing drag drop author alexb argouml version 0 15 2  created 19 october 2003  08 36 constructor  
+        
+   
+        see java awt event actionlistener#actionperformed java awt event actionevent  
+        
+   copy gif image clipboard image gef  
+       
+        return image  
+        
+   avoid gef calcdrawingarea bug nothing diagram  
+   hide grid  otherwise t see anything 
+   background color  
+   
+        see java awt datatransfer clipboardowner#lostownership  
+            java awt datatransfer clipboard  java awt datatransfer transferable nothing 
+   
+        see javax swing abstractaction#isenabled   
+        
+   avoid gef calcdrawingarea bug nothing diagram uid  
+        
+    
+   encapsulates awt image data transfer clipboard diagram image data 
+    
+       constructor  
+       
+        param newdiagramimage image  
+        
+   
+        see java awt datatransfer transferable#gettransferdataflavors   
+        
+   
+        see java awt datatransfer transferable#isdataflavorsupported  
+               java awt datatransfer dataflavor  
+        
+   hack order to compile java1 3 
+   
+        see java awt datatransfer transferable#gettransferdata  
+               java awt datatransfer dataflavor  
+       org argouml uml diagram ui ActionSaveDiagramToClipboard org argouml uml diagram ui actionsavediagramtoclipboard abstractaction clipboardowner actionsavediagramtoclipboard translator localize  menu popup copy-diagram-to-clip    
+                resourceloaderwrapper lookupicon  action copy actionperformed actionevent actionevent    
+ 
+        image diagramgifimage   getimage diagramgifimage clipboard clipboard   toolkit getdefaulttoolkit   getsystemclipboard    
+        clipboard setcontents imageselection diagramgifimage image getimage scale   
+            configuration getinteger  
+                savegraphicsmanager key_graphics_resolution  1   
+ 
+        editor ce   globals cureditor    
+        rectangle drawingarea   
+            ce getlayermanager   getactivelayer   
+                 calcdrawingarea drawingarea x   0    drawingarea y   0    drawingarea width    0 
+                   drawingarea height    0 isgridhidden   ce getgridhidden    
+        ce setgridhidden image diagramgifimage   
+            ce createimage drawingarea width   scale  
+                drawingarea height   scale   
+        graphics g   diagramgifimage getgraphics g graphics2d    
+              graphics2d  g  scale scale  scale   
+          
+ 
+          
+        g setcolor color savegifaction transparent_bg_color    
+        g fillrect 0  0  drawingarea width   scale  drawingarea height   scale   
+        g translate -drawingarea x  -drawingarea y   
+        ce print g   
+        ce setgridhidden isgridhidden diagramgifimage lostownership clipboard clipboard  transferable transferable isenabled     
+        editor ce   globals cureditor ce ce getlayermanager ce getlayermanager   getactivelayer layer layer   ce getlayermanager   getactivelayer layer rectangle drawingarea   layer calcdrawingarea drawingarea x   0    drawingarea y   0    drawingarea width    0 
+                   drawingarea height    0 isenabled imageselection transferable dataflavor   supportedflavors     
+        dataflavor imageflavor imageselection image newdiagramimage    
+ 
+        diagramimage   newdiagramimage dataflavor   gettransferdataflavors supportedflavors isdataflavorsupported dataflavor parflavor parflavor getmimetype   equals  
+                dataflavor imageflavor getmimetype       parflavor 
+                 gethumanpresentablename   equals  
+                        dataflavor imageflavor gethumanpresentablename object gettransferdata dataflavor parflavor unsupportedflavorexception isdataflavorsupported parflavor diagramimage unsupportedflavorexception dataflavor imageflavor   
+ 
+      
+ org argouml uml diagram ui ActionSaveDiagramToClipboard

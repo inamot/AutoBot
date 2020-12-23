@@ -1,0 +1,130 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license constant pool java class constant pool collection constants used java class file stores strings  constant values  
+   class names  method names  field names etc  
+   
+    see href  http   java sun com docs books vmspec java virtual 
+        machine specification entries constant pool hashtable utf8 entries - used constant pool indexes utf8 values quickly 
+        
+    initialise constant pool zero index never present constant pool itself add null entry read constant pool class input stream  
+       
+        param classstream datainputstream class file  
+        exception ioexception problem reading constant pool stream size constant pool  
+       
+        return size constant pool 
+        
+    
+       add entry constant pool  
+       
+        param entry new entry added constant pool  
+        return index constant pool entry stored  
+        
+   add null entries any additional slots required  
+    
+       resolve entries constant pool  resolution constant 
+       pool involves transforming indexes constant pool entries actual data entry constant pool entry particular index  
+       
+        param index index constant pool  
+        return constant pool entry index index given utf8 constant pool entry  
+       
+        param value string value utf8 entry  
+        return index given string occurs constant 
+            pool 1 value not occur index given constant_class entry constant pool  
+       
+        param classname name class class entry 
+            index required  
+        return index given class entry occurs constant pool 1 value not occur index given constant value entry constant pool  
+       
+        param constantvalue constant value index required  
+        return index given value entry occurs constant pool 1 value not occur index given constant_methodref entry constant 
+       pool  
+       
+        param methodclassname name class contains method being referenced  
+        param methodname name method being referenced  
+        param methodtype type descriptor method being referenced  
+        return index given method ref entry occurs constant pool 1 value not occur index given constant_interfacemethodref entry constant pool  
+       
+        param interfacemethodclassname name interface contains method being referenced  
+        param interfacemethodname name method being referenced  
+        param interfacemethodtype type descriptor method being 
+            referenced  
+        return index given method ref entry occurs constant pool 1 value not occur index given constant_fieldref entry constant 
+       pool  
+       
+        param fieldclassname name class contains field 
+            being referenced  
+        param fieldname name field being referenced  
+        param fieldtype type descriptor field being referenced  
+        return index given field ref entry occurs constant pool 1 value not occur index given constant_nameandtype entry constant 
+       pool  
+       
+        param name name 
+        param type type 
+        return index given nameandtype entry occurs constant pool 1 value not occur  
+        
+    
+       dump constant pool string  
+       
+        return constant pool entries strings 
+       org apache tools ant taskdefs optional depend constantpool ConstantPool org apache tools ant taskdefs optional depend constantpool constantpool constantpool     
+        entries vector    
+ 
+          
+          
+        entries addelement utf8indexes hashtable read datainputstream classstream ioexception numentries   classstream readunsignedshort i   1  i   numentries     
+            constantpoolentry nextentry 
+                   constantpoolentry readentry classstream   
+ 
+            i    nextentry getnumentries    
+ 
+            addentry nextentry size entries size addentry constantpoolentry entry index   entries size    
+ 
+        entries addelement entry numslots   entry getnumentries j   0  j   numslots - 1    j    
+            entries addelement entry utf8cpinfo    
+            utf8cpinfo utf8info    utf8cpinfo  entry  
+ 
+            utf8indexes put utf8info getvalue integer index index resolve enumeration i   entries elements    i hasmoreelements       
+            constantpoolentry poolinfo    constantpoolentry  i nextelement poolinfo poolinfo isresolved      
+                poolinfo resolve constantpoolentry getentry index constantpoolentry  entries elementat index getutf8entry value index   -1  
+        integer indexinteger    integer  utf8indexes get value indexinteger index   indexinteger intvalue index getclassentry classname index   -1 i   0  i   entries size      index    -1    i    
+            object element   entries elementat i element classcpinfo    
+                classcpinfo classinfo    classcpinfo  element classinfo getclassname   equals classname     
+                    index   i index getconstantentry object constantvalue index   -1 i   0  i   entries size      index    -1    i    
+            object element   entries elementat i element constantcpinfo    
+                constantcpinfo constantentry    constantcpinfo  element constantentry getvalue   equals constantvalue     
+                    index   i index getmethodrefentry methodclassname methodname methodtype index   -1 i   0  i   entries size      index    -1    i    
+            object element   entries elementat i element methodrefcpinfo    
+                methodrefcpinfo methodrefentry    methodrefcpinfo  element methodrefentry getmethodclassname   equals methodclassname  
+                        methodrefentry getmethodname   equals methodname  
+                        methodrefentry getmethodtype   equals methodtype     
+                    index   i index getinterfacemethodrefentry interfacemethodclassname interfacemethodname interfacemethodtype index   -1 i   0  i   entries size      index    -1    i    
+            object element   entries elementat i element interfacemethodrefcpinfo    
+                interfacemethodrefcpinfo interfacemethodrefentry 
+                        interfacemethodrefcpinfo  element interfacemethodrefentry getinterfacemethodclassname   equals  
+                        interfacemethodclassname  
+                        interfacemethodrefentry getinterfacemethodname   equals  
+                         interfacemethodname  
+                        interfacemethodrefentry getinterfacemethodtype   equals  
+                         interfacemethodtype     
+                    index   i index getfieldrefentry fieldclassname fieldname fieldtype index   -1 i   0  i   entries size      index    -1    i    
+            object element   entries elementat i element fieldrefcpinfo    
+                fieldrefcpinfo fieldrefentry    fieldrefcpinfo  element fieldrefentry getfieldclassname   equals fieldclassname  
+                        fieldrefentry getfieldname   equals fieldname  
+                        fieldrefentry getfieldtype   equals fieldtype     
+                    index   i index getnameandtypeentry name type index   -1 i   0  i   entries size      index    -1    i    
+            object element   entries elementat i element nameandtypecpinfo    
+                nameandtypecpinfo nameandtypeentry 
+                       nameandtypecpinfo  element nameandtypeentry getname   equals name  
+                        nameandtypeentry gettype   equals type     
+                    index   i index tostring     
+        stringbuffer sb stringbuffer  \n size   entries size i   0  i   size    i    
+            sb append       i            getentry i     \n sb tostring    
+      
+ 
+  
+org apache tools ant taskdefs optional depend constantpool ConstantPool

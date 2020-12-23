@@ -1,0 +1,50 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   encapsulates jikes compiler directly executing external 
+   process  
+   
+    p  strong ant 1 2 class considered dead code ant developers unmaintained   don't use strong   p  
+   
+    deprecated 1 2  
+               merged class javac  
+    
+   checkstyle visibilitymodifier bc 
+   checkstyle visibilitymodifier constructs new jikes object  
+        param jop      parser send jike's output param command  name jikes executable 
+        param project current project compile specified arguments  
+        param args - arguments pass process command line 
+        
+   windows 32k limit total arg size create temporary file store arguments reports 300 files compiled 250 conservative approach assume everything jikes writes goes standard output  not standard error option 
+   -xstdout given jikes javac dojikescompile guarantee least hope org apache tools ant taskdefs Jikes org apache tools ant taskdefs jikes jikesoutputparser jop command project project jikes jikesoutputparser jop command  project project system err println  as of ant 1 2 released in october 2000    
+               the jikes system err println  is considered to be dead code by the ant   
+               developers and is unmaintained     
+        system err println  don\'t use it jop   jop command   command project   project compile args commandarray file tmpfile myos   system getproperty  os name myos tolowercase   indexof  windows      0 
+                   args length   250    
+                printwriter out tempfilename    jikes random system currenttimemillis     nextlong    
+                    tmpfile file tempfilename   
+                    out printwriter filewriter tmpfile i   0  i   args length  i      
+                        out println args i    
+                      
+                    out flush    
+                    commandarray command  
+                                                     tmpfile getabsolutepath ioexception e buildexception  error creating temporary file   
+                                             e fileutils close out commandarray args length   1   
+                commandarray 0    command  
+                system arraycopy args  0  commandarray  1  args length execute exe execute jop   
+                exe setantrun project   
+                exe setworkingdirectory project getbasedir     
+                exe setcommandline commandarray   
+                exe execute ioexception e buildexception  error running jikes compiler   e tmpfile tmpfile delete    
+              
+          
+      
+ org apache tools ant taskdefs Jikes

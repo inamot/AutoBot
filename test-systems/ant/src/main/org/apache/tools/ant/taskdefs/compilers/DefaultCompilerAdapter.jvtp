@@ -1,0 +1,293 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+  java5 style 
+  import static org apache tools ant util stringutils line_sep default implementation compileradapter interface  
+   currently cut paste original javac task ant 1 3 
+    
+   checkstyle visibilitymodifier bc 
+  must keep subclass bc  though unused  
+   checkstyle constantnamecheck bc 
+   checkstyle constantnamecheck checkstyle visibilitymodifier set javac instance contains configured compilation 
+       attributes  
+       
+        param attributes configured javac task javac task instance associated compiler adapter 
+       
+        return configured javac task instance used adapter project compiler adapter created return owner project ant 1 6 
+        
+    
+       builds compilation classpath  
+        return compilation class path 
+        
+   add dest dir classpath previously compiled untouched classes classpath 
+   combine build classpath system classpath order determined value build sysclasspath command line arguments switches  
+        param cmd command line 
+        return command line command line argument processing common classic modern   doesn't add files compile  
+        param cmd command line 
+        param usedebuglevel true set set debug level g switch 
+        return command line sourcepath  use sourcepath  value present  
+   otherwise default srcdir  value add  sourcepath classpath jdk1 1 well bootclasspath extdirs buildfile specifies sourcepath don't 
+   output any sourcepath command line argument processing modern   doesn't 
+       add files compile  
+        param cmd command line 
+        return command line 
+        
+   support source 1 1 source 1 2 added jdk 1 4 2 isn't present 1 5 0 either 
+   1 5 0 doesn't support -source 1 1 command line argument processing modern adds files compile well  
+        return command line 
+        
+    
+       set up command line  
+        return command line command line argument processing classic adds files compile well  
+        param debuglevelcheck true set debug level g switch 
+        return command line 
+        
+    
+       logs compilation parameters  adds files compile logs quot nicesourcelist quot  
+        param cmd command line compile specified arguments  
+        param args - arguments pass process command line 
+        param firstfilename - index first source file args index negative temporary file created may hit command line length limit system  
+        return exit code compilation compile specified arguments  
+        param args - arguments pass process command line 
+        param firstfilename - index first source file args index negative temporary file created may hit command line length limit system  
+        param quotefiles set true  filenames containing 
+       spaces quoted appear external file necessary running jdk 1 4's javac probably 
+       others  
+        return exit code compilation ant 1 6 
+        
+   
+               many system reported trouble long command lines not only windows  -   
+               
+               posix seems define lower limit 4k use temporary 
+               file total length command line exceeds limit  
+                
+  use vm launcher instead shell launcher vms java 
+    
+       add extdirs classpath 
+        param classpath classpath use 
+        deprecated 1 5 x  
+                   use org apache tools ant types path#addextdirs instead  
+        
+    
+       adds command line arguments specific current implementation  
+        param cmd command line use 
+        
+    
+       shall assume jdk 1 1 command line switches? 
+        return true jdk 1 1 ant 1 5 
+        
+    
+       shall assume jdk 1 2 command line switches? 
+        return true jdk 1 2 ant 1 5 
+        
+    
+       shall assume jdk 1 3 command line switches? 
+        return true jdk 1 3 ant 1 5 
+        
+    
+       shall assume jdk 1 4 command line switches? 
+        return true jdk 1 4 ant 1 6 3 
+        
+    
+       shall assume jdk 1 5 command line switches? 
+        return true jdk 1 5 ant 1 6 3 
+        
+    
+       shall assume jdk 1 6 command line switches? 
+        return true jdk 1 6 ant 1 7 
+        
+    
+       combines user specified bootclasspath system 
+       bootclasspath taking build sysclasspath account  
+       
+        return non-null path instance combines user 
+       specified system bootclasspath argument compiler see debug attribute set false  
+       
+        p return value code null  code  means argument p  
+       
+        return  -g none  unless expect invoke jdk 1 1 compiler ant 1 6 3 
+       org apache tools ant taskdefs compilers DefaultCompilerAdapter org apache tools ant taskdefs compilers defaultcompileradapter compileradapter path src file destdir encoding debug optimize deprecation depend verbose target path bootclasspath path extdirs path compileclasspath path compilesourcepath project project location location includeantruntime includejavaruntime memoryinitialsize memorymaximumsize file   compilelist javac attributes lsep   stringutils line_sep setjavac javac attributes attributes   attributes  
+        src   attributes getsrcdir    
+        destdir   attributes getdestdir    
+        encoding   attributes getencoding    
+        debug   attributes getdebug    
+        optimize   attributes getoptimize    
+        deprecation   attributes getdeprecation    
+        depend   attributes getdepend    
+        verbose   attributes getverbose    
+        target   attributes gettarget    
+        bootclasspath   attributes getbootclasspath    
+        extdirs   attributes getextdirs    
+        compilelist   attributes getfilelist    
+        compileclasspath   attributes getclasspath    
+        compilesourcepath   attributes getsourcepath    
+        project   attributes getproject    
+        location   attributes getlocation    
+        includeantruntime   attributes getincludeantruntime    
+        includejavaruntime   attributes getincludejavaruntime    
+        memoryinitialsize   attributes getmemoryinitialsize    
+        memorymaximumsize   attributes getmemorymaximumsize javac getjavac attributes project getproject project path getcompileclasspath     
+        path classpath path project destdir classpath setlocation destdir   
+          
+ 
+          
+          
+ 
+        path cp   compileclasspath cp cp path project includeantruntime    
+            classpath addexisting cp concatsystemclasspath  last classpath addexisting cp concatsystemclasspath  ignore includejavaruntime    
+            classpath addjavaruntime classpath commandline setupjavaccommandlineswitches commandline cmd setupjavaccommandlineswitches cmd commandline setupjavaccommandlineswitches commandline cmd usedebuglevel    
+        path classpath   getcompileclasspath    
+          
+          
+        path sourcepath compilesourcepath sourcepath   compilesourcepath sourcepath   src memoryparameterprefix   assumejava11   ?  -j-     -j-x memoryinitialsize attributes isforkedjavac      
+                attributes log  since fork is ignoring   
+                                  memoryinitialsize setting    
+                               project msg_warn cmd createargument   setvalue memoryparameterprefix 
+                                                 ms    memoryinitialsize memorymaximumsize attributes isforkedjavac      
+                attributes log  since fork is ignoring   
+                                  memorymaximumsize setting    
+                               project msg_warn cmd createargument   setvalue memoryparameterprefix 
+                                                 mx    memorymaximumsize attributes getnowarn      
+            cmd createargument   setvalue  -nowarn deprecation    
+            cmd createargument   setvalue  -deprecation destdir cmd createargument   setvalue  -d    
+            cmd createargument   setfile destdir   
+          
+ 
+        cmd createargument   setvalue  -classpath assumejava11      
+            path cp path project   
+ 
+            path bp   getbootclasspath bp size     0    
+                cp append bp extdirs cp addextdirs extdirs   
+              
+            cp append classpath   
+            cp append sourcepath   
+            cmd createargument   setpath cp cmd createargument   setpath classpath sourcepath size     0    
+                cmd createargument   setvalue  -sourcepath    
+                cmd createargument   setpath sourcepath target cmd createargument   setvalue  -target    
+                cmd createargument   setvalue target   
+              
+ 
+            path bp   getbootclasspath bp size     0    
+                cmd createargument   setvalue  -bootclasspath    
+                cmd createargument   setpath bp extdirs extdirs size     0    
+                cmd createargument   setvalue  -extdirs    
+                cmd createargument   setpath extdirs encoding cmd createargument   setvalue  -encoding    
+            cmd createargument   setvalue encoding debug usedebuglevel     assumejava11 debuglevel   attributes getdebuglevel debuglevel cmd createargument   setvalue  -g     debuglevel cmd createargument   setvalue  -g cmd createargument   setvalue  -g getnodebugargument cmd createargument   setvalue getnodebugargument optimize    
+            cmd createargument   setvalue  -o depend assumejava11      
+                cmd createargument   setvalue  -depend assumejava12      
+                cmd createargument   setvalue  -xdepend attributes log  depend attribute is not supported by the   
+                                  modern compiler   project msg_warn verbose    
+            cmd createargument   setvalue  -verbose    
+          
+ 
+        addcurrentcompilerargs cmd cmd commandline setupmodernjavaccommandlineswitches commandline cmd    
+        setupjavaccommandlineswitches cmd attributes getsource assumejava13      
+            cmd createargument   setvalue  -source source   attributes getsource assumejava14      assumejava15    
+                    source equals  1 1      source equals  1 2       
+                  
+                  
+                cmd createargument   setvalue  1 3 cmd createargument   setvalue source assumejava15      assumejava16    
+                      attributes gettarget t   attributes gettarget t equals  1 1      t equals  1 2      t equals  1 3   
+                   t equals  1 4 s   t t equals  1 1      
+                      
+                    s    1 2   
+                  
+                attributes log     project msg_warn   
+                attributes log            warning   project msg_warn   
+                attributes log     project msg_warn   
+                attributes log  the -source defaults to 1 5 in jdk 1 5 and 1 6    
+                               project msg_warn   
+                attributes log you specify -target     t 
+                                   you now must also specify -source     s 
+                                      project msg_warn   
+                attributes log  ant will implicitly add -source     s you   please change your build file    
+                               project msg_warn   
+                cmd createargument   setvalue  -source    
+                cmd createargument   setvalue s cmd commandline setupmodernjavaccommand     
+        commandline cmd commandline    
+        setupmodernjavaccommandlineswitches cmd   
+ 
+        logandaddfilestocompile cmd cmd commandline setupjavaccommand setupjavaccommand commandline setupjavaccommand debuglevelcheck    
+        commandline cmd commandline    
+        setupjavaccommandlineswitches cmd  debuglevelcheck   
+        logandaddfilestocompile cmd cmd logandaddfilestocompile commandline cmd    
+        attributes log  compilation     cmd describearguments    
+                       project msg_verbose   
+ 
+        stringbuffer nicesourcelist stringbuffer  file compilelist length    1    
+            nicesourcelist append  s    
+          
+        nicesourcelist append   to be compiled     
+ 
+        nicesourcelist append stringutils line_sep i   0  i   compilelist length  i arg   compilelist i  getabsolutepath    
+            cmd createargument   setvalue arg   
+            nicesourcelist append          
+            nicesourcelist append arg   
+            nicesourcelist append stringutils line_sep   
+          
+ 
+        attributes log nicesourcelist tostring    project msg_verbose executeexternalcompile args firstfilename executeexternalcompile args  firstfilename executeexternalcompile args firstfilename quotefiles commandarray file tmpfile commandline tostring args  length     4096 
+                   firstfilename    0    
+                printwriter out tmpfile   file_utils createtempfile  
+                         files       getjavac   gettempdir     
+                    tmpfile deleteonexit    
+                    out printwriter filewriter tmpfile i   firstfilename  i   args length  i quotefiles    args i  indexof        -1    
+                            args i    args i  replace file separatorchar  ' '   
+                            out println  \     args i out println args i    
+                          
+                      
+                    out flush    
+                    commandarray firstfilename   1   
+                    system arraycopy args  0  commandarray  0  firstfilename   
+                    commandarray firstfilename          tmpfile ioexception e buildexception  error creating temporary file   
+                                             e  location fileutils close out commandarray   args execute exe execute logstreamhandler attributes  
+                                                       project msg_info  
+                                                       project msg_warn os isfamily  openvms      
+                      
+                      
+                    exe setvmlauncher exe setantrun project   
+                exe setworkingdirectory project getbasedir     
+                exe setcommandline commandarray   
+                exe execute exe getexitvalue ioexception e buildexception  error running     args 0  
+                            compiler   e  location tmpfile tmpfile delete addextdirstoclasspath path classpath    
+        classpath addextdirs extdirs addcurrentcompilerargs commandline cmd    
+        cmd addarguments getjavac   getcurrentcompilerargs assumejava11 javac1 1  equals attributes getcompilerversion assumejava12 javac1 2  equals attributes getcompilerversion    
+                 classic  equals attributes getcompilerversion    
+                   javaenvutils isjavaversion javaenvutils java_1_2   
+                 extjavac  equals attributes getcompilerversion    
+                   javaenvutils isjavaversion javaenvutils java_1_2 assumejava13 javac1 3  equals attributes getcompilerversion    
+                 classic  equals attributes getcompilerversion    
+                   javaenvutils isjavaversion javaenvutils java_1_3   
+                 modern  equals attributes getcompilerversion    
+                   javaenvutils isjavaversion javaenvutils java_1_3   
+                 extjavac  equals attributes getcompilerversion    
+                   javaenvutils isjavaversion javaenvutils java_1_3 assumejava14 javac1 4  equals attributes getcompilerversion    
+                 classic  equals attributes getcompilerversion    
+                   javaenvutils isjavaversion javaenvutils java_1_4   
+                 modern  equals attributes getcompilerversion    
+                   javaenvutils isjavaversion javaenvutils java_1_4   
+                 extjavac  equals attributes getcompilerversion    
+                   javaenvutils isjavaversion javaenvutils java_1_4 assumejava15 javac1 5  equals attributes getcompilerversion    
+                 classic  equals attributes getcompilerversion    
+                   javaenvutils isjavaversion javaenvutils java_1_5   
+                 modern  equals attributes getcompilerversion    
+                   javaenvutils isjavaversion javaenvutils java_1_5   
+                 extjavac  equals attributes getcompilerversion    
+                   javaenvutils isjavaversion javaenvutils java_1_5 assumejava16 javac1 6  equals attributes getcompilerversion    
+                 classic  equals attributes getcompilerversion    
+                   javaenvutils isjavaversion javaenvutils java_1_6   
+                 modern  equals attributes getcompilerversion    
+                   javaenvutils isjavaversion javaenvutils java_1_6   
+                 extjavac  equals attributes getcompilerversion    
+                   javaenvutils isjavaversion javaenvutils java_1_6 path getbootclasspath     
+        path bp path project bootclasspath bp append bootclasspath bp concatsystembootclasspath  ignore getnodebugargument assumejava11 g none   
+      
+  
+org apache tools ant taskdefs compilers DefaultCompilerAdapter

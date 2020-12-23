@@ -1,0 +1,205 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications api class localization localization calls goes through class  
+   
+    author jean-hugues de raigniac 
+    
+    
+       logger search bundles  
+        
+    
+       store bundles current locale  
+        
+    
+       store classloaders find bundles  
+        
+    
+       used make class self-initialising needed  
+        
+    
+       used keep track original system default locale class only used static context make constructor private  
+        
+    
+       alternate initialization entry point use argoeclipse leaves out telling gef bundles won't access  
+ 
+       note must called  before  any methods called work properly  
+        
+        deprecated mvw v0 25  replaced initforeclipse string   
+        
+  configuration getstring argo key_locale      
+    
+       alternate initialization entry point use argoeclipse leaves out telling gef bundles won't access   p  
+        
+       note must called  before  any methods called work properly  
+       
+        param locale configured locale or null 
+        
+    
+       default locale set resources bundles loaded  
+        deprecated mvw v0 25 3  replaced init string locale   
+        
+  configuration getstring argo key_locale      
+   todo uplevel reference gef argouml - tfm bundle used used?  
+           mvw  move main?    
+    
+       initialise locale  
+        
+        param locale string locale 
+        
+          assert  initialized     guitestactionopenproject fails over retain original one  
+   todo using internal knowledge gef handle itself  - tfm 
+           mvw  move something main initgef      
+   
+       internal initialization method   handles initialization common both public methods  
+        
+   retain original one  
+   todo using internal knowledge gef handle itself  - tfm locale selection  p  
+       
+       todo  detect available locales available files  
+       
+        return locales used argouml 
+        
+    
+       change current locale string name follows bnf format   p  
+           language    _  country   
+        p  
+       only use before gui initialized  
+       
+        param name name new locale needed junit tests   
+           otherwise assert initialized suffice     
+    
+       change current locale  
+        p  
+       only use before gui initialized  
+       
+        param locale new locale 
+        
+    
+       returns original value default locale instance java virtual machine independent selected 
+       configuration   
+        
+        return original system default locale 
+        
+    
+       add another class loader resource bundle located 
+       through  
+       
+        param cl classloader add  
+        
+    
+       loads bundle not already loaded   
+       
+        param name name bundle load  
+        
+    
+       calculate name key  
+       
+        param key key look up  
+        return name file code null  code not possible  
+        
+    
+       synonym messageformat encourage developers convert 
+       existing uses localize     string concatentation use method instead  
+        see org argouml i18n translator#messageformat string  object    
+       
+        param key key localize 
+        param args arguments objects inserted string 
+        return string localized string main function class localizes strings  
+       
+        param key key localize  
+        return localized string needed junit tests   
+           otherwise assert initialized suffice     
+    
+       generates localized string arguments  p localized string pattern processed link messageformat   
+       
+        param key key localize 
+        param args args objects  inserted localized string 
+        return localized string inserted arguments 
+       org argouml i18n Translator org argouml i18n translator list classloader  classloaders arraylist classloader translator     
+      
+ 
+      
+     deprecated initforeclipse     
+        initinternal initforeclipse locale    
+        initinternal locale   
+      
+ 
+      
+     deprecated init      
+        initinternal     
+          
+        localizer addresource  umlmenu   
+			       org argouml i18n umlresourcebundle init locale    
+  
+        initialized systemdefaultlocale   locale getdefault equals locale       locale setlocale locale setlocale locale  
+                    system getproperty  user language    en    
+                    system getproperty  user country          
+          
+ 
+          
+        localizer addresource  gefbase   
+                               org tigris gef base baseresourcebundle    
+        localizer addresource  
+                 gefpres   
+                 org tigris gef presentation presentationresourcebundle initinternal s initialized  
+        initialized systemdefaultlocale   locale getdefault equals s       s setlocale s setlocale locale  
+                    system getproperty  user language    en    
+                    system getproperty  user country          
+          
+ 
+          
+          
+        localizer addresource  gefbase   
+			       org tigris gef base baseresourcebundle    
+        localizer addresource  
+		 gefpres   
+		 org tigris gef presentation presentationresourcebundle locale   getlocales locale     
+            locale english  
+            locale french locale  es        
+            locale german  
+            locale italian locale  nb locale  pt locale  ru        
+            locale chinese  
+            locale uk setlocale name initialized    
+            init  en language   name country i   name indexof  _ i   0      name length     i   1     
+            language   name substring 0  i   
+            country   name substring i   1   
+          
+        setlocale locale language  country setlocale locale locale    
+        locale setdefault locale   
+        bundles hashmap resourcebundle locale getsystemdefaultlocale systemdefaultlocale addclassloader classloader cl    
+	classloaders add cl loadbundle name bundles containskey name resource   bundles_path         name  
+        resourcebundle bundle log debug  loading     resource   
+            locale locale   locale getdefault    
+            bundle   resourcebundle getbundle resource  locale missingresourceexception e1    
+            log debug  resource     resource 
+		          not found in the loader     
+ 
+	    iterator iter   classloaders iterator iter hasnext      
+		classloader cl    classloader  iter next log debug  loading     resource     from     cl   
+		    bundle   
+			resourcebundle getbundle resource  
+						 locale getdefault    
+						 cl missingresourceexception e2    
+		    log debug  resource     resource     not found in     cl   
+		  
+	      
+          
+ 
+        bundles put name  bundle getname key key null indexofdot   key indexof indexofdot   0 key substring 0  indexofdot localize key  object   args messageformat key  args localize key initialized    
+            init  en key illegalargumentexception name   getname key name localizer localize  umlmenu   key   
+          
+ 
+        loadbundle name   
+ 
+        resourcebundle bundle   bundles get name bundle log debug  bundle      name resource   
+                      key     not found key bundle getstring key missingresourceexception e    
+            log debug  resource     key     not found key messageformat key  object   args messageformat localize key   format args   
+      
+ org argouml i18n Translator

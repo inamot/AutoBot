@@ -1,0 +1,204 @@
+ 
+   $id  profileselectiontab java 13040 2007-07-10 20 00 25z linus $ 
+   copyright  c  2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications tab new profiles added registered 
+   ones activated deactivated current project 
+   
+    author marcos aurélio default constructor class 
+        
+               
+             
+   
+        see java awt event actionlistener#actionperformed java awt event actionevent  
+        
+    
+        return internationalization key containing name tab 
+        see org argouml application api guisettingstabinterface#gettabkey   
+        
+    
+        return panel containing tab 
+        see org argouml application api guisettingstabinterface#gettabpanel   
+       org argouml ui ProjectSettingsTabProfile org argouml ui projectsettingstabprofile jpanel guisettingstabinterface  actionlistener jbutton loadfromfile jbutton translator 
+	     localize  tab profiles userdefined load jbutton unregisterprofile jbutton translator 
+	     localize  tab profiles userdefined unload jlabel stereolabel jlabel translator localize  menu popup stereotype-view projectsettingstabprofile     
+	setlayout boxlayout boxlayout y_axis    
+ 
+          
+         
+        jpanel setdefstereov jpanel    
+        setdefstereov setlayout flowlayout             
+         
+        stereolabel setlabelfor stereofield   
+        setdefstereov add stereolabel   
+        setdefstereov add stereofield   
+ 
+        defaultcomboboxmodel cmodel defaultcomboboxmodel    
+        stereofield setmodel cmodel   
+         
+        cmodel addelement translator 
+                 localize  menu popup stereotype-view textual     
+        cmodel addelement translator 
+                 localize  menu popup stereotype-view big-icon     
+        cmodel addelement translator 
+                 localize  menu popup stereotype-view small-icon     
+ 
+        stereofield additemlistener itemlistener itemstatechanged itemevent e    
+                projectsettings ps   projectmanager getmanager   
+                         getcurrentproject   getprojectsettings    
+                object src   e getsource src    stereofield    
+                    object item   e getitem    
+                    defaultcomboboxmodel model    
+                         defaultcomboboxmodel  stereofield getmodel idx   model getindexof item idx 0  
+                        ps setdefaultstereotypeview  
+                                fignodemodelelement stereotype_view_textual 1  
+                        ps setdefaultstereotypeview  
+                                fignodemodelelement stereotype_view_big_icon 2  
+                        ps setdefaultstereotypeview  
+                                fignodemodelelement stereotype_view_small_icon add setdefstereov   
+                 
+          
+         
+         
+	jpanel configpanel jpanel    
+	configpanel setlayout boxlayout configpanel  boxlayout x_axis    
+ 
+	availablelist setprototypecellvalue  12345678901234567890    
+	usedlist setprototypecellvalue  12345678901234567890    
+ 
+	availablelist setminimumsize dimension 50  50    
+	usedlist setminimumsize dimension 50  50    
+	 
+	jpanel leftlist jpanel    
+	leftlist setlayout borderlayout     
+	leftlist add jlabel translator 
+		 localize  tab profiles userdefined available     
+		borderlayout north   
+	leftlist add jscrollpane availablelist   borderlayout center   
+	configpanel add leftlist   
+ 
+	jpanel centerbuttons jpanel    
+	centerbuttons setlayout boxlayout centerbuttons  boxlayout y_axis    
+	centerbuttons add addbutton   
+	centerbuttons add removebutton   
+	configpanel add centerbuttons   
+ 
+	jpanel rightlist jpanel    
+	rightlist setlayout borderlayout     
+	rightlist add jlabel translator 
+		 localize  tab profiles userdefined active     
+		borderlayout north   
+	rightlist add jscrollpane usedlist   borderlayout center   
+	configpanel add rightlist   
+ 
+	addbutton addactionlistener removebutton addactionlistener add configpanel   
+ 
+	jpanel lffpanel jpanel    
+	lffpanel setlayout flowlayout     
+	lffpanel add loadfromfile   
+	lffpanel add unregisterprofile   
+ 
+	loadfromfile addactionlistener unregisterprofile addactionlistener add lffpanel refreshlists     
+        availablelist setmodel defaultcomboboxmodel getavailableprofiles   toarray      
+        usedlist setmodel defaultcomboboxmodel getusedprofiles   toarray list profile  getusedprofiles arraylist profile  projectmanager getmanager   
+                 getcurrentproject   getprofileconfiguration   getprofiles list profile  getavailableprofiles     
+        list profile  used   getusedprofiles    
+        list profile  ret arraylist profile profile profile   profilefacade getmanager   
+                 getregisteredprofiles used contains profile     
+                ret add profile ret actionperformed actionevent arg0    
+        mutablecomboboxmodel modelavailable    
+              mutablecomboboxmodel  availablelist getmodel     
+        mutablecomboboxmodel modelused    
+              mutablecomboboxmodel  usedlist getmodel arg0 getsource      addbutton availablelist getselectedindex      -1    
+                profile selected    profile  modelavailable 
+                         getelementat availablelist getselectedindex     
+                modelused addelement selected   
+                modelavailable removeelement selected profile profile   getavailabledependents selected     
+                    modelused addelement profile   
+                    modelavailable removeelement profile arg0 getsource      removebutton usedlist getselectedindex      -1    
+                profile selected    profile  modelused getelementat usedlist 
+                         getselectedindex     
+      
+                list profile  dependents   getactivedependents selected remove dependents isempty message   translator localize  
+                             tab profiles confirmdeletewithdependencies object    dependents title   translator localize  
+                             tab profiles confirmdeletewithdependencies title    
+                    remove    joptionpane 
+                             showconfirmdialog message  
+                                    title  
+                                    joptionpane yes_no_option     joptionpane yes_option remove profilefacade getmanager   
+                             getregisteredprofiles   contains selected  
+                                profilefacade getmanager   
+                                     getdefaultprofiles   contains selected     
+                        remove    joptionpane 
+                                 showconfirmdialog translator 
+                                                 localize  tab profiles confirmdeleteunregistered    
+                                        translator 
+                                                 localize  tab profiles confirmdeleteunregistered title    
+                                        joptionpane yes_no_option     joptionpane yes_option remove    
+                        modelused removeelement selected   
+                        modelavailable addelement selected profile profile   dependents    
+                            modelused removeelement profile   
+                            modelavailable addelement profile arg0 getsource      unregisterprofile availablelist getselectedindex      -1    
+                profile selected    profile  modelavailable 
+                         getelementat availablelist getselectedindex selected userdefinedprofile    
+                    profilefacade getmanager   removeprofile selected   
+                    modelavailable removeelement selected joptionpane showmessagedialog translator 
+                             localize  tab profiles cannotdelete arg0 getsource      loadfromfile    
+	    jfilechooser filechooser jfilechooser    
+	    filechooser setfilefilter filefilter accept file file file isdirectory   
+			        file isfile    
+				        file getname   endswith   xml    
+					     file getname   endswith   xmi getdescription xmi files ret   filechooser showopendialog ret    jfilechooser approve_option    
+                file file   filechooser getselectedfile userdefinedprofile profile userdefinedprofile file   
+                    profilefacade getmanager   registerprofile profile   
+ 
+                    modelavailable addelement profile profileexception e    
+                    joptionpane showmessagedialog translator 
+                             localize  tab profiles userdefined errorloading     
+                  
+              
+          
+ 
+	availablelist validate    
+	usedlist validate list profile  getavailabledependents profile selected    
+        mutablecomboboxmodel modelavl     mutablecomboboxmodel  availablelist 
+                 getmodel     
+         
+        list profile  ret arraylist profile i   0  i   modelavl getsize      i    
+            profile p    profile  modelavl getelementat i p equals selected     selected getdependencies   contains p     
+                ret add p ret list profile  getactivedependents profile selected    
+        mutablecomboboxmodel modelusd     mutablecomboboxmodel  usedlist 
+                 getmodel     
+         
+        list profile  ret arraylist profile i   0  i   modelusd getsize      i    
+            profile p    profile  modelusd getelementat i p equals selected     p getdependencies   contains selected     
+                ret add p ret gettabkey tab profiles jpanel gettabpanel handleresettodefault     
+        refreshlists handlesettingstabcancel handlesettingstabrefresh     
+        projectsettings ps   projectmanager getmanager   getcurrentproject   
+                 getprojectsettings ps getdefaultstereotypeviewvalue fignodemodelelement stereotype_view_textual  
+            stereofield setselectedindex 0 fignodemodelelement stereotype_view_big_icon  
+            stereofield setselectedindex 1 fignodemodelelement stereotype_view_small_icon  
+            stereofield setselectedindex 2 refreshlists handlesettingstabsave     
+        list profile  toremove arraylist profile     
+        profileconfiguration pc   projectmanager getmanager   
+                 getcurrentproject   getprofileconfiguration    
+         
+        list profile  useditens arraylist profile     
+ 
+        mutablecomboboxmodel modelusd     mutablecomboboxmodel  usedlist 
+                 getmodel i   0  i   modelusd getsize      i    
+            useditens add  profile  modelusd getelementat i profile profile   pc getprofiles useditens contains profile     
+                toremove add profile profile profile   toremove    
+            pc removeprofile profile profile profile   useditens pc getprofiles   contains profile     
+                pc addprofile profile   
+              
+          
+      
+      
+ 
+ org argouml ui ProjectSettingsTabProfile

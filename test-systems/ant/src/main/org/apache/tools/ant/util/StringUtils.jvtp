@@ -1,0 +1,86 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license set helper methods related string manipulation  
+   
+    
+    
+       constructor stop anyone instantiating class line separator os    
+    
+       splits up string list lines equivalent tt split data  '\n'   tt   
+        param data string split up lines  
+        return list lines available string  
+        
+    
+       splits up string elements separated specific 
+       character return elements  
+        param data string split up  
+        param ch separator character  
+        return list elements  
+        
+    
+       replace occurrences string  
+        param data string replace occurrences param occurrence replace  
+        param occurrence used replacement  
+        return new string replaced occurrences  
+        
+    
+       convenient method retrieve full stacktrace given exception  
+        param t exception stacktrace return stacktrace given exception  
+        
+    
+       checks string buffer ends up given string may sound 
+       trivial existing 
+       jdk api various implementation jdks make those 
+       methods extremely resource intensive perform poorly due massive memory allocation copying  see 
+        param buffer buffer perform check param suffix suffix 
+        return   code true  code character sequence represented argument suffix character sequence represented stringbuffer object   code false  code  otherwise  note result code true  code argument empty string loop done purpose avoid memory allocation performance 
+   problems various jdks 
+   stringbuffer lastindexof introduced jdk 1 4 implementation ok though allocation copying 
+   stringbuffer tostring   endswith massive memory 
+   allocation copying jdk 1 5 
+   see http   issues apache org bugzilla show_bug cgi?id 37169 
+    
+       xml not c interpretation strings e  \n\r\t etc method processes \n  \r  \t  \f subs \s -    \n\r\t\f trailing ignored 
+       
+        param input raw string possible embedded '\'s 
+        return converted string ant 1 7 
+        
+    
+       takes human readable size representation eg 10k long value  doesn't support 1 1k rational values  
+        param humansize 
+        return long value representation 
+        throws exception ant 1 7 
+        
+  last character isn't digitorg apache tools ant util StringUtils org apache tools ant util stringutils stringutils line_sep   system getproperty  line separator vector linesplit data split data  '\n vector split data ch    
+        vector elems vector pos   -1 i   0 pos   data indexof ch  i      -1 elem   data substring i  pos   
+            elems addelement elem   
+            i   pos   1  
+          
+        elems addelement data substring i elems replace data from to    
+        stringbuffer buf stringbuffer data length pos   -1 i   0 pos   data indexof from  i      -1    
+            buf append data substring i  pos   append to   
+            i   pos   from length    
+          
+        buf append data substring i buf tostring getstacktrace throwable t    
+        stringwriter sw stringwriter    
+        printwriter pw printwriter sw t printstacktrace pw   
+        pw flush    
+        pw close sw tostring endswith stringbuffer buffer suffix suffix length     buffer length endindex   suffix length   - 1 bufferindex   buffer length   - 1 endindex    0 buffer charat bufferindex     suffix charat endindex bufferindex--  
+            endindex resolvebackslash input    
+        stringbuffer b stringbuffer backslashseen i   0  i   input length      i c   input charat i backslashseen c    '\\'    
+                    backslashseen b append c c b append n'  
+                        b append n r'  
+                        b append r t'  
+                        b append t f'  
+                        b append f s'  
+                        b append   \t\n\r\f b append c   
+                  
+                backslashseen b tostring parsehumansizes humansize exception kilobyte   1024 megabyte   kilobyte   1024 gigabyte   megabyte   1024 terabyte   gigabyte   1024 petabyte   terabyte   1024 character isdigit humansize charat humansize length  -1 c   humansize charat humansize length  -1 value valueof humansize substring 0  humansize length  -1   longvalue c k value   kilobyte m value   megabyte g value   gigabyte t value   terabyte p value   petabyte value parselong humansize   
+    	  
+      
+ org apache tools ant util StringUtils

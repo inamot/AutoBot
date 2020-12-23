@@ -1,0 +1,459 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications  
+    
+   implements list todoitem's  p spawns sweeper  thread periodically goes through list eliminates todoitem's longer valid  p  
+   
+   one difficulty designers face keeping track myriad details task easy skip step design process  
+   leave part design unspecified make mistake requires revision  argouml provides designer list user interface presents action items organized form items suggestions critics  
+   reminders finish steps process model personal notes entered designer choice control top list pane allow designer organize 
+   items different ways priority decision supported offending design 
+   element  etc  p  
+   
+   items shown under applicable headings  p class dependent designer  p  
+   
+    see designer#nondisruptivelywarn 
+    author jason robbins 
+    
+    
+       logger  
+        
+    
+       number seconds thread sleep between passes 
+        
+   todo  offenders need strongly typed  - tfm 20070630 
+                                                                 
+   instance variables 
+    
+       pending todoitems designer consider computed needed  
+       todo  offenders need strongly typed  - tfm 20070630 computed needed  
+        
+    
+       todoitems designer explicitly indicated s considers resolved  p  
+       
+       todo  generalize design rationale logging facility thread keeps checking items list still valid designer  used determining todoitem still valid  
+        
+    
+       state variable whether validity checking thread paused 
+        waiting   
+        
+    
+       creates new todolist only todolist owned designer  
+        
+    
+       start thread delete old items todolist  
+       
+        param d designer 
+        
+    
+       periodically check see items list still valid validity checking thread wait disabled  
+    
+       check each todoitem list see still valid not remove item called automatically validitycheckingthread called user 
+       pressing button via forcevaliditycheck    
+        
+    
+       check each todoitem list see still valid not remove item called automatically validitycheckingthread called user 
+       pressing button via forcevaliditycheck     p  
+       
+        em warning  fragile code   em method method calls synchronized designer  otherwise deadlock  
+       
+        param removes items removed 
+        
+              history thehistory additemresolution item longer valid    
+    todoitem item  resolve longer valid    
+  notifyobservers  removeelement   item   
+    
+       pause  
+        
+    
+       resume  
+        
+    
+        return true paused 
+        
+    
+       sets pause state  
+       
+        param paused set false  calls resume start working 
+        
+                                                                 
+   notifications updates 
+    
+        param action action 
+        param arg argument 
+        
+   
+        see java util observable#notifyobservers java lang object  
+        
+   
+        see observable#notifyobservers   
+        
+    
+        return todo items 
+        deprecated 0 25 4 tfmorris 
+        
+    
+        return list todo items  
+        
+    
+        return resolved items 
+        
+    
+        return set offenders 
+        
+       todo return value needs strongly  
+       typed  - tfm - 20070630 
+        
+   extra care taken alloffenders reset method running  
+    
+        return set posters 
+        
+   extra care taken allposters reset method running  
+    
+        return decisions 
+        deprecated tfmorris 0 25 4   use   link #getdecisionlist     
+        
+    
+        return list decisions  empty default   
+        
+    
+        return goals 
+        deprecated 0 25 4 tfmorris  use   link #getgoallist     
+        
+    
+        return list goals  empty default   
+        
+   
+       todo  needs documenting synchronized? 
+        
+   remove any identical items already list    
+  cat debug  checking inhibitors     rc item getposter   instanceof designer  
+              history thehistory additem item   note history thehistory additemcritique item   
+    
+        param item todo item added 
+        
+    
+        param list todo items removed 
+        
+    
+        param item todo item removed 
+        return  code true  code argument component list   code false  code  otherwise 
+        
+    
+        param item todo item removed 
+        return  code true  code argument component list   code false  code  otherwise 
+        
+    
+        param item todo item resolved 
+        return  code true  code argument component list   code false  code  otherwise 
+        
+    
+        param item todo item 
+        param reason reason todo  use return  code true  code argument component list   code false  code  otherwise 
+        throws unresolvableexception unable resolve 
+        
+              history thehistory additemresolution item  reason   
+    
+       add given resolved critic list resolved critics  
+       
+        param rc resolved critic 
+        return  code true  code successfully added  
+                code false  code  otherwise 
+        
+    
+       remove todo items  
+        
+    
+        param offender 
+        return todo tems offender 
+        deprecated 0 25 4 tfmorris  use 
+                     link #elementlistforoffender object    
+        
+    
+        param offender 
+        return todo tems offender 
+        
+    
+        return number todo items 
+        
+    
+        return todo items 
+        deprecated 0 25 4 tfmorris   use   link #iterator     
+        
+    
+        return iterator todoitems 
+        
+    
+        param index index todo items list 
+        return item index 
+        deprecated 0 25 4 tfmorris   use   link int    
+        
+    
+       re-compute offenders  
+        
+    
+       reset posters  
+        
+                                                                 
+   event related stuff 
+    
+        param l listener added 
+        
+    
+        param l listener removed 
+        
+    
+       notify listeners registered interest notification event type event instance lazily created using parameters passed fire method  
+        see eventlistenerlist 
+        
+   guaranteed return non-null array 
+   process listeners last first  notifying 
+   those interested event 
+   lazily create event  
+    
+        param item todo item 
+        
+   process listeners last first  notifying 
+   those interested event 
+   lazily create event  
+    
+        param item todo item 
+        
+    
+        param theitems todo items 
+        
+   guaranteed return non-null array 
+   process listeners last first  notifying 
+   those interested event 
+   lazily create event  
+    
+        param item todo item 
+        
+    
+        param theitems todo items 
+        
+   guaranteed return non-null array 
+   process listeners last first  notifying 
+   those interested event 
+   lazily create event org argouml cognitive ToDoList org argouml cognitive todolist observable runnable  
+        iterable todoitem    
+      
+  
+     
+      
+  
+ 
+      
+  
+  
+ 
+      
+      
+ 
+      
+  
+ 
+      
+  
+ 
+      
+  
+ 
+      
+  
+ 
+      
+  
+ 
+      
+  
+ 
+  
+ 
+  
+  
+ 
+      
+  
+ 
+ 
+      
+    todolist     
+ 
+	items arraylist todoitem  100   
+	resolveditems linkedhashset resolvedcritic  100   
+	listenerlist eventlistenerlist    
+	longesttodolist   0  
+	numnotvalid   0  
+	recentoffenderitems arraylist todoitem spawnvaliditychecker designer d    
+        designer   d  
+        validitychecker thread argo-todovaliditycheckingthread    
+        validitychecker setdaemon validitychecker setpriority thread min_priority   
+        validitychecker start run     
+        list todoitem  removes arraylist todoitem ispaused wait interruptedexception ignore    
+                        log error  interruptedexception      ignore   
+                      
+                  
+              
+ 
+            forcevaliditycheck removes   
+            removes clear thread sleep sleep_seconds   1000 interruptedexception ignore    
+                log error  interruptedexception      ignore forcevaliditycheck     
+        list todoitem  removes arraylist todoitem     
+        forcevaliditycheck removes forcevaliditycheck list todoitem  removes todoitem item   items valid valid   item stillvalid designer exception ex    
+                valid stringbuffer buf stringbuffer  exception raised in to list cleaning    
+                buf append  \n    
+                buf append item tostring     
+                log error buf tostring    ex valid    
+                numnotvalid    
+                removes add item todoitem item   removes    
+            removee item   
+  
+              
+              
+          
+        recomputealloffenders    
+        recomputeallposters    
+        firetodoitemsremoved removes pause     
+        ispaused resume     
+        notifyall ispaused ispaused setpaused paused    
+        ispaused   paused ispaused    
+            resume notifyobservers action  object arg    
+        setchanged    
+        list object  l arraylist object  2   
+        l add action   
+        l add arg notifyobservers l notifyobservers object o    
+        setchanged notifyobservers o notifyobservers     
+        setchanged notifyobservers    
+      
+ 
+      
+     deprecated vector todoitem  gettodoitems vector todoitem  items list todoitem  gettodoitemlist items set resolvedcritic  getresolveditems resolveditems listset getoffenders     
+          
+          
+        listset all   alloffenders all size   items size    
+            all listset size   2 todoitem item   items    
+                all addall item getoffenders     
+              
+            alloffenders   all all addoffenders listset newoffs alloffenders alloffenders addall newoffs listset poster  getposters     
+          
+          
+        listset poster  all   allposters all all listset poster todoitem item   items    
+                all add item getposter     
+              
+            allposters   all all addposters poster newp allposters allposters add newp   
+	  
+      
+ 
+      
+     deprecated vector getdecisions vector list decision  getdecisionlist arraylist decision     
+      
+     
+      
+     deprecated vector getgoals vector list goal  getgoallist arraylist goal adde todoitem item items contains item item getposter critic    
+            resolvedcritic rc rc resolvedcritic  critic  item getposter    
+				       item getoffenders iterator resolvedcritic  elems   resolveditems iterator elems hasnext elems next   equals rc     
+                        log debug  todoitem not added because it was resolved unresolvableexception ure    
+              
+          
+ 
+        items add item   
+        longesttodolist   math max longesttodolist  items size     
+        addoffenders item getoffenders     
+        addposters item getposter     
+  
+  
+  
+  
+        notifyobservers  addelement   item   
+        firetodoitemadded item addelement todoitem item    
+        adde item removeall todolist list todoitem item   list    
+            removee item   
+          
+        recomputealloffenders    
+        recomputeallposters    
+        firetodoitemsremoved list gettodoitemlist removee todoitem item res   items remove item res removeelement todoitem item res   removee item   
+        recomputealloffenders    
+        recomputeallposters    
+        firetodoitemremoved item   
+        notifyobservers  removeelement   item res resolve todoitem item res   removee item   
+        firetodoitemremoved item res explicitlyresolve todoitem item reason unresolvableexception item getposter designer res   resolve item res item getposter critic unresolvableexception translator localize  
+                     misc todo-unresolvable object   item getposter   getclass       
+	  
+ 
+        resolvedcritic rc resolvedcritic  critic  item getposter    
+			       item getoffenders res   resolve item res    
+            res   addresolvedcritic rc res addresolvedcritic resolvedcritic rc resolveditems add rc removeallelements     
+        log debug  removing all todo items    
+        list todoitem  olditems arraylist todoitem  items todoitem tdi   olditems    
+            removee tdi   
+	  
+ 
+        recomputealloffenders    
+        recomputeallposters    
+        notifyobservers  removeallelements    
+        firetodoitemsremoved olditems   
+      
+ 
+      
+     deprecated vector todoitem  elementsforoffender object off vector todoitem  elementlistforoffender off list todoitem  elementlistforoffender object off off    recentoffender recentoffenderitems  
+          
+        recentoffender   off  
+        recentoffenderitems clear items todoitem item   items item getoffenders   contains off     
+                    recentoffenderitems add item recentoffenderitems size items size    
+      
+ 
+      
+     deprecated enumeration todoitem  elements collections enumeration items iterator todoitem  iterator items iterator    
+      
+     
+      
+     deprecated todoitem elementat index get index todoitem get index items get index recomputealloffenders     
+        alloffenders recomputeallposters     
+        allposters addtodolistlistener todolistlistener l    
+        listenerlist add todolistlistener l removetodolistlistener todolistlistener l    
+        listenerlist remove todolistlistener l firetodolistchanged     
+        recentoffender object   listeners   listenerlist getlistenerlist    
+        todolistevent e i   listeners length - 2  i    0  i -  2 listeners i     todolistlistener e e todolistevent    
+		  
+                  todolistlistener  listeners i   1   todolistchanged e firetodoitemchanged todoitem item    
+        object   listeners   listenerlist getlistenerlist    
+        todolistevent e i   listeners length - 2  i    0  i -  2 listeners i     todolistlistener e list todoitem  its arraylist todoitem     
+                    its add item   
+                    e todolistevent its   
+                  
+                  todolistlistener  listeners i   1   todoitemschanged e firetodoitemadded todoitem item    
+        list todoitem  l arraylist todoitem     
+        l add item   
+        firetodoitemsadded l firetodoitemsadded list todoitem  theitems    
+        recentoffender object   listeners   listenerlist getlistenerlist    
+        todolistevent e i   listeners length - 2  i    0  i -  2 listeners i     todolistlistener e e todolistevent theitems   
+		  
+                  todolistlistener  listeners i   1   todoitemsadded e firetodoitemremoved todoitem item    
+        list todoitem  l arraylist todoitem     
+        l add item   
+        firetodoitemsremoved l firetodoitemsremoved list todoitem  theitems    
+        recentoffender object   listeners   listenerlist getlistenerlist    
+        todolistevent e i   listeners length - 2  i    0  i -  2 listeners i     todolistlistener e e todolistevent theitems   
+		  
+                  todolistlistener  listeners i   1   todoitemsremoved e   
+              
+          
+      
+ 
+ 
+     override tostring     
+        stringbuffer res stringbuffer 100   
+        res append getclass   getname    append    \n todoitem item res append         append item tostring    append  \n    
+          
+        res append res tostring    
+      
+ 
+ org argouml cognitive ToDoList

@@ -1,0 +1,141 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   adds listener current build process records output file  
+    p several recorders exist same time   each recorder associated file filename used unique identifier recorders first call recorder task unused filename create recorder  using parameters provided add listeners build subsequent calls recorder task using filename modify recorders state  recording not properties logging level    p  
+    p some technical issues file's print stream flushed quot finished quot  
+   events  buildfinished  targetfinished taskfinished closed buildfinished event   p  
+    see recorderentry 
+    version 0 5 ant 1 4 
+    ant task name  record  category  utility  
+    
+                                                                       
+   attributes name file record whether not append  need boolean record unset state  null   
+        
+    
+       whether start stop recording  need boolean record unset 
+       state  null level log level 1 means not initialized strip task banners true list recorder entries     
+                                                                       
+   constructors   initializers 
+    
+       overridden add task build listener ant 1 7 
+        
+                                                                       
+   accessor methods 
+    
+       sets name file log name recorder 
+       entry  
+       
+        param fname file name logfile  
+        
+    
+       sets action associated recorder entry  
+       
+        param action action entry take  start stop  
+        
+    
+       whether not logger append previous file  
+        param append true  append previous file  
+        
+    
+       set emacs mode  
+        param emacsmode true use emacs mode 
+        
+    
+       sets level recorder entry log param level level set  
+        see verbositylevelchoices 
+        
+                                                                       
+   core   main body main execution  
+        throws buildexception error recorder entry 
+   set values recorder 
+                                                                       
+   inner classes list possible values code setaction    code  method  
+       possible values include  start stop  
+        
+    
+            see enumeratedattribute#getvalues   
+            
+      inheritdoc list possible values code setloglevel    code  method  
+       possible values include  error  warn  info  verbose  debug  
+        
+    
+       gets recorder s associated passed name recorder doesn't exist new one created  
+        param name name recoder 
+        param proj current project 
+        return recorder 
+        throws buildexception error 
+        
+   create recorder entry 
+    
+       empty implementation required subbuildlistener interface  
+        param event ignored ant 1 7 
+        
+    
+       empty implementation required subbuildlistener interface  
+        param event ignored ant 1 7 
+        
+    
+       empty implementation required subbuildlistener interface  
+        param event ignored ant 1 7 
+        
+    
+       empty implementation required subbuildlistener interface  
+        param event ignored ant 1 7 
+        
+    
+       empty implementation required subbuildlistener interface  
+        param event ignored ant 1 7 
+        
+    
+       empty implementation required subbuildlistener interface  
+        param event ignored ant 1 7 
+        
+    
+       empty implementation required subbuildlistener interface  
+        param event ignored ant 1 7 
+        
+    
+       cleans recorder registry  
+        param event ignored ant 1 7 
+        
+    
+       cleans recorder registry subbuild task created param event ignored ant 1 7 
+        
+    
+       cleans recorder registry removes itself buildlistener list ant 1 7 
+       org apache tools ant taskdefs Recorder org apache tools ant taskdefs recorder task subbuildlistener init     
+        getproject   addbuildlistener setname fname    
+        filename   fname setaction actionchoices action action getvalue   equalsignorecase  start      
+            start start setappend append append    append setemacsmode emacsmode emacsmode   emacsmode setloglevel verbositylevelchoices level    
+        loglevel   level getlevel execute buildexception filename buildexception  no filename specified    
+          
+ 
+        getproject   log  setting a recorder name     filename  
+            project msg_debug   
+ 
+          
+        recorderentry recorder   getrecorder filename  getproject     
+          
+        recorder setmessageoutputlevel loglevel   
+        recorder setemacsmode emacsmode start start booleanvalue      
+                recorder reopenfile    
+                recorder setrecordstate start recorder setrecordstate start   
+                recorder closefile actionchoices enumeratedattribute getvalues values verbositylevelchoices loglevel recorderentry getrecorder name  project proj buildexception   
+        object o   recorderentries get name   
+        recorderentry entry o entry recorderentry name append entry openfile entry openfile append booleanvalue     
+              
+            entry setproject proj   
+            recorderentries put name  entry entry    recorderentry  o entry buildstarted buildevent event subbuildstarted buildevent event targetstarted buildevent event targetfinished buildevent event taskstarted buildevent event taskfinished buildevent event messagelogged buildevent event buildfinished buildevent event    
+        cleanup subbuildfinished buildevent event event getproject      getproject      
+            cleanup cleanup     
+        recorderentries clear    
+        getproject   removebuildlistener org apache tools ant taskdefs Recorder

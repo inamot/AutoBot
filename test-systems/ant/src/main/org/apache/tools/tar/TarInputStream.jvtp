@@ -1,0 +1,129 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license package based work done timothy gerard endres 
+    time ice com ant project very grateful great code tarinputstream reads unix tar archive inputstream  
+   methods provided position each successive entry archive read each entry normal input stream 
+   using read    
+   
+    
+   checkstyle visibilitymodifier bc contents array not used class only here avoid repreated object creation during calls arg read method  
+        
+   checkstyle visibilitymodifier constructor tarinputstream  
+        param input stream use 
+        
+    
+       constructor tarinputstream  
+        param input stream use 
+        param blocksize block size use 
+        
+    
+       constructor tarinputstream  
+        param input stream use 
+        param blocksize block size use 
+        param recordsize record size use 
+        
+    
+       sets debugging flag  
+       
+        param debug true turn debugging  
+        
+    
+       closes stream  calls tarbuffer's close   method  
+        throws ioexception error record size being used stream's tarbuffer  
+       
+        return tarbuffer record size available data read current 
+       entry archive not indicate much data left entire archive  only current entry value determined entry's size header field amount data already read current entry  
+       integer max_value returen case integer max_value 
+       bytes left current entry archive  
+       
+        return number available bytes current entry  
+        throws ioexception signature 
+        
+    
+       skip bytes input buffer skips bytes current entry's data  not entire archive stop end current entry's data number skip extends beyond point  
+       
+        param numtoskip number bytes skip  
+        return number actually skipped 
+        throws ioexception error 
+        
+   review horribly inefficient ensures properly skip over bytes via tarbuffer not support marking return false  
+       
+        return false not support marking nothing  
+       
+        param marklimit limit mark not support marking nothing next entry tar archive skip 
+       over any remaining data current entry one place input stream header next entry read header instantiate new 
+       tarentry header bytes return entry entries archive  null returned indicate end archive reached  
+       
+        return next tarentry archive null  
+        throws ioexception error 
+        
+   read name 
+   bugzilla  40334 
+   malformed tar file - long entry name not followed entry 
+   remove trailing null terminator 
+    
+       reads byte current tar archive entry method simply calls read  byte    int  int    
+       
+        return byte read 1 eof  
+        throws ioexception error 
+        
+    
+       reads bytes current tar archive entry method aware boundaries current 
+       entry archive deal stream's start eof  
+       
+        param buf buffer place bytes read  
+        param offset offset place bytes read  
+        param numtoread number bytes read  
+        return number bytes read 1 eof  
+        throws ioexception error 
+        
+   unexpected eof  
+    
+       copies contents current tar archive entry directly output stream  
+       
+        param out outputstream write entry's data  
+        throws ioexception error 
+       org apache tools tar TarInputStream org apache tools tar tarinputstream filterinputstream debug hashiteof entrysize entryoffset readbuf tarbuffer buffer tarentry currentry onebuf tarinputstream inputstream is is  tarbuffer default_blksize  tarbuffer default_rcdsize tarinputstream inputstream is blocksize is  blocksize  tarbuffer default_rcdsize tarinputstream inputstream is blocksize recordsize is buffer tarbuffer is  blocksize  recordsize readbuf onebuf 1 debug hashiteof setdebug debug debug   debug buffer setdebug debug close ioexception buffer close getrecordsize buffer getrecordsize available ioexception entrysize entryoffset   integer max_value integer max_value entrysize entryoffset skip numtoskip ioexception skipbuf 8   1024 skip   numtoskip skip   0 realskip skip   skipbuf length ? skipbuf length   skip numread read skipbuf  0  realskip numread    -1 skip -  numread numtoskip - skip marksupported mark marklimit reset tarentry getnextentry ioexception hashiteof currentry numtoskip entrysize entryoffset debug    
+                system err println  tarinputstream  skip currentry currentry getname      ' sz entrysize     off entryoffset      skipping   
+                          numtoskip     bytes numtoskip   0 skip numtoskip readbuf headerbuf buffer readrecord headerbuf debug    
+                system err println  read record hashiteof buffer iseofrecord headerbuf debug    
+                system err println  read eof record hashiteof hashiteof currentry currentry tarentry headerbuf debug    
+                system err println  tarinputstream  set currentry currentry getname   
+                           ' size currentry getsize entryoffset   0 entrysize currentry getsize currentry currentry isgnulongnameentry      
+              
+            stringbuffer longname stringbuffer buf 256 length   0 length   read buf      0    
+                longname append buf  0  length    
+              
+            getnextentry currentry null longname length     0 
+                   longname charat longname length   - 1     0    
+                longname deletecharat longname length   - 1 currentry setname longname tostring currentry read ioexception num read onebuf  0  1 num    -1 ? -1 onebuf 0     0xff read buf offset numtoread ioexception totalread   0 entryoffset entrysize 1 numtoread entryoffset entrysize    
+            numtoread entrysize entryoffset readbuf sz    numtoread readbuf length readbuf length 
+                      numtoread  
+ 
+            system arraycopy readbuf  0  buf  offset  sz sz readbuf length readbuf newlen readbuf length - sz newbuf newlen   
+ 
+                system arraycopy readbuf  sz  newbuf  0  newlen readbuf   newbuf  
+              
+ 
+            totalread    sz  
+            numtoread -  sz  
+            offset    sz numtoread   0 rec buffer readrecord rec ioexception  unexpected eof with     numtoread 
+                            bytes unread sz   numtoread reclen   rec length reclen   sz    
+                system arraycopy rec  0  buf  offset  sz readbuf reclen - sz   
+ 
+                system arraycopy rec  sz readbuf  0  reclen - sz sz   reclen  
+ 
+                system arraycopy rec  0  buf  offset  reclen   
+              
+ 
+            totalread    sz  
+            numtoread -  sz  
+            offset    sz entryoffset    totalread totalread copyentrycontents outputstream out ioexception buf 32   1024 numread read buf  0  buf length numread    -1 out write buf  0  numread   
+          
+      
+ org apache tools tar TarInputStream

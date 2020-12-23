@@ -1,0 +1,383 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications  
+    
+    tab ocl constraint editing  
+    
+     author v1 0  falk finger 
+     author v2 0  steffen zschaler actual editor pane current target element constructor  
+        
+       removed workaround problems autosplit 
+                     ocleditor optionmask_autosplit     
+    
+       set toolbar rollover style  
+       
+        param enable true button borders not become visible 
+       until mouse rolls over button  
+        
+    
+       set toolbar floating style  
+       
+        param enable true toolbar floated docked reference toolbar object contained ocleditor component currently nasty hack really 
+       require interface method ocleditor  bob tarling 8 feb 
+       2003   
+       
+        return toolbar 
+        
+  tabmodeltarget interface methods tab activated current target element? p  
+       
+       argo only supports constraints classes features 
+        eg  attributes operations  currently  
+       
+         inheritdoc  
+        
+   
+        see org argouml ui tabtarget#gettarget   
+        
+    
+       refresh tab target changed  
+        
+    
+       set target element displayed tab  only model elements accepted constraint tab  
+       
+         inheritdoc  
+        
+   set editor's model 
+    
+       adapter provide information manipulation interface target element's set constraints constraint editor target element being edited list constraints m_nmeitarget necessary induce consistent order constraints  
+            
+    
+           list listeners  
+            
+    
+           construct new constraintmodel  
+            
+    
+           return number constraints model  
+            
+    
+           return constraint specified index  
+           
+            param nidx index constraint returned  
+                       0    nidx     link #getconstraintcount  
+            
+    
+           remove specified constraint model  
+           
+            param nidx index constraint removed  
+                       0    nidx     link #getconstraintcount  
+            
+    
+           add fresh constraint model  p 2 restrictions parsed  given current ocl grammar  
+            ol  
+              li class names must capital first letter  
+              li feature name must lower case first letter  
+             ol  
+            
+   check ocl parsing constraints fix issue #2056 fix issue #2056 
+   todo  i18n not create constraint  
+   null elements represent new constraints added target first time any actual editing 
+   takes place done ensure syntactical 
+   correctness constraints stored target  
+   todo  - please add some javadoc - ugly classname constraint being represented constraint's index list constraints  necessary only new constraints m_mcconstraint still  tt null  tt name constraint constraint's body  
+                
+    
+               set constraint's body text exceptions detailed message must human readable  
+               
+                param sdata new body constraint 
+               
+                exception illegalstateexception constraint not state accept body changes  
+                exception oclparserexception specified constraint not 
+                   syntactically correct  
+                exception ocltypeexception specified constraint not adhere ocl type rules  
+                
+   parse check specified constraint  
+   ignored  highly unlikely anyway?  log split constraint body user constraint _must_ owned namespace 
+   store constraint body 
+   new constraint  first time setdata called constraint _must_ owned namespace runtime exception occurs some 
+   internal test fails 
+    
+               set constraint's name  
+                
+   check name consistency spec 
+   set name set name constraint body -- added 03 14 2001 
+   replace name 
+   ok didn't work out ignore 
+   any problems don't set name constraint body better log create representation adapter given constraint  
+            
+    
+           add listener informed changes model  
+           
+            param ccl new listener 
+            
+    
+           remove listener informed changes model  
+           
+            param ccl listener removed 
+            
+   guaranteed return non-null array 
+   process listeners last first  notifying 
+   those interested event 
+   lazily create event  
+   guaranteed return non-null array 
+   process listeners last first  notifying 
+   those interested event 
+   lazily create event  
+   guaranteed return non-null array 
+   process listeners last first  notifying 
+   those interested event 
+   lazily create event  
+   guaranteed return non-null array 
+   process listeners last first  notifying 
+   those interested event 
+   lazily create event  
+   
+        see org argouml ui targetmanager targetlistener#targetadded  
+               org argouml ui targetmanager targetevent  
+        
+   todo ignored? - tfm - 20070110 
+   
+        see org argouml ui targetmanager targetlistener#targetremoved  
+               org argouml ui targetmanager targetevent  
+        
+   
+        see org argouml ui targetmanager targetlistener#targetset  
+               org argouml ui targetmanager targetevent  
+        
+   
+        see java awt event componentlistener#componentshown java awt event componentevent  
+        
+   update model saved target 
+   
+        see java awt event componentlistener#componenthidden java awt event componentevent model event listeners need anything 
+   ignored 
+   ignoredorg argouml uml ui TabConstraints org argouml uml ui tabconstraints abstractargojpanel tabmodeltarget  componentlistener tabconstraints tab constraints    
+ 
+        setlayout borderlayout 0  0    
+ 
+        mocleeditor ocleditor    
+        mocleeditor setoptionmask ocleditor optionmask_typecheck 
+                     
+        mocleeditor setdoautosplit settoolbarrollover settoolbarfloatable getocltoolbar   setname  misc toolbar constraints    
+ 
+        add mocleeditor   
+         
+        addcomponentlistener settoolbarrollover enable toolbarmanager alwaysusestandardrollover      
+            getocltoolbar   putclientproperty  
+                     jtoolbar isrollover settoolbarfloatable enable    
+        getocltoolbar   setfloatable jtoolbar getocltoolbar jtoolbar  mocleeditor getcomponent 0 shouldbeenabled object target    
+        target    target fig  ?   fig  target  getowner     target model getfacade   isaclass target  
+                   model getfacade   isafeature target object gettarget mmmeitarget refresh     
+        settarget mmmeitarget settarget object otarget    
+        otarget   
+	     otarget fig  ?   fig  otarget  getowner     otarget model getfacade   isamodelelement otarget      
+            mmmeitarget mmmeitarget   otarget isvisible      
+            settargetinternal mmmeitarget settargetinternal object otarget    
+          
+        mocleeditor setmodel constraintmodel otarget constraintmodel ocleditormodel constraintmodel object mmeitarget themmmeitarget   mmeitarget  
+ 
+            themalconstraints arraylist model getfacade   getconstraints themmmeitarget getconstraintcount themalconstraints size constraintrepresentation getconstraintat nidx representationfor nidx removeconstraintat nidx nidx   0      nidx   themalconstraints size object mc   themalconstraints remove nidx mc model getcorehelper   removeconstraint themmmeitarget  mc   
+              
+ 
+            fireconstraintremoved mc  nidx addconstraint     
+ 
+              
+            object mmecontext   oclutil 
+                     getinnermostenclosingnamespace themmmeitarget contextname   model getfacade   getname mmecontext targetname   model getfacade   getname themmmeitarget contextname contextname equals       
+		      
+                 targetname targetname equals       
+		       
+                 character isuppercase contextname charat 0   
+		    model getfacade   isaclass  themmmeitarget  
+		        character isuppercase targetname charat 0    
+		    model getfacade   isafeature themmmeitarget  
+		        character islowercase targetname charat 0       
+                  
+                joptionpane showmessagedialog the ocl toolkit requires that \n\n names have a capital first letter and\n  
+		       attribute or operation names have   
+		       a lower first letter    
+                     require correct name convention    
+                    joptionpane error_message themalconstraints add fireconstraintadded cr constraintrepresentation cr object mcconstraint nidx themmcconstraint   mcconstraint  
+                themnidx   nidx cr nidx nidx getname themmcconstraint newconstraint model getfacade   getname themmcconstraint getdata themmcconstraint oclutil getcontextstring themmmeitarget model getfacade   getbody  
+                        model getfacade   getbody themmcconstraint setdata sdata  editingutilities euhelper oclparserexception  ocltypeexception   
+                  
+                ocltree tree object mmecontext   oclutil 
+                             getinnermostenclosingnamespace themmmeitarget tree   
+			    euhelper parseandcheckconstraint  
+				sdata argofacade mmecontext ioexception ioe    
+                          
+                          
+                        log error  problem parsing and checking constraints   
+				   ioe euhelper getdoautosplit      
+                        list lconstraints   euhelper splitconstraint tree lconstraints size     0    
+                            removeconstraintat themnidx iterator i   lconstraints iterator    
+				 i hasnext       
+                                ocltree ocltcurrent    ocltree  i next    
+ 
+                                object mc   
+                                    model getcorefactory   
+				         createconstraint    
+                                model getcorehelper   setname mc  ocltcurrent 
+                                     getconstraintname     
+                                model getcorehelper   setbody mc  
+                                        model getdatatypesfactory   
+                                        	 createbooleanexpression  
+                                        	         ocl   
+                                        	        ocltcurrent 
+                                        	         getexpression      
+                                model getcorehelper   addconstraint  
+                                        themmmeitarget  
+                                        mc model getfacade   getnamespace  
+                                        themmmeitarget model getcorehelper   addownedelement  
+                                            model getfacade   getnamespace  
+                                                    themmmeitarget   
+                                            mc model getfacade   getnamespace  
+                                        mmecontext model getcorehelper   addownedelement  
+                                            model getfacade   getnamespace  
+                                                    mmecontext   
+                                            themmcconstraint   
+                                  
+ 
+                                themalconstraints add mc   
+                                fireconstraintadded object mcold themmcconstraint themmcconstraint   
+                            model getcorefactory   createconstraint    
+ 
+                        model getcorehelper   setname  
+                                themmcconstraint  
+                                 newconstraint    
+                        model getcorehelper   setbody  
+                                themmcconstraint  
+                                model getdatatypesfactory   
+                                	 createbooleanexpression  ocl   sdata    
+ 
+                        model getcorehelper   addconstraint themmmeitarget  
+                                themmcconstraint   
+ 
+                          
+                        object targetnamespace   
+                            model getfacade   getnamespace themmmeitarget   
+                        object contextnamespace   
+                            model getfacade   getnamespace mmecontext targetnamespace model getcorehelper   addownedelement  
+                                    targetnamespace  
+                                    themmcconstraint contextnamespace model getcorehelper   addownedelement  
+                                    contextnamespace  
+                                    themmcconstraint   
+                          
+ 
+                        themalconstraints set themnidx  themmcconstraint mcold   model getcorefactory   createconstraint    
+                        model getcorehelper   setname  
+                                mcold  
+                                model getfacade   getname themmcconstraint    
+                        model getcorehelper   setbody  
+                                mcold  
+                                model getdatatypesfactory   
+                                	 createbooleanexpression  ocl model getfacade   
+                                	        	 getbody  
+                                                model getfacade   getbody  
+                                                        themmcconstraint      
+                        model getcorehelper   setbody themmcconstraint  
+                                model getdatatypesfactory   
+                                	 createbooleanexpression  ocl   sdata    
+                      
+ 
+                    fireconstraintdatachanged themnidx  mcold  
+                            themmcconstraint ocltypeexception pe    
+                    log warn  there was some sort of ocl type problem   pe pe oclparserexception pe1    
+                    log warn  could not parse the constraint   pe1 pe1 oclexception oclexc    
+                      
+                      
+                    log warn  there was some unidentified problem oclexc setname sname editingutilities euhelper themmcconstraint euhelper isvalidconstraintname sname illegalargumentexception  
+                                 please specify a valid name     
+                      
+ 
+                      
+                    object mcold   
+                        model getcorefactory   createconstraint    
+                    model getcorehelper   setname mcold  
+                            model getfacade   getname themmcconstraint    
+                    object constraintbody   
+                        model getfacade   getbody themmcconstraint   
+                    model getcorehelper   setbody mcold  
+                            model getdatatypesfactory   
+                                 createbooleanexpression  
+                                         ocl model getfacade   getbody  
+                                                constraintbody     
+ 
+                    model getcorehelper   setname themmcconstraint  sname   
+ 
+                    fireconstraintnamechanged themnidx  mcold  
+                            themmcconstraint ocltree tree object mmecontext   oclutil 
+                                 getinnermostenclosingnamespace themmmeitarget   
+ 
+                        constraintbody   
+                            model getfacade   getbody themmcconstraint   
+                        tree   
+                            euhelper parseandcheckconstraint model getfacade   getbody  
+                                        constraintbody argofacade mmecontext tree tree apply depthfirstadapter caseaconstraintbody  
+                                        aconstraintbody node nameid    0    
+                                        node setname tname sname node setname tname  
+                                                sname    _    nameid    
+                                      
+                                    nameid    
+				  
+                                
+ 
+                            setdata tree getexpression    euhelper throwable t    
+                          
+                          
+                          
+                        log error  some unidentified problem   t illegalstateexception  
+                         please define and submit a constraint body first cr representationfor nidx nidx   0      nidx    themalconstraints size object mc   themalconstraints get nidx mc cr mc  nidx cr nidx addconstraintchangelistener constraintchangelistener ccl    
+            themelllisteners add constraintchangelistener ccl removeconstraintchangelistener  
+                constraintchangelistener ccl    
+            themelllisteners remove constraintchangelistener ccl fireconstraintremoved  
+                object mc nidx    
+              
+            object   listeners   themelllisteners getlistenerlist    
+ 
+            constraintchangeevent cce i   listeners length - 2  i    0  i -  2 listeners i     constraintchangelistener cce cce constraintchangeevent nidx cr mc  nidx constraintchangelistener  listeners i   1   
+                         constraintremoved cce fireconstraintadded     
+              
+            object   listeners   themelllisteners getlistenerlist    
+ 
+            constraintchangeevent cce i   listeners length - 2  i    0  i -  2 listeners i     constraintchangelistener cce nidx   themalconstraints size   - 1  
+                        cce constraintchangeevent nidx representationfor nidx    
+                      
+                      constraintchangelistener  listeners i   1   
+                         constraintadded cce fireconstraintdatachanged nidx  
+                         object mcold  
+                         object mcnew    
+              
+            object   listeners   themelllisteners getlistenerlist    
+ 
+            constraintchangeevent cce i   listeners length - 2  i    0  i -  2 listeners i     constraintchangelistener cce cce constraintchangeevent nidx cr mcold  nidx cr mcnew  nidx    
+                      
+ 
+                      constraintchangelistener  listeners i   1   
+                         constraintdatachanged cce fireconstraintnamechanged nidx  
+                         object mcold  
+                         object mcnew    
+              
+            object   listeners   themelllisteners getlistenerlist    
+ 
+            constraintchangeevent cce i   listeners length - 2  i    0  i -  2 listeners i     constraintchangelistener cce cce constraintchangeevent nidx cr mcold  nidx cr mcnew  nidx    
+                      
+ 
+                      constraintchangelistener  listeners i   1   
+                         constraintnamechanged cce targetadded targetevent e targetremoved targetevent e    
+        settarget e getnewtarget targetset targetevent e    
+        settarget e getnewtarget componentshown componentevent e    
+          
+        settargetinternal mmmeitarget componenthidden componentevent e componentmoved componentevent e componentresized componentevent e    
+          
+      
+ 
+ 
+ org argouml uml ui TabConstraints

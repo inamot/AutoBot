@@ -1,0 +1,168 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications  
+    
+    author bob tarling 
+   
+    
+    
+       utility classes returns set unique available stereotypes given modelelement  
+        
+        param modelelement given modelelement 
+        return set stereotype uml objects 
+        
+   adds stereotypes defined top level namespaces         
+   adds stereotypes defined profiles applied current namespace 
+   adds stereotypes defined profiles applied current project 
+    
+       helper method buildmodellist  
+        p  
+       adds those elements source not same path any 
+       path paths elements path paths  thus elements never contain two objects same path  unless added means  
+        
+    
+       replace previous set stereotypes applied given modelelement new set  given form separated string stereotype 
+       names  
+        
+        param element uml element modify 
+        param stereotype comma separated list stereotype names  empty string code null  code  represents stereotypes  
+        param removecurrent true current stereotypes removed 
+                      before adding new stereotypes  false new 
+                      stereotypes added existing ones function shall replace previous set stereotypes given 
+       modelelement new set  given form separated string stereotype names  
+        
+        param umlobject uml element adapt 
+        param stereotype comma separated list stereotype names  empty string code null  code  represents stereotypes  
+        param full false stereotypes only added  true removal done convert string  e g   aaa bbb ccc separate stereotype-names  e g   aaa    bbb    ccc    
+            
+   collect removed stereotypes now remove add stereotypes 
+    
+       finds stereotype named name either subtree model rooted root the profilejava model  
+       
+        param obj modelelement find suitable stereotype param name name stereotype search return stereotype named name possibly null  
+        
+    
+       recursively search hive model stereotype name given name  
+       
+        param obj model element suitable param root model element search param name name stereotype search return stereotype named name null none found  
+        
+   loop through each element namespace  recursing org argouml uml StereotypeUtility org argouml uml stereotypeutility stereotypeutility action   getapplystereotypeactions object modelelement    
+        set availablestereotypes   getavailablestereotypes modelelement availablestereotypes isempty      
+            action   menuactions action availablestereotypes size     
+ 
+            iterator it   availablestereotypes iterator i   0  it hasnext      i    
+                menuactions i actionaddstereotype modelelement   
+                        it next menuactions action 0 set object  getavailablestereotypes object modelelement    
+        set list  paths hashset list     
+        set object  availablestereotypes treeset object comparator object compare object o1  object o2 o1 equals o2 0 name1   model getfacade   getname o1 name2   model getfacade   getname o2   
+                            name1    name1 name1        
+                            name2    name2 name2 namecompare   name1 compareto name2 namecompare    0 1 namecompare exception e classcastexception e getmessage     
+                          
+                      
+                    
+        collection models   
+            projectmanager getmanager   getcurrentproject   getmodels    
+         
+        collection toplevelmodels   
+            projectmanager getmanager   getcurrentproject   getmodels    
+         
+          
+        collection toplevelstereotypes   gettoplevelstereotypes toplevelmodels   
+         
+        collection validtoplevelstereotypes arraylist    
+             
+        addalluniquemodelelementsfrom availablestereotypes  paths  model 
+                 getextensionmechanismshelper   getallpossiblestereotypes  
+                        models  modelelement object stereotype   toplevelstereotypes model getextensionmechanismshelper   isvalidstereotype  
+                    modelelement  stereotype     
+                validtoplevelstereotypes add stereotype   
+                          
+          
+ 
+        addalluniquemodelelementsfrom availablestereotypes  paths  
+                validtoplevelstereotypes   
+         
+          
+          
+        object namespace   model getfacade   getnamespace modelelement namespace getapplicablestereotypesinnamespace modelelement  paths  
+                        availablestereotypes  namespace   
+                object newnamespace   model getfacade   getnamespace namespace newnamespace namespace   newnamespace  
+              
+          
+         
+          
+          
+        addalluniquemodelelementsfrom availablestereotypes  paths  
+                projectmanager getmanager   getcurrentproject   
+                         getprofileconfiguration   
+                         findallstereotypesformodelelement modelelement availablestereotypes collection object  gettoplevelstereotypes  
+            collection object  toplevelmodels    
+        collection object  ret arraylist object object model   toplevelmodels object stereotype   model getextensionmechanismshelper   
+                     getstereotypes model     
+                object namespace   model getfacade   getnamespace stereotype model getfacade   getnamespace namespace ret add stereotype ret getapplicablestereotypesinnamespace  
+            object modelelement  set list  paths  
+            set object  availablestereotypes  object namespace    
+        collection allprofiles   getallprofilepackages model getfacade   
+                 getmodel modelelement    
+        collection object  allappliedprofiles arraylist object object profilepackage   allprofiles    
+            collection alldependencies   model getcorehelper   getdependencies  
+                    profilepackage  namespace object dependency   alldependencies model getextensionmechanismshelper   hasstereotype  
+                        dependency   appliedprofile      
+                    allappliedprofiles add profilepackage addalluniquemodelelementsfrom availablestereotypes  paths  
+                getappliablestereotypes modelelement  allappliedprofiles collection object  getappliablestereotypes  
+            object modelelement  collection object  allappliedprofiles    
+        collection object  ret arraylist object object profile   allappliedprofiles object stereotype   model getextensionmechanismshelper   
+                     getstereotypes profile model getextensionmechanismshelper   isvalidstereotype  
+                        modelelement  stereotype     
+                    ret add stereotype ret collection object  getallprofilepackages object model    
+        collection col   model getmodelmanagementhelper   
+                 getallmodelelementsofkind model  
+                        model getmetatypes   getpackage     
+        collection object  ret arraylist object object element   col model getfacade   isapackage element  
+                       model getextensionmechanismshelper   hasstereotype  
+                            element   profile      
+                ret add element ret addalluniquemodelelementsfrom set object  elements  
+            set list  paths  collection object  source object obj   source    
+            list path   model getmodelmanagementhelper   getpathlist obj paths contains path     
+                paths add path   
+                elements add obj dealwithstereotypes object element  
+            stringbuilder stereotype removecurrent stereotype dealwithstereotypes element removecurrent dealwithstereotypes element  stereotype tostring    removecurrent dealwithstereotypes object umlobject stereotype full token  
+        mytokenizer mst  
+        collection stereotypes arraylist stereotype mst mytokenizer stereotype mst hasmoretokens      
+                token   mst nexttoken equals token          equals token     
+                    stereotypes add token full    
+              
+            collection object  toberemoved arraylist object object stereo   model getfacade   getstereotypes umlobject stereotypename   model getfacade   getname stereo stereotypename stereotypes contains stereotypename     
+                    toberemoved add getstereotype umlobject  stereotypename object o   toberemoved    
+                model getcorehelper   removestereotype umlobject  o stereotypename   stereotypes model getextensionmechanismshelper   
+                     hasstereotype umlobject  stereotypename     
+                object umlstereo   getstereotype umlobject  stereotypename umlstereo model getcorehelper   addstereotype umlobject  umlstereo object getstereotype object obj name    
+        object root   model getfacade   getmodel obj   
+        object stereo  
+ 
+        stereo   recfindstereotype obj  root  name stereo stereo  
+          
+ 
+        project project   projectmanager getmanager   getcurrentproject    
+        stereo   project getprofileconfiguration   findstereotypeforobject  
+                name  obj stereo stereo root name length     0    
+            stereo   
+                model getextensionmechanismsfactory   buildstereotype  
+                    obj  name  root stereo object recfindstereotype  
+            object obj  object root name    
+        object stereo root null model getfacade   isastereotype root  
+                   name equals model getfacade   getname root model getextensionmechanismshelper   isvalidstereotype obj  
+                    root root model getfacade   isanamespace root collection ownedelements   model getfacade   getownedelements root ownedelements null  
+          
+ 
+          
+ 
+        iterator iter   ownedelements iterator iter hasnext      
+            stereo   recfindstereotype obj  iter next    name stereo stereo org argouml uml StereotypeUtility

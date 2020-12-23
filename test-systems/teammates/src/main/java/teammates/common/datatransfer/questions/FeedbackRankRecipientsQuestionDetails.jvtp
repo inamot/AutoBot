@@ -1,0 +1,249 @@
+ feedback responses  generate mapping option list ranks received option key map returned recipient's participant identifier values map list ranks received recipient  
+        param responses list responses 
+        
+    
+       generates key  value mapping  each key corresponds recipient value normalised self rank  
+        param responses list responses 
+        
+    
+       returns map response normalised rank resolving ties each giver's set responses  
+        see feedbackrankquestiondetails#obtainmappingtonormalisedranksforranking map  list ties resolved 
+        
+   collect each giver's responses 
+   resolve ties each giver's responses 
+    
+       returns list responses excluding responses given self  
+       
+        param responses list responses 
+        return list responses excluding self given responses 
+        
+    
+       returns average excluding self response text  
+       displays dash user only self response  
+       
+        param df decimal format 
+        param recipientranksexcludingself map recipient ranks excluding self response 
+        param recipientname recipient average calculated 
+        return average excluding self text 
+        
+    
+       returns map recipient ranks excluding self  
+       
+        param responses list responses question 
+        return map recipient ranks excluding self responses 
+       teammates common datatransfer questions FeedbackRankRecipientsQuestionDetails teammates common datatransfer questions feedbackrankrecipientsquestiondetails feedbackrankquestiondetails feedbackrankrecipientsquestiondetails feedbackquestiontype rank_recipients   
+      
+ 
+     override getquestiontypedisplayname feedbackquestiontypenames rank_recipient  
+      
+ 
+     override getquestionwithexistingresponsesubmissionformhtml sessionisopen qnidx responseidx courseid totalnumrecipients  
+                        feedbackresponsedetails existingresponsedetails    
+ 
+        feedbackrankrecipientsresponsedetails existingresponse   
+                 feedbackrankrecipientsresponsedetails  existingresponsedetails  
+        stringbuilder optionlisthtml stringbuilder optionfragmenttemplate   formtemplates rank_submission_form_optionfragment optionfragment   
+                templates populatetemplate optionfragmenttemplate  
+                        slots question_index  integer tostring qnidx   
+                        slots response_index  integer tostring responseidx   
+                        slots option_index   0   
+                        slots disabled  sessionisopen ?       disabled   
+                        slots rank_option_visibility   style \ display none\    
+                        slots options  getsubmissionoptionshtmlforrankingrecipients  
+                                           totalnumrecipients  existingresponse answer   
+                        slots feedback_response_text paramsnames feedback_response_text  
+                        slots rank_option_value       
+        optionlisthtml append optionfragment  append eol templates populatetemplate  
+                formtemplates rank_submission_form  
+                slots rank_submission_form_option_fragments  optionlisthtml tostring    
+                slots question_index  integer tostring qnidx   
+                slots response_index  integer tostring responseidx   
+                slots rank_option_visibility   style \ display none\    
+                slots rank_param_to_recipient paramsnames feedback_question_ranktorecipients  
+                slots rank_to_recipients_value slots rank_param_num_option paramsnames feedback_question_ranknumoptions  
+                slots rank_num_option_value  integer tostring 0   
+                slots rank_param_is_duplicates_allowed paramsnames feedback_question_rankisduplicatesallowed  
+                slots rank_are_duplicates_allowed_value tostring isareduplicatesallowed    
+                   
+      
+ 
+     override getquestionwithoutexistingresponsesubmissionformhtml sessionisopen qnidx responseidx courseid totalnumrecipients    
+ 
+        stringbuilder optionlisthtml stringbuilder optionfragmenttemplate   formtemplates rank_submission_form_optionfragment optionfragment   
+                templates populatetemplate optionfragmenttemplate  
+                        slots question_index  integer tostring qnidx   
+                        slots response_index  integer tostring responseidx   
+                        slots option_index   0   
+                        slots disabled  sessionisopen ?       disabled   
+                        slots rank_option_visibility   style \ display none\    
+                        slots options  getsubmissionoptionshtmlforrankingrecipients  
+                                           totalnumrecipients int_uninitialized   
+                        slots feedback_response_text paramsnames feedback_response_text  
+                        slots rank_option_value       
+        optionlisthtml append optionfragment  append eol templates populatetemplate  
+                formtemplates rank_submission_form  
+                slots rank_submission_form_option_fragments  optionlisthtml tostring    
+                slots question_index  integer tostring qnidx   
+                slots response_index  integer tostring responseidx   
+                slots rank_option_visibility   style \ display none\    
+                slots rank_to_recipients_value slots rank_param_to_recipient paramsnames feedback_question_ranktorecipients  
+                slots rank_param_num_option paramsnames feedback_question_ranknumoptions  
+                slots rank_num_option_value  integer tostring 0   
+                slots rank_param_is_duplicates_allowed paramsnames feedback_question_rankisduplicatesallowed  
+                slots rank_are_duplicates_allowed_value tostring isareduplicatesallowed getsubmissionoptionshtmlforrankingrecipients totalnumrecipients rankgiven    
+ 
+        stringbuilder result stringbuilder 100   
+ 
+        elementtag option   pagedata createoption         rankgiven int_uninitialized   
+        result append   option  
+                       option getattributestostring         
+                       option getcontent   
+                          option i   1  i    totalnumrecipients  i      
+            option   pagedata createoption valueof i valueof i   rankgiven    i   
+            result append   option  
+                          option getattributestostring         
+                          option getcontent   
+                             option result tostring    
+      
+ 
+     override getquestionspecificeditformhtml questionnumber templates populatetemplate  
+                formtemplates rank_edit_recipients_form  
+                slots question_number  integer tostring questionnumber   
+                slots option_recipient_display_name   recipient   
+                slots rank_param_is_duplicates_allowed paramsnames feedback_question_rankisduplicatesallowed  
+                slots rank_are_duplicates_allowed_checked  isareduplicatesallowed   ?  checked         
+ 
+      
+ 
+     override getnewquestionspecificeditformhtml div id \ rankrecipientsform getquestionspecificeditformhtml -1  
+                     div    
+      
+ 
+     override getquestionadditionalinfohtml questionnumber additionalinfoid additionalinfo getquestiontypedisplayname       br templates populatetemplate  
+                        formtemplates feedback_question_additional_info  
+                        slots more    more    
+                        slots less    less    
+                        slots question_number  integer tostring questionnumber   
+                        slots additional_info_id  additionalinfoid  
+                        slots question_additional_info  additionalinfo   
+      
+ 
+     override getquestionresultstatisticshtml  
+                        list feedbackresponseattributes  responses  
+                        feedbackquestionattributes question studentemail  
+                        feedbacksessionresultsbundle bundle view student  equals view     responses isempty stringbuilder fragments stringbuilder    
+ 
+        map list integer   recipientranks   generateoptionranksmapping responses   
+ 
+        map list integer   recipientranksexcludingself   getrecipientranksexcludingself responses   
+        map integer  recipientselfranks   generateselfrankforeachrecipient responses fragmenttemplatetouse   formtemplates rank_result_stats_recipientfragment templatetouse   formtemplates rank_result_recipient_stats  
+ 
+        decimalformat df decimalformat entry list integer   entry   recipientranks entryset      
+ 
+            list integer  ranks   entry getvalue average   computeaverage ranks ranksreceived   getlistofranksreceivedasstring ranks participantidentifier   entry getkey name   bundle getnameforemail participantidentifier teamname   bundle getteamnameforemail participantidentifier useraverageexcludingselftext   
+                    getaverageexcludingselftext df  recipientranksexcludingself  entry getkey selfrank   recipientselfranks containskey participantidentifier  
+                    ? integer tostring recipientselfranks get participantidentifier      -   
+ 
+            fragments append templates populatetemplate fragmenttemplatetouse  
+                    slots rank_option_value  sanitizationhelper sanitizeforhtml name   
+                    slots team  sanitizationhelper sanitizeforhtml teamname   
+                    slots rank_recieved  ranksreceived  
+                    slots rank_self  selfrank  
+                    slots rank_average  df format average   
+                    slots rank_excluding_self_average  useraverageexcludingselftext templates populatetemplate templatetouse  
+                slots rank_option_recipient_display_name   recipient   
+                slots fragments  fragments tostring     
+ 
+      
+ 
+     override getquestionresultstatisticscsv  
+                        list feedbackresponseattributes  responses  
+                        feedbackquestionattributes question  
+                        feedbacksessionresultsbundle bundle responses isempty stringbuilder fragments stringbuilder    
+        map list integer   recipientranks   generateoptionranksmapping responses   
+ 
+        map list integer   recipientranksexcludingself   getrecipientranksexcludingself responses   
+        map integer  recipientselfranks   generateselfrankforeachrecipient responses   
+ 
+        decimalformat df decimalformat entry list integer   entry   recipientranks entryset teamname   bundle getteamnameforemail entry getkey recipientname   bundle getnameforemail entry getkey option   sanitizationhelper sanitizeforcsv teamname  
+                                  
+                              sanitizationhelper sanitizeforcsv recipientname useraverageexcludingselftext   
+                    getaverageexcludingselftext df  recipientranksexcludingself  entry getkey     
+            list integer  ranks   entry getvalue average   computeaverage ranks selfrank   recipientselfranks containskey entry getkey    
+                    ? integer tostring recipientselfranks get entry getkey        -   
+ 
+            fragments append option   
+            fragments append ' '  append selfrank   
+            fragments append ' '  append df format average    
+            fragments append ' '  append useraverageexcludingselftext   
+            fragments append ' '   
+            fragments append stringhelper join      ranks    
+            fragments append eol team  recipient  self rank  average rank  average rank excluding self  ranks received eol 
+                  fragments eol map list integer   generateoptionranksmapping list feedbackresponseattributes  responses    
+ 
+        map feedbackresponseattributes  integer  normalisedrankofresponse   getnormalisedrankforeachresponse responses   
+ 
+        map list integer   optionranks hashmap feedbackresponseattributes response   responses    
+            updateoptionranksmapping optionranks  response recipient  normalisedrankofresponse get response optionranks map integer  generateselfrankforeachrecipient list feedbackresponseattributes  responses    
+        map feedbackresponseattributes  integer  normalisedrankofresponse   getnormalisedrankforeachresponse responses   
+        map integer  recipienttoselfrank hashmap feedbackresponseattributes response   responses response recipient equalsignorecase response giver     
+                recipienttoselfrank put response recipient  normalisedrankofresponse get response recipienttoselfrank map feedbackresponseattributes  integer  getnormalisedrankforeachresponse  
+                                                            list feedbackresponseattributes  responses    
+ 
+          
+        map list feedbackresponseattributes   responsesgivenbyperson hashmap feedbackresponseattributes response   responses responsesgivenbyperson containskey response giver     
+                responsesgivenbyperson put response giver arraylist feedbackresponseattributes      
+              
+ 
+            responsesgivenbyperson get response giver  
+                                   add response   
+          
+ 
+          
+        map feedbackresponseattributes  integer  normalisedrankofresponse hashmap map entry list feedbackresponseattributes   entry   responsesgivenbyperson entryset      
+            map feedbackresponseattributes  integer  rankofresponse hashmap feedbackresponseattributes res   responses    
+                feedbackrankrecipientsresponsedetails frd    feedbackrankrecipientsresponsedetails  res getresponsedetails    
+                rankofresponse put res  frd answer   
+              
+ 
+            normalisedrankofresponse putall obtainmappingtonormalisedranksforranking rankofresponse  entry getvalue normalisedrankofresponse list feedbackresponseattributes  getresponsesexcludingself list feedbackresponseattributes  responses    
+        list feedbackresponseattributes  responsesexcludingself arraylist feedbackresponseattributes response   responses response giver equalsignorecase response recipient     
+                responsesexcludingself add response responsesexcludingself getaverageexcludingselftext decimalformat df  
+            map list integer   recipientranksexcludingself recipientname    
+        list integer  ranksexcludingself   recipientranksexcludingself get recipientname ranksexcludingself averageexcludingself   computeaverage ranksexcludingself df format averageexcludingself map list integer   getrecipientranksexcludingself list feedbackresponseattributes  responses    
+        list feedbackresponseattributes  responsesexcludingself   getresponsesexcludingself responses generateoptionranksmapping responsesexcludingself   
+      
+ 
+     override ischangesrequiresresponsedeletion feedbackquestiondetails newdetails override getcsvheader feedback   
+      
+ 
+     override getquestiontypechoiceoption li data-questiontype   \     feedbackquestiontype rank_recipients name      \   a href \ javascript feedbackquestiontypenames rank_recipient      a   li    
+      
+ 
+     override list validatequestiondetails arraylist      
+      
+ 
+     override list validateresponseattributes  
+            list feedbackresponseattributes  responses numrecipients responses isempty arraylist isareduplicatesallowed arraylist      
+          
+        list errors arraylist      
+ 
+        set integer  responserank hashset feedbackresponseattributes response   responses    
+            feedbackrankrecipientsresponsedetails frd   
+                     feedbackrankrecipientsresponsedetails  response getresponsedetails responserank contains frd answer     
+                errors add  duplicate rank     frd answer     in question frd answer   numrecipients    
+                errors add  invalid rank     frd answer     in question    
+              
+            responserank add frd answer errors  
+      
+ 
+     override comparator instructorfeedbackresultsresponserow  getresponserowssortorder comparator instructorfeedbackresultsresponserow      
+ 
+             override compare instructorfeedbackresultsresponserow o1  
+                               instructorfeedbackresultsresponserow o2 o1 getgiverteam   equals o2 getgiverteam o1 getgiverteam   compareto o2 getgiverteam o1 getgiverdisplayableidentifier   equals o2 getgiverdisplayableidentifier o1 getgiverdisplayableidentifier   compareto o2 getgiverdisplayableidentifier o1 getdisplayableresponse   equals o2 getdisplayableresponse o1 getdisplayableresponse   compareto o2 getdisplayableresponse o1 getrecipientteam   equals o2 getrecipientteam o1 getrecipientteam   compareto o2 getrecipientteam o1 getrecipientdisplayableidentifier   compareto o2 getrecipientdisplayableidentifier     
+              
+ 
+           
+      
+ 
+     override validategiverrecipientvisibility feedbackquestionattributes feedbackquestionattributes teammates common datatransfer questions FeedbackRankRecipientsQuestionDetails

@@ -1,0 +1,75 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   builds ejb support classes using weblogic's ejbc tool directory containing set deployment descriptors root directory tree containing serialised deployment desciptors actual 
+       deployment descriptor files selected using include exclude constructs ejbc task provided matchingtask superclass directory generated files placed name manifest file generated ejb jar classpath used weblogic ejbc calls must contain weblogic 
+       classes  b b implementation classes home remote interfaces source directory home remote interfaces used determine generated deployment classes out date  
+        
+   checkstyle visibilitymodifier bc 
+    whether keep generated files    
+   checkstyle visibilitymodifier work work actually done creating separate jvm run helper task approach allows classpath helper task set weblogic tools require class files project's home remote 
+       interfaces available classpath avoids having start ant class path project building  
+       
+        exception buildexception someting goes wrong build files descriptor directory keep generated attribute  
+        return attribute  
+        
+    
+       set directory serialized deployment descriptors read  
+       
+        param dirname name directory containing serialised deployment descriptors  
+        
+    
+       set directory support classes  rmi stubs  etc written  
+       
+        param dirname name directory code generated true  ejbc keep intermediate java files used build class files useful debugging  
+        param newkeepgenerated boolean string  
+        
+    
+       set name generated manifest file each ejb processed entry created file used create jar file dploying beans  
+       
+        param manifestfilename name manifest file generated  
+        
+    
+       set classpath used compilation  
+        param s classpath string use  
+        
+    
+       set directory containing source code home interface  remote interface public key class definitions  
+       
+        param dirname directory containg source tree ejb's interface classes  
+       org apache tools ant taskdefs optional ejb Ejbc org apache tools ant taskdefs optional ejb ejbc matchingtask keepgenerated execute buildexception descriptordirectory descriptordirectory isdirectory buildexception  descriptors directory   
+                  descriptordirectory getpath       is not valid generatedfilesdirectory generatedfilesdirectory isdirectory buildexception  dest directory   
+                  generatedfilesdirectory getpath       is not valid sourcedirectory sourcedirectory isdirectory buildexception  src directory   
+                  sourcedirectory getpath       is not valid systemclasspath   system getproperty  java path execclasspath 
+              fileutils translatepath systemclasspath         classpath 
+                                                 generatedfilesdirectory   
+          
+        directoryscanner ds getdirectoryscanner descriptordirectory files   ds getincludedfiles    
+ 
+        java helpertask java helpertask setfork helpertask setclassname  org apache tools ant taskdefs optional ejb ejbchelper args       
+        args          descriptordirectory  
+        args          generatedfilesdirectory  
+        args          sourcedirectory  
+        args          generatedmanifestfile  
+        args          keepgenerated i   0  i   files length    i    
+            args          files i   
+          
+ 
+        commandline argument arguments   helpertask createarg    
+        arguments setline args   
+        helpertask setclasspath path getproject    execclasspath helpertask executejava      0 buildexception  execution of ejbc helper failed getkeepgenerated keepgenerated setdescriptors dirname    
+        descriptordirectory file dirname setdest dirname    
+        generatedfilesdirectory file dirname setkeepgenerated newkeepgenerated    
+        keepgenerated valueof newkeepgenerated trim    booleanvalue setmanifest manifestfilename    
+        generatedmanifestfile file manifestfilename setclasspath s classpath   fileutils translatepath s setsrc dirname    
+        sourcedirectory file dirname   
+      
+ org apache tools ant taskdefs optional ejb Ejbc

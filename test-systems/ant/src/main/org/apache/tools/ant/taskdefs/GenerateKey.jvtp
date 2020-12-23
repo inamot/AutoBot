@@ -1,0 +1,164 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   generates key keystore ant 1 2 
+   
+    ant task name  genkey  category  java distinguishedname parameter nested element dname nested element  
+        
+    
+           set name attribute  
+            param name code string  code  value name attribute  
+            return name  
+            
+    
+           set value attribute  
+            param value code string  code  value value attribute  
+            return value class corresponding dname nested element  
+        
+    
+           create param nested element  
+            return dnameparam object configured nested parameters  
+            return enumeration nested parameters  
+            
+    
+           generate string rep distinguished name format each parameters  name   value  
+           separated used command line  
+            return string rep name 
+            
+    
+           encode name value encoded result same input string 
+           except each replaced param string value encoded 
+            return encoded value  
+            
+   checkstyle visibilitymodifier bc alias signer name keystore file  
+        
+   checkstyle visibilitymodifier distinguished name list  
+       
+        return distinguished name container  
+        throws buildexception specified once dname 
+                              attribute used distinguished name entity  
+       
+        param dname distinguished name alias add under  
+       
+        param alias alias add under 
+        
+    
+       keystore location  
+       
+        param keystore location 
+        
+    
+       password keystore integrity  
+       must least 6 characters long  
+        param storepass password 
+        
+    
+       keystore type  
+       
+        param storetype type 
+        
+    
+       password private key different   
+       
+        param keypass password algorithm use signing  
+       
+        param sigalg algorithm method use generating name-value pair  
+        param keyalg algorithm 
+        
+    
+       indicates size key generated  
+       
+        param keysize size key 
+        throws buildexception not integer 
+        todo convert plain integer setter  
+        
+    
+       indicates many days certificate valid  
+       
+        param validity days valid 
+        throws buildexception not integer true  verbose output signing  
+        param verbose verbose not 
+        
+    
+       execute task  
+        throws buildexception error 
+       org apache tools ant taskdefs GenerateKey org apache tools ant taskdefs generatekey task dnameparam setname name name   name getname name setvalue value value   value getvalue value distinguishedname object createparam     
+            dnameparam param dnameparam    
+            params addelement param param enumeration getparams params elements tostring size   params size stringbuffer sb stringbuffer firstpass i   0  i   size  i firstpass    
+                    sb append        
+                  
+                firstpass dnameparam param    dnameparam  params elementat i   
+                sb append encode param getname      
+                sb append ' '   
+                sb append encode param getvalue sb tostring encode string end indexof 1    end stringbuffer sb stringbuffer start   0 1    end    
+                sb append substring start  end    
+                sb append  \\     
+                start   end   1  
+                end indexof ' '  start   
+              
+ 
+            sb append substring start sb tostring alias keystore storepass storetype keypass sigalg keyalg dname distinguishedname expandeddname keysize validity verbose distinguishedname createdname buildexception expandeddname buildexception  dname sub-element can only be   
+                                        specified once dname buildexception  it is not possible to specify dname   
+                                        both as attribute and element     
+          
+        expandeddname distinguishedname expandeddname setdname dname expandeddname buildexception  it is not possible to specify dname   
+                                        both as attribute and element dname   dname setalias alias alias   alias setkeystore keystore keystore   keystore setstorepass storepass storepass   storepass setstoretype storetype storetype   storetype setkeypass keypass keypass   keypass setsigalg sigalg sigalg   sigalg setkeyalg keyalg keyalg   keyalg setkeysize keysize buildexception keysize   integer parseint keysize numberformatexception nfe buildexception  keysize attribute should be a integer setvalidity validity buildexception validity   integer parseint validity numberformatexception nfe buildexception  validity attribute should be a integer setverbose verbose verbose   verbose execute buildexception alias buildexception  alias attribute must be set storepass buildexception  storepass attribute must be set dname expandeddname buildexception  dname must be set stringbuffer sb stringbuffer    
+ 
+        sb append  -genkey verbose    
+            sb append  -v     
+          
+ 
+        sb append  -alias \     
+        sb append alias   
+        sb append dname    
+            sb append  -dname \     
+            sb append dname   
+            sb append expandeddname    
+            sb append  -dname \     
+            sb append expandeddname   
+            sb append keystore    
+            sb append  -keystore \     
+            sb append keystore   
+            sb append storepass    
+            sb append  -storepass \     
+            sb append storepass   
+            sb append storetype    
+            sb append  -storetype \     
+            sb append storetype   
+            sb append  \      
+          
+ 
+        sb append  -keypass keypass    
+            sb append keypass sb append storepass   
+          
+        sb append sigalg    
+            sb append  -sigalg \     
+            sb append sigalg   
+            sb append keyalg    
+            sb append  -keyalg \     
+            sb append keyalg   
+            sb append 0   keysize    
+            sb append  -keysize \     
+            sb append keysize   
+            sb append 0   validity    
+            sb append  -validity \     
+            sb append validity   
+            sb append  \      
+          
+ 
+        log  generating key alias exectask cmd exectask cmd setexecutable javaenvutils getjdkexecutable  keytool     
+        commandline argument arg   cmd createarg    
+        arg setline sb tostring     
+        cmd setfailonerror cmd settaskname gettaskname     
+        cmd execute    
+      
+  
+org apache tools ant taskdefs GenerateKey

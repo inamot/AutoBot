@@ -1,0 +1,688 @@
+ 
+    
+   represents detailed results feedback session  
+    br  contains  
+    br basic   link feedbacksessionattributes  
+    br      link list viewable responses link feedbackresponseattributes  objects  
+    
+    
+       responses identities giver recipients not hidden used anonymous result calculation only identities hidden before showing users contribution questions  
+   key questionid  value map student email studentresultsumary 
+   key questionid  value map team name teamevalresult 
+   
+       sectionteamnametable takes account section viewing privileges logged instructor selected section viewing 
+       whereas rostersectionteamnametable doesn't result  sectionteamnametable only contains sections viewable logged instructor 
+       whereas rostersectionteamnametable contains sections course sectionteamnametable dependent instructor privileges only used instructor pages not student pages 
+       
+   sorts givername   recipientname   qnnumber 
+   general questions team questions bottom  
+   sorts givername   recipientname 
+   sorts teamname   givername   recipientname   qnnumber 
+   sorts recipientname   givername   qnnumber 
+   sorts teamname   recipientname   givername   qnnumber 
+   sorts givername   question   recipientteam   recipientname 
+   sorts giverteam   givername   question   recipientteam   recipientname 
+   sorts recipientname   question   giverteam   givername 
+   sorts recipientteam   recipientname   question   giverteam   givername 
+   sorts recipientteam   question   recipientname   giverteam   givername 
+   sorts giverteam   question   givername   recipientteam   recipientname 
+   sorts recipientname   recipientemail   givername   giveremail 
+   compare recipient name 
+   compare recipient email 
+   compare giver name 
+   compare giver email change user email team name here display purposes teams giver type older responses giveremail stored student giver's email database convert team name use feedbacksessionresultsbundle 
+   copy data before hiding response recipient giver  
+   unlike emailteamnametable  emaillastnametable emailteamnametable  
+   roster  table populated using courseroster data directly 
+    
+       hides response names emails teams not visible current user  
+       replaces giver recipient email responses email two     s indicate invalid not displayed  
+        
+   hide recipient details not visible current user 
+   hide giver details not visible current user 
+    
+       checks giver recipient response visible hidden current user  
+        
+    
+       returns true recipient response visible current user  
+       returns false otherwise  
+        
+    
+       returns true giver response visible current user  
+       returns false otherwise  
+        
+   return person name participant student 
+   return person name participant instructor 
+   return team name participantidentifier team name 
+   return team name participant team identified member displayable full name email  
+       
+        p function different link #getnameforemail obtains name 
+       using class roster  instead responses  
+        return full name student participantidentifier email student   br name instructor participantidentifier email instructor   br team name participantidentifier represents team   br  
+               otherwise  return empty string displayable last name email  
+       
+        p function different link #getlastnameforemail obtains name 
+       using class roster  instead responses  
+        return last name student participantidentifier email student   br name instructor participantidentifier email instructor   br team name participantidentifier represents team   br  
+               otherwise  return empty string 
+        
+    
+       return true participantidentifier email either student instructor course roster  otherwise  return false  
+       
+        return true participantidentifier email either student instructor course roster  false otherwise participantidentifier identifies student instructor participantidentifier returned  
+       
+        p otherwise  const user_nobody_text returned  
+        see #getdisplayableemail displayable team name email email not email someone class roster empty string returned  
+       
+        p function different link #getteamnameforemail obtains name 
+       using class roster  instead responses displayable section name email  
+       
+        p email not email someone class roster empty string returned  
+       
+        p email instructor general passed specific recipient returned emails students given teamname teamname instructors   returns list instructors  
+        return set emails students team team names section   br  
+       
+        p instructors not contained any section  
+        return set team names teams section possible givers recipient specified participant identifier question  
+       
+        return list participant identifiers give response recipient specified possible givers team recipient question specified  
+        return list possible givers give response team 
+               specified recipient possible givers student recipient question specified  
+        return list possible givers give response student 
+               specified recipient possible givers instructor recipient question specified  
+        return list possible givers give response instructor 
+               specified recipient 
+        
+   use giver type determine recipients recipient self  
+   todo code duplication between function feedbackquestionslogic getrecipientsforquestion possible recipients giver question specified  
+        return list possible recipients receive response giver specified participantidentifier possible recipients instructor giver question specified  
+        return list possible recipients receive response giver specified instructorgiver possible recipients student giver question specified  
+        return list possible recipients receive response giver specified studentgiver possible recipients team giver question specified  
+        return list possible recipients receive response giver specified givingteam sorted list teams feedback session  br  
+       instructors not present team sorted list team members same team student  br list includes student  
+       
+        return list team members  including original student 
+        see #getsortedlistofteammembersemailsexcludingself sorted list team members same team student  
+       excluding student  
+       
+        return list team members  excluding original student 
+        see #getsortedlistofteammembersemails 
+        
+    
+       returns list student emails  sorted section name  
+        
+    
+       returns list instructor emails  sorted alphabetically  
+        
+    
+       used instructor feedback results views  
+        
+    
+       returns displayable email email giver recipient course allowed displayed  
+       returns const user_nobody_text otherwise  
+        
+    
+       returns displayable email email recipient course allowed displayed  
+       returns const user_nobody_text otherwise  
+        
+    
+       returns displayable email email giver course allowed displayed  
+       returns const user_nobody_text otherwise  
+        
+    
+       returns true given identifier email person course  
+       returns false otherwise email must least contains ' ' character team name may contains differentiate team name email person check against name   team name associated participant identifier 
+            
+   todo consider removing increase cohesion 
+   todo  make responses student calling method always top  
+    
+       gets questions responses bundle map  
+       
+        return ordered   code map keys link feedbackquestionattributes  
+               sorted questionnumber mapped values each key corresponding 
+                 link feedbackresponseattributes code list   
+        
+   sorts questions natural ordering question number 
+   sorts questions natural ordering question number 
+    
+       returns ordered map code recipientteam  name key 
+       sorted recipientteam   question   recipientname   giverteam   givername  
+        
+    
+       returns ordered map code giverteam  name key 
+       sorted giverteam   question   givername   recipientteam   recipientname  
+        
+    
+       returns responses code map recipientname  map question  list response responses sorted order recipient  question  giver  
+        return responses sorted recipient   question   giver 
+        
+    
+       returns responses bundle code tree  structure base node 
+       using code linkedhashmap  implementation  
+        br tree sorted recipientname   givername   questionnumber  
+        br key each map represents parent node value represents leaf  
+        br top-most parent   code string recipientname recipient's name s leafs  
+        br inner parent   code string givername giver's name s leafs  
+        br inner-most child code list feedbackresponseattributes responses 
+        br attributes corresponding s parents  
+        return responses bundle sorted recipient's name   giver's name   question number  
+        
+    
+       returns responses bundle code tree  structure base node 
+       using code linkedhashmap  implementation  
+        br tree sorted recipientname   givername   questionnumber  
+        br key each map represents parent node value represents leaf  
+        br top-most parent   code string recipientname recipient's name s leafs  
+        br inner parent   code string givername giver's name s leafs  
+        br inner-most child code list feedbackresponseattributes responses 
+        br attributes corresponding s parents  
+        return responses bundle sorted recipient identifier   giver identifier   question number  
+        see #getresponsessortedbyrecipient 
+        
+    
+       returns responses code map givername  map question  list response responses sorted order giver  question  recipient  
+        return responses sorted giver   question   recipient 
+        
+    
+       returns responses bundle code tree  structure base node 
+       using code linkedhashmap  implementation  
+        br tree sorted givername   recipientname   questionnumber  
+        br key each map represents parent node value represents leaf  
+        br top-most parent   code string givername recipient's name s leafs  
+        br inner parent   code string recipientname giver's name s leafs  
+        br inner-most child code list feedbackresponseattributes responses 
+        br attributes corresponding s parents  
+        return responses bundle sorted giver's name   recipient's name   question number  
+        
+    
+       returns responses bundle code tree  structure base node 
+       using code linkedhashmap  implementation  
+        br tree sorted givername   recipientname   questionnumber  
+        br key each map represents parent node value represents leaf  
+        br top-most parent   code string givername recipient's name s leafs  
+        br inner parent   code string recipientname giver's name s leafs  
+        br inner-most child code list feedbackresponseattributes responses 
+        br attributes corresponding s parents  
+        return responses bundle sorted giver's identifier   recipient's identifier   question number  
+        see #getresponsessortedbygiver response not written student visible student response comment visible student 
+    
+       compares values code name1 code name2   
+       anonymous names ordered later non-anonymous names  
+        param isfirstnamevisible  true first name visible user 
+        param issecondnamevisible true second name visible user 
+        
+   make class feedback always appear top team responses bottom teammates common datatransfer FeedbackSessionResultsBundle teammates common datatransfer feedbacksessionresultsbundle feedbacksessionattributes feedbacksession list feedbackresponseattributes  responses map feedbackquestionattributes  questions map string  emailnametable map string  emaillastnametable map string  emailteamnametable map string  instructoremailnametable map set rosterteamnamememberstable map set rostersectionteamnametable map visibilitytable feedbacksessionresponsestatus responsestatus courseroster roster map list feedbackresponsecommentattributes   responsecomments iscomplete list feedbackresponseattributes  actualresponses map map studentresultsummary   contributionquestionstudentresultsummary hashmap map map teamevalresult   contributionquestionteamevalresults hashmap map set sectionteamnametable comparator feedbackresponseattributes  comparebygiverrecipientquestion comparator feedbackresponseattributes      
+         override compare feedbackresponseattributes o1  feedbackresponseattributes o2 giversection1   o1 giversection giversection2   o2 giversection order   giversection1 compareto giversection2 order    0 order isgivervisible1   isgivervisible o1 isgivervisible2   isgivervisible o2 givername1   emailnametable get o1 giver givername2   emailnametable get o2 giver   
+            order   comparebynames givername1  givername2  isgivervisible1  isgivervisible2 order    0 order isrecipientvisible1   isrecipientvisible o1 isrecipientvisible2   isrecipientvisible o2 recipientname1   emailnametable get o1 recipient recipientname2   emailnametable get o2 recipient   
+            order   comparebynames recipientname1  recipientname2  isrecipientvisible1  isrecipientvisible2 order    0 order  
+              
+ 
+            order   comparebyquestionnumber o1  o2 order    0 order  
+              
+            order   comparebyresponsestring o1  o2 order    0 order o1 getid   compareto o2 getid comparator feedbackresponseattributes  comparebygiverrecipient comparator feedbackresponseattributes      
+         override compare feedbackresponseattributes o1  feedbackresponseattributes o2 isgivervisible1   isgivervisible o1 isgivervisible2   isgivervisible o2 givername1   emailnametable get o1 giver givername2   emailnametable get o2 giver order   comparebynames givername1  givername2  isgivervisible1  isgivervisible2 order    0 order isrecipientvisible1   isrecipientvisible o1 isrecipientvisible2   isrecipientvisible o2 recipientname1   emailnametable get o1 recipient recipientname2   emailnametable get o2 recipient   
+            order   comparebynames recipientname1  recipientname2  isrecipientvisible1  isrecipientvisible2 order    0 order  
+              
+ 
+            order   comparebyresponsestring o1  o2 order    0 order o1 getid   compareto o2 getid comparator feedbackresponseattributes  comparebyteamgiverrecipientquestion comparator feedbackresponseattributes      
+         override compare feedbackresponseattributes o1  feedbackresponseattributes o2 giversection1   o1 giversection giversection2   o2 giversection order   giversection1 compareto giversection2 order    0 order isgivervisible1   isgivervisible o1 isgivervisible2   isgivervisible o2 t1   getteamnameforemail o1 giver  isempty   ? getnameforemail o1 giver  
+                                                                  getteamnameforemail o1 giver t2   getteamnameforemail o2 giver  isempty   ? getnameforemail o2 giver  
+                                                                  getteamnameforemail o2 giver   
+            order   comparebynames t1  t2  isgivervisible1  isgivervisible2 order    0 order givername1   emailnametable get o1 giver givername2   emailnametable get o2 giver   
+            order   comparebynames givername1  givername2  isgivervisible1  isgivervisible2 order    0 order isrecipientvisible1   isrecipientvisible o1 isrecipientvisible2   isrecipientvisible o2 recipientname1   emailnametable get o1 recipient recipientname2   emailnametable get o2 recipient   
+            order   comparebynames recipientname1  recipientname2  isrecipientvisible1  isrecipientvisible2 order    0 order  
+              
+ 
+            order   comparebyquestionnumber o1  o2 order    0 order  
+              
+            order   comparebyresponsestring o1  o2 order    0 order o1 getid   compareto o2 getid comparator feedbackresponseattributes  comparebyrecipientgiverquestion comparator feedbackresponseattributes      
+         override compare feedbackresponseattributes o1  feedbackresponseattributes o2 recipientsection1   o1 recipientsection recipientsection2   o2 recipientsection order   recipientsection1 compareto recipientsection2 order    0 order isrecipientvisible1   isrecipientvisible o1 isrecipientvisible2   isrecipientvisible o2 recipientname1   emailnametable get o1 recipient recipientname2   emailnametable get o2 recipient   
+            order   comparebynames recipientname1  recipientname2  isrecipientvisible1  isrecipientvisible2 order    0 order isgivervisible1   isgivervisible o1 isgivervisible2   isgivervisible o2 givername1   emailnametable get o1 giver givername2   emailnametable get o2 giver   
+            order   comparebynames givername1  givername2  isgivervisible1  isgivervisible2 order    0 order  
+              
+ 
+            order   comparebyquestionnumber o1  o2 order    0 order  
+              
+            order   comparebyresponsestring o1  o2 order    0 order o1 getid   compareto o2 getid comparator feedbackresponseattributes  comparebyteamrecipientgiverquestion comparator feedbackresponseattributes      
+         override compare feedbackresponseattributes o1  feedbackresponseattributes o2 recipientsection1   o1 recipientsection recipientsection2   o2 recipientsection order   recipientsection1 compareto recipientsection2 order    0 order isrecipientvisible1   isrecipientvisible o1 isrecipientvisible2   isrecipientvisible o2 t1   getteamnameforemail o1 recipient  isempty   ? getnameforemail o1 recipient  
+                                                                      getteamnameforemail o1 recipient t2   getteamnameforemail o2 recipient  isempty   ? getnameforemail o2 recipient  
+                                                                      getteamnameforemail o2 recipient   
+            order   comparebynames t1  t2  isrecipientvisible1  isrecipientvisible2 order    0 order recipientname1   emailnametable get o1 recipient recipientname2   emailnametable get o2 recipient   
+            order   comparebynames recipientname1  recipientname2  isrecipientvisible1  isrecipientvisible2 order    0 order isgivervisible1   isgivervisible o1 isgivervisible2   isgivervisible o2 givername1   emailnametable get o1 giver givername2   emailnametable get o2 giver   
+            order   comparebynames givername1  givername2  isgivervisible1  isgivervisible2 order    0 order  
+              
+ 
+            order   comparebyquestionnumber o1  o2 order    0 order  
+              
+            order   comparebyresponsestring o1  o2 order    0 order o1 getid   compareto o2 getid comparator feedbackresponseattributes  comparebygiverquestionteamrecipient comparator feedbackresponseattributes      
+         override compare feedbackresponseattributes o1  feedbackresponseattributes o2 giversection1   o1 giversection giversection2   o2 giversection order   giversection1 compareto giversection2 order    0 order isgivervisible1   isgivervisible o1 isgivervisible2   isgivervisible o2 givername1   emailnametable get o1 giver givername2   emailnametable get o2 giver   
+            order   comparebynames givername1  givername2  isgivervisible1  isgivervisible2 order    0 order  
+              
+ 
+            order   comparebyquestionnumber o1  o2 order    0 order isrecipientvisible1   isrecipientvisible o1 isrecipientvisible2   isrecipientvisible o2 t1   getteamnameforemail o1 recipient  isempty   ? getnameforemail o1 recipient  
+                                                                      getteamnameforemail o1 recipient t2   getteamnameforemail o2 recipient  isempty   ? getnameforemail o2 recipient  
+                                                                      getteamnameforemail o2 recipient   
+            order   comparebynames t1  t2  isrecipientvisible1  isrecipientvisible2 order    0 order recipientname1   emailnametable get o1 recipient recipientname2   emailnametable get o2 recipient   
+            order   comparebynames recipientname1  recipientname2  isrecipientvisible1  isrecipientvisible2 order    0 order  
+              
+            order   comparebyresponsestring o1  o2 order    0 order o1 getid   compareto o2 getid comparator feedbackresponseattributes  comparebyteamgiverquestionteamrecipient comparator feedbackresponseattributes      
+         override compare feedbackresponseattributes o1  feedbackresponseattributes o2 giversection1   o1 giversection giversection2   o2 giversection order   giversection1 compareto giversection2 order    0 order isgivervisible1   isgivervisible o1 isgivervisible2   isgivervisible o2 giverteam1   getteamnameforemail o1 giver  isempty   ? getnameforemail o1 giver  
+                                                                          getteamnameforemail o1 giver giverteam2   getteamnameforemail o2 giver  isempty   ? getnameforemail o2 giver  
+                                                                          getteamnameforemail o2 giver   
+            order   comparebynames giverteam1  giverteam2  isgivervisible1  isgivervisible2 order    0 order givername1   emailnametable get o1 giver givername2   emailnametable get o2 giver   
+            order   comparebynames givername1  givername2  isgivervisible1  isgivervisible2 order    0 order  
+              
+ 
+            order   comparebyquestionnumber o1  o2 order    0 order isrecipientvisible1   isrecipientvisible o1 isrecipientvisible2   isrecipientvisible o2 receiverteam1   getteamnameforemail o1 recipient  isempty   ? getnameforemail o1 recipient  
+                                                                                 getteamnameforemail o1 recipient receiverteam2   getteamnameforemail o2 recipient  isempty   ? getnameforemail o2 recipient  
+                                                                                 getteamnameforemail o2 recipient   
+            order   comparebynames receiverteam1  receiverteam2  isrecipientvisible1  isrecipientvisible2 order    0 order recipientname1   emailnametable get o1 recipient recipientname2   emailnametable get o2 recipient   
+            order   comparebynames recipientname1  recipientname2  isrecipientvisible1  isrecipientvisible2 order    0 order  
+              
+            order   comparebyresponsestring o1  o2 order    0 order o1 getid   compareto o2 getid comparator feedbackresponseattributes  comparebyrecipientquestionteamgiver comparator feedbackresponseattributes      
+         override compare feedbackresponseattributes o1  feedbackresponseattributes o2 recipientsection1   o1 recipientsection recipientsection2   o2 recipientsection order   recipientsection1 compareto recipientsection2 order    0 order isrecipientvisible1   isrecipientvisible o1 isrecipientvisible2   isrecipientvisible o2 recipientname1   emailnametable get o1 recipient recipientname2   emailnametable get o2 recipient   
+            order   comparebynames recipientname1  recipientname2  isrecipientvisible1  isrecipientvisible2 order    0 order  
+              
+ 
+            order   comparebyquestionnumber o1  o2 order    0 order isgivervisible1   isgivervisible o1 isgivervisible2   isgivervisible o2 t1   getteamnameforemail o1 giver  isempty   ? getnameforemail o1 giver  
+                                                                  getteamnameforemail o1 giver t2   getteamnameforemail o2 giver  isempty   ? getnameforemail o2 giver  
+                                                                  getteamnameforemail o2 giver   
+            order   comparebynames t1  t2  isgivervisible1  isgivervisible2 order    0 order givername1   emailnametable get o1 giver givername2   emailnametable get o2 giver   
+            order   comparebynames givername1  givername2  isgivervisible1  isgivervisible2 order    0 order  
+              
+            order   comparebyresponsestring o1  o2 order    0 order o1 getid   compareto o2 getid comparator feedbackresponseattributes  comparebyteamrecipientquestionteamgiver comparator feedbackresponseattributes      
+         override compare feedbackresponseattributes o1  feedbackresponseattributes o2 recipientsection1   o1 recipientsection recipientsection2   o2 recipientsection order   recipientsection1 compareto recipientsection2 order    0 order isrecipientvisible1   isrecipientvisible o1 isrecipientvisible2   isrecipientvisible o2 recipientteam1   getteamnameforemail o1 recipient  isempty   ? getnameforemail o1 recipient  
+                                                                                  getteamnameforemail o1 recipient recipientteam2   getteamnameforemail o2 recipient  isempty   ? getnameforemail o2 recipient  
+                                                                                  getteamnameforemail o2 recipient   
+            order   comparebynames recipientteam1  recipientteam2  isrecipientvisible1  isrecipientvisible2 order    0 order recipientname1   emailnametable get o1 recipient recipientname2   emailnametable get o2 recipient   
+            order   comparebynames recipientname1  recipientname2  isrecipientvisible1  isrecipientvisible2 order    0 order  
+              
+ 
+            order   comparebyquestionnumber o1  o2 order    0 order isgivervisible1   isgivervisible o1 isgivervisible2   isgivervisible o2 giverteam1   getteamnameforemail o1 giver  isempty   ? getnameforemail o1 giver  
+                                                                          getteamnameforemail o1 giver giverteam2   getteamnameforemail o2 giver  isempty   ? getnameforemail o2 giver  
+                                                                          getteamnameforemail o2 giver   
+            order   comparebynames giverteam1  giverteam2  isgivervisible1  isgivervisible2 order    0 order givername1   emailnametable get o1 giver givername2   emailnametable get o2 giver   
+            order   comparebynames givername1  givername2  isgivervisible1  isgivervisible2 order    0 order  
+              
+            order   comparebyresponsestring o1  o2 order    0 order o1 getid   compareto o2 getid comparator feedbackresponseattributes  comparebyteamquestionrecipientteamgiver comparator feedbackresponseattributes      
+         override compare feedbackresponseattributes o1  feedbackresponseattributes o2 isrecipientvisible1   isrecipientvisible o1 isrecipientvisible2   isrecipientvisible o2 recipientteam1   getteamnameforemail o1 recipient  isempty   ? getnameforemail o1 recipient  
+                                                                                  getteamnameforemail o1 recipient recipientteam2   getteamnameforemail o2 recipient  isempty   ? getnameforemail o2 recipient  
+                                                                                  getteamnameforemail o2 recipient order   comparebynames recipientteam1  recipientteam2  isrecipientvisible1  isrecipientvisible2 order    0 order  
+              
+ 
+            order   comparebyquestionnumber o1  o2 order    0 order recipientname1   emailnametable get o1 recipient recipientname2   emailnametable get o2 recipient   
+            order   comparebynames recipientname1  recipientname2  isrecipientvisible1  isrecipientvisible2 order    0 order giverteam1   getteamnameforemail o1 giver  isempty   ? getnameforemail o1 giver  
+                                                                          getteamnameforemail o1 giver giverteam2   getteamnameforemail o2 giver  isempty   ? getnameforemail o2 giver  
+                                                                          getteamnameforemail o2 giver   
+            order   comparebynames giverteam1  giverteam2  isrecipientvisible1  isrecipientvisible2 order    0 order isgivervisible1   isgivervisible o1 isgivervisible2   isgivervisible o2 givername1   emailnametable get o1 giver givername2   emailnametable get o2 giver   
+            order   comparebynames givername1  givername2  isgivervisible1  isgivervisible2 order    0 order  
+              
+ 
+            order   comparebyresponsestring o1  o2 order    0 order o1 getid   compareto o2 getid comparator feedbackresponseattributes  comparebyteamquestiongiverteamrecipient comparator feedbackresponseattributes      
+         override compare feedbackresponseattributes o1  feedbackresponseattributes o2 isgivervisible1   isgivervisible o1 isgivervisible2   isgivervisible o2 giverteam1   getteamnameforemail o1 giver  isempty   ? getnameforemail o1 giver  
+                                                                          getteamnameforemail o1 giver giverteam2   getteamnameforemail o2 giver  isempty   ? getnameforemail o2 giver  
+                                                                          getteamnameforemail o2 giver order   comparebynames giverteam1  giverteam2  isgivervisible1  isgivervisible2 order    0 order  
+              
+ 
+            order   comparebyquestionnumber o1  o2 order    0 order givername1   emailnametable get o1 giver givername2   emailnametable get o2 giver   
+            order   comparebynames givername1  givername2  isgivervisible1  isgivervisible2 order    0 order isrecipientvisible1   isrecipientvisible o1 isrecipientvisible2   isrecipientvisible o2 receiverteam1   getteamnameforemail o1 recipient  isempty   ? getnameforemail o1 recipient  
+                                                                                 getteamnameforemail o1 recipient receiverteam2   getteamnameforemail o2 recipient  isempty   ? getnameforemail o2 recipient  
+                                                                                 getteamnameforemail o2 recipient   
+            order   comparebynames receiverteam1  receiverteam2  isrecipientvisible1  isrecipientvisible2 order    0 order recipientname1   emailnametable get o1 recipient recipientname2   emailnametable get o2 recipient   
+            order   comparebynames recipientname1  recipientname2  isrecipientvisible1  isrecipientvisible2 order    0 order  
+              
+ 
+            order   comparebyresponsestring o1  o2 order    0 order o1 getid   compareto o2 getid comparator feedbackresponseattributes  comparebyrecipientnameemailgivernameemail comparator feedbackresponseattributes      
+         override compare feedbackresponseattributes o1  feedbackresponseattributes o2 isrecipientvisible1   isrecipientvisible o1 isrecipientvisible2   isrecipientvisible o2 recipientnamecompareresult   comparebynames getnameforemail o1 recipient   
+                                                            getnameforemail o2 recipient   
+                                                            isrecipientvisible1  isrecipientvisible2 recipientnamecompareresult    0 recipientnamecompareresult recipientemailcompareresult   comparebynames o1 recipient  o2 recipient  
+                                                             isrecipientvisible1  isrecipientvisible2 recipientemailcompareresult    0 recipientemailcompareresult isgivervisible1   isgivervisible o1 isgivervisible2   isgivervisible o2 givernamecompareresult   comparebynames getnameforemail o1 giver   
+                                                        getnameforemail o2 giver   
+                                                        isgivervisible1  isgivervisible2 givernamecompareresult    0 givernamecompareresult giveremailcompareresult   comparebynames o1 giver  o2 giver  
+                                                         isgivervisible1  isgivervisible2 giveremailcompareresult    0 giveremailcompareresult responsestringresult   comparebyresponsestring o1  o2 responsestringresult    0 responsestringresult o1 getid   compareto o2 getid feedbacksessionresultsbundle feedbacksessionattributes feedbacksession  
+            map feedbackquestionattributes  questions  courseroster roster feedbacksession arraylist feedbackresponseattributes     questions hashmap string hashmap string hashmap string hashmap set hashmap feedbacksessionresponsestatus    roster hashmap list feedbackresponsecommentattributes feedbacksessionresultsbundle feedbacksessionattributes feedbacksession  
+                                        list feedbackresponseattributes  responses  
+                                        map feedbackquestionattributes  questions  
+                                        map string  emailnametable  
+                                        map string  emaillastnametable  
+                                        map string  emailteamnametable  
+                                        map set sectionteamnametable  
+                                        map visibilitytable  
+                                        feedbacksessionresponsestatus responsestatus  
+                                        courseroster roster  
+                                        map list feedbackresponsecommentattributes   responsecomments feedbacksession  responses  questions  emailnametable  emaillastnametable  
+             emailteamnametable  sectionteamnametable  visibilitytable  responsestatus  roster  responsecomments feedbacksessionresultsbundle feedbacksessionattributes feedbacksession  
+                                        list feedbackresponseattributes  responses  
+                                        map feedbackquestionattributes  questions  
+                                        map string  emailnametable  
+                                        map string  emaillastnametable  
+                                        map string  emailteamnametable  
+                                        map set sectionteamnametable  
+                                        map visibilitytable  
+                                        feedbacksessionresponsestatus responsestatus  
+                                        courseroster roster  
+                                        map list feedbackresponsecommentattributes   responsecomments iscomplete feedbacksession   feedbacksession questions   questions responses   responses emailnametable   emailnametable emaillastnametable   emaillastnametable emailteamnametable   emailteamnametable instructoremailnametable   getinstructoremailnametablefromroster roster sectionteamnametable   sectionteamnametable visibilitytable   visibilitytable responsestatus   responsestatus roster   roster responsecomments   responsecomments actualresponses arraylist feedbackresponseattributes response   responses questions get response feedbackquestionid  givertype    feedbackparticipanttype teams 
+                       roster isstudentincourse response giver     
+                  
+                  
+                  
+                response giver   emailnametable get response giver team_of_email_owner   
+              
+              
+            feedbackresponseattributes fracopy feedbackresponseattributes response   
+            actualresponses add fracopy iscomplete   iscomplete  
+ 
+        hideresponsesgiverrecipient rosterteamnamememberstable   getteamnametoemailstablefromroster roster rostersectionteamnametable   getsectiontoteamnamesfromroster roster hideresponsesgiverrecipient feedbackresponseattributes response   responses name   emailnametable get response recipient   
+            feedbackquestionattributes question   questions get response feedbackquestionid   
+            feedbackparticipanttype participanttype   question recipienttype isrecipientvisible response anonemail   getanonemail participanttype  name   
+                name   getanonname participanttype  name   
+ 
+                emailnametable put anonemail  name   
+                emailteamnametable put anonemail  name team_of_email_owner   
+ 
+                response recipient   anonemail  
+              
+ 
+              
+            name   emailnametable get response giver   
+            participanttype   question givertype isgivervisible response anonemail   getanonemail participanttype  name   
+                name   getanonname participanttype  name   
+ 
+                emailnametable put anonemail  name   
+                emailteamnametable put anonemail  name team_of_email_owner participanttype    feedbackparticipanttype teams    
+                    emailteamnametable put anonemail  name   
+                  
+                response giver   anonemail isfeedbackparticipantvisible isgiver  feedbackresponseattributes response    
+        feedbackquestionattributes question   questions get response feedbackquestionid   
+        feedbackparticipanttype participanttype responseid   response getid isvisible isgiver    
+            isvisible   visibilitytable get responseid visibility_table_giver   
+            participanttype   question givertype isvisible   visibilitytable get responseid visibility_table_recipient   
+            participanttype   question recipienttype istypeself   participanttype    feedbackparticipanttype self istypenone   participanttype    feedbackparticipanttype none isvisible    istypeself    istypenone isrecipientvisible feedbackresponseattributes response isfeedbackparticipantvisible response isgivervisible feedbackresponseattributes response isfeedbackparticipantvisible response getanonemail feedbackparticipanttype type name anonname   getanonname type  name anonname          anonname     com getanonemailfromstudentemail studentemail name   roster getstudentforemail studentemail  name getanonemail feedbackparticipanttype students  name getanonnamewithoutnumericalid feedbackparticipanttype type anonymous     type tosingularformstring getanonname feedbackparticipanttype type name hashedencryptedname   gethashofname getencryptedname name participanttype   type tosingularformstring format  anonymous %s %s   participanttype  hashedencryptedname getencryptedname name stringhelper encrypt name gethashofname name tostring math abs name hashcode getnamefromroster participantidentifier isfullname participantidentifier equals general_question user_nobody_text isparticipantidentifierstudent participantidentifier     
+            studentattributes student   roster getstudentforemail participantidentifier isfullname student name student lastname isparticipantidentifierinstructor participantidentifier roster getinstructorforemail participantidentifier  
+                          name isteamname   rosterteamnamememberstable containskey participantidentifier isteamname participantidentifier isnamerepresentingstudentsteam   participantidentifier contains team_of_email_owner isnamerepresentingstudentsteam index   participantidentifier indexof team_of_email_owner getteamnamefromroster participantidentifier substring 0  index getfullnamefromroster participantidentifier getnamefromroster participantidentifier getlastnamefromroster participantidentifier getnamefromroster participantidentifier isemailofpersonfromroster participantidentifier isstudent   isparticipantidentifierstudent participantidentifier isinstructor   isparticipantidentifierinstructor participantidentifier isstudent    isinstructor getdisplayableemailfromroster participantidentifier isemailofpersonfromroster participantidentifier participantidentifier user_nobody_text getteamnamefromroster participantidentifier participantidentifier equals general_question user_nobody_text isparticipantidentifierstudent participantidentifier roster getstudentforemail participantidentifier  team isparticipantidentifierinstructor participantidentifier user_team_for_instructor getsectionfromroster participantidentifier isstudent   isparticipantidentifierstudent participantidentifier isinstructor   isparticipantidentifierinstructor participantidentifier participantisgeneral   participantidentifier equals general_question isstudent roster getstudentforemail participantidentifier  
+                          section isinstructor    participantisgeneral no_specific_recipient set getteammembersfromroster teamname rosterteamnamememberstable containskey teamname hashset hashset   rosterteamnamememberstable get teamname set getteamsinsectionfromroster sectionname rostersectionteamnametable containskey sectionname hashset   rostersectionteamnametable get sectionname hashset isparticipantidentifierstudent participantidentifier    
+        studentattributes student   roster getstudentforemail participantidentifier student isparticipantidentifierinstructor participantidentifier    
+        instructorattributes instructor   roster getinstructorforemail participantidentifier instructor list getpossiblegivers feedbackquestionattributes fqa recipientparticipantidentifier recipientparticipantidentifier contains arraylist isparticipantidentifierstudent recipientparticipantidentifier     
+            studentattributes student   roster getstudentforemail recipientparticipantidentifier getpossiblegivers fqa  student isparticipantidentifierinstructor recipientparticipantidentifier getpossiblegiversforinstructor fqa recipientparticipantidentifier equals general_question fqa givertype students getsortedlistofstudentemails teams getsortedlistofteams instructors getsortedlistofinstructoremails self  
+                list creatoremail arraylist      
+                creatoremail add fqa creatoremail creatoremail log severe  invalid giver type specified arraylist getpossiblegiversforteam fqa  recipientparticipantidentifier list getpossiblegiversforteam feedbackquestionattributes fqa recipientteam    
+        feedbackparticipanttype givertype   fqa givertype  
+        feedbackparticipanttype recipienttype   fqa recipienttype  
+        list possiblegivers arraylist recipienttype    feedbackparticipanttype teams givertype teams  
+                possiblegivers   getsortedlistofteams students  
+                possiblegivers   getsortedlistofstudentemails instructors  
+                possiblegivers   getsortedlistofinstructoremails self  
+                possiblegivers add fqa creatoremail log severe  invalid giver type specified recipienttype    feedbackparticipanttype own_team givertype    feedbackparticipanttype teams    
+                possiblegivers add recipientteam possiblegivers arraylist   getteammembersfromroster recipientteam possiblegivers list getpossiblegivers feedbackquestionattributes fqa  
+                                           studentattributes studentrecipient    
+        feedbackparticipanttype givertype   fqa givertype  
+        feedbackparticipanttype recipienttype   fqa recipienttype  
+        list possiblegivers arraylist givertype students  
+            possiblegivers   getsortedlistofstudentemails instructors  
+            possiblegivers   getsortedlistofinstructoremails teams  
+            possiblegivers   getsortedlistofteams self  
+            possiblegivers add fqa creatoremail log severe  invalid giver type specified recipienttype students teams self  
+            possiblegivers arraylist      
+            possiblegivers add studentrecipient email own_team_members  
+            possiblegivers retainall getsortedlistofteammembersemailsexcludingself studentrecipient own_team_members_including_self  
+            possiblegivers retainall getsortedlistofteammembersemails studentrecipient possiblegivers list getpossiblegiversforinstructor feedbackquestionattributes fqa    
+        feedbackparticipanttype givertype   fqa givertype  
+        list possiblegivers arraylist givertype students  
+            possiblegivers   getsortedlistofstudentemails instructors  
+            possiblegivers   getsortedlistofinstructoremails teams  
+            possiblegivers   getsortedlistofteams self  
+            possiblegivers add fqa creatoremail log severe  invalid giver type specified possiblegivers list getpossiblegivers feedbackquestionattributes fqa    
+        feedbackparticipanttype givertype   fqa givertype  
+        list possiblegivers arraylist givertype students  
+            possiblegivers   getsortedlistofstudentemails instructors  
+            possiblegivers   getsortedlistofinstructoremails teams  
+            possiblegivers   getsortedlistofteams self  
+            possiblegivers arraylist      
+            possiblegivers add fqa creatoremail log severe  invalid giver type specified possiblegivers list getpossiblerecipients feedbackquestionattributes fqa    
+        feedbackparticipanttype recipienttype   fqa recipienttype  
+        list possiblerecipients fqa recipienttype    feedbackparticipanttype self    
+            recipienttype   fqa givertype recipienttype students own_team_members own_team_members_including_self  
+            possiblerecipients   getsortedlistofstudentemails instructors  
+            possiblerecipients   getsortedlistofinstructoremails teams own_team  
+            possiblerecipients   getsortedlistofteams none  
+            possiblerecipients arraylist      
+            possiblerecipients add user_nobody_text log severe  invalid recipient type specified possiblerecipients list getpossiblerecipients feedbackquestionattributes fqa giverparticipantidentifier giverparticipantidentifier contains arraylist isparticipantidentifierstudent giverparticipantidentifier     
+            studentattributes student   roster getstudentforemail giverparticipantidentifier getpossiblerecipients fqa  student isparticipantidentifierinstructor giverparticipantidentifier     
+            instructorattributes instructor   roster getinstructorforemail giverparticipantidentifier getpossiblerecipients fqa  instructor getpossiblerecipientsforteam fqa  giverparticipantidentifier list getpossiblerecipients feedbackquestionattributes fqa  
+                                               instructorattributes instructorgiver    
+        feedbackparticipanttype recipienttype   fqa recipienttype  
+        list possiblerecipients arraylist recipienttype students  
+            possiblerecipients   getsortedlistofstudentemails instructors  
+            possiblerecipients   getsortedlistofinstructoremails    
+            possiblerecipients remove instructorgiver email teams  
+            possiblerecipients   getsortedlistofteams self  
+            possiblerecipients add instructorgiver email own_team  
+            possiblerecipients add user_team_for_instructor none  
+            possiblerecipients add general_question log severe  invalid recipient type specified possiblerecipients list getpossiblerecipients feedbackquestionattributes fqa  
+                                               studentattributes studentgiver    
+        feedbackparticipanttype recipienttype   fqa recipienttype  
+        list possiblerecipients arraylist recipienttype students  
+            possiblerecipients   getsortedlistofstudentemails    
+            possiblerecipients remove studentgiver email own_team_members  
+            possiblerecipients   getsortedlistofteammembersemailsexcludingself studentgiver own_team_members_including_self  
+            possiblerecipients   getsortedlistofteammembersemails studentgiver instructors  
+            possiblerecipients   getsortedlistofinstructoremails teams  
+            possiblerecipients   getsortedlistofteamsexcludingownteam studentgiver own_team  
+            possiblerecipients add studentgiver team self  
+            possiblerecipients add studentgiver email none  
+            possiblerecipients add general_question log severe  invalid recipient type specified possiblerecipients list getpossiblerecipientsforteam feedbackquestionattributes fqa givingteam    
+        feedbackparticipanttype recipienttype   fqa recipienttype  
+        list possiblerecipients arraylist recipienttype teams  
+            possiblerecipients   getsortedlistofteams    
+            possiblerecipients remove givingteam self own_team  
+            possiblerecipients add givingteam instructors  
+            possiblerecipients   getsortedlistofinstructoremails students  
+            possiblerecipients   getsortedlistofstudentemails own_team_members_including_self rosterteamnamememberstable containskey givingteam     
+                set studentemailstonames   rosterteamnamememberstable get givingteam   
+                possiblerecipients arraylist   studentemailstonames   
+                collections sort possiblerecipients none  
+            possiblerecipients add general_question log severe  invalid recipient type specified possiblerecipients list getsortedlistofteamsexcludingownteam studentattributes student studentteam   student team  
+        list listofteams   getsortedlistofteams    
+        listofteams remove studentteam listofteams list getsortedlistofteams     
+        list teams arraylist   rosterteamnamememberstable keyset     
+        teams remove user_team_for_instructor   
+        collections sort teams teams list getsortedlistofteammembersemails studentattributes student teamname   student team  
+        set teammembersemailstonames   rosterteamnamememberstable get teamname   
+        list teammembers arraylist   teammembersemailstonames   
+        collections sort teammembers teammembers list getsortedlistofteammembersemailsexcludingself studentattributes student    
+        list teammembers   getsortedlistofteammembersemails student currentstudentemail   student email  
+        teammembers remove currentstudentemail teammembers list getsortedlistofstudentemails     
+        list emaillist arraylist      
+        list studentattributes  students   roster getstudents    
+        studentattributes sortbysectionname students studentattributes student   students    
+            emaillist add student email emaillist list getsortedlistofinstructoremails     
+        list emaillist arraylist      
+        list instructorattributes  instructors   roster getinstructors instructorattributes instructor   instructors    
+            emaillist add instructor email   
+          
+        collections sort emaillist emaillist getresponseanswerhtml feedbackresponseattributes response  
+                                        feedbackquestionattributes question response getresponsedetails   getanswerhtml response  question getresponseanswercsv feedbackresponseattributes response  
+                                       feedbackquestionattributes question response getresponsedetails   getanswercsv response  question feedbackresponseattributes getactualresponse feedbackresponseattributes response    
+        feedbackresponseattributes actualresponse feedbackresponseattributes resp   actualresponses resp getid   equals response getid       
+                actualresponse   resp actualresponse getnameforemail email name   emailnametable get email name name equals user_is_missing user_unknown_text name equals user_is_nobody user_nobody_text name equals user_is_team getteamnameforemail email name getlastnameforemail email name   emaillastnametable get email name name equals user_is_missing user_unknown_text name equals user_is_nobody user_nobody_text name equals user_is_team getteamnameforemail email name getteamnameforemail email teamname   emailteamnametable get email teamname email equals general_question user_nobody_text teamname getdisplayableemail isgiver  feedbackresponseattributes response participantidentifier isgiver    
+            participantidentifier   response giver participantidentifier   response recipient isemailofperson participantidentifier     isfeedbackparticipantvisible isgiver  response participantidentifier user_nobody_text getdisplayableemailrecipient feedbackresponseattributes response getdisplayableemail response getdisplayableemailgiver feedbackresponseattributes response getdisplayableemail response isemailofperson participantidentifier isidentifieremail   participantidentifier contains name   emailnametable get participantidentifier isidentifiername   name name equals participantidentifier isidentifierteam   name name equals user_is_team teamname   emailteamnametable get participantidentifier isidentifierteamname   teamname teamname equals participantidentifier isidentifieremail      isidentifiername    isidentifierteamname    isidentifierteam getrecipientnameforresponse feedbackresponseattributes response name   emailnametable get response recipient name name equals user_is_missing user_unknown_text name equals user_is_nobody user_nobody_text name getgivernameforresponse feedbackresponseattributes response name   emailnametable get response giver name name equals user_is_missing user_unknown_text name equals user_is_nobody user_nobody_text name appendteamnametoname name teamname outputname name contains  anonymous      name equals user_unknown_text  
+                   name equals user_nobody_text     teamname isempty      
+            outputname   name outputname   name          teamname outputname getquestiontext feedbackquestionid sanitizationhelper sanitizeforhtml questions get feedbackquestionid  
+                                                   getquestiondetails   
+                                                   getquestiontext map feedbackquestionattributes  list feedbackresponseattributes   getquestionresponsemap questions responses null  
+          
+ 
+        map feedbackquestionattributes  list feedbackresponseattributes   sortedmap linkedhashmap      
+        list feedbackquestionattributes  sortedquestions arraylist   questions values     
+          
+        collections sort sortedquestions feedbackquestionattributes question   sortedquestions    
+            sortedmap put question arraylist feedbackresponseattributes feedbackresponseattributes response   responses    
+            feedbackquestionattributes question   questions get response feedbackquestionid   
+            list feedbackresponseattributes  responsesforquestion   sortedmap get question   
+            responsesforquestion add response list feedbackresponseattributes  responsesforquestion   sortedmap values      
+            collections sort responsesforquestion  comparebygiverrecipient sortedmap map feedbackquestionattributes  list feedbackresponseattributes   getquestionresponsemapsortedbyrecipient questions responses null  
+          
+ 
+        map feedbackquestionattributes  list feedbackresponseattributes   sortedmap linkedhashmap      
+ 
+        list feedbackquestionattributes  sortedquestions arraylist   questions values     
+          
+        collections sort sortedquestions feedbackquestionattributes question   sortedquestions    
+            sortedmap put question arraylist feedbackresponseattributes feedbackresponseattributes response   responses    
+            feedbackquestionattributes question   questions get response feedbackquestionid   
+            list feedbackresponseattributes  responsesforquestion   sortedmap get question   
+            responsesforquestion add response list feedbackresponseattributes  responsesforquestion   sortedmap values      
+            collections sort responsesforquestion  comparebyrecipientnameemailgivernameemail sortedmap map map feedbackquestionattributes  list feedbackresponseattributes    
+            getquestionresponsemapbyrecipientteam     
+        linkedhashmap map feedbackquestionattributes  list feedbackresponseattributes    sortedmap linkedhashmap      
+ 
+        collections sort responses  comparebyteamquestionrecipientteamgiver feedbackresponseattributes response   responses recipientteam   getteamnameforemail response recipient recipientteam isempty      
+                recipientteam   getnameforemail response recipient sortedmap containskey recipientteam     
+                sortedmap put recipientteam linkedhashmap feedbackquestionattributes  list feedbackresponseattributes       
+              
+            map feedbackquestionattributes  list feedbackresponseattributes   responsesforonerecipient   
+                                            sortedmap get recipientteam   
+ 
+            feedbackquestionattributes question   questions get response feedbackquestionid responsesforonerecipient containskey question     
+                responsesforonerecipient put question arraylist feedbackresponseattributes      
+              
+ 
+            list feedbackresponseattributes  responsesforonerecipientonequestion   
+                                            responsesforonerecipient get question   
+            responsesforonerecipientonequestion add response sortedmap map map feedbackquestionattributes  list feedbackresponseattributes    
+            getquestionresponsemapbygiverteam     
+        linkedhashmap map feedbackquestionattributes  list feedbackresponseattributes    sortedmap linkedhashmap      
+ 
+        collections sort responses  comparebyteamquestiongiverteamrecipient feedbackresponseattributes response   responses giverteam   getteamnameforemail response giver giverteam isempty      
+                giverteam   getnameforemail response giver sortedmap containskey giverteam     
+                sortedmap put giverteam linkedhashmap feedbackquestionattributes  list feedbackresponseattributes       
+              
+            map feedbackquestionattributes  list feedbackresponseattributes   responsesfromonegiver   
+                                            sortedmap get giverteam   
+ 
+            feedbackquestionattributes question   questions get response feedbackquestionid responsesfromonegiver containskey question     
+                responsesfromonegiver put question arraylist feedbackresponseattributes      
+              
+ 
+            list feedbackresponseattributes  responsesfromonegiveronequestion   responsesfromonegiver get question   
+            responsesfromonegiveronequestion add response sortedmap map map feedbackquestionattributes  list feedbackresponseattributes    
+            getresponsessortedbyrecipientquestiongiver sortbyteam    
+        map map feedbackquestionattributes  list feedbackresponseattributes    sortedmap linkedhashmap sortbyteam    
+            collections sort responses  comparebyteamrecipientquestionteamgiver collections sort responses  comparebyrecipientquestionteamgiver feedbackresponseattributes response   responses recipientemail   response recipient sortedmap containskey recipientemail     
+                sortedmap put recipientemail linkedhashmap feedbackquestionattributes  list feedbackresponseattributes       
+              
+            map feedbackquestionattributes  list feedbackresponseattributes   responsesforonerecipient   
+                                            sortedmap get recipientemail   
+ 
+            feedbackquestionattributes question   questions get response feedbackquestionid responsesforonerecipient containskey question     
+                responsesforonerecipient put question arraylist feedbackresponseattributes      
+              
+            list feedbackresponseattributes  responsesforonerecipientonequestion   
+                                            responsesforonerecipient get question   
+            responsesforonerecipientonequestion add response sortedmap map map list feedbackresponseattributes    getresponsessortedbyrecipient getresponsessortedbyrecipient map map list feedbackresponseattributes    
+            getresponsessortedbyrecipient sortbyteam    
+        map map list feedbackresponseattributes    sortedmap linkedhashmap sortbyteam    
+            collections sort responses  comparebyteamrecipientgiverquestion collections sort responses  comparebyrecipientgiverquestion feedbackresponseattributes response   responses recipientname getrecipientnameforresponse response recipientteamname getteamnameforemail response recipient recipientnamewithteam appendteamnametoname recipientname  recipientteamname sortedmap containskey recipientnamewithteam     
+                sortedmap put recipientnamewithteam linkedhashmap list feedbackresponseattributes       
+              
+            map list feedbackresponseattributes   responsestoonerecipient   
+                                            sortedmap get recipientnamewithteam givername getgivernameforresponse response giverteamname getteamnameforemail response giver givernamewithteam appendteamnametoname givername  giverteamname responsestoonerecipient containskey givernamewithteam     
+                responsestoonerecipient put givernamewithteam arraylist feedbackresponseattributes      
+              
+            list feedbackresponseattributes  responsesfromonegivertoonerecipient   
+                                            responsestoonerecipient get givernamewithteam   
+            responsesfromonegivertoonerecipient add response sortedmap map map list feedbackresponseattributes    
+            getresponsessortedbyrecipientgiverquestion sortbyteam    
+ 
+        linkedhashmap map list feedbackresponseattributes    sortedmap linkedhashmap sortbyteam    
+            collections sort responses  comparebyteamrecipientgiverquestion collections sort responses  comparebyrecipientgiverquestion feedbackresponseattributes response   responses recipientemail   response recipient sortedmap containskey recipientemail     
+                sortedmap put recipientemail linkedhashmap list feedbackresponseattributes       
+              
+            map list feedbackresponseattributes   responsestoonerecipient   
+                                            sortedmap get recipientemail giveremail   response giver responsestoonerecipient containskey giveremail     
+                responsestoonerecipient put giveremail arraylist feedbackresponseattributes      
+              
+            list feedbackresponseattributes  responsesfromonegivertoonerecipient   
+                                            responsestoonerecipient get giveremail   
+            responsesfromonegivertoonerecipient add response sortedmap map map feedbackquestionattributes  list feedbackresponseattributes    
+                getresponsessortedbygiverquestionrecipient sortbyteam    
+        map map feedbackquestionattributes  list feedbackresponseattributes    sortedmap linkedhashmap sortbyteam    
+            collections sort responses  comparebyteamgiverquestionteamrecipient collections sort responses  comparebygiverquestionteamrecipient feedbackresponseattributes response   responses giveremail   response giver sortedmap containskey giveremail     
+                sortedmap put giveremail linkedhashmap feedbackquestionattributes  list feedbackresponseattributes       
+              
+            map feedbackquestionattributes  list feedbackresponseattributes   responsesfromonegiver   
+                                            sortedmap get giveremail   
+ 
+            feedbackquestionattributes question   questions get response feedbackquestionid responsesfromonegiver containskey question     
+                responsesfromonegiver put question arraylist feedbackresponseattributes      
+              
+            list feedbackresponseattributes  responsesfromonegiveronequestion   
+                                            responsesfromonegiver get question   
+            responsesfromonegiveronequestion add response sortedmap map map list feedbackresponseattributes    getresponsessortedbygiver getresponsessortedbygiver map map list feedbackresponseattributes    
+            getresponsessortedbygiver sortbyteam    
+        map map list feedbackresponseattributes    sortedmap linkedhashmap sortbyteam    
+            collections sort responses  comparebyteamgiverrecipientquestion collections sort responses  comparebygiverrecipientquestion feedbackresponseattributes response   responses givername getgivernameforresponse response giverteamname getteamnameforemail response giver givernamewithteam appendteamnametoname givername  giverteamname sortedmap containskey givernamewithteam     
+                sortedmap put givernamewithteam linkedhashmap list feedbackresponseattributes       
+              
+            map list feedbackresponseattributes   responsesfromonegiver   sortedmap get givernamewithteam recipientname getrecipientnameforresponse response recipientteamname getteamnameforemail response recipient recipientnamewithteam appendteamnametoname recipientname  recipientteamname responsesfromonegiver containskey recipientnamewithteam     
+                responsesfromonegiver put recipientnamewithteam arraylist feedbackresponseattributes      
+              
+            list feedbackresponseattributes  responsesfromonegivertoonerecipient   
+                    responsesfromonegiver get recipientnamewithteam   
+            responsesfromonegivertoonerecipient add response sortedmap map map list feedbackresponseattributes    
+                getresponsessortedbygiverrecipientquestion sortbyteam sortbyteam    
+            collections sort responses  comparebyteamgiverrecipientquestion collections sort responses  comparebygiverrecipientquestion   
+          
+ 
+        map map list feedbackresponseattributes    sortedmap linkedhashmap feedbackresponseattributes response   responses giveremail   response giver sortedmap containskey giveremail     
+                sortedmap put giveremail linkedhashmap list feedbackresponseattributes       
+              
+            map list feedbackresponseattributes   responsesfromonegiver   sortedmap get giveremail recipientemail   response recipient responsesfromonegiver containskey recipientemail     
+                responsesfromonegiver put recipientemail arraylist feedbackresponseattributes      
+              
+            list feedbackresponseattributes  responsesfromonegivertoonerecipient   
+                                            responsesfromonegiver get recipientemail   
+            responsesfromonegivertoonerecipient add response sortedmap isstudenthassomethingnewtosee studentattributes student feedbackresponseattributes response   responses response giver equals student email responsecomments containskey response getid map set getteamnametoemailstablefromroster courseroster courseroster    
+        list studentattributes  students   courseroster getstudents    
+        map set teamnametoemails hashmap studentattributes student   students studentteam   student team  
+            set studentemails teamnametoemails containskey studentteam     
+                studentemails   teamnametoemails get studentteam studentemails treeset      
+              
+ 
+            studentemails add student email   
+            teamnametoemails put studentteam  studentemails   
+          
+ 
+        list instructorattributes  instructors   courseroster getinstructors instructorsteam user_team_for_instructor  
+        set instructoremails hashset instructorattributes instructor   instructors    
+            instructoremails add instructor email   
+            teamnametoemails put instructorsteam  instructoremails teamnametoemails map set getsectiontoteamnamesfromroster courseroster courseroster    
+        list studentattributes  students   courseroster getstudents    
+        map set sectiontoteam hashmap studentattributes student   students studentsection   student section studentteam   student team  
+            set teamnames sectiontoteam containskey studentsection     
+                teamnames   sectiontoteam get studentsection teamnames hashset      
+              
+ 
+            teamnames add studentteam   
+            sectiontoteam put studentsection  teamnames sectiontoteam comparebyquestionnumber feedbackresponseattributes r1  
+                                        feedbackresponseattributes r2    
+        feedbackquestionattributes q1   questions get r1 feedbackquestionid   
+        feedbackquestionattributes q2   questions get r2 feedbackquestionid q1 q2 0 q1 compareto q2 comparebynames name1 name2 isfirstnamevisible issecondnamevisible isfirstnamevisible     issecondnamevisible 0 isfirstnamevisible    issecondnamevisible 1 isfirstnamevisible     issecondnamevisible 1 n1priority   0 n2priority   0 name1 equals user_is_nobody     
+            n1priority   -1 name1 equals user_is_team     
+            n1priority   1 name2 equals user_is_nobody     
+            n2priority   -1 name2 equals user_is_team     
+            n2priority   1 order   integer compare n1priority  n2priority order    0 ? name1 compareto name2    order comparebyresponsestring feedbackresponseattributes o1  feedbackresponseattributes o2 responseanswer1   o1 getresponsedetails   getanswerstring responseanswer2   o2 getresponsedetails   getanswerstring responseanswer1 compareto responseanswer2 feedbacksessionattributes getfeedbacksession feedbacksession list feedbackresponseattributes  getresponses responses map feedbackquestionattributes  getquestions questions map string  getemailnametable emailnametable map string  getemaillastnametable emaillastnametable map string  getemailteamnametable emailteamnametable map set getrosterteamnamememberstable rosterteamnamememberstable set sectionsincourse hashset   rostersectionteamnametable keyset map set getrostersectionteamnametable rostersectionteamnametable map getvisibilitytable visibilitytable feedbacksessionresponsestatus getresponsestatus responsestatus courseroster getroster roster map list feedbackresponsecommentattributes   getresponsecomments responsecomments iscomplete iscomplete gettimezone feedbacksession gettimezone map string  getinstructoremailnametablefromroster courseroster roster    
+        map string  instructoremailnametable hashmap      
+        list instructorattributes  instructorlist   roster getinstructors instructorattributes instructor   instructorlist    
+            instructoremailnametable put instructor email  instructor name instructoremailnametable stringbuilder getcsvdetailedfeedbackresponsecommentsrow feedbackresponseattributes response    
+        list feedbackresponsecommentattributes  frclist responsecomments get response getid     
+        stringbuilder commentrow stringbuilder 200 feedbackresponsecommentattributes frc   frclist    
+            commentrow append       instructoremailnametable get frc giveremail        
+                      gettextfromcomment frc commenttext commentrow gettextfromcomment text commenttext htmltext   commenttext getvalue    
+        stringbuilder comment stringbuilder 200   
+        comment append jsoup parse htmltext  text jsoup parse htmltext  getelementsbytag  img   isempty       
+            comment append  images link      
+            elements ele   jsoup parse htmltext  getelementsbytag  img element element   ele    
+                comment append element absurl  src sanitizationhelper sanitizeforcsv comment tostring     
+      
+ teammates common datatransfer FeedbackSessionResultsBundle

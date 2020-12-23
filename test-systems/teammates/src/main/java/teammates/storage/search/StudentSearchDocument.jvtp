@@ -1,0 +1,73 @@
+ link searchdocument  object defines store   link document students  
+    
+   produce searchabletext student document contains courseid  coursename  studentemail  studentname studentteam studentsection used filter documents visible certain instructor 
+   searchabletext createddate used match query string 
+   attribute field used convert doc back attribute 
+    
+       produces link studentsearchresultbundle code results scoreddocument   collection list link instructorattributes used filter out search result  
+       
+        p method used admin only searching not restrict visibility according logged user's google id  
+        
+    
+       produces link studentsearchresultbundle code results scoreddocument   collection list link instructorattributes used filter out search result  
+       teammates storage search StudentSearchDocument teammates storage search studentsearchdocument searchdocument studentsearchdocument studentattributes student student   student  
+      
+ 
+     override preparedata student course   coursesdb getcourse student course   
+      
+ 
+     override document todocument delim searchabletext   student course   delim 
+                                   course course getname      delim 
+                                  student email   delim 
+                                  student name   delim 
+                                  student team   delim 
+                                  student section document newbuilder   
+                  
+                 addfield field newbuilder   setname searchdocumentfield course_id  
+                                             settext student course   
+                  
+                 addfield field newbuilder   setname searchdocumentfield searchable_text  
+                                             settext searchabletext   
+                  
+                 addfield field newbuilder   setname searchdocumentfield student_attribute  
+                                             settext jsonutils tojson student    
+                 setid student key  
+                 build studentsearchresultbundle fromresults results scoreddocument  results    
+        studentsearchresultbundle bundle studentsearchresultbundle results bundle scoreddocument doc   results    
+            studentattributes student   jsonutils fromjson  
+                    doc getonlyfield searchdocumentfield student_attribute  gettext    
+                    studentattributes student key studentsdb getstudentforregistrationkey stringhelper encrypt student key studentsdb deletedocument student bundle studentlist add student   
+            bundle numberofresults    
+          
+ 
+        sortstudentresultlist bundle studentlist bundle studentsearchresultbundle fromresults results scoreddocument  results  
+                                                        list instructorattributes  instructors    
+        studentsearchresultbundle bundle studentsearchresultbundle results bundle instructorattributes ins   instructors    
+            bundle courseidinstructormap put ins courseid  ins   
+          
+ 
+        list scoreddocument  filteredresults   filteroutcourseid results  instructors scoreddocument doc   filteredresults    
+            studentattributes student   jsonutils fromjson  
+                    doc getonlyfield searchdocumentfield student_attribute  gettext    
+                    studentattributes student key studentsdb getstudentforregistrationkey stringhelper encrypt student key studentsdb deletedocument student bundle studentlist add student   
+            bundle numberofresults    
+          
+ 
+        sortstudentresultlist bundle studentlist bundle sortstudentresultlist list studentattributes  studentlist    
+ 
+        collections sort studentlist comparator studentattributes      
+             override compare studentattributes s1  studentattributes s2 compareresult   s1 course compareto s2 course compareresult    0 compareresult  
+                  
+ 
+                compareresult   s1 section compareto s2 section compareresult    0 compareresult  
+                  
+ 
+                compareresult   s1 team compareto s2 team compareresult    0 compareresult  
+                  
+ 
+                compareresult   s1 name compareto s2 name compareresult    0 compareresult s1 email compareto s2 email   
+              
+            
+      
+ 
+ teammates storage search StudentSearchDocument

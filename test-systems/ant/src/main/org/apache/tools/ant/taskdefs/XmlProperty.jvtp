@@ -1,0 +1,375 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   loads property values valid xml file  generating property names file's element attribute names  
+   
+    p example   p  
+    pre  
+      lt root-tag myattr  true  gt  
+        lt inner-tag someattr  val  gt text lt  inner-tag gt  
+        lt a2 gt  lt a3 gt  lt a4 gt false lt  a4 gt  lt  a3 gt  lt  a2 gt  
+        lt x gt x1 lt  x gt  
+        lt x gt x2 lt  x gt  
+      lt  root-tag gt  
+    pre  
+   
+    p generates following properties   p  
+   
+    pre  
+    root-tag myattr  true 
+    root-tag inner-tag text 
+    root-tag inner-tag someattr  val 
+    root-tag a2 a3 a4 false 
+    root-tag x x1 x2 
+     pre  
+   
+    p collapseattributes property task set true default false instead result following properties  note difference names properties 
+   corresponding xml attributes    p  
+   
+    pre  
+    root-tag myattr true 
+    root-tag inner-tag text 
+    root-tag inner-tag someattr val 
+    root-tag a2 a3 a4 false 
+    root-tag x x1 x2 
+     pre  
+   
+    p optionally closely mirror abilities property 
+   task selected set attributes treated specially enable behavior semanticattributes  property task 
+   must set true defaults false attribute specified following attributes take special meaning 
+    setting true implicitly sets collapseattributes true well    p  
+   
+    ul  
+     li  b value  b   identifies text value property   li  
+     li  b location  b   identifies file location property   li  
+     li  b id  b   sets id property  li  
+     li  b refid  b   sets property value another property 
+         based upon provided id  li  
+     li  b pathid  b   defines path property given id   li  
+     ul  
+   
+    p example keeproot   false following properties file   p  
+   
+    pre  
+    lt root-tag gt  
+      lt build gt  
+      lt build folder  build  gt  
+        lt classes id  build classes  location  $ build folder  classes   gt  
+        lt reference refid  build classes   gt  
+      lt  build gt  
+      lt compile gt  
+        lt classpath pathid  compile classpath  gt  
+          lt pathelement location  $ build classes    gt  
+        lt  classpath gt  
+      lt  compile gt  
+      lt run-time gt  
+        lt jars gt   jar lt  jars gt  
+        lt classpath pathid  run-time classpath  gt  
+          lt path refid  compile classpath   gt  
+          lt pathelement path  $ run-time jars    gt  
+        lt  classpath gt  
+      lt  run-time gt  
+    lt  root-tag gt  
+     pre  
+   
+    p equivalent following entries build file   p  
+   
+    pre  
+    lt property name  build  location  build   gt  
+    lt property name  build classes  location  $ build location  classes   gt  
+    lt property name  build reference  refid  build classes   gt  
+   
+    lt property name  run-time jars  value    jar  gt  
+   
+    lt classpath id  compile classpath  gt  
+      lt pathelement location  $ build classes    gt  
+    lt  classpath gt  
+   
+    lt classpath id  run-time classpath  gt  
+      lt path refid  compile classpath   gt  
+      lt pathelement path  $ run-time jars    gt  
+    lt  classpath gt  
+     pre  
+   
+    p task requires following attributes   p  
+   
+    ul  
+    li  b file  b name file load   li  
+     ul  
+   
+    p task supports following attributes   p  
+   
+    ul  
+    li  b prefix  b   optionally specify prefix applied properties loaded   defaults empty string   li  
+    li  b keeproot  b   indicate whether root xml element kept part property name   defaults true   li  
+    li  b validate  b   indicate whether xml file validated  
+       defaults false   li  
+    li  b collapseattributes  b   indicate whether attributes stored property names parens period 
+       delimiters   defaults false  meaning properties stored parens e   foo attr     li  
+    li  b semanticattributes  b   indicate whether attributes 
+       named  location    value    refid path interpreted ant properties   defaults false   li  
+    li  b rootdirectory  b   indicate directory use root directory resolving location 
+       properties   defaults directory project using task   li  
+    li  b includesemanticattribute  b   indicate whether include semantic attribute   location value part property name   defaults false   li  
+     ul  
+   
+    ant task name  xmlproperty  category  xml  
+    
+    
+       constructor  
+        
+    
+       initializes task  
+        
+    
+        return xmlcatalog entityresolver  
+        
+    
+       run task  
+        throws buildexception exception raised during task execution  
+        todo validate source file valid before opening  print better error message 
+        todo add verbose level log message listing name file being loaded 
+        
+   keep hashtable attributes added task task allow override properties not properties need keep track properties ve added  
+   error generated during parsing 
+   parser specified options t built o error 
+    iterate through nodes tree     
+   set prefix node include tag name  
+   pass container processing node  
+   now  iterate through children each child  pass object added processnode children word  each 
+   object pass information along children  
+    
+       process given node  adding any required attributes child node alone em not  em  processing any 
+       children  
+       
+        param node xml node parse 
+        param prefix string prepend any properties added node  
+        param container optionally object parent node 
+       generated node might belong example node within node generated path  
+        return object created node   generally either string node resulted setting attribute path  
+        
+   parse attribute s text node  adding 
+   properties each path  attribute specified return created path passed children node value id attribute node id attribute? 
+   now  iterate through attributes adding main conditional logic attribute somehow  special e known 
+                       semantic meaning deal appropriately  
+                        
+   id already found above path  attribute node within path object refid  attribute node within path object location  attribute node within path object node identifying new path arbitrary attribute text node  add property containing object string use id  
+   return path added id node children reference needed   path objects definitely used child path elements id may used child text node  
+    
+       actually add given property value project writing log message attribute added task append value existing value use setproperty method forcibly override property already exists need put properties project read though  instead keeping outside project batch adding end allow properties reference return reasonable attribute name given node using semantic attributes collapsing 
+       attributes returned name nodename   
+       otherwise return   nodename long-standing default   lt xmlproperty gt  behavior  
+        
+   never include refid  attribute part attribute name  
+   otherwise  return appended unless property hide set  
+    
+       return whether provided attribute name recognized not  
+        
+    
+       return value given attribute not using semantic attributes literal string value attribute  
+       
+        p em em  using semantic attributes first 
+       dependent properties resolved e   $ foo resolved 
+       based foo property value appropriate data 
+       type used particular  location-based properties resolved absolute file names refid values  look 
+       up referenced object project   p xml file parse  required  
+        param src file parse resource pack  required  
+        param src resource expand 
+        
+    
+       set source resource  
+        param resource pack single element resource collection prefix prepend each property 
+        param prefix prefix prepend each property 
+        
+    
+       flag include xml root tag first value property name  optional  
+       default true 
+        param keeproot true  default   include xml root tag 
+        
+    
+       flag validate xml file  optional  default false 
+        param validate true validate xml file  default false 
+        
+    
+       flag treat attributes nested elements  
+       optional  default false 
+        param collapseattributes true treat attributes nested elements 
+        
+    
+       attribute enable special handling attributes - see ant manual  
+        param semanticattributes true enable special handling directory use resolving file references  
+       ignored semanticattributes not set true  
+        param rootdirectory directory  
+        
+    
+       include semantic attribute name part property name  
+       ignored semanticattributes not set true  
+        param includesemanticattribute true include sematic attribute 
+                                       name  
+        
+    
+       add xmlcatalog nested element  optional  
+        param catalog xmlcatalog use 
+        
+   expose members extensibility    
+    
+        return file attribute  
+        
+    
+        return resource  
+        
+   delegate way around support subclasses overwrite getfile 
+    
+        return prefix attribute  
+        
+    
+        return keeproot attribute  
+        
+    
+        return validate attribute  
+        
+    
+        return collapse attributes attribute  
+        
+    
+        return semantic attributes attribute  
+        
+    
+        return root directory attribute  
+        
+    
+        return include semantic attribute project resolve file ourselves rootdirectory set  
+        
+    
+       whether task deal non-file resources  
+       
+        p implementation returns true only task lt xmlproperty gt    any subclass class support non-file resources needs override method need backwards compatibility reasons t expect subclasses support resources   p  
+        return true task ant 1 7 
+       org apache tools ant taskdefs XmlProperty org apache tools ant taskdefs xmlproperty org apache tools ant task attributes id  ref_id  location  value  path  pathid xmlproperty init init    
+        xmlcatalog setproject getproject entityresolver getentityresolver xmlcatalog execute buildexception   
+ 
+        resource r   getresource r msg    xmlproperty task requires a source resource buildexception msg log  loading     src  project msg_verbose r isexists      
+ 
+              documentbuilderfactory factory   documentbuilderfactory newinstance    
+              factory setvalidating validate   
+              factory setnamespaceaware documentbuilder builder   factory newdocumentbuilder    
+              builder setentityresolver getentityresolver     
+              document document src fileresource    
+                  document   builder parse   fileresource  src  getfile document   builder parse src getinputstream     
+                
+              element topelement   document getdocumentelement    
+ 
+                
+                
+                
+                
+              addedattributes hashtable keeproot    
+                  addnoderecursively topelement  prefix nodelist topchildren   topelement getchildnodes numchildren   topchildren getlength i   0  i   numchildren  i      
+                    addnoderecursively topchildren item i   prefix log  unable to find property resource      r  
+                    project msg_verbose saxexception sxe    
+              
+            exception x   sxe sxe getexception x   sxe getexception buildexception  failed to load     src  x parserconfigurationexception pce buildexception pce ioexception ioe buildexception  failed to load     src  ioe addnoderecursively node node prefix  
+                                    object container nodeprefix   prefix node getnodetype      node text_node prefix trim   length     0    
+                nodeprefix         
+              
+            nodeprefix    node getnodename    
+          
+ 
+          
+        object nodeobject   processnode node  nodeprefix  container node haschildnodes      
+ 
+            nodelist nodechildren   node getchildnodes numchildren   nodechildren getlength i   0  i   numchildren  i      
+                  
+                  
+                  
+                addnoderecursively nodechildren item i   nodeprefix  
+                                   nodeobject addnoderecursively org w3c dom node node prefix    
+        addnoderecursively node  prefix object processnode  node node prefix  object container    
+ 
+          
+          
+          
+          
+        object addedpath id node hasattributes      
+ 
+            namednodemap nodeattributes   node getattributes    
+ 
+              
+            node idnode   nodeattributes getnameditem id   
+            id    semanticattributes    idnode idnode getnodevalue i   0  i   nodeattributes getlength    i      
+ 
+                node attributenode   nodeattributes item i semanticattributes attributename   getattributename attributenode attributevalue   getattributevalue attributenode   
+                    addproperty prefix   attributename  attributevalue nodename   attributenode getnodename attributevalue   getattributevalue attributenode   
+ 
+                    path containingpath    container container path ?  path  container nodename equals id containingpath nodename equals path     
+                          
+                        containingpath setpath attributevalue container path 
+                                  nodename equals ref_id     
+                          
+                        containingpath setpath attributevalue container path 
+                                  nodename equals location     
+                          
+                          
+                        containingpath setlocation resolvefile attributevalue nodename equals pathid container buildexception  xmlproperty does not   
+                                                        support nested paths    
+                          
+ 
+                        addedpath path getproject     
+                        getproject   addreference attributevalue  addedpath attributename   getattributename attributenode   
+                        addproperty prefix   attributename  attributevalue  id nodetext emptynode semanticemptyoverride node getnodetype      node element_node 
+               semanticattributes 
+               node hasattributes   
+                node getattributes   getnameditem value node getattributes   getnameditem location node getattributes   getnameditem ref_id node getattributes   getnameditem path node getattributes   getnameditem pathid semanticemptyoverride node getnodetype      node text_node    
+              
+            nodetext   getattributevalue node node getnodetype      node element_node  
+                node getchildnodes   getlength      1  
+                node getfirstchild   getnodetype      node cdata_section_node     
+ 
+            nodetext   node getfirstchild   getnodevalue equals nodetext      semanticemptyoverride    
+                emptynode node getnodetype      node element_node  
+                       node getchildnodes   getlength      0  
+                       semanticemptyoverride    
+            nodetext       
+            emptynode node getnodetype      node element_node  
+                       node getchildnodes   getlength      1  
+                       node getfirstchild   getnodetype      node text_node  
+                          equals node getfirstchild   getnodevalue     
+                       semanticemptyoverride    
+            nodetext       
+            emptynode nodetext semanticattributes    id container id container nodetext trim   length      0    emptynode    
+                addproperty prefix  nodetext  id addedpath addedpath   id addproperty name value id msg   name         value id msg       id     id         
+          
+        log msg  project msg_debug addedattributes containskey name     
+              
+              
+              
+              
+              
+              
+              
+              
+            value addedattributes get name          value  
+            getproject   setproperty name  value   
+            addedattributes put name  value getproject   getproperty name getproject   setnewproperty name  value   
+            addedattributes put name  value log  override ignored property     name  project msg_verbose id getproject   addreference id  value getattributename  node attributenode attributename   attributenode getnodename semanticattributes attributename equals ref_id issemanticattribute attributename  
+                          includesemanticattribute attributename collapseattributes attributename attributename issemanticattribute attributename i   0  i   attributes length  i attributename equals attributes i getattributevalue  node attributenode nodevalue   attributenode getnodevalue   trim semanticattributes attributename   attributenode getnodename    
+            nodevalue   getproject   replaceproperties nodevalue attributename equals location     
+                file f   resolvefile nodevalue f getpath attributename equals ref_id     
+                object ref   getproject   getreference nodevalue ref ref tostring nodevalue setfile file src    
+        setsrcresource fileresource src setsrcresource resource src src isdirectory buildexception  the source can't be a directory src fileresource     supportsnonfileresources buildexception  only filesystem resources are  
+                                         supported src   src addconfigured resourcecollection a a size      1 buildexception  only single argument resource collections  
+                                         are supported as archives    
+          
+        setsrcresource  resource  a iterator   next setprefix prefix prefix   prefix trim setkeeproot keeproot keeproot   keeproot setvalidate validate validate   validate setcollapseattributes collapseattributes collapseattributes   collapseattributes setsemanticattributes semanticattributes semanticattributes   semanticattributes setrootdirectory file rootdirectory rootdirectory   rootdirectory setincludesemanticattribute includesemanticattribute includesemanticattribute   includesemanticattribute addconfiguredxmlcatalog xmlcatalog catalog    
+        xmlcatalog addconfiguredxmlcatalog catalog file getfile src fileresource fileresource  src  getfile resource getresource     
+          
+          
+        file f   getfile f fileresource f src getprefix prefix getkeeproot keeproot getvalidate validate getcollapseattributes collapseattributes getsemanticattributes semanticattributes file getrootdirectory rootdirectory getincludesementicattribute includesemanticattribute file resolvefile filename rootdirectory file_utils resolvefile getproject   getbasedir    filename file_utils resolvefile rootdirectory  filename supportsnonfileresources getclass   equals xmlproperty org apache tools ant taskdefs XmlProperty

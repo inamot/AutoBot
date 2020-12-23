@@ -1,0 +1,114 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license ant wrapper task weblogic deploy tool used hot-deploy j2ee applications running weblogic server b not  b same creating application 
+    archive task assumes archive  ear  jar war  file assembled supplied source  attribute  
+     p end task assembles commadline parameters runs weblogic deploy tool seperate jvm  
+   
+   see org apache tools ant taskdefs optional j2ee hotdeploymenttool 
+   see org apache tools ant taskdefs optional j2ee abstracthotdeploymenttool 
+   see org apache tools ant taskdefs optional j2ee serverdeploy 
+    
+    
+        description field classname tool run valid actions weblogic deploy permits   
+        
+    
+        description field 
+        
+    
+        description field 
+        
+    
+        description field 
+        
+    
+        description field 
+        
+    
+        set host david orb  required orb  david  
+       
+       param  invalue new davidhost value 
+        
+    
+        set port david orb  required orb  david  
+       
+       param  invalue new davidport value 
+        
+    
+        set jonas root directory  -dinstall root element required  
+       
+       param  invalue new jonasroot value 
+        
+    
+       
+       choose orb   rmi  jeremie  david       optional omitted defaults one present classpath corresponding jonas jar automatically added classpath orb david  rmi iiop must 
+       specify davidhost davidport properties  
+       
+       param  invalue  rmi  jeremie  david     
+        
+    
+        gets classpath field  
+       
+       return path representing classpath  attribute  
+        
+    
+        validates passed attributes   p rules ol  
+           li action deploy update application source  attributes must supplied  
+           li action delete undeploy application  attribute must supplied  
+       
+       exception  buildexception                       description exception 
+        
+   super validateattributes       don't want call method 
+    
+        determines action supplied valid   p  
+       
+        valid actions contained static array 
+        valid_actions 
+       
+       return    true action attribute valid  false not  
+       org apache tools ant taskdefs optional j2ee JonasHotDeploymentTool org apache tools ant taskdefs optional j2ee jonashotdeploymenttool generichotdeploymenttool hotdeploymenttool default_orb    rmi valid_actions 
+           action_delete  action_deploy  action_list  action_undeploy  action_update setdavidhost invalue    
+        davidhost   invalue setdavidport invalue    
+        davidport   invalue setjonasroot file invalue    
+        jonasroot   invalue setorb invalue    
+        orb   invalue path getclasspath     
+ 
+        path aclasspath getclasspath aclasspath aclasspath path gettask   getproject orb aorbjar file jonasroot   lib     orb    _jonas jar   tostring aconfigdir file jonasroot   config    tostring    
+            path ajonasorbpath path aclasspath getproject    
+                    aorbjar   file pathseparator   aconfigdir   
+            aclasspath append ajonasorbpath aclasspath validateattributes buildexception   
+          
+ 
+        java java   getjava action   gettask   getaction action buildexception  the \ action\  attribute must be set isactionvalid buildexception  invalid action \     action    \  passed getclassname setclassname jonas_deploy_class_name jonasroot jonasroot isdirectory      
+            java createjvmarg   setvalue  -dinstall root     jonasroot   
+            java createjvmarg   setvalue  -djava security policy     jonasroot 
+                    config java policy david  equals orb     
+                java createjvmarg   setvalue  -dorg omg corba orbclass  
+                        org objectweb david libs binding orbs iiop iioporb    
+                java createjvmarg   setvalue  -dorg omg corba orbsingletonclass   
+                       org objectweb david libs binding orbs orbsingletonclass    
+                java createjvmarg   setvalue  -djavax rmi corba stubclass   
+                       org objectweb david libs stub_factories rmi stubdelegate    
+                java createjvmarg   setvalue  -djavax rmi corba portableremoteobjectclass   
+                       org objectweb david libs binding rmi orbportableremoteobjectdelegate    
+                java createjvmarg   setvalue  -djavax rmi corba utilclass   
+                       org objectweb david libs helpers rmiutildelegate    
+                java createjvmarg   setvalue  -ddavid cosnaming default_method 0    
+                java createjvmarg   setvalue  -ddavid rmi valuehandlerclass   
+                       com sun corba se internal io valuehandlerimpl davidhost java createjvmarg   setvalue  -ddavid cosnaming default_host   
+                          davidhost davidport    0    
+                    java createjvmarg   setvalue  -ddavid cosnaming default_port   
+                          davidport getserver java createarg   setline  -n     getserver action equals action_deploy  
+               action equals action_update  
+               action equals  redeploy      
+            java createarg   setline  -a     gettask   getsource action equals action_delete     action equals action_undeploy     
+            java createarg   setline  -r     gettask   getsource action equals action_list     
+            java createarg   setvalue  -l isactionvalid valid action   gettask   getaction i   0  i   valid_actions length  i action equals valid_actions i      
+                valid valid  
+      
+  
+org apache tools ant taskdefs optional j2ee JonasHotDeploymentTool

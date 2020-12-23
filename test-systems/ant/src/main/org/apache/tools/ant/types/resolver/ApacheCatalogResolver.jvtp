@@ -1,0 +1,99 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+    p class extends catalogresolver class provided norman 
+   walsh's resolver library xml-commons provides bridge 
+   between ant xmlcatalog datatype xml-commons catalog 
+   class   xmlcatalog calls methods class using reflection order avoid requiring xml-commons resolver library path   p  
+   
+    p link org apache tools ant types resolver apachecatalog 
+   apachecatalog  class used parse external catalog files either href  http   oasis-open org committees entity background 9401 html   
+   plain text format href  http   www oasis-open org committees entity spec-2001-08-06 html   
+   xml format p  
+   
+    p each entry found external catalog file any instance link org apache tools ant types resourcelocation 
+   resourcelocation created added controlling 
+   xmlcatalog datatype way entries included xmlcatalog's lookup algorithm   see xmlcatalog java details   p  
+   
+    see org apache tools ant types xmlcatalog catalogresolver 
+    see org apache xml resolver catalogmanager ant 1 6 xmlcatalog object callback don't sorts annoying 
+   warnings missing properties file seems work fine default values   ultimately probably include catalogmanager properties  
+   file ant jarfile some default property 
+   settings   see catalogmanager java details  
+   
+   
+   make sure catalogresolver instantiates apachecatalog plain catalog 
+   
+   debug 
+   catalogmanager getstaticmanager   setverbosity 4   
+    
+       set xmlcatalog object callback  
+        param xmlcatalog xmlcatalog use  
+        
+    
+       xmlcatalog calls add external catalog file each 
+       file within code  lt catalogfiles gt   code  fileset  
+        param file external catalog file  
+        
+   pass reference ourselves called back  
+    
+        p add public catalog entry controlling xmlcatalog instance  
+       apachecatalog calls each public entry found external 
+       catalog file   p  
+       
+        param publicid public id resource 
+        param systemid system id  aka location resource 
+        param base base url resource systemid 
+       specifies relative url pathname resolved using base default base external catalog file directory catalog located  
+       
+        
+    
+        p add uri catalog entry controlling xmlcatalog instance  
+       apachecatalog calls each uri entry found external 
+       catalog file   p  
+       
+        param uri uri resource 
+        param alturi uri resource mapped 
+        aka location  
+        param base base url resource alturi 
+       specifies relative url pathname resolved using base default base external catalog file directory catalog located  
+       
+        
+  -- apachecatalogresolverorg apache tools ant types resolver ApacheCatalogResolver org apache tools ant types resolver apachecatalogresolver catalogresolver catalogmanager getstaticmanager   setignoremissingproperties system getproperties   put  xml catalog classname   
+                                   apachecatalog getname     
+ 
+        catalogmanager getstaticmanager   setusestaticcatalog setxmlcatalog xmlcatalog xmlcatalog xmlcatalog   xmlcatalog parsecatalog file    
+ 
+        catalog catalog   getcatalog catalog apachecatalog buildexception  wrong catalog type found      catalog getclass   getname     
+          
+        apachecatalog apachecatalog    apachecatalog  catalog  
+ 
+          
+        apachecatalog setresolver apachecatalog parsecatalog file malformedurlexception ex buildexception ex ioexception ex buildexception ex addpublicentry publicid systemid  
+                               url base    
+ 
+        resourcelocation dtd resourcelocation    
+        dtd setbase base   
+        dtd setpublicid publicid   
+        dtd setlocation systemid   
+ 
+        xmlcatalog adddtd dtd addurientry uri alturi  
+                            url base    
+ 
+        resourcelocation entity resourcelocation    
+        entity setbase base   
+        entity setpublicid uri   
+        entity setlocation alturi   
+ 
+        xmlcatalog addentity entity   
+      
+ 
+   org apache tools ant types resolver ApacheCatalogResolver

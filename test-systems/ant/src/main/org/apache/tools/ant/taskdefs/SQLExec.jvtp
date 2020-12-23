@@ -1,0 +1,352 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   executes series sql statements database using jdbc  
+   
+    p statements either read text file using src attribute between enclosing sql tags   p  
+   
+    p multiple statements provided  separated semicolons defined delimiter individual lines within statements commented using either rem start line   p  
+   
+    p autocommit attribute specifies whether auto-commit turned whilst executing statements auto-commit turned each statement executed committed turned statements executed one transaction   p  
+   
+    p onerror attribute specifies proceed error occurs 
+   during execution one statements possible values b continue  b  execution  only show error  
+    b stop  b  execution commit transaction b abort  b  execution transaction fail task   p ant 1 2 
+   
+    ant task name  sql  category  database  
+    
+    
+       delimiters support   normal row enumerated strings    
+     return enumerated strings    
+    
+       database connection 
+        
+    
+       files load 
+        
+    
+       sql statement 
+        
+    
+       sql input file 
+        
+    
+       sql input command 
+        
+    
+       sql transactions perform 
+        
+    
+       sql statement delimiter delimiter type indicating whether delimiter only recognized line itself 
+        
+    
+       print sql results  
+        
+    
+       print header columns  
+        
+    
+       print sql stats  rows affected  
+        
+    
+       results output file  
+        
+    
+       action perform error found 
+         
+    
+       encoding use reading sql statements file 
+        
+    
+       append existing file overwrite keep format sql block? 
+        
+    
+       argument statement setescapeprocessing ant 1 6 properties expanded text? 
+       false backwards compatibility ant 1 7 
+        
+    
+       set name sql file run  
+       required unless statements enclosed build file 
+        param srcfile file containing sql command  
+        
+    
+       enable property expansion inside nested text 
+       
+        param expandproperties true expand properties ant 1 7 property expansion inside inline text enabled? 
+       
+        return true properties expanded ant 1 7 
+        
+    
+       set inline sql command execute  
+       nb  properties not expanded text unless   link #expandproperties set  
+        param sql inline string containing sql command need expand properties here happens transaction addtext called here error  
+    
+       adds set files  nested fileset attribute   
+        param set set files contains sql commands  each file run separate transaction  
+        
+    
+       adds collection resources  nested element   
+        param rc collection resources containing sql commands  
+       each resource run separate transaction ant 1 7 
+        
+    
+       add sql transaction execute 
+        return transaction configured  
+        
+    
+       set file encoding use sql files read param encoding encoding use files 
+        
+    
+       set delimiter separates sql statements  defaults quot   quot   
+       optional 
+       
+        p example  set go delimitertype row sybase ase ms sql server   p  
+        param delimiter separator  
+        
+    
+       set delimiter type   normal row   default  normal    
+       
+        p delimiter type takes two values - normal row  normal 
+       means any occurrence delimiter terminate sql 
+       command whereas row  only line containing delimiter recognized end command   p  
+        param delimitertype type delimiter -  normal row   
+        
+    
+       print result sets statements  
+       optional  default false 
+        param print true print result sets  
+        
+    
+       print headers result sets statements  optional  default true  
+        param showheaders true print headers result sets  
+        
+    
+       print trailing info  rows affected sql 
+       addresses bug request #27446 
+        param showtrailers true prints sql rows affected ant 1 7 
+        
+    
+       set output file  
+       optional  defaults ant log  
+        param output output file use logging messages  
+        
+    
+       whether output appended overwrite existing file   defaults false ant 1 5 
+        param append true append existing file  
+        
+    
+       action perform statement fails  continue  stop abort 
+       optional  default  quot abort quot  
+        param action action perform statement failure  
+        
+    
+       whether not format preserved  
+       defaults false  
+       
+        param keepformat keepformat set 
+        
+    
+       set escape processing statements  
+        param enable true enable escape processing  default true ant 1 6 
+        
+    
+       load sql file execute throws buildexception error  
+        
+   deal resources 
+   make transaction each resource 
+   make transaction group outer command 
+   process transactions 
+   ignore 
+    
+       read lines execute param reader reader contains sql lines  
+        param out place output results  
+        throws sqlexception sql problems 
+        throws ioexception io problems 
+        
+        
+   sql defines comment eol oracle may contain hint cannot remove instead must end catch any statements not followed exec sql statement  
+        param sql sql statement execute 
+        param out place put output 
+        throws sqlexception sql problems 
+        
+   check ignore empty statements 
+    
+       print any results statement 
+        deprecated 1 6 x  
+                   use   link #printresults java sql resultset  java io printstream two arg version  instead  
+        param out place print results 
+        throws sqlexception sql problems  
+        
+    
+       print any results result set  
+        param rs resultset print information param out place print results 
+        throws sqlexception sql problems ant 1 6 3 
+        
+   
+       closes unused connection error doesn't rethrow possible sqlexception ant 1 7 
+        
+   ignore action task perform error  
+       one continue    stop abort  
+        
+     return enumerated values    
+    
+       contains definition new transaction element  
+       transactions allow several files blocks statements executed using same jdbc connection commit 
+       operation between  
+        
+    
+           set source file attribute  
+            param src source file places file perhaps elsewhere assumed null acceptable parameter  
+    
+           set source resource attribute  
+            param src source file ant 1 7 
+            
+    
+           set inline text 
+            param sql inline text 
+            
+    
+           set source resource  
+            param source resource collection ant 1 7 
+            
+    
+           
+           org apache tools ant taskdefs SQLExec org apache tools ant taskdefs sqlexec jdbctask delimitertype enumeratedattribute normal    normal   row    row getvalues normal  row setsrc file srcfile srcfile   srcfile setexpandproperties expandproperties expandproperties   expandproperties getexpandproperties expandproperties addtext sql sqlcommand    sql addfileset fileset set    
+        add set add resourcecollection rc    
+        resources add rc transaction createtransaction     
+        transaction t transaction    
+        transactions addelement t t setencoding encoding encoding   encoding setdelimiter delimiter delimiter   delimiter setdelimitertype delimitertype delimitertype delimitertype   delimitertype getvalue setprint print print   print setshowheaders showheaders showheaders   showheaders setshowtrailers showtrailers showtrailers   showtrailers setoutput file output output   output setappend append append   append setonerror onerror action onerror   action getvalue setkeepformat keepformat keepformat   keepformat setescapeprocessing enable    
+        escapeprocessing   enable execute buildexception   
+        vector savedtransaction    vector  transactions clone savedsqlcommand   sqlcommand  
+ 
+        sqlcommand   sqlcommand trim srcfile sqlcommand length      0 
+                   resources size      0 transactions size      0 buildexception  source file or resource   
+                                                collection    
+                                                transactions or sql statement   
+                                                must be set    getlocation srcfile srcfile exists buildexception  source file does not exist    getlocation     
+              
+ 
+              
+            iterator iter   resources iterator iter hasnext      
+                resource r    resource  iter next    
+                  
+                transaction t   createtransaction    
+                t setsrcresource r   
+              
+ 
+              
+            transaction t   createtransaction    
+            t setsrc srcfile   
+            t addtext sqlcommand   
+            conn   getconnection isvalidrdbms conn statement   conn createstatement    
+                statement setescapeprocessing escapeprocessing   
+ 
+                printstream out   system out output log  opening printstream to output file     output  
+                            project msg_verbose   
+                        out printstream bufferedoutputstream fileoutputstream output 
+                                                            getabsolutepath    
+                                                           append enumeration e   transactions elements    
+                         e hasmoreelements       
+ 
+                          transaction  e nextelement    runtransaction out isautocommit      
+                            log  committing transaction   project msg_verbose   
+                            conn commit out out    system out    
+                        out close ioexception e    
+                closequietly buildexception e  getlocation sqlexception e    
+                closequietly buildexception e  getlocation statement statement close conn conn close sqlexception ex    
+                      
+                  
+              
+ 
+            log goodsql     of     totalsql 
+                    sql statements executed successfully transactions   savedtransaction  
+            sqlcommand   savedsqlcommand runstatements reader reader  printstream out sqlexception  ioexception   
+        stringbuffer sql stringbuffer line  
+ 
+        bufferedreader in bufferedreader reader line   in readline keepformat    
+                line   line trim    
+              
+            line   getproject   replaceproperties line keepformat line startswith line startswith stringtokenizer st stringtokenizer line st hasmoretokens token   st nexttoken rem  equalsignorecase token keepformat    
+                sql append       
+                sql append line sql append  \n    
+                sql append line keepformat line indexof  --      0    
+                    sql append  \n delimitertype equals delimitertype normal  
+                    stringutils endswith sql  delimiter   
+                   
+                 delimitertype equals delimitertype row  
+                    line equals delimiter      
+                execsql sql substring 0  sql length   - delimiter length     
+                        out   
+                sql replace 0  sql length sql length     0    
+            execsql sql tostring    out execsql sql  printstream out sqlexception equals sql trim resultset resultset totalsql    
+            log  sql      sql  project msg_verbose ret updatecount   0  updatecounttotal   0  
+ 
+            ret   statement execute sql   
+            updatecount   statement getupdatecount    
+            resultset   statement getresultset ret updatecount    -1    
+                        updatecounttotal    updatecount print    
+                        printresults resultset  out   
+                      
+                  
+                ret   statement getmoreresults ret    
+                    updatecount   statement getupdatecount    
+                    resultset   statement getresultset ret   
+ 
+            log updatecounttotal     rows affected   
+                project msg_verbose print    showtrailers    
+                out println updatecounttotal     rows affected    
+              
+ 
+            sqlwarning warning   conn getwarnings warning log warning     sql warning   project msg_verbose   
+                warning   warning getnextwarning    
+              
+            conn clearwarnings    
+            goodsql sqlexception e    
+            log  failed to execute      sql  project msg_err onerror equals e  
+              
+            log e tostring    project msg_err resultset resultset close printresults printstream out sqlexception   
+        resultset rs   statement getresultset printresults rs  out rs rs close printresults resultset rs  printstream out sqlexception rs log  processing result set    project msg_verbose   
+            resultsetmetadata md   rs getmetadata columncount   md getcolumncount    
+            stringbuffer line stringbuffer showheaders col   1  col   columncount  col      
+                     line append md getcolumnname col    
+                     line append       
+                  
+                line append md getcolumnname columncount    
+                out println line   
+                line stringbuffer rs next first col   1  col    columncount  col columnvalue   rs getstring col columnvalue columnvalue   columnvalue trim first    
+                        first line append       
+                      
+                    line append columnvalue   
+                  
+                out println line   
+                line stringbuffer    
+              
+          
+        out println closequietly isautocommit      conn onerror equals  abort conn rollback sqlexception ex onerror enumeratedattribute getvalues stop    abort transaction setsrc file src src setsrcresource fileresource src setsrcresource resource src tsrcresource buildexception  only one resource per transaction    
+              
+            tsrcresource   src addtext sql sql getexpandproperties      
+                    sql   getproject   replaceproperties sql tsqlcommand    sql addconfigured resourcecollection a a size      1 buildexception  only single argument resource   
+                                            collections are supported     
+              
+            setsrcresource  resource  a iterator   next runtransaction printstream out ioexception  sqlexception tsqlcommand length      0    
+                log  executing commands   project msg_info   
+                runstatements stringreader tsqlcommand   out tsrcresource log  executing resource      tsrcresource tostring    
+                    project msg_info   
+                inputstream is reader reader is   tsrcresource getinputstream    
+                    reader   
+                         encoding inputstreamreader is inputstreamreader is  encoding   
+                    runstatements reader  out fileutils close is   
+                    fileutils close reader   
+                  
+              
+          
+      
+ org apache tools ant taskdefs SQLExec

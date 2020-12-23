@@ -1,0 +1,274 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   used create verify file checksums ant 1 5 
+   
+    ant task category  control  
+    
+    
+       file checksum calculated  
+        
+    
+       root directory checksum files written not specified checksum files written same directory each file  
+        
+    
+       messagedigest algorithm used  
+        
+    
+       messagedigest algorithm provider 
+        
+    
+       file extension used create identify 
+       destination file 
+        
+    
+       holds generated checksum gets set project property  
+        
+    
+       holds checksums files  both calculated cached disk   
+       key    java util file  source file  
+       value  java lang string  digest  
+        
+    
+       holds relative file names files  always forward slash used calculate total hash  
+       key    java util file  source file  
+       value  java lang string  relative file name  
+        
+    
+       property totalchecksum gets set  
+        
+    
+       whether not create new file  
+       defaults code false  code   
+        
+    
+       contains result checksum verification    true false   
+        
+    
+       resource collection  
+        
+    
+       stores sourcefile  destfile pairs sourcefile  property string pairs  
+        
+    
+       message digest instance task being used nested condition element? 
+        
+    
+       size read buffer use  
+        
+    
+       formater checksum file  
+        
+    
+       sets file checksum calculated  
+        param file code file  code  value 
+        
+    
+       sets root directory checksum files written read 
+        param todir directory write ant 1 6 
+        
+    
+       specifies algorithm used compute checksum  
+       defaults md5 popular algorithms sha  may used well  
+        param algorithm code string  code  value 
+        
+    
+       sets messagedigest algorithm provider used calculate checksum  
+        param provider code string  code  value 
+        
+    
+       sets file extension used create identify destination file  
+        param fileext code string  code  value 
+        
+    
+       sets property hold generated checksum  
+        param property code string  code  value 
+        
+    
+       sets property hold generated total checksum files  
+        param totalproperty code string  code  value ant 1 6 
+        
+    
+       sets verify property project property holds result checksum verification -  true false  
+        param verifyproperty code string  code  value 
+        
+    
+       whether not overwrite existing file irrespective whether newer source file   defaults false  
+        param forceoverwrite code boolean  code  value size read buffer use  
+        param size code int  code  value 
+        
+    
+       select output pattern via well know format name  
+        param e code enumerated  code  value 1 7 0 
+        
+    
+       specify pattern use messageformat pattern  
+       
+        p  0  gets replaced checksum   1 filename   p  
+        param p code string  code  value 1 7 0 
+        
+    
+       files generate checksums param set fileset files generate checksums add resource collection  
+        param rc resourcecollection add  
+        
+    
+       calculate checksum s   
+        throws buildexception error 
+        
+    
+       calculate checksum s  
+       
+        return returns true checksum verification test passed  
+       false otherwise  
+        throws buildexception error 
+        
+    
+       validate attributes down business  
+        
+   use calculate digest based file name required order same result different platforms  
+    
+       add key-value pair hashtable upon later operate upon  
+        
+   read checksum disk separate directory explicitly declared 
+  bug 37386 not occur once  
+   create directory might not exist use same directory file itself directory exist 
+    
+       generate checksum s  using message digest created earlier  
+        
+   empty statement either property name string file 
+   file wrong format  swallow 
+   calculate total checksum 
+   convert keys  source files sorted array  
+   file comparable sorting trivial 
+   loop over checksums generate total hash  
+   add digest file content 
+   add file path 
+    
+       converts array characters representing hexadecimal values array bytes those same values returned array half length passed array takes two characters represent any 
+       given byte exception thrown passed char array odd 
+       number elements  
+       
+       note code copied jakarta-commons codec  
+        param data array characters representing hexadecimal values 
+        return converted array bytes 
+        throws buildexception error 
+        
+   two characters form hex value  
+    
+       reads checksum file using specified format 1 7 
+        
+    
+       helper class format attribute 1 7 
+        
+    constructor formatelement default value - checksum  
+            return defaul value  
+            
+    
+           convert enumerated type code messageformat  code   
+            return code messageformat  code  object valid values  
+            return array values  
+           org apache tools ant taskdefs Checksum org apache tools ant taskdefs checksum matchingtask condition fileunion restrict   
+  
+        fileunion     
+            u union add u add type file add resourcecollection rc    
+            u add rc setfile file file file   file settodir file todir todir   todir setalgorithm algorithm algorithm   algorithm setprovider provider provider   provider setfileext fileext fileext   fileext setproperty property property   property settotalproperty totalproperty totalproperty   totalproperty setverifyproperty verifyproperty verifyproperty   verifyproperty setforceoverwrite forceoverwrite forceoverwrite   forceoverwrite setreadbuffersize size readbuffersize   size setformat formatelement e    
+        format   e getformat setpattern p    
+        format messageformat p addfileset fileset set    
+        add set add resourcecollection rc rc resources    resources fileunion     resources  
+        resources add rc execute buildexception   
+        iscondition value   validateandexecute verifyproperty getproject   setnewproperty  
+                verifyproperty  
+                 value tostring tostring eval buildexception   
+        iscondition validateandexecute validateandexecute buildexception savedfileext   fileext file resources resources size      0 buildexception  
+                 specify at least one source - a file or a resource collection resources resources isfilesystemonly buildexception  can only calculate checksums file-based resources file file exists      file isdirectory buildexception  checksum cannot be generated directories file totalproperty buildexception  file and totalproperty cannot co-exist property fileext buildexception  property and fileext cannot co-exist property forceoverwrite buildexception  
+                     forceoverwrite cannot be used when property is specified ct   0 resources ct    resources size file ct ct   1 buildexception  
+                     multiple files cannot be used when property is specified verifyproperty iscondition verifyproperty forceoverwrite buildexception  verifyproperty and forceoverwrite cannot co-exist iscondition    forceoverwrite buildexception  
+                 forceoverwrite cannot be used when conditions are being used     
+          
+        messagedigest provider messagedigest   messagedigest getinstance algorithm  provider nosuchalgorithmexception noalgo buildexception noalgo  getlocation nosuchproviderexception noprovider buildexception noprovider  getlocation messagedigest   messagedigest getinstance algorithm nosuchalgorithmexception noalgo buildexception noalgo  getlocation messagedigest buildexception  unable to create message digest   getlocation fileext fileext         algorithm fileext trim   length      0 buildexception  file extension when specified must not be an empty resources iterator i   resources iterator    i hasnext       
+                    fileresource fr    fileresource  i next    
+                    file src   fr getfile totalproperty todir relativefilepaths put src  fr getname   replace file separatorchar  ' '    
+                      
+                    addtoincludefilemap src file totalproperty todir relativefilepaths put  
+                        file  file getname   replace file separatorchar  ' '    
+                  
+                addtoincludefilemap file generatechecksums fileext   savedfileext  
+            includefilemap clear addtoincludefilemap file file buildexception file exists property file checksumfile   getchecksumfile file forceoverwrite    iscondition 
+                        file lastmodified     checksumfile lastmodified       
+                    includefilemap put file  checksumfile log file     omitted as     checksumfile     is up to date    
+                        project msg_verbose totalproperty checksum   readchecksum checksumfile digest   decodehex checksum tochararray     
+                        alldigests put file  digest includefilemap put file  property message    could not find file   
+                  file getabsolutepath   
+                    to generate checksum log message buildexception message  getlocation file getchecksumfile file file    
+        file directory todir path relativefilepaths get file path buildexception  
+                     internal error    
+                       relativefilepaths could not match file  
+                      file    \n  
+                       please file a bug report on directory file todir  path  getparentfile    
+              
+            directory mkdirs directory   file getparentfile    
+          
+        file checksumfile file directory  file getname     fileext checksumfile generatechecksums buildexception checksummatches fileinputstream fis fileoutputstream fos buf readbuffersize enumeration e   includefilemap keys    e hasmoreelements       
+                messagedigest reset    
+                file src    file  e nextelement iscondition    
+                    log  calculating     algorithm     checksum src  project msg_verbose   
+                  
+                fis fileinputstream src   
+                digestinputstream dis digestinputstream fis  
+                                                              messagedigest dis read buf  0  readbuffersize     -1    
+                      
+                  
+                dis close    
+                fis close    
+                fis filedigest   messagedigest digest totalproperty alldigests put src  filedigest checksum   createdigeststring filedigest   
+                  
+                object destination   includefilemap get src destination java lang string prop destination iscondition    
+                        checksummatches 
+                              checksummatches    checksum equals property getproject   setnewproperty prop  checksum destination java io file iscondition    
+                        file existingfile    file  destination existingfile exists suppliedchecksum   
+                                    readchecksum existingfile   
+                                checksummatches   checksummatches 
+                                       checksum equals suppliedchecksum buildexception be    
+                                  
+                                checksummatches checksummatches file dest    file  destination  
+                        fos fileoutputstream dest   
+                        fos write format format object     
+                                                    checksum  
+                                                    src getname    
+                                                   getbytes     
+                        fos write stringutils line_sep getbytes     
+                        fos close    
+                        fos totalproperty set keys   alldigests keyset    
+                object   keyarray   keys toarray    
+                  
+                arrays sort keyarray   
+                  
+                messagedigest reset i   0  i   keyarray length  i      
+                    file src    file  keyarray i digest alldigests get src   
+                    messagedigest update digest filename relativefilepaths get src   
+                    messagedigest update filename getbytes totalchecksum   createdigeststring messagedigest digest     
+                getproject   setnewproperty totalproperty  totalchecksum exception e buildexception e  getlocation fileutils close fis   
+            fileutils close fos checksummatches createdigeststring filedigest    
+        stringbuffer checksumsb stringbuffer i   0  i   filedigest length  i hexstr   integer tohexstring 0x00ff   filedigest i hexstr length     2    
+                checksumsb append  0    
+              
+            checksumsb append hexstr checksumsb tostring decodehex data buildexception l   data length l   0x01     0 buildexception  odd number of characters out l    1 i   0  j   0  j   l  i f   character digit data j     16     4  
+            f   f   character digit data j     16   
+            out i f   0xff out readchecksum file f    
+        bufferedreader diskchecksumreader diskchecksumreader bufferedreader filereader f    
+            object   result   format parse diskchecksumreader readline result result length    0    result 0 buildexception  failed to find a checksum result 0 ioexception e buildexception  couldn't read checksum file     f  e parseexception e buildexception  couldn't read checksum file     f  e fileutils close diskchecksumreader formatelement enumeratedattribute formatmap put checksum messageformat   0      
+            formatmap put md5sum messageformat   0    1      
+            formatmap put svf messageformat  md5   1      0 formatelement formatelement getdefault     
+            formatelement e formatelement    
+            e setvalue checksum e messageformat getformat messageformat  formatmap get getvalue getvalues checksum  md5sum  svf   
+          
+      
+ org apache tools ant taskdefs Checksum

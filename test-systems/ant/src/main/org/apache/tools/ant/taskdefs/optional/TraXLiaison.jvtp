@@ -1,0 +1,264 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   concrete liaison xslt processor implementing trax   ie jaxp 1 1 ant 1 3 
+    
+    
+       helper transforming filenames uris ant 1 7 current  code project  code name factory implementation class use null default jaxp lookup trax transformerfactory    
+    stylesheet use transformation    
+    possible resolver publicids    
+    transformer use processing files memory version stylesheet modification time stylesheet templates read 
+        
+    possible resolver uris    
+    transformer output properties    
+    stylesheet parameters    
+    factory attributes    
+    
+       constructor traxliaison  
+        throws exception never 
+        
+    
+       set stylesheet file  
+        param stylesheet code file  code  value 
+        throws exception error 
+        
+    
+       set stylesheet file  
+        param stylesheet link org apache tools ant types resource  value 
+        throws exception error 
+        
+   resetting stylesheet - reset transformer need reset templates well 
+    
+       transform input file  
+        param infile file transform 
+        param outfile result file 
+        throws exception error 
+        
+   not sure need set parameters each transformation  maybe something changed 
+   e g  value file name parameter  
+   make sure close handles  otherwise garbage 
+   collector close whenever possible windows may complain not being delete files  
+   ignore 
+   ignore source instance stream id file  
+        param stream containing stylesheet data  
+        param infile file used systemid  
+        return configured source instance matching stylesheet  
+        throws parserconfigurationexception parser cannot created satisfies requested configuration  
+        throws saxexception case problem detected sax parser  
+        
+   todo comment still relevant ?? 
+   fixme  need use saxsource source transform plug entity resolver 
+   warn  don't use streamsource file  ctor won't work xalan prior 2 2 systemid bugs  
+   todo comment still relevant ?? 
+   fixme  need use saxsource source transform plug entity resolver 
+   warn  don't use streamsource file  ctor won't work xalan prior 2 2 systemid bugs line below hack system id must uri not 
+   cleat uri resource set name resource system id 
+    
+       read templates stylesheet 
+        
+   use stream close yourself quickly avoid keeping handle until object garbaged  
+    always keep control   otherwise won't delete file quickly windows  
+    
+       create new transformer based liaison settings 
+        throws exception thrown error during creation  
+        see #setstylesheet java io file  
+        see #addparam java lang string  java lang string  
+        see #setoutputproperty java lang string  java lang string  
+        
+   configure transformer    
+    
+       sets paramters transformer  
+        
+    
+       return transformer factory associated liaison  
+        return transformer factory associated liaison  
+        throws buildexception thrown problem creating factory  
+        see #setfactory string ant 1 5 2 
+        
+   not initialized create factory 
+   specific attributes transformer 
+    
+       set factory name use instead jaxp default lookup  
+        param name fully qualified class name factory use null default jaxp look up mechanism ant 1 6 
+        
+    
+       set custom attribute jaxp factory implementation  
+        param name attribute name  
+        param value value attribute  usually boolean 
+       string object ant 1 6 
+        
+    
+       set output property current transformer  
+       note stylesheet must set prior calling method  
+        param name output property name  
+        param value output property value ant 1 5 ant 1 5 
+        
+    
+       set class resolve entities during transformation  
+        param aresolver resolver class  
+        
+    
+       set class resolve uris during transformation 
+        param aresolver code entityresolver  code  value 
+        
+    
+       add parameter  
+        param name name parameter 
+        param value value parameter 
+        
+    
+       set logger  
+        param l logger  
+        
+    
+       log error  
+        param e exception log  
+        
+    
+       log fatal error  
+        param e exception log  
+        
+    
+       log warning  
+        param e exception log  
+        
+   kept backwards compatibility 
+    
+        param file filename use systemid 
+        return systemid 
+        deprecated 1 5 x  
+                   use org apache tools ant util jaxputils#getsystemid instead  
+        
+    
+       specific configuration trax liaison  
+        param xslttask xsltprocess task instance liasion configured  
+        
+   configure factory attributes 
+   use xmlcatalog entity resolver uri resolver 
+   configure output propertiesorg apache tools ant taskdefs optional TraXLiaison org apache tools ant taskdefs optional traxliaison xsltliaison3  errorlistener  xsltloggeraware traxliaison exception setstylesheet file stylesheet exception   
+        fileresource fr fileresource    
+        fr setproject project   
+        fr setfile stylesheet   
+        setstylesheet fr setstylesheet resource stylesheet exception stylesheet transformer stylesheet equals stylesheet  
+                    stylesheet getlastmodified      templatesmodtime     
+                templates stylesheet   stylesheet transform file infile  file outfile exception transformer createtransformer    
+          
+ 
+        inputstream fis outputstream fos fis bufferedinputstream fileinputstream infile    
+            fos bufferedoutputstream fileoutputstream outfile    
+            streamresult res streamresult fos   
+              
+            res setsystemid jaxputils getsystemid outfile    
+            source src   getsource fis  infile   
+ 
+              
+              
+            settransformationparameters    
+ 
+            transformer transform src  res fis fis close ioexception ignored fos fos close ioexception ignored source getsource inputstream is  file infile parserconfigurationexception  saxexception   
+          
+          
+          
+        source src entityresolver getfactory   getfeature saxsource feature     
+                saxparserfactory spfactory   saxparserfactory newinstance    
+                spfactory setnamespaceaware xmlreader reader   spfactory newsaxparser   getxmlreader    
+                reader setentityresolver entityresolver   
+                src saxsource reader inputsource is illegalstateexception  xcatalog specified  but   
+                       parser doesn't support sax src streamsource is   
+          
+        src setsystemid jaxputils getsystemid infile src source getsource inputstream is  resource resource parserconfigurationexception  saxexception   
+          
+          
+          
+        source src entityresolver getfactory   getfeature saxsource feature     
+                saxparserfactory spfactory   saxparserfactory newinstance    
+                spfactory setnamespaceaware xmlreader reader   spfactory newsaxparser   getxmlreader    
+                reader setentityresolver entityresolver   
+                src saxsource reader inputsource is illegalstateexception  xcatalog specified  but   
+                       parser doesn't support sax src streamsource is   
+          
+          
+          
+          
+        src setsystemid resourcetouri resource src resourcetouri resource resource resource fileresource    
+            file f     fileresource  resource  getfile file_utils touri f getabsolutepath resource urlresource    
+            url u     urlresource  resource  geturl valueof u resource getname readtemplates ioexception  transformerconfigurationexception  
+               parserconfigurationexception  saxexception   
+ 
+          
+          
+          
+          
+        inputstream xslstream xslstream bufferedinputstream stylesheet getinputstream     
+            templatesmodtime   stylesheet getlastmodified    
+            source src   getsource xslstream  stylesheet   
+            templates   getfactory   newtemplates src xslstream xslstream close createtransformer exception templates readtemplates    
+          
+ 
+        transformer   templates newtransformer    
+ 
+          
+        transformer seterrorlistener uriresolver transformer seturiresolver uriresolver i   0  i   outputproperties size    i pair outputproperties elementat i   
+            transformer setoutputproperty pair 0   pair 1 settransformationparameters enumeration enumeration   params keys    
+             enumeration hasmoreelements name enumeration nextelement value params get name   
+            transformer setparameter name  value transformerfactory getfactory buildexception tfactory tfactory factoryname tfactory   transformerfactory newinstance clazz forname factoryname   
+                tfactory    transformerfactory  clazz newinstance exception e buildexception e   
+              
+          
+        tfactory seterrorlistener i   0  i   attributes size    i object   pair    object    attributes elementat i   
+            tfactory setattribute pair 0   pair 1 uriresolver tfactory seturiresolver uriresolver tfactory setfactory name    
+        factoryname   name setattribute name  object value object   pair object   name  value   
+        attributes addelement pair setoutputproperty name value pair name  value   
+        outputproperties addelement pair setentityresolver entityresolver aresolver    
+        entityresolver   aresolver seturiresolver uriresolver aresolver    
+        uriresolver   aresolver addparam name value    
+        params put name  value setlogger xsltlogger l    
+        logger   l error transformerexception e    
+        logerror e   error fatalerror transformerexception e    
+        logerror e   fatal error buildexception  fatal error during transformation   e warning transformerexception e    
+        logerror e   warning logerror transformerexception e type logger stringbuffer msg stringbuffer    
+        sourcelocator locator   e getlocator locator systemid   locator getsystemid systemid url   systemid url startswith  file       
+                    url   fileutils getfileutils   fromuri url   
+                  
+                msg append url msg append  unknown file line   locator getlinenumber line    -1    
+                msg append       
+                msg append line column   locator getcolumnnumber column    -1    
+                    msg append       
+                    msg append column   
+                  
+              
+          
+        msg append        
+        msg append type   
+        msg append        
+        msg append e getmessage e getcause msg append   cause      
+            msg append e getcause     
+          
+ 
+        logger log msg tostring getsystemid file file jaxputils getsystemid file configure xsltprocess xslttask    
+        project   xslttask getproject    
+        xsltprocess factory factory   xslttask getfactory factory setfactory factory getname enumeration attrs   factory getattributes    
+                    attrs hasmoreelements       
+                xsltprocess factory attribute attr   
+                         xsltprocess factory attribute  attrs nextelement    
+                setattribute attr getname    attr getvalue     
+              
+          
+ 
+        xmlcatalog xmlcatalog   xslttask getxmlcatalog xmlcatalog setentityresolver xmlcatalog   
+            seturiresolver xmlcatalog enumeration props   xslttask getoutputproperties    
+                props hasmoreelements       
+            xsltprocess outputproperty prop 
+                   xsltprocess outputproperty  props nextelement    
+            setoutputproperty prop getname    prop getvalue     
+          
+      
+ org apache tools ant taskdefs optional TraXLiaison

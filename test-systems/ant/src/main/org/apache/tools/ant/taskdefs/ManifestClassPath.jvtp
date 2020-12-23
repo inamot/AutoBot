@@ -1,0 +1,78 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   converts path property suitable manifest classpath ant 1 7 
+   
+    ant task category  property property name hold classpath value directory classpath relative maximum parent directory level traverse classpath convert     
+    
+       sets property must not already exist space 
+       separated list files directories relative jar 
+       file's parent directory  
+        
+   normalize reference directory  containing jar  
+   create many directory prefixes parent levels traverse addition reference directory itself 
+   normalize current file 
+   find longest prefix shared current file reference directory match  add many parent 
+   directory traversed relative path match bail out  
+   manifest's classpath  attribute always uses forward 
+   slashes space-separated  ant properly 
+   format 72 columns proper line continuation 
+   finally assign property manifest classpath 
+    
+       sets property name hold classpath value  
+       
+        param  name property name jar file contain classpath attribute manifest  
+       
+        param  jarfile jar file  need not exist parent 
+               directory must exist hand  
+        
+    
+       sets maximum parent directory levels allowed computing relative path  
+       
+        param  levels max level  defaults 2  
+        
+    
+       adds classpath convert  
+       
+        param  path classpath convert  
+       org apache tools ant taskdefs ManifestClassPath org apache tools ant taskdefs manifestclasspath task execute name buildexception  missing 'property' attribute dir buildexception  missing 'jarfile' attribute getproject   getproperty name buildexception  property '    name    ' already set path buildexception  missing nested  classpath fileutils fileutils   fileutils getfileutils    
+        dir   fileutils normalize dir getabsolutepath     
+ 
+          
+          
+        file currdir   dir dirs maxparentlevels   1 i   0  i   maxparentlevels   1    i    
+            dirs i    currdir getabsolutepath     file separatorchar  
+            currdir   currdir getparentfile currdir maxparentlevels   i   1 elements   path list    
+        stringbuffer buffer stringbuffer    
+        stringbuffer element stringbuffer i   0  i   elements length    i    
+              
+            file pathentry file elements i    
+            pathentry   fileutils normalize pathentry getabsolutepath fullpath   pathentry getabsolutepath relpath j   0  j    maxparentlevels    j dir   dirs j fullpath startswith dir element setlength 0 k   0  k   j    k    
+                    element append        
+                    element append file separatorchar   
+                  
+                element append fullpath substring dir length      
+                relpath   element tostring relpath buildexception  
+                     no suitable relative path from   
+                      dir     to     fullpath file separatorchar    ' '    
+                relpath   relpath replace file separatorchar pathentry isdirectory      
+                relpath   relpath relpath   locator encodeuri relpath unsupportedencodingexception exc buildexception exc   
+              
+            buffer append relpath   
+            buffer append ' '   
+          
+ 
+          
+        getproject   setnewproperty name  buffer tostring   trim setproperty name name   name setjarfile file jarfile    
+        file parent   jarfile getparentfile parent isdirectory buildexception  jar's directory not found      parent dir   parent setmaxparentlevels levels maxparentlevels   levels addclasspath path path path   path  
+      
+ 
+ org apache tools ant taskdefs ManifestClassPath

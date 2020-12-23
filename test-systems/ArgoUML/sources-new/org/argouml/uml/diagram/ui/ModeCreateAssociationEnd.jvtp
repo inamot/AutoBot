@@ -1,0 +1,156 @@
+ 
+   $id$ 
+   copyright  c  2005-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications mode interpret user input creating association end association end connect existing association existing 
+   classifier association n-ary association  diamond shape node edge simply added association binary association edge edge transformed n-ary association  
+   todo  investigate extend modecreategraphedge 
+   
+    author pepargouml yahoo es uid  
+        
+   
+        see java awt event mouselistener#mousepressed java awt event mouseevent  
+        
+   
+        see org tigris gef base modecreatepolyedge#mousereleased java awt event mouseevent  
+        
+   todo  http   argouml tigris org issues show_bug cgi?id 2991 
+   
+        see org tigris gef base modecreatepolyedge#mousereleased java awt event mouseevent  
+        
+   order here very important  
+   1  remove old association figedge first 
+   3  make sure association node graph model 
+   
+        see org tigris gef base modecreatepolyedge#mousereleased java awt event mouseevent  
+        
+   order here very important  
+   1  remove old association figedge first 
+   2  add new association end association 
+   3  create new fignode representing n-ary assoc 
+   4  create new fignode representing n-ary assoc called edge successfully connected method extended make sure edges graph model 
+        param fe figedge drawn 
+        
+  fignode setvisible false method must called edge drawing aborted any reason removes any fignodeassociation may created drawing started figassociation edge  
+        
+   
+        see org tigris gef base modeimpl#leave   
+        
+   end class modecreateassociation   org argouml uml diagram ui ModeCreateAssociationEnd org argouml uml diagram ui modecreateassociationend modecreatepolyedge logger log   
+	logger getlogger modecreateassociationend mousepressed mouseevent me x   me getx    y   me gety    
+        fig undermouse   editor hit x  y undermouse undermouse   editor hit x - 16  y - 16  32  32 undermouse _npoints    0    
+            done    
+            me consume _npoints   0    
+            me consume object modelelement   undermouse getowner model getfacade   isaassociationclass modelelement model getfacade   isaassociation undermouse getowner       
+                association   undermouse getowner undermouse figassociation    
+                associationends   
+                    model getfacade   getconnections association   
+                newfignodeassociation   placetempnode me   
+                undermouse   newfignodeassociation  
+                setsourcefignode newfignodeassociation   
+                setstartport newfignodeassociation getowner     
+                setstartportfig newfignodeassociation undermouse fignodeassociation 
+                       undermouse figclassifierbox getsourcefignode setsourcefignode  fignode  undermouse   
+                    setstartport getsourcefignode   deephitport x  y getstartport done    
+                    me consume setstartportfig  
+                        getsourcefignode   getportfig getstartport done    
+                me consume createfig me   
+        me consume mousereleased mouseevent me me isconsumed getsourcefignode done    
+            me consume x   me getx y   me gety    
+        fig destfig   editor hit x  y destfig destfig   editor hit x - 16  y - 16  32  32 destfig object source   getsourcefignode   getowner    
+            object dest   destfig getowner model getfacade   isaassociationclass source  
+            	   model getfacade   isaassociationclass dest model getfacade   isaassociation source  
+                   model getfacade   isaclassifier dest   
+                    model getfacade   isaclassifier source     
+                mousereleasedonclassifier me  destfig model getfacade   isaclassifier dest  
+                   model getfacade   isaassociation dest   
+                    model getfacade   isaclassifier source     
+                mousereleasedonassociation me  destfig nearlast x  y     
+            editor damageall    
+            point snappt point x  y   
+            editor snap snappt   
+              figpoly  _newitem  addpoint snappt x  snappt y   
+            _npoints    
+            editor damageall    
+          
+        _lastx   x  
+        _lasty   y  
+        me consume mousereleasedonclassifier mouseevent me fig destfig    
+        mutablegraphmodel graphmodel   
+             mutablegraphmodel  editor getgraphmodel    
+ 
+          
+          
+        graphmodel removeedge association model getumlfactory   buildconnection  
+	    	model getmetatypes   getassociationend    
+	    	getsourcefignode   getowner destfig getowner null illegalmodelelementconnectionexception e    
+	    log error  exception   e   
+	  
+	 
+          
+        graphmodel addnode association   
+         
+        associationends   
+            model getfacade   getconnections association   
+         
+        endattached me consume mousereleasedonassociation mouseevent me fig destfig x   me getx y   me gety    
+         
+        mutablegraphmodel graphmodel   
+             mutablegraphmodel  editor getgraphmodel    
+ 
+        object destassociation   destfig getowner    
+         
+          
+          
+        graphmodel removeedge destassociation   
+        destfig removefromdiagram    
+         
+          
+        graphmodel connect  
+                getstartport    
+                destassociation  
+                model getmetatypes   getassociationend     
+         
+          
+        graphmodel addnode destassociation   
+         
+          
+        layer lay   editor getlayermanager   getactivelayer    
+        fignode fignode    fignode  lay presentationfor destassociation   
+        fignode setlocation  
+                x - fignode getwidth     2  
+                y - fignode getheight     2   
+        editor add fignode   
+         
+        associationends   
+            model getfacade   getconnections destassociation   
+         
+        endattached me consume endattached figedge fe    
+        mutablegraphmodel graphmodel   
+             mutablegraphmodel  editor getgraphmodel iterator it   associationends iterator    it hasnext        
+            graphmodel addedge it next endattached fe   
+        done fignode placetempnode mouseevent me    
+        fignode fignode graphmodel gm   editor getgraphmodel    
+ 
+        graphnoderenderer renderer   editor getgraphnoderenderer    
+        layer lay   editor getlayermanager   getactivelayer    
+        fignode   renderer getfignodefor gm  lay  association fignode setlocation  
+                me getx   - fignode getwidth     2  
+                me gety   - fignode getheight     2   
+          
+        editor add fignode   
+        editor getselectionmanager   deselectall fignode keytyped keyevent ke ke getkeychar      keyevent vk_escape    
+            log debug  esc pressed    
+            abort    
+            done    
+            ke consume abort     
+	log info  drawing association end aborted newfignodeassociation editor remove newfignodeassociation   
+            newfignodeassociation removefromdiagram leave     
+        abort leave    
+      
+   org argouml uml diagram ui ModeCreateAssociationEnd

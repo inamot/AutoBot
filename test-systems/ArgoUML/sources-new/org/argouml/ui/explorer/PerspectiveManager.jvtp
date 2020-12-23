@@ -1,0 +1,305 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications  
+    
+   provides model event management perspectives views explorer  p class defines complete list perspective rules knows default perspectives contents  
+   
+    author alexb 0 15 2 
+    
+    
+       logger  
+        
+    
+        return instance  singleton  
+        
+    
+       creates new instance perspectivemanager  
+        
+    
+        param listener listener added 
+        
+    
+        param listener listener removed 
+        
+    
+        param perspective perspective added 
+        
+    
+        param newperspectives collection perspectives added 
+        
+    
+        param perspective perspective removed 
+        
+    
+       remove perspectives  
+        
+    
+        return list perspectives 
+        
+    
+       tries load user defined perspectives t loads predefined  default perspectives  
+        
+   load user perspectives perspective name 
+   make sure some rules rules rule name 
+   create rule 
+   rule name rules 
+   add perspective user defined perspectives 
+   one last check some loaded  
+    
+       loads pre-defined default set perspectives  
+        
+    
+        return collection default perspectives e predefined ones  
+        
+   
+           removed next one due issue 2165  
+           packageperspective addrule new gooperationtocollaborationdiagram     
+            
+   works both statediagram activitygraph predefined rules  p hard coded rules library now quite lot work possible rule names org argouml ui explorer rules classpath not allow adding rules locations   
+        
+    
+       add rule list rules  
+       
+        param rule perspectiverule added 
+        
+    
+       remove rule list  
+       
+        param rule perspectiverule removed 
+        
+    
+        return collection rules 
+        
+    
+       save user perspectives argouml configuration  
+        
+    
+        return string representation perspectives same format saved user properties  
+        see java lang object#tostring   
+       org argouml ui explorer PerspectiveManager org argouml ui explorer perspectivemanager logger log   
+        logger getlogger perspectivemanager perspectivemanager getinstance instance instance perspectivemanager instance perspectivemanager     
+ 
+        perspectivelisteners arraylist perspectivemanagerlistener     
+        perspectives arraylist explorerperspective     
+        rules arraylist perspectiverule     
+        loadrules addlistener perspectivemanagerlistener listener    
+        perspectivelisteners add listener removelistener perspectivemanagerlistener listener    
+        perspectivelisteners remove listener addperspective explorerperspective perspective    
+        perspectives add perspective perspectivemanagerlistener listener   perspectivelisteners    
+            listener addperspective perspective addallperspectives  
+            collection explorerperspective  newperspectives explorerperspective newperspective   newperspectives    
+            addperspective newperspective removeperspective explorerperspective perspective    
+        perspectives remove perspective perspectivemanagerlistener listener   perspectivelisteners    
+            listener removeperspective perspective removeallperspectives     
+ 
+        list explorerperspective  pers arraylist explorerperspective     
+ 
+        pers addall getperspectives explorerperspective perspective   pers    
+            removeperspective perspective list explorerperspective  getperspectives perspectives loaduserperspectives userperspectives   
+            configuration getstring  
+                    argo key_user_explorer_perspectives       
+ 
+        stringtokenizer pst stringtokenizer userperspectives pst hasmoretokens pst hasmoretokens perspective   pst nexttoken    
+                stringtokenizer perspectivedetails stringtokenizer perspective perspectivename   perspectivedetails nexttoken    
+ 
+                explorerperspective userdefinedperspective explorerperspective perspectivename perspectivedetails hasmoretokens perspectivedetails hasmoretokens rulename   perspectivedetails nexttoken ruleclass forname rulename   
+ 
+                            perspectiverule rule   
+                                 perspectiverule  ruleclass newinstance    
+ 
+                            userdefinedperspective addrule rule classnotfoundexception e    
+                            log error  
+                                     could not create rule     rulename  
+                                        you can to   
+                                       refresh the perspectives to the settings    
+                                    e instantiationexception e    
+                            log error  
+                                     could not create rule     rulename  
+                                        you can to   
+                                       refresh the perspectives to the settings    
+                                    e illegalaccessexception e    
+                            log error  
+                                     could not create rule     rulename  
+                                        you can to   
+                                       refresh the perspectives to the settings    
+                                    e addperspective userdefinedperspective loaddefaultperspectives getperspectives   size      0    
+            loaddefaultperspectives loaddefaultperspectives     
+        collection explorerperspective  c   getdefaultperspectives    
+ 
+        addallperspectives c collection explorerperspective  getdefaultperspectives     
+        explorerperspective classperspective explorerperspective  
+                 combobox item centric    
+        classperspective addrule goprojecttomodel     
+        classperspective addrule goprojecttoprofileconfiguration     
+        classperspective addrule goprofileconfigurationtoprofile     
+        classperspective addrule goprofiletomodel     
+        classperspective addrule goprojecttoroots     
+        classperspective addrule gonamespacetoclassifierandpackage     
+        classperspective addrule gonamespacetodiagram     
+        classperspective addrule goclasstosummary     
+        classperspective addrule gosummarytoassociation     
+        classperspective addrule gosummarytoattribute     
+        classperspective addrule gosummarytooperation     
+        classperspective addrule gosummarytoinheritance     
+        classperspective addrule gosummarytoincomingdependency     
+        classperspective addrule gosummarytooutgoingdependency     
+ 
+        explorerperspective packageperspective explorerperspective  
+                 combobox item centric    
+        packageperspective addrule goprojecttomodel     
+        packageperspective addrule goprojecttoprofileconfiguration     
+        packageperspective addrule goprofileconfigurationtoprofile     
+        packageperspective addrule goprofiletomodel     
+        packageperspective addrule goprojecttoroots     
+        packageperspective addrule gonamespacetoownedelements     
+        packageperspective addrule gopackagetoelementimport     
+        packageperspective addrule gonamespacetodiagram     
+        packageperspective addrule gousecasetoextensionpoint     
+        packageperspective addrule goclassifiertostructuralfeature     
+        packageperspective addrule goclassifiertobehavioralfeature     
+        packageperspective addrule goenumerationtoliterals     
+        packageperspective addrule gocollaborationtointeraction     
+        packageperspective addrule gointeractiontomessages     
+        packageperspective addrule gomessagetoaction     
+        packageperspective addrule gosignaltoreception     
+        packageperspective addrule golinktostimuli     
+        packageperspective addrule gostimulustoaction     
+        packageperspective addrule goclassifiertocollaboration     
+        packageperspective addrule gooperationtocollaboration     
+        packageperspective addrule gomodelelementtocomment     
+        packageperspective addrule gocollaborationtodiagram     
+          
+        packageperspective addrule gobehavioralfeaturetostatemachine     
+          
+        packageperspective addrule gostatemachinetodiagram     
+        packageperspective addrule gostatemachinetostate     
+        packageperspective addrule gocompositestatetosubvertex     
+        packageperspective addrule gostatetointernaltrans     
+        packageperspective addrule gostatetodoactivity     
+        packageperspective addrule gostatetoentry     
+        packageperspective addrule gostatetoexit     
+        packageperspective addrule goclassifiertosequencediagram     
+        packageperspective addrule gooperationtosequencediagram     
+        packageperspective addrule goclassifiertoinstance     
+        packageperspective addrule gostatetoincomingtrans     
+        packageperspective addrule gostatetooutgoingtrans     
+        packageperspective addrule gosubmachinestatetostatemachine     
+        packageperspective addrule gostereotypetotagdefinition     
+        packageperspective addrule gomodelelementtobehavior     
+        packageperspective addrule gomodelelementtocontainedlostelements     
+ 
+        explorerperspective diagramperspective explorerperspective  
+                 combobox item diagram-centric    
+        diagramperspective addrule goprojecttomodel     
+        diagramperspective addrule goprojecttoprofileconfiguration     
+        diagramperspective addrule goprofileconfigurationtoprofile     
+        diagramperspective addrule goprofiletomodel     
+        diagramperspective addrule gomodeltodiagrams     
+        diagramperspective addrule godiagramtonode     
+        diagramperspective addrule godiagramtoedge     
+        diagramperspective addrule gousecasetoextensionpoint     
+        diagramperspective addrule goclassifiertostructuralfeature     
+        diagramperspective addrule goclassifiertobehavioralfeature     
+ 
+        explorerperspective inheritanceperspective explorerperspective  
+                 combobox item inheritance-centric    
+        inheritanceperspective addrule goprojecttomodel     
+        inheritanceperspective addrule goprojecttoprofileconfiguration     
+        classperspective addrule goprofileconfigurationtoprofile     
+        classperspective addrule goprofiletomodel     
+        inheritanceperspective addrule gomodeltobaseelements     
+        inheritanceperspective 
+                 addrule gogeneralizableelementtospecialized     
+ 
+        explorerperspective associationsperspective explorerperspective  
+                 combobox item associations    
+        associationsperspective addrule goprojecttomodel     
+        associationsperspective addrule goprojecttoprofileconfiguration     
+        associationsperspective addrule goprofileconfigurationtoprofile     
+        associationsperspective addrule goprofiletomodel     
+        associationsperspective addrule gonamespacetodiagram     
+        associationsperspective addrule gopackagetoclass     
+        associationsperspective addrule goclasstoassociatedclass     
+ 
+        explorerperspective residenceperspective explorerperspective  
+                 combobox item residence-centric    
+        residenceperspective addrule goprojecttomodel     
+        residenceperspective addrule goprojecttoprofileconfiguration     
+        residenceperspective addrule goprofileconfigurationtoprofile     
+        residenceperspective addrule goprofiletomodel     
+        residenceperspective addrule gomodeltonode     
+        residenceperspective addrule gonodetoresidentcomponent     
+        residenceperspective addrule gocomponenttoresidentmodelelement     
+ 
+        explorerperspective stateperspective explorerperspective  
+                 combobox item state-centric    
+        stateperspective addrule goprojecttostatemachine     
+        stateperspective addrule gostatemachinetodiagram     
+        stateperspective addrule gostatemachinetostate     
+        stateperspective addrule gocompositestatetosubvertex     
+        stateperspective addrule gostatetoincomingtrans     
+        stateperspective addrule gostatetooutgoingtrans     
+        stateperspective addrule gotransitiontoeffect     
+        stateperspective addrule gotransitiontoguard     
+ 
+        explorerperspective transitionsperspective explorerperspective  
+                 combobox item transitions-centric    
+        transitionsperspective addrule goprojecttostatemachine     
+        transitionsperspective addrule gostatemachinetodiagram     
+        transitionsperspective addrule gostatemachinetotransition     
+        transitionsperspective addrule gotransitiontosource     
+        transitionsperspective addrule gotransitiontotarget     
+        transitionsperspective addrule gotransitiontoeffect     
+        transitionsperspective addrule gotransitiontoguard     
+ 
+        explorerperspective compositionperspective explorerperspective  
+                 combobox item composite-centric    
+        compositionperspective addrule goprojecttomodel     
+        compositionperspective addrule goprojecttoprofileconfiguration     
+        compositionperspective addrule goprofileconfigurationtoprofile     
+        compositionperspective addrule goprofiletomodel     
+        compositionperspective addrule goprojecttoroots     
+        compositionperspective addrule gomodelelementtocontents     
+        compositionperspective addrule gomodelelementtocontaineddiagrams     
+ 
+        collection explorerperspective  c arraylist explorerperspective     
+        c add packageperspective   
+        c add classperspective   
+        c add diagramperspective   
+        c add inheritanceperspective   
+        c add associationsperspective   
+        c add residenceperspective   
+        c add stateperspective   
+        c add transitionsperspective   
+        c add compositionperspective c loadrules     
+ 
+        perspectiverule   rulenamesarray goassocroletomessages gobehavioralfeaturetostatediagram gobehavioralfeaturetostatemachine goclassifiertobehavioralfeature goclassifiertocollaboration goclassifiertoinstance goclassifiertosequencediagram goclassifiertostatemachine goclassifiertostructuralfeature goclasstoassociatedclass goclasstonavigableclass goclasstosummary gocollaborationtodiagram gocollaborationtointeraction gocomponenttoresidentmodelelement gocompositestatetosubvertex godiagramtoedge godiagramtonode goelementtomachine goenumerationtoliterals gogeneralizableelementtospecialized gointeractiontomessages golinktostimuli gomessagetoaction gomodelelementtocomment gomodelelementtobehavior gomodelelementtocontents gomodelelementtocontaineddiagrams gomodelelementtocontainedlostelements gomodeltobaseelements gomodeltocollaboration gomodeltodiagrams gomodeltoelements gomodeltonode gonamespacetoclassifierandpackage gonamespacetodiagram gonamespacetoownedelements gonodetoresidentcomponent gooperationtocollaborationdiagram gooperationtocollaboration gooperationtosequencediagram gopackagetoclass gopackagetoelementimport goprojecttocollaboration goprojecttodiagram goprojecttomodel goprojecttostatemachine goprojecttoprofileconfiguration goprofileconfigurationtoprofile goprofiletomodel goprojecttoroots gosignaltoreception gostatemachinetotop gostatemachinetodiagram gostatemachinetostate gostatemachinetotransition gostatetodoactivity gostatetodownstream gostatetoentry gostatetoexit gostatetoincomingtrans gostatetointernaltrans gostatetooutgoingtrans gostereotypetotagdefinition gostimulustoaction gosummarytoassociation gosummarytoattribute gosummarytoincomingdependency gosummarytoinheritance gosummarytooperation gosummarytooutgoingdependency gotransitiontosource gotransitiontotarget gotransitiontoeffect gotransitiontoguard gousecasetoextensionpoint gosubmachinestatetostatemachine    
+           
+ 
+        rules   arrays aslist rulenamesarray addrule perspectiverule rule    
+        rules add rule removerule perspectiverule rule    
+        rules remove rule collection perspectiverule  getrules rules saveuserperspectives     
+        configuration setstring argo key_user_explorer_perspectives tostring     
+      
+ 
+      
+     override tostring     
+ 
+        stringbuffer p stringbuffer explorerperspective perspective   getperspectives name   perspective tostring    
+            p append name  append perspectiverule rule   perspective getlist      
+                p append rule getclass   getname    append       
+              
+            p deletecharat p length   - 1   
+            p append       
+          
+         
+        p deletecharat p length   - 1 p tostring    
+      
+ org argouml ui explorer PerspectiveManager

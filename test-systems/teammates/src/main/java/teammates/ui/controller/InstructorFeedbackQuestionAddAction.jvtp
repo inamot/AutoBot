@@ -1,0 +1,73 @@
+teammates ui controller InstructorFeedbackQuestionAddAction teammates ui controller instructorfeedbackquestionaddaction action   
+ 
+     override actionresult execute courseid   getrequestparamvalue paramsnames course_id feedbacksessionname   getrequestparamvalue paramsnames feedback_session_name   
+        instructorattributes instructordetailforcourse   logic getinstructorforgoogleid courseid  account googleid   
+ 
+        gatekeeper verifyaccessible instructordetailforcourse  
+                                    logic getfeedbacksession feedbacksessionname  courseid paramsnames instructor_permission_modify_session   
+ 
+        feedbackquestionattributes feedbackquestion   extractfeedbackquestiondata instructordetailforcourse email   
+        list questiondetailserrors   feedbackquestion getquestiondetails   validatequestiondetails    
+ 
+        list statusmessage  questiondetailserrorsmessages arraylist error   questiondetailserrors    
+            questiondetailserrorsmessages add statusmessage error  statusmessagecolor danger    
+          
+ 
+        redirectresult redirectresult   createredirectresult pagedata account  sessiontoken  
+                 getinstructorfeedbackeditlink courseid  feedbacksessionname questiondetailserrors isempty      
+            statustouser addall questiondetailserrorsmessages   
+            iserror redirectresult err   validatequestiongiverrecipientvisibility feedbackquestion err isempty      
+            statustouser add statusmessage err  statusmessagecolor danger    
+            iserror logic createfeedbackquestion feedbackquestion   
+            statustouser add statusmessage statusmessages feedback_question_added  statusmessagecolor success    
+            statustoadmin    created feedback question feedback session  span bold\     
+                            feedbackquestion feedbacksessionname       span course  span bold\     
+                            feedbackquestion courseid       span  created  br   
+                              span bold\    
+                            feedbackquestion getquestiondetails   getquestiontypedisplayname   
+                                span    
+                            sanitizationhelper sanitizeforhtml feedbackquestion getquestiondetails   getquestiontext invalidparametersexception e    
+            statustouser add statusmessage e getmessage    statusmessagecolor danger    
+            statustoadmin   e getmessage    
+            iserror redirectresult validatequestiongiverrecipientvisibility feedbackquestionattributes feedbackquestion instructorfeedbackquestioneditaction validatequestiongiverrecipientvisibility feedbackquestion feedbackquestionattributes extractfeedbackquestiondata creatoremail    
+        feedbackquestionattributes newquestion feedbackquestionattributes    
+ 
+        newquestion creatoremail   creatoremail  
+ 
+        newquestion courseid   getrequestparamvalue paramsnames course_id   
+        assumption assertpostparamnotnull paramsnames course_id  newquestion courseid   
+ 
+        newquestion feedbacksessionname   getrequestparamvalue paramsnames feedback_session_name   
+        assumption assertpostparamnotnull paramsnames feedback_session_name  newquestion feedbacksessionname feedbackquestiongivertype   getrequestparamvalue paramsnames feedback_question_givertype   
+        assumption assertpostparamnotnull paramsnames feedback_question_givertype  feedbackquestiongivertype   
+        newquestion givertype   feedbackparticipanttype valueof feedbackquestiongivertype feedbackquestionrecipienttype   getrequestparamvalue paramsnames feedback_question_recipienttype   
+        assumption assertpostparamnotnull paramsnames feedback_question_recipienttype  feedbackquestionrecipienttype   
+        newquestion recipienttype   feedbackparticipanttype valueof feedbackquestionrecipienttype feedbackquestionnumber   getrequestparamvalue paramsnames feedback_question_number   
+        assumption assertpostparamnotnull paramsnames feedback_question_number  feedbackquestionnumber   
+        newquestion questionnumber   integer parseint feedbackquestionnumber   
+        assumption asserttrue  invalid question number   newquestion questionnumber    1 numberofentitytypes   getrequestparamvalue paramsnames feedback_question_numberofentitiestype   
+        assumption assertpostparamnotnull paramsnames feedback_question_numberofentitiestype  numberofentitytypes custom  equals numberofentitytypes  
+                    newquestion recipienttype    feedbackparticipanttype students 
+                           newquestion recipienttype    feedbackparticipanttype teams numberofentities   getrequestparamvalue paramsnames feedback_question_numberofentities   
+            assumption assertpostparamnotnull paramsnames feedback_question_numberofentities  numberofentities   
+ 
+            newquestion numberofentitiestogivefeedbackto   integer parseint numberofentities newquestion numberofentitiestogivefeedbackto max_possible_recipients  
+          
+ 
+        newquestion showresponsesto   feedbackparticipanttype getparticipantlistfromcommaseparatedvalues  
+                getrequestparamvalue paramsnames feedback_question_showresponsesto    
+        newquestion showgivernameto   feedbackparticipanttype getparticipantlistfromcommaseparatedvalues  
+                getrequestparamvalue paramsnames feedback_question_showgiverto    
+        newquestion showrecipientnameto   feedbackparticipanttype getparticipantlistfromcommaseparatedvalues  
+                getrequestparamvalue paramsnames feedback_question_showrecipientto questiontype   getrequestparamvalue paramsnames feedback_question_type   
+        assumption assertpostparamnotnull paramsnames feedback_question_type  questiontype   
+        questiontype   feedbackquestiontype standardizeifconstsum questiontype   
+        newquestion questiontype   feedbackquestiontype valueof questiontype   
+ 
+        feedbackquestiondetails questiondetails   feedbackquestiondetails createquestiondetails  
+                requestparameters  newquestion questiontype   
+        newquestion setquestiondetails questiondetails questiondescription   getrequestparamvalue paramsnames feedback_question_description   
+        newquestion setquestiondescription text questiondescription newquestion  
+      
+ 
+ teammates ui controller InstructorFeedbackQuestionAddAction

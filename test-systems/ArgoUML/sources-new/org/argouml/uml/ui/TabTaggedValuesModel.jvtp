@@ -1,0 +1,135 @@
+ 
+   $id$ 
+   copyright  c  2005-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications model table tagged values  implementation uml 1 4 tagdefinitions  
+    
+   todo currently only supports taggedvalues tagdefinition type string modelelement current target  
+        
+    
+       construct model used jtable containing taggedvalues  
+        
+    
+       set current target given model element  
+        
+        param t target modelelement 
+        
+   always fire changes case something changed composition taggedvalues collection  
+   
+        see javax swing table tablemodel#getcolumncount   
+        
+   
+        see javax swing table tablemodel#getcolumnname int  
+        
+   
+        see javax swing table tablemodel#getcolumnclass int  
+        
+   todo vary based type tagdefinition 
+   
+        see javax swing table tablemodel#iscelleditable int  int  
+        
+   
+        see javax swing table tablemodel#getrowcount tvs    null  return 1  
+   target deleted 
+   
+        see javax swing table tablemodel#getvalueat int  int row past end current collection   
+   return empty string add new value debugging 
+   
+        see javax swing table tablemodel#setvalueat java lang object  int  int  
+        
+   todo  use default value appropriate type here 
+    
+       add tagged value model given type value  
+        
+        param values values columns  
+        values 0  contains type new taggedvalue 
+        values 1  contains value new taggedvalue 
+        
+   todo  use default value appropriate type td 
+              tagvalue   true really shouldn't add until set up need owner following method calls aren't sure ordering  fire event whole table 
+    
+       remove taggedvalue given row modelelement  
+        
+        param row row containing taggedvalue removed  
+        
+   
+       return ith element collection  
+        
+        param collection collection element param index index element returned 
+        return object 
+        
+   
+        see java beans propertychangelistener#propertychange java beans propertychangeevent  
+        
+   
+        see java beans vetoablechangelistener#vetoablechange java beans propertychangeevent  
+        
+   
+        see org argouml kernel delayedvchangelistener#delayedvetoablechange java beans propertychangeevent uid  
+       org argouml uml ui TabTaggedValuesModel org argouml uml ui tabtaggedvaluesmodel abstracttablemodel vetoablechangelistener  delayedvchangelistener  propertychangelistener logger log   
+        logger getlogger tabtaggedvaluesmodel tabtaggedvaluesmodel settarget object t log isdebugenabled      
+            log debug  set target to     t t model getfacade   isamodelelement t illegalargumentexception target    t target model getpump   removemodeleventlistener target   
+              
+            target   t t model getpump   addmodeleventlistener t taggedvalue    referencetag     
+              
+          
+          
+          
+        firetabledatachanged getcolumncount 2  
+      
+ 
+      
+     override getcolumnname c c    0 translator localize  label taggedvaluespane tag c    1 translator localize  label taggedvaluespane value xxx getcolumnclass c c    0 model getmetatypes   gettagdefinition c    1 iscelleditable row col getrowcount target 0 collection tvs    
+                model getfacade   gettaggedvaluescollection target tvs size     1 invalidelementexception e 0 object getvalueat row col    
+        collection tvs   model getfacade   gettaggedvaluescollection target row   tvs size      col   1 illegalargumentexception row    tvs size object tv   tvs toarray   row col    0    
+            object n   model getfacade   gettagdefinition tv n return n col    1 be   model getfacade   getvalueoftag tv be return be tv-    row   2   col    
+      
+ 
+      
+     override setvalueat object avalue rowindex columnindex columnindex    0    columnindex    1 columnindex    1    avalue avalue equals avalue     columnindex    0    
+            removerow rowindex collection tvs   model getfacade   gettaggedvaluescollection target tvs size      rowindex columnindex    0    
+                addrow object    avalue columnindex    1    
+                addrow object avalue object tv   getfromcollection tvs  rowindex columnindex    0    
+                model getextensionmechanismshelper   settag tv  avalue columnindex    1    
+                model getcommonbehaviorhelper   setvalue tv  avalue   
+              
+            firetablechanged tablemodelevent rowindex  rowindex  columnindex addrow object   values    
+        object tagtype   values 0   
+        object tagvalue   values 1 tagtype tagtype tagvalue tagvalue       
+  
+          
+        object tv   model getextensionmechanismsfactory   createtaggedvalue    
+         
+          
+          
+        model getextensionmechanismshelper   addtaggedvalue target  tv   
+ 
+        model getextensionmechanismshelper   settag tv  tagtype   
+        model getcommonbehaviorhelper   setvalue tv  tagvalue   
+ 
+          
+        firetablechanged tablemodelevent removerow row    
+        collection c   model getfacade   gettaggedvaluescollection target row    0      row   c size       
+            object element   getfromcollection c  row   
+            model getumlfactory   delete element   
+            firetablechanged tablemodelevent object getfromcollection collection collection index collection list list  collection  get index index    collection size      index   0 indexoutofboundsexception    
+          
+        iterator it   collection iterator i   0  i   index  i       
+            it next it next propertychange propertychangeevent evt taggedvalue  equals evt getpropertyname     
+                    referencetag  equals evt getpropertyname       
+            firetablechanged tablemodelevent evt deleteinstanceevent 
+                   evt getsource      target    
+            settarget vetoablechange propertychangeevent pce    
+        delayedchangenotify delayednotify delayedchangenotify pce   
+        swingutilities invokelater delayednotify delayedvetoablechange propertychangeevent pce    
+        firetabledatachanged    
+      
+ 
+      
+  
+ org argouml uml ui TabTaggedValuesModel

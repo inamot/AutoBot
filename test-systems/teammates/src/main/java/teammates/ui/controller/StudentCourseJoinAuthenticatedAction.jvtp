@@ -1,0 +1,41 @@
+ action handles students attempt join course student forced re-authenticate himself link studentcoursejoinaction action actual 
+   joining student course next url specified either registration key 
+    see   link action#parseandinitializeregkeyfromrequest parameter request not sanitize html allow insertion mailto linkteammates ui controller StudentCourseJoinAuthenticatedAction teammates ui controller studentcoursejoinauthenticatedaction action   
+ 
+  
+ 
+     override actionresult execute entitydoesnotexistexception   
+        assumption assertnotnull regkey nexturl   nexturlfromregkey getrequestparamvalue paramsnames next_url    nexturlfromregkey  
+        assumption assertpostparamnotnull paramsnames next_url  nexturl   
+        nexturl   sanitizationhelper desanitizefromnexturl nexturl   
+ 
+        ensurestudentexists logic joincourseforstudent regkey  account googleid joincourseexception   invalidparametersexception e statuscodes invalid_key equals e errorcode     
+                setstatusforexception e format e getmessage    requesturl setstatusforexception e  e getmessage     
+              
+            nexturl actionuris student_home_page  
+            excludestudentdetailsfromresponseparams createredirectresult nexturl studentinfo    action student joins course  
+                    br google id      account googleid 
+                    br key       regkey  
+        redirectresult response   createredirectresult nexturl   
+        response addresponseparam paramsnames check_persistence_course  getstudent   course   
+        excludestudentdetailsfromresponseparams statustoadmin statustoadmin trim   isempty      
+            statustoadmin   studentinfo statustoadmin      br  br     studentinfo  
+          
+ 
+        addstatusmessagetouser response addstatusmessagetouser entitydoesnotexistexception   
+        courseattributes course   logic getcourse getstudent   course coursedisplaytext         course getid            sanitizationhelper sanitizeforhtml course getname     
+ 
+        statustouser add statusmessage format statusmessages student_course_join_successful  
+                                                           coursedisplaytext   statusmessagecolor success    
+ 
+        list feedbacksessionattributes  fsa   
+                logic getfeedbacksessionsforuserincourse getstudent   course  getstudent   email fsa isempty      
+            statustouser add statusmessage format statusmessages hint_for_no_sessions_student  
+                                                               coursedisplaytext   statusmessagecolor info    
+ 
+            studentprofileattributes spa   logic getstudentprofile account googleid updateprofilemessage   spa generateupdatemessageforstudent updateprofilemessage isempty      
+                statustouser add statusmessage updateprofilemessage  statusmessagecolor info ensurestudentexists     
+        studentattributes student   getstudent student log info  student object not found regkey      regkey unauthorizedaccessexception  no student with given registration key     regkey studentattributes getstudent student student   logic getstudentforregistrationkey regkey student  
+      
+ 
+ teammates ui controller StudentCourseJoinAuthenticatedAction

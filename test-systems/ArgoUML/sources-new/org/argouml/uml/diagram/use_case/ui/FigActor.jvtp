@@ -1,0 +1,219 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications  
+    
+   class display graphics actor diagram serialization version - eclipse generated rev  1 40 padding between actor body name top stereotype positions child figs inside fig must added constructor order now name must not last force 
+  zero width lines  until gef fixed  
+    
+       main constructor creation new actor  
+        
+   put rectangle behind rest goes first 
+   initialize any figs here 
+   add figs fignode back front order 
+    
+       constructor use figure created existing actor 
+       node metamodel  p  
+       
+        param gm ignored  
+        param node uml object being placed  
+        
+   
+        see org tigris gef presentation fig#setlinewidth int  
+        
+   miss out text fix line 
+   
+        see org tigris gef presentation fig#setfilled boolean  
+        
+   only head filled  not text  
+   
+        see org tigris gef presentation fig#makeselection   
+        
+   
+        see org tigris gef ui popupgenerator#getpopupactions  
+               java awt event mouseevent  
+        
+   modifiers     
+   
+        see org tigris gef presentation fig#isresizable   
+        
+   
+        see org tigris gef presentation fig#getminimumsize   
+        
+   
+        see org tigris gef presentation fig#setboundsimpl int  int  int  int  
+        
+  accumulate bounding box figs group  
+    
+       overruled parent implementation always use minimum size  
+        
+        see org argouml uml diagram ui fignodemodelelement#updatebounds   
+        
+   
+        see org tigris gef presentation fignode#deephitport int  int  
+        
+   
+       makes sure edges stick outline fig  
+        see org tigris gef presentation fig#getgravitypoints   
+        
+   
+        see org argouml uml diagram ui fignodemodelelement#modelchanged java beans propertychangeevent  
+        
+        name updating bigport needs overrule getgravitypoints port fignode  
+       
+        author mvw tigris org parent fig e actor constructor  
+           
+            param x x 
+            param y y 
+            param w width 
+            param h hight 
+            param p actor fig 
+            
+    
+           makes sure edges stick outline fig  
+            see org tigris gef presentation fig#getgravitypoints serial version - eclipse generated rev  1 40 
+           org argouml uml diagram use_case ui FigActor org argouml uml diagram use_case ui figactor fignodemodelelement min_vert_padding   4 figactor     
+          
+        figrect bigport actorportfigrect 10  10  0  0 figcircle head figcircle 12  10  16  15  color black  color white   
+        figline body figline 20  25  20  40  color black   
+        figline arms figline 10  30  30  30  color black   
+        figline leftleg figline 20  40  15  55  color black   
+        figline rightleg figline 20  40  25  55  color black   
+        getnamefig   setbounds 10  55  20  20   
+ 
+        getnamefig   settextfilled getnamefig   setfilled getnamefig   setlinewidth 0   
+          
+        getstereotypefig   setbounds getbigport   getcenter   x  
+                                     getbigport   getcenter   y  
+                                     0  0   
+        setsuppresscalcbounds addfig bigport   
+        addfig getnamefig     
+        addfig head   
+        addfig body   
+        addfig arms   
+        addfig leftleg   
+        addfig rightleg   
+        addfig getstereotypefig     
+        setbigport bigport   
+        setsuppresscalcbounds figactor graphmodel gm  object node setowner node   
+      
+ 
+      
+     override setlinewidth width    
+          
+        getfigat head_posn  setlinewidth width   
+        getfigat body_posn  setlinewidth width   
+        getfigat arms_posn  setlinewidth width   
+        getfigat left_leg_posn  setlinewidth width   
+        getfigat right_leg_posn  setlinewidth width   
+      
+ 
+      
+     override setfilled filled    
+          
+        getfigat head_posn  setfilled filled   
+      
+ 
+ 
+      
+     override selection makeselection selectionactor override vector getpopupactions mouseevent me    
+        vector popupactions getpopupactions me   
+          
+        popupactions add  
+                popupactions size   - getpopupaddoffset    
+                buildmodifierpopup leaf   root popupactions  
+      
+ 
+      
+     override isresizable override dimension getminimumsize     
+        dimension namedim   getnamefig   getminimumsize w   math max namedim width  40 h   namedim height   55 getstereotypefig   isvisible      
+            dimension stereodim   getstereotypefig   getminimumsize    
+            w   math max stereodim width  w   
+            h   h   stereodim height dimension w  h   
+      
+ 
+      
+     override setboundsimpl x y w h middle   x   w   2  
+ 
+        rectangle oldbounds   getbounds    
+        getbigport   setbounds x  y  w  h   
+ 
+        getfigat head_posn  setlocation  
+                middle - getfigat head_posn  getwidth     2  y   10   
+        getfigat body_posn  setlocation middle  y   25   
+        getfigat arms_posn  setlocation  
+                middle - getfigat arms_posn  getwidth     2  y   30   
+        getfigat left_leg_posn  setlocation  
+                middle - getfigat left_leg_posn  getwidth    y   40   
+        getfigat right_leg_posn  setlocation middle  y    40   
+ 
+        dimension mintextsize   getnamefig   getminimumsize    
+        getnamefig   setbounds middle - mintextsize width   2  
+	        y    55  
+	        mintextsize width  
+	        mintextsize height getstereotypefig   isvisible      
+            dimension minstereosize   getstereotypefig   getminimumsize minstereosize width    w  
+            getstereotypefig   setbounds middle - minstereosize width   2  
+                    y   55   getnamefig   getheight    
+                    minstereosize width   
+                    minstereosize height   
+          
+        calcbounds      
+        firepropchange  bounds   oldbounds  getbounds     
+        updateedges    
+      
+ 
+      
+     override updatebounds ischecksize rectangle bbox   getbounds    
+        dimension minsize   getminimumsize    
+        setbounds bbox x  bbox y  minsize width  minsize height   
+      
+ 
+      
+     override object deephitport x y    
+        object o deephitport x  y o o hit rectangle dimension x  y getowner override list point  getgravitypoints maxpoints   20  
+        list point  ret arraylist point cx   getfigat head_posn  getcenter   x cy   getfigat head_posn  getcenter   y radiusx   math round getfigat head_posn  getwidth     2    1 radiusy   math round getfigat head_posn  getheight     2    1  
+        point point i   0  i   maxpoints  i angle   2   math pi   maxpoints   i  
+            point point cx   math cos angle    radiusx cy   math sin angle    radiusy    
+            ret add point   
+          
+        ret add point   figline  getfigat left_leg_posn   getx2    
+                            figline  getfigat left_leg_posn   gety2      
+        ret add point   figline  getfigat right_leg_posn   getx2    
+                            figline  getfigat right_leg_posn   gety2      
+        ret add point   figline  getfigat arms_posn   getx1    
+                            figline  getfigat arms_posn   gety1      
+        ret add point   figline  getfigat arms_posn   getx2    
+                            figline  getfigat arms_posn   gety2 ret  
+      
+ 
+      
+     override modelchanged propertychangeevent mee modelchanged mee damage getowner mee mee getpropertyname   equals  stereotype    
+                   model getfacade   getstereotypes getowner    
+                                 contains mee getsource       
+            updatestereotypetext    
+            damage damage    
+            damage    
+          
+      
+ 
+     override getnamefigfontstyle     
+        object cls   getowner model getfacade   isabstract cls  ? font italic   font plain actorportfigrect figrect actorportfigrect x y w h  fig p x  y  w  h null   
+            parent   p  
+          
+ 
+          
+         override list getgravitypoints parent getgravitypoints    
+          
+ 
+          
+  
+      
+ 
+ org argouml uml diagram use_case ui FigActor

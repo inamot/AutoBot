@@ -1,0 +1,455 @@
+ 
+   $id$ 
+   copyright  c  2002-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications manager target argouml target argouml element currently selected user either instance meta-class interface class example diagram anything shown diagram  p multiple targets case 
+   someone selected multiple items explorer diagram done shift-clicking ctrl-clicking items drawing box diagram around items select  p case multiple targets selected target manager add each 
+   target beginning list targets way first item list last selected item  
+   most functions argouml work selected items few  intentionally  only work one target properties panels functions 2 ways retrieving target work ul  
+    li 1  use functions return one target only gettarget    getmodeltarget    getfigtarget    
+    li 2  use first item list returned gettargets    getmodeltargets      ul  p  
+   
+   remark currently function getfigs    
+   returning list selected figs obtain list gef   p purpose targetmanager central spot manage list current targets  p  
+   
+   via event mechanism manager makes sure objects interested knowing wether selection changed acknowledged   p  
+   
+   note particular null invalid target  p  
+   
+   thanks architecture argouml modelelements figs  
+   one rule decided upon mvw tigris org   ul  
+    li list targets shall not contain any fig owner  
+   instead owner enlisted  
+     ul  
+   
+    author jaap branderhorst xs4all nl manager history targets  every time user program  selects new target recorded history  via navigateback navigateforward user browse through history ordinary internet 
+       browser  
+        author jaap branderhorst xs4all nl history targets  
+            
+    
+           flag indicate current settarget instantiated navigateback action pointer current target history listener uml model changes   
+           deleted model elements removed history list   
+            
+    
+           default constructor registrates history manager target 
+           listener target manager  
+           
+            
+    
+           puts some target history needed   updates both history pointer indicate target  
+            param target target put history 
+            
+   only targets didn't allready count 
+    
+           resizes history s grown big  
+           
+            
+    
+           navigate one target forward history  throws illegalstateexception not possible  
+           
+            
+    
+           navigate one step back history  throws illegalstateexception not possible nothing selected  go last selected target 
+    
+           checks s possible navigate back  
+            
+            return true s possible navigate back  
+            
+    
+           checks s possible navigate forward  
+           
+            return true s possible navigate forward 
+            
+    
+           listener additions targets selected targets addition targets put history  
+            see org argouml ui targetmanager targetlistener#targetadded  
+           org argouml ui targetmanager targetevent put targets 'backwards history first target addedtargets array first one selected  
+    
+           listener removal targets selection removal target selection nothing respect history targets  
+            see org argouml ui targetmanager targetlistener#targetremoved org argouml ui targetmanager targetevent  
+            
+    
+           listener selection whole bunch targets one go one   puts new 
+           targets history starting newest' target  
+            see org argouml ui targetmanager targetlistener#targetset org argouml ui targetmanager targetevent  
+            
+    
+           cleans history total  
+           
+            
+   cannot break here object multiple 
+   times history log4j logger log messages singleton instance targets  
+        
+    
+       cache modeltarget  see getmodeltarget  
+        
+    
+       cache figtarget  see getfigtarget list targetlisteners history manager argouml  via historymanager browser behaviour emulated listener uml model changes   
+       deleted model elements removed target list   
+        
+    
+       flag indicate settarget method running  
+        
+    
+       singleton retrieval method  
+        return targetmanager 
+        
+    
+       singleton constructor remain private  
+        
+    
+       sets targets single given object targets moment calling method removed targets interested targetlisteners targetevent fired new target o equals current target events fired target re set  
+        param o new target  null clears targets  
+        
+   needed argo startup  -  
+    
+       returns current primary target first selected object value new primary target during targetset  
+       targetadded targetremoved notification notifications target s changed  
+       
+        return current target null target selected 
+        
+    
+       sets given collection current targets collection 
+       equals current targets nothing setting targets targetevent fired each interested listener  
+       note first element returned iterator targetlist taken primary target  see gettarget event fired case that element not equal element returned gettarget    
+       note any nulls within collection ignored  
+       
+        param targetscollection new targets list  
+        
+   remove duplicates take care getowner remove nulls     
+   check new elements list old new list same size 
+   set oldtargets correct selection 
+   implement set behaviour same element 
+   may not added once  
+    
+       adds target targets list target already targets list nothing  otherwise target added appropriate targetevent fired interested listeners null never target  
+       adding null never anything  
+        param target target added  
+        
+    
+       removes target targets list nothing target not exist targets list  fires appropriate targetevent interested listeners null never target  removing 
+       null never anything  
+        param target target remove  
+        
+      targets contains target       
+  	targets remove target   
+    
+        param o object 
+        return owner fig didn't exist object itself 
+        
+    
+       returns list targets  returns empty list targets several targets first 
+       object iterator returned list zero'th object array list guaranteed object returned link #getsingletarget value new target s  during targetset  
+       targetadded targetremoved notification notifications target s changed  
+       
+        return list targets only one target returned  
+       otherwise null  
+        
+        return one only target 
+        
+    
+        return target model only one model target returned  
+       otherwise null  
+       
+        return single model target 
+        
+    
+       adds listener  
+        param listener listener add 
+        
+    
+       removes listener  
+        param listener listener remove 
+        
+   guaranteed return non-null array 
+   lazily create event  
+   guaranteed return non-null array 
+   lazily create event  
+   guaranteed return non-null array 
+   lazily create event action creating adding new attribute single 
+       selected target owner   
+        
+        deprecated 0 25 3 bob tarling use link org argouml uml ui foundation core actionaddattribute  
+                   constructor instead  
+        return null action creating adding new operation single 
+       selected target owner   
+        
+        deprecated 0 25 3 bob tarling  instantiate action 
+                     link org argouml uml ui foundation core actionaddoperation  
+                   directly instead  
+        return null action creating adding new operation single 
+       selected target owner   
+        
+        deprecated 0 25 3 michiel  instantiate addmessageaction 
+                   directly instead  
+        return null action deleting target list  
+        
+        deprecated 0 25 3 michiel  instantiate addmessageaction 
+                   directly instead  
+        return null action class creating adding new enumerationliteral single selected target owner   
+        
+        deprecated tfmorris 0 25 3 - use  
+       new   link org argouml uml ui foundation core actionaddenumerationliteral only introduced 0 24 removed quickly  
+        return null 
+        
+    
+       convenience method return target fig current 
+       target  retrieved gettarget either fig itself owner fig fig returned  otherwise null returned  
+        return target s 'fig-form' 
+        
+    
+       calculates most probable 'fig-form some target  beware result not depend current diagram  
+       
+        param target target calculate fig-form return fig-form  
+        
+    
+       returns target s 'modelform target retrieved gettarget umldiagram uml element target returned target fig owned modelelement modelelement returned   otherwise null returned  
+        
+        return target s 'modelform'  
+        
+    
+       calculates modeltarget  
+        param target target calculate modeltarget return modeltarget 
+        
+    
+       navigates target pointer one target forward implements together navigatebackward browser functionality  
+        throws illegalstateexception target pointer end history  
+        
+    
+       navigates target pointer one target backward implements together navigateforward browser functionality 
+        throws illegalstateexception target pointer beginning history  
+        
+    
+       checks s possible navigate forward  
+        return true possible navigate forward  
+        
+    
+       checks s possible navigate backward  
+       
+        return true s possible navigate backward 
+        
+    
+       cleans history  needed junit tests instantiating new project  
+        
+    
+        param o object removed listener removals uml model elements   
+       diagrams commentedges   
+       deleted elements removed target list history   
+        
+        author michiel 
+        
+   
+            see java beans propertychangelistener#propertychange java beans propertychangeevent  
+            
+   
+            see javax management notificationlistener#handlenotification javax management notification  java lang object  
+           org argouml ui targetmanager TargetManager org argouml ui targetmanager targetmanager historymanager targetlistener historymanager     
+            addtargetlistener putinhistory object target currenttarget   -1    
+                  
+                object themodeltarget   
+                    target fig ?   fig  target  getowner     target  
+                object oldtarget   
+                      weakreference  history get currenttarget   get    
+                oldtarget   
+                    oldtarget fig 
+		    ?   fig  oldtarget  getowner   
+		      oldtarget oldtarget    themodeltarget target navigatebackward currenttarget   1    history size      
+                    umllistener addlistener target   
+                    history add weakreference target    
+                    currenttarget    
+                    resize weakreference ref   
+                        currenttarget   -1 
+			?  weakreference  history get currenttarget currenttarget    -1     ref get   equals target size   history size i   currenttarget   1  i   size  i      
+                            umllistener removelistener  
+                                    history remove currenttarget   1    
+                          
+                        history add weakreference target    
+                        umllistener addlistener target   
+                        currenttarget resize size   history size size   max_size oversize   size - max_size halfsize   size   2 currenttarget   halfsize    oversize   halfsize i   0  i   oversize  i      
+                        umllistener removelistener  
+                                history remove 0    
+                      
+                    currenttarget -  oversize navigateforward currenttarget    history size   - 1 illegalstateexception  
+			 navigateforward is not allowed   
+			   since the targetpointer is pointing at   
+			   the upper boundary   
+			   of the history    
+              
+            settarget   weakreference  history get   currenttarget   get navigatebackward currenttarget    0 illegalstateexception  
+		         navigatebackward is not allowed   
+			   since the targetpointer is pointing at   
+			   the lower boundary   
+			   of the history    
+              
+            navigatebackward targets size      0    
+                settarget   weakreference  history get currenttarget   get settarget   weakreference  history get --currenttarget   get     
+              
+            navigatebackward navigatebackpossible currenttarget   0 navigateforwardpossible currenttarget   history size   - 1 targetadded targetevent e    
+            object   addedtargets   e getaddedtargets i   addedtargets length - 1  i    0  i--    
+                putinhistory addedtargets i targetremoved targetevent e targetset targetevent e    
+            object   newtargets   e getnewtargets i   newtargets length - 1  i    0  i--    
+                putinhistory newtargets i clean     
+            umllistener removealllisteners history   
+            history arraylist    
+            currenttarget   -1 removehistorytarget object o o diagram    
+                iterator it     diagram  o  getedges   iterator it hasnext      
+                    removehistorytarget it next     
+                  
+                it     diagram  o  getnodes   iterator it hasnext      
+                    removehistorytarget it next     
+                  
+              
+            listiterator it   history listiterator it hasnext      
+                weakreference ref    weakreference  it next    
+                object historyobject   ref get model getfacade   isamodelelement o     
+                    historyobject   
+                        historyobject fig 
+			?   fig  historyobject  getowner   
+			  historyobject o    historyobject history indexof ref     currenttarget    
+                        currenttarget--  
+                      
+                    it remove targetmanager getinstance instance targetmanager settarget object o isintargettransaction targets size      0    o targets size      1    targets get 0  equals o starttargettransaction    
+ 
+	object   oldtargets   targets toarray    
+        umllistener removealllisteners targets   
+	targets clear o object newtarget o diagram      
+                newtarget   o newtarget   getowner o   
+              
+            targets add newtarget   
+            umllistener addlistener newtarget   
+          
+	internalonsettarget targetevent target_set  oldtargets   
+ 
+        endtargettransaction internalonsettarget eventname  object   oldtargets    
+	targetevent event targetevent eventname  oldtargets  targets toarray targets size     0    
+	    figtarget   determinefigtarget targets get 0    
+	    modeltarget   determinemodeltarget targets get 0 figtarget modeltarget targetevent target_set equals eventname     
+	    firetargetset event targetevent target_added equals eventname     
+	    firetargetadded event targetevent target_removed equals eventname     
+	    firetargetremoved event log error  unknown eventname      eventname object gettarget targets size     0 ? targets get 0 settargets collection targetscollection    
+	iterator ntarg isintargettransaction collection targetslist arraylist targetscollection targetslist addall targetscollection   
+          
+ 
+          
+        list modifiedlist arraylist    
+        iterator it   targetslist iterator it hasnext      
+            object o   it next    
+            o   getowner o o modifiedlist contains o     
+                modifiedlist add o   
+              
+          
+        targetslist   modifiedlist  
+ 
+	object   oldtargets targetslist size      targets size first ntarg   targetslist iterator ntarg hasnext      
+		object targ   ntarg next targ targets contains targ  
+		        first    targ    gettarget       
+		    oldtargets   targets toarray first oldtargets   targets toarray oldtargets starttargettransaction    
+ 
+        umllistener removealllisteners targets   
+	targets clear    
+ 
+	  
+	  
+	ntarg   targetslist iterator ntarg hasnext      
+	    object targ   ntarg next targets contains targ targets add targ   
+            umllistener addlistener targ   
+	  
+ 
+	internalonsettarget targetevent target_set  oldtargets   
+ 
+	endtargettransaction addtarget object target target targetlistener    
+            log warn  addtarget method received a targetlistener    
+                       perhaps addtargetlistener was intended  -     target isintargettransaction object newtarget   getowner target target targets contains target  
+                   targets contains newtarget starttargettransaction    
+ 
+	object   oldtargets   targets toarray    
+	targets add 0  newtarget   
+        umllistener addlistener newtarget   
+ 
+	internalonsettarget targetevent target_added  oldtargets   
+ 
+	endtargettransaction removetarget object target isintargettransaction target starttargettransaction    
+ 
+	object   oldtargets   targets toarray    
+        collection c   getownerandallfigs target   
+  
+        targets removeall c   
+        umllistener removealllisteners c targets size      oldtargets length    
+            internalonsettarget targetevent target_removed  oldtargets   
+          
+ 
+	endtargettransaction collection getownerandallfigs object o    
+        collection c arraylist    
+        c add o o fig fig  o  getowner o     fig  o  getowner    
+                c add o o fig     
+            project p   projectmanager getmanager   getcurrentproject    
+            collection col   p findallpresentationsfor o col col isempty      
+                c addall col c object getowner object o o fig fig  o  getowner o     fig  o  getowner o list gettargets collections unmodifiablelist targets object getsingletarget targets size      1 ? targets get 0 collection getmodeltargets     
+        arraylist t arraylist    
+        iterator iter   gettargets   iterator iter hasnext      
+            t add determinemodeltarget iter next t object getsinglemodeltarget i   0  
+        iterator iter   gettargets   iterator iter hasnext determinemodeltarget iter next i i   1 i    1 modeltarget addtargetlistener targetlistener listener    
+        listenerlist add targetlistener listener removetargetlistener targetlistener listener    
+        listenerlist remove targetlistener listener firetargetset targetevent targetevent    
+          
+        object   listeners   listenerlist getlistenerlist i   listeners length - 2  i    0  i -  2 listeners i     targetlistener targetlistener  listeners i   1   targetset targetevent runtimeexception e    
+	        log error calling targetset targetevent 
+	                    in   
+	                  listeners i   1  
+	                                an error is thrown    
+	                            e   
+                e printstacktrace firetargetadded targetevent targetevent    
+          
+        object   listeners   listenerlist getlistenerlist i   listeners length - 2  i    0  i -  2 listeners i     targetlistener targetlistener  listeners i   1   
+		         targetadded targetevent runtimeexception e    
+		log error calling targetadded targetevent 
+			      in   
+			    listeners i   1  
+			      an error is thrown    
+			  e   
+                e printstacktrace firetargetremoved targetevent targetevent    
+          
+        object   listeners   listenerlist getlistenerlist i   listeners length - 2  i    0  i -  2 listeners i     targetlistener targetlistener  listeners i   1   
+		         targetremoved targetevent runtimeexception e    
+		log warn calling targetremoved targetevent 
+			      in   
+			    listeners i   1  
+			      an error is thrown    
+			  e   
+                e printstacktrace starttargettransaction     
+        intransaction isintargettransaction intransaction endtargettransaction     
+        intransaction deprecated action getaddattributeaction deprecated action getaddoperationaction deprecated action getaddmessageaction deprecated abstractaction getdeleteaction action getaddenumerationliteralaction fig getfigtarget figtarget fig determinefigtarget object target target fig     
+ 
+            project p   projectmanager getmanager   getcurrentproject    
+            collection col   p findfigsformember target col col isempty      
+                target target   col iterator   next target fig ?  fig  target object getmodeltarget modeltarget object determinemodeltarget object target target fig    
+            object owner     fig  target  getowner model getfacade   isaumlelement owner     
+                target   owner target diagram 
+               model getfacade   isaumlelement target  ? target navigateforward illegalstateexception   
+        historymanager navigateforward navigatebackward illegalstateexception   
+        historymanager navigatebackward navigateforwardpossible historymanager navigateforwardpossible navigatebackpossible historymanager navigatebackpossible cleanhistory     
+        historymanager clean removehistoryelement object o    
+        historymanager removehistorytarget o remover propertychangelistener   
+        notificationlistener addlistener object o model getfacade   isamodelelement o     
+                model getpump   addmodeleventlistener o   remove o diagram    
+                  diagram  o  addpropertychangelistener o notificationemitter    
+                  notificationemitter  o  addnotificationlistener o removelistener object o model getfacade   isamodelelement o     
+                model getpump   removemodeleventlistener o   remove o diagram    
+                  diagram  o  removepropertychangelistener o notificationemitter notificationemitter  o  removenotificationlistener listenernotfoundexception e    
+                    log error  notification listener commentedge not found   e removealllisteners collection c    
+            iterator i   c iterator i hasnext      
+                removelistener i next propertychange propertychangeevent evt remove  equals evt getpropertyname       
+                remove evt getsource handlenotification notification notification   
+                object handback remove  equals notification gettype       
+                remove notification getsource remove object obj targetremover remover remove object obj    
+            removetarget obj historyremover remover remove object obj    
+            historymanager removehistorytarget obj   
+          
+      
+  
+org argouml ui targetmanager TargetManager

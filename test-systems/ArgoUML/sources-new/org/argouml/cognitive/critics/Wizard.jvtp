@@ -1,0 +1,111 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications  
+    
+    abstract  base class non-modal wizards   each subclass define makenextpanel methods most 
+   wizards not run completion panels constructed 
+   only needed implies wizards not initialize 
+   many instance variables constructors  p convention step 0 problem description todoitem  
+   step 1 first panel displayed user presses 
+    next problem description panel not stored wizard  only panels specific wizard stored user presses  back   enough times back problem description  backpanel return null null panel 
+   indicates problem description shown   p  
+   
+   several comments class refer context    context data execution wizard example  values user enters step 1 part context later steps todoitem offenders set always context   most 
+   context stored instance variables wizard subclasses  
+   
+    author jrobbins 
+    
+    user interface panels displayed far current step wizard zero indicates wizard not begun     
+    true wizard done everything construct new wizard help user repair design flaw     
+    
+        param s step number panel removed 
+        
+    
+       setter todoitem  
+       
+        param todoitem 
+        
+    
+        return todoitem integer between 0 100  shows percent done current 
+        argouml user interface shows different postit note icons 0  1-25  26-50  51-75 76-100  
+         return percentage done number steps wizard   subclasses override return constant compute based context  
+         return number steps wizard panel displayed now   usually called user pressed  next gt next returned user pressed   lt back back returned called user turns away wizard something returns attention wizard  
+         return panel displayed now exising panel step s  step 1 first wizard 
+        panel  
+        param s step 
+        return panel step s null none  
+        
+                                                                 
+   wizard actions 
+    return true iff next gt   button enabled  
+        subclasses override first check super nextenabled check legal context values  
+         return  code true  code  iff next gt   button enabled next step wizard  
+        
+    
+        return true step back 
+        
+    
+       step back  
+        
+    
+        return true finish e finish button not downlighted  
+        
+    
+        return true wizard started 
+        
+    
+        return true wizard finished 
+        
+    
+       finish wizard  
+        
+   todo following steps 
+   todo  resolve item todolist 
+    create new panel given step example given step 1  create first step wizard   p  
+       
+        todo might convient make reusable 
+        subclass wizard shows textual steps guide user without any automation wizard easily 
+        authored  stored xml file efficiently presented reusing single panel single jtextarea  
+       
+         param newstep number step make panel return new panel given step 
+        
+    take action completion step example given step 0 nothing given step 1 first action   argo non-modal wizards take action along soon possible not wait until final step user pressed  finish  doaction may called steps never constructored displayed panels  
+       
+        param oldstep given step action wizard  
+        
+    undo action done given step example given step 0  nothing done nothing undone given step 1  undo first action   undo allows 
+        users work part way through fixing problem  see partial 
+        result explore different alternative  
+       
+        param oldstep given step 
+        
+    
+       undo action  
+        
+    
+        return returns step  
+       org argouml cognitive critics Wizard org argouml cognitive critics wizard java io serializable wizard removepanel s    
+        panels remove s settodoitem wizarditem i    
+        item   i wizarditem gettodoitem item getprogress step   100   getnumsteps getnumsteps jpanel getcurrentpanel getpanel step jpanel getpanel s s   0    s    panels size panels get s - 1 cangonext step   getnumsteps next     
+	doaction step   
+	step    
+	jpanel p   makepanel step p panels add p   
+          
+	started item item changed cangoback step   0 back     
+	step step   0  step   0  
+	undoaction step item item changed canfinish isstarted started isfinished finished finish     
+	started numsteps   getnumsteps i   step  i    numsteps  i      
+	    doaction i item item changed    
+	  
+	  
+	  
+	finished jpanel makepanel newstep doaction oldstep doaction     doaction step undoaction oldstep undoaction     undoaction step getstep step  
+      
+ org argouml cognitive critics Wizard

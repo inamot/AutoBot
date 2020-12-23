@@ -1,0 +1,53 @@
+ 
+    
+   action  uploads image google cloud storage  
+    
+    
+       extracts image metadata passed image key parameter  
+        
+    
+       validates image size content type  
+        
+    
+       deletes uploaded image  
+        
+    
+       deletes uploaded file google cloud storage  
+       teammates ui controller ImageUploadAction teammates ui controller imageuploadaction action   
+ 
+  
+ 
+  
+ 
+     override actionresult execute     
+        data   preparedata createajaxresult data getimagekeyparam paramsnames image_to_upload fileuploadpagedata preparedata     
+        fileuploadpagedata data fileuploadpagedata account  sessiontoken   
+        blobinfo blobinfo   extractimagekey getimagekeyparam blobinfo data isfileuploaded data filesrcurl log warning  image upload failed    
+            statustoadmin    image upload failed data  
+          
+ 
+        blobkey blobkey   blobinfo getblobkey    
+ 
+        data isfileuploaded appurl filesrcurl   config getappurl actionuris public_image_serve  
+                 withparam paramsnames blob_key  blobkey getkeystring absolutefilesrcurl   filesrcurl toabsolutestring    
+        data filesrcurl   filesrcurl tostring    
+ 
+        log info image uploaded       absolutefilesrcurl   
+        statustoadmin image uploaded         a href     data filesrcurl     target \ _blank\    
+                  absolutefilesrcurl      a    
+        data ajaxstatus    image successfully uploaded to google cloud storage data blobinfo extractimagekey param map list blobinfo   blobsmap   blobstoreservicefactory getblobstoreservice   getblobinfos request   
+            list blobinfo  blobs   blobsmap get param blobs blobs isempty      
+                data ajaxstatus statusmessages no_image_given  
+                iserror blobinfo image   blobs get 0 validateimage image illegalstateexception e blobinfo validateimage blobinfo image image getsize systemparams max_profile_pic_size    
+            deleteimage image getblobkey     
+            iserror data ajaxstatus statusmessages image_too_large image getcontenttype   contains  image       
+            deleteimage image getblobkey     
+            iserror data ajaxstatus statusmessages file_not_a_picture image deleteimage blobkey blobkey blobkey equals blobkey deleteuploadedfile blobkey blobstorefailureexception bfe    
+            statustoadmin action_result_failure 
+                          unable to delete picture  possible unused picture with key    
+                      blobkey getkeystring   
+                           error message    
+                      bfe getmessage eol deleteuploadedfile blobkey blobkey    
+        logic deleteuploadedfile blobkey   
+      
+ teammates ui controller ImageUploadAction

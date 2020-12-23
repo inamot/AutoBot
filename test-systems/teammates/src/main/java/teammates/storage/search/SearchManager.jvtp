@@ -1,0 +1,94 @@
+ 
+    
+   manages   link document link index datastore use search functions  
+   
+    see href  https   cloud google com appengine docs java search   https   cloud google com appengine docs java search utility class 
+    
+       creates updates search document given document index  
+        
+    
+       tries putting document  handling transient errors retrying exponential backoff  
+       
+        throws putexception non-transient error encountered  
+        throws maximumretriesexceededexception final   link operationresult 's message final message operation fails maximum retries gae search api signals put document failure two ways either 
+           returns putresponse containing operationresult non-ok statuscode throws putexception contains embedded operationresult handle both ways examining operationresult determine kind error it transient use retrymanager retry operation non-transient not retry throw putexception upwards instead  
+            
+   update final message shown task fails maximum retries transient error retried non-transient error signals operation not retried 
+    
+       batch creates updates search documents given documents index  
+        
+    
+       tries putting multiple documents  handling transient errors retrying exponential backoff  
+       
+        throws putexception only non-transient errors encountered  
+        throws maximumretriesexceededexception list failed   link document s final data final   link operationresult 's message final message operation fails maximum retries gae search api allows batch putting list documents  
+           results each document reported via list operationresults use retrymanager retry putting list documents each retry re-putting only documents failed previous retry encounter one transient errors retry operation results non-transient errors give up throw putexception upwards  
+            
+   update list documents put during next retry 
+   update final message data shown task fails maximum retries least one transient error  continue retrying errors non-transient not continue retrying 
+    
+       searches document given query  
+        
+    
+       deletes document documentid  
+       teammates storage search SearchManager teammates storage search searchmanager error_non_transient_backend_issue   
+             failed to put document s  %s into search index %s due to non backend issue error_maximum_retries_exceeded   
+             failed to put document s  %s into search index %s after maximum retries  %s searchmanager putdocument indexname  document document putdocumentwithretry indexname  document putexception e    
+            log severe format error_non_transient_backend_issue  document  indexname  
+                      teammatesexception tostringwithstacktrace e maximumretriesexceededexception e    
+            log severe format error_maximum_retries_exceeded  document  indexname  e finalmessage  
+                      teammatesexception tostringwithstacktrace e putdocumentwithretry indexname document document putexception  maximumretriesexceededexception index index   getindex indexname   
+ 
+          
+        rm rununtilsuccessful retryabletaskthrows putexception   put document     
+ 
+  
+ 
+             override run putresponse response   index put document   
+                    lastresult   response getresults   get 0 putexception e    
+                    lastresult   e getoperationresult    
+                  
+              
+ 
+             override issuccessful putexception   
+                  
+                finalmessage   lastresult getmessage statuscode ok equals lastresult getcode statuscode transient_error equals lastresult getcode putexception lastresult putdocuments indexname  list document  documents putdocumentswithretry indexname  documents putexception e    
+            log severe format error_non_transient_backend_issue  documents  indexname  
+                      teammatesexception tostringwithstacktrace e maximumretriesexceededexception e    
+            object faileddocuments   e finaldata  
+            log severe format error_maximum_retries_exceeded  faileddocuments  indexname  e finalmessage  
+                      teammatesexception tostringwithstacktrace e putdocumentswithretry indexname list document  documents putexception  maximumretriesexceededexception index index   getindex indexname   
+ 
+          
+        rm rununtilsuccessful retryabletaskthrows putexception   put documents     
+ 
+  
+  
+  
+ 
+             override run putexception putresponse response   index put documentstoput   
+                    lastresults   response getresults    
+                    lastids   response getids putexception e    
+                    lastresults   e getresults    
+                    lastids   e getids    
+                  
+              
+ 
+             override issuccessful hastransienterror list document  faileddocuments arraylist i   0  i   documentstoput size    i      
+                    statuscode code   lastresults get i  getcode statuscode ok equals code     
+                        faileddocuments add documentstoput get i statuscode transient_error equals code     
+                            hastransienterror documentstoput   faileddocuments  
+ 
+                  
+                finalmessage   lastresults get 0  getmessage    
+                finaldata   documentstoput documentstoput isempty hastransienterror putexception lastresults get 0   lastresults  lastids results scoreddocument  searchdocuments indexname  query query getindex indexname  search query deletedocument indexname documentid    
+        getindex indexname  deleteasync documentid index getindex indexname    
+        map index  indicestable   getindicestable    
+        index index   indicestable get indexname index indexspec indexspec   indexspec newbuilder   setname indexname  build    
+            index   searchservicefactory getsearchservice   getindex indexspec   
+            indicestable put indexname  index index map index  getindicestable     
+        map index  indicestable   per_thread_indices_table get indicestable indicestable hashmap      
+            per_thread_indices_table set indicestable indicestable  
+      
+ 
+ teammates storage search SearchManager

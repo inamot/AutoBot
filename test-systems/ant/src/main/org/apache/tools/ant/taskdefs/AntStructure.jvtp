@@ -1,0 +1,210 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   creates partial dtd ant currently known tasks ant 1 1 
+   
+    ant task category  xml output file  
+        param output output file structureprinter use  
+        param p printer use ant 1 7 
+        
+    
+       build antstructure dtd  
+       
+        exception buildexception dtd cannot written  
+        
+   
+                   plain impossible utf8  see 
+                   http   java sun com j2se 1 5 0 docs guide intl encoding doc html 
+                   
+                   fallback platform specific anyway  
+                    
+    
+       writes actual structure information  
+       
+        p   link #printhead     link #printtargetdecl link #printtail called exactly once    link #printelementdecl  once each declared task type   p  
+        
+    
+           prints header generated output  
+           
+            param out printwriter write param p project instance current task 
+            param tasks map  name implementing class  
+            param types map  name implementing class  
+           data types  
+            
+    
+           prints definition target element  
+            param out printwriter write print definition given element  
+           
+            param out printwriter write param p project instance current task 
+            param name element name  
+            param element class defined element  
+            
+    
+           prints trailer  
+            param out printwriter write prints header generated output  
+           
+            p basically prints xml declaration  defines some 
+           entities project element   p  
+            
+    
+           prints definition target element  
+            
+    
+           print definition given element  
+            
+   
+                   xxx - failed load class properly print warning here string match xml-nmtoken production? 
+            param s string test 
+            return true string matches xml-nmtoken 
+            
+   xxx committing combiningchar extender here strings match xml-nmtoken production? 
+           
+            p otherwise not suitable enumerated attribute example   p  
+            param s array string test 
+            return true strings array math xml-nmtoken string match xml-nmtoken production? 
+        param s string test 
+        return true string matches xml-nmtoken strings match xml-nmtoken production? 
+       
+        p otherwise not suitable enumerated attribute example   p  
+        param s array string test 
+        return true strings array math xml-nmtoken 
+       org apache tools ant taskdefs AntStructure org apache tools ant taskdefs antstructure task line_sep 
+          system getproperty  line separator setoutput file output output   output add structureprinter p    
+        printer   p execute buildexception output buildexception  output attribute is required   getlocation     
+          
+ 
+        printwriter out try   
+                out printwriter outputstreamwriter fileoutputstream output    utf8 unsupportedencodingexception ue    
+                  
+                out printwriter filewriter output    
+              
+ 
+            printer printhead out  getproject    
+                              getproject   gettaskdefinitions    
+                              getproject   getdatatypedefinitions     
+ 
+            printer printtargetdecl out   
+ 
+            enumeration datatypes   getproject   getdatatypedefinitions   keys datatypes hasmoreelements typename datatypes nextelement    
+                printer printelementdecl  
+                    out  getproject    typename getproject   getdatatypedefinitions   get typename    
+              
+ 
+            enumeration tasks   getproject   gettaskdefinitions   keys tasks hasmoreelements tname tasks nextelement    
+                printer printelementdecl out  getproject    tname getproject   gettaskdefinitions   get tname    
+              
+ 
+            printer printtail out ioexception ioe buildexception  error writing   
+                                       output getabsolutepath    ioe  getlocation out out close structureprinter printhead printwriter out  project p  hashtable tasks  
+                       hashtable types printtargetdecl printwriter out printelementdecl printwriter out  project p name element printtail printwriter out dtdprinter structureprinter printtail printwriter out    
+            visited clear printhead printwriter out  project p  hashtable tasks  hashtable types    
+            printhead out  tasks keys    types keys printhead printwriter out  enumeration tasks  
+                               enumeration types    
+            out println   ?xml version \ 1 0\  encoding \ utf-8\  ?     
+            out println    entity on off yes no \      
+            out print    entity % tasks first tasks hasmoreelements tname tasks nextelement first    
+                    out print first out print tname   
+              
+            out println  \      
+            out print    entity % types \     
+            first types hasmoreelements typename types nextelement first    
+                    out print first out print typename   
+              
+            out println  \      
+ 
+            out println      
+ 
+            out print    element project  target       
+            out print tasks   
+            out print         
+            out print types   
+            out println         
+            out println    attlist project    
+            out println            name    cdata #implied    
+            out println cdata #implied    
+            out println            basedir cdata #implied     
+            out println printtargetdecl printwriter out    
+            out print    element target      
+            out print tasks   
+            out print         
+            out print types   
+            out println         
+            out println      
+ 
+            out println    attlist target    
+            out println            id          id    #implied    
+            out println            name        cdata #required    
+            out println cdata #implied    
+            out println            unless      cdata #implied    
+            out println            depends     cdata #implied    
+            out println            description cdata #implied     
+            out println printelementdecl printwriter out  project p name element visited containskey name visited put name       
+ 
+            introspectionhelper ih ih   introspectionhelper gethelper p  element throwable t stringbuffer sb stringbuffer    element     
+            sb append name  append org apache tools ant types reference equals element     
+                sb append  empty    append line_sep   
+                sb append    attlist    append name   
+                sb append line_sep  append            id id #implied    
+                sb append line_sep  append            refid idref #implied    
+                sb append      append line_sep   
+                out println sb vector v vector ih supportscharacters      
+                v addelement  #pcdata taskcontainer isassignablefrom element     
+                v addelement tasks   
+              
+ 
+            enumeration e   ih getnestedelements e hasmoreelements      
+                v addelement e nextelement v isempty      
+                sb append  empty sb append count   v size i   0  i   count  i i    0    
+                        sb append         
+                      
+                    sb append v elementat i    
+                  
+                sb append count   1     v elementat 0  equals  #pcdata      
+                    sb append       
+                  
+              
+            sb append       
+            out println sb   
+ 
+            sb stringbuffer    attlist     
+            sb append name   
+            sb append line_sep  append            id id #implied    
+ 
+            e   ih getattributes e hasmoreelements attrname e nextelement id  equals attrname sb append line_sep  append               
+                     append attrname  append type   ih getattributetype attrname type equals java lang type equals java lang type     
+                    sb append append reference isassignablefrom type     
+                    sb append  idref enumeratedattribute isassignablefrom type enumeratedattribute ea   
+                             enumeratedattribute  type newinstance values   ea getvalues values values length    0 
+                                arenmtokens values     
+                            sb append  cdata sb append i   0  i   values length  i i    0    
+                                    sb append         
+                                  
+                                sb append values i    
+                              
+                            sb append instantiationexception ie    
+                        sb append  cdata illegalaccessexception ie    
+                        sb append  cdata type getsuperclass type getsuperclass   getname   equals  java lang object   values    object    type getmethod  values invoke object values length    0    
+                            sb append  cdata sb append i   0  i   values length  i i    0    
+                                    sb append         
+                                  
+                                sb append type getmethod  name invoke values i    object sb append exception x    
+                        sb append  cdata sb append  cdata     
+                  
+                sb append  #implied    
+              
+            sb append      append line_sep   
+            out println sb count   v size i   0  i   count  i nestedname v elementat i pcdata  equals nestedname  
+                        tasks equals nestedname  
+                        types equals nestedname     
+                    printelementdecl out  p  nestedname  ih getelementtype nestedname isnmtoken s length   s length i   0  i   length  i c   s charat i character isletterordigit c  
+                       c    ' '    c    '-'    c    '_'    c arenmtokens s i   0  i   s length  i isnmtoken s i isnmtoken s dtdprinter isnmtoken s arenmtokens s dtdprinter arenmtokens s   
+      
+ org apache tools ant taskdefs AntStructure

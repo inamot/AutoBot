@@ -1,0 +1,117 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   sets java's web proxy properties tasks code run same jvm through firewall access remote web sites remote ftp sites nominate http ftp proxy socks server  reset server 
+   settings nothing p  
+   examples 
+    pre  lt setproxy  gt   pre nothing 
+    pre  lt setproxy proxyhost  firewall   gt   pre  
+   set proxy firewall 80 
+    pre  lt setproxy proxyhost  firewall  proxyport  81   gt   pre  
+   set proxy firewall 81 
+    pre  lt setproxy proxyhost     gt   pre  
+   stop using http proxy  don't change socks settings 
+    pre  lt setproxy socksproxyhost  socksy   gt   pre  
+   use socks via socksy 1080 
+    pre  lt setproxy socksproxyhost     gt   pre  
+   stop using socks server  
+    p set username password http tt proxyhost  tt tt proxypassword  tt  attributes java1 4 above used against socks5 servers  
+     p  
+    see href  http   java sun com j2se 1 5 0 docs guide net properties html   
+    java 1 5 network property list ant 1 5 
+    ant task category  network  
+    
+   checkstyle visibilitymodifier bc 
+    
+       proxy details 
+        
+    
+       name proxy port 
+        
+   checkstyle visibilitymodifier socks host  
+        
+    
+       socks proxy port  default 1080  
+        
+    
+       list non proxy hosts 
+        
+    
+       user http only 
+        
+    
+       password http only http ftp proxy host  set http proxy 
+       option disabled 
+       
+        param hostname new proxy hostname http ftp proxy port number  default 80 
+       
+        param port port number proxy name socks server  set to turn socks 
+       proxying param host new socksproxyhost value 
+        
+    
+       set proxyport socks connections default value 1080 
+       
+        param port new socksproxyport value list hosts bypass proxy separated vertical bar character ' '  only java 1 4 ftp use list  
+       e g  fozbot corp sun com   eng sun com 
+        param nonproxyhosts lists hosts talk direct set proxy user  probably requires password accompany setting  default    
+        param proxyuser username ant1 6 
+        
+    
+       set password proxy  used only proxyuser set  
+        param proxypassword password go username ant1 6 proxy port host settings not null settings applied settings last beyond life object apply network connections 
+       relevant docs  buglist #4183340 
+        
+  socks may java1 4 thingy only 
+    
+       list out going work  
+       
+        exception buildexception thrown unrecoverable error 1 6 3 
+       org apache tools ant taskdefs optional net SetProxy org apache tools ant taskdefs optional net setproxy task proxyhost proxyport   80 setproxyhost hostname    
+        proxyhost   hostname setproxyport port    
+        proxyport   port setsocksproxyhost host socksproxyhost   host setsocksproxyport port socksproxyport   port setnonproxyhosts nonproxyhosts nonproxyhosts   nonproxyhosts setproxyuser proxyuser proxyuser   proxyuser setproxypassword proxypassword proxypassword   proxypassword applywebproxysettings settingschanged enablingproxy properties sysprops   system getproperties proxyhost settingschanged proxyhost length      0    
+                tracesettinginfo    
+                enablingproxy sysprops put proxysetup http_proxy_host  proxyhost portstring   integer tostring proxyport   
+                sysprops put proxysetup http_proxy_port  portstring   
+                sysprops put proxysetup https_proxy_host  proxyhost   
+                sysprops put proxysetup https_proxy_port  portstring   
+                sysprops put proxysetup ftp_proxy_host  proxyhost   
+                sysprops put proxysetup ftp_proxy_port  portstring nonproxyhosts sysprops put proxysetup http_non_proxy_hosts  nonproxyhosts   
+                    sysprops put proxysetup https_non_proxy_hosts  nonproxyhosts   
+                    sysprops put proxysetup ftp_non_proxy_hosts  nonproxyhosts proxyuser sysprops put proxysetup http_proxy_username  proxyuser   
+                    sysprops put proxysetup http_proxy_password  proxypassword log  resetting http proxy   project msg_verbose   
+                sysprops remove proxysetup http_proxy_host   
+                sysprops remove proxysetup http_proxy_port   
+                sysprops remove proxysetup http_proxy_username   
+                sysprops remove proxysetup http_proxy_password   
+                sysprops remove proxysetup https_proxy_host   
+                sysprops remove proxysetup https_proxy_port   
+                sysprops remove proxysetup ftp_proxy_host   
+                sysprops remove proxysetup ftp_proxy_port socksproxyhost settingschanged socksproxyhost length      0    
+                enablingproxy sysprops put proxysetup socks_proxy_host  socksproxyhost   
+                sysprops put proxysetup socks_proxy_port  integer tostring socksproxyport proxyuser sysprops put proxysetup socks_proxy_username  proxyuser   
+                    sysprops put proxysetup socks_proxy_password  proxypassword log  resetting socks proxy   project msg_verbose   
+                sysprops remove proxysetup socks_proxy_host   
+                sysprops remove proxysetup socks_proxy_port   
+                sysprops remove proxysetup socks_proxy_username   
+                sysprops remove proxysetup socks_proxy_password proxyuser enablingproxy    
+                authenticator setdefault proxyauth proxyuser  
+                                                       proxypassword settingschanged    
+                authenticator setdefault proxyauth tracesettinginfo     
+        log  setting proxy to   
+                   proxyhost proxyhost    ''   
+                        proxyport  
+                project msg_verbose execute buildexception   
+        applywebproxysettings proxyauth authenticator proxyauth user pass    
+            auth passwordauthentication user  pass tochararray passwordauthentication getpasswordauthentication auth  
+          
+      
+  
+org apache tools ant taskdefs optional net SetProxy

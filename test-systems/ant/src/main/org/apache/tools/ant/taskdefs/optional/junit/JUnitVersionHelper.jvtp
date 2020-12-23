@@ -1,0 +1,42 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   work around some changes public junit api between 
+   different junit releases  
+    
+   pre junit 3 7 
+   ignore 
+    
+       junit 3 7 introduces testcase getname subsequent versions junit remove old name   method method provides 
+       access name testcase via reflection supposed work version before junit 3 7  
+       
+        p ant 1 5 1 method invoke  quot  code public 
+       string getname    code  quot any implementation test exists   p  
+       
+        p ant 1 7 checks junit4testcasefacade explicitly used junit framework junit4testadapter   p  
+        param t test  
+        return name test  
+        
+   self-describing junit 4  #38811 trim   classname    
+   ignore 
+   ignore 
+    
+       tries find name class test represents 
+       across junit 3 4  
+        
+   junit 4 wraps solo tests way extract original test name little hack org apache tools ant taskdefs optional junit JUnitVersionHelper org apache tools ant taskdefs optional junit junitversionhelper testcasename   testcase getmethod  getname 0 nosuchmethodexception e testcasename   testcase getmethod  name 0 nosuchmethodexception e2 gettestcasename test t t t getclass   getname   equals  junit framework junit4testcasefacade name   t tostring name endswith paren   name lastindexof name substring 0  paren name t testcase    testcasename testcasename invoke t object 0 throwable e method getnamemethod getnamemethod   
+                        t getclass   getmethod  getname 0 nosuchmethodexception e    
+                    getnamemethod   t getclass   getmethod  name 0 getnamemethod getnamemethod getreturntype string  getnamemethod invoke t object 0 throwable e unknown gettestcaseclassname test test classname   test getclass   getname test junittaskmirrorimpl vmexiterrortest    
+            classname     junittaskmirrorimpl vmexiterrortest  test  getclassname classname equals  junit framework junit4testcasefacade name   test tostring paren   name lastindexof paren    -1    name endswith         
+                classname   name substring paren   1  name length   - 1 classname  
+      
+ 
+ org apache tools ant taskdefs optional junit JUnitVersionHelper

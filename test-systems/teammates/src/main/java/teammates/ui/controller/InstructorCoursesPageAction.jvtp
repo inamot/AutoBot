@@ -1,0 +1,53 @@
+ 
+    
+   action  loading courses' page instructor  
+    
+   explanation  first extract any parameters request object  
+           e g   idofcoursetodelete   getrequestparam const paramsnames course_id may verify parameters  
+           e g  assumption assertnotnull courseid action parameters    
+   explanation  next  check user rights execute action    
+   explanation show page' type action  therefore prepare matching pagedata object  accessing logic 
+           component necessary list instructorattributes belong user corresponding courses instructors  
+   sort coursedetailsbundle lists course id 
+   explanation  set any status messages shown user    
+   explanation must set variable text represent particular execution action admin activity log' page    
+   explanation  create appropriate result object return teammates ui controller InstructorCoursesPageAction teammates ui controller instructorcoursespageaction action   
+ 
+     override actionresult execute     
+          
+ 
+          
+        gatekeeper verifyinstructorprivileges account   
+ 
+          
+        instructorcoursespagedata data instructorcoursespagedata account  sessiontoken isusingajax   getrequestparamvalue paramsnames is_using_ajax   
+        data setusingajax isusingajax map instructorattributes  instructorsforcourses hashmap      
+        list courseattributes  allcourses arraylist      
+        list courseattributes  activecourses arraylist      
+        list courseattributes  archivedcourses arraylist data isusingajax      
+              
+            list instructorattributes  instructorlist   logic getinstructorsforgoogleid data account googleid instructorattributes instructor   instructorlist    
+                instructorsforcourses put instructor courseid  instructor   
+              
+ 
+              
+            allcourses   logic getcoursesforinstructor instructorlist   
+ 
+            list archivedcourseids   logic getarchivedcourseids allcourses  instructorsforcourses courseattributes course   allcourses archivedcourseids contains course getid       
+                    archivedcourses add course activecourses add course   
+                  
+              
+ 
+              
+            courseattributes sortbyid activecourses   
+            courseattributes sortbyid archivedcourses   
+          
+ 
+        data init activecourses  archivedcourses  instructorsforcourses data isusingajax      allcourses isempty      
+            statustouser add statusmessage statusmessages course_empty  statusmessagecolor warning    
+          
+ 
+          
+        statustoadmin    instructorcourse page load br total courses      allcourses size createshowpageresult viewuris instructor_courses  data   
+      
+ teammates ui controller InstructorCoursesPageAction

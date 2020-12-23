@@ -1,0 +1,289 @@
+ 
+   $id$ 
+   copyright  c  2005-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications uml notation operation reception  
+    
+    author mvw tigris org constructor  
+       
+        param operation operation represented 
+        
+   
+        see org argouml notation providers notationprovider#parse java lang object  java lang string  
+        
+    
+       parse string representing one ore separated operations case string char contains e g initializer handled not occurences param classifier  classifier classifier operation s  belong param operation   operation operation editing happened 
+        param text string parse 
+        throws parseexception invalid input text? remove op non-whitechars text? remove op  
+   check operations  ' ' separated   
+   yes newop setownerscope op getownerscope        
+  not needed case operation 
+    
+       parse line text aligns operation specification 
+       given line following form  ul  
+        li  visibility name  parameter list    return-type-expression 
+        property-string  
+         ul elements optional left unspecified preserve old values  p  
+       
+        em stereotypes  em given between any element line form   lt  lt stereotype1 stereotype2 stereotype3 gt  gt  p following properties recognized special meaning  
+       abstract  concurrency  concurrent  guarded  leaf  query  root sequential  p syntax compatible uml 1 3 spec  p  
+       
+        formerly visibility name  parameter list    return-type-expression 
+        property-string     formerly 2nd   visibility   keywords  returntype 
+       name params       
+       
+        param s string parse  
+        param op operation adjust specification s  
+        throws parseexception detects error attribute string  see parseerror geterroroffset nothing 
+   end loop 
+   parameterlist guaranteed contain least     
+   don't create stereotype signal reception create any parsed stereotypes needed 
+    
+       convenience method signal parser error  
+        
+        param message 
+                  string containing error message literal appended base  parser error localized  
+        param offset 
+                  offset error occurred 
+        throws parseexception 
+        
+    
+       parse tokens following open brace  properties   
+        
+        param st tokenizer being used 
+        param properties current properties list 
+        return updated list properties 
+        throws parseexception 
+        
+    
+       sets return parameter op type type none  one created many one removed  
+       
+        param op operation 
+        param type type return parameter 
+        
+   
+        see org argouml notation providers notationprovider#getparsinghelp   
+        
+   
+       generates operation according uml notation  
+       
+               stereotype visibility name  parameter-list    
+                               return-type-expression  property-string return-type-expression  only types return parameters shown   depending settings notation  visibility properties shown not shown  
+       
+        author jaap branderhorst xs4all nl 
+       
+        see org argouml notation providers notationprovider#tostring java lang object  java util map  
+        
+   todo  needs i18n parameters returnparameters only one return value without type return param string remove remove only extra properties query state 
+   
+               although operation signal peers uml type  
+               hierarchy share attributes isroot  isleaf   
+               isabstract specification  concurrency not   
+               shared specific operation  
+                
+   remove last   
+   lets concatenate resulting string  genstr show types  defaults true stay compatible older 
+               argouml versions not setting model element deleted working itorg argouml notation providers uml OperationNotationUml org argouml notation providers uml operationnotationuml operationnotation operationnotationuml object operation operation parse object modelelement text parseoperationfig model getfacade   getowner modelelement    
+                    modelelement  text parseexception pe msg    statusmsg bar error parsing operation   
+            object   args     
+                pe getlocalizedmessage    
+                integer valueof pe geterroroffset     
+               
+            argoeventpump fireevent argohelpevent  
+                    argoeventtypes help_changed translator messageformat msg  args parseoperationfig  
+            object classifier  
+            object operation text parseexception classifier operation parseexception pex start   0 end   notationutilityuml indexofnextcheckedsemicolon text  start   
+        project currentproject   
+            projectmanager getmanager   getcurrentproject end    -1    
+              
+            currentproject movetotrash operation s   text substring start  end  trim s length      0    
+              
+            currentproject movetotrash operation parseoperation s  operation i   model getfacade   getfeatures classifier  indexof operation   
+          
+        start   end   1  
+        end   notationutilityuml indexofnextcheckedsemicolon text  start end   start    end    text length      
+            s   text substring start  end  trim s length     0    
+                  
+                object returntype   currentproject getdefaultreturntype    
+                object newop   
+                    model getcorefactory   
+                         buildoperation classifier  returntype newop parseoperation s  newop i    -1    
+                            model getcorehelper   addfeature  
+                                    classifier    i  newop model getcorehelper   addfeature  
+                                    classifier  newop parseexception ex pex pex   ex  
+                          
+                      
+                  
+              
+            start   end   1  
+            end   notationutilityuml indexofnextcheckedsemicolon text  start pex pex parseoperation s  object op parseexception   
+        mytokenizer st hascolon name parameterlist stringbuilder stereotype token type visibility list properties paramoffset   0  
+ 
+        s   s trim s length     0  
+                   notationutilityuml visibilitychars indexof s charat 0    
+                       0    
+            visibility   s substring 0  1   
+            s   s substring 1 st mytokenizer s     \t    \u00ab \u00bb            \\    
+                    notationutilityuml operationcustomsep st hasmoretokens      
+                token   st nexttoken equals token      \t  equals token  
+                               equals token equals token      \u00ab  equals token stereotype parseerror  operation stereotypes    
+                                st gettokenindex     
+                      
+                    stereotype stringbuilder token   st nexttoken equals token      \u00bb  equals token stereotype append token equals token     
+                    properties   tokenopenbrace st  properties equals token     
+                    hascolon equals token     
+                    parseerror  operation values   st gettokenindex token charat 0     ' '     hascolon parameterlist parseerror  operation two-parameter-lists    
+                                st gettokenindex     
+                      
+ 
+                    parameterlist   token hascolon type parseerror  operation two-types    
+                                    st gettokenindex token length     0 
+                                    token charat 0     '\ ' 
+                                       token charat 0     '\''     
+                            parseerror  operation type-quoted   
+                                    st gettokenindex token length     0    token charat 0     ' '    
+                            parseerror  operation type-expr    
+                                    st gettokenindex     
+                          
+ 
+                        type   token name visibility parseerror  operation extra-text   
+                                    st gettokenindex token length     0 
+                                    token charat 0     '\ ' 
+                                       token charat 0     '\''     
+                            parseerror  operation name-quoted   
+                                    st gettokenindex token length     0    token charat 0     ' '    
+                            parseerror  operation name-expr    
+                                    st gettokenindex name visibility token length     1 
+                                   notationutilityuml visibilitychars indexof  
+                                        token charat 0   
+                                                       0    
+                            visibility   token substring 0  1   
+                            token   token substring 1 name visibility   name  
+                            name   token name   token nosuchelementexception nsee    
+            parseerror  operation unexpected-end-operation    
+                    s length parseexception pre pre parameterlist parameterlist charat parameterlist length   - 1     ' '    
+                parseerror  operation parameter-list-incomplete   
+                        paramoffset   parameterlist length   - 1   
+              
+ 
+            paramoffset    
+            parameterlist   parameterlist substring 1  
+                    parameterlist length   - 1   
+            notationutilityuml parseparamlist op  parameterlist  paramoffset visibility model getcorehelper   setvisibility op  
+                    notationutilityuml getvisibility visibility trim name model getcorehelper   setname op  name trim model getfacade   getname op equals model getfacade   getname op      
+            model getcorehelper   setname op   anonymous type object ow   model getfacade   getowner op   
+            object ns ow model getfacade   getnamespace ow ns   model getfacade   getnamespace ow ns   model getfacade   getmodel op   
+              
+            object mtype   notationutilityuml gettype type trim    ns   
+            setreturnparameter op  mtype properties notationutilityuml setproperties op  properties   
+                    notationutilityuml operationspecialstrings model getfacade   isareception op   
+                    reception_keyword equals stereotype tostring       
+            stereotypeutility dealwithstereotypes op  stereotype parseerror message offset parseexception parseexception  
+                translator localize  parsing error     message    
+                offset list tokenopenbrace mytokenizer st  list properties parseexception token  
+        stringbuilder propname stringbuilder propvalue properties properties arraylist token   st nexttoken equals token         equals token propname length     0    
+                    properties add propname tostring     
+                    properties add propvalue   
+                  
+                propname stringbuilder    
+                propvalue equals token equals token propvalue msg    
+                         parsing error operation prop-stereotypes   
+                    object   args    propname parseexception  
+                    		translator localize msg   
+                            args    
+                            st gettokenindex     
+                  
+                propvalue propvalue propname append token propvalue    token propname length     0    
+            properties add propname tostring     
+            properties add propvalue properties setreturnparameter object op  object type    
+        object param iterator it   model getfacade   getparameters op  iterator it hasnext      
+            object p   it next model getfacade   isreturn p     
+                param   p it hasnext      
+            object p   it next model getfacade   isreturn p     
+                projectmanager getmanager   getcurrentproject   movetotrash p param object returntype   
+                projectmanager getmanager   
+                         getcurrentproject   getdefaultreturntype    
+            param   model getcorefactory   buildparameter op  returntype   
+          
+        model getcorehelper   settype param  type getparsinghelp parsing help operation tostring object modelelement  map args    
+        project p   projectmanager getmanager   getcurrentproject    
+        projectsettings ps   p getprojectsettings stereostr   notationutilityuml generatestereotype  
+                    model getfacade   getstereotypes modelelement isreception   model getfacade   isareception modelelement isreception    
+                stereostr   
+                        notationutilityuml 
+                                 generatestereotype reception_keyword  
+                                        stereostr visstr   notationutilityuml generatevisibility modelelement namestr   model getfacade   getname modelelement   
+ 
+              
+            stringbuffer parameterlistbuffer stringbuffer    
+            collection coll   model getfacade   getparameters modelelement   
+            iterator it   coll iterator counter   0 it hasnext      
+                object parameter   it next model getfacade   hasreturnparameterdirectionkind  
+                        parameter     
+                    counter    
+                    parameterlistbuffer append  
+                            notationutilityuml generateparameter parameter    
+                    parameterlistbuffer append counter   0    
+                parameterlistbuffer delete  
+                        parameterlistbuffer length   - 1  
+                        parameterlistbuffer length     
+              
+ 
+            stringbuffer parameterstr stringbuffer    
+            parameterstr append      append parameterlistbuffer  append       
+ 
+              
+            stringbuffer returnparassb stringbuffer isreception    
+                coll   model getcorehelper   getreturnparameters modelelement coll coll size     0    
+                    returnparassb append        
+                    iterator it2   coll iterator it2 hasnext      
+                        object type   model getfacade   gettype it2 next type returnparassb append model getfacade   
+                                     getname type    
+                          
+                        returnparassb append returnparassb length      3    
+                        returnparassb delete 0  returnparassb length returnparassb delete  
+                                returnparassb length   - 1  
+                                returnparassb length     
+                      
+                  
+              
+ 
+ 
+              
+            stringbuffer propertysb stringbuffer   append model getfacade   isquery modelelement     
+                propertysb append  query model getfacade   isroot modelelement     
+                propertysb append  root model getfacade   isleaf modelelement     
+                propertysb append  leaf isreception model getfacade   getconcurrency modelelement propertysb append model getfacade   getname  
+                            model getfacade   getconcurrency modelelement     
+                    propertysb append ' '   
+                  
+              
+            iterator it3   model getfacade   gettaggedvalues modelelement   
+            stringbuffer taggedvaluessb stringbuffer it3 it3 hasnext it3 hasnext      
+                    taggedvaluessb append  
+                            notationutilityuml generatetaggedvalue it3 next      
+                    taggedvaluessb append       
+                  
+                taggedvaluessb delete  
+                        taggedvaluessb length   - 1  
+                        taggedvaluessb length propertysb length     1    
+                propertysb delete propertysb length   - 1  propertysb length     
+                  
+                propertysb append propertysb stringbuffer    
+              
+ 
+              
+            stringbuffer genstr stringbuffer 30 stereostr stereostr length     0     
+                genstr append stereostr  append visstr visstr length     0  
+                       ps getshowvisibilityvalue      
+                genstr append visstr namestr namestr length     0     
+                genstr append namestr ps getshowtypesvalue      
+                genstr append parameterstr  append returnparassb returnparassb length     0     
+                    genstr append returnparassb  append genstr append propertysb length     0  
+                       ps getshowpropertiesvalue      
+                genstr append propertysb genstr tostring   trim invalidelementexception e org argouml notation providers uml OperationNotationUml

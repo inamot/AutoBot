@@ -1,0 +1,137 @@
+ architecture mapping mapping between components architecture model arbitrary ressources example source 
+   code files  
+    author sebastian herold class represents single entries architecture mapping maps single component single resource  
+	   entries organized tree  entries refine parents means resource refer scope parent entry mapped component referred child entry not exist example source code package pkg mapped component 
+	   c pkg automatically mapped c  unless entry 
+	   mapping pkg another component  
+	    author sebastian herold 
+	   
+	    
+    
+	   creates empty architecture mapping sets resource factory used mapping  
+	    param resourcefactory resource factory used  
+	    return new empty architecture mapping  
+	    
+    
+	   create empty architecture mapping sets default 
+	   resource factory used  
+	    return new empty architecture mapping  
+	    
+    
+	   returns resource factory used mapping  
+	    return see above  
+	    
+    
+	   determines resource closest ancestor resource explicit mapping exists    
+	    param elem element described ancestor needs found  
+	    return closest explicitly mapped ancestor resource elem itself explicitly mapped  elem returned  
+	   null element exists  
+	    
+    
+	   determines component element mapped either directly indirectly via ancestor resource  
+	    param elem element component required  
+	    return corresponding component component exists   
+	    
+    
+	   returns explicitly mapped resources component  
+	    param comp component mapped resources requested  
+	    return set mapped resources  
+	    
+    
+	   adds mapping between specified resource specified component mapping added component null resource null explicit mapping resource already resource already indirectly mapped specified component one ancestor resources already mapped comp   
+	    param comp component onto resource mapped  
+	    param resource resource mapped  
+	    return true mapping added  false otherwise  
+	    
+    
+	   removes single mapping between given component given resource explicit mapping existed  
+	    param comp given component  
+	    param resource given resource  
+	    return true the given component explicitly mapped given 
+	   resource  false otherwise  
+	    
+    
+	   removes explicit mapping  see removemapping component  imappableelement  
+	    param comp given component 
+	    param resource given resource 
+	    param isduplicateremoval indicates whether not removal caused another mapping removal  removing mapping entry cause further removals case leads parent child entries mapping same components not allow parameter set true  mapping listeners not notified change  
+	    return true the given component explicitly mapped given 
+	   resource  false otherwise  
+	    
+    
+	   adds listener mapping  
+	    param listener listener added  
+	    
+    
+	   removes listener not notified mapping modifications 
+	   anymore  
+	    param listener listener removed  
+	    
+    
+	   notifies registered listeners mapping modification 
+	    param event mapping modification  
+	    
+    
+	   returns mapping entry resource 
+	    param elem resource 
+	    return mapping entry explicit mapping elem exists  
+	   se kau cs jittac model mapping ArchitectureMapping se kau cs jittac model mapping architecturemapping entry component comp imappableelement elem entry refined set entry  refining hashset entry entry component comp  imappableelement elem comp   comp elem   elem architecturemapping createemptymapping ijittacresourcefactory resourcefactory  architecturemodel model architecturemapping resourcefactory  model architecturemapping createemptymapping architecturemodel model architecturemapping jittacresourcemodelregistry instance getdefaultresourcemodel    model architecturemapping architecturemodel model jittacresourcemodelregistry instance getdefaultresourcemodel    model architecturemapping ijittacresourcefactory resourcefactory  architecturemodel model resourcefactory nullpointerexception  no resource model set     
+		explicitmappings hashedmap component  set entry      
+		explicitlymappedelements hashedmap imappableelement  entry     
+		managedprojects hashedmap ijittacproject  integer resourcefactory   resourcefactory architecturemodel   model ijittacresourcefactory getresourcefactory resourcefactory imappableelement getexplicitlymappedparent imappableelement elem elem null explicitlymappedelements containskey elem     
+			imappableelement parent   elem getparent getexplicitlymappedparent parent elem component getcomponent imappableelement elem elem null  
+		imappableelement mappedparentorself getexplicitlymappedparent elem mappedparentorself null explicitlymappedelements get mappedparentorself  comp set imappableelement  getmappedresources component comp    
+		set imappableelement  result hashset imappableelement comp explicitmappings containskey comp entry e   explicitmappings get comp     
+					result add e elem result addmapping component comp  imappableelement resource comp resource illegalargumentexception  arguments must not be explicitlymappedelements containskey resource component currentcomponent   getcomponent resource comp equals currentcomponent _addmapping comp  resource   
+				fireevent mappingadditionevent comp  resource  currentcomponent removecomponent component comp result set imappableelement  elements getmappedresources comp   
+		result   elements size     0 imappableelement elem   elements temp   removemapping comp  elem result   result    temp result removemapping component comp  imappableelement resource removemapping comp  resource set imappableelement  getidenticallymappedsubtree imappableelement elem    
+		hashset imappableelement  result hashset      
+		component comp getcomponent elem comp result add elem ijittacresource child   elem getchildren comp equals getcomponent child      
+					result addall getidenticallymappedsubtree child result removemapping component comp  imappableelement resource isduplicateremoval comp resource illegalargumentexception  arguments must not be explicitlymappedelements containskey resource     
+			entry removeentry   explicitlymappedelements get resource   
+			set entry  currentmappings   explicitmappings get comp   
+ 
+			_updaterefinementsforremovedentry removeentry   
+			explicitlymappedelements remove resource   
+			currentmappings remove removeentry   
+			_decreaseresourcecounter resource getproject currentmappings isempty      
+				explicitmappings remove comp isduplicateremoval    
+				fireevent mappingremovalevent comp  resource getcomponent resource registerlistener iarchitecturemappingchangelistener listener listeners contains listener     
+			listeners add listener deregisterlistener iarchitecturemappingchangelistener listener    
+		listeners remove listener fireevent architecturemappingchangeevent event iarchitecturemappingchangelistener l   listeners    
+			l onevent event _deleteentryfromtree entry e    
+		entry parent   e refined  
+		set entry  children   e refining entry child   children    
+			child refined   parent parent parent refining remove e   
+			parent refining addall children   
+		  
+		e refined e refining clear _addmapping component comp  imappableelement resource comp resource illegalargumentexception  arguments must not be set entry  currentmappings explicitmappings containskey comp     
+			currentmappings hashset entry     
+			explicitmappings put comp  currentmappings currentmappings   explicitmappings get comp   
+		  
+		 
+		entry newentry entry comp  resource   
+		currentmappings add newentry   
+		explicitlymappedelements put resource  newentry   
+		_increaseresourcecounter resource getproject     
+		_updaterefinementsfornewmapping newentry _addentryintree entry newentry newentry entry parententry   explicitlymappedelements get getexplicitlymappedparent newentry elem getparent      
+		newentry refined   parententry parententry set entry  temp hashset entry  parententry refining entry child   temp child elem isdescendantof newentry elem     
+					parententry refining remove child   
+					child refined   newentry  
+					newentry refining add child   
+				  
+			  
+			parententry refining add newentry entry e   explicitlymappedelements values e elem isdescendantof newentry elem     e refined e refined   newentry  
+					newentry refining add e _updaterefinementsfornewmapping entry newentry newentry _addentryintree newentry   
+		_deleteirrelevantrefinement newentry   
+		_deleteirrelevantrefinement newentry refined  newentry _updaterefinementsforremovedentry entry removeentry removeentry entry parent   removeentry refined  
+		_deleteentryfromtree removeentry   
+		_deleteirrelevantrefinement parent _deleteirrelevantrefinement entry entry entry entry child   entry refining    
+			_deleteirrelevantrefinement entry  child _deleteirrelevantrefinement entry entry  entry refining entry refining entry refining contains refining     entry comp equals refining comp     
+			removemapping refining comp  refining elem _increaseresourcecounter ijittacproject project project managedprojects containskey project nrofresources   managedprojects get project   
+			managedprojects put project  nrofresources   1 managedprojects put project  1   
+			fireevent managedprojectaddedevent project _decreaseresourcecounter ijittacproject project project managedprojects containskey project nrofresources   managedprojects get project nrofresources    1    
+				managedprojects remove project   
+				fireevent managedprojectremovedevent project managedprojects put project  nrofresources - 1 entry getentryforelement imappableelement elem explicitlymappedelements get elem set ijittacproject  getmanagedprojects hashset ijittacproject  managedprojects keyset     
+	  
+ se kau cs jittac model mapping ArchitectureMapping

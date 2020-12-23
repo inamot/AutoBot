@@ -1,0 +1,489 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications configure perspectives  dialog  p class implements following features  p  
+    ul  
+    li - saving perspectives user profile  
+    li - adding new perspectives  
+    li - deleting perspectives  
+    li - renaming perspectives  
+    li - duplicating existing perspectives  
+    li - reordering perspectives  
+    li - selecting any number combination rules perspective  
+     ul  p dialog behaves exactly described http   java sun com products jlf book idioms6 html#57371 21 december 2003  
+    author  alexb 
+    
+    
+       logger  
+        
+    
+       insets pixels  
+        
+                                                                 
+   instance variables top 
+   right bottom 
+   left bottom 
+    
+       creates new instance perspectivedesignerdialog dialog modal 
+  sortjlistmodel rulelibrarylist   
+    
+       make lists dialog box fill make buttons dialog box localized strings mnemonics  
+        
+  disable buttons now selection made make layout dialog box text set later text set later text set later 
+    
+       add action listeners buttons lists  
+        
+    
+       load existing rules perspective manager presentation presented library rules user may pick remove ones already selected perspective selected  
+   add load perspectives perspective manager presentation  
+        
+   must add editable list new explorerperspective's list model original ones not changed case cancel action user  
+    
+       update label above list perspectives count  
+        
+    
+       update label above library rules list count  
+        
+   update label shows number rules  
+    
+       update label above library rules list count  
+        
+   update label shows number rules  
+    
+        param list jlist sorted 
+        
+    
+       handles pressing ok button   p  
+       
+       updates perspectives explorer  
+       saves user perspectives exits  
+        
+    
+       handles pressing reset default button   p  
+       
+       resets perspectives build defaults  
+        
+    
+       handles pressing new  button  
+        
+    
+       handles pressing remove  button  
+        
+    
+       handles pressing duplicate button  
+        
+    
+       handles pressing buttons  
+        
+    
+       handles double-clicking library list ruleslist triggers same functions add currently selected rule library rules list current perspective  
+        
+   remove rule library list 
+   set newly selected item library list 
+    
+       remove currently selected rule rules list current perspective  
+        
+   set newly selected item library list 
+    
+       handles pressing move up button  
+        
+   
+            see java awt event actionlistener#actionperformed java awt event actionevent  
+            
+    
+       handles pressing move down button  
+        
+    
+       handles confirming changed text text-entry field 
+        e g  pressing enter perspective name  
+        
+   todo  replace functioncall next line requestfocusinwindow   once not support java 1 3 any handles changes text text-entry field perspective name  
+        
+    
+       handles selection changes perspective list  
+        
+   
+            see javax swing event listselectionlistener#valuechanged javax swing event listselectionevent  
+            
+    
+       handles selection changes rules list  
+        
+   
+            see javax swing event listselectionlistener#valuechanged javax swing event listselectionevent  
+            
+    
+       handles selection changes library list  
+       
+        
+   
+            see javax swing event listselectionlistener#valuechanged javax swing event listselectionevent  
+           org argouml ui explorer PerspectiveConfigurator org argouml ui explorer perspectiveconfigurator argodialog logger log   
+	logger getlogger perspectiveconfigurator perspectiveconfigurator translator localize  dialog title configure-perspectives    
+	      argodialog ok_cancel_option configpanelnorth jpanel    
+        configpanelsouth jpanel    
+         
+        makelists    
+         
+        makebuttons    
+         
+        makelayout    
+        updaterulelabel    
+         
+        makelisteners    
+         
+        loadperspectives    
+        loadlibrary    
+          
+         
+        splitpane jsplitpane jsplitpane vertical_split  
+                    configpanelnorth  configpanelsouth   
+        splitpane setcontinuouslayout setcontent splitpane makelists     
+        renametextfield jtextfield    
+ 
+        perspectivelistmodel defaultlistmodel    
+        perspectivelist jlist perspectivelistmodel   
+        perspectiveruleslistmodel defaultlistmodel    
+        perspectiveruleslist jlist perspectiveruleslistmodel   
+        rulelibrarylistmodel defaultlistmodel    
+        rulelibrarylist jlist rulelibrarylistmodel   
+ 
+        perspectivelist setborder borderfactory createemptyborder  
+                inset_px  inset_px  inset_px  inset_px    
+        perspectiveruleslist setborder borderfactory createemptyborder  
+                inset_px  inset_px  inset_px  inset_px    
+        rulelibrarylist setborder borderfactory createemptyborder  
+                inset_px  inset_px  inset_px  inset_px    
+ 
+        perspectivelist setselectionmode  
+                listselectionmodel single_selection   
+        perspectiveruleslist setselectionmode  
+                listselectionmodel single_selection   
+        rulelibrarylist setselectionmode  
+                listselectionmodel single_selection makebuttons     
+        newperspectivebutton jbutton    
+        namebutton newperspectivebutton   button newperspectivebutton settooltiptext  
+                translator localize  button tooltip     
+ 
+        removeperspectivebutton jbutton    
+        namebutton removeperspectivebutton   button remove    
+        removeperspectivebutton settooltiptext  
+                translator localize  button remove tooltip     
+ 
+        duplicateperspectivebutton jbutton    
+        namebutton duplicateperspectivebutton   button duplicate    
+        duplicateperspectivebutton settooltiptext  
+                translator localize  button duplicate tooltip     
+ 
+        moveupbutton jbutton    
+        namebutton moveupbutton   button move-up    
+        moveupbutton settooltiptext  
+                translator localize  button move-up tooltip     
+ 
+        movedownbutton jbutton    
+        namebutton movedownbutton   button move-down    
+        movedownbutton settooltiptext  
+                translator localize  button move-down tooltip     
+ 
+        addrulebutton jbutton        
+        addrulebutton settooltiptext translator localize  button add-rule     
+        removerulebutton jbutton        
+        removerulebutton settooltiptext translator localize  
+                 button remove-rule     
+ 
+        resettodefaultbutton jbutton    
+        namebutton resettodefaultbutton   button restore-defaults    
+        resettodefaultbutton settooltiptext  
+                translator localize  button restore-defaults tooltip     
+ 
+          
+        removeperspectivebutton setenabled duplicateperspectivebutton setenabled moveupbutton setenabled movedownbutton setenabled addrulebutton setenabled removerulebutton setenabled renametextfield setenabled makelayout     
+        gridbaglayout gb gridbaglayout    
+        configpanelnorth setlayout gb   
+        configpanelsouth setlayout gb   
+        gridbagconstraints c gridbagconstraints    
+        c ipadx   3  
+        c ipady   3  
+ 
+        perslabel jlabel      
+        perslabel setborder borderfactory createemptyborder  
+                inset_px  inset_px  inset_px  inset_px    
+        c fill   gridbagconstraints both  
+        c gridx   0  
+        c gridy   0  
+        c gridwidth   3  
+        c weightx   1 0   c weighty   0 0  
+        gb setconstraints perslabel  c   
+        configpanelnorth add perslabel   
+ 
+        jpanel perspanel jpanel borderlayout     
+        jscrollpane persscroll jscrollpane perspectivelist  
+			    jscrollpane vertical_scrollbar_as_needed  
+			    jscrollpane horizontal_scrollbar_never   
+        perspanel add renametextfield  borderlayout north   
+        perspanel add persscroll  borderlayout center   
+        c gridx   0  
+        c gridy   1  
+        c gridwidth   4  
+        c weightx   1 0   c weighty   1 0  
+        gb setconstraints perspanel  c   
+        configpanelnorth add perspanel   
+ 
+        jpanel persbuttons jpanel gridlayout 6  1  0  5    
+        persbuttons add newperspectivebutton   
+        persbuttons add removeperspectivebutton   
+        persbuttons add duplicateperspectivebutton   
+        persbuttons add moveupbutton   
+        persbuttons add movedownbutton   
+        persbuttons add resettodefaultbutton   
+        jpanel persbuttonwrapper jpanel flowlayout flowlayout right  0  0    
+        persbuttonwrapper add persbuttons   
+        c gridx   4  
+        c gridy   1  
+        c gridwidth   1  
+        c weightx   0 0   c weighty   0 0  
+        c ipadx   0       c ipady   0  
+        c insets insets 0  5  0  0   
+        gb setconstraints persbuttonwrapper  c   
+        configpanelnorth add persbuttonwrapper   
+ 
+        ruleliblabel jlabel      
+        ruleliblabel setborder borderfactory createemptyborder  
+                inset_px  inset_px  inset_px  inset_px    
+        c gridx   0  
+        c gridy   3  
+        c gridwidth   1  
+        c weightx   1 0  
+        c weighty   0 0  
+        c ipadx   3  
+        c ipady   3  
+        c insets insets 10  0  0  0   
+        gb setconstraints ruleliblabel  c   
+        configpanelsouth add ruleliblabel   
+ 
+        addrulebutton setmargin insets 2  15  2  15    
+        removerulebutton setmargin insets 2  15  2  15    
+        jpanel xferbuttons jpanel    
+        xferbuttons setlayout boxlayout xferbuttons  boxlayout y_axis    
+        xferbuttons add addrulebutton   
+        xferbuttons add spacerpanel     
+        xferbuttons add removerulebutton   
+        c gridx   2  
+        c gridy   4  
+        c weightx   0 0  
+        c weighty   0 0  
+        c insets insets 0  3  0  5   
+        gb setconstraints xferbuttons  c   
+        configpanelsouth add xferbuttons   
+ 
+        ruleslabel jlabel      
+        ruleslabel setborder borderfactory createemptyborder  
+                inset_px  inset_px  inset_px  inset_px    
+        c gridx   3  
+        c gridy   3  
+        c gridwidth   1  
+        c weightx   1 0  
+        c insets insets 10  0  0  0   
+        gb setconstraints ruleslabel  c   
+        configpanelsouth add ruleslabel   
+ 
+        c gridx   0  
+        c gridy   4  
+        c weighty   1 0  
+        c gridwidth   2  
+        c gridheight   2  
+        c insets insets 0  0  0  0   
+        jscrollpane rulelibscroll jscrollpane rulelibrarylist  
+			    jscrollpane vertical_scrollbar_as_needed  
+			    jscrollpane horizontal_scrollbar_never   
+        gb setconstraints rulelibscroll  c   
+        configpanelsouth add rulelibscroll   
+ 
+        c gridx   3  
+        c gridy   4  
+        c gridwidth   2  
+        c gridheight   2  
+        jscrollpane rulesscroll jscrollpane perspectiveruleslist  
+			    jscrollpane vertical_scrollbar_as_needed  
+			    jscrollpane horizontal_scrollbar_never   
+        gb setconstraints rulesscroll  c   
+        configpanelsouth add rulesscroll makelisteners     
+        renametextfield addactionlistener renamelistener     
+        renametextfield getdocument   adddocumentlistener renamedocumentlistener     
+ 
+ 
+        newperspectivebutton addactionlistener newperspectivelistener     
+        removeperspectivebutton addactionlistener removeperspectivelistener     
+        duplicateperspectivebutton addactionlistener duplicateperspectivelistener     
+        moveupbutton addactionlistener moveuplistener     
+        movedownbutton addactionlistener movedownlistener     
+        addrulebutton addactionlistener rulelistener     
+        removerulebutton addactionlistener rulelistener     
+        resettodefaultbutton addactionlistener resetlistener     
+ 
+        perspectivelist addlistselectionlistener perspectivelistselectionlistener     
+        perspectiveruleslist addlistselectionlistener ruleslistselectionlistener     
+        perspectiveruleslist addmouselistener rulelistmouselistener     
+        rulelibrarylist addlistselectionlistener librarylistselectionlistener     
+        rulelibrarylist addmouselistener rulelistmouselistener     
+ 
+        getokbutton   addactionlistener oklistener loadlibrary     
+        list perspectiverule  ruleslib arraylist perspectiverule     
+        ruleslib addall perspectivemanager getinstance   getrules     
+        collections sort ruleslib comparator perspectiverule compare perspectiverule o1  perspectiverule o2 o1 tostring   compareto o2 tostring     
+              
+            
+          
+        explorerperspective selpers   
+             explorerperspective  perspectivelist getselectedvalue selpers perspectiverule persrule   selpers getlist perspectiverule librule   ruleslib librule tostring   equals persrule tostring       
+                        ruleslib remove librule rulelibrarylistmodel clear perspectiverule rule   ruleslib    
+            rulelibrarylistmodel addelement rule   
+          
+        updateliblabel loadperspectives     
+        list explorerperspective  perspectives    
+            perspectivemanager getinstance   getperspectives explorerperspective perspective   perspectives    
+            list perspectiverule  rules   perspective getlist    
+ 
+            explorerperspective editableperspective explorerperspective perspective tostring perspectiverule rule   rules    
+                editableperspective addrule rule   
+              
+ 
+            perspectivelistmodel addelement editableperspective   
+          
+ 
+        updateperslabel updateperslabel     
+        perslabel settext translator localize  label perspectives   
+                         perspectivelistmodel size updateliblabel     
+          
+        ruleliblabel settext translator localize  label rules-library   
+                         rulelibrarylistmodel size updaterulelabel     
+          
+        ruleslabel settext translator localize  label selected-rules   
+                         perspectiveruleslistmodel size sortjlistmodel jlist list    
+        defaultlistmodel model    defaultlistmodel  list getmodel    
+        list all arraylist i   0  i   model getsize    i      
+            all add model getelementat i    
+          
+        model clear    
+        collections sort all comparator compare object o1  object o2 o1 tostring   compareto o2 tostring object obj   all    
+            model addelement obj oklistener actionlistener actionperformed actionevent e    
+ 
+            perspectivemanager getinstance   removeallperspectives i   0  i   perspectivelistmodel size    i      
+                explorerperspective perspective    
+                     explorerperspective  perspectivelistmodel get i   
+                perspectivemanager getinstance   addperspective perspective   
+              
+ 
+            perspectivemanager getinstance   saveuserperspectives resetlistener actionlistener actionperformed actionevent e    
+ 
+            collection explorerperspective  c   
+                perspectivemanager getinstance   getdefaultperspectives c size     0    
+                perspectivelistmodel removeallelements explorerperspective p   c    
+                    perspectivelistmodel addelement p   
+                  
+                updateperslabel newperspectivelistener actionlistener actionperformed actionevent e    
+            object   msgargs     
+                integer valueof  perspectivelist getmodel   getsize     1    
+	       
+	    explorerperspective newpers explorerperspective translator messageformat  
+                     dialog perspective explorer-perspective   msgargs    
+	    perspectivelistmodel insertelementat newpers  0   
+	    perspectivelist setselectedvalue newpers perspectiveruleslistmodel clear    
+	    updateperslabel    
+	    updaterulelabel removeperspectivelistener actionlistener actionperformed actionevent e    
+            object sel   perspectivelist getselectedvalue perspectivelistmodel getsize     1    
+                perspectivelistmodel removeelement sel   
+              
+            perspectivelist setselectedindex 0 perspectivelistmodel getsize      1    
+                removeperspectivebutton setenabled updateperslabel duplicateperspectivelistener actionlistener actionperformed actionevent e    
+            object sel   perspectivelist getselectedvalue sel object   msgargs    sel tostring      
+                explorerperspective newpers   
+                      explorerperspective  sel  makenamedclone translator 
+                         messageformat  dialog perspective copy-of   msgargs    
+                perspectivelistmodel insertelementat newpers  0   
+                perspectivelist setselectedvalue newpers updateperslabel rulelistener actionlistener actionperformed actionevent e    
+ 
+            object src   e getsource perspectivelist getselectedvalue src    addrulebutton    
+                doaddrule src    removerulebutton    
+                doremoverule rulelistmouselistener mouseadapter mouseclicked mouseevent me    
+            object src   me getsource me getclickcount      2 
+		   perspectivelist getselectedvalue src    rulelibrarylist    addrulebutton isenabled      
+                doaddrule src    perspectiveruleslist    removerulebutton isenabled      
+                doremoverule doaddrule     
+        object sel   rulelibrarylist getselectedvalue sellibnr   rulelibrarylist getselectedindex perspectiverule newrule    
+                 perspectiverule  sel getclass   newinstance    
+ 
+            perspectiveruleslistmodel insertelementat newrule  0   
+              explorerperspective  perspectivelist getselectedvalue    
+                 addrule newrule   
+            sortjlistmodel perspectiveruleslist   
+            perspectiveruleslist setselectedvalue newrule loadlibrary rulelibrarylistmodel size     sellibnr     
+                sellibnr   rulelibrarylistmodel size   - 1  
+              
+            rulelibrarylist setselectedindex sellibnr   
+            updaterulelabel exception e    
+            log error  problem adding rule   e doremoverule sellibnr   rulelibrarylist getselectedindex    
+        perspectiverule sel   
+	     perspectiverule  perspectiveruleslist getselectedvalue selecteditem   perspectiveruleslist getselectedindex    
+	object selpers   perspectivelist getselectedvalue    
+ 
+        perspectiveruleslistmodel removeelement sel   
+          explorerperspective  selpers  removerule sel perspectiveruleslistmodel getsize     selecteditem    
+            perspectiveruleslist setselectedindex selecteditem perspectiveruleslistmodel getsize     0    
+            perspectiveruleslist setselectedindex  
+                    perspectiveruleslistmodel getsize   - 1   
+          
+        loadlibrary    
+          
+        rulelibrarylist setselectedindex sellibnr   
+        updaterulelabel moveuplistener actionlistener actionperformed actionevent e sel   perspectivelist getselectedindex sel   0    
+                object selobj   perspectivelistmodel get sel   
+                object prevobj   perspectivelistmodel get sel - 1   
+                perspectivelistmodel set sel  prevobj   
+                perspectivelistmodel set sel - 1  selobj   
+                perspectivelist setselectedindex sel - 1   
+                perspectivelist ensureindexisvisible sel - 1 movedownlistener actionlistener actionperformed actionevent e sel   perspectivelist getselectedindex sel    perspectivelistmodel getsize   - 1     
+                object selobj   perspectivelistmodel get sel   
+                object nextobj   perspectivelistmodel get sel   1   
+                perspectivelistmodel set sel  nextobj   
+                perspectivelistmodel set sel   1  selobj   
+                perspectivelist setselectedindex sel   1   
+                perspectivelist ensureindexisvisible sel   1 renamelistener actionlistener actionperformed actionevent e sel   perspectivelist getselectedindex    
+            object selpers   perspectivelist getselectedvalue newname   renametextfield gettext sel    0    newname length     0    
+                  explorerperspective  selpers  setname newname   
+                perspectivelistmodel set sel  selpers   
+                  
+                perspectivelist requestfocus renamedocumentlistener documentlistener insertupdate documentevent e    
+            update removeupdate documentevent e    
+            update changedupdate documentevent e    
+            update update sel   perspectivelist getselectedindex    
+            object selpers   perspectivelist getselectedvalue newname   renametextfield gettext sel    0    newname length     0    
+                  explorerperspective  selpers  setname newname   
+                perspectivelistmodel set sel  selpers perspectivelistselectionlistener listselectionlistener valuechanged listselectionevent lse lse getvalueisadjusting object selpers   perspectivelist getselectedvalue    
+            loadlibrary    
+            object selrule   rulelibrarylist getselectedvalue    
+            renametextfield setenabled selpers removeperspectivebutton setenabled selpers duplicateperspectivebutton setenabled selpers moveupbutton setenabled perspectivelist getselectedindex     0   
+            movedownbutton setenabled  selpers perspectivelist getselectedindex   
+                               perspectivelist getmodel   getsize   - 1 selpers renametextfield settext selpers tostring     
+ 
+            explorerperspective pers    explorerperspective  selpers  
+            perspectiveruleslistmodel clear perspectiverule rule   pers getlist      
+                perspectiveruleslistmodel insertelementat rule  0   
+              
+            sortjlistmodel perspectiveruleslist   
+            addrulebutton setenabled selpers selrule updaterulelabel ruleslistselectionlistener listselectionlistener valuechanged listselectionevent lse lse getvalueisadjusting object selpers perspectivelistmodel size     0    
+                selpers   perspectivelist getselectedvalue    
+              
+ 
+            object selrule perspectiveruleslistmodel size     0    
+                selrule   perspectiveruleslist getselectedvalue    
+              
+ 
+            removerulebutton setenabled selpers selrule librarylistselectionlistener listselectionlistener valuechanged listselectionevent lse lse getvalueisadjusting object selpers   perspectivelist getselectedvalue    
+            object selrule   rulelibrarylist getselectedvalue    
+            addrulebutton setenabled selpers selrule org argouml ui explorer PerspectiveConfigurator

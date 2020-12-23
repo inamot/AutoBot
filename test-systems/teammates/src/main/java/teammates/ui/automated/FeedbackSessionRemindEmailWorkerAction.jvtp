@@ -1,0 +1,33 @@
+ 
+    
+   task queue worker action  sends feedback session reminder email course  
+    
+   filter out instructors submitted feedback sessionteammates ui automated FeedbackSessionRemindEmailWorkerAction teammates ui automated feedbacksessionremindemailworkeraction automatedaction   
+ 
+  
+ 
+     override getactiondescription override getactionmessage override execute feedbacksessionname   getrequestparamvalue paramsnames submission_feedback   
+        assumption assertpostparamnotnull paramsnames submission_feedback  feedbacksessionname courseid   getrequestparamvalue paramsnames submission_course   
+        assumption assertpostparamnotnull paramsnames submission_course  courseid feedbacksessionattributes session   logic getfeedbacksession feedbacksessionname  courseid   
+            list studentattributes  studentlist   logic getstudentsforcourse courseid   
+            list instructorattributes  instructorlist   logic getinstructorsforcourse courseid   
+ 
+            list studentattributes  studentstoremindlist arraylist studentattributes student   studentlist logic isfeedbacksessioncompletedbystudent session  student email     
+                    studentstoremindlist add student   
+                  
+              
+ 
+              
+            list instructorattributes  instructorstoremindlist arraylist instructorattributes instructor   instructorlist logic isfeedbacksessioncompletedbyinstructor session  instructor email     
+                    instructorstoremindlist add instructor   
+                  
+              
+ 
+            list emailwrapper  emails emailgenerator   generatefeedbacksessionreminderemails  
+                    session  studentstoremindlist  instructorstoremindlist  instructorlist   
+            taskqueuer scheduleemailsforsending emails exception e    
+            log severe  unexpected error sending emails      teammatesexception tostringwithstacktrace e    
+          
+      
+ 
+ teammates ui automated FeedbackSessionRemindEmailWorkerAction

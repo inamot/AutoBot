@@ -1,0 +1,318 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications class defines bridge between uml meta-model 
+   representation design graphmodel interface used gef class handles only uml class digrams  
+   
+    author jrobbins 
+    
+    
+       logger  
+        
+                                                                 
+   graphmodel implementation 
+   
+        see org tigris gef graph graphmodel#getports java lang object  
+        
+   
+        see org tigris gef graph basegraphmodel#getowner java lang object  
+        
+    
+       return edges going given port  read model element   
+        
+        param port 
+                  model element query 
+        return list incoming connections 
+        
+   top hierarchy generalizable element classifier   package 
+   navigable     only want incoming 
+   
+        see org tigris gef graph graphmodel#getoutedges java lang object  
+        
+   top hierarchy generalizable element classifier 
+                                                                 
+   mutablegraphmodel implementation 
+   
+        see org tigris gef graph mutablegraphmodel#canaddnode java lang object binary association not node reject  
+   n b node association either n-ary association class part associationclass 
+   todo logic may well worth moving model component  
+   provide similar grid connectionsgrid 
+   issue 3774 
+   
+        see org tigris gef graph mutablegraphmodel#canaddedge java lang object  
+        
+   
+        see org tigris gef graph mutablegraphmodel#addnode java lang object  
+        
+   todo probably undesirable side effect unless user 
+   confirms placing element second diagram going potentially change namespace  - tfm 20061208 
+    
+       add given edge graph correct type  
+       throws illegalargumentexception edge null either ends null  
+       
+        param edge edge added 
+        
+   todo  assumes public 
+   todo probably undesirable side effect unless user 
+   confirms placing element second diagram going potentially change namespace  - tfm 20061208 
+    
+       add edges given node example method lets add existing association between two figclassifiers  
+        
+        param node model element query connections 
+        
+   todo add associationclasses way things now only half add disable 
+   until fixed  - tfm  20061208 
+   return  
+   return  
+   return  
+                                                                 
+   vetoablechangelistener implementation 
+   
+        see java beans vetoablechangelistener#vetoablechange java beans propertychangeevent  
+        
+  throws propertyvetoexception 
+  mmodelelement modelelement   elementimport getmodelelement uid rerouting edge first method called selectionrerouteedge order determine 
+       whether graphmodel allow change  p  
+       
+       restricted class-association changes now  
+       
+        param newnode new node one ends dragged param oldnode existing node already connected  
+        param edge edge being dragged rerouted 
+       
+        return whether not rerouting allowed 
+        
+   prevent changes    
+   check parameter types  
+    
+       reroutes connection old node connected new node  
+       
+       delegates reroutexxx each 4 possible edges class diagram  association  dependency  generalization  link  
+       
+        param newnode new node one ends dragged param oldnode existing node already connected  
+        param edge edge being dragged rerouted 
+        param issource tells end being rerouted  
+        
+    
+       helper method changeconnectednode  
+        
+   check param types  only some connections legal uml connections t connection between 2 interfaces end type 
+   cast params 
+   rerouting source  
+   rerouting destination  
+   set ends navigability see class actionnavigability 
+  set new end type  
+    
+       helper method changeconnectednode  p  
+       
+       empty moment 
+        
+   empty moment 
+    
+       helper method changeconnectednode  p  
+       
+       empty moment 
+        
+   empty moment 
+    
+       helper method changeconnectednode  p  
+       
+       empty moment 
+        
+   empty momentorg argouml uml diagram static_structure ClassDiagramGraphModel org argouml uml diagram static_structure classdiagramgraphmodel umlmutablegraphsupport vetoablechangelistener logger log   
+	logger getlogger classdiagramgraphmodel list object  getports object nodeoredge    
+	list object  res arraylist object model getfacade   isaclassifier nodeoredge     
+	    res add nodeoredge model getfacade   isainstance nodeoredge     
+	    res add nodeoredge model getfacade   isamodel nodeoredge     
+	    res add nodeoredge model getfacade   isastereotype nodeoredge     
+            res add nodeoredge model getfacade   isasignal nodeoredge     
+            res add nodeoredge res object getowner object port port list getinedges object port    
+ 
+	list object  edges arraylist object model getfacade   isamodelelement port     
+	    iterator it   
+	        model getfacade   getsupplierdependencies port  iterator it hasnext      
+		edges add it next model getfacade   isageneralizableelement port     
+	    iterator it   model getfacade   getspecializations port  iterator it hasnext      
+		edges add it next model getfacade   isaclassifier port  
+                   model getfacade   isapackage port     
+            iterator it   model getfacade   getassociationends port  iterator it hasnext      
+                object nextassocend   it next model getfacade   isnavigable nextassocend     
+                    edges add nextassocend model getfacade   isainstance port     
+            iterator it   model getfacade   getlinkends port  iterator it hasnext      
+                edges add it next edges list getoutedges object port    
+ 
+	list object  edges arraylist object model getfacade   isamodelelement port     
+	    iterator it   
+	        model getfacade   getclientdependencies port  iterator it hasnext      
+		edges add it next model getfacade   isageneralizableelement port     
+	    iterator it   model getfacade   getgeneralizations port  iterator it hasnext      
+		edges add it next model getfacade   isaclassifier port     
+	    iterator it   model getfacade   getassociationends port  iterator it hasnext      
+	        object thisend   it next    
+	        object assoc   model getfacade   getassociation thisend assoc iterator it2     
+	                model getfacade   getassociationends assoc  iterator it2 hasnext      
+                        object nextassocend   it2 next thisend equals nextassocend  
+                                   model getfacade   isnavigable  
+                                        nextassocend     
+                            edges add nextassocend edges  
+      
+ 
+      
+      
+ 
+      
+     override canaddnode object node model getfacade   isaassociation node  
+                    model getfacade   isanaryassociation node canaddnode node      containsnode node containsnode node     
+            log error  addition of node of type    
+                      node getclass   getname   
+                        rejected because its already in the graph model model getfacade   isaassociation node     
+              
+              
+            collection ends   model getfacade   getconnections node   
+            iterator iter   ends iterator iter hasnext      
+                object classifier   
+                    model getfacade   getclassifier iter next containsnode classifier     
+                    log error  addition of node of type   
+                              node getclass   getname   
+                                rejected because it is connected to a   
+                               classifier that is not in the diagram model getfacade   isamodel node model getfacade   isaclassifierrole node model getfacade   isaclassifier node  
+               model getfacade   isapackage node  
+               model getfacade   isastereotype node  
+               model getfacade   isasignal node  
+               model getfacade   isainstance node   
+      
+ 
+      
+     override canaddedge object edge edge containsedge edge object sourcemodelelement object destmodelelement model getfacade   isaassociation edge     
+            collection conns   model getfacade   getconnections edge conns size     2    
+                log error  association rejected  must have at least 2 ends iterator iter   conns iterator    
+            object associationend0   iter next    
+            object associationend1   iter next associationend0 associationend1 log error  association rejected  an end is sourcemodelelement   model getfacade   gettype associationend0   
+            destmodelelement   model getfacade   gettype associationend1 model getfacade   isaassociationend edge     
+            sourcemodelelement   model getfacade   getassociation edge   
+            destmodelelement   model getfacade   gettype edge sourcemodelelement destmodelelement log error  association end rejected  an end is containsedge sourcemodelelement   
+                        containsnode sourcemodelelement     
+                log error  association end rejected  the source model element    
+                          sourcemodelelement getclass   getname   
+                             must be on the diagram containsnode destmodelelement     
+                log error  association end rejected    
+                           the destination model element must be   
+                           on the diagram model getfacade   isageneralization edge     
+            sourcemodelelement   model getfacade   getspecific edge   
+            destmodelelement   model getfacade   getgeneral edge model getfacade   isadependency edge     
+            collection clients   model getfacade   getclients edge   
+            collection suppliers   model getfacade   getsuppliers edge clients suppliers sourcemodelelement   clients iterator   next    
+            destmodelelement   suppliers iterator   next model getfacade   isalink edge     
+            collection roles   model getfacade   getconnections edge roles size     2 iterator iter   roles iterator    
+            object linkend0   iter next    
+            object linkend1   iter next linkend0 linkend1 sourcemodelelement   model getfacade   getinstance linkend0   
+            destmodelelement   model getfacade   getinstance linkend1 edge commentedge    
+            sourcemodelelement     commentedge  edge  getsource    
+            destmodelelement     commentedge  edge  getdestination sourcemodelelement destmodelelement log error  edge rejected  its ends are not attached to anything containsnode sourcemodelelement  
+                    containsedge sourcemodelelement     
+            log error  edge rejected  its source end is attached to   
+                      sourcemodelelement 
+                        but is not in the graph model containsnode destmodelelement  
+                    containsedge destmodelelement     
+            log error  edge rejected  its destination end is attached to   
+                      destmodelelement  
+                        but is not in the graph model override addnode object node canaddnode node getnodes   add node model getfacade   isamodelelement node  
+	           model getfacade   getnamespace node model getcorehelper   addownedelement gethomemodel    node   
+	  
+ 
+	firenodeadded node   
+      
+ 
+      
+     override addedge object edge edge illegalargumentexception  cannot add a edge getdestport edge getsourceport edge illegalargumentexception  
+                     the source and dest port should be provided on an edge log isinfoenabled      
+            log info  adding an edge of type   
+                     edge getclass   getname   
+                       to diagram canaddedge edge     
+            log info  attempt to add edge rejected getedges   add edge model getfacade   isamodelelement edge  
+                   model getfacade   getnamespace edge model getfacade   isaassociationend edge     
+    	    model getcorehelper   addownedelement gethomemodel    edge   
+          
+        fireedgeadded edge   
+      
+ 
+ 
+      
+     override addnoderelatededges object node addnoderelatededges node model getfacade   isaclassifier node     
+            collection ends   model getfacade   getassociationends node   
+            iterator iter   ends iterator iter hasnext      
+                object association   
+                        model getfacade   getassociation iter next model getfacade   isanaryassociation association  
+                            model getfacade   isaassociationclass association  
+                           canaddedge association     
+                    addedge association model getfacade   isageneralizableelement node     
+            collection generalizations   
+                model getfacade   getgeneralizations node   
+            iterator iter   generalizations iterator iter hasnext      
+        	object generalization   iter next canaddedge generalization     
+        	    addedge generalization   
+        	      
+        	  
+              
+            collection specializations   
+                model getfacade   getspecializations node   
+            iter   specializations iterator iter hasnext      
+        	object specialization   iter next canaddedge specialization     
+        	    addedge specialization model getfacade   isamodelelement node     
+            collection specs   model getfacade   getclientdependencies node   
+            specs addall model getfacade   getsupplierdependencies node    
+            iterator iter   specs iterator iter hasnext      
+        	object dependency   iter next canaddedge dependency     
+        	    addedge dependency model getfacade   isaassociation node     
+            collection ends   model getfacade   getconnections node   
+            iterator iter   ends iterator iter hasnext      
+                object associationend   iter next canaddedge associationend     
+                    addedge associationend vetoablechange propertychangeevent pce ownedelement  equals pce getpropertyname       
+	    list oldowned    list  pce getoldvalue    
+	    object elementimport   pce getnewvalue    
+            object modelelement   
+                    model getfacade   getmodelelement elementimport oldowned contains elementimport     
+		log debug  model removed     modelelement model getfacade   isaclassifier modelelement     
+		    removenode modelelement model getfacade   isapackage modelelement     
+		    removenode modelelement model getfacade   isaassociation modelelement     
+		    removeedge modelelement model getfacade   isadependency modelelement     
+		    removeedge modelelement model getfacade   isageneralization modelelement     
+		    removeedge modelelement log debug  model added     modelelement serialversionuid   -2638688086415040146l  
+ 
+ 
+      
+     override canchangeconnectednode object newnode  object oldnode  
+					  object edge newnode    oldnode model getfacade   isaclass newnode  
+	           model getfacade   isaclass oldnode  
+	           model getfacade   isaassociation edge override changeconnectednode object newnode  object oldnode  
+				    object edge issource model getfacade   isaassociation edge     
+	    rerouteassociation newnode   oldnode   edge   issource model getfacade   isageneralization edge     
+	    reroutegeneralization newnode   oldnode   edge   issource model getfacade   isadependency edge     
+	    reroutedependency newnode   oldnode   edge   issource model getfacade   isalink edge     
+	    reroutelink newnode   oldnode   edge   issource rerouteassociation object newnode  object oldnode  
+				    object edge issource model getfacade   isaclassifier newnode   
+	         model getfacade   isaclassifier oldnode object othernode issource    
+            othernode   model getcorehelper   getdestination edge othernode   model getcorehelper   getsource edge model getfacade   isainterface newnode  
+	           model getfacade   isainterface othernode object edgeassoc   edge  
+ 
+	object theend object theotherend collection connections   model getfacade   getconnections edgeassoc   
+        iterator iter   connections iterator issource    
+              
+            theend   iter next    
+            theotherend   iter next theotherend   iter next    
+            theend   iter next model getfacade   isainterface newnode     
+            model getcorehelper   setnavigable theend model getcorehelper   setnavigable theotherend model getfacade   isainterface othernode     
+            model getcorehelper   setnavigable theotherend model getcorehelper   setnavigable theend model getcorehelper   settype theend  newnode reroutegeneralization object newnode  object oldnode  
+				       object edge issource reroutedependency object newnode  object oldnode  
+				   object edge issource reroutelink object newnode  object oldnode  
+			     object edge issource    
+          
+ 
+      
+ 
+ org argouml uml diagram static_structure ClassDiagramGraphModel

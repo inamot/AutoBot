@@ -1,0 +1,130 @@
+ 
+  todo   courseattribute  remove desanitization data migration 
+  todo   courseattribute  remove desanitization data migration 
+    
+       finds googleid registered instructor co-owner privileges instructor  finds googleid registered 
+       instructor privilege modify instructors  
+       
+        param courseid id course 
+        return googleid suitable instructor found  otherwise empty string 
+       teammates ui controller AdminSearchPageAction teammates ui controller adminsearchpageaction action   
+ 
+  
+ 
+  
+  
+ 
+     override actionresult execute     
+ 
+        gatekeeper verifyadminprivileges account searchkey   getrequestparamvalue paramsnames admin_search_key searchbuttonhit   getrequestparamvalue paramsnames admin_search_button_hit   
+ 
+        adminsearchpagedata data adminsearchpagedata account  sessiontoken searchkey searchkey trim   isempty searchbuttonhit statustoadmin    adminsearchpaga page load statustouser add statusmessage  search key cannot be empty   statusmessagecolor warning    
+                statustoadmin    invalid search  search key cannot be empty   
+                iserror createshowpageresult viewuris admin_search  data   
+          
+ 
+        data searchkey   sanitizationhelper sanitizeforhtml searchkey   
+ 
+        data studentresultbundle   logic searchstudentsinwholesystem searchkey   
+ 
+        data   putfeedbacksessionlinkintomap data studentresultbundle studentlist  data   
+        data   putstudenthomepagelinkintomap data studentresultbundle studentlist  data   
+        data   putstudentrecordspagelinkintomap data studentresultbundle studentlist  data   
+        data   putstudentinstituteintomap data studentresultbundle studentlist  data   
+ 
+        data instructorresultbundle   logic searchinstructorsinwholesystem searchkey   
+        data   putinstructorinstituteintomap data instructorresultbundle instructorlist  data   
+        data   putinstructorhomepagelinkintomap data instructorresultbundle instructorlist  data   
+        data   putinstructorcoursejoinlinkintomap data instructorresultbundle instructorlist  data   
+ 
+        data   putcoursenameintomap data studentresultbundle studentlist  
+                                    data instructorresultbundle instructorlist  
+                                    data numofresults   data studentresultbundle numberofresults 
+                             data instructorresultbundle numberofresults numofresults   0    
+            statustouser add statusmessage  total results found      numofresults  statusmessagecolor info    
+            statustoadmin    search key      data searchkey     br      total results found      numofresults  
+            iserror statustouser add statusmessage  no result found  please again   statusmessagecolor warning    
+            statustoadmin    search key      data searchkey     br      no result found   
+            iserror data init createshowpageresult viewuris admin_search  data adminsearchpagedata putcoursenameintomap list studentattributes  students  
+                                                     list instructorattributes  instructors  
+                                                     adminsearchpagedata data studentattributes student   students student course data courseidtocoursenamemap containskey student course     
+                courseattributes course   logic getcourse student course course data courseidtocoursenamemap put  
+                            student course  sanitizationhelper desanitizeifhtmlsanitized course getname instructorattributes instructor   instructors instructor courseid data courseidtocoursenamemap containskey instructor courseid     
+                courseattributes course   logic getcourse instructor courseid course data courseidtocoursenamemap put  
+                            instructor courseid  sanitizationhelper desanitizeifhtmlsanitized course getname data adminsearchpagedata putinstructorcoursejoinlinkintomap list instructorattributes  instructors  
+                                                                   adminsearchpagedata data instructorattributes instructor   instructors googleidofalreadyregisteredinstructor   findavailableinstructorgoogleidforcourse instructor courseid googleidofalreadyregisteredinstructor isempty joinlinkwithoutinstitute   config getappurl actionuris instructor_course_join  
+                                                 withregistrationkey stringhelper encrypt instructor key   
+                                                 toabsolutestring    
+                data instructorcoursejoinlinkmap put instructor getidentificationstring    
+                                                     joinlinkwithoutinstitute data adminsearchpagedata putinstructorinstituteintomap list instructorattributes  instructors  
+                                                              adminsearchpagedata data instructorattributes instructor   instructors tempcourseidtoinstitutemap get instructor courseid data instructorinstitutemap put instructor getidentificationstring    
+                                                tempcourseidtoinstitutemap get instructor courseid googleid   findavailableinstructorgoogleidforcourse instructor courseid   
+ 
+            accountattributes account   logic getaccount googleid account institute   account institute trim   isempty   ?  none    account institute  
+ 
+            tempcourseidtoinstitutemap put instructor courseid  institute   
+            data instructorinstitutemap put instructor getidentificationstring    institute data adminsearchpagedata putinstructorhomepagelinkintomap list instructorattributes  instructors  
+                                                                 adminsearchpagedata data instructorattributes instructor   instructors instructor googleid curlink   url addparamtourl actionuris instructor_home_page paramsnames user_id  
+                                                        instructor googleid   
+ 
+            data instructorhomepagelinkmap put instructor googleid  curlink data adminsearchpagedata putstudentinstituteintomap list studentattributes  students  adminsearchpagedata data studentattributes student   students tempcourseidtoinstitutemap get student course data studentinstitutemap put student getidentificationstring    
+                                             tempcourseidtoinstitutemap get student course instructorforcoursegoogleid   findavailableinstructorgoogleidforcourse student course   
+ 
+            accountattributes account   logic getaccount instructorforcoursegoogleid account institute   account institute trim   isempty   ?  none    account institute  
+ 
+            tempcourseidtoinstitutemap put student course  institute   
+ 
+            data studentinstitutemap put student getidentificationstring    institute data adminsearchpagedata putstudenthomepagelinkintomap list studentattributes  students  adminsearchpagedata data studentattributes student   students student googleid curlink   url addparamtourl actionuris student_home_page paramsnames user_id  
+                                                        student googleid   
+ 
+            data studentidtohomepagelinkmap put student googleid  curlink data adminsearchpagedata putstudentrecordspagelinkintomap list studentattributes  students  
+                                                                 adminsearchpagedata data studentattributes student   students student course student email curlink   url addparamtourl actionuris instructor_student_records_page paramsnames course_id  
+                                                        student course   
+            curlink   url addparamtourl curlink paramsnames student_email  student email availablegoogleid   findavailableinstructorgoogleidforcourse student course availablegoogleid isempty      
+                curlink   url addparamtourl curlink paramsnames user_id  availablegoogleid   
+                data studentrecordspagelinkmap put student getidentificationstring    curlink data findavailableinstructorgoogleidforcourse courseid tempcourseidtoinstructorgoogleidmap get courseid tempcourseidtoinstructorgoogleidmap get courseid   
+          
+ 
+        list instructorattributes  instructorlist   logic getinstructorsforcourse courseid instructorlist isempty instructorattributes instructor   instructorlist instructor isregistered      instructor hascoownerprivileges      
+                tempcourseidtoinstructorgoogleidmap put courseid  instructor googleid instructor googleid instructorattributes instructor   instructorlist instructor isregistered   
+                       instructor isallowedforprivilege paramsnames instructor_permission_modify_instructor     
+ 
+                tempcourseidtoinstructorgoogleidmap put courseid  instructor googleid instructor googleid adminsearchpagedata putfeedbacksessionlinkintomap list studentattributes  students  
+                                                              adminsearchpagedata rawdata    
+ 
+        adminsearchpagedata processeddata   rawdata studentattributes student   students    
+            list feedbacksessionattributes  feedbacksessions   logic getfeedbacksessionsforcourse student course feedbacksessionattributes fsa   feedbacksessions    
+                processeddata   extractdatafromfeedbacksession fsa  processeddata  student processeddata adminsearchpagedata extractdatafromfeedbacksession feedbacksessionattributes fsa  
+                                                               adminsearchpagedata data  
+                                                               studentattributes student submiturl   config getappurl actionuris student_feedback_submission_edit_page  
+                                withcourseid student course  
+                                withsessionname fsa getfeedbacksessionname    
+                                withregistrationkey stringhelper encrypt student key   
+                                withstudentemail student email  
+                                toabsolutestring openclosedatefragment   generateopenclosedateinfo fsa getstarttimestring    fsa getendtimestring fsa isopened data studentopenfeedbacksessionlinksmap get student getidentificationstring list submiturllist arraylist      
+                submiturllist add submiturl   
+                data studentopenfeedbacksessionlinksmap put student getidentificationstring    submiturllist data studentopenfeedbacksessionlinksmap get student getidentificationstring    add submiturl   
+              
+ 
+            data feedbacksessionlinktonamemap put submiturl  fsa getfeedbacksessionname         
+                      openclosedatefragment data studentunopenedfeedbacksessionlinksmap get student getidentificationstring list submiturllist arraylist      
+                submiturllist add submiturl   
+                data studentunopenedfeedbacksessionlinksmap put student getidentificationstring    submiturllist data studentunopenedfeedbacksessionlinksmap get student getidentificationstring    add submiturl   
+              
+ 
+            data feedbacksessionlinktonamemap put submiturl  fsa getfeedbacksessionname        currently not open    
+                      openclosedatefragment viewresulturl   config getappurl actionuris student_feedback_results_page  
+                                    withcourseid student course  
+                                    withsessionname fsa getfeedbacksessionname    
+                                    withregistrationkey stringhelper encrypt student key   
+                                    withstudentemail student email  
+                                    toabsolutestring fsa ispublished data studentpublishedfeedbacksessionlinksmap get student getidentificationstring list viewresulturllist arraylist      
+                viewresulturllist add viewresulturl   
+                data studentpublishedfeedbacksessionlinksmap put student getidentificationstring    viewresulturllist data studentpublishedfeedbacksessionlinksmap get student getidentificationstring    add viewresulturl   
+              
+ 
+            data feedbacksessionlinktonamemap put viewresulturl  fsa getfeedbacksessionname        published    
+                      openclosedatefragment data generateopenclosedateinfo starttime endtime format open_close_dates_session_template  starttime  endtime   
+      
+ 
+ teammates ui controller AdminSearchPageAction

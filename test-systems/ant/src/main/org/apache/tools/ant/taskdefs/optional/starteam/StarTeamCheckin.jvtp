@@ -1,0 +1,166 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   checks files starteam project  
+   optionally adds files local tree not managed repository control  
+   created  sat dec 15 20 26 07 2001 
+   
+    version 1 0 
+   
+    ant task name  stcheckin  category  scm  product  starteam  
+    
+    
+       constructor starteamcheckin want false default  unlike checkin comment stored checkin  
+        
+    
+       holder add uncontrolled attribute true local files not starteam added repository  
+        
+    
+       sets value createfolders 
+       
+        param argcreatefolders value assign createfolders comment attribute operation 
+        return value comment  
+        
+    
+       optional checkin comment saved file  
+        param comment  value assign comment value adduncontrolled  
+        return value adduncontrolled true  any files folders not starteam added repository   defaults false   
+        param adduncontrolled  value assign adduncontrolled attribute tells whether unlocked files checkin users may access checkout leave checkout status 
+       alone  default   
+        see #setunlocked boolean  
+        
+    
+       set unlocked checkout  optional  default false true  file unlocked users may 
+       change false  lock status not change  
+        param v  true means unlocked checkout 
+                 false means leave status alone  
+        
+    
+       override base-class abstract function creates appropriately configured view checkins always current tip  view  
+       
+        param raw unconfigured  code view  code  
+        return snapshot  code view  code  appropriately configured  
+        
+    
+       implements base-class abstract function define tests any preconditons required task  
+       
+        exception buildexception thrown both rootlocalfolder viewrootlocalfolder defined 
+        
+    
+       implements base-class abstract function emit log entry describing parameters used operation  
+       
+        param starteamrootfolder 
+                     root folder starteam operation 
+        param targetrootfolder 
+                     root local folder operation 
+        whether specified user not   
+        
+    
+       implements base-class abstract function perform checkout 
+       operation files each folder tree  
+       
+        param starteamfolder starteam folder files checked param targetfolder local folder files checked exception buildexception any error occurs 
+        
+   note s important scan items before make unmatchedfilemap creates bunch new 
+   folders files  unattached repository don't want include those traversal  
+    
+       provides string showing full paths logging 
+       
+        param remotefile star team file being processed  
+       
+        return string showing full paths 
+        
+    
+       processes  checks-out   code stfiles  code files starteam folder  
+       
+        param eachfile repository file process 
+        param targetfolder java io file  folder work 
+        throws ioexception starteam api fails work files file doesn't pass include exclude tests  skip try update status once give starteam 
+   another chance  
+    
+       handles deletion uncontrolled items override adds members repository assumed method not called until items corresponding folder processed internal map contain only uncontrolled items  
+            
+   once find folder isn't repository know add org apache tools ant taskdefs optional starteam StarTeamCheckin org apache tools ant taskdefs optional starteam starteamcheckin treebasedtask starteamcheckin     
+          
+        setrecursive setcreatefolders argcreatefolders createfolders   argcreatefolders getcomment comment setcomment comment comment   comment isadduncontrolled adduncontrolled setadduncontrolled adduncontrolled adduncontrolled   adduncontrolled setunlocked v v lockstatus   item locktype unlocked lockstatus   item locktype unchanged view createsnapshotview view raw view raw  viewconfiguration createtip testpreconditions buildexception logoperationdescription  
+        folder starteamrootfolder  java io file targetrootfolder    
+        log isrecursive   ?  recursive     non-recursive   
+                checkin from getrootlocalfolder targetrootfolder getabsolutepath     
+ 
+        log  checking in to      starteamrootfolder getfolderhierarchy     
+        logincludes    
+        logexcludes lockstatus    item locktype unlocked    
+            log    items will be checked in unlocked log    items will be checked in with no change in lock status isforced      
+            log    items will be checked in in accordance with repository   
+                   status and regardless of lock status log    items will be checked in regardless of repository status   
+                   only locked visit folder starteamfolder  java io file targetfolder buildexception getrootlocalfolder      
+                starteamfolder setalternatepathfragment  
+                    targetfolder getabsolutepath     
+              
+ 
+            folder   folderslist   starteamfolder getsubfolders    
+            item   stfiles   starteamfolder getitems gettypenames   file   
+ 
+              
+              
+              
+              
+ 
+            unmatchedfilemap ufm checkinmap   init  
+                    targetfolder getabsolutefile    starteamfolder i   0  size   folderslist length  i   size  i      
+                folder stfolder   folderslist i   
+                java io file subfolder java io file targetfolder  stfolder getname     
+ 
+                ufm removecontrolleditem subfolder isrecursive      
+                    visit stfolder  subfolder i   0  size   stfiles length  i   size  i      
+                com starbase starteam file stfile   
+                     com starbase starteam file  stfiles i   
+                processfile stfile   
+ 
+                ufm removecontrolleditem java io file targetfolder  stfile getname adduncontrolled    
+                ufm processuncontrolleditems ioexception e buildexception e describecheckin com starbase starteam file remotefile    
+        stringbuffer sb stringbuffer    
+        sb append remotefile getfullname    
+           append   --     
+           append getfullrepositorypath remotefile sb tostring processfile com starbase starteam file eachfile ioexception filename   eachfile getname shouldprocess filename     
+            log  excluding     getfullrepositorypath eachfile checkin filestatus    eachfile getstatus filestatus    status merge    filestatus    status unknown    
+            eachfile updatestatus true   
+            filestatus    eachfile getstatus filestatus    status modified    
+            log  checking in      describecheckin eachfile filestatus    status missing    
+            log  local file missing      describecheckin eachfile    
+            checkin isforced      
+                log  forced checkin of     describecheckin eachfile  
+                        over status     status name filestatus log  skipping      getfullrepositorypath eachfile  
+                        - status      status name filestatus    
+                checkin checkin    
+            eachfile checkin comment lockstatus isforced true checkinmap unmatchedfilemap isactive starteamcheckin adduncontrolled processuncontrolleditems buildexception isactive      
+                enumeration e keys e hasmoreelements      
+                    java io file local    java io file  e nextelement    
+                    item remoteitem    item get local   
+                    remoteitem update local isdirectory      
+                        folder folder    folder  remoteitem  
+                        log  added uncontrolled folder   
+                              folder getfolderhierarchy   
+                                from     local getabsolutefile isrecursive      
+                            unmatchedfilemap submap checkinmap   init local  folder   
+                            submap processuncontrolleditems com starbase starteam file remotefile   
+                             com starbase starteam file  remoteitem  
+                        log  added uncontrolled file   
+                              treebasedtask getfullrepositorypath remotefile  
+                                from     local getabsolutefile     
+ 
+                      
+                  
+              
+          
+      
+ 
+ org apache tools ant taskdefs optional starteam StarTeamCheckin

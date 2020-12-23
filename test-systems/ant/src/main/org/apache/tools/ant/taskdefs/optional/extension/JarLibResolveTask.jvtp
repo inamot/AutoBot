@@ -1,0 +1,124 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   tries locate jar satisfy extension place 
+   location jar property  
+   
+    ant task name  jarlib-resolve name property location library stored extension required set resolvers use attempt locate library  
+        
+    
+       flag indicate check librarys resolved actually contain 
+       extension don't raise exception  
+        
+    
+       flag indicating whether not throw buildexception cannot resolve 
+       library name property location library stored  
+       
+        param property name property location library stored  
+        
+    
+       check nested libraries extensions 
+       
+        param checkextension true  libraries returned nested 
+       resolvers checked see supply extension  
+        
+    
+       set whether fail error  
+       
+        param failonerror true  failure locate library fail build  
+        
+    
+       adds location resolver look library location 
+       relative project directory  
+       
+        param loc resolver location search  
+        
+    
+       adds url resolver download library url local file  
+       
+        param url url resolver download library 
+        
+    
+       adds ant resolver run ant build file generate library  
+       
+        param ant antresolver generate library  
+        
+    
+       set extension looking param extension set extension looking execute task  
+       
+        throws buildexception task fails  
+        
+    
+       utility method throw link buildexception link #failonerror true displays warning  
+        
+    
+       check specified file satisfies extension set relevent property throw buildexception  
+       
+        param file candidate library 
+        throws buildexception library not satisfy extension 
+        
+    
+       utility method set appropriate property indicate specified file satisfies library 
+       requirements  
+       
+        param file library 
+        
+    
+       validate tasks parameters  
+       
+        throws buildexception invalid parameters found 
+       org apache tools ant taskdefs optional extension JarLibResolveTask org apache tools ant taskdefs optional extension jarlibresolvetask task setproperty property propertyname   property setcheckextension checkextension checkextension   checkextension setfailonerror failonerror failonerror   failonerror addconfiguredlocation locationresolver loc    
+        resolvers add loc addconfiguredurl urlresolver url    
+        resolvers add url addconfiguredant antresolver ant    
+        resolvers add ant addconfiguredextension extensionadapter extension requiredextension message    can not specify extension to   
+                   resolve multiple times buildexception message   
+          
+        requiredextension   extension toextension execute buildexception   
+        validate    
+ 
+        getproject   log  resolving extension      requiredextension  
+                          project msg_verbose candidate   
+            getproject   getproperty propertyname candidate message    property already set to      candidate failonerror buildexception message   
+              
+            getproject   log message  project msg_err size   resolvers size i   0  i   size  i extensionresolver resolver   
+                 extensionresolver  resolvers get i   
+ 
+            getproject   log  searching extension using resolver     resolver  
+                              project msg_verbose file file   
+                    resolver resolve requiredextension  getproject checkextension file buildexception be message    file     file     returned by   
+                           resolver failed to satisfy extension due to    
+                          be getmessage    
+                    getproject   log message  project msg_warn buildexception be message    failed to resolve extension to file   
+                       using resolver     resolver     due to      be  
+                getproject   log message  project msg_warn   
+              
+          
+ 
+        missingextension missingextension message   
+             unable to resolve extension to a file failonerror buildexception message   
+          
+        getproject   log message  project msg_err checkextension file file file exists message   
+                 file     file     does not exist buildexception message file isfile message   
+                 file     file     is not a file buildexception message checkextension message    setting property to     file 
+                    without verifying library satisfies extension   
+            getproject   log message  project msg_verbose   
+            setlibraryproperty file getproject   log  checking file     file 
+                    to see it satisfies extension   project msg_verbose manifest manifest   
+                extensionutil getmanifest file extension   extensions   
+                extension getavailable manifest i   0  i   extensions length  i extension extension   extensions  i extension iscompatiblewith requiredextension     
+                    setlibraryproperty file getproject   log  file     file     skipped as it   
+                   does not satisfy extension   project msg_verbose message   
+                 file     file     does not satisfy extension buildexception message setlibraryproperty file file    
+        getproject   setnewproperty propertyname  
+                                     file getabsolutepath validate buildexception propertyname message    property attribute must be specified buildexception message requiredextension message    extension element must be specified buildexception message   
+          
+      
+ org apache tools ant taskdefs optional extension JarLibResolveTask

@@ -1,0 +1,83 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   executes command remote machine via ssh ant 1 6  created february 2  2003 command execute via ssh    
+    units milliseconds  default 0 infinite waiting command finish exec exec exec  
+    
+       constructor sshexectask  
+        
+    
+       sets command execute remote host  
+       
+        param command new command value connection dropped specified number milliseconds sometimes useful connection may flaky  default 0 means  quot wait forever quot   
+       
+        param timeout new timeout value seconds used  stores output command given file  
+       
+        param output file write determines output appended file given code setoutput  code   default false overwrite file  
+       
+        param append  true append existing file  false overwrite set output command stored given property  
+       
+        param property name property command output stored  
+        
+    
+       execute command remote host  
+       
+        exception buildexception  most likely network error bad parameter  
+        
+   execute command 
+   wait finish 
+   ignored 
+   ran out time 
+   completed successfully wrong test remote os openvms doesn't seem way detect writes string file destination file exists may overwritten depending append  value  
+       
+        param string write 
+        param file write param append true  append existing file overwrite 
+        exception exception  most likely ioexception 
+       org apache tools ant taskdefs optional ssh SSHExec org apache tools ant taskdefs optional ssh sshexec sshbase timeout_message   
+         timeout period exceeded  connection dropped sshexec setcommand command command   command settimeout timeout    
+        maxwait   timeout setoutput file output    
+        outputfile   output setappend append append   append setoutputproperty property    
+        outputproperty   property execute buildexception gethost buildexception  host is required getuserinfo   getname buildexception  username is required getuserinfo   getkeyfile getuserinfo   getpassword buildexception  password or keyfile is required command buildexception  command is required     
+          
+ 
+        bytearrayoutputstream out bytearrayoutputstream    
+        teeoutputstream tee teeoutputstream out keepaliveoutputstream system out    
+ 
+        session session session   opensession    
+            session settimeout maxwait channelexec channel    channelexec  session openchannel  exec    
+            channel setcommand command   
+            channel setoutputstream tee   
+            channel setextoutputstream tee   
+            channel connect    
+ 
+              
+            thread thread run channel iseof thread sleep 500 exception e    
+                                  
+                              
+                          
+                      
+                   
+ 
+            thread start    
+            thread join maxwait thread isalive      
+                  
+                thread getfailonerror buildexception timeout_message log timeout_message  project msg_err outputproperty getproject   setproperty outputproperty  out tostring outputfile writetofile out tostring    append  outputfile ec   channel getexitstatus ec    0 msg    remote command failed with exit status     ec getfailonerror buildexception msg log msg  project msg_err buildexception e e jschexception e e getmessage   indexof  session is down      0 getfailonerror buildexception timeout_message  e log timeout_message  project msg_err getfailonerror buildexception e log  caught exception      e getmessage    
+                        project msg_err exception e getfailonerror buildexception e log  caught exception      e getmessage    project msg_err session session isconnected      
+                session disconnect writetofile from append  file to ioexception   
+        filewriter out out filewriter to getabsolutepath    append   
+            stringreader in stringreader from buffer 8192 bytesread bytesread   in read buffer bytesread    -1 out write buffer  0  bytesread   
+              
+            out flush out out close    
+              
+          
+      
+ 
+ org apache tools ant taskdefs optional ssh SSHExec

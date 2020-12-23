@@ -1,0 +1,33 @@
+ 
+    
+   cron job  compiles application logs sends severe logs compilation support email  
+    
+   sets range 6 minutes slightly overlap 5 minute email timer not send any emails severe logs  prevents spammingteammates ui automated CompileLogsAction teammates ui automated compilelogsaction automatedaction   
+ 
+     override getactiondescription send severe log notifications   
+      
+ 
+     override getactionmessage compiling logs email notification   
+      
+ 
+     override execute     
+        list applogline  errorlogs   geterrorlogs    
+        sendemail errorlogs list applogline  geterrorlogs     
+        logservice logservice   logservicefactory getlogservice endtime date   gettime queryrange   1000   60   6 starttime   endtime - queryrange  
+ 
+        logquery q   logquery builder withdefaults   
+                                      includeapplogs starttimemillis starttime  
+                                      endtimemillis endtime  
+                                      minloglevel loglevel error   
+ 
+        iterable requestlogs  logs   logservice fetch q   
+        list applogline  errorlogs arraylist requestlogs requestlogs   logs    
+            list applogline  loglist   requestlogs getapploglines applogline currentlog   loglist    
+                loglevel loglevel   currentlog getloglevel loglevel fatal    loglevel    loglevel error    loglevel    
+                    errorlogs add currentlog errorlogs sendemail list applogline  logs logs isempty      
+            emailwrapper message emailgenerator   generatecompiledlogsemail logs   
+            emailsender sendreport message   
+          
+      
+ 
+ teammates ui automated CompileLogsAction

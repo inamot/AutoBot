@@ -1,0 +1,91 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications  
+    
+   wraps cmdsavegif cmdsave e ps allow selection output file  
+   introduced thanks issue 2126  saves diagrams only gifs   p  
+   
+   todo  add user choice formats  png  svg      
+   todo undoableaction tfm 
+    
+    author leonardo souza mario bueno  lsbueno tigris org constructor  
+       
+        
+   set tooltip string  
+    
+        param overwrite true overwrite without asking 
+        return success 
+        
+    
+        param overwrite 
+                  true overwrite without asking 
+        param directory 
+                  directory save null  user prompted choose  
+        return success save status user cancelled     
+    
+        param overwrite true overwrite without asking 
+        param target diagram 
+        param savedir directory save return success 
+        
+   todo s probably worthwhile abstract factor chooser directory stuff file handling coming m sure  
+    
+        param p current project 
+        return returns null user not approve choice 
+       org argouml uml ui ActionSaveAllGraphics org argouml uml ui actionsaveallgraphics undoableaction logger log   
+        logger getlogger actionsaveallgraphics actionsaveallgraphics translator localize  action save-all-graphics putvalue action short_description   
+                translator localize  action save-all-graphics     
+      
+ 
+     override actionperformed  actionevent ae actionperformed ae   
+        trysave trysave overwrite trysave overwrite trysave overwrite  file directory    
+        project p    projectmanager getmanager   getcurrentproject    
+        targetmanager tm   targetmanager getinstance    
+        file savedir    directory directory   getsavedir p savedir oksofar argodiagram activediagram   p getactivediagram argodiagram d   p getdiagramlist      
+            tm settarget d   
+            oksofar   trysavediagram overwrite  d  savedir oksofar tm settarget activediagram oksofar trysavediagram overwrite  object target  
+            file savedir target diagram defaultname     diagram  target  getname    
+            defaultname   util stripjunk defaultname file thefile file savedir  defaultname       
+                      savegraphicsmanager getinstance   getdefaultsuffix name   thefile getname path   thefile getparent    
+                savegraphicsaction cmd   savegraphicsmanager getinstance   
+                     getsaveactionbysuffix  
+                        savegraphicsmanager getinstance   getdefaultsuffix cmd showstatus  unknown graphics file type with extension   
+                              savegraphicsmanager getinstance   
+                                     getdefaultsuffix showstatus   writing     path   name            
+                savegraphicstofile thefile  cmd  overwrite   
+                showstatus   wrote     path   name filenotfoundexception ignore     
+                log error  got a filenotfoundexception   ignore ioexception ignore     
+                log error  got an ioexception   ignore file getsavedir project p    
+        jfilechooser chooser   getfilechooser p fn   configuration getstring  
+                savegraphicsmanager key_saveall_graphics_path fn length     0    
+            chooser setselectedfile file fn retval   chooser showsavedialog argoframe getinstance retval    jfilechooser approve_option     
+            file thefile   chooser getselectedfile path   thefile getpath    
+            configuration setstring  
+                    savegraphicsmanager key_saveall_graphics_path  
+                    path thefile savegraphicstofile file thefile  savegraphicsaction cmd overwrite ioexception thefile exists       overwrite response   
+		joptionpane showconfirmdialog argoframe getinstance    
+                    translator messageformat  optionpane confirm-overwrite object    thefile    
+                    translator localize  optionpane confirm-overwrite-title    
+                    joptionpane yes_no_option response    joptionpane no_option fileoutputstream fo fo fileoutputstream  thefile    
+            cmd setstream fo   
+            cmd setscale configuration getinteger  
+                    savegraphicsmanager key_graphics_resolution  1    
+            cmd actionperformed fo fo close jfilechooser getfilechooser project p    
+        jfilechooser chooser p p geturi p geturi   tourl   getfile   length     0     
+	        chooser jfilechooser p geturi   tourl   getfile malformedurlexception ex     
+            log error  exception in opening jfilechooser   ex chooser chooser jfilechooser    
+        chooser setdialogtitle  
+                translator localize  filechooser save-all-graphics     
+        chooser setdialogtype jfilechooser open_dialog   
+        chooser setfileselectionmode jfilechooser directories_only   
+        chooser setmultiselectionenabled chooser showstatus text    
+        argoeventpump fireevent argostatusevent  
+                argoeventtypes status_text text    
+      
+ org argouml uml ui ActionSaveAllGraphics

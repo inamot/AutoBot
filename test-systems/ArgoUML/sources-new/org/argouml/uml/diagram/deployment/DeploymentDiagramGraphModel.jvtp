@@ -1,0 +1,173 @@
+ 
+   $id$ 
+   copyright  c  2003-2006 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications class defines bridge between uml meta-model 
+   representation design graphmodel interface used gef  p class handles only uml deployment diagrams  p  
+   
+    
+    
+       logger  
+        
+                                                                 
+   graphmodel implementation 
+   
+        see org tigris gef graph graphmodel#getports java lang object  
+        
+   
+        see org tigris gef graph basegraphmodel#getowner java lang object  
+        
+   
+        see org tigris gef graph graphmodel#getinedges java lang object  
+        
+   
+        see org tigris gef graph graphmodel#getoutedges java lang object  
+        
+   todo ? 
+                                                                 
+   mutablegraphmodel implementation 
+   
+        see org tigris gef graph mutablegraphmodel#canaddnode java lang object binary association not node reject  
+   
+        see org tigris gef graph mutablegraphmodel#canaddedge java lang object  
+        
+   both ends must defined nodes graph already  
+   
+        see org tigris gef graph mutablegraphmodel#addnode java lang object  
+        
+   todo  assumes public  user pref default visibility check namespace here?  toby  
+   
+        see org tigris gef graph mutablegraphmodel#addedge java lang object  
+        
+   todo  assumes public 
+   
+        see org tigris gef graph mutablegraphmodel#addnoderelatededges java lang object  
+        
+   
+        see java beans vetoablechangelistener#vetoablechange java beans propertychangeevent uid  
+       org argouml uml diagram deployment DeploymentDiagramGraphModel org argouml uml diagram deployment deploymentdiagramgraphmodel umlmutablegraphsupport vetoablechangelistener logger log   
+            logger getlogger deploymentdiagramgraphmodel list getports object nodeoredge    
+        list res arraylist model getfacade   isanode nodeoredge     
+            res add nodeoredge model getfacade   isanodeinstance nodeoredge     
+            res add nodeoredge model getfacade   isacomponent nodeoredge     
+            res add nodeoredge model getfacade   isacomponentinstance nodeoredge     
+            res add nodeoredge model getfacade   isaclass nodeoredge     
+            res add nodeoredge model getfacade   isainterface nodeoredge     
+            res add nodeoredge model getfacade   isaobject nodeoredge     
+            res add nodeoredge res object getowner object port port list getinedges object port    
+        list res arraylist model getfacade   isanode port     
+            collection ends   model getfacade   getassociationends port ends collections empty_list object end   ends    
+                res add model getfacade   getassociation end model getfacade   isanodeinstance port     
+            object noi   port  
+            collection ends   model getfacade   getlinkends noi   
+            res addall ends model getfacade   isacomponent port     
+            collection ends   model getfacade   getassociationends port ends collections empty_list object end   ends    
+                res add model getfacade   getassociation end model getfacade   isacomponentinstance port     
+            object coi   port  
+            collection ends   model getfacade   getlinkends coi   
+            res addall ends model getfacade   isaclass port     
+            collection ends   model getfacade   getassociationends port ends collections empty_list object end   ends    
+                res add model getfacade   getassociation end model getfacade   isainterface port     
+            collection ends   model getfacade   getassociationends port ends collections empty_list object end   ends    
+                res add model getfacade   getassociation end model getfacade   isaobject port     
+            object clo   port  
+            collection ends   model getfacade   getlinkends clo   
+            res addall ends res list getoutedges object port collections empty_list    
+      
+ 
+      
+      
+ 
+      
+     override canaddnode object node node model getfacade   isaassociation node  
+                    model getfacade   isanaryassociation node containsnode node model getfacade   isaassociation node     
+            collection ends   model getfacade   getconnections node canadd object end   ends    
+                object classifier   
+                        model getfacade   getclassifier end containsnode classifier     
+                    canadd canadd model getfacade   isanode node   
+                    model getfacade   isacomponent node   
+                    model getfacade   isaclass node   
+                    model getfacade   isainterface node   
+                    model getfacade   isaobject node   
+                    model getfacade   isanodeinstance node   
+                    model getfacade   isacomponentinstance node  
+                    model getfacade   isacomment node     
+      
+ 
+      
+     override canaddedge object edge edge containsedge edge object end0 end1 edge commentedge    
+            end0     commentedge  edge  getsource    
+            end1     commentedge  edge  getdestination model getfacade   isaassociationend edge     
+            end0   model getfacade   getassociation edge   
+            end1   model getfacade   gettype edge end0 end1 containsedge end0     containsnode end0   
+                       containsnode end1 model getfacade   isarelationship edge     
+            end0   model getcorehelper   getsource edge   
+            end1   model getcorehelper   getdestination edge model getfacade   isalink edge     
+            end0   model getcommonbehaviorhelper   getsource edge   
+            end1   
+                    model getcommonbehaviorhelper   getdestination edge edge commentedge    
+            end0     commentedge  edge  getsource    
+            end1     commentedge  edge  getdestination end0 end1 log error  edge rejected  its ends are not attached to anything containsnode end0  
+                    containsedge end0     
+            log error  edge rejected  its source end is attached to   
+                      end0 
+                        but is not in the graph model containsnode end1  
+                    containsedge end1     
+            log error  edge rejected  its destination end is attached to   
+                      end1 
+                        but is not in the graph model override addnode object node    
+        log debug  adding node canaddnode node getnodes   add node model getfacade   isamodelelement node  
+                    model getfacade   getnamespace node model getcorehelper   addownedelement gethomemodel    node   
+          
+        firenodeadded node   
+      
+ 
+      
+     override addedge object edge    
+        log debug  adding edge canaddedge edge getedges   add edge model getfacade   isamodelelement edge  
+                    model getfacade   isaassociationend edge     
+            model getcorehelper   addownedelement gethomemodel    edge   
+          
+        fireedgeadded edge   
+      
+ 
+      
+     override addnoderelatededges object node addnoderelatededges node model getfacade   isaclassifier node     
+            collection ends   model getfacade   getassociationends node object ae   ends model getfacade   isanaryassociation  
+                        model getfacade   getassociation ae   
+                           canaddedge model getfacade   getassociation ae      
+                    addedge model getfacade   getassociation ae model getfacade   isaassociation node     
+            collection ends   model getfacade   getconnections node object associationend   ends canaddedge associationend     
+                    addedge associationend model getfacade   isainstance node     
+            collection ends   model getfacade   getlinkends node object end   ends    
+                object link   model getfacade   getlink end canaddedge link     
+                    addedge link model getfacade   isageneralizableelement node     
+            collection generalizations   
+                model getfacade   getgeneralizations node object generalization   generalizations canaddedge generalization     
+                    addedge generalization collection specializations    
+                model getfacade   getspecializations node object specialization   specializations canaddedge specialization     
+                    addedge specialization model getfacade   isamodelelement node     
+            list dependencies arraylist model getfacade   getclientdependencies node    
+            dependencies addall model getfacade   getsupplierdependencies node object dependency   dependencies canaddedge dependency     
+                    addedge dependency vetoablechange propertychangeevent pce ownedelement  equals pce getpropertyname       
+            list oldowned    list  pce getoldvalue    
+            object eo   pce getnewvalue    
+            object me   model getfacade   getmodelelement eo oldowned contains eo     
+                log debug  model removed     me model getfacade   isanode me     
+                    removenode me model getfacade   isanodeinstance me     
+                    removenode me model getfacade   isacomponent me     
+                    removenode me model getfacade   isacomponentinstance me     
+                    removenode me model getfacade   isaclass me     
+                    removenode me model getfacade   isainterface me     
+                    removenode me model getfacade   isaobject me     
+                    removenode me model getfacade   isaassociation me     
+                    removeedge me model getfacade   isadependency me     
+                    removeedge me model getfacade   isalink me     
+                    removeedge me log debug  model added     me serialversionuid   1003748292917485298l  
+ 
+ org argouml uml diagram deployment DeploymentDiagramGraphModel

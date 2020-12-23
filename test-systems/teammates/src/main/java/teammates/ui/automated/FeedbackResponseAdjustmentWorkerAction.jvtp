@@ -1,0 +1,20 @@
+ 
+    
+   task queue worker action  adjusts feedback responses database due change student enrollment details course logged user workerteammates ui automated FeedbackResponseAdjustmentWorkerAction teammates ui automated feedbackresponseadjustmentworkeraction automatedaction   
+ 
+  
+ 
+     override getactiondescription override getactionmessage override execute courseid   getrequestparamvalue paramsnames course_id   
+        assumption assertpostparamnotnull paramsnames course_id  courseid sessionname   getrequestparamvalue paramsnames feedback_session_name   
+        assumption assertpostparamnotnull paramsnames feedback_session_name  sessionname enrollmentdetails   getrequestparamvalue paramsnames enrollment_details   
+        assumption assertpostparamnotnull paramsnames enrollment_details  enrollmentdetails   
+ 
+        log info  adjusting submissions feedback session      sessionname    in course       courseid   
+ 
+        feedbacksessionattributes feedbacksession   logic getfeedbacksession sessionname  courseid errorstring    error encountered adjusting feedback session responses of %s in course %s  %s%n%s feedbacksession log severe format errorstring  sessionname  courseid   feedback session is setforretry list feedbackresponseattributes  allresponses   
+                logic getfeedbackresponsesforsession feedbacksession getfeedbacksessionname    
+                                                     feedbacksession getcourseid     
+        list studentenrolldetails  enrollmentlist   
+                jsonutils fromjson enrollmentdetails typetoken list studentenrolldetails       gettype feedbackresponseattributes response   allresponses logic adjustfeedbackresponseforenrollments enrollmentlist  response exception e url   httprequesthelper getrequestedurl request   
+                map string    params   httprequesthelper getparametermap request logmessage logmessagegenerator   generateactionfailurelogmessage url  params  e log severe format errorstring  sessionname  courseid  e getmessage    logmessage    
+                setforretry teammates ui automated FeedbackResponseAdjustmentWorkerAction

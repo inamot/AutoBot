@@ -1,0 +1,69 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   class responsible sending email through raw protocol methods ant 1 5 
+    
+    
+       sends email using apache mailmessage class  
+       
+        see org apache tools mail mailmessage 
+        
+    
+       attaches file email 
+       
+        param file file attache 
+        param out message stream add throws ioexception errors occur 
+       org apache tools ant taskdefs email PlainMailer org apache tools ant taskdefs email plainmailer mailer send mailmessage mailmessage mailmessage host  port   
+ 
+            mailmessage from from tostring     
+ 
+            enumeration e  
+ 
+            e   replytolist elements e hasmoreelements      
+                mailmessage replyto e nextelement   tostring     
+              
+            e   tolist elements e hasmoreelements      
+                mailmessage to e nextelement   tostring     
+              
+            e   cclist elements e hasmoreelements      
+                mailmessage cc e nextelement   tostring     
+              
+            e   bcclist elements e hasmoreelements      
+                mailmessage bcc e nextelement   tostring subject mailmessage setsubject subject   
+              
+            mailmessage setheader  date   getdate message getcharset mailmessage setheader  content-type   message getmimetype   
+                         charset \     message getcharset mailmessage setheader  content-type   message getmimetype     
+              
+            e   headers elements e hasmoreelements      
+                header h    header  e nextelement    
+                mailmessage setheader h getname    h getvalue     
+              
+            printstream out   mailmessage getprintstream    
+            message print out   
+ 
+            e   files elements e hasmoreelements      
+                attach  file  e nextelement    out   
+              
+            mailmessage sendandclose ioexception ioe buildexception  io error sending mail   ioe attach file file  printstream out ioexception file exists       file canread buildexception  file \     file getname   
+                    \  does not exist or is not   
+                    readable includefilenames    
+            out println filename   file getname filenamelength   filename length    
+ 
+            out println filename star   0  star   filenamelength  star      
+                out print ' '   
+              
+            out println length maxbuf   1024 buf maxbuf   
+        fileinputstream finstr fileinputstream file bufferedinputstream in bufferedinputstream finstr  buf length length   in read buf      -1    
+                out write buf  0  length finstr close    
+          
+      
+  
+org apache tools ant taskdefs email PlainMailer

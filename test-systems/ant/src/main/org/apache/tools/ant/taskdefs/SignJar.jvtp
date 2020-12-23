@@ -1,0 +1,234 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   signs jar zip files javasign command line tool tool detailed 
+   dependency checking  files only signed not signed tt signjar  tt  attribute point file generate file 
+   exists modification date used cue whether resign 
+   any jar file  
+   
+   timestamp driven signing based unstable inadequately documented 
+   information java1 5 docs 
+    see href  http   java sun com j2se 1 5 0 docs guide security time signing-beta1 html   
+   beta documentation ant task category  java ant 1 1 
+    
+   checkstyle visibilitymodifier bc 
+    
+       name signature file 
+        
+    
+       name single jar 
+        
+    
+       flag internal sf signing 
+        
+    
+       sign sections only? 
+        
+    
+       flag preserve timestamp modified files 
+        
+    
+       whether assume jar appropriate  sf file already 
+       signed output directory using paths  
+        
+    
+       mapper todir work 
+        
+    
+       url tsa  null implies tsa support 
+        
+    
+       alias tsa keystore 
+        
+    
+       error string unit test verification    value  
+        
+    
+       error string unit test verification    value  
+        
+    
+       error string unit test verification   value  
+        
+    
+       error string unit test verification    value  
+        
+    
+       error string unit test verification    value  
+        
+    
+       error string unit test verification    value  
+        
+    
+       error string unit test verification    value  
+        
+   checkstyle visibilitymodifier name sf  dsa file  optional 
+       
+        param sigfile name sf  dsa file 
+        
+    
+       name signed jar file  optional 
+       
+        param signedjar name signed jar file 
+        
+    
+       flag include sf file inside signature  optional  default 
+       false 
+       
+        param internalsf true include sf file inside signature 
+        
+    
+       flag compute hash entire manifest  optional  default false 
+       
+        param sectionsonly flag compute hash entire manifest 
+        
+    
+       flag control whether presence signature file means jar signed  optional  default false 
+       
+        param lazy flag control whether presence signature 
+        
+    
+       optionally sets output directory used  
+       
+        param destdir directory place signed jars ant 1 7 
+        
+    
+       add mapper determine file naming policy  only used todir 
+       processing  
+       
+        param newmapper mapper add ant 1 7 active mapper  may null 
+        return mapper null ant 1 7 tsaurl url 
+        return url null ant 1 7 
+        
+    
+       
+        param tsaurl tsa url ant 1 7 tsacert option ant 1 7 
+        return certificate alias null 
+        
+    
+       set alias keystore tsa use  
+        param tsacert cert alias  
+        
+    
+       sign jar s  
+       
+        throws buildexception errors 
+        
+  validation logic isnt strictly needed being fussy now change implementation details later 
+  special case single jar handling signedjar attribute set 
+   single jar processing 
+  return here rest method treats single jar nested path one file 
+  set up mapping policy mapper? use identity policy point paths set up lists files mapper ready map source dirs dest files 
+  now iterate through every jar giving source dest names 
+   deal paths 
+  calculate destination directory either destdir 
+  attribute base dir fileset situ updates  
+  determine destination filename via mapper only simple mappers  
+    
+       sign one jar  
+        p signing only takes place link #isuptodate file  file   indicates needed  
+       
+        param jarsource source sign 
+        param jartarget target  may null 
+        throws buildexception not set signedjar option source  dest 
+  unless fielding hotspot crash reports 
+  add -tsa operations declared 
+  jar source required 
+  alias required signing 
+   restore lastmodified attribute tsa parameters set passes command validation java version third party jdks 
+       may implement earlier later jarsigner implementations  
+        param cmd exec task  
+        
+    
+       compare jar file corresponding signed jar logic complex best explained source itself  essentially either file doesnt exist destfile out date timestamp return value false  
+        p signing ourself check   link #issigned file used trigger process  
+       
+        param jarfile unsigned jar file 
+        param signedjarfile result signed jar file 
+        return true signedjarfile considered up date pathological cases retained case somebody 
+  subclassed normally compare destination source dest specified  compare source source any means destfile source match check presence signatures lazy signing 
+  unsigned non-lazy self signings always false different timestamps used 
+    
+       test file being signed looking signature meta-inf 
+       directory alias  
+       
+        param file file checked 
+        return true file signed 
+        see issigned#issigned file  string log true indicate signed jar modification date remains same original  defaults false 
+       
+        param preservelastmodified true preserve last modified time 
+       org apache tools ant taskdefs SignJar org apache tools ant taskdefs signjar abstractjarsignertask sigfile file signedjar internalsf sectionsonly lazy file destdir tsaurl tsacert error_todir_and_signedjar 
+               'destdir' and 'signedjar' cannot both be set error_too_many_mappers    too many mappers error_signedjar_and_paths 
+           you cannot specify the signed jar when using paths or filesets error_bad_map    cannot map source file to anything sensible error_mapper_without_dest 
+           the destdir attribute is required a mapper is set error_no_alias    alias attribute must be set error_no_storepass    storepass attribute must be set setsigfile sigfile sigfile   sigfile setsignedjar file signedjar signedjar   signedjar setinternalsf internalsf internalsf   internalsf setsectionsonly sectionsonly sectionsonly   sectionsonly setlazy lazy lazy   lazy setdestdir file destdir destdir   destdir add filenamemapper newmapper mapper buildexception error_too_many_mappers   
+          
+        mapper   newmapper filenamemapper getmapper mapper gettsaurl tsaurl settsaurl tsaurl tsaurl   tsaurl gettsacert tsacert settsacert tsacert tsacert   tsacert execute buildexception hasjar   jar hassignedjar   signedjar hasdestdir   destdir hasmapper   mapper hasjar     hasresources buildexception error_no_source alias buildexception error_no_alias storepass buildexception error_no_storepass hasdestdir    hassignedjar buildexception error_todir_and_signedjar hasresources      hassignedjar buildexception error_signedjar_and_paths hasdestdir    hasmapper buildexception error_mapper_without_dest   
+          
+ 
+        beginexecution hasjar    hassignedjar    
+                  
+                signonejar jar  signedjar path sources   createunifiedsourcepath    
+              
+            filenamemapper destmapper hasmapper    
+                destmapper   mapper destmapper identitymapper    
+              
+ 
+ 
+              
+              
+              
+              
+            iterator iter   sources iterator iter hasnext      
+                fileresource fr    fileresource  iter next    
+ 
+                  
+                  
+                file todir   hasdestdir ? destdir   fr getbasedir destfilenames   destmapper mapfilename fr getname destfilenames destfilenames length    1 buildexception error_bad_map   fr getfile     
+                  
+                file destfile file todir  destfilenames 0    
+                signonejar fr getfile    destfile endexecution signonejar file jarsource  file jartarget buildexception   
+ 
+ 
+        file targetfile   jartarget targetfile targetfile   jarsource isuptodate jarsource  targetfile lastmodified   jarsource lastmodified exectask cmd   createjarsigner    
+ 
+        setcommonoptions cmd   
+ 
+        bindtokeystore cmd sigfile    
+            addvalue cmd   -sigfile value sigfile  
+            addvalue cmd  value targetfile     jarsource equals targetfile     
+            addvalue cmd   -signedjar    
+            addvalue cmd  targetfile getpath internalsf    
+            addvalue cmd   -internalsf sectionsonly    
+            addvalue cmd   -sectionsonly    
+          
+ 
+          
+        addtimestampauthoritycommands cmd   
+ 
+          
+        addvalue cmd  jarsource getpath     
+ 
+          
+        addvalue cmd  alias   
+ 
+        log  signing jar    
+              jarsource getabsolutepath   
+                to   
+              targetfile getabsolutepath   
+                as     alias   
+ 
+        cmd execute preservelastmodified    
+            targetfile setlastmodified lastmodified addtimestampauthoritycommands exectask cmd tsaurl addvalue cmd   -tsa    
+            addvalue cmd  tsaurl tsacert addvalue cmd   -tsacert    
+            addvalue cmd  tsacert isuptodate file jarfile  file signedjarfile jarfile     jarfile exists file destfile   signedjarfile destfile destfile   jarfile jarfile equals destfile lazy issigned jarfile file_utils isuptodate jarfile  destfile issigned file file issigned issigned file  alias ioexception e    
+              
+            log e tostring    project msg_verbose setpreservelastmodified preservelastmodified preservelastmodified   preservelastmodified  
+      
+ org apache tools ant taskdefs SignJar

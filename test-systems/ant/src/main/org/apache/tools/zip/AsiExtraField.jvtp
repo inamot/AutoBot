@@ -1,0 +1,155 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   adds unix file permission uid gid fields well symbolic 
+   link handling  
+   
+    p class uses asi extra field format  
+    pre  
+           value         size            description 
+           -----         ----            ----------- 
+    unix3  0x756e        short           tag extra block type 
+           tsize         short           total data size block 
+           crc           long            crc-32 remaining data 
+           mode          short           file permissions 
+           sizdev        long            symlink'd size major minor dev num 
+           uid           short           user id 
+           gid           short           group id 
+            var          variable        symbolic link filename 
+     pre  
+   taken appnote iz  info-zip note  981119  found href  ftp   ftp uu net pub archiving zip doc   ftp   ftp uu net pub archiving zip doc p  
+ 
+   
+    p short two bytes long four bytes big endian byte word order  device numbers currently not supported   p  
+   
+    
+    
+       standard unix stat 2  file mode 1 1 
+        
+    
+       user id 1 1 
+        
+    
+       group id 1 1 
+        
+    
+       file entry points symbolic link  
+       
+        p empty string entry not symbolic link   p 1 1 entry directory 1 1 
+        
+    
+       instance used calculate checksums 1 1 
+        
+    constructor asiextrafield header-id  
+        return value header id extrafield 1 1 
+        
+    
+       length extra field local file data - without 
+       header-id length specifier  
+        return code zipshort  code length data extra field 1 1 
+        
+   crc 
+   mode 
+   sizdev 
+   uid 
+   gid 
+    
+       delegate local file data  
+        return centraldirectory length 1 1 actual data put local file data - without header-id length specifier  
+        return data 1 1 
+        
+   crc added later 
+    
+       delegate local file data  
+        return local file data 1 1 
+        
+    
+       set user id  
+        param uid user id 1 1 user id  
+        return user id 1 1 
+        
+    
+       set group id  
+        param gid group id 1 1 group id  
+        return group id 1 1 
+        
+    
+       indicate entry symbolic link given filename  
+       
+        param name name file entry links empty string not symbolic link 1 1 
+        
+    
+       name linked file 
+       
+        return name file entry links symbolic link empty string otherwise 1 1 entry symbolic link? 
+        return true symbolic link 1 1 
+        
+    
+       file mode file  
+        param mode file mode 1 1 
+        
+    
+       file mode file  
+        return file mode 1 1 
+        
+    
+       indicate whether entry directory  
+        param dirflag true entry directory 1 1 entry directory? 
+        return true entry directory 1 1 
+        
+    
+       populate data array local file data  
+        param data array bytes 
+        param offset start offset 
+        param length number bytes array offset 1 1 
+        throws zipexception error file mode given permissions correct file type  
+        param mode mode 
+        return type mode 1 1 
+       org apache tools zip AsiExtraField org apache tools zip asiextrafield zipextrafield  unixstat  cloneable asiextrafield zipshort getheaderid header_id zipshort getlocalfiledatalength zipshort 4           
+                            2           
+                            4           
+                            2           
+                            2           
+                            getlinkedfile   getbytes   length zipshort getcentraldirectorylength getlocalfiledatalength getlocalfiledatadata data getlocalfiledatalength   getvalue   - 4   
+        system arraycopy zipshort getbytes getmode     0  data  0  2 linkarray   getlinkedfile   getbytes    
+        system arraycopy ziplong getbytes linkarray length   
+                         0  data  2  4   
+ 
+        system arraycopy zipshort getbytes getuserid     
+                         0  data  6  2   
+        system arraycopy zipshort getbytes getgroupid     
+                         0  data  8  2   
+ 
+        system arraycopy linkarray  0  data  10  linkarray length   
+ 
+        crc reset    
+        crc update data checksum   crc getvalue result data length   4   
+        system arraycopy ziplong getbytes checksum   0  result  0  4   
+        system arraycopy data  0  result  4  data length result getcentraldirectorydata getlocalfiledatadata setuserid uid uid   uid getuserid uid setgroupid gid gid   gid getgroupid gid setlinkedfile name    
+        link   name  
+        mode   getmode mode getlinkedfile link islink getlinkedfile   length      0 setmode mode mode   getmode mode getmode mode setdirectory dirflag dirflag   dirflag  
+        mode   getmode mode isdirectory dirflag     islink parsefromlocalfiledata data offset length zipexception givenchecksum   ziplong getvalue data  offset tmp length - 4   
+        system arraycopy data  offset   4  tmp  0  length - 4   
+        crc reset    
+        crc update tmp realchecksum   crc getvalue givenchecksum    realchecksum zipexception  bad crc checksum tohexstring givenchecksum  
+                                       instead of tohexstring realchecksum newmode   zipshort getvalue tmp  0 linkarray ziplong getvalue tmp  2    
+        uid   zipshort getvalue tmp  6   
+        gid   zipshort getvalue tmp  8 linkarray length    0    
+            link system arraycopy tmp  10  linkarray  0  linkarray length   
+            link linkarray   
+          
+        setdirectory  newmode   dir_flag     0   
+        setmode newmode getmode mode type   file_flag islink      
+            type   link_flag isdirectory      
+            type   dir_flag type    mode   perm_mask   
+      
+ 
+ org apache tools zip AsiExtraField

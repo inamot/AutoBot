@@ -1,0 +1,290 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   converts text source files local os formatting conventions well repair text files damaged misconfigured misguided editors file transfer programs  
+    p task take following arguments  
+    ul  
+    li srcdir 
+    li destdir 
+    li include 
+    li exclude 
+    li cr 
+    li eol 
+    li tab 
+    li eof 
+    li encoding 
+    li targetencoding 
+     ul arguments  only  b sourcedir  b required  
+    p task executes scan srcdir based include exclude properties  
+    p version generalises handling eol characters allows cr-only line endings standard mac systems prior os x   
+   tab handling generalised accommodate any tabwidth 2 80  inclusive   importantly leave untouched any 
+   literal tab characters embedded within string character constants  
+    p  
+    em warning   em not run binary files  
+    em caution   em  run care carefully formatted files may sound obvious don't specify asis  presume files going modified tabs add remove   
+   whitespace characters may added removed necessary   similarly cr's fact  eol   crlf cr  add result cr 
+   characters being removed one special case accommodated e   
+   crcrlf regarded single eol handle cases programs converted crlf crcrlf ant 1 1 
+   
+    ant task category  filesystem  
+    
+    error string using srcdir file    
+    
+       encoding assume files 
+        
+    
+       encoding use output files 
+        
+    
+       chain task reader  
+        param rdr reader chain  
+        return reader ant 1 7? 
+        
+    
+       set source dir find source text files  
+        param srcdir source directory  
+        
+    
+       set destination fixed files placed  
+       default replace original file  
+        param destdir destination directory  
+        
+    
+       set true modifying java source files  
+        param javafiles whether modifying java files  
+        
+    
+       set single file convert ant 1 6 3 
+        param file file convert  
+        
+    
+       specify endofline characters handled  
+       
+        param attr valid values  
+        ul  
+        li asis  leave line endings alone 
+        li cr  convert line endings cr 
+        li lf  convert line endings lf 
+        li crlf  convert line endings crlf 
+         ul  
+        
+    
+       specify carriage return  cr  characters handled  
+       
+        param attr valid values  
+        ul  
+        li add  ensure cr before every lf 
+        li asis  leave cr characters alone 
+        li remove  remove cr characters 
+         ul  
+       
+        deprecated 1 4 x  
+                   use   link #seteol seteol  instead  
+        
+   must add  
+    
+       specify tab characters handled  
+       
+        param attr valid values  
+        ul  
+        li add  convert sequences spaces span tab stop tabs 
+        li asis  leave tab space characters alone 
+        li remove  convert tabs spaces 
+         ul  
+        
+    
+       specify tab length characters  
+       
+        param tlength specify length tab spaces  
+        throws buildexception error  
+        
+    
+       specify dos eof  control-z  characters handled  
+       
+        param attr valid values  
+        ul  
+        li add  ensure eof end file 
+        li asis  leave eof characters alone 
+        li remove  remove any eof character found end 
+         ul  
+        
+    
+       specifies encoding ant expects files defaults platforms default encoding  
+        param encoding string encoding name  
+        
+    
+       specifies encoding files written same input encoding default  
+        param outputencoding string outputencoding name  
+        
+    
+       specify whether missing eol added final line file  
+        param fixlast whether fix last line  
+        
+    
+       set whether preserve last modified time original files  
+        param preserve true timestamps preserved ant 1 6 3 
+        
+    
+       executes task  
+        throws buildexception error  
+        
+   first make sure ve srcdir destdir 
+   log options used 
+  patch file fileset 
+  set parent dir 
+   compare destination temp file 
+    
+       deprecated functionality moved filters fixcrlffilter  
+        deprecated 1 7 0  
+        
+    
+           constructor  
+            param srcfile file read  
+            throws buildexception error  
+            
+    
+           move next line  
+            throws buildexception error  
+            
+   eof reached 
+   check r  \r\n r\r\n 
+   regard \r\r not followed n two lines 
+   don't reposition ve reached end stream 
+   end switch   char  ch   reader read     
+   fall tru 
+   end switch   char  ch eolcount    0 trailing characters string ctrl-zs  set eofstr 
+   keep searching first ^z 
+   trailing characters zs 
+   construct new line eofstr 
+   end eolcount    0 eof string  
+            return eof string state  
+            return state  
+            
+    
+           set state  
+            param state value use  
+            
+    
+            return true elements next element  
+            return next element  
+            throws nosuchelementexception close reader  
+            throws ioexception error  
+            
+    
+       enumerated attribute values  asis    add remove   
+        
+      inheritdoc      
+    
+       enumerated attribute values  asis    cr    lf crlf   
+        
+    
+            see enumeratedattribute#getvalues 
+            
+      inheritdoc     org apache tools ant taskdefs FixCRLF org apache tools ant taskdefs fixcrlf matchingtask chainablereader error_file_and_srcdir 
+           srcdir and file are mutually exclusive reader chain reader rdr filter chain rdr setsrcdir file srcdir srcdir   srcdir setdestdir file destdir destdir   destdir setjavafiles javafiles    
+        filter setjavafiles javafiles setfile file file file   file seteol crlf attr    
+        filter seteol fixcrlffilter crlf newinstance attr getvalue setcr addasisremove attr    
+        log  deprecated  the cr attribute has been deprecated    
+            project msg_warn   
+        log  please use the eol attribute instead   project msg_warn option   attr getvalue    
+        crlf c crlf option equals  remove      
+            c setvalue  lf option equals  asis      
+            c setvalue  asis c setvalue  crlf    
+          
+        seteol c settab addasisremove attr    
+        filter settab fixcrlffilter addasisremove newinstance attr getvalue settablength tlength buildexception filter settablength tlength ioexception e buildexception e seteof addasisremove attr    
+        filter seteof fixcrlffilter addasisremove newinstance attr getvalue setencoding encoding encoding   encoding setoutputencoding outputencoding outputencoding   outputencoding setfixlast fixlast    
+        filter setfixlast fixlast setpreservelastmodified preserve    
+        preservelastmodified   preserve execute buildexception   
+          
+        validate enc   encoding encoding  
+        log  options   
+                eol     filter geteol   getvalue   
+                tab     filter gettab   getvalue   
+                eof     filter geteof   getvalue   
+                tablength     filter gettablength   
+                encoding     enc 
+                outputencoding   
+               outputencoding enc   outputencoding   
+            project msg_verbose   
+ 
+        directoryscanner ds getdirectoryscanner srcdir files   ds getincludedfiles i   0  i   files length  i      
+            processfile files i validate buildexception file srcdir buildexception error_file_and_srcdir   
+              
+              
+            fileset setfile file   
+              
+            srcdir   file getparentfile srcdir buildexception  srcdir attribute must be set srcdir exists buildexception  srcdir does not exist srcdir isdirectory buildexception  srcdir is not a directory destdir destdir exists buildexception  destdir does not exist destdir isdirectory buildexception  destdir is not a directory processfile file buildexception   
+        file srcfile file srcdir  file lastmodified   srcfile lastmodified    
+        file destd   destdir srcdir   destdir fcv filterchain fc filterchain    
+            fc add filter   
+            fcv vector 1   
+            fcv add fc   
+          
+        file tmpfile   file_utils createtempfile  fixcrlf tmpfile deleteonexit file_utils copyfile srcfile  tmpfile fcv false  
+                encoding  outputencoding encoding   outputencoding  
+                getproject     
+ 
+            file destfile file destd  file destiswrong destfile exists      
+                  
+                log  destfile exists   project msg_debug   
+                destiswrong    file_utils contentequals destfile  tmpfile   
+                log destfile    destiswrong ?   is being written  
+                        is not written  as the contents are identical    
+                    project msg_debug destiswrong    
+                file_utils rename tmpfile  destfile preservelastmodified    
+                    log  preserved lastmodified   project msg_debug   
+                    file_utils setfilelastmodified destfile  lastmodified   
+                  
+                tmpfile ioexception e buildexception e oneliner enumeration oneliner file srcfile buildexception srcfile   srcfile reader bufferedreader  
+                      encoding filereader srcfile inputstreamreader fileinputstream srcfile   encoding    inbuflen   
+ 
+                nextline ioexception e buildexception srcfile          e getmessage    
+                                         e  getlocation nextline buildexception ch   -1 eolcount   0  
+ 
+            eolstr stringbuffer    
+            line stringbuffer ch   reader read ch    -1    ch    '\r'    ch    '\n'    
+                    line append ch   
+                    ch   reader read ch    -1    line length      0    
+                      
+                    reachedeof ch r'  
+                      
+                      
+                      eolcount  
+                    eolstr append '\r'   
+                    reader mark 2   
+                    ch   reader read ch r'  
+                        ch   reader read ch     '\n'    
+                            eolcount    2  
+                            eolstr append  \r\n reader reset n'  
+                          eolcount  
+                        eolstr append '\n 1 reader reset break n'  
+                      eolcount  
+                    eolstr append '\n eolcount    0 i   line length i    0    line charat i     ctrlz i   line length   - 1    
+                          
+                          
+                        eofstr append line tostring   substring i   1 i   0    
+                            line setlength 0   
+                            reachedeof line setlength i   1 ioexception e buildexception srcfile          e getmessage    
+                                         e  getlocation geteofstr eofstr substring 0 getstate state setstate state state   state hasmoreelements reachedeof object nextelement nosuchelementexception hasmoreelements nosuchelementexception  oneliner    
+              
+            bufferline tmpline bufferline line tostring    eolstr substring 0    
+            nextline tmpline close ioexception reader reader close bufferline bufferline line eolstr buildexception   
+                next   0  
+                column   0 line   line eolstr   eolstr getnext next setnext next next   next getlookahead lookahead setlookahead lookahead lookahead   lookahead getchar i line charat i getnextchar getchar next getnextcharinc getchar next getcolumn column setcolumn col    
+                column   col inccolumn column length line length geteollength eolstr length getlinestring line geteol eolstr substring begin line substring begin substring begin end line substring begin  end setstate state    
+                oneliner setstate state getstate oneliner getstate addasisremove enumeratedattribute getvalues add    asis    remove crlf enumeratedattribute getvalues asis    cr    lf    crlf   
+                                  mac    unix    dos    
+          
+      
+ 
+  
+org apache tools ant taskdefs FixCRLF

@@ -1,0 +1,142 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license package based work done timothy gerard endres 
+    time ice com ant project very grateful great code tarbuffer class implements tar archive concept buffered input stream concept goes back days blocked tape drives special io devices java universe only real function class 
+   performs ensure files correct  block  
+   size tars complain  
+    p never need access class directly  
+   tarbuffers created tar io streams  
+   
+    
+    default record size    
+    default block size    
+    
+       constructor tarbuffer input stream  
+        param instream input stream use 
+        
+    
+       constructor tarbuffer input stream  
+        param instream input stream use 
+        param blocksize block size use 
+        
+    
+       constructor tarbuffer input stream  
+        param instream input stream use 
+        param blocksize block size use 
+        param recordsize record size use 
+        
+    
+       constructor tarbuffer output stream  
+        param outstream output stream use 
+        
+    
+       constructor tarbuffer output stream  
+        param outstream output stream use 
+        param blocksize block size use 
+        
+    
+       constructor tarbuffer output stream  
+        param outstream output stream use 
+        param blocksize block size use 
+        param recordsize record size use 
+        
+    
+       initialization common constructors tar buffer's block size  blocks consist multiple records  
+        return block size tar buffer's record size  
+        return record size 
+        
+    
+       set debugging flag buffer  
+       
+        param debug true  print debugging output  
+        
+    
+       determine archive record indicate end archive  end archive indicated record consists entirely null bytes  
+       
+        param record record data check  
+        return true record data end archive 
+        
+    
+       skip over record input stream  
+        throws ioexception error 
+        
+   undone 
+    
+       read record input stream return data  
+       
+        return record data  
+        throws ioexception error 
+        
+    
+        return false end file true 
+        
+   
+   note fit eof block not full broken archive not follow standard 
+   blocking algorithm generous requires little effort simply ignore error continue entire block read not appear break anything upstream used return 
+   false case  
+   
+   thanks yohann roussel alcatel fr fix  
+   
+   ensure not read gigabytes zeros corrupt tar file  
+   see http   issues apache org bugzilla show_bug cgi?id 39924 leaving unread portion buffer dirty cause problems some cases problem described http   issues apache org bugzilla show_bug cgi?id 29877 solution fill unused portion buffer zeros current block number  zero based  
+       
+        return current zero based block number current record number  within current block  zero based  
+       thus  current offset    currentblocknum   recsperblk    currentrecnum  
+       
+        return current zero based record number  
+        
+    
+       write archive record archive  
+       
+        param record record data write archive  
+        throws ioexception error 
+        
+    
+       write archive record archive record may inside larger array buffer buffer must offset plus 
+       record size  long  
+       
+        param buf buffer containing record data write  
+        param offset offset record data within buf  
+        throws ioexception error 
+        
+    
+       write tarbuffer block archive  
+        
+    
+       flush current data block any data close tarbuffer output buffer flush current block before closing  
+        throws ioexception error 
+       org apache tools tar TarBuffer org apache tools tar tarbuffer default_rcdsize    512 default_blksize    default_rcdsize   20 tarbuffer inputstream instream instream  tarbuffer default_blksize tarbuffer inputstream instream blocksize instream  blocksize  tarbuffer default_rcdsize tarbuffer inputstream instream blocksize recordsize instream   instream outstream initialize blocksize  recordsize tarbuffer outputstream outstream outstream  tarbuffer default_blksize tarbuffer outputstream outstream blocksize outstream  blocksize  tarbuffer default_rcdsize tarbuffer outputstream outstream blocksize recordsize instream outstream   outstream initialize blocksize  recordsize initialize blocksize recordsize debug blocksize   blocksize recordsize   recordsize recsperblock blocksize recordsize blockbuffer blocksize instream currblkidx   -1 currrecidx recsperblock currblkidx   0 currrecidx   0 getblocksize blocksize getrecordsize recordsize setdebug debug debug   debug iseofrecord record i   0  sz getrecordsize    i   sz    i record i     0 skiprecord ioexception debug    
+            system err println  skiprecord  recidx currrecidx 
+                                   blkidx currblkidx instream ioexception  reading  via skip  from an output buffer currrecidx recsperblock readblock currrecidx readrecord ioexception debug    
+            system err println  readrecord  recidx currrecidx 
+                                   blkidx currblkidx instream ioexception  reading from an output buffer currrecidx recsperblock readblock result recordsize   
+ 
+        system arraycopy blockbuffer currrecidx recordsize   result  0 recordsize currrecidx result readblock ioexception debug    
+            system err println  readblock  blkidx currblkidx instream ioexception  reading from an output buffer currrecidx   0 offset   0 bytesneeded blocksize bytesneeded   0 numbytes instream read blockbuffer  offset  
+                                               bytesneeded numbytes    -1 offset    0 arrays fill blockbuffer  offset  offset   bytesneeded 0 offset    numbytes  
+            bytesneeded -  numbytes numbytes blocksize debug    
+                    system err println  readblock  incomplete read   
+                                         numbytes     of blocksize 
+                                           bytes read currblkidx getcurrentblocknum currblkidx getcurrentrecordnum currrecidx - 1 writerecord record ioexception debug    
+            system err println  writerecord  recidx currrecidx 
+                                   blkidx currblkidx outstream ioexception  writing to an input buffer record length recordsize ioexception  record to write has length '  
+                                    record length 
+                                     ' which is not the record size of recordsize currrecidx recsperblock writeblock    
+          
+ 
+        system arraycopy record  0 blockbuffer currrecidx recordsize recordsize currrecidx writerecord buf offset ioexception debug    
+            system err println  writerecord  recidx currrecidx 
+                                   blkidx currblkidx outstream ioexception  writing to an input buffer offset recordsize    buf length ioexception  record has length '    buf length 
+                                     ' with offset '    offset 
+                                     ' which is less than the record size of recordsize currrecidx recsperblock writeblock    
+          
+ 
+        system arraycopy buf  offset blockbuffer currrecidx recordsize recordsize currrecidx writeblock ioexception debug    
+            system err println  writeblock  blkidx currblkidx outstream ioexception  writing to an input buffer outstream write blockbuffer  0 blocksize outstream flush currrecidx   0 currblkidx flushblock ioexception debug    
+            system err println  tarbuffer flushblock   called outstream ioexception  writing to an input buffer currrecidx   0 writeblock close ioexception debug    
+            system err println  tarbuffer closebuffer outstream flushblock outstream    system out outstream    system err outstream close outstream instream instream    system in instream close instream org apache tools tar TarBuffer

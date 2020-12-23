@@ -1,0 +1,121 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license class implements security manager meant usage tasks run inside ant vm examples java task junittask basic functionality nothing  except base set permissions allowed  unless permission granted either explicitly implicitly permission granted overruled explicitly revoking permission not permissible add permissions  either granted revoked security manager active calling setsecuritymanager before calling restoresecuritymanager ant 1 6 
+    
+    
+       create set permissions   equivalent calling 
+        code new permissions false   code   
+        
+    
+       create set permissions  
+        param delegatetooldsm code true  code old security manager used permission not explicitly granted revoked instance  
+        
+    
+       adds permission granted  
+        param perm permissions permission granted  
+        
+    
+       adds permission revoked  
+        param perm permissions permission revoked used tasks wishing use security model before executing part subject permissions  note setting securitymanager early may 
+       prevent part starting instance changing classloaders may prohibited classloader new situation supposed present  
+        throws buildexception error 
+        
+    
+       initializes list granted permissions  checks list revoked permissions  
+        
+   add base set permissions used tasks finished executing parts subject permissions inner class implements actual securitymanager used tasks 
+       supporting permissions  
+        
+    
+           exit treated special way order to return exit code 
+           towards tasks exitexception thrown instead simple securityexception indicate exit 
+           code  
+           overridden java lang securitymanager 
+            param status exit status requested central point checking permissions  
+           overridden java lang securitymanager 
+           
+            param perm permission requested permission not explicitly granted revoked original security manager work 
+                       
+    
+           throws exception permission revoked 
+            param perm permission being checked 
+            
+    represents permission     
+    
+           set class  mandatory  
+            param aclass class name permission class permission  
+            return class name permission  
+            
+    
+           set name permission  
+            param aname name permission name permission  
+            return name permission  
+            
+    
+           set actions  
+            param actions actions permission actions  
+            return actions permission  
+            
+    
+           learn whether permission matches case revoked permission  
+            param perm permission check against  
+            
+   none actions revoked allowed  
+    
+           parses actions set separate strings  
+            param actions actions parsed string description permissions  
+            return string description permissions  
+           org apache tools ant types Permissions org apache tools ant types permissions permissions permissions delegatetooldsm delegatetooldsm   delegatetooldsm addconfiguredgrant permissions permission perm    
+        grantedpermissions add perm addconfiguredrevoke permissions permission perm    
+        revokedpermissions add perm setsecuritymanager buildexception   
+        origsm   system getsecuritymanager    
+        init    
+        system setsecuritymanager mysm     
+        active init buildexception   
+        granted java security permissions iterator i   revokedpermissions listiterator    i hasnext       
+            permissions permission p    permissions permission  i next p getclassname buildexception  revoked permission     p     does not contain a iterator i   grantedpermissions listiterator    i hasnext       
+            permissions permission p    permissions permission  i next p getclassname buildexception  granted permission     p     does not contain a java security permission perm unresolvedpermission p getclassname    p getname    p getactions granted add perm   
+              
+          
+          
+        granted add java net socketpermission  localhost 1024-    listen     
+        granted add java util propertypermission  java version    read     
+        granted add java util propertypermission  java vendor    read     
+        granted add java util propertypermission  java vendor url    read     
+        granted add java util propertypermission  java version    read     
+        granted add java util propertypermission  os name    read     
+        granted add java util propertypermission  os version    read     
+        granted add java util propertypermission  os arch    read     
+        granted add java util propertypermission  file encoding    read     
+        granted add java util propertypermission  file separator    read     
+        granted add java util propertypermission  path separator    read     
+        granted add java util propertypermission  line separator    read     
+        granted add java util propertypermission  java specification version    read     
+        granted add java util propertypermission  java specification vendor    read     
+        granted add java util propertypermission  java specification name    read     
+        granted add java util propertypermission  java vm specification version    read     
+        granted add java util propertypermission  java vm specification vendor    read     
+        granted add java util propertypermission  java vm specification name    read     
+        granted add java util propertypermission  java vm version    read     
+        granted add java util propertypermission  java vm vendor    read     
+        granted add java util propertypermission  java vm name    read restoresecuritymanager     
+        active system setsecuritymanager origsm mysm securitymanager checkexit status    
+            java security permission perm java lang runtimepermission  exitvm checkpermission perm securityexception e exitexception e getmessage    status checkpermission java security permission perm active delegatetooldsm     perm getname   equals  exitvm permok granted implies perm     
+                        permok checkrevoked perm permok    origsm origsm checkpermission perm granted implies perm securityexception  permission     perm     was not granted     
+                      
+                    checkrevoked perm checkrevoked java security permission perm iterator i   revokedpermissions listiterator    i hasnext permissions permission  i next    matches perm securityexception  permission     perm     was revoked permission setclass aclass    
+                classname   aclass trim getclassname classname setname aname    
+            name   aname trim getname name setactions actions    
+            actionstring   actions actions length     0 actions   parseactions actions getactions actionstring matches java security permission perm classname equals perm getclass   getname name name endswith perm getname   startswith name substring 0  name length   - 1 name equals perm getname actions set as   parseactions perm getactions size   as size    
+                as removeall actions as size      size set parseactions actions    
+            set result hashset    
+            stringtokenizer tk stringtokenizer actions tk hasmoretokens item   tk nexttoken   trim item equals        
+                    result add item result tostring permission      classname      \     name    \   \     actions    \      
+          
+      
+ org apache tools ant types Permissions

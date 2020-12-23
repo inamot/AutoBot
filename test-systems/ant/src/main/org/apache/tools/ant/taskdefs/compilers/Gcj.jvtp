@@ -1,0 +1,71 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license implementation gcj compiler primarily cut paste jikes ant 1 4 
+    
+    
+       performs compile using gcj compiler  
+        return true compilation succeeded 
+        throws buildexception error 
+        
+    
+       set up gcj commandline  
+        return command line 
+        
+   gcj doesn't support bootclasspath dir  -bootclasspath ll emulate compatibility convenience  
+   gcj doesn't support extension dir  -extdir ll emulate compatibility convenience  
+   gcj option source-path add classpath  
+    
+            gcj set generate class compile native' argument passed 
+            
+    
+       whether any arguments given via  lt compilerarg gt  
+       implies compilation native code requested  
+        return true compilation native code requested ant 1 6 2 
+       org apache tools ant taskdefs compilers Gcj org apache tools ant taskdefs compilers gcj defaultcompileradapter execute buildexception   
+        commandline cmd  
+        attributes log  using gcj compiler   project msg_verbose   
+        cmd   setupgcjcommand firstfilename   cmd size    
+        logandaddfilestocompile cmd executeexternalcompile cmd getcommandline    firstfilename     0 commandline setupgcjcommand     
+        commandline cmd commandline    
+        path classpath path project   
+ 
+          
+          
+        path p   getbootclasspath p size     0    
+            classpath append p   
+          
+ 
+          
+          
+        classpath addextdirs extdirs   
+ 
+        classpath append getcompileclasspath compilesourcepath classpath append compilesourcepath classpath append src exec   getjavac   getexecutable    
+        cmd setexecutable exec gcj    exec destdir cmd createargument   setvalue  -d    
+            cmd createargument   setfile destdir destdir exists       destdir mkdirs buildexception  can't make output directories    
+                                            maybe permission is wrong      
+              
+          
+ 
+        cmd createargument   setvalue  -classpath    
+        cmd createargument   setpath classpath encoding cmd createargument   setvalue  --encoding     encoding debug    
+            cmd createargument   setvalue  -g1 optimize    
+            cmd createargument   setvalue  -o isnativebuild      
+            cmd createargument   setvalue  -c    
+          
+ 
+        addcurrentcompilerargs cmd cmd isnativebuild nativebuild additionalarguments   getjavac   getcurrentcompilerargs argslength   0 nativebuild    argslength   additionalarguments length conflictlength   0 nativebuild 
+                      conflictlength   conflict_with_dash_c length    
+                nativebuild    additionalarguments argslength  startswith 
+                                conflict_with_dash_c conflictlength     
+                conflictlength    
+              
+            argslength nativebuild conflict_with_dash_c     
+         -o     --main     -d    -fjni    -l  
+       
+ 
+ org apache tools ant taskdefs compilers Gcj

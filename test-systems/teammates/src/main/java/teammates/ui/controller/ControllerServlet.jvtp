@@ -1,0 +1,118 @@
+ 
+    
+   receives requests browser  executes matching action sends result back browser result page view instructions browser send another request different follow up action  
+    
+   used fallback using template method design pattern here method contains high level logic request processing  
+               concrete details processing steps implemented child 
+               classes  based request-specific needs log message used generate activity log admin exception may not caught gae kills request soon throwing case error 
+              message log emailed admin separate 
+              cron job    
+  todo  handle invalid parameters exception 
+   log only stack trace prevent delay termination request result gae shutting down instance  
+               note severe logs sent email automatically cron job auto compilelogs  
+               teammates ui controller ControllerServlet teammates ui controller  
+ 
+  
+  
+  
+  
+ 
+  
+  
+  
+  
+ 
+  
+  
+ 
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+ 
+  
+ suppresswarnings  serial controllerservlet httpservlet   
+ 
+  
+ 
+     override init servletexception   
+        timehelper setsystemtimezoneifrequired    
+      
+ 
+     override doget httpservletrequest req  httpservletresponse resp ioexception dopost req  resp   
+      
+ 
+     override 
+     suppresswarnings  pmd avoidcatchingthrowable dopost httpservletrequest req  httpservletresponse resp ioexception   
+ 
+        usertype usertype gatekeeper   getcurrentuser url   httprequesthelper getrequestedurl req   
+        map string    params   httprequesthelper getparametermap req starttime   system currenttimemillis    
+ 
+            log info  request received        req getmethod            req getrequesturl   tostring   
+                            httprequesthelper printrequestparameters req    
+            log info  user agent       req getheader  user-agent     
+ 
+            action c actionfactory   getaction req c isvaliduser      
+                actionresult actionresult   c executeandpostprocess    
+                actionresult writesessiontokentocookieifrequired req  resp   
+                actionresult send req  resp resp sendredirect c getauthenticationredirecturl timetaken   system currenttimemillis   - starttime  
+              
+ 
+            log info c getlogmessage             timetaken pagenotfoundexception e    
+            log warning logmessagegenerator   
+                                 generateactionfailurelogmessage url  params  e  usertype    
+            cleanupstatusmessageinsession req   
+            resp sendredirect viewuris action_not_found_page entitynotfoundexception e    
+            log warning logmessagegenerator   
+                                 generateactionfailurelogmessage url  params  e  usertype    
+            cleanupstatusmessageinsession req   
+            resp sendredirect viewuris entity_not_found_page feedbacksessionnotvisibleexception e    
+            log warning logmessagegenerator   
+                                 generateactionfailurelogmessage url  params  e  usertype    
+            cleanupstatusmessageinsession req   
+            req getsession   setattribute paramsnames feedback_session_not_visible  e getstarttimestring     
+            resp sendredirect viewuris feedback_session_not_visible invalidoriginexception e    
+            log warning logmessagegenerator   
+                                 generateactionfailurelogmessage url  params  e  usertype    
+            cleanupstatusmessageinsession req   
+            resp sendredirect viewuris invalid_origin unauthorizedaccessexception e    
+            log warning logmessagegenerator   
+                                 generateactionfailurelogmessage url  params  e  usertype    
+            cleanupstatusmessageinsession req   
+            resp sendredirect viewuris unauthorized deadlineexceededexception   datastoretimeoutexception e    
+              
+            cleanupstatusmessageinsession req   
+            log severe  deadline exceeded exception caught by controllerservlet     
+                      teammatesexception tostringwithstacktrace e    
+            resp sendredirect viewuris deadline_exceeded_error_page nullpostparameterexception e requesturl   req getrequesturl   tostring    
+            log info e getmessage     
+            cleanupstatusmessageinsession req   
+ 
+            list statusmessage  statusmessagestouser arraylist      
+            statusmessagestouser add statusmessage statusmessages null_post_parameter_message  
+                                                       statusmessagecolor warning    
+            req getsession   setattribute paramsnames status_messages_list  statusmessagestouser requesturl contains   instructor      
+                resp sendredirect actionuris instructor_home_page requesturl contains   student      
+                resp sendredirect actionuris student_home_page requesturl contains   admin      
+                resp sendredirect actionuris admin_home_page cleanupstatusmessageinsession req   
+                resp sendredirect viewuris error_page throwable t    
+              
+            log severe  unexpected exception caught by controllerservlet     
+                          teammatesexception tostringwithstacktrace t    
+            cleanupstatusmessageinsession req   
+            resp sendredirect viewuris error_page cleanupstatusmessageinsession httpservletrequest req    
+        req getsession   removeattribute paramsnames status_messages_list   
+      
+ teammates ui controller ControllerServlet

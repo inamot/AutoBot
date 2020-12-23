@@ -288,6 +288,8 @@ public class AutoMap
 			pageNumber++;
 		}
 		
+		//System.out.println( "rejectedMappings: " + rejectedMappings );
+		
 		generateRunResultsJSONData();
 		generateGraphData();
 		generateRunResultsWebPage( runResults.get( runResults.size() - 1 ) );

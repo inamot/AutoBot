@@ -1,0 +1,358 @@
+ 
+   set default values 
+   need know recipients hidden anonymised recipients not appear summary table 
+   hidden recipients not appear summary table ignore responses hidden recipients 
+   need know recipients hidden anonymised recipients not appear summary table 
+   move current user head recipient list 
+   skip current user added head list 
+   hidden recipients not appear summary table ignore responses hidden recipients 
+   replace current user name replace general identifier general  
+   replace current user team recipient type not student 
+   display recipients' team name 
+   display dash user only self response 
+   need know recipients hidden anonymised recipients not appear summary table 
+   hidden recipients not appear summary table ignore responses hidden recipients 
+   general recipient type not give self response 
+   therefore average exclude self response always hidden exists least one average score exclude self 
+   compute number responses including user's self response 
+   compute number responses excluding user's self response 
+   compute minimum score received 
+   compute maximum score received 
+   compute total score received 
+   compute total score received excluding self 
+   totalscoreexcludingself    null user only self response 
+   compute average score received 
+   compute average score received excluding self 
+   list recipients hide 
+    
+       return true number responses any visible recipient current user least 2 responses used displaying statistic users doesn't make sense users only 1 response each 
+       return false otherwise least 2 responses given any recipient current user 
+  todo  strengthen check stepteammates common datatransfer questions FeedbackNumericalScaleQuestionDetails teammates common datatransfer questions feedbacknumericalscalequestiondetails feedbackquestiondetails feedbacknumericalscalequestiondetails feedbackquestiontype numscale minscale   1 maxscale   5 step   0 5  
+      
+ 
+     override extractquestiondetails  
+            map string    requestparameters  
+            feedbackquestiontype questiontype minscalestring   
+                httprequesthelper getvaluefromparammap requestparameters paramsnames feedback_question_numscale_min   
+        assumption assertnotnull minimum scale   minscalestring minscale   integer parseint minscalestring maxscalestring   
+                httprequesthelper getvaluefromparammap requestparameters paramsnames feedback_question_numscale_max   
+        assumption assertnotnull maximum scale   maxscalestring maxscale   integer parseint maxscalestring stepstring   
+                httprequesthelper getvaluefromparammap requestparameters paramsnames feedback_question_numscale_step   
+        assumption assertnotnull step   stepstring step parsedouble stepstring   
+ 
+        setnumericalscalequestiondetails minscale  maxscale  step setnumericalscalequestiondetails minscale maxscale step minscale   minscale maxscale   maxscale step   step  
+      
+ 
+     override getquestiontypedisplayname feedbackquestiontypenames numscale  
+      
+ 
+     override getquestionwithexistingresponsesubmissionformhtml sessionisopen qnidx responseidx courseid totalnumrecipients  feedbackresponsedetails existingresponsedetails    
+        feedbacknumericalscaleresponsedetails numscaleresponsedetails   
+                 feedbacknumericalscaleresponsedetails  existingresponsedetails templates populatetemplate  
+                formtemplates numscale_submission_form  
+                slots question_index  integer tostring qnidx   
+                slots disabled  sessionisopen ?       disabled   
+                slots response_index  integer tostring responseidx   
+                slots min_scale  integer tostring minscale   
+                slots max_scale  integer tostring maxscale   
+                slots step  stringhelper todecimalformatstring step   
+                slots existing_answer  numscaleresponsedetails getanswerstring    
+                slots possible_values_string  getpossiblevaluesstringsubmit    
+                slots feedback_response_text paramsnames feedback_response_text  
+                slots numscale_min paramsnames feedback_question_numscale_min  
+                slots numscale_max paramsnames feedback_question_numscale_max  
+                slots numscale_step paramsnames feedback_question_numscale_step   
+      
+ 
+     override getquestionwithoutexistingresponsesubmissionformhtml sessionisopen qnidx responseidx courseid totalnumrecipients templates populatetemplate  
+                formtemplates numscale_submission_form  
+                slots question_index  integer tostring qnidx   
+                slots disabled  sessionisopen ?       disabled   
+                slots response_index  integer tostring responseidx   
+                slots min_scale  integer tostring minscale   
+                slots max_scale  integer tostring maxscale   
+                slots step  stringhelper todecimalformatstring step   
+                slots existing_answer      
+                slots possible_values_string  getpossiblevaluesstringsubmit    
+                slots feedback_response_text paramsnames feedback_response_text  
+                slots numscale_min paramsnames feedback_question_numscale_min  
+                slots numscale_max paramsnames feedback_question_numscale_max  
+                slots numscale_step paramsnames feedback_question_numscale_step   
+      
+ 
+     override getquestionspecificeditformhtml questionnumber templates populatetemplate  
+                formtemplates numscale_edit_form  
+                slots question_number  integer tostring questionnumber   
+                slots min_scale  integer tostring minscale   
+                slots max_scale  integer tostring maxscale   
+                slots step  stringhelper todecimalformatstring step   
+                slots possible_values  getpossiblevaluesstringedit    
+                slots numscale_min paramsnames feedback_question_numscale_min  
+                slots numscale_max paramsnames feedback_question_numscale_max  
+                slots numscale_step paramsnames feedback_question_numscale_step  
+                slots numscale_tooltips_min tooltips feedback_question_numscale_min  
+                slots numscale_tooltips_max tooltips feedback_question_numscale_max  
+                slots numscale_tooltips_step tooltips feedback_question_numscale_step   
+      
+ 
+     override getnewquestionspecificeditformhtml     
+          
+        minscale   1  
+        maxscale   5  
+        step   1 div id \ numscaleform getquestionspecificeditformhtml -1  
+                  div    
+      
+ 
+     override getquestionadditionalinfohtml questionnumber additionalinfoid additionalinfo   getquestiontypedisplayname   
+                                   br minimum value      minscale 
+                                   increment      step      maximum value    
+                                maxscale templates populatetemplate  
+                formtemplates feedback_question_additional_info  
+                slots more    more    
+                slots less    less    
+                slots question_number  integer tostring questionnumber   
+                slots additional_info_id  additionalinfoid  
+                slots question_additional_info  additionalinfo   
+      
+ 
+     override getquestionresultstatisticshtml list feedbackresponseattributes  responses  
+            feedbackquestionattributes question studentemail  
+            feedbacksessionresultsbundle bundle view student  equals view getstudentquestionresultsstatisticshtml responses  studentemail  question  bundle getinstructorquestionresultsstatisticshtml responses  question  bundle getinstructorquestionresultsstatisticshtml  
+            list feedbackresponseattributes  responses  
+            feedbackquestionattributes question  feedbacksessionresultsbundle bundle    
+        map min hashmap      
+        map max hashmap      
+        map average hashmap      
+        map averageexcludingself hashmap      
+        map total hashmap      
+        map totalexcludingself hashmap      
+        map integer  numresponses hashmap      
+        map integer  numresponsesexcludingself hashmap      
+ 
+          
+        list hiddenrecipients   gethiddenrecipients responses  question  bundle   
+ 
+        populatesummarystatisticsfromresponses responses  min  max  average  averageexcludingself  total  
+                                               totalexcludingself  numresponses  numresponsesexcludingself showavgexcludingself   showaverageexcludingself question  averageexcludingself fragmenttemplatetouse   showavgexcludingself 
+                                     ? formtemplates numscale_results_stats_fragment_with_self_response 
+                                       formtemplates numscale_results_stats_fragment  
+ 
+        decimalformat df decimalformat    
+        df setminimumfractiondigits 0   
+        df setmaximumfractiondigits 5   
+        df setroundingmode roundingmode down   
+ 
+        stringbuilder fragmenthtml stringbuilder recipient   numresponses keyset hiddenrecipients contains recipient useraverageexcludingself   averageexcludingself get recipient useraverageexcludingselftext   
+                    getaverageexcludingselftext showavgexcludingself  df  useraverageexcludingself recipientname   recipient equals general_question  ?  general    bundle getnameforemail recipient recipientteam   bundle getteamnameforemail recipient   
+ 
+            fragmenthtml append templates populatetemplate  
+                                    fragmenttemplatetouse  
+                                    slots recipient_team  sanitizationhelper sanitizeforhtml recipientteam   
+                                    slots recipient_name  sanitizationhelper sanitizeforhtml recipientname   
+                                    slots average  df format average get recipient    
+                                    slots max  df format max get recipient    
+                                    slots min  df format min get recipient    
+                                    slots average_excluding_self_response  useraverageexcludingselftext fragmenthtml length      0 statstitle    response summary templatetouse   showavgexcludingself 
+                             ? formtemplates numscale_result_stats_with_self_response 
+                               formtemplates numscale_result_stats templates populatetemplate  
+                        templatetouse  
+                        slots summary_title  statstitle  
+                        slots stats_fragments  fragmenthtml tostring getstudentquestionresultsstatisticshtml  
+            list feedbackresponseattributes  responses studentemail  
+            feedbackquestionattributes question  feedbacksessionresultsbundle bundle    
+ 
+        map min hashmap      
+        map max hashmap      
+        map average hashmap      
+        map averageexcludingself hashmap      
+        map total hashmap      
+        map totalexcludingself hashmap      
+        map integer  numresponses hashmap      
+        map integer  numresponsesexcludingself hashmap      
+ 
+          
+        list hiddenrecipients   gethiddenrecipients responses  question  bundle   
+ 
+        populatesummarystatisticsfromresponses responses  min  max  average  averageexcludingself  total  
+                                               totalexcludingself  numresponses  numresponsesexcludingself showavgexcludingself   showaverageexcludingself question  averageexcludingself fragmenttemplatetouse   showavgexcludingself 
+                                     ? formtemplates numscale_results_stats_fragment_with_self_response 
+                                       formtemplates numscale_results_stats_fragment  
+ 
+        decimalformat df decimalformat    
+        df setminimumfractiondigits 0   
+        df setmaximumfractiondigits 5   
+        df setroundingmode roundingmode down isrecipienttypegeneral   question recipienttype    feedbackparticipanttype none isrecipienttypeteam   question recipienttype    feedbackparticipanttype teams 
+                                         question recipienttype    feedbackparticipanttype own_team isrecipienttypestudent    isrecipienttypegeneral     isrecipienttypeteam currentuserteam   bundle getteamnameforemail studentemail currentuseridentifier   getcurrentuseridentifier numresponses  
+                                                                isrecipienttypestudent  studentemail  
+                                                                isrecipienttypeteam  currentuserteam   
+ 
+        set recipientset   numresponses keyset    
+        arraylist recipientlist arraylist hascurrentuserreceivedanyresponse   recipientset contains currentuseridentifier hascurrentuserreceivedanyresponse    
+            recipientlist add currentuseridentifier otherrecipient   recipientset otherrecipient equalsignorecase currentuseridentifier recipientlist add otherrecipient   
+          
+ 
+        stringbuilder fragmenthtml stringbuilder recipient   recipientlist ishiddenrecipient hiddenrecipients contains recipient     
+                ishiddenrecipient recipientname recipientteam isrecipientcurrentuser   recipient equalsignorecase currentuseridentifier isrecipientgeneral   recipient equalsignorecase general_question   
+ 
+            recipientname   getdisplayablerecipientname ishiddenrecipient  
+                            isrecipientcurrentuser  hasatleasttworesponses numresponses  currentuseridentifier   
+                            isrecipienttypestudent  hasatleasttworesponsesotherthancurrentuser  
+                                                            numresponses  currentuseridentifier  hiddenrecipients   
+                            isrecipientgeneral  bundle getnameforemail recipient   currentuserteam   
+ 
+            recipientteam   getdisplayablerecipientteam ishiddenrecipient  
+                                                        isrecipientcurrentuser  
+                                                        hasatleasttworesponses numresponses  currentuseridentifier   
+                                                        isrecipienttypestudent  
+                                                        hasatleasttworesponsesotherthancurrentuser numresponses  
+                                                                                                   currentuseridentifier  
+                                                                                                   hiddenrecipients   
+                                                        bundle getteamnameforemail recipient   currentuserteam minscore maxscore averagescore averagescoreexcludingself isrecipientdetailsavailable   recipientname recipientteam isrecipientdetailsavailable minscore   min get recipient   
+            maxscore   max get recipient   
+            averagescore   average get recipient   
+            averagescoreexcludingself   averageexcludingself get recipient averagescoreexcludingselftext   
+                    getaverageexcludingselftext showavgexcludingself  df  averagescoreexcludingself recipientfragmenthtml   templates populatetemplate  
+                    fragmenttemplatetouse  
+                    slots recipient_team  sanitizationhelper sanitizeforhtml recipientteam   
+                    slots recipient_name  sanitizationhelper sanitizeforhtml recipientname   
+                    slots average  df format averagescore   
+                    slots max  df format maxscore   
+                    slots min  df format minscore   
+                    slots average_excluding_self_response  averagescoreexcludingselftext   
+ 
+            fragmenthtml append recipientfragmenthtml fragmenthtml length      0 statstitle   getstatstitle  
+                isrecipienttypegeneral  isrecipienttypeteam  
+                hasatleasttworesponsesotherthancurrentuser numresponses  currentuseridentifier  hiddenrecipients templatetouse   showavgexcludingself 
+                             ? formtemplates numscale_result_stats_with_self_response 
+                               formtemplates numscale_result_stats templates populatetemplate templatetouse  
+                slots summary_title  statstitle  
+                slots stats_fragments  fragmenthtml tostring getdisplayablerecipientname ishiddenrecipient isrecipientcurrentuser hasatleasttworesponses isrecipienttypestudent hasatleasttworesponsesotherthancurrentuser isrecipientgeneral recipientname currentuserteam ishiddenrecipient    isrecipientcurrentuser    hasatleasttworesponses isrecipienttypestudent ?  you     your team      currentuserteam ishiddenrecipient     isrecipientcurrentuser    hasatleasttworesponsesotherthancurrentuser isrecipientgeneral ?  general    recipientname getdisplayablerecipientteam ishiddenrecipient isrecipientcurrentuser hasatleasttworesponses isrecipienttypestudent hasatleasttworesponsesotherthancurrentuser recipientteamname currentuserteam ishiddenrecipient    isrecipientcurrentuser    hasatleasttworesponses isrecipienttypestudent ? currentuserteam ishiddenrecipient     isrecipientcurrentuser    hasatleasttworesponsesotherthancurrentuser recipientteamname getcurrentuseridentifier map integer  numresponses isrecipientstudent currentuseremail isrecipientteam currentuserteam isrecipientstudent    numresponses containskey currentuseremail  
+                   numresponses get currentuseremail     1 currentuseremail isrecipientteam    numresponses containskey currentuserteam  
+                      numresponses get currentuserteam     1 currentuserteam hasatleasttworesponses map integer  numresponses recipient numresponses integer numofresponses   numresponses get recipient numofresponses numofresponses    2 getaverageexcludingselftext showavgexcludingself  decimalformat df averageexcludingself showavgexcludingself averageexcludingself df format averageexcludingself override getquestionresultstatisticscsv  
+            list feedbackresponseattributes  responses  
+            feedbackquestionattributes question  
+            feedbacksessionresultsbundle bundle responses isempty map min hashmap      
+        map max hashmap      
+        map average hashmap      
+        map averageexcludingself hashmap      
+        map total hashmap      
+        map totalexcludingself hashmap      
+        map integer  numresponses hashmap      
+        map integer  numresponsesexcludingself hashmap      
+ 
+          
+        list hiddenrecipients   gethiddenrecipients responses  question  bundle   
+ 
+        populatesummarystatisticsfromresponses responses  min  max  average  averageexcludingself  total  
+                                               totalexcludingself  numresponses  numresponsesexcludingself showavgexcludingself   showaverageexcludingself question  averageexcludingself   
+ 
+        decimalformat df decimalformat    
+        df setminimumfractiondigits 0   
+        df setmaximumfractiondigits 5   
+        df setroundingmode roundingmode down csvheader    team  recipient  average  minimum  maximum  
+                            showavgexcludingself ?    average excluding self response eol  
+ 
+        stringbuilder csvbody stringbuilder recipient   numresponses keyset hiddenrecipients contains recipient recipientteam   bundle getteamnameforemail recipient isrecipientgeneral   recipient equals general_question averagescoreexcludingself   averageexcludingself get recipient averagescoreexcludingselftext   
+                    getaverageexcludingselftext showavgexcludingself  df  averagescoreexcludingself   
+ 
+            csvbody append sanitizationhelper sanitizeforcsv recipientteam    ' ' 
+                             sanitizationhelper sanitizeforcsv isrecipientgeneral 
+                                                      ?  general  
+                                                        bundle getnameforemail recipient   
+                             ' ' 
+                             df format average get recipient     ' ' 
+                             df format min get recipient     ' ' 
+                             df format max get recipient   
+                              showavgexcludingself ? ' '   averagescoreexcludingselftext eol csvheader   csvbody tostring showaverageexcludingself  
+            feedbackquestionattributes question  map averageexcludingself question recipienttype    feedbackparticipanttype none average   averageexcludingself values average populatesummarystatisticsfromresponses  
+            list feedbackresponseattributes  responses  
+            map min  map max  
+            map average  map averageexcludingself  
+            map total  map totalexcludingself  
+            map integer  numresponses  
+            map integer  numresponsesexcludingself feedbackresponseattributes response   responses    
+            feedbacknumericalscaleresponsedetails responsedetails   
+                     feedbacknumericalscaleresponsedetails  response getresponsedetails answer   responsedetails getanswer giveremail   response giver recipientemail   response recipient numresponses containskey recipientemail     
+                numresponses put recipientemail  0 numofresponses   numresponses get recipientemail    1  
+            numresponses put recipientemail  numofresponses numresponsesexcludingself containskey recipientemail     
+                numresponsesexcludingself put recipientemail  0 isselfresponse   giveremail equalsignorecase recipientemail isselfresponse numofresponsesexcludingself   numresponsesexcludingself get recipientemail    1  
+                numresponsesexcludingself put recipientemail  numofresponsesexcludingself min containskey recipientemail     
+                min put recipientemail  answer minscorereceived   math min answer  min get recipientemail    
+            min put recipientemail  minscorereceived max containskey recipientemail     
+                max put recipientemail  answer maxscorereceived   math max answer  max get recipientemail    
+            max put recipientemail  maxscorereceived total containskey recipientemail     
+                total put recipientemail  0 0 totalscore   total get recipientemail    answer  
+            total put recipientemail  totalscore totalexcludingself containskey recipientemail     
+                totalexcludingself put recipientemail isselfresponse totalscoreexcludingself   totalexcludingself get recipientemail   
+ 
+                  
+                totalexcludingself put recipientemail  
+                                       totalscoreexcludingself answer   totalscoreexcludingself   answer average containskey recipientemail     
+                average put recipientemail  0 0 averagereceived   total get recipientemail    numresponses get recipientemail   
+            average put recipientemail  averagereceived averageexcludingself containskey recipientemail     
+                averageexcludingself put recipientemail isselfresponse    totalexcludingself get recipientemail averagereceivedexcludingself   
+                        totalexcludingself get recipientemail    numresponsesexcludingself get recipientemail   
+                averageexcludingself put recipientemail  averagereceivedexcludingself list gethiddenrecipients  
+            list feedbackresponseattributes  responses  
+            feedbackquestionattributes question  
+            feedbacksessionresultsbundle bundle    
+        list hiddenrecipients arraylist        
+        feedbackparticipanttype type   question recipienttype feedbackresponseattributes response   responses bundle visibilitytable get response getid    1  
+                       type    feedbackparticipanttype self 
+                       type    feedbackparticipanttype none    
+ 
+                hiddenrecipients add response recipient hiddenrecipients getstatstitle isdirectedatgeneral isdirectedatteams isabletoseeallresponses statstitle isdirectedatgeneral    isabletoseeallresponses    
+            statstitle    response summary isdirectedatteams    
+            statstitle    summary of responses received by your team statstitle    summary of responses received by you statstitle hasatleasttworesponsesotherthancurrentuser  
+            map integer  numresponses currentuseridentifier  list hiddenrecipients isatleasttworesponsesotherthancurrentuser recipient   numresponses keyset hiddenrecipients contains recipient hasatleasttworesponses numresponses  recipient  
+                        recipient equals currentuseridentifier     
+ 
+                isatleasttworesponsesotherthancurrentuser isatleasttworesponsesotherthancurrentuser  
+      
+ 
+     override ischangesrequiresresponsedeletion  
+            feedbackquestiondetails newdetails    
+        feedbacknumericalscalequestiondetails newnumscaledetails   
+                 feedbacknumericalscalequestiondetails  newdetails minscale    newnumscaledetails minscale maxscale    newnumscaledetails maxscale step    newnumscaledetails step  
+      
+ 
+     override getcsvheader feedback   
+      
+ 
+     override getquestiontypechoiceoption li data-questiontype   \ numscale\   a href \ javascript feedbackquestiontypenames numscale      a   li getpossiblevaluesstringedit based on the above settings  acceptable responses are      getpossiblevaluesstring getpossiblevaluesstringsubmit possible values      getpossiblevaluesstring getpossiblevaluesstring cur   minscale   step possiblevaluescount   1 maxscale - cur    -1e-9    
+            cur    step  
+            possiblevaluescount    
+          
+ 
+        stringbuilder possiblevaluesstring stringbuilder possiblevaluescount   6    
+            possiblevaluesstring 
+                 append stringhelper todecimalformatstring minscale   append       
+                 append stringhelper todecimalformatstring minscale   step   append       
+                 append stringhelper todecimalformatstring minscale   2   step   append            
+                 append stringhelper todecimalformatstring maxscale - 2   step   append       
+                 append stringhelper todecimalformatstring maxscale - step   append       
+                 append stringhelper todecimalformatstring maxscale possiblevaluesstring append integer tostring minscale    
+            cur   minscale   step maxscale - cur    -1e-9    
+                possiblevaluesstring append       append stringhelper todecimalformatstring cur    
+                cur    step possiblevaluesstring tostring          
+      
+ 
+     override list validatequestiondetails     
+        list errors arraylist minscale    maxscale    
+            errors add feedbackquestion numscale_error_min_max step    0    
+            errors add feedbackquestion numscale_error_step errors  
+      
+ 
+     override list validateresponseattributes  
+            list feedbackresponseattributes  responses numrecipients    
+        list errors arraylist feedbackresponseattributes response   responses    
+            feedbacknumericalscaleresponsedetails frd   
+                     feedbacknumericalscaleresponsedetails  response getresponsedetails frd getanswer     minscale    frd getanswer     maxscale    
+                errors add frd getanswerstring feedbackquestion numscale_error_out_of_range 
+                               min     minscale      max     maxscale errors  
+      
+ 
+     override comparator instructorfeedbackresultsresponserow  getresponserowssortorder override validategiverrecipientvisibility feedbackquestionattributes feedbackquestionattributes getminscale minscale setminscale minscale minscale   minscale getmaxscale maxscale setmaxscale maxscale maxscale   maxscale getstep step  
+      
+ 
+ teammates common datatransfer questions FeedbackNumericalScaleQuestionDetails

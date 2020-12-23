@@ -1,0 +1,286 @@
+ 
+   $id$ 
+   copyright  c  2006-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications  
+    
+   tab settings dialog makes possible customize actions' 
+   shortcuts 
+    
+    author andrea nironi gmail uid table modules names columns table objects representing available actions 
+        
+   
+        see guisettingstabinterface#gettabkey   
+        
+   
+        see guisettingstabinterface#gettabpanel s add table  inside jscrollpane 
+   now s set up selected action  container 
+    
+       enable disable field lower panel 
+        
+        param enable 
+                  whether enable fields not 
+        
+    
+       sets current target 
+        
+        param t new target s enable radiobuttons container 
+   updating radiobuttons container's title s select correct radio button shortcuts --  none 
+   current shortcut    default --  default 
+   customized shortcut --  custom 
+   
+        see org argouml ui guisettingstabinterface#handleresettodefault nothing buttons not shown  
+   
+        see org argouml ui guisettingstabinterface#handlesettingstabcancel nothing next time refresh fetch values again  
+   
+        see org argouml ui guisettingstabinterface#handlesettingstabrefresh s reload shortcuts 
+   
+        see org argouml ui guisettingstabinterface#handlesettingstabsave   
+        
+   conflict detected  showing warning user  instead saving shortcuts 
+   saving shortcuts called every time row selected updates fields buttons status 
+        
+        see javax swing event listselectionlistener#valuechanged javax swing event listselectionevent shortcut select check actual 
+   action conflict ones shortcut already assigned another action s pop-up message user 
+   blanking old action's shortcut now refreshing table  
+   re-selecting old row  without changing target without throwing another listselectionevent s change target 
+    
+       verifies given keystroke already assigned another action  
+        
+        param keystroke keystroke checked 
+        return action already assigned 
+        
+   duplicate shortcut not found s check duplicates s duplicate s recheck conflict called every time panel button  custom   default   none pressed  
+        
+        see java awt event actionlistener#actionperformed java awt event actionevent method simply reset conflict  gui blanking warning 
+       label resetting shortcut's background color 
+       
+        
+    
+       updates gui given new keystroke 
+        
+        param newkeystroke keystroke set 
+        
+   updating shortcut field 
+   updating table data 
+   updating actions 
+    
+       listener method shortcutchangedevents 
+        
+        see org argouml ui cmd shortcutchangedlistener#shortcutchange org argouml ui cmd shortcutchangedevent  
+        
+    
+       update gui conflict given key stroke 
+        
+        param newkeystroke key stroke checked shortcut already assigned another action  
+    
+       table model table modules  
+        
+    
+           constructor  
+            
+   
+            see javax swing table tablemodel#getcolumncount   
+            
+   
+            see javax swing table tablemodel#getcolumnname int  
+            
+   
+            see javax swing table tablemodel#getrowcount   
+            
+   
+            see javax swing table tablemodel#getvalueat int  int  
+            
+    
+           sets value cell code col  code code row  code code ob  code code ob  code action instance code col  code code row  code  
+           parameters ignored ob action searched elements actions  
+            
+            see javax swing table tablemodel#setvalueat  java lang object  int  
+                int given object keystroke instance ca s update actions array 
+   
+            see javax swing table tablemodel#getcolumnclass int  
+            
+   
+            see javax swing table tablemodel#iscelleditable int  int uid  
+            
+    
+   tablecellrenderer keystroke object  
+   
+    author andrea nironi gmail com uid  
+        
+    
+       construct table cell rendered key strokes  
+        
+    
+       format given keystroke 
+        
+        see javax swing table defaulttablecellrenderer#setvalue java lang object  
+       org argouml ui cmd SettingsTabShortcuts org argouml ui cmd settingstabshortcuts jpanel guisettingstabinterface  actionlistener  listselectionlistener  
+        shortcutchangedlistener none_name   translator 
+             localize  label shortcut-none default_name   translator 
+             localize  label shortcut custom_name   translator 
+             localize  label shortcut-custom columnnames     
+            translator localize  misc column-name action    
+            translator localize  misc column-name shortcut    
+            translator localize  misc column-name gettabkey tab shortcuts jpanel gettabpanel table setlayout gridbaglayout     
+            gridbagconstraints panelconstraints gridbagconstraints    
+            panelconstraints gridx   0  
+            panelconstraints gridy   0  
+            panelconstraints anchor   gridbagconstraints north  
+            panelconstraints fill   gridbagconstraints both  
+            panelconstraints weightx   5  
+            panelconstraints weighty   15  
+ 
+              
+            table jtable shortcuttablemodel     
+            table setautoresizemode jtable auto_resize_last_column   
+            table setshowverticallines table setdefaultrenderer keystroke keystrokecellrenderer     
+            table setselectionmode listselectionmodel single_selection   
+            table getselectionmodel   addlistselectionlistener jpanel tablecontainer jpanel borderlayout     
+            tablecontainer setborder  
+                    borderfactory createtitledborder  
+                            translator localize  
+                                     dialog shortcut titled-border actions      
+            tablecontainer add jscrollpane table    
+            add tablecontainer  panelconstraints   
+ 
+              
+            custombutton addactionlistener defaultbutton addactionlistener nonebutton addactionlistener selectedcontainer jpanel gridbaglayout     
+            selectedcontainer setborder  
+                    borderfactory createtitledborder  
+                            translator localize  
+                                     dialog shortcut titled-border selected      
+            gridbagconstraints constraints gridbagconstraints    
+            constraints gridx   0  
+            constraints gridy   0  
+            constraints insets insets 0  5  10  0   
+ 
+            nonebutton setactioncommand none_name   
+            defaultbutton setactioncommand default_name   
+            custombutton setactioncommand custom_name   
+            nonebutton addactionlistener defaultbutton addactionlistener custombutton addactionlistener buttongroup radiobuttongroup buttongroup    
+            radiobuttongroup add nonebutton   
+            radiobuttongroup add defaultbutton   
+            radiobuttongroup add custombutton   
+            selectedcontainer add nonebutton  constraints   
+            constraints gridx   1  
+            constraints insets insets 0  5  10  0   
+            selectedcontainer add defaultbutton  constraints   
+            constraints gridx   2  
+            constraints insets insets 0  5  10  0   
+            selectedcontainer add custombutton  constraints   
+ 
+            constraints gridx   3  
+            constraints weightx   10 0  
+            constraints insets insets 0  10  10  15   
+            constraints fill   gridbagconstraints horizontal  
+            shortcutfield addshortcutchangedlistener shortcutfielddefaultbg   shortcutfield getbackground    
+            selectedcontainer add shortcutfield  constraints   
+            constraints gridwidth   4  
+            constraints gridy   1  
+            constraints gridx   0  
+            constraints anchor   gridbagconstraints west  
+            constraints insets insets 0  10  5  10   
+            warninglabel setforeground color red   
+            selectedcontainer add warninglabel  constraints   
+ 
+            panelconstraints gridy   1  
+            panelconstraints anchor   gridbagconstraints center  
+            panelconstraints fill   gridbagconstraints both  
+            panelconstraints weightx   1  
+            panelconstraints weighty   1  
+            add selectedcontainer  panelconstraints enablefields enablefields enable    
+        shortcutfield seteditable enable   
+        custombutton setenabled enable   
+        defaultbutton setenabled enable   
+        nonebutton setenabled enable settarget object t    
+        target    action  t  
+          
+        enablefields selectedcontainer setborder borderfactory createtitledborder translator 
+                 localize  dialog shortcut titled-border selected-partial   
+                    \     target getactionname      \      
+        shortcutfield settext keyeventutils formatkeystroke target 
+                 getcurrentshortcut      
+        resetkeystrokeconflict target getcurrentshortcut nonebutton setselected shortcutfield setenabled target getdefaultshortcut target getcurrentshortcut   equals  
+                        target getdefaultshortcut       
+              
+            defaultbutton setselected shortcutfield setenabled custombutton setselected shortcutfield setenabled shortcutfield requestfocus handleresettodefault handlesettingstabcancel handlesettingstabrefresh     
+          
+        actions   shortcutmgr getshortcuts    
+        table setmodel shortcuttablemodel handlesettingstabsave getactionalreadyassigned shortcutmgr 
+                 decodekeystroke shortcutfield gettext joptionpane showmessagedialog translator localize  
+                             optionpane shortcut-save-conflict    
+                    translator localize  
+                             optionpane shortcut-save-conflict-title    
+                          joptionpane warning_message shortcutmgr saveshortcuts actions valuechanged listselectionevent lse lse getvalueisadjusting object src   lse getsource src    table getselectionmodel      table getselectedrow      -1 nonebutton isselected      
+            action oldaction   getactionalreadyassigned shortcutmgr 
+                     decodekeystroke shortcutfield gettext oldaction t   messageformat format translator 
+                         localize  optionpane conflict-shortcut object    shortcutfield gettext    
+                                oldaction getactionname response   joptionpane showconfirmdialog t  t  
+                        joptionpane yes_no_option response joptionpane yes_option  
+                    oldaction setcurrentshortcut table setvalueat oldaction  -1  -1 joptionpane no_option  
+                      
+                      
+                    table getselectionmodel   removelistselectionlistener table getselectionmodel   setselectioninterval  
+                            lastrowselected  lastrowselected   
+                    table getselectionmodel   addlistselectionlistener settarget actions table getselectedrow      
+ 
+        lastrowselected   table getselectedrow action getactionalreadyassigned keystroke keystroke i   0  i   actions length  i actions i  getcurrentshortcut actions i  getcurrentshortcut   equals keystroke  
+                        actions i  getactionname   equals  
+                            target getactionname actions i   
+              
+          
+          
+        keystroke duplicate   shortcutmgr getduplicate keystroke duplicate i   0  i   actions length  i actions i  getcurrentshortcut actions i  getcurrentshortcut   equals duplicate  
+                            actions i  getactionname   equals  
+                                target getactionname actions i actionperformed actionevent e    
+        resetkeystrokeconflict e getsource      custombutton    
+            setkeystrokevalue shortcutmgr decodekeystroke shortcutfield 
+                     gettext      
+            shortcutfield setenabled shortcutfield requestfocus e getsource      defaultbutton    
+            setkeystrokevalue target getdefaultshortcut     
+            shortcutfield setenabled checkshortcutalreadyassigned target getdefaultshortcut e getsource      nonebutton    
+            setkeystrokevalue shortcutfield setenabled resetkeystrokeconflict warninglabel settext shortcutfield setbackground shortcutfielddefaultbg setkeystrokevalue keystroke newkeystroke formattedkeystroke   keyeventutils formatkeystroke newkeystroke   
+          
+        shortcutfield settext formattedkeystroke   
+          
+        table getmodel   setvalueat newkeystroke  table getselectedrow    1   
+          
+        actions table getselectedrow    setcurrentshortcut newkeystroke   
+        table repaint shortcutchange shortcutchangedevent event    
+        checkshortcutalreadyassigned event getkeystroke     
+        setkeystrokevalue event getkeystroke selectedcontainer repaint checkshortcutalreadyassigned keystroke newkeystroke    
+        action oldaction   getactionalreadyassigned newkeystroke oldaction shortcutfield setbackground color yellow warninglabel settext messageformat format translator 
+                     localize  misc shortcuts conflict object    keyeventutils formatkeystroke oldaction 
+                             getcurrentshortcut      
+                            oldaction getactionname resetkeystrokeconflict shortcuttablemodel abstracttablemodel shortcuttablemodel     
+            elements object actions length  3 i   0  i   elements length  i      
+                action currentaction   actions i   
+                elements i  0    currentaction getactionname    
+                elements i  1    currentaction getcurrentshortcut    
+                elements i  2    currentaction getdefaultshortcut getcolumncount columnnames length  
+          
+ 
+          
+         override getcolumnname col columnnames col getrowcount elements length object getvalueat row col elements row  col   
+          
+ 
+          
+         override setvalueat object ob row col ob action    
+                action newvalueaction    action  ob i   0  i   elements length  i elements i  0  equals newvalueaction getactionname       
+                        elements i  1    newvalueaction getcurrentshortcut    
+                        repaint i   0  i   actions length  i actions i  getkey   equals newvalueaction getkey       
+                        actions i  setcurrentshortcut newvalueaction 
+                                 getcurrentshortcut elements row  col    ob getcolumnclass col col 0 1 keystroke 2 keystroke override iscelleditable row col keystrokecellrenderer defaulttablecellrenderer keystrokecellrenderer sethorizontalalignment javax swing swingconstants center   
+      
+ 
+      
+     override setvalue object value value value keystroke    
+            value   keyeventutils formatkeystroke  keystroke  value setvalue value   
+      
+ org argouml ui cmd SettingsTabShortcuts

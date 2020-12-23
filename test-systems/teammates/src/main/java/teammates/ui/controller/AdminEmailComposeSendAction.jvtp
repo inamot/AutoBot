@@ -1,0 +1,72 @@
+ 
+  params needed move heavy jobs address mode task 
+  params needed move heavy jobs group mode taskteammates ui controller AdminEmailComposeSendAction teammates ui controller adminemailcomposesendaction action   
+ 
+  
+  
+ 
+  
+  
+ 
+      
+  
+ 
+      
+  
+  
+ 
+     override actionresult execute     
+ 
+        gatekeeper verifyadminprivileges account   
+        adminemailcomposepagedata data adminemailcomposepagedata account  sessiontoken emailcontent   getrequestparamvalue paramsnames admin_email_content subject   getrequestparamvalue paramsnames admin_email_subject   
+ 
+        addressreceiverliststring   getrequestparamvalue paramsnames admin_email_address_receivers   
+        isaddressmodeon   addressreceiverliststring addressreceiverliststring isempty    
+        emailid   getrequestparamvalue paramsnames admin_email_id   
+        groupreceiverlistfilekey   getrequestparamvalue paramsnames admin_email_group_receiver_list_file_key   
+        isgroupmodeon   groupreceiverlistfilekey groupreceiverlistfilekey isempty isgroupmodeon groupreceiver add groupreceiverlistfilekey   
+                googlecloudstoragehelper getgroupreceiverlist blobkey groupreceiverlistfilekey exception e    
+                iserror setstatusforexception e   an error occurred when retrieving receiver list  please again isaddressmodeon    
+            addressreceiver add addressreceiverliststring checkaddressreceiverstring addressreceiverliststring invalidparametersexception e    
+                iserror setstatusforexception e isaddressmodeon     isgroupmodeon    
+            iserror statustoadmin    error   no receiver address or file given   
+            statustouser add statusmessage  error   no receiver address or file given   statusmessagecolor danger iserror    
+            data emailtoedit adminemailattributes subject  
+                                                        addressreceiver  
+                                                        groupreceiver text emailcontent data emailtoedit emailid   emailid createshowpageresult viewuris admin_email  data isemaildraft   emailid emailid isempty isemaildraft    
+            updatedraftemailtosent emailid  subject  addressreceiver  groupreceiver  emailcontent recordnewsentemail subject  addressreceiver  groupreceiver  emailcontent iserror    
+            data emailtoedit adminemailattributes subject  
+                                                        addressreceiver  
+                                                        groupreceiver text emailcontent data emailtoedit emailid   emailid createshowpageresult viewuris admin_email  data checkaddressreceiverstring addressreceiverstring invalidparametersexception   
+        fieldvalidator validator fieldvalidator emails   addressreceiverstring split email   emails error   validator getinvalidityinfoforemail email error isempty      
+                iserror statustouser add statusmessage error  statusmessagecolor danger invalidparametersexception   strong email format error  strong movejobtogroupmodetaskqueue isgroupmodeon taskqueuer scheduleadminemailpreparationingroupmode emailid  groupreceiverlistfilekey  0  0   
+ 
+        statustoadmin      br       group receiver's list     groupreceiverlistfilekey  
+        statustouser add statusmessage  email will be sent within an hour to uploaded group receiver's list    
+                     statusmessagecolor success movejobtoaddressmodetaskqueue isaddressmodeon taskqueuer scheduleadminemailpreparationinaddressmode emailid  addressreceiverliststring   
+ 
+        statustoadmin      br       recipient      addressreceiverliststring  
+        statustouser add statusmessage  email will be sent within an hour to     addressreceiverliststring  
+                     statusmessagecolor success recordnewsentemail subject  
+                                    list addressreceiver  
+                                    list groupreceiver content    
+ 
+        adminemailattributes newdraft adminemailattributes subject  
+                                                                 addressreceiver  
+                                                                 groupreceiver text content date date createdate   logic createadminemail newdraft   
+            emailid   logic getadminemail subject  createdate  getemailid exception e    
+            iserror setstatusforexception e  e getmessage statustoadmin    email queued sending    
+ 
+        movejobtogroupmodetaskqueue    
+        movejobtoaddressmodetaskqueue updatedraftemailtosent emailid subject  
+                                        list addressreceiver  
+                                        list groupreceiver content    
+ 
+        adminemailattributes finalisedemail adminemailattributes subject  
+                                            addressreceiver  
+                                            groupreceiver text content date logic updateadminemailbyid finalisedemail  emailid invalidparametersexception   entitydoesnotexistexception e    
+            iserror setstatusforexception e movejobtogroupmodetaskqueue    
+        movejobtoaddressmodetaskqueue    
+      
+ 
+ teammates ui controller AdminEmailComposeSendAction

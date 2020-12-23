@@ -1,0 +1,925 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications main window argouml application  
+   
+    stereotype singleton 
+    
+    
+       default width  
+        
+    
+       default height  
+        
+    
+       logger  
+        
+    
+       position pane overall browser window  
+        
+   make sure correspondence depend doesn't change 
+    
+       flag indicate main application being integrated another top level application eclipse  via argoeclipse plugin   
+       todo temporary measure until projectbrowser refactored appropriately  - tfm 
+        
+                                                                 
+   class variables 
+    
+       member attribute contain singleton  
+        
+                                                                 
+   instance variables 
+   
+       todo  work progress here allow multiple details panes different contents - bob tarling 
+        
+    
+       partially implemented  needs work display 
+       import source saving zargo  
+        
+    
+       todo needs work users set font 
+       size through gui preference window explorer  formerly called navigator  pane 
+       containing modelstructure todopane  lower left corner screen class handles title frame   
+       e g indicate save status action save current project action remove current selected figs diagram testing purposes tests constructor called theinstance filled constructor  
+        
+        param applicationname title frame 
+        param splash splash screen show startup 
+        param mainapplication 
+                  flag indicating whether top level application  
+                  false providing components another top level app  
+        
+  getcontentpane   add _menubar  borderlayout north   
+   allows ask want save first?  
+   
+   adds listener projectmanager gets updated project changes 
+   adds listener targetmanager gets notified active diagram changes 
+   add listener focus changes  
+   rationale  reset undo manager start new chain  
+   
+                    see java beans propertychangelistener#propertychange java beans propertychangeevent many many events s filter     
+   todo  bob re looking focus change flag start interaction detect focus gained prop 
+   panel field assumption edting field start  
+   not good assumption need see rid this next line ideal debugging taborder 
+                            focus traversal   see e g  issue 1849  
+                            
+                        system out println  focus changed     obj   
+    
+       singleton retrieval method projectbrowser  lazely instantiates projectbrowser  
+        return singleton instance projectbrowser 
+        
+    
+       creator method projectbrowser optionally allows components created without making top level application window 
+       visible  
+        
+        param splash 
+                  true allowed show splash screen 
+        param mainapplication 
+                  true create top level application  false integrated something return singleton instance projectbrowser 
+        
+   
+        see java awt component#getlocale   
+        
+    
+       creates panels working area  
+       
+        param splash true show splashscreen during startup workarea visible space except menu  
+   toolbar status bar   workarea layed out bordersplitpane various components make up argo application positioned  
+   create todopane various details panes hold 
+   different tabs pages according users settings  
+   place each pane required border area  
+   toolbar boundary area between menu status 
+   bar contains workarea centre toolbar 
+   position north  south  east west  
+   todo save restore last positions toolbars 
+    
+           registers toolbars enables north panel hiding toolbars hidden  
+            
+    
+           end registering toolbar 
+            
+   
+           work progress here allow multiple details panes different 
+           contents - bob tarling 
+            
+   add target listeners details panes 
+    
+       add panel split pane area  
+       
+        param comp panel add 
+        param position position panel added 
+        
+    
+       remove panel split pane area  
+       
+        param comp panel remove 
+        
+    
+       set size each panel last saved configuration file  
+        
+   convenience methods return saved width height values 
+    
+       handle title-bar window  
+        
+        author michiel 
+        
+    
+           create title main window's title  
+           
+            param projectfilename project-file name 
+            param activediagram new  current diagram 
+            
+   
+            see java beans propertychangelistener#propertychange java beans propertychangeevent  
+            
+    
+       set save indicator the title appear depending curreny save action enabled status  
+        
+    
+        return application name   argouml shown titlebar 
+        
+    
+        param n application name   argouml shown titlebar method used navigatorpane  multieditor detailspane set target application  p target either model element  usually selected navigation pane properties panel fig  selected diagram   p concept selection transaction used prevent change target one view creating call back method change target views again    p  
+       
+        param o target 
+        
+    
+       select tab page containing todo item  
+       
+       todo introduce instance variable go straight correct tab instead trying param o todo item select tab page containing properties  
+       
+        return tabprops tabpage theory multiple details pane  work progress must first determined details 
+   page contains properties tab  bob tarling 7 dec 2002 tab page instance given class  
+       
+        param tabclass given class 
+        return tabpage theory multiple details pane  work progress must first determined details 
+   page contains properties tab  bob tarling 7 dec 2002 
+    
+        return status bar 
+        
+   
+        see javax swing jframe#getjmenubar   
+        
+    
+        return editor pane 
+        
+    
+        return explorer pane 
+        
+    
+        return details pane 
+        
+    
+       find tabpage given label make front tab  
+       
+        param tabname tabpage label 
+        
+    
+       given list targets  displays corresponding diagram method jumps diagram showing targets scrolls make visible  
+       
+        param targets collection targets show 
+        
+   making possible jump modelroot finally  adjust scrollbars show fig 
+   
+        see java awt component#setvisible boolean  
+        
+   
+        see org tigris gef ui istatusbar#showstatus java lang string  
+        
+    
+       save positions screen splitters  sizes postion main window properties file  
+        
+    
+       build new details pane given compass point  
+       
+        param compasspoint position build pane 
+        param orientation required orientation pane  
+        return details pane null none required given 
+               compass point  
+        
+    
+       exit application save required save required prompt user wish save exit  exit without saving cancel exit operation  
+        
+   
+        see java awt window#dispose   
+        
+    
+       receives window events  
+        
+    
+           constructor  
+            
+   
+            see java awt event windowlistener#windowclosing java awt event windowevent  
+            
+   end class windowcloser    
+   
+        see java beans propertychangelistener#propertychange  
+               java beans propertychangeevent project changed 
+  designer thedesigner gettodolist   removeallelements    
+   update panes 
+                                                                          
+   targetlistener methods implemented notified selected 
+   diagram changes  used update window title  
+   
+        see org argouml ui targetmanager targetlistener#targetadded org argouml ui targetmanager targetevent  
+        
+   
+        see org argouml ui targetmanager targetlistener#targetremoved org argouml ui targetmanager targetevent  
+        
+   
+        see org argouml ui targetmanager targetlistener#targetset org argouml ui targetmanager targetevent  
+        
+    
+       called update current namespace active diagram target changed  
+       
+        param target new target 
+        
+    
+       enabled remove action item selected anything activity state diagrams  
+        
+    
+       returns todopane  
+        return todopane 
+        
+    
+        return returns defaultfont  
+        
+    
+       try save project  possibly not creating new file 
+        param overwrite true overwrite without asking 
+        
+    
+       try save project  
+        param overwrite true overwrite without asking 
+        param savenewfile true ll ask new file even current project already one method invoked several places check 
+   whether project uri set not file really exists? 
+   project file doesn't exist s pop up message dialog s ask user whether save actual 
+   project new file not 
+   save action cancelled 
+   attempt save project under new name  
+   prompt user new name user cancelled operation don't save anything s call real save method 
+    
+       checks given file writable read-only 
+        param file file checked 
+        return true given file read-only 
+        
+    
+       loads project displaying nice progressmonitor 
+        
+        param overwrite true file going overwritten 
+        param file target file 
+        
+       todo  separate swing specific class - tfm 
+        
+    
+       rebuild title using name current project  
+       
+        
+    
+       try save project  
+        param overwrite true overwrite without asking 
+        param file file save param pmw progressmonitor updated    
+        return true successful 
+        
+       todo  separate swing specific class - tfm 
+        
+   repair any errors project 
+   todo  i18n 
+   
+               notification menu bar 
+                
+   
+       simulate some errors repair  
+       replace junits - bob 
+        
+   change true enable testing fig null owner fig null layer fig removed model element 
+    
+       register new file saved  
+       
+        param file file  
+        throws ioexception cannot file name file  
+        
+   todo listen file save events - tfm current project dirty  needs saving function ask confirmation user user indicates saving needed saving attempted  
+       see actionexit actionperformed very similar procedure  
+       
+        return true continue opening 
+        
+    
+       loads project displaying nice progressmonitor 
+        
+        param file project opened 
+        param showui    whether show gui not 
+        
+       todo needs refactored gui independent - tfm 
+        
+    
+       loads project file opens kinds error message windows doesn't work some reason those cases preserves old project  
+       
+        param file file open  
+        param showui true error message may shown user  
+                     false run commandline mode 
+        param pmw progressmonitor updated not needed  use null  
+        return true file successfully opened 
+        
+       todo  separate swing specific class - tfm 
+        
+   todo actually hack  some diagram types statechart diagrams  access current 
+   diagram some info might cause 
+   problems s another statechart diagram 
+   active remove current project  before 
+   loading new one  
+   hide save action during load  otherwise appearing title bar save enabling models updated 
+   todo still need now save enablement improved s save project mru list s save project last used one configuration file 
+   todo seems entirely redundant now ve made message generic removed convenient time - tfm 
+  argouml tigris org\n p equals oldproject exception not gc  garbage collect old project 
+  prepare old project gc 
+   set new project before removing old always valid current project temporary  load project create new project undomanager command 
+   make sure save action always reinstated 
+    
+       open message dialog error message  
+       
+        param message message display  
+        param showui true error message may shown user  
+                     false run commandline mode 
+        
+    
+       open message dialog error message  
+       
+        param message message display  
+        param showui true error message may shown user  
+                     false run commandline mode 
+        param ex exception thrown  
+        
+   todo anyone use command line localization needed - tfm 
+  argouml tigris org \n remove open dialogs parent projectbrowser needed non-modal dialogs find goto action save current project  
+        return save action action removes selected figs diagram  
+        return remove diagram action  
+        
+    
+        return file save adding project files icon uid  
+        
+   end class projectbrowser   org argouml ui ProjectBrowser org argouml ui projectbrowser jframe istatusbar  propertychangelistener  targetlistener default_componentwidth   400 default_componentheight   350 logger log   
+        logger getlogger projectbrowser position   
+        center  north  south  east  west  
+        northeast  southeast  southwest  northwest position center tostring   equals bordersplitpane center position north tostring   equals bordersplitpane north position northeast tostring   equals bordersplitpane northeast position south tostring   equals bordersplitpane south map position  detailspane  detailspanesbycompasspoint hashmap position  detailspane actionremovefromdiagram removefromdiagram actionremovefromdiagram  
+                translator localize  action remove-from-diagram projectbrowser argouml null projectbrowser applicationname  splashscreen splash mainapplication  jpanel leftbottompane applicationname   
+        theinstance ismainapplication   mainapplication  
+         
+        getcontentpane   setfont defaultfont   
+         
+        saveaction actionsaveproject    
+        projectmanager getmanager   setsaveaction saveaction   
+ 
+        createpanels splash  leftbottompane ismainapplication    
+            menubar genericargomenubar    
+            getcontentpane   setlayout borderlayout setjmenubar menubar   
+              
+            getcontentpane   add assemblepanels    borderlayout center   
+ 
+            jpanel bottom jpanel    
+            bottom setlayout borderlayout     
+            bottom add statusbar  borderlayout center   
+            bottom add heapmonitor    borderlayout east   
+            getcontentpane   add bottom  borderlayout south   
+ 
+            setappname applicationname   
+ 
+              
+            setdefaultcloseoperation projectbrowser do_nothing_on_close   
+            addwindowlistener windowcloser     
+            imageicon argoimage   
+                resourceloaderwrapper lookupiconresource  argoicon seticonimage argoimage getimage     
+          
+ 
+          
+          
+            projectmanager getmanager   addpropertychangelistener targetmanager getinstance   addtargetlistener keyboardfocusmanager kfm   
+                keyboardfocusmanager getcurrentkeyboardfocusmanager    
+            kfm addpropertychangelistener propertychangelistener propertychange propertychangeevent evt focusowner  equals evt getpropertyname    
+                                evt getnewvalue obj    evt getnewvalue       
+                        obj   evt getnewvalue    
+                          
+                          
+                          
+                          
+                          
+                          
+                          
+                          
+                        project p    
+                            projectmanager getmanager   getcurrentproject    
+                        p getundomanager   startinteraction  focus    
+                          
+  
+                      
+                  
+                
+          
+        argoeventpump addlistener argoeventtypes any_help_event helplistener getstatusbar projectbrowser getinstance theinstance theinstance projectbrowser theinstance projectbrowser makeinstance splashscreen splash mainapplication  jpanel leftbottompane projectbrowser  argouml   splash   
+                mainapplication  leftbottompane   
+      
+ 
+      
+     override locale getlocale locale getdefault createpanels splashscreen splash  jpanel leftbottompane splash splash getstatusbar   showstatus  
+                translator localize  statusmsg bar making-project-browser     
+            splash getstatusbar   showprogress 10   
+            splash setvisible editorpane multieditorpane splash splash getstatusbar   showstatus  
+                    translator localize  
+                             statusmsg bar making-project-browser-explorer     
+            splash getstatusbar   incprogress 5   
+          
+        explorerpane navigatorpane splash   
+ 
+          
+          
+          
+          
+        workareapane bordersplitpane splash splash getstatusbar   showstatus translator localize  
+                     statusmsg bar making-project-browser-to pane     
+            splash getstatusbar   incprogress 5   
+          
+        todopane   leftbottompane  
+        createdetailspanes    
+        restorepanelsizes component assemblepanels     
+        addpanel editorpane  position center   
+        addpanel explorerpane  position west   
+        addpanel todopane  position southwest map entry position  detailspane  entry  
+                  detailspanesbycompasspoint entryset      
+            position position   entry getkey    
+            addpanel entry getvalue    position jpanel toolbarboundary jpanel    
+        toolbarboundary setlayout dockborderlayout toolbarposition   borderlayout north  
+        toolbarboundary add menubar getfiletoolbar    toolbarposition   
+        toolbarboundary add menubar getedittoolbar    toolbarposition   
+        toolbarboundary add menubar getviewtoolbar    toolbarposition   
+        toolbarboundary add menubar getcreatediagramtoolbar    
+                        toolbarposition   
+        toolbarboundary add workareapane  borderlayout center   
+ 
+ 
+          
+        argotoolbarmanager getinstance   registertoolbar  
+                menubar getfiletoolbar    menubar getfiletoolbar    0   
+        argotoolbarmanager getinstance   registertoolbar  
+                menubar getedittoolbar    menubar getedittoolbar    1   
+        argotoolbarmanager getinstance   registertoolbar  
+                menubar getviewtoolbar    menubar getviewtoolbar    2   
+        argotoolbarmanager getinstance   registertoolbar  
+                menubar getcreatediagramtoolbar    
+                menubar getcreatediagramtoolbar    3 jtoolbar   toolbars jtoolbar    menubar getfiletoolbar    
+                menubar getedittoolbar    menubar getviewtoolbar    
+                menubar getcreatediagramtoolbar jtoolbar toolbar   toolbars    
+            toolbar addcomponentlistener componentadapter componenthidden componentevent e allhidden jtoolbar bar   toolbars bar isvisible      
+                            allhidden allhidden jtoolbar bar   toolbars    
+                            toolbarboundary getlayout   removelayoutcomponent  
+                                    bar   
+                          
+                        toolbarboundary getlayout   layoutcontainer  
+                                toolbarboundary componentshown componentevent e    
+                    jtoolbar onevisible jtoolbar bar   toolbars bar isvisible      
+                            onevisible   bar onevisible toolbarboundary add onevisible  toolbarposition   
+                        toolbarboundary getlayout   layoutcontainer  
+                                toolbarboundary toolbarboundary createdetailspanes     
+          
+        eastpane    
+            makedetailspane bordersplitpane east   vertical getinstance     
+        southpane   
+            makedetailspane bordersplitpane south  horizontal getinstance     
+        southeastpane   
+            makedetailspane bordersplitpane southeast  
+                    horizontal getinstance     
+        northwestpane   
+            makedetailspane bordersplitpane northwest  
+                    horizontal getinstance     
+        northpane   
+            makedetailspane bordersplitpane north  horizontal getinstance     
+        northeastpane   
+            makedetailspane bordersplitpane northeast  
+                    horizontal getinstance southpane detailspanesbycompasspoint put position south  southpane southeastpane detailspanesbycompasspoint put position southeast  
+                    southeastpane eastpane detailspanesbycompasspoint put position east  eastpane northwestpane detailspanesbycompasspoint put position northwest  
+                    northwestpane northpane detailspanesbycompasspoint put position north  northpane northeastpane detailspanesbycompasspoint put position northeast  
+                    northeastpane   
+          
+ 
+          
+        iterator it   detailspanesbycompasspoint entryset   iterator it hasnext      
+            targetmanager getinstance   addtargetlistener  
+                     detailspane    map entry  it next    getvalue addpanel component comp  position position    
+        workareapane add comp  position tostring removepanel component comp    
+        workareapane remove comp   
+        workareapane validate    
+        workareapane repaint restorepanelsizes northpane northpane setpreferredsize dimension  
+                    0  getsavedheight argo key_screen_north_height southpane southpane setpreferredsize dimension  
+                    0  getsavedheight argo key_screen_south_height eastpane eastpane setpreferredsize dimension  
+                    getsavedwidth argo key_screen_east_width   0 explorerpane explorerpane setpreferredsize dimension  
+                    getsavedwidth argo key_screen_west_width   0 northwestpane northwestpane setpreferredsize getsaveddimensions  
+                    argo key_screen_northwest_width  
+                    argo key_screen_north_height todopane todopane setpreferredsize getsaveddimensions  
+                    argo key_screen_southwest_width  
+                    argo key_screen_south_height northeastpane northeastpane setpreferredsize getsaveddimensions  
+                    argo key_screen_northeast_width  
+                    argo key_screen_north_height southeastpane southeastpane setpreferredsize getsaveddimensions  
+                    argo key_screen_southeast_width  
+                    argo key_screen_south_height dimension getsaveddimensions configurationkey width  
+            configurationkey height dimension getsavedwidth width   getsavedheight height getsavedwidth configurationkey width configuration getinteger width  default_componentwidth getsavedheight configurationkey height configuration getinteger height  default_componentheight titlehandler propertychangelistener buildtitle projectfilename   
+                argodiagram activediagram projectfilename equals projectfilename projectmanager getmanager   getcurrentproject projectfilename   projectmanager getmanager   
+                         getcurrentproject   getname activediagram activediagram   projectmanager getmanager   
+                     getcurrentproject   getactivediagram changeindicator saveaction saveaction isenabled      
+                changeindicator activediagram monitoreddiagram monitoreddiagram removepropertychangelistener  name activediagram addpropertychangelistener  name monitoreddiagram   activediagram  
+                settitle projectfilename     -     activediagram getname   
+                            -     getappname     changeindicator settitle projectfilename     -     getappname    
+                          changeindicator propertychange propertychangeevent evt evt getpropertyname   equals  name   
+                       evt getsource argodiagram    
+                buildtitle  
+                    projectmanager getmanager   getcurrentproject   getname     
+                     argodiagram  evt getsource showsaveindicator     
+        titlehandler buildtitle null getappname appname setappname n    
+        appname   n settarget object o    
+        targetmanager getinstance   settarget o settodoitem object o    
+        iterator it   detailspanesbycompasspoint values   iterator it hasnext      
+            detailspane detailspane    detailspane  it next detailspane settodoitem o tabprops gettabprops     
+          
+          
+          
+        iterator it   detailspanesbycompasspoint values   iterator it hasnext      
+            detailspane detailspane    detailspane  it next    
+            tabprops tabprops   detailspane gettabprops tabprops tabprops illegalstateexception  no properties tab found abstractargojpanel gettab tabclass    
+          
+          
+          
+        iterator it   detailspanesbycompasspoint values   iterator it hasnext      
+            detailspane detailspane    detailspane  it next    
+            abstractargojpanel tab   detailspane gettab tabclass tab tab illegalstateexception  no     tabclass getname   
+                                            tab found statusbar getstatusbar statusbar jmenubar getjmenubar menubar multieditorpane geteditorpane editorpane navigatorpane getexplorerpane explorerpane jpanel getdetailspane southpane selecttabnamed tabname    
+        iterator it   detailspanesbycompasspoint values   iterator it hasnext      
+            detailspane detailspane    detailspane  it next detailspane selecttabnamed translator localize tabname illegalargumentexception  no such tab named     tabname jumptodiagramshowing collection targets targets targets size      0 list dms arraylist targets   
+        object first   dms get 0 first diagram    dms size     1    
+            settarget first   
+            settarget dms get 1 first diagram    dms size      1    
+            settarget first list argodiagram  diagrams   
+            projectmanager getmanager   getcurrentproject   getdiagramlist    
+        object target   targetmanager getinstance   gettarget target diagram  
+                 diagram  target  countcontained dms     dms size      
+            settarget first argodiagram bestdiagram bestnumcontained   0 argodiagram d   diagrams nc   d countcontained dms nc   bestnumcontained    
+                bestnumcontained   nc  
+                bestdiagram   d nc    dms size bestdiagram projectmanager getmanager   getcurrentproject   
+                     getactivediagram   equals bestdiagram     
+                settarget bestdiagram   
+              
+            settarget first first equals projectmanager getmanager   getcurrentproject   
+                          getroot       
+            settarget first   
+          
+ 
+          
+        project p   projectmanager getmanager   getcurrentproject p object f   targetmanager getinstance   getfigtarget f fig    
+                globals cureditor   scrolltoshow  fig  f   
+              
+          
+      
+ 
+      
+     override setvisible b setvisible b b    
+            globals setstatusbar showstatus s    
+        statusbar showstatus s savescreenconfiguration explorerpane configuration setinteger argo key_screen_west_width  
+                                     explorerpane getwidth eastpane configuration setinteger argo key_screen_east_width  
+                                     eastpane getwidth northpane configuration setinteger argo key_screen_north_height  
+                                     northpane getheight southpane configuration setinteger argo key_screen_south_height  
+                                     southpane getheight todopane configuration setinteger argo key_screen_southwest_width  
+                    todopane getwidth southeastpane configuration setinteger argo key_screen_southeast_width  
+                    southeastpane getwidth northwestpane configuration setinteger argo key_screen_northwest_width  
+                    northwestpane getwidth northeastpane configuration setinteger argo key_screen_northeast_width  
+                    northeastpane getwidth     
+          
+         
+        configuration setinteger argo key_screen_width  getwidth     
+        configuration setinteger argo key_screen_height  getheight     
+        configuration setinteger argo key_screen_left_x  getx     
+        configuration setinteger argo key_screen_top_y  gety detailspane makedetailspane compasspoint  
+                                        orientation orientation    
+        detailspane detailspane detailspane compasspoint tolowercase    orientation detailspane gettabcount      0 detailspane tryexit saveaction saveaction isenabled      
+            project p   projectmanager getmanager   getcurrentproject t   
+                messageformat format translator localize  
+                         optionpane exit-save-changes-to object    p getname response   
+                joptionpane showconfirmdialog t  t  joptionpane yes_no_cancel_option response    joptionpane cancel_option 
+                       response    joptionpane closed_option response    joptionpane yes_option    
+                trysave projectmanager getmanager   getcurrentproject projectmanager getmanager   getcurrentproject   
+                                 geturi saveaction isenabled savescreenconfiguration    
+        configuration save    
+        system exit 0 dispose windowcloser windowadapter windowcloser windowclosing windowevent e    
+            tryexit propertychange propertychangeevent evt evt getpropertyname   
+             equals projectmanager current_project_property_name     
+            project p    project  evt getnewvalue p titlehandler buildtitle p getname designer setcritiquingroot p   
+                  
+                targetmanager getinstance   settarget p getinitialtarget targetadded targetevent e    
+    	targetchanged e getnewtarget targetremoved targetevent e    
+    	targetchanged e getnewtarget targetset targetevent e    
+    	targetchanged e getnewtarget targetchanged object target target argodiagram    
+            titlehandler buildtitle argodiagram  target   
+          
+        determineremoveenabled    
+         
+        project p   projectmanager getmanager   getcurrentproject    
+         
+        object thecurrentnamespace target   targetmanager getinstance   gettarget target argodiagram    
+            thecurrentnamespace     argodiagram  target  getnamespace model getfacade   isanamespace target     
+            thecurrentnamespace   target model getfacade   isamodelelement target     
+            thecurrentnamespace   model getfacade   getnamespace target thecurrentnamespace   p getroot    
+          
+        p setcurrentnamespace thecurrentnamespace target argodiagram    
+            p setactivediagram  argodiagram  target determineremoveenabled     
+        editor editor   globals cureditor    
+        collection figs   editor getselectionmanager   getfigs removeenabled    figs isempty    
+        graphmodel gm   editor getgraphmodel gm umlmutablegraphsupport    
+            removeenabled   
+                  umlmutablegraphsupport  gm  isremovefromdiagramallowed figs   
+          
+        removefromdiagram setenabled removeenabled jpanel gettodopane todopane font getdefaultfont defaultfont trysave overwrite trysave overwrite trysave overwrite savenewfile    
+        uri uri   projectmanager getmanager   getcurrentproject   geturi    
+ 
+        file file uri savenewfile    
+            file file uri file exists response   joptionpane showconfirmdialog translator localize  
+                                 optionpane save-project-file-not-found    
+                        translator localize  
+                                 optionpane save-project-file-not-found-title    
+                        joptionpane yes_no_option response    joptionpane yes_option    
+                    savenewfile savenewfile savenewfile    
+            file   getnewfile file trysavewithprogressmonitor overwrite  file isfilereadonly file file file file exists       file canwrite     
+                     file exists       file createnewfile ioexception ioexc trysavewithprogressmonitor overwrite  file file    
+        saveswingworker worker saveswingworker overwrite  file   
+        thread currentthread   setpriority thread max_priority   
+        worker start buildtitlewithcurrentprojectname     
+        titlehandler buildtitle  
+                projectmanager getmanager   getcurrentproject   getname trysave overwrite   
+            file file   
+            progressmonitor pmw    
+        log info  saving the project    
+        project project   projectmanager getmanager   getcurrentproject    
+        persistencemanager pm   persistencemanager getinstance    
+        projectfilepersister persister persistencemanager getinstance   confirmoverwrite  
+                    argoframe getinstance    overwrite  file isfilereadonly file     
+                joptionpane showmessagedialog translator localize  
+                                 optionpane save-project-cant-write    
+                        translator localize  
+                                 optionpane save-project-cant-write-title    
+                              joptionpane information_message sstatus   
+                messageformat format translator localize  
+                     label save-project-status-writing object    file showstatus  sstatus   
+ 
+            persister   pm getsavepersister    
+            pm setsavepersister persister persister   pm getpersisterfromfilename file getname persister illegalstateexception  filename     project getname   
+                                is not of a known file type    
+              
+ 
+            testsimulateerrors report   project repair report length     0    
+                  
+                report    
+                     an inconsistency has been detected when saving the model   
+                           these have been repaired and are reported below    
+                           the save will with the model having been   
+                           amended as described \n    report  
+                reporterror  
+                        pmw   
+                        translator localize  dialog repair     report pmw pmw updateprogress 25   
+                persister addprogresslistener pmw   
+              
+             
+            project presave    
+            persister save project  file   
+            project postsave    
+ 
+            sstatus   
+                messageformat format translator localize  
+                     label save-project-status-wrote object    project geturi      
+            showstatus sstatus   
+            log debug   setting most recent project file to   
+                     file getcanonicalpath     
+ 
+              
+            saveaction setenabled addfilesaved file   
+ 
+            configuration setstring argo key_most_recent_project_file  
+                        file getcanonicalpath exception ex smessage   
+                messageformat format translator localize  
+                     optionpane save-project-general-exception object    ex getmessage      
+ 
+            joptionpane showmessagedialog smessage  
+                    translator localize  
+                     optionpane save-project-general-exception-title    
+                          joptionpane error_message   
+ 
+            reporterror  
+                    pmw  
+                    translator localize  
+                             dialog error save error object    file getname ex   
+ 
+            log error smessage  ex testsimulateerrors layer lay   
+                globals cureditor   getlayermanager   getactivelayer    
+            list figs   lay getcontentsnoedges figs size     0    
+                fig fig    fig  figs get 0   
+                log error  setting owner of    
+                          fig getclass   getname       to fig setowner figs size     1    
+                fig fig    fig  figs get 1   
+                fig setlayer figs size     2    
+                fig fig    fig  figs get 2   
+                object owner   fig getowner    
+                model getumlfactory   delete owner addfilesaved file file ioexception   
+          
+        genericargomenubar menu    genericargomenubar  getjmenubar menu menu addfilesaved file getcanonicalpath askconfirmationandsave     
+        projectbrowser pb   projectbrowser getinstance    
+        project p   projectmanager getmanager   getcurrentproject p saveaction isenabled t   
+                messageformat format translator localize  
+                         optionpane open-project-save-changes-to object    p getname response   
+                joptionpane showconfirmdialog pb  t  t  
+                    joptionpane yes_no_cancel_option response    joptionpane cancel_option 
+                       response    joptionpane closed_option response    joptionpane yes_option    
+ 
+                trysave projectmanager getmanager   getcurrentproject projectmanager getmanager   getcurrentproject   
+                                 geturi saveaction isenabled loadprojectwithprogressmonitor file file showui    
+        loadswingworker worker loadswingworker file  showui   
+        worker start loadproject file file showui   
+            progressmonitor pmw    
+        log info  loading project     
+ 
+        persistencemanager pm   persistencemanager getinstance    
+        project oldproject   projectmanager getmanager   getcurrentproject success designer disablecritiquing    
+        designer clearcritiquing    
+        cleardialogs    
+        project project file canread       
+            reporterror pmw   file not found     file        showui   
+            designer enablecritiquing    
+            success abstractaction rememberedsaveaction saveaction saveaction projectmanager getmanager   setsaveaction projectfilepersister persister   
+                    pm getpersisterfromfilename file getname persister success illegalstateexception  filename   
+                              file getname   
+                                is not of a known file type pmw persister addprogresslistener pmw   
+                  
+                 
+                diagramfactory getinstance   getdiagram   clear    
+ 
+                project   persister doload file pmw persister removeprogresslistener pmw   
+                  
+                threadutils checkifinterrupted model getdiagraminterchangemodel collection diagrams   
+                        diagramfactory getinstance   getdiagram    
+                    iterator diag   diagrams iterator diag hasnext      
+                        project addmember diag next diagrams isempty      
+                        project setactivediagram  
+                                 argodiagram  diagrams iterator   next addfilesaved file   
+                  
+                  
+                configuration setstring argo key_most_recent_project_file  
+                        file getcanonicalpath     
+                 
+                projectbrowser getinstance   showstatus  
+                        translator localize  
+                                 label open-project-status-read object    file getname versionexception ex    
+                project   oldproject  
+                success reporterror  
+                        pmw  
+                        translator localize  
+                                 dialog error file version object    ex getmessage      
+                        showui outofmemoryerror ex    
+                project   oldproject  
+                success log error  out of memory loading project   ex   
+                reporterror  
+                        pmw  
+                        translator localize  dialog error memory limit    
+                        showui java lang interruptedexception ex    
+                project   oldproject  
+                success log error  project loading interrupted by user umlversionexception ex    
+                project   oldproject  
+                success reporterror  
+                        pmw  
+                        translator localize  
+                                 dialog error file version error object    ex getmessage      
+                        showui  ex xmiformatexception ex    
+                project   oldproject  
+                success reporterror  
+                        pmw  
+                        translator localize  
+                                 dialog error xmi format error object    ex getmessage      
+                        showui  ex ioexception ex    
+                success project   oldproject  
+                log error  exception loading project   ex   
+                reporterror  
+                        pmw  
+                        translator localize  
+                                 dialog error open error object    file getname      
+                        showui  ex openexception ex    
+                success project   oldproject  
+                log error  exception loading project   ex   
+                reporterror  
+                        pmw  
+                        translator localize  
+                                 dialog error open error object    file getname      
+                        showui  ex runtimeexception ex    
+                success project   oldproject  
+                log error  exception loading project   ex   
+                reporterror  
+                        pmw  
+                        translator localize  
+                                 dialog error open error object    file getname      
+                        showui  ex persistencemanager getinstance   getlastloadstatus      
+                        project   oldproject  
+                        success reporterror  
+                                pmw  
+                                 problem loading the project   
+                                  file getname   
+                                   \n  
+                                   error message \n  
+                                  persistencemanager getinstance   
+                                     getlastloadmessage   
+                                   \n  
+                                   some  or all  information may be missing   
+                                   from the project \n  
+                                   please report problem at   
+                                   http   
+                                showui oldproject project project equals oldproject     
+                              
+                            log info  there are   
+                                      oldproject getdiagramlist   size   
+                                        diagrams in the old project    
+                            log info  there are    
+                                      project getdiagramlist   size   
+                                        diagrams in the project    
+                              
+                              
+                            projectmanager getmanager   setcurrentproject  
+                                    project   
+                            projectmanager getmanager   removeproject  
+                                    oldproject   
+                            project getprojectsettings   init    
+                            command cmd nonundoablecommand object execute project getundomanager   addcommand cmd project log info  the current project is log info  there are     project getdiagramlist   size   
+                                    diagrams in the current project    
+                      
+                     
+                    designer enablecritiquing saveaction   rememberedsaveaction  
+                    projectmanager getmanager   setsaveaction  
+                            rememberedsaveaction success    
+                        rememberedsaveaction setenabled success reporterror progressmonitor monitor message showui showui monitor monitor notifymessage  
+                        translator localize  dialog error title     
+                        translator localize  dialog error open save error    
+                        message swingutilities invokelater runnable run     
+                        jdialog dialog exceptiondialog  
+                                    argoframe getinstance    
+                                    translator localize  dialog error title    
+                                    translator localize  
+                                             dialog error open save error    
+                                    message   
+                        dialog setvisible system err print message reporterror progressmonitor monitor message showui throwable ex showui monitor monitor notifymessage  
+                        translator localize  dialog error title    
+                        message   
+                        exceptiondialog formatexception  
+                                message  ex  ex openexception swingutilities invokelater runnable run     
+                        jdialog dialog exceptiondialog  
+                                    argoframe getinstance    
+                                    translator localize  dialog error title    
+                                    message   
+                                    exceptiondialog formatexception  
+                                                message  ex  
+                                                ex openexception    
+                        dialog setvisible stringwriter sw stringwriter    
+            printwriter pw printwriter sw   
+            ex printstacktrace pw exception   sw tostring    
+              
+              
+            reporterror monitor   please report the error below to the argouml  
+                       development team at http   
+                      message    \n\n    exception  showui cleardialogs     
+        window   windows   getownedwindows i   0  i   windows length  i windows i finddialog     
+                windows i  dispose    
+              
+          
+        finddialog getinstance   reset abstractaction getsaveaction saveaction abstractaction getremovefromdiagramaction removefromdiagram file getnewfile     
+        projectbrowser pb   projectbrowser getinstance    
+        project p   projectmanager getmanager   getcurrentproject    
+ 
+        jfilechooser chooser uri uri   p geturi uri file projectfile file uri projectfile length     0    
+                chooser jfilechooser projectfile chooser jfilechooser    
+              
+            chooser setselectedfile projectfile chooser jfilechooser schoosertitle   
+            translator localize  filechooser save-as-project    
+        chooser setdialogtitle schoosertitle         p getname     
+ 
+          
+        chooser setfileview projectfileview getinstance     
+ 
+        chooser setacceptallfilefilterused persistencemanager getinstance   setsavefilechooserfilters  
+                chooser   
+                uri util uritofilename uri tostring retval   chooser showsavedialog pb retval    jfilechooser approve_option    
+            file thefile   chooser getselectedfile    
+            abstractfilepersister filter   
+                 abstractfilepersister  chooser getfilefilter thefile configuration setstring  
+                        persistencemanager key_project_name_path  
+                        persistencemanager getinstance   getbasename  
+                                thefile getpath name   thefile getname name endswith       filter getextension       
+                    thefile file  
+                            thefile getparent    
+                            name         filter getextension     
+                  
+              
+            persistencemanager getinstance   setsavepersister filter thefile org argouml ui ProjectBrowser

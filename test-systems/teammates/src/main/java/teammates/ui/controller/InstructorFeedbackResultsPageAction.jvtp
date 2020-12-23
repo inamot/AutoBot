@@ -1,0 +1,114 @@
+ ajax loading html table modal 
+     non-english characters not displayed properly downloaded file? click here   
+   todo move another action another page data class 
+   default view  sort question  statistics shown  grouped team  
+   bundle questions sections 
+   warning section wise viewing case many responses  
+   warning section wise not make sense multiple sections  
+   load page structure without responses sections questions question view 
+   set up question tables  responses load ajax 
+   set iscomplete true prevent behavior many responses display warning messages 
+   bundle questions selected section 
+   bundle specific question sections 
+   bundle specific question specific section 
+   not tested test file not large enough reach catch blockteammates ui controller InstructorFeedbackResultsPageAction teammates ui controller instructorfeedbackresultspageaction action   
+ 
+  
+  
+ 
+     override actionresult execute entitydoesnotexistexception courseid   getrequestparamvalue paramsnames course_id feedbacksessionname   getrequestparamvalue paramsnames feedback_session_name showstats   getrequestparamvalue paramsnames feedback_results_showstats   
+ 
+        assumption assertpostparamnotnull paramsnames course_id  courseid   
+        assumption assertpostparamnotnull paramsnames feedback_session_name  feedbacksessionname   
+ 
+        statustoadmin    show instructor feedback result page br   
+                         session name      feedbacksessionname     br   
+                         course id      courseid  
+ 
+        instructorattributes instructor   logic getinstructorforgoogleid courseid  account googleid   
+        feedbacksessionattributes session   logic getfeedbacksession feedbacksessionname  courseid iscreatoronly gatekeeper verifyaccessible instructor  session   iscreatoronly   
+ 
+        instructorfeedbackresultspagedata data instructorfeedbackresultspagedata account  sessiontoken selectedsection   getrequestparamvalue paramsnames feedback_results_groupbysection selectedsection selectedsection   all_section_option ismissingresponsesshown   getrequestparamasboolean paramsnames feedback_results_indicate_missing_responses isloadingcsvresultsashtml   getrequestparamasboolean paramsnames csv_to_html_table_needed isloadingcsvresultsashtml createajaxresultforcsvtableloadedinhtml  
+                    courseid  feedbacksessionname  instructor  data  selectedsection  
+                    ismissingresponsesshown valueof showstats    
+          
+        data setsessionresultshtmltableasstring      
+        data setajaxstatus groupbyteam   getrequestparamvalue paramsnames feedback_results_groupbyteam sorttype   getrequestparamvalue paramsnames feedback_results_sorttype startindex   getrequestparamvalue paramsnames feedback_results_main_index startindex data setstartindex integer parseint startindex sorttype showstats    on   
+            groupbyteam    on   
+            sorttype feedbacksessionresults question_sort_type  
+            ismissingresponsesshown questionid   getrequestparamvalue paramsnames feedback_question_id istestingajax   getrequestparamvalue paramsnames feedback_results_need_ajax all_section_option equals selectedsection     questionid feedbacksessionresults question_sort_type equals sorttype     
+              
+            data setbundle  
+                     logic getfeedbacksessionresultsforinstructorwithinrangefromview  
+                                                                           feedbacksessionname  courseid  
+                                                                           instructor email  
+                                                                           default_section_query_range  sorttype feedbacksessionresults question_sort_type equals sorttype     
+            data setbundle getbundleforquestionview istestingajax  courseid  feedbacksessionname  instructor  data  
+                                                    selectedsection  sorttype  questionid feedbacksessionresults gqr_sort_type equals sorttype feedbacksessionresults grq_sort_type equals sorttype     
+            data setbundle logic 
+                     getfeedbacksessionresultsforinstructorfromsectionwithinrange feedbacksessionname  courseid  
+                                                                                  instructor email  
+                                                                                  selectedsection  
+                                                                                  default_section_query_range feedbacksessionresults rqg_sort_type equals sorttype feedbacksessionresults rgq_sort_type equals sorttype     
+            data setbundle logic 
+                     getfeedbacksessionresultsforinstructortosectionwithinrange feedbacksessionname  courseid  
+                                                                                instructor email  
+                                                                                selectedsection  
+                                                                                default_section_query_range data getbundle entitydoesnotexistexception  feedback session     feedbacksessionname 
+                                                      does not exist in     courseid isshowsectionwarningforquestionview   data islargenumberofrespondents feedbacksessionresults question_sort_type equals sorttype isshowsectionwarningforparticipantview    data getbundle   iscomplete feedbacksessionresults question_sort_type equals sorttype ismultiplesectionavailable   data getbundle   getrostersectionteamnametable   size     1 selectedsection equals all_section_option      isshowsectionwarningforparticipantview 
+                                                              isshowsectionwarningforquestionview ismultiplesectionavailable    
+                statustouser add statusmessage statusmessages feedback_results_sectionviewwarning  
+                                                   statusmessagecolor warning statustouser add statusmessage statusmessages feedback_results_questionviewwarning  
+                                                   statusmessagecolor warning    
+              
+            iserror sorttype feedbacksessionresults question_sort_type  
+            data initforviewbyquestion instructor  selectedsection  showstats  groupbyteam  ismissingresponsesshown createshowpageresult viewuris instructor_feedback_results_by_question  data feedbacksessionresults rgq_sort_type  
+            data initforsectionpanelviews instructor  selectedsection  showstats  groupbyteam  
+                                          instructorfeedbackresultspageviewtype recipient_giver_question  
+                                          ismissingresponsesshown createshowpageresult viewuris instructor_feedback_results_by_recipient_giver_question  data feedbacksessionresults grq_sort_type  
+            data initforsectionpanelviews instructor  selectedsection  showstats  groupbyteam  
+                                          instructorfeedbackresultspageviewtype giver_recipient_question  
+                                          ismissingresponsesshown createshowpageresult viewuris instructor_feedback_results_by_giver_recipient_question  data feedbacksessionresults rqg_sort_type  
+            data initforsectionpanelviews instructor  selectedsection  showstats  groupbyteam  
+                                          instructorfeedbackresultspageviewtype recipient_question_giver  
+                                          ismissingresponsesshown createshowpageresult viewuris instructor_feedback_results_by_recipient_question_giver  data feedbacksessionresults gqr_sort_type  
+            data initforsectionpanelviews instructor  selectedsection  showstats  groupbyteam  
+                                          instructorfeedbackresultspageviewtype giver_question_recipient  
+                                          ismissingresponsesshown createshowpageresult viewuris instructor_feedback_results_by_giver_question_recipient  data sorttype feedbacksessionresults rgq_sort_type  
+            data initforsectionpanelviews instructor  selectedsection  showstats  groupbyteam  
+                                          instructorfeedbackresultspageviewtype recipient_giver_question  
+                                          ismissingresponsesshown createshowpageresult viewuris instructor_feedback_results_by_recipient_giver_question  data feedbacksessionresultsbundle getbundleforquestionview needajax courseid feedbacksessionname  instructorattributes instructor  
+            instructorfeedbackresultspagedata data selectedsection sorttype questionid entitydoesnotexistexception   
+        feedbacksessionresultsbundle bundle questionid all_section_option equals selectedsection     
+                  
+ 
+                data setlargenumberofrespondents needajax bundle   logic getfeedbacksessionresultsforinstructorwithinrangefromview  
+                                               feedbacksessionname  courseid  
+                                               instructor email  
+                                               1  sorttype   
+                  
+                  
+                bundle iscomplete bundle   logic getfeedbacksessionresultsforinstructorinsection feedbacksessionname  courseid  
+                                                                                    instructor email  
+                                                                                    selectedsection all_section_option equals selectedsection     
+                  
+                bundle   logic getfeedbacksessionresultsforinstructorfromquestion feedbacksessionname  courseid  
+                                                                                  instructor email  questionid bundle   logic getfeedbacksessionresultsforinstructorfromquestioninsection  
+                                                feedbacksessionname  courseid  
+                                                instructor email  questionid  selectedsection bundle actionresult createajaxresultforcsvtableloadedinhtml courseid feedbacksessionname  
+                                    instructorattributes instructor  instructorfeedbackresultspagedata data selectedsection ismissingresponsesshown isstatsshown entitydoesnotexistexception selectedsection contentequals all_section_option     
+                data setsessionresultshtmltableasstring  
+                        stringhelper csvtohtmltable  
+                                logic getfeedbacksessionresultsummaryascsv  
+                                        courseid  feedbacksessionname  instructor email  
+                                        ismissingresponsesshown  isstatsshown data setsessionresultshtmltableasstring  
+                        stringhelper csvtohtmltable  
+                                logic getfeedbacksessionresultsummaryinsectionascsv  
+                                        courseid  feedbacksessionname  instructor email  
+                                        selectedsection ismissingresponsesshown  isstatsshown exceedingrangeexception e    
+              
+            data setsessionresultshtmltableasstring      
+            data setajaxstatus  there are too many responses  please download the feedback results by section createajaxresult data   
+      
+ 
+ teammates ui controller InstructorFeedbackResultsPageAction

@@ -1,0 +1,457 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications main class two types argouml application invocation   
+   non-gui command line swing gui  p  
+    
+   note  functionality common types application 
+   invocation  e g  extension modules loaded added some 
+   common class b not  b  here   adding things here cause behavior diverge application invocation types  e g  argoeclipse   
+   
+    
+    
+       logger location default logging configuration   lcf  file default implementation start main entry point argouml  
+        param args command line parameters 
+        
+   force configuration load 
+   synchronize startup directory 
+   initialise version application 
+   set i18n locale 
+   create anonymous class kind adaptor cognitive 
+   system provide proper translation i18n print out some version info debuggers    
+   set properties application behaviour    
+   fix  set application name mac os x    
+   todo  move command line parsing separate method 
+   parse command line args assumption options precede name project file load s load project 
+   now s print nothing to set laf splash screen splash screen up early possible 
+   initialize model subsystem 
+   initialize profile subsystem 
+   
+               initialize module loader least plug-ins provide 
+               profiles need initialized before project loaded some profile may set default 
+               profiles need applied project soon created loaded first instance project needed 
+               during gui initialization 
+                
+   initialize java code generator early? - tfm reason gui initialized before commands run some commands use projectbrowser project entered command line  
+   try reload most recent project option true 
+   although looks redundant s needed initialization state set correctly many side effects part initialization  
+  tooltipmanager sharedinstance   setinitialdelay 500   
+    
+       initialise uml model repository  
+        
+    
+       helper update progress splash screen displayed  
+       
+        param splash  code true  code splash shown 
+        param percent new percentage progress bar 
+        param message messae shown splash 
+        
+    
+       calculates link url given project name file not exist cannot converted default 
+         link url returned  
+       
+        param projectname file name project 
+        param urltoopen default   link url  
+        return new url cause empty project created    
+    
+       prints usage message  
+        
+    
+       check tha jvm version  
+        p unsupported jvm version exit immediately  
+        p  
+       note most cases jvm classloader complain unsupportedclassversionerror long before anywhere near point initialization  
+        
+   check using supported java version 
+   exit unsupported java version  
+    
+       check inetaddress localhost fail unix etc hosts not correctly set up  
+        
+    
+       add element postloadactions list contains actions run argouml started  
+       
+        param r runnable  action 
+        
+    
+       perform list commands given command line first implementation list commands possible give  
+       
+        param list commands list strings  
+        
+   perform one command  
+   now create new object  
+    
+       install security handlers basic initialization log4j  
+       
+       log4j initialization must done part main class initializer log4j initialization complete 
+       before any static initializers installs trap eat  certain securityexceptions  
+       refer link java awt eventdispatchthread details  
+        
+     
+           install trap eat  securityexceptions  
+            
+           note temporary go away future  release 
+           http   bugs sun com bugdatabase view_bug bug_id 4714232 string  code log4j configuration  code same string found link org apache log4j configuration default_configuration_file use reference log4j configures itself clears system property never know set set static initializer link argo  perform initialization  
+            
+   todo ok static initializer running java web start environment? - tfm 
+   jws property logs deployment user logdir   deployment user tmp 
+   default level debug 
+   initlogging    
+    
+       create display splash screen  
+        return splash screen uniprocessors wait until re sure splash screen painted aren't competing resources part initialization very much gui-stuff  
+       
+        param splash splash screeen 
+        
+   make projectbrowser 
+   set screen layout user left before reasonable defaults  
+    
+       publish version argouml application   p function intentionally public applications built argouml not make use main main call function access argouml's version applicationversion class   
+        
+   end class main    
+    
+   class hold list actions perform perform initializations done  
+    
+    
+       logger list actions perform  
+        
+    
+       constructor  
+       
+        param actions actions perform  
+        
+   
+        see java lang runnable#run   
+        
+   end class postload    
+    
+   class load modules  
+    
+    
+       logger  
+        
+    
+       load internal modules found standard 
+       classpath don't care optional modules aren't found     
+   
+        see java lang runnable#run   
+        
+   end class loadmodules   org argouml application Main org argouml application main default_logging_configuration   
+         org argouml resource lcf default_model_implementation   
+         org argouml model mdr mdrmodelimplementation main args log info  argouml started     
+ 
+            simpletimer st simpletimer    
+            st mark  begin    
+ 
+            checkjvmversion    
+            checkhostsfile    
+ 
+              
+            configuration load directory   argo getdirectory    
+            org tigris gef base globals setlastdirectory directory   
+ 
+              
+            initversion    
+ 
+              
+            translator init configuration getstring argo key_locale    
+ 
+              
+              
+            org argouml cognitive translator settranslator abstractcognitivetranslator i18nlocalize key translator localize key i18nmessageformat key  
+                                object   iargs translator messageformat key  iargs   
+                          
+                        
+ 
+              
+            org argouml util tools logversioninfo    
+ 
+            st mark  arguments    
+ 
+              
+            system setproperty  gef imagelocation     org argouml images    
+ 
+            system setproperty  apple laf usescreenmenubar system setproperty  
+                     com apple mrj application apple menu about name   
+                     argouml dosplash   configuration getboolean argo key_splash reloadrecent   configuration getboolean  
+                    argo key_reload_recent_project batch list commands arraylist string projectname thetheme i   0  i   args length  i args i  startswith themename   lookandfeelmgr getinstance   
+                             getthemeclassnamefromarg args i themename thetheme   themename args i  equalsignorecase  -help   
+                               args i  equalsignorecase  -h   
+                               args i  equalsignorecase  --help   
+                               args i  equalsignorecase   ?      
+                        printusage    
+                        system exit 0 args i  equalsignorecase  -nosplash      
+                        dosplash args i  equalsignorecase  -norecentfile      
+                        reloadrecent args i  equalsignorecase  -command   
+                               i   1   args length    
+                        commands add args i   1    
+                        i args i  equalsignorecase  -locale   
+                               i   1   args length    
+                        translator setlocale args i   1    
+                        i args i  equalsignorecase  -batch      
+                        batch args i  equalsignorecase  -open    
+                               i   1   args length    
+                        projectname   args   i args i  equalsignorecase  -print    
+                               i   1   args length projecttobeprinted    
+                            persistencemanager getinstance   fixextension  
+                                    args   i    
+                        url urltobeprinted   projecturl projecttobeprinted projectbrowser getinstance   loadproject file urltobeprinted getfile printmanager getinstance   print    
+                          
+                        system exit 0 system err 
+                                 println  ignoring unknown incomplete option '  
+                                          args i projectname system out println  
+                                 setting projectname to '    args i     '    
+                        projectname   args i   
+                      
+                  
+              
+ 
+              
+            st mark  initialize laf    
+            lookandfeelmgr getinstance   initializelookandfeel thetheme lookandfeelmgr getinstance   setcurrenttheme thetheme   
+              
+ 
+              
+            st mark  create splash    
+            splashscreen splash dosplash     batch    
+                splash   initializesplash    
+              
+ 
+              
+            st mark  initialize model subsystem    
+ 
+            initmodel    
+ 
+            updateprogress splash  5   statusmsg bar model-subsystem    
+             
+              
+            st mark  initialize the profile subsystem initprofilesubsystem   init    
+ 
+              
+            st mark  modules    
+ 
+            subsystemutility initsubsystem initmoduleloader     
+ 
+              
+            generatorjava getinstance    
+ 
+              
+              
+            st mark  initialize gui    
+            projectbrowser pb   initializegui splash   
+ 
+            subsystemutility initsubsystem inituicmdsubsystem     
+            subsystemutility initsubsystem initnotationui     
+            subsystemutility initsubsystem initnotation     
+            subsystemutility initsubsystem initnotationuml     
+            subsystemutility initsubsystem initnotationjava     
+            subsystemutility initsubsystem initdiagramappearanceui reloadrecent    projectname s   configuration getstring  
+                        argo key_most_recent_project_file equals s      
+                    file file file s file exists      
+                        log info  re-opening project     s   
+                        projectname   s log warn  cannot re-open     s 
+                                    because it does not exist    
+                      
+                  
+              
+ 
+            url urltoopen projectname projectname   
+                    persistencemanager getinstance   fixextension projectname   
+                urltoopen   projecturl projectname  urltoopen   
+              
+ 
+            st mark  perform commands batch    
+                performcommands commands   
+                commands system out println  exiting because we are running in batch actionexit   docommand splash urltoopen splash getstatusbar   showstatus  
+                            translator localize  
+                                     statusmsg bar defaultproject object   msgargs    projectname   
+                    splash getstatusbar   showstatus  
+                            translator messageformat  
+                                     statusmsg bar readingproject   
+                                    msgargs    
+                  
+ 
+                splash getstatusbar   showprogress 40   
+              
+ 
+            st mark  make empty project    
+ 
+            designer disablecritiquing    
+            designer clearcritiquing projectloaded urltoopen filename   urltoopen getfile    
+                file file file filename   
+                system err println  the url of the file to open is    
+                          urltoopen   
+                system err println  the filename is     filename   
+                system err println  the file is     file   
+                system err println  file exists       file exists     
+                projectloaded   pb loadproject file projectloaded    
+                  
+                  
+                  
+                projectmanager getmanager   setcurrentproject  
+                        projectmanager getmanager   getcurrentproject     
+                projectmanager getmanager   setsaveenabled st mark  set project    
+ 
+            designer enablecritiquing    
+ 
+            st mark  perspectives splash splash getstatusbar   showprogress 75   
+              
+ 
+            st mark  open window    
+ 
+            updateprogress splash  95   statusmsg bar open-project-browser    
+ 
+            argoframe getinstance   setvisible st mark  close splash splash splash setvisible splash dispose    
+                splash performcommands commands   
+            commands st mark  start critics    
+            runnable startcritics startcritics    
+            main addpostloadaction startcritics   
+ 
+            st mark  start loading modules    
+            runnable moduleloader loadmodules    
+            main addpostloadaction moduleloader   
+ 
+            postload pl postload postloadactions   
+            thread postloadthead thread pl   
+            postloadthead start    
+ 
+            log info      
+            log info  profile of load time enumeration i   st result    i hasmoreelements       
+                log info i nextelement     
+              
+            log info  #################################    
+            log info      
+ 
+            st argoframe getinstance   setcursor  
+                    cursor getpredefinedcursor cursor default_cursor    
+ 
+              
+            tooltipmanager sharedinstance   setdismissdelay 50000000 throwable t log fatal  fatal error on startup   argouml failed to start    
+                        t system out println  fatal error on startup     
+                           argouml failed to start     
+                t printstacktrace    
+                system exit 1 initmodel classname   system getproperty  
+                 argouml model implementation   
+                default_model_implementation   
+        throwable ret   model initialise classname ret log fatal  model component not correctly initialized    ret   
+            system err println classname 
+                        is not a working model implementation     
+            system exit 1 updateprogress splashscreen splash percent message splash splash getstatusbar   showstatus translator localize message    
+            splash getstatusbar   showprogress percent url projecturl projectname  url urltoopen    
+        file projectfile file projectname projectfile exists      
+            system err println  project file '    projectfile 
+			          ' does not exist urltoopen   util filetourl projectfile exception e    
+                log error  exception opening project in main     e urltoopen printusage     
+        system err println  usage   options   project-file     
+        system err println  options include      
+        system err println    -help           display information    
+        lookandfeelmgr getinstance   printthemeargs    
+        system err println    -nosplash       don't display logo at startup    
+        system err println    -norecentfile   don't reload last saved file    
+        system err println    -command  arg   command to perform on startup    
+        system err println    -batch          don't start gui    
+        system err println    -locale  arg    set the locale  e g  'en_gb'     
+        system err println      
+        system err println  you can also set java settings which influence   
+			      the behaviour of argouml     
+        system err println    -xms250m -xmx500m   makes argouml reserve   
+			      more memory large projects     
+        system err println  \n\n checkjvmversion javaversion   system getproperty  java version javaversion startswith  1 4    
+                   javaversion startswith  1 3   
+                   javaversion startswith  1 2   
+                   javaversion startswith  1 1      
+ 
+	    system err println  you are using java     javaversion        
+			          please use java 5  aka 1 5  or later   
+                                   with argouml    
+	    system exit 0 checkhostsfile inetaddress getlocalhost unknownhostexception e    
+            system err println  error  unable to get localhost information     
+            e printstacktrace system err   
+            system err println  on unix systems usually indicates that  
+                   your  etc hosts file is incorrectly setup     
+            system err println  stopping execution of argouml     
+            system exit 0 addpostloadaction runnable r    
+        postloadactions add r performcommands list list    
+	iterator iter   list iterator iter hasnext commandstring iter next pos   commandstring indexof commandname commandargument pos    -1    
+		commandname   commandstring  
+		commandargument commandname   commandstring substring 0  pos   
+		commandargument   commandstring substring pos   1 c c forname commandname classnotfoundexception e    
+		system out println  cannot find the command      commandname object o o   c newinstance instantiationexception e    
+		system out println commandname 
+				       could not be instantiated - skipping  
+				        instantiationexception illegalaccessexception e    
+		system out println commandname 
+				       could not be instantiated - skipping  
+				        illegalaccessexception o o commandlineinterface     
+		system out println commandname 
+				       is not a command - skipping commandlineinterface clio    commandlineinterface  o  
+ 
+	    system out println  performing command   
+			         commandname        
+			          commandargument commandargument result   clio docommand commandargument result    
+		system out println  there was an error executing   
+				      the command   
+				     commandname        
+				      commandargument commandargument           
+		system out println  aborting the rest of the commands system setproperty  
+             sun awt exception handler   
+            argoawtexceptionhandler getname system getproperty  log4j configuration properties props properties    
+	    inputstream stream stream   
+                        thread currentthread   getcontextclassloader   
+                                 getresourceasstream  
+                                        default_logging_configuration stream props load stream ioexception io    
+                io printstacktrace    
+                system exit -1   
+              
+ 
+	    propertyconfigurator configure props stream basicconfigurator configure    
+		logger getrootlogger   getloggerrepository   setthreshold  
+                        level error     
+                logger getrootlogger   error  
+                         failed to find valid log4j properties  
+                                   in log4j configuration  
+                                   using logging configuration splashscreen initializesplash     
+        splashscreen splash splashscreen    
+        splash setvisible eventqueue isdispatchthread   
+                   runtime getruntime   availableprocessors      1 splash splash ispaintcalled splash wait interruptedexception e splash projectbrowser initializegui splashscreen splash    
+          
+        jpanel todopane todopane splash   
+	projectbrowser pb   projectbrowser makeinstance splash todopane   
+ 
+	joptionpane setrootframe pb   
+ 
+        pb setcursor cursor getpredefinedcursor cursor wait_cursor    
+          
+          
+        rectangle scrsize   graphicsenvironment getlocalgraphicsenvironment   
+                 getmaximumwindowbounds configframewidth   
+            configuration getinteger argo key_screen_width  scrsize width w   math min configframewidth  scrsize width w    0    
+            w   600 configframeheight   
+            configuration getinteger argo key_screen_height  scrsize height h   math min configframeheight  scrsize height h    0    
+            h   400 x   configuration getinteger argo key_screen_left_x  0 y   configuration getinteger argo key_screen_top_y  0   
+        pb setlocation x  y   
+        pb setsize w  h   
+         
+        uimanager put  button focusinputmap uidefaults lazyinputmap object     
+                     enter    pressed   
+                     released enter    released   
+                     space    pressed   
+                     released space    released pb initversion     
+        argoversion init postload runnable postload list runnable  actions    
+        postloadactions   actions run thread sleep 1000 exception ex    
+            log error  post load no sleep   ex runnable r   postloadactions    
+            r run thread sleep 100 exception ex    
+                log error  post load no sleep2   ex loadmodules runnable optional_internal_modules     
+         org argouml dev developermodule huntforinternalmodules module   optional_internal_modules moduleloader2 addclass module classnotfoundexception e    
+                  
+                log debug  module     module     not found run javaimport   init    
+	huntforinternalmodules    
+        log info  module loading done    
+      
+ 
+   org argouml application Main

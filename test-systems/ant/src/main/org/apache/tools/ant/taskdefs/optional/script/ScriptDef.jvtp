@@ -1,0 +1,192 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   define task using script ant 1 6 
+    
+    
+       script runner helper 
+        
+    
+       script runner  
+        
+    used run script name script activated    
+    attributes definitions script    
+    nested element definitions script attribute names set nested element definitions indexed names    
+    
+       set project  
+        param project project def belows set name under script activated build 
+       file 
+       
+        param name name script 
+        
+    
+       indicates whether task supports given attribute name 
+       
+        param attributename name attribute  
+       
+        return true attribute supported script  
+        
+    
+       class representing attribute definition attribute name    
+    
+           set attribute name 
+           
+            param name attribute name 
+            
+    
+       add attribute definition script  
+       
+        param attribute attribute definition  
+        
+    
+       class represent nested element definition name neseted element ant type nested element corresponds class created nested element    
+    
+           set tag name nested element 
+           
+            param name name nested element 
+            
+    
+           set type element name ant task type used element created alternative specifying class name directly 
+           
+            param type name ant type task use nested 
+           element  
+            
+    
+           set classname class used nested element specifies class directly alternative specifying ant type name  
+           
+            param classname name class use nested 
+           element  
+            
+    
+       add nested element definition  
+       
+        param nestedelement nested element definition  
+        
+    
+       define script  
+        
+   check need set loader 
+   now create scriptrunner 
+   find script repository stored project 
+    
+       create nested element configured  
+       
+        param elementname name nested element  
+        return object representing element name  
+        
+   
+               try context classloader 
+            classloader loader 
+                  thread currentthread   getcontextclassloader    
+               
+    
+       execute script  
+       
+        param attributes collection attributes 
+        param elements list nested element values  
+        deprecated 1 7  
+                   use executescript attribute  elements  instance  instead  
+        
+    
+       execute script called script instance execute script definition  
+       
+        param attributes collection attributes 
+        param elements list nested element values  
+        param instance script instance null 
+        
+    
+       defines manager  
+       
+        param manager scripting manager  
+        
+    
+       defines language  required   
+       
+        param language scripting language name script  
+        
+    
+       load script external file   optional  
+       
+        param file file containing script source  
+        
+    
+       set script text  
+       
+        param text component script text added  
+       org apache tools ant taskdefs optional script ScriptDef org apache tools ant taskdefs optional script scriptdef defbase setproject project project setproject project   
+        helper setprojectcomponent helper setsetbeans setname name name   name isattributesupported attributename attributeset contains attributename attribute setname name name   name tolowercase locale us addattribute attribute attribute    
+        attributes add attribute nestedelement setname name name   name tolowercase locale us settype type type   type setclassname classname classname   classname addelement nestedelement nestedelement    
+        nestedelements add nestedelement execute name buildexception  scriptdef requires a name attribute to   
+                   name the script helper getlanguage buildexception   scriptdef  requires a language attribute   
+                   to specify the script language getantlibclassloader hascpdelegate      
+            helper setclassloader createloader     
+          
+ 
+          
+        runner   helper getscriptrunner    
+ 
+        attributeset hashset iterator i   attributes iterator    i hasnext       
+            attribute attribute    attribute  i next attribute name buildexception  scriptdef  attribute  elements   
+                       must specify an attribute name attributeset contains attribute name buildexception  scriptdef      name      declares   
+                       the     attribute name     attribute more than once    
+              
+            attributeset add attribute name   
+          
+ 
+        nestedelementmap hashmap iterator i   nestedelements iterator    i hasnext       
+            nestedelement nestedelement    nestedelement  i next nestedelement name buildexception  scriptdef  element  elements   
+                       must specify an element name nestedelementmap containskey nestedelement name buildexception  scriptdef      name      declares   
+                       the     nestedelement name     nested element more   
+                       than once nestedelement classname nestedelement type buildexception  scriptdef  element  elements   
+                       must specify either a classname or type attribute nestedelement classname nestedelement type buildexception  scriptdef  element  elements   
+                       must specify only one of the classname and type   
+                       attributes    
+              
+ 
+ 
+            nestedelementmap put nestedelement name  nestedelement   
+          
+ 
+          
+        map scriptrepository project p   getproject p    
+            scriptrepository   
+                 map  p getreference magicnames script_repository scriptrepository scriptrepository hashmap    
+                p addreference magicnames script_repository  
+                    scriptrepository   
+              
+          
+ 
+        name   projecthelper gencomponentname geturi    name   
+        scriptrepository put name anttypedefinition def anttypedefinition    
+        def setname name   
+        def setclass scriptdefbase componenthelper getcomponenthelper  
+            getproject    adddatatypedefinition def object createnestedelement elementname    
+        nestedelement definition 
+               nestedelement  nestedelementmap get elementname definition buildexception       name      does not support   
+                   the      elementname      nested element    
+          
+ 
+        object instance classname   definition classname classname instance   getproject   createtask definition type instance instance   getproject   createdatatype definition type classloader loader   createloader instance   classpathutils newinstance classname  loader buildexception e classpathutils newinstance classname  scriptdef getclassloader     
+              
+ 
+            getproject   setprojectreference instance instance buildexception       name      is unable to create   
+                   the      elementname      nested element instance executescript map attributes  map elements    
+        executescript attributes  elements executescript map attributes  map elements  scriptdefbase instance    
+        runner addbean  attributes   attributes   
+        runner addbean  elements   elements   
+        runner addbean  project   getproject instance runner addbean  self runner executescript  scriptdef_    name setmanager manager    
+        helper setmanager manager setlanguage language    
+        helper setlanguage language setsrc file file    
+        helper setsrc file addtext text    
+        helper addtext text   
+      
+  
+org apache tools ant taskdefs optional script ScriptDef

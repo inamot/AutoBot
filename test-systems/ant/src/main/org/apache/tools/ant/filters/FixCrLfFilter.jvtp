@@ -1,0 +1,350 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   converts text local os formatting conventions well repair text 
+   damaged misconfigured misguided editors file transfer programs  
+    p filter take following arguments  
+    ul  
+    li eof 
+    li eol 
+    li fixlast 
+    li javafiles 
+    li tab 
+    li tablength 
+     ul  
+   none required  
+    p version generalises handling eol characters allows cr-only line endings standard mac systems prior os x   tab 
+   handling generalised accommodate any tabwidth 2 80  
+   inclusive  importantly leave untouched any literal tab characters 
+   embedded within java string character constants  
+    p  
+    em caution   em  run care carefully formatted files may 
+   sound obvious don't specify asis  presume files going modified tabs add remove   whitespace characters 
+   may added removed necessary  similarly eols  eol  asis  
+   actually means convert native o s eol convention eol  crlf cr  add result cr characters being removed one special case 
+   accommodated e   crcrlf regarded single eol handle cases programs converted crlf crcrlf  
+   
+    p  
+   example  
+   
+    pre  
+    lt  lt fixcrlf tab  quot add quot  eol  quot crlf quot  eof  quot asis quot   gt  
+     pre pre  
+    lt filterreader classname  quot org apache tools ant filters fixcrlffilter quot  gt  
+      lt param eol  quot crlf quot  tab  quot asis quot   gt  
+     lt  filterreader gt  
+     pre  
+   
+    
+    
+       constructor dummy  instances  
+       
+        see basefilterreader#basefilterreader   
+        
+    
+       create new filtered reader  
+       
+        param reader object providing underlying stream  must not code null  code   
+        throws ioexception error  
+        
+   instance initializer  executes super   call class's constructor  
+    
+       create new fixcrlffilter using passed reader instantiation  
+       
+        param rdr reader object providing underlying stream  must not code null  code   
+       
+        return new filter based configuration filtering specified reader dos eof  control-z  characters being handled  
+       
+        return values  
+                ul  
+                li add  ensure eof end file 
+                li asis  leave eof characters alone 
+                li remove  remove any eof character found end 
+                 ul  
+        
+   return copy call must call seteof change state fixcrlf endofline characters being handled  
+       
+        return values  
+                ul  
+                li asis  convert line endings o s convention 
+                li cr  convert line endings cr 
+                li lf  convert line endings lf 
+                li crlf  convert line endings crlf 
+                 ul  
+        
+   return copy call must call seteol change state fixcrlf whether missing eol added final line stream  
+       
+        return true filtered file always end eol whether stream treated though contains java 
+       source  
+        p attribute only used assocation quot b tab  b quot  
+       attribute  tabs found java literals protected changes filter  
+       
+        return true whitespace java character string literals ignored  
+        
+    
+       return tab characters being handled  
+       
+        return values  
+                ul  
+                li add  convert sequences spaces span tab stop tabs 
+                li asis  leave tab space characters alone 
+                li remove  convert tabs spaces 
+                 ul  
+        
+   return copy caller must call settab change state fixcrlf tab length use  
+       
+        return length tab spaces 
+        
+   calculate eol string per current config 
+   assume  eol    crlf lf    eol    crlf unix  
+    
+       wrap input stream internal filters necessary perform configuration settings m removing eof character first filters don't see character  
+   change eol characters match calculated eol string configured append trailing eol file ends eol filtering java source  prevent changes whitespace character string literals  
+   add remove tabs 
+   add missing eof character 
+    
+       return next character filtered stream  
+       
+        return next character resulting stream 1 end resulting stream reached  
+       
+        exception ioexception underlying stream throws ioexception during 
+                      reading  
+        
+    
+       specify dos eof  control-z  characters handled  
+       
+        param attr 
+                  valid values  
+                   ul  
+                   li add  ensure eof end file 
+                   li asis  leave eof characters alone 
+                   li remove  remove any eof character found end 
+                    ul  
+        
+    
+       specify end line  eol  characters handled  
+       
+        param attr 
+                  valid values  
+                   ul  
+                   li asis  convert line endings o s convention 
+                   li cr  convert line endings cr 
+                   li lf  convert line endings lf 
+                   li crlf  convert line endings crlf 
+                    ul  
+        
+    
+       specify whether missing eol added final line input  
+       
+        param fixlast true missing eol appended  
+        
+    
+       indicate whether stream contains java source attribute only used assocation quot b tab  b quot  
+       attribute  
+       
+        param javafiles 
+                  set true prevent filter changing tabs found java literals  
+        
+    
+       specify tab characters handled  
+       
+        param attr 
+                  valid values  
+                   ul  
+                   li add  convert sequences spaces span tab stop tabs 
+                   li asis  leave tab space characters alone 
+                   li remove  convert tabs spaces 
+                    ul  
+        
+    
+       specify tab length characters  
+       
+        param tablength 
+                  specify length tab spaces  valid values between 
+                  2 80 inclusive default parameter 8  
+        throws ioexception error filter reader redirects read o methods through read   
+       method  
+       
+        p input stream already buffered copy task doesn't 
+       significantly impact performance makes writing individual 
+       fix filters much easier  
+         p filter want block edits last character returned read eof characters buffer  return eof 
+   mask  block being edited characters constants current character always emitted  
+   fall tru 
+   fall tru 
+   fall tru current character always emitted  
+   eol 
+   fall tru current character always emitted  
+   fall tru current character always emitted current character always emitted  
+   fall tru 
+   fall tru 
+   eol n  
+   eol r\r\n  
+   eol r\r  - handle two consecutive  \r r  
+   eol r\n  
+   eol r  
+   fall tru source eof last character not ctrl-z  return ctrl-z source eof lookahead ctrl-z  return eof  not ctrl-z  
+   return current look-ahead 
+   fall tru 
+    
+       enumerated attribute values  asis    add remove   
+        
+      inheritdoc      
+    
+           equality depending index  
+            param object test equality against  
+            return true object same index hashcode depending index  
+            return index hashcode  
+            
+   works clone doesn't show up javadocs 
+    
+           create instance enumerated value based string value  
+            param value value use  
+            return enumerated instance  
+            
+    
+       enumerated attribute values  asis    cr    lf crlf   
+        
+    
+            see enumeratedattribute#getvalues 
+            
+      inheritdoc      
+    
+           equality depending index  
+            param object test equality against  
+            return true object same index hashcode depending index  
+            return index hashcode  
+            
+   works clone doesn't show up javadocs 
+    
+           create instance enumerated value based string value  
+            param value value use  
+            return enumerated instance  
+           org apache tools ant filters FixCrLfFilter org apache tools ant filters fixcrlffilter baseparamfilterreader chainablereader fixcrlffilter fixcrlffilter reader in ioexception in   
+      
+ 
+      
+      
+      
+        tabs   addasisremove asis os isfamily  mac       os isfamily  unix      
+            ctrlz   addasisremove remove  
+            seteol crlf mac os isfamily  dos      
+            ctrlz   addasisremove asis  
+            seteol crlf dos ctrlz   addasisremove remove  
+            seteol crlf unix reader chain reader rdr fixcrlffilter newfilter fixcrlffilter rdr   
+ 
+            newfilter setjavafiles getjavafiles     
+            newfilter seteol geteol     
+            newfilter settab gettab     
+            newfilter settablength gettablength     
+            newfilter seteof geteof     
+            newfilter setfixlast getfixlast     
+            newfilter initinternalfilters newfilter ioexception e buildexception e addasisremove geteof ctrlz newinstance crlf geteol eol newinstance getfixlast fixlast getjavafiles javafiles addasisremove gettab tabs newinstance gettablength tablength calculateeolstring crlf eol eol    crlf asis system getproperty  line separator eol    crlf cr    eol    crlf mac r eol    crlf crlf    eol    crlf dos r\n n initinternalfilters     
+ 
+          
+          
+        in    ctrlz    addasisremove remove removeeoffilter in    in  
+ 
+          
+          
+          
+        in normalizeeolfilter in  calculateeolstring eol   getfixlast tabs    addasisremove asis getjavafiles      
+                in maskjavatabliteralsfilter in   
+              
+              
+            in    tabs    addasisremove add  ?  reader addtabfilter in  gettablength    
+                       reader removetabfilter in  gettablength     
+          
+          
+        in    ctrlz    addasisremove add addeoffilter in    in  
+        initialized read ioexception initialized    
+            initinternalfilters in read seteof addasisremove attr    
+        ctrlz   attr resolve seteol crlf attr    
+        eol   attr resolve setfixlast fixlast fixlast   fixlast setjavafiles javafiles javafiles   javafiles settab addasisremove attr    
+        tabs   attr resolve settablength tablength ioexception tablength   2    tablength   80 ioexception  tablength must be between 2 and 80 tablength   tablength simplefilterreader reader simplefilterreader reader in in   in push c    
+            push c push c preempt preemptindex      c arrayindexoutofboundsexception e p2 preempt length   2   
+                system arraycopy preempt  0  p2  0  preempt length   
+                preempt   p2  
+                push c push cs start length i   start   length - 1  i    start     
+                push cs i push cs    
+            push cs  0  cs length push s    
+            push s tochararray editsblocked in simplefilterreader      simplefilterreader  in  editsblocked read java io ioexception preemptindex   0 ? preempt --preemptindex    in read close java io ioexception   
+            in close reset ioexception   
+            in reset marksupported in marksupported ready java io ioexception in ready mark i java io ioexception   
+            in mark i skip i java io ioexception in skip i read buf java io ioexception read buf  0  buf length read buf start length java io ioexception count   0 c   0 length--   0     c read       -1    
+                buf start c  
+                count count    0    c    -1  ? -1   count maskjavatabliteralsfilter simplefilterreader maskjavatabliteralsfilter reader in in   
+            state   java editsblocked editsblocked editsblocked read ioexception thischar read    
+              
+            editsblocked    state    in_char_const    state    in_str_const state java thischar state   in_char_const state   in_str_const state   trans_to_comment in_char_const thischar state   java in_str_const thischar state   java in_single_comment thischar n r'    
+                    state   java in_multi_comment thischar state   trans_from_multi trans_to_comment thischar state   in_multi_comment state   in_single_comment state   in_char_const state   in_str_const state   java trans_from_multi thischar state   java default thischar normalizeeolfilter simplefilterreader normalizeeolfilter reader in eolstring fixlast in   
+            eol   eolstring tochararray fixlast   fixlast read ioexception thischar read normalizedeol    0 numeol   0 atend thischar ctrlz c read c    -1    
+                        atend fixlast     previouswaseol    
+                            numeol   1  
+                            push thischar push c 1  
+                    atend fixlast     previouswaseol    
+                        numeol   1 n'  
+                      
+                    numeol   1 r'  
+                    numeol   1 c1 read c2 read c1    '\r'    c2    '\n c1    '\r'    
+                          
+                          
+                        numeol   2  
+                        push c2 c1    '\n'    
+                          
+                        push c2 push c2   
+                        push c1 numeol   0 numeol--   0    
+                        push eol   
+                        normalizedeol    eol length  
+                      
+                    previouswaseol thischar   read atend    
+                    previouswaseol normalizedeol thischar addeoffilter simplefilterreader addeoffilter reader in in read ioexception thischar read thischar    -1 lastchar    ctrlz    
+                    lastchar   ctrlz lastchar lastchar   thischar thischar removeeoffilter simplefilterreader removeeoffilter reader in in lookahead   in read ioexception e    
+                lookahead   -1 read ioexception lookahead2 read lookahead2    -1    lookahead    ctrlz 1 i   lookahead  
+            lookahead   lookahead2 i addtabfilter simplefilterreader addtabfilter reader in tablength in tablength   tablength read ioexception c read c r n'  
+                columnnumber   0 columnnumber editsblocked colnexttab     columnnumber   tablength - 1    tablength    tablength countspaces   1 numtabs   0  
+ 
+                    scanwhitespace c read       -1 c columnnumber    colnexttab    
+                                numtabs    
+                                countspaces   0  
+                                colnexttab    tablength countspaces t'  
+                            columnnumber   colnexttab  
+                            numtabs    
+                            countspaces   0  
+                            colnexttab    tablength push c scanwhitespace countspaces--   0    
+                        push ' '   
+                        columnnumber numtabs--   0    
+                        push '\t'   
+                        columnnumber -  tablength  
+                      
+                    c read c columnnumber t'  
+                        columnnumber    tablength t'  
+                columnnumber     columnnumber   tablength - 1    tablength    tablength columnnumber c removetabfilter simplefilterreader removetabfilter reader in tablength in tablength   tablength read ioexception c read c r n'  
+                columnnumber   0 t width   tablength - columnnumber % tablength editsblocked width   1  width--    
+                        push ' '   
+                      
+                    c   ' '  
+                  
+                columnnumber    width columnnumber c addasisremove enumeratedattribute getvalues add    asis    remove equals object other other addasisremove 
+                       getindex        addasisremove  other  getindex hashcode getindex    
+          
+ 
+        addasisremove resolve illegalstateexception equals asis asis equals add add equals remove remove illegalstateexception  no replacement addasisremove newinstance newinstance getvalue addasisremove newinstance value    
+            addasisremove a addasisremove    
+            a setvalue value a crlf enumeratedattribute getvalues asis    cr    lf    crlf    mac    unix    dos equals object other other crlf    getindex        crlf  other  getindex hashcode getindex    
+          
+ 
+        crlf resolve equals asis asis equals cr equals mac cr equals crlf equals dos crlf equals lf equals unix lf illegalstateexception  no replacement crlf newinstance newinstance getvalue crlf newinstance value    
+            crlf c crlf    
+            c setvalue value c  
+          
+      
+ org apache tools ant filters FixCrLfFilter

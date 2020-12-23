@@ -26,7 +26,8 @@ public class Evaluator
 	private static String promMConfigFile = "test-systems/prom/config-prom.json";
 	private static String jittacConfigFile = "test-systems/jittac/config-jittac.json";
 	private static String argoumlConfigFile = "test-systems/argouml/config-argouml.json";
-	private static String apodefenceConfigFile = "test-systems/apodefence/config-apodefence.json";
+	private static String antConfigFile = "test-systems/ant/config-ant.json";
+	private static String teammatesConfigFile = "test-systems/teammates/config-teammates.json";
 	private static boolean createIndex = true;
 	private static String testingNote = "TESTING: ...";
 	private static Program program = new Program();
@@ -290,20 +291,23 @@ public class Evaluator
 	
 	public static void main( String[] agrs ) 
 	{
-		//loadConfigSettings( jabrefConfigFile );
+		/*loadConfigSettings( antConfigFile );
 		//nonThreadedEvaluation();
 		
-		loadConfigSettings( promMConfigFile );
+		loadConfigSettings( argoumlConfigFile );
 		nonThreadedEvaluation();
 		
-		//loadConfigSettings( jittacConfigFile );
-		//nonThreadedEvaluation();
+		loadConfigSettings( jabrefConfigFile );
+		nonThreadedEvaluation();*/
 		
-		//loadConfigSettings( argoumlConfigFile );
-		//nonThreadedEvaluation();
+		loadConfigSettings( jittacConfigFile );
+		nonThreadedEvaluation();
+
+		/*loadConfigSettings( promMConfigFile );
+		nonThreadedEvaluation();
 		
-		//loadConfigSettings( apodefenceConfigFile );
-		//nonThreadedEvaluation();
+		loadConfigSettings( teammatesConfigFile );
+		nonThreadedEvaluation();*/
 	}
 	
 	public static void nonThreadedEvaluation()

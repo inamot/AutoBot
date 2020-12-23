@@ -1,0 +1,73 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   creates ear archive  based war task ant 1 4 
+   
+    ant task category  packaging  
+    
+    
+       create ear task  
+        
+    
+       set destination file  
+        param earfile destination file 
+        deprecated 1 5 x  
+                   use setdestfile destfile  instead  
+        
+    
+       file incorporate application xml  
+        param descr descriptor file 
+        
+   create zipfileset file pass up  
+    
+       adds zipfileset  
+       
+        param fs zipfileset add set prefix fileset pass up need lh 
+    
+       initialize output stream  
+        param zout zip output stream  
+        throws ioexception o errors 
+        throws buildexception errors webxml file specified s error  
+    
+       overridden zip class deal application xml 
+        param file file add archive 
+        param zout stream write param vpath name entry shall archive 
+        param mode unix permissions set  
+        throws ioexception error file being added meta-inf application xml warn s not one specified appxml  
+   attribute s being added twice  meaning same 
+   file specified appxml  attribute fileset  element  
+    
+       make sure don't think already application xml next 
+       time task gets executed  
+       org apache tools ant taskdefs Ear org apache tools ant taskdefs ear jar ear archivetype    ear   
+        emptybehavior    create setearfile file earfile    
+        setdestfile earfile setappxml file descr    
+        deploymentdescriptor   descr deploymentdescriptor exists buildexception  deployment descriptor    
+                                       deploymentdescriptor 
+                                         does not exist     
+          
+ 
+          
+        zipfileset fs zipfileset    
+        fs setfile deploymentdescriptor   
+        fs setfullpath  meta-inf application xml addfileset fs addarchives zipfileset fs    
+          
+          
+        fs setprefix addfileset fs initzipoutputstream zipoutputstream zout ioexception  buildexception deploymentdescriptor isinupdatemode buildexception  appxml attribute is required   getlocation initzipoutputstream zout zipfile file file  zipoutputstream zout vpath mode ioexception vpath equalsignorecase  meta-inf application xml deploymentdescriptor file_utils filenameequals deploymentdescriptor  file  
+                   descriptoradded    
+                log  warning  selected     archivetype 
+                        files include a meta-inf application xml which will  
+                        be ignored  please use appxml attribute to   
+                      archivetype     task    project msg_warn zipfile file  zout  vpath  mode   
+                descriptoradded zipfile file  zout  vpath  mode cleanup     
+        descriptoradded cleanup    
+      
+ org apache tools ant taskdefs Ear

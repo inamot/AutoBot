@@ -1,0 +1,82 @@
+ 
+    
+   action  edits profile picture based coordinates cropped photograph branch covered uitests  look todo transformimage    
+   happens gcs service down branch covered uitests following method not behave same dev staging  
+               todo  find way cover action tests  
+                
+    
+       checks information given via post valid  
+        
+    
+       gets parameters request ensures not null  
+       teammates ui controller StudentProfilePictureEditAction teammates ui controller studentprofilepictureeditaction action   
+ 
+  
+  
+  
+  
+  
+  
+  
+  
+ 
+     override actionresult execute     
+        gatekeeper verifyloggedinuserprivileges    
+        readallpostparametervaluestofields validatepostparameters createredirectresult actionuris student_profile_page transformedimage transformimage iserror    
+                  
+                googlecloudstoragehelper writeimagedatatogcs account googleid  transformedimage ioexception e    
+              
+            iserror statustouser add statusmessage statusmessages student_profile_pic_service_down  
+                                               statusmessagecolor danger    
+            statustoadmin action_result_failure       writing transformed image to file failed  error    
+                            e getmessage createredirectresult actionuris student_profile_page transformimage image newimage   gettransformedimage newimage getimagedata runtimeexception re    
+            iserror statustouser add statusmessage statusmessages student_profile_picture_edit_failed  
+                                               statusmessagecolor danger    
+            statustoadmin action_result_failure       reading and transforming image failed   
+                            re getmessage 0 image gettransformedimage     
+        assumption assertnotnull blobkey   
+ 
+        image oldimage   imagesservicefactory makeimagefromblob blobkey   
+        compositetransform finaltransform   getcompositetransformtoapply    
+        outputsettings settings outputsettings imagesservice outputencoding png imagesservicefactory getimagesservice   applytransform finaltransform  oldimage  settings transform getscaletransform width parsedouble widthstring height parsedouble heightstring imagesservicefactory makeresize math round width math round height transform getrotatetransform rotate parsedouble rotatestring imagesservicefactory makerotate math round rotate transform getcroptransform height parsedouble heightstring width parsedouble widthstring leftx parsedouble leftxstring    width topy parsedouble topystring    height rightx parsedouble rightxstring    width bottomy parsedouble bottomystring    height imagesservicefactory makecrop leftx  topy  rightx  bottomy compositetransform getcompositetransformtoapply     
+        transform standardcompress   imagesservicefactory makeresize 150  150 imagesservicefactory makecompositetransform   
+                 concatenate getscaletransform    
+                 concatenate getrotatetransform    
+                 concatenate getcroptransform    
+                 concatenate standardcompress validatepostparameters leftxstring isempty      topystring isempty   
+                   rightxstring isempty      bottomystring isempty      
+            iserror statustouser add statusmessage  given crop locations were not valid  please again   
+                                               statusmessagecolor danger    
+            statustoadmin action_result_failure       one or more of the given coords were empty heightstring isempty      widthstring isempty      
+            iserror statustouser add statusmessage  given crop locations were not valid  please again   
+                                               statusmessagecolor danger    
+            statustoadmin action_result_failure       one or both of the image dimensions were empty parsedouble widthstring     0 parsedouble heightstring     0    
+            iserror statustouser add statusmessage  given crop locations were not valid  please again   
+                                               statusmessagecolor danger    
+            statustoadmin action_result_failure       one or both of the image dimensions were zero readallpostparametervaluestofields     
+        leftxstring   getleftxstring    
+        topystring   gettopystring    
+        rightxstring   getrightxstring    
+        bottomystring   getbottomystring    
+        heightstring   getpictureheight    
+        widthstring   getpicturewidth    
+        blobkey   getblobkey    
+        rotatestring   getrotatestring blobkey getblobkey     
+        assumption assertpostparamnotnull paramsnames blob_key  
+                                          getrequestparamvalue paramsnames blob_key blobkey getrequestparamvalue paramsnames blob_key getpicturewidth     
+        assumption assertpostparamnotnull paramsnames profile_picture_width  
+                                          getrequestparamvalue paramsnames profile_picture_width getrequestparamvalue paramsnames profile_picture_width getpictureheight     
+        assumption assertpostparamnotnull paramsnames profile_picture_height  
+                                          getrequestparamvalue paramsnames profile_picture_height getrequestparamvalue paramsnames profile_picture_height getbottomystring     
+        assumption assertpostparamnotnull paramsnames profile_picture_bottomy  
+                                          getrequestparamvalue paramsnames profile_picture_bottomy getrequestparamvalue paramsnames profile_picture_bottomy getrightxstring     
+        assumption assertpostparamnotnull paramsnames profile_picture_rightx  
+                                          getrequestparamvalue paramsnames profile_picture_rightx getrequestparamvalue paramsnames profile_picture_rightx gettopystring     
+        assumption assertpostparamnotnull paramsnames profile_picture_topy  
+                                          getrequestparamvalue paramsnames profile_picture_topy getrequestparamvalue paramsnames profile_picture_topy getleftxstring     
+        assumption assertpostparamnotnull paramsnames profile_picture_leftx  
+                                          getrequestparamvalue paramsnames profile_picture_leftx getrequestparamvalue paramsnames profile_picture_leftx getrotatestring     
+        assumption assertpostparamnotnull paramsnames profile_picture_rotate  
+                                          getrequestparamvalue paramsnames profile_picture_rotate getrequestparamvalue paramsnames profile_picture_rotate   
+      
+ teammates ui controller StudentProfilePictureEditAction

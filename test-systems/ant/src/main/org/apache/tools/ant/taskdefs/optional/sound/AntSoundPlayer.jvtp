@@ -1,0 +1,89 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+   ant includes class designed used any anttask requires audio output implements buildlistener interface listen buildevents easily extended provide audio output upon any specific build events occuring only tested wav aiff sound file formats  both seem work fine  
+   
+    
+    constructor antsoundplayer     
+    
+        param file location audio file played build successful 
+        param loops number times file played build successful 
+        param duration number milliseconds file played build successful 
+        
+    
+        param filefail location audio file played build fails 
+        param loopsfail number times file played build fails 
+        param durationfail number milliseconds file played build fails 
+        
+    
+       plays file duration milliseconds loops  
+        
+   empty block 
+   ignore exception implemented listen any line events closes clip required  
+        param event line event follow bug javasound 0 90  jdk1 3beta prevents correct termination vm exit ourselves  
+                
+  system exit 0   
+    
+        fired before any targets started  
+        param event ignored 
+        
+    
+        fired last target finished event still thrown error occurred during build  
+        param event build finished event  
+         see buildevent#getexception   
+        
+   build successfull  
+    
+        fired target started  
+        param event ignored  
+         see buildevent#gettarget   
+        
+    
+        fired target finished event still thrown error occurred during build  
+        param event ignored  
+         see buildevent#getexception   
+        
+    
+        fired task started  
+        param event ignored  
+         see buildevent#gettask   
+        
+    
+        fired task finished event still throw error occurred during build  
+        param event ignored  
+         see buildevent#getexception   
+        
+    
+        fired whenever message logged  
+         param event build event 
+         see buildevent#getmessage   
+         see buildevent#getpriority   
+       org apache tools ant taskdefs optional sound AntSoundPlayer org apache tools ant taskdefs optional sound antsoundplayer linelistener  buildlistener antsoundplayer addbuildsuccessfulsound file file loops duration filesuccess   file loopssuccess   loops durationsuccess   duration addbuildfailedsound file filefail loopsfail durationfail filefail   filefail loopsfail   loopsfail durationfail   durationfail play project project  file file loops duration    
+ 
+        clip audioclip audioinputstream audioinputstream audioinputstream   audiosystem getaudioinputstream file unsupportedaudiofileexception uafe    
+            project log  audio format is not yet supported    
+                  uafe getmessage ioexception ioe    
+            ioe printstacktrace audioinputstream audioformat format   audioinputstream getformat    
+            dataline info   info dataline info clip format  
+                                             audiosystem not_specified audioclip    clip  audiosystem getline info   
+                audioclip addlinelistener audioclip open audioinputstream lineunavailableexception e    
+                project log  the sound device is currently unavailable ioexception e    
+                e printstacktrace duration playclip audioclip  duration longvalue playclip audioclip  loops   
+              
+            audioclip drain    
+            audioclip close project log  can't get data from file     file getname playclip clip clip loops    
+ 
+        clip loop loops clip isrunning playclip clip clip duration    
+        clip loop clip loop_continuously thread sleep duration interruptedexception e update lineevent event event gettype   equals lineevent type stop     
+            line line   event getline    
+            line close event gettype   equals lineevent type close buildstarted buildevent event buildfinished buildevent event event getexception filesuccess play event getproject    filesuccess  loopssuccess  durationsuccess event getexception filefail play event getproject    filefail  loopsfail  durationfail targetstarted buildevent event targetfinished buildevent event taskstarted buildevent event taskfinished buildevent event messagelogged buildevent event    
+      
+  
+org apache tools ant taskdefs optional sound AntSoundPlayer

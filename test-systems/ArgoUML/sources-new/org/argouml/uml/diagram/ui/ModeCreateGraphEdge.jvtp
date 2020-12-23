@@ -1,0 +1,112 @@
+ 
+   $id$ 
+   copyright  c  2005-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications mode interpret user input creating edge edge connect any two model element prooviding isconnectionvalid 
+   return true fig drawing starts  either fignode figedge 
+        
+   
+        see java awt event mouselistener#mousepressed java awt event mouseevent re drawing edge 
+   
+        see org tigris gef base modecreatepolyedge#mousereleased java awt event mouseevent  
+        
+   user made false start 
+   calling connect add edge graphmodel any layerpersectives graphmodel edgeadded event add appropriate figedge 
+    determined graphedgerenderer new edge implements mouselistener 
+   interface receive mousereleased   event 
+   set new edge place 
+    
+       return meta type element mode designed create case dependency metatype  
+        return dependency meta type  
+        
+    
+       called edge drawn source dropped destination  return true drop valid default true  subclasses override logic  
+        param source source fig 
+        param dest dest fig 
+        return true drop edge valid  
+       org argouml uml diagram ui ModeCreateGraphEdge org argouml uml diagram ui modecreategraphedge modecreatepolyedge logger log   
+	logger getlogger modecreategraphedge override mousepressed mouseevent me x   me getx    y   me gety    
+        fig undermouse   editor hit x  y undermouse undermouse   editor hit x - 16  y - 16  32  32 undermouse _npoints    0    
+            done    
+            me consume _npoints   0    
+            me consume sourcefig   undermouse undermouse figedgemodelelement 
+                     undermouse figedgenote     
+              
+ 
+            figedgemodelelement sourceedge    figedgemodelelement  undermouse  
+            sourceedge makeedgeport    
+            figedgeport edgeport   sourceedge getedgeport    
+            sourceedge computeroute    
+ 
+            undermouse   edgeport  
+            setsourcefignode edgeport   
+            setstartport sourcefig getowner     
+            setstartportfig edgeport undermouse fignodemodelelement getsourcefignode setsourcefignode  fignode  undermouse   
+                setstartport getsourcefignode   deephitport x  y getstartport done    
+                me consume setstartportfig  
+                    getsourcefignode   getportfig getstartport done    
+            me consume createfig me   
+        me consume    
+      
+     
+      
+     override mousereleased mouseevent me me isconsumed getsourcefignode done    
+            me consume x   me getx    y   me gety    
+        fig destfig   editor hit x  y destfig destfig   editor hit x - 16  y - 16  32  32   
+          
+        mutablegraphmodel graphmodel   
+             mutablegraphmodel  editor getgraphmodel isconnectionvalid sourcefig  destfig     
+            destfig log info  connection valid destfig figedgemodelelement 
+                     destfig figedgenote     
+            figedgemodelelement destedge    figedgemodelelement  destfig  
+            destedge makeedgeport    
+            destfig   destedge getedgeport    
+            destedge computeroute destfig fignodemodelelement    
+            fignode destfignode    fignode  destfig  
+            object foundport   destfignode getowner foundport    getstartport      _npoints   4    
+                  
+                done    
+                me consume foundport fig destportfig   destfignode getportfig foundport   
+                figpoly p    figpoly  _newitem foundport    getstartport      _npoints    4    
+                    p setselfloop editor damageall    
+                p setcomplete log info  connecting    
+                object modelelement   graphmodel connect  
+                        getstartport     
+                        foundport   
+                        getmetatype     
+                setnewedge modelelement getnewedge getsourcefignode   damage    
+                    destfignode damage    
+                    layer lay   editor getlayermanager   getactivelayer    
+                    figedge fe    figedge  lay presentationfor getnewedge     
+                    _newitem setlinecolor color black   
+                    fe setfig _newitem   
+                    fe setsourceportfig getstartportfig     
+                    fe setsourcefignode getsourcefignode     
+                    fe setdestportfig destportfig   
+                    fe setdestfignode destfignode fe editor getselectionmanager   select fe   
+                      
+                    editor damageall fe mouselistener    
+                          mouselistener  fe  mousereleased me getsourcefignode getsourcefignode   updateedges destfignode destfignode updateedges    
+                      
+                    endattached fe   
+                  
+                done    
+                me consume nearlast x  y     
+            editor damageall    
+            point snappt point x  y   
+            editor snap snappt   
+              figpoly  _newitem  addpoint snappt x  snappt y   
+            _npoints    
+            editor damageall    
+          
+        _lastx   x  
+        _lasty   y  
+        me consume object getmetatype isconnectionvalid fig source  fig dest model getumlfactory   isconnectionvalid  
+		getmetatype     
+		source getowner     
+		dest getowner org argouml uml diagram ui ModeCreateGraphEdge

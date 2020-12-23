@@ -1,0 +1,189 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license default implementation rmicadapter interface  
+   currently cut paste original rmic task defaultcopmpileradapter ant 1 4 
+    
+    suffix denoting stub file    
+    suffix denoting skel file    
+    suffix denoting tie file    
+    arg compat    
+    arg 1 1    
+    arg 1 2    
+    
+       default constructor 
+        
+    
+       sets rmic attributes 
+        param attributes rmic attributes rmic attributes 
+        return attributes rmic taskdef 
+        
+    
+       gets stub class suffix 
+        return stub suffix  quot _stub quot  
+        
+    
+       gets skeleton class suffix 
+        return skeleton suffix  quot _skel quot  
+        
+    
+       gets tie class suffix 
+        return tie suffix  quot _tie quot implementation returns mapper may return up two 
+       file names  
+       
+        ul  
+          li jrmp return  _getstubclasssuffix _getskelclasssuffix jdk 1 1 used   li  
+       
+          li idl return random name  causing  lt rmic gt always recompile   li  
+       
+          li iiop return _ _getstubclasssuffix interfaces _ _getstubclasssuffix non-interfaces determine interface create _ _stub li  
+         ul  
+        return code filenamemapper  code  
+        
+    
+       gets classpath rmic process use  
+        return classpath 
+        
+    
+       builds compilation classpath  
+        return classpath 
+        
+   add dest dir classpath previously compiled untouched classes classpath 
+   combine build classpath system classpath order determined value build sysclasspath 
+    
+       setup rmic argument rmic  
+        return command line 
+        
+    
+       setup rmic argument rmic  
+        param options additional parameters needed specific 
+                      implementation  
+        return command line 
+        
+  handle many different stub options  
+  default compatibility 
+  anything nothing value go -v stubversion java1 5 generate compatible stubs unless caller asked idl iiop support  
+  set non-null stuboption 
+    
+       logs compilation parameters  adds files compile logs quot nicesourcelist quot  
+        param cmd commandline args 
+        
+    
+       mapper may return up two file names  
+       
+        ul  
+          li jrmp return  _getstubclasssuffix _getskelclasssuffix jdk 1 1 used   li  
+       
+          li idl return random name  causing  rmic always recompile   li  
+       
+          li iiop return _ _getstubclasssuffix interfaces _ _getstubclasssuffix non-interfaces determine interface create _ _stub li  
+         ul  
+        
+    
+           empty implementation  
+            
+    
+           empty implementation  
+            
+   not class file one d generate know name endswith   class   
+   
+               fallback case trouble loading class don't know handle easy way know idl mode generate supposed make ant always recompile class file name not exist  
+                
+   jrmp simple naming convention know not necessary prefer explicit  sb package 
+   only stub tie 
+   
+                           stub derived implementation  
+                           tie interface name packageorg apache tools ant taskdefs rmic DefaultRmicAdapter org apache tools ant taskdefs rmic defaultrmicadapter rmicadapter rmi_stub_suffix    _stub rmi_skel_suffix    _skel rmi_tie_suffix    _tie stub_compat    -vcompat stub_1_1    -v1 1 stub_1_2    -v1 2 defaultrmicadapter setrmic rmic attributes attributes   attributes  
+        mapper rmicfilenamemapper rmic getrmic attributes getstubclasssuffix rmi_stub_suffix getskelclasssuffix rmi_skel_suffix gettieclasssuffix rmi_tie_suffix filenamemapper getmapper mapper path getclasspath getcompileclasspath path getcompileclasspath     
+        path classpath path attributes getproject     
+          
+          
+        classpath setlocation attributes getbase     
+ 
+          
+          
+ 
+        path cp   attributes getclasspath cp cp path attributes getproject attributes getincludeantruntime      
+            classpath addexisting cp concatsystemclasspath  last classpath addexisting cp concatsystemclasspath  ignore attributes getincludejavaruntime      
+            classpath addjavaruntime classpath commandline setuprmiccommand setuprmiccommand commandline setuprmiccommand options    
+        commandline cmd commandline options i   0  i   options length  i      
+                cmd createargument   setvalue options i    
+              
+          
+ 
+        path classpath   getcompileclasspath    
+ 
+        cmd createargument   setvalue  -d    
+        cmd createargument   setfile attributes getbase attributes getextdirs cmd createargument   setvalue  -extdirs    
+            cmd createargument   setpath attributes getextdirs     
+          
+ 
+        cmd createargument   setvalue  -classpath    
+        cmd createargument   setpath classpath stubversion   attributes getstubversion stuboption null    stubversion 1 1  equals stubversion     
+                stuboption   stub_1_1 1 2  equals stubversion     
+                stuboption   stub_1_2 compat  equals stubversion     
+                stuboption   stub_compat attributes log  unknown stub option     stubversion stuboption attributes getiiop   
+                attributes getidl      
+            stuboption   stub_compat stuboption cmd createargument   setvalue stuboption attributes getsourcebase      
+            cmd createargument   setvalue  -keepgenerated attributes getiiop      
+            attributes log  iiop has been turned on    project msg_info   
+            cmd createargument   setvalue  -iiop attributes getiiopopts attributes log  iiop options      attributes getiiopopts    
+                               project msg_info   
+                cmd createargument   setvalue attributes getiiopopts attributes getidl       
+            cmd createargument   setvalue  -idl    
+            attributes log  idl has been turned on    project msg_info attributes getidlopts cmd createargument   setvalue attributes getidlopts     
+                attributes log  idl options      attributes getidlopts    
+                               project msg_info attributes getdebug      
+            cmd createargument   setvalue  -g    
+          
+ 
+        cmd addarguments attributes getcurrentcompilerargs     
+ 
+        logandaddfilestocompile cmd cmd logandaddfilestocompile commandline cmd    
+        vector compilelist   attributes getcompilelist    
+ 
+        attributes log  compilation     cmd describearguments    
+                       project msg_verbose   
+ 
+        stringbuffer nicesourcelist stringbuffer  file clistsize   compilelist size clistsize    1    
+            nicesourcelist append  s    
+          
+        nicesourcelist append   to be compiled i   0  i   clistsize  i arg compilelist elementat i   
+            cmd createargument   setvalue arg   
+            nicesourcelist append          
+            nicesourcelist append arg   
+          
+ 
+        attributes log nicesourcelist tostring    project msg_verbose rmicfilenamemapper filenamemapper   
+ 
+        rmicfilenamemapper setfrom s setto s mapfilename name name name endswith name endswith getstubclasssuffix name endswith getskelclasssuffix name endswith gettieclasssuffix base   name substring 0  name length   - 6 classname   base replace file separatorchar attributes getverify   
+                    attributes isvalidrmiremote classname target name     tmp     rand nextlong attributes getiiop       attributes getidl 1 2  equals attributes getstubversion       
+                    target base   getstubclasssuffix target base   getstubclasssuffix base   getskelclasssuffix attributes getidl lastslash   base lastindexof file separatorchar dirname index   -1 lastslash    -1    
+                      
+                    index   0 index   lastslash   1  
+                    dirname   base substring 0  index filename   base substring index c   attributes getloader   loadclass classname c isinterface      
+                          
+                        target dirname    _    filename   getstubclasssuffix interf   attributes getremoteinterface c iname   interf getname idir iindex   -1 lastdot   iname lastindexof lastdot    -1    
+                              
+                            iindex   0 iindex   lastdot   1  
+                            idir   iname substring 0  iindex   
+                            idir   idir replace ' '  file separatorchar   
+                          
+ 
+                        target dirname    _    filename   gettieclasssuffix idir    _    iname substring iindex  
+                              getstubclasssuffix classnotfoundexception e    
+                    attributes log  unable to verify classname 
+                                        it could not be found    
+                                   project msg_warn noclassdeffounderror e    
+                    attributes log  unable to verify classname 
+                                        it is not defined    project msg_warn throwable t    
+                    attributes log  unable to verify classname 
+                                        loading caused exception    
+                                     t getmessage    project msg_warn target  
+          
+      
+ org apache tools ant taskdefs rmic DefaultRmicAdapter

@@ -1,0 +1,208 @@
+ 
+   $id$ 
+   copyright  c  1996-2006 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications  
+    
+   class display graphics uml mcompositestate diagram  
+   
+    author jrobbins ics uci edu 
+    
+                                                                 
+   instance variables 
+                                                                 
+   constructors main constructor  
+       
+        
+   add figs fignode back front order 
+  setblinkports false     make port invisble unless mouse enters constructor new fig created existing uml elm  
+       
+        param gm ignored 
+        param node uml element 
+        
+   
+        see java lang object#clone   
+        
+                                                                 
+   accessors 
+   
+        see org tigris gef presentation fig#getminimumsize   
+        
+   
+        see org tigris gef presentation fig#getusetraprect   
+        
+   
+       override setbounds keep shapes looking right  
+       
+        see org tigris gef presentation fig#setboundsimpl int  int  int  int concurrent contains concurrent regions bottom region minimum height   
+  _x   x  _y   y  _w   w  _h   h concurrent contains concurrent regions regions resized resize only new concurrent region added  
+       changing height  
+       
+        param h new height 
+        
+  _x   x  _y   y  _w   w  _h   h  
+   
+        see org tigris gef ui popupgenerator#getpopupactions java awt event mouseevent  
+        
+   check multiple items selected     
+   
+        see org tigris gef presentation fig#setlinecolor java awt color  
+        
+   
+        see org tigris gef presentation fig#getlinecolor   
+        
+   
+        see org tigris gef presentation fig#setfillcolor java awt color  
+        
+   
+        see org tigris gef presentation fig#getfillcolor   
+        
+   
+        see org tigris gef presentation fig#setfilled boolean  
+        
+   
+        see org tigris gef presentation fig#getfilled   
+        
+   
+        see org tigris gef presentation fig#setlinewidth int  
+        
+   
+        see org tigris gef presentation fig#getlinewidth   
+        
+                                                                 
+   event processing 
+   
+       update text labels  
+       
+        see org argouml uml diagram ui fignodemodelelement#modelchanged java beans propertychangeevent  
+        
+   todo split composite state two 
+   regions must implemented 
+   
+        see org argouml uml diagram state ui figstate#getinitialheight   
+        
+   
+        see org argouml uml diagram state ui figstate#getinitialwidth   
+        
+   
+        see org argouml uml diagram state ui figstate#getinitialx   
+        
+   
+        see org argouml uml diagram state ui figstate#getinitialy uid  
+        
+   end class figcompositestate   org argouml uml diagram state ui FigCompositeState org argouml uml diagram state ui figcompositestate figstate figcompositestate cover figrrect getinitialx    getinitialy    
+			      getinitialwidth    getinitialheight    
+			      color black  color white   
+ 
+        getbigport   setlinewidth 0   
+ 
+        divider figline getinitialx    
+			getinitialy     2   getnamefig   getbounds   height   1  
+			getinitialwidth   - 1  
+			getinitialy     2   getnamefig   getbounds   height   1  
+			color black   
+ 
+          
+        addfig getbigport     
+        addfig cover   
+        addfig getnamefig     
+        addfig divider   
+        addfig getinternal     
+ 
+          
+        rectangle r   getbounds    
+        setbounds r x  r y  r width  r height figcompositestate graphmodel gm  object node setowner node object clone     
+        figcompositestate figclone    figcompositestate clone    
+        iterator it   figclone getfigs   iterator    
+        figclone setbigport  figrrect  it next     
+        figclone cover    figrect  it next    
+        figclone setnamefig  figtext  it next     
+        figclone divider    figline  it next    
+        figclone setinternal  figtext  it next figclone dimension getminimumsize     
+        dimension namedim   getnamefig   getminimumsize    
+        dimension internaldim   getinternal   getminimumsize h   
+            space_top   namedim height 
+              space_middle   internaldim height 
+              space_bottom w   
+            math max namedim width   2   margin  
+                     internaldim width   2   margin dimension w  h getusetraprect setstandardbounds x y w h getnamefig rectangle oldbounds   getbounds    
+        dimension namedim   getnamefig   getminimumsize    
+        list regionslist   getenclosedfigs getowner model getfacade   isconcurrent getowner    
+                        regionslist isempty   
+                       regionslist get regionslist size   - 1 figconcurrentregion    
+                figconcurrentregion f     figconcurrentregion  regionslist 
+                         get regionslist size   - 1    
+                rectangle regionbounds   f getbounds h - oldbounds height   regionbounds height  
+                            f getminimumsize   height     
+                    h   oldbounds height  
+                    y   oldbounds y  
+                  
+              
+          
+ 
+        getnamefig   setbounds x   margin  
+                y   space_top  
+                w - 2   margin  
+                namedim height   
+        divider setshape x  
+                y   divider_y   namedim height  
+                x   w - 1  
+                y   divider_y   namedim height   
+ 
+        getinternal   setbounds  
+                x   margin  
+                y   namedim height   space_top   space_middle  
+                w - 2   margin  
+                h - namedim height - space_top - space_middle - space_bottom   
+ 
+        getbigport   setbounds x  y  w  h   
+        cover setbounds x  y  w  h   
+ 
+        calcbounds      
+        updateedges    
+        firepropchange  bounds   oldbounds  getbounds getowner model getfacade   isconcurrent getowner    
+                        regionslist isempty   
+                       regionslist get regionslist size   - 1 figconcurrentregion    
+                figconcurrentregion f     figconcurrentregion  regionslist 
+                         get regionslist size   - 1 i   0  i   regionslist size   - 1  i      
+                      figconcurrentregion  regionslist get i   
+                         setbounds x - oldbounds x  y - oldbounds y  
+                                w - 6 f setbounds x - oldbounds x  
+                        y - oldbounds y  w - 6  h - oldbounds height setbounds h getnamefig rectangle oldbounds   getbounds    
+        dimension namedim   getnamefig   getminimumsize x   oldbounds x y   oldbounds y w   oldbounds width  
+ 
+        getinternal   setbounds  
+                x   2  y   namedim height   4  
+                w - 4  h - namedim height - 6   
+        getbigport   setbounds x  y  w  h   
+        cover setbounds x  y  w  h   
+ 
+        calcbounds      
+        updateedges    
+        firepropchange  bounds   oldbounds  getbounds vector getpopupactions mouseevent me    
+        vector popupactions getpopupactions me ms   targetmanager getinstance   gettargets   size     1 ms    
+            popupactions add  
+                    popupactions size   - getpopupaddoffset actionaddconcurrentregion popupactions setlinecolor color col    
+        cover setlinecolor col   
+        divider setlinecolor col color getlinecolor cover getlinecolor setfillcolor color col    
+        cover setfillcolor col color getfillcolor cover getfillcolor setfilled f    
+        cover setfilled f   
+        getbigport   setfilled f getfilled cover isfilled    
+      
+ 
+     override isfilled cover isfilled setlinewidth w    
+        cover setlinewidth w   
+        divider setlinewidth w getlinewidth cover getlinewidth modelchanged propertychangeevent mee modelchanged mee mee getpropertyname   equals  isconcurrent      
+              
+              
+            renderingchanged getinitialheight 150 getinitialwidth 180 getinitialx 0 getinitialy 0  
+      
+ 
+      
+  
+   org argouml uml diagram state ui FigCompositeState

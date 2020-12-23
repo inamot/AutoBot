@@ -1,0 +1,571 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications  
+    
+    abstract  base class design critics   each subclass define predicate method define relevance tags   p critic supports design goals decisions adjusted 
+   accordingly post todo items may may not relevant particular designer  p  
+   
+   steps follow adding critic listed argo 
+   cookbook under href     cookbook html#define_critic   
+   define_critic author jason robbins 
+    
+    
+       logger  
+        
+                                                                 
+   constants 
+    
+       problem_found used result check critic  
+        
+    
+       no_problem used result check critic keys some predefined control records  
+        
+    
+       type knowledge critics deliver  
+        
+    
+       type knowledge critics deliver  
+        
+    
+       type knowledge critics deliver  
+        
+    
+       type knowledge critics deliver  
+        
+    
+       type knowledge critics deliver  
+        
+    
+       type knowledge critics deliver  
+        
+    
+       type knowledge critics deliver  
+        
+    
+       type knowledge critics deliver  
+        
+    
+       type knowledge critics deliver  
+        
+    
+       type knowledge critics deliver  
+        
+    
+       type knowledge critics deliver function calculates default url describe critic syntax synchronized ol  
+        li tags manual  
+        li name argouml site  
+        li manual deployed site  
+         ol must updated any change  
+       
+        return url string format 
+        
+  argouml-stats tigris org documentation   
+                                                                 
+   instance variables priority todoitem produced headline todoitem produced description todoitem produced moreinfourl todoitem produced  
+        
+    
+       arguments used configure critic  
+       todo removed main critics class? 
+        deprecated 0 25 4 linus tolke way storing information encourages 
+                   violation type safety  
+                   create member attributes instead icon representing resource decision category critic relevant idea each critic being relevant exactly one type decision very simple one   subclasses sophisticated 
+       decision relevance logic override isrelevanttodecisions define new controlmech's   p  
+       
+       decision categories defined decisionmodel particular domain  
+       
+        see controlmech decision type critic example  correctness  
+       completeness  consistency  alternative  presentation  
+       optimization  organizational  tool critics  etc  
+        
+    
+       internal flag stores end result controlmech 
+       evaluations critic  
+        
+    
+       control records used determining critic active  
+        
+                                                                 
+   constructor 
+    
+       construct new critic instance   typically only one instance each critic class created stored static variable per singleton pattern   each domain extension define static initializer block make one instance each critic call   link agency#register critic  object instance  
+        
+   todo hack much better way doing not start critic first place  
+	    
+    
+       returns link org argouml configuration configurationkey critic uses determine enabled disabled  p string resulting configurationkey 
+        code argo critic critic_category critic_name  code   p  
+       
+        code critic_category  code describe type critic taken link #getcriticcategory   p  
+       
+        code critic_name  code describe function critic taken link #getcriticname   p  
+       
+       some examples  p  
+        ul  
+        li argo critic layout overlap 
+        li argo critic uml reservedword 
+        li argo critic java reservedword 
+        li argo critic idl reservedword 
+         ul  
+       
+        see org argouml configuration configuration#makekey string  
+               string  string  
+        see #getcriticcategory 
+        see #getcriticname 0 9 4 
+       
+        return key 
+        
+    
+       returns default critic category  
+       critics override provide specific classification information 0 9 4 
+       
+        return default category 
+        
+    
+       returns default critic name default simple class name  
+       critic implementations override provide better descriptive  string 0 9 4 
+       
+        return default critic name 
+        
+                                                                 
+   critiquing 
+    
+       examine given object designer appropriate  produce one todoitem's add offending design material's designer's todolist default basically simple statement relies predicate determine some appropriate feedback todoitem produce todoitem predicate todoitem   pair methods simple convient many critics sophisticated critics produce one todoitem per critiquing produce 
+       todoitem's contain information already computed predicate override critique override method call super critique    
+       
+        see critic#predicate 
+        see critic#todoitem 
+       
+        param dm design material 
+        param dsgr designer following debug line now single most memory consuming 
+   line whole argouml allocates approximately 18 memory allocated  
+   suggestions solutions  
+   check log debug string  string  method used instead  
+   use two calls now linus comment out  
+   log debug  applying critic      _headline   
+   log debug  predicate   returned true  creating todoitem    
+    
+        param item todo item 
+        param dm designmaterial offender informed 
+        param dsgr designer 
+        
+    
+       perform critic's analysis design  subclasses test given object make sure type object expected   each object design registers critics run-time system dm parameter bound each design object registered critic  one per 
+       call  returning true means feedback delivered designer convention  subclasses return superclass predicate method predicate return false  
+       
+        param dm design material checked 
+        param dsgr designer 
+        return critic result 
+        
+    
+       return true iff given todoitem still valid kept given designers todolist  critics not 
+       enabled always return false todoitems removed  subclasses critic supply multiple offenders always override method   p default method basically asks critic again 
+       critique offending object checks resulting todoitem same one already posted simple works fine light-weight critics  critics expend lot computational effort making feedback easily check see still holds override method   p  
+       
+       todo  maybe todoitem carry some data make method efficient  
+       
+         inheritdoc  
+        
+   now know critic still valid need figure out corresponding item still valid item replaced name some offender changed affects description contents list offenders changed check creating new todoitem verifying looks exactly same really creates lot items goes waste  
+   
+        see org argouml cognitive poster#supports org argouml cognitive decision  
+        
+    
+        param d decision 
+        
+   
+        see org argouml cognitive poster#supports org argouml cognitive goal  
+        
+    
+        param g goal 
+        
+   
+        see org argouml cognitive poster#containsknowledgetype java lang string  
+        
+    
+        param type knowledgetype 
+        
+    
+        return knowledgetypes 
+        
+    
+        param kt knowledgetypes 
+        
+    
+       reset knowledgetypes add given one  
+       
+        param t1 only knowledgetype string format 
+        
+    
+       reset knowledgetypes add given ones  
+       
+        param t1 knowledgetype string format 
+        param t2 knowledgetype string format 
+        
+    
+       reset knowledgetypes add given ones  
+       
+        param t1 knowledgetype string format 
+        param t2 knowledgetype string format 
+        param t3 knowledgetype string format 
+        
+    
+        param s reason 
+        return code given reason 
+        
+    
+        return trigger mask 
+        
+    
+        param s trigger added ored mask  
+        
+    
+        param patterncode mask checked 
+        return true matches trigger 
+        
+   
+        see org argouml cognitive poster#expand java lang string  org argouml cognitive listset  
+        
+   
+        see org argouml cognitive poster#getclarifier   
+        
+                                                                 
+   criticism control 
+    
+       reply true iff critic execute fact normally 
+       determined controlmech  
+       
+        return true iff critic execute 
+        
+    
+       make critic active now applied design material critiquing  
+        
+    
+       make critic inactive now idle not applied design material critiquing  
+        
+    
+       add some attribute used controlmech determine critic active  critics store control record stateful controlmech's not need store parallel data 
+       structure critic's not directy use modify data  
+       
+        param name key 
+        param controldata value 
+        return previous value specified key hashtable code null  code not one 
+        
+    
+       reply named control record null not defined  
+       
+        param name key 
+        return value convient method accessing one well-known control 
+       record enabled control record boolean user turn manually enable disable critic normally combined controlmech determinations logic return true enabled 
+        
+    
+        param e value set key enabled 
+        
+    
+       reply snoozeorder defined critic  
+       
+        return snooze order 
+        
+    
+       disable critic next few minutes  
+        
+    
+       lift any previous snoozeorder  
+        
+    
+       checks critic currently snoozed  
+        return true critic snoozed 
+        
+    
+       reply true critic relevant decisions designer considering default asks designer considering decisioncategory  really something controlmech compute subclass critic encapsulates some information may need override method  
+       
+        param dsgr designer 
+        return true relevant 
+        
+   todo  make use constants defined todoitem class     
+    
+       reply true iff critic relevant goals designer trying achieve default critic's relevant regardless goalmodel  really something controlmech compute subclass critic encapsulates 
+       some information may need override method   p  
+       
+       todo better default action goals typed values must interperted critics not generic decisionmodel  
+       
+        param dsgr designer 
+        return true relevant 
+        
+                                                                 
+   corrective automations  wizards 
+    
+       create new wizard help user fix identified problem version assumes subclasses override getwizclass return appropriate 
+       class wizard  critic subclasses need initialize wizard 
+       might override call super makewizard work result  
+       
+        param item todo item 
+        return wizard wizclass not subclass wizard  print warning 
+    
+       return class wizard fix problem identifed critic method returns null  subclasses wizards override param item todo item 
+        return null wizard defined  
+        
+    
+       initialize newly created wizard information found critic called right wizard made makewizard wizard's todoitem set   any critic supports wizards probably override method call super initwizard   first  
+       
+        param w wizard 
+        
+                                                                 
+   accessors 
+    
+       reply string used determine critic relevant current design decisions  strings returned here compared strings decisionmodel  
+       
+        return decision category 
+        
+    
+       set decisioncategory  usually done constructor not thought case dynamically changing critic's decisioncategory useful  
+       
+        param c category 
+        
+    
+       reply string used contol critics according type  examples include  correctness  completeness  consistency  
+       optimization  presentation alternative  
+       
+        return critic knowledge type 
+        
+    
+       reply headline used feedback produced critic  
+       
+        param dm design material 
+        param dsgr designer 
+        return headline 
+        
+    
+       reply headline used feedback produced critic  
+       
+        param offenders set offenders 
+        param dsgr designer 
+        return headline 
+        
+    
+       reply headline used feedback produced critic  
+       
+        return headline 
+        
+    
+       set headline used feedback produced critic  
+       
+        param h headline 
+        
+    
+       reply priority used feedback produced critic  
+       
+        param offenders offenders 
+        param dsgr designer 
+        return priority 
+        
+    
+        param p priority 
+        
+    
+        return priority 
+        
+    
+       reply description used feedback produced critic  
+       
+        param offenders offenders 
+        param dsgr designer 
+        return description 
+        
+    
+        param d description 
+        
+    
+        return description 
+        
+    
+       reply moreinfourl used feedback produced critic  
+       
+        param offenders offenders 
+        param dsgr designer 
+        return info-url 
+        
+    
+        param m info-url 
+        
+    
+        return info-url 
+        
+    
+        param name key 
+        param value value 
+        deprecated 0 25 4 linus tolke way storing information encourages 
+                   violation type safety  
+                   create member attributes instead   
+        
+    
+        param name key 
+        return value 
+        deprecated 0 25 4 linus tolke way storing information encourages 
+                   violation type safety  
+                   create member attributes instead   
+        
+    
+        return key  value  pairs 
+        deprecated 0 25 4 linus tolke way storing information encourages 
+                   violation type safety  
+                   create member attributes instead   
+        
+    
+        param h new table key  value  pairs 
+        deprecated 0 25 4 linus tolke way storing information encourages 
+                   violation type safety  
+                   create member attributes instead   
+        
+                                                                 
+   design feedback 
+    
+       reply todoitem designer see iff predicate   
+       returns true default fills fields todoitem accessor methods critic  critic subclasses 
+       may override method accessor methods add computed 
+       fields todoitem  
+       
+       todo  critic's may want add new fields todoitem make stillvalid efficent  
+        
+        see critic#critique 
+       
+        param dm offender 
+        param dsgr designer 
+        return todoitem 
+        
+                                                                 
+   issue resolution 
+   
+       todo  not implemented idea some 
+       problems identified critic's fixed certain design 
+       manipulations transforms applied automatically resolve problem method replies true iff given 
+       problem fixed fixit   method actually fix  
+       
+        see org argouml cognitive poster#canfixit org argouml cognitive todoitem see critic#fixit 
+        
+   
+        see org argouml cognitive poster#fixit org argouml cognitive todoitem  java lang object  
+        
+   
+       reply string describes critic  identical getcriticname   
+       
+        see java lang object#tostring   
+       org argouml cognitive Critic org argouml cognitive critic observable poster  serializable problem_found no_problem kt_designers   
+	translator localize  misc knowledge designers kt_correctness   
+	translator localize  misc knowledge correctness kt_completeness   
+	translator localize  misc knowledge completeness kt_consistency   
+	translator localize  misc knowledge consistency kt_syntax   
+	translator localize  misc knowledge syntax kt_semantics   
+	translator localize  misc knowledge semantics kt_optimization   
+	translator localize  misc knowledge optimization kt_presentation   
+	translator localize  misc knowledge presentation kt_organizational   
+	translator localize  misc knowledge organizational kt_experiencial   
+	translator localize  misc knowledge experiential kt_tool   
+	translator localize  misc knowledge tool defaultmoreinfourl clsname   getclass   getname    
+	clsname   clsname substring clsname lastindexof        1 http   
+	       manual-0 24-single argomanual html  
+	       #critics     clsname  
+      
+ 
+      
+      
+ 
+      
+  
+ 
+      
+  
+ 
+      
+  
+ 
+      
+  
+ 
+      
+     deprecated icon default_clarifier   
+	resourceloaderwrapper 
+	     lookupiconresource  postit0 hashtable object  controlrecs hashtable object critic configuration getboolean getcritickey addcontrolrec enabled isactive addcontrolrec enabled isactive addcontrolrec snooze_order snoozeorder     
+	critictype    correctness   
+	knowledgetypes add kt_correctness   
+	decisioncategory    checking   
+ 
+	moreinfourl   defaultmoreinfourl    
+	description    no description is availible   
+	headline critic headline      getclass   getname          
+	priority   todoitem med_priority configurationkey getcritickey configuration makekey  critic   
+				     getcriticcategory    
+				     getcriticname getcriticcategory unclassified getcriticname getclass   getname   
+	     substring getclass   getname   lastindexof        1 critique object dm  designer dsgr predicate dm  dsgr     
+	      
+	    todoitem item   todoitem dm  dsgr   
+	    postitem item  dm  dsgr postitem todoitem item  object dm  designer dsgr dm offender    
+	      offender  dm  inform item   
+	  
+	dsgr inform item predicate object dm  designer dsgr stillvalid todoitem i  designer dsgr isactive      
+	    log warn  got to stillvalid not active i getoffenders   size      1 predicate i getoffenders   get 0   dsgr     
+	      
+	      
+	      
+	      
+	      
+	      
+	      
+	      
+	    todoitem item   todoitem i getoffenders   get 0   dsgr item equals i supports decision d supporteddecisions contains d list decision  getsupporteddecisions supporteddecisions addsupporteddecision decision d    
+	supporteddecisions add d supports goal g supportedgoals contains g list goal  getsupportedgoals supportedgoals addsupportedgoal goal g    
+	supportedgoals add g containsknowledgetype type knowledgetypes contains type addknowledgetype type    
+	knowledgetypes add type listset getknowledgetypes knowledgetypes setknowledgetypes listset kt    
+        knowledgetypes   kt setknowledgetypes t1    
+	knowledgetypes listset addknowledgetype t1 setknowledgetypes t1 t2    
+	knowledgetypes listset addknowledgetype t1   
+	addknowledgetype t2 setknowledgetypes t1 t2 t3    
+	knowledgetypes listset addknowledgetype t1   
+	addknowledgetype t2   
+	addknowledgetype t3 reasoncodefor s 1     s hashcode   % 62 gettriggermask triggermask addtrigger s newcode   reasoncodefor s   
+	triggermask    newcode matchreason patterncode triggermask    0       triggermask   patterncode     0 expand desc  listset offs desc icon getclarifier clarifier isactive isactive beactive isactive    
+	    configuration setboolean getcritickey isactive setchanged    
+            notifyobservers beinactive isactive    
+	    configuration setboolean getcritickey isactive setchanged    
+            notifyobservers object addcontrolrec name  object controldata controlrecs put name  controldata object getcontrolrec name controlrecs get name isenabled getcriticname getcriticname   equals  crnoguard      
+            system currenttimemillis getcontrolrec enabled   booleanvalue setenabled e enabledbool   e addcontrolrec enabled  enabledbool snoozeorder snoozeorder snoozeorder  getcontrolrec snooze_order snooze     snoozeorder   snooze unsnooze     snoozeorder   unsnooze issnoozed snoozeorder   getsnoozed isrelevanttodecisions designer dsgr decision d   getsupporteddecisions d getpriority     0    d getpriority      getpriority isrelevanttogoals designer dsgr wizard makewizard todoitem item wizclass   getwizardclass item wizclass wizard w    wizard  wizclass newinstance    
+                w settodoitem item   
+                initwizard w w illegalaccessexception illex    
+                log error  could not access wizard     illex instantiationexception instex    
+                log error  could not instantiate wizard     instex getwizardclass todoitem item initwizard wizard w getdecisioncategory decisioncategory setdecisioncategory c    
+        decisioncategory   c getcritictype critictype getheadline object dm  designer dsgr getheadline getheadline listset offenders  designer dsgr getheadline offenders get 0   dsgr getheadline headline setheadline h    
+        headline   h getpriority listset offenders  designer dsgr priority setpriority p    
+        priority   p getpriority priority getdescription listset offenders  designer dsgr description setdescription d    
+        description   d getdescriptiontemplate description getmoreinfourl listset offenders  designer dsgr moreinfourl setmoreinfourl m    
+        moreinfourl   m getmoreinfourl getmoreinfourl null   
+      
+ 
+      
+     deprecated setarg name  object value    
+	args put name  value   
+      
+ 
+      
+     deprecated object getarg name args get name   
+      
+ 
+      
+     deprecated hashtable object  getargs args  
+      
+ 
+      
+     deprecated setargs hashtable object  h    
+        args   h todoitem todoitem object dm  designer dsgr todoitem dm  dsgr canfixit todoitem item fixit todoitem item  object arg    
+      
+ 
+      
+     override tostring getcriticname    
+      
+ 
+ org argouml cognitive Critic

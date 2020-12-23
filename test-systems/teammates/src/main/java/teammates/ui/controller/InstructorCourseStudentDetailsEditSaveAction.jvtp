@@ -1,0 +1,62 @@
+teammates ui controller InstructorCourseStudentDetailsEditSaveAction teammates ui controller instructorcoursestudentdetailseditsaveaction action   
+ 
+  
+ 
+     override actionresult execute entitydoesnotexistexception courseid   getrequestparamvalue paramsnames course_id   
+        assumption assertpostparamnotnull paramsnames course_id  courseid studentemail   getrequestparamvalue paramsnames student_email   
+        assumption assertpostparamnotnull paramsnames student_email  studentemail   
+ 
+        instructorattributes instructor   logic getinstructorforgoogleid courseid  account googleid   
+        gatekeeper verifyaccessible  
+                instructor  logic getcourse courseid paramsnames instructor_permission_modify_student   
+ 
+        studentattributes student   logic getstudentforemail courseid  studentemail student redirectwitherror statusmessages student_not_found_for_edit  
+                                      student  span bold\      studentemail      span  in   
+                                        course  span bold\       courseid       span  not found    
+                                     courseid   
+          
+ 
+        student name   getrequestparamvalue paramsnames student_name   
+        student email   getrequestparamvalue paramsnames new_student_email   
+        student team   getrequestparamvalue paramsnames team_name   
+        student section   getrequestparamvalue paramsnames section_name   
+        student comments   getrequestparamvalue paramsnames comments hassection   logic hasindicatedsections courseid   
+ 
+        student name   sanitizationhelper sanitizename student name   
+        student email   sanitizationhelper sanitizeemail student email   
+        student team   sanitizationhelper sanitizename student team   
+        student section   sanitizationhelper sanitizename student section   
+        student comments   sanitizationhelper sanitizetextfield student comments studentattributes originalstudentattribute   logic getstudentforemail courseid  studentemail   
+            student updatewithexistingrecord originalstudentattribute issectionchanged   student issectionchanged originalstudentattribute isteamchanged   student isteamchanged originalstudentattribute isemailchanged   student isemailchanged originalstudentattribute issectionchanged    
+                logic validatesectionsandteams arrays aslist student   courseid isteamchanged    
+                logic validateteams arrays aslist student   courseid   
+              
+ 
+            logic updatestudent studentemail  student issessionsummarysendemail   getrequestparamasboolean paramsnames session_summary_email_send_check isemailchanged    
+                logic resetstudentgoogleid student email  courseid issessionsummarysendemail emailwrapper email emailgenerator   generatefeedbacksessionsummaryofcourse courseid  student   
+                        emailsender sendemail email exception e    
+                        log severe  error sending session summary email  
+                                      teammatesexception tostringwithstacktrace e    
+                      
+                  
+              
+ 
+            statustouser add statusmessage issessionsummarysendemail    isemailchanged statusmessages student_edited_and_email_sent statusmessages student_edited  statusmessagecolor success    
+ 
+            statustoadmin    student  span bold\      studentemail    's  span  details in   
+                               course  span bold\       courseid       span  edited  br email      student email     br team      student team     br   
+                               comments      student comments  
+ 
+            redirectresult result   createredirectresult actionuris instructor_course_details_page   
+            result addresponseparam paramsnames course_id  courseid result invalidparametersexception   enrollexception e    
+            setstatusforexception e newemail   student email  
+            student email   studentemail isopenorpublishedemailsentforthecourse   logic isopenorpublishedemailsentforthecourse courseid   
+            instructorcoursestudentdetailseditpagedata data instructorcoursestudentdetailseditpagedata account  sessiontoken  student  newemail  hassection  
+                            isopenorpublishedemailsentforthecourse createshowpageresult viewuris instructor_course_student_edit  data redirectresult redirectwitherror errortouser errortoadmin courseid    
+        statustouser add statusmessage errortouser  statusmessagecolor danger    
+        statustoadmin   errortoadmin  
+        iserror redirectresult result   createredirectresult actionuris instructor_course_details_page   
+        result addresponseparam paramsnames course_id  courseid result  
+      
+ 
+ teammates ui controller InstructorCourseStudentDetailsEditSaveAction

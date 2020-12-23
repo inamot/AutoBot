@@ -1,0 +1,160 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications upper right pane argouml user interface may several 
+   tabs different kinds major  editors allow user edit whatever selected explorerpane   p  
+   currently only diagram tab  
+    
+    logger    
+    
+       classes tabs included property panel  
+        previously stored org argouml argo ini  
+        
+   org argouml ui tabtable 
+   tabmetrics 
+   tabjavasrc   tabsrc 
+   tabumldisplay 
+   tabhash 
+    
+       constructs multieditorpane pane tabs diagrams drawn argouml multieditorpane jtabbedpane holds 0-  jpanels show several editors only show one 
+       editor moment  argouml version 0 13 3 editor diagrams edited  
+        
+   todo  i18n 
+   
+        see java awt component#getpreferredsize   
+        
+   
+        see java awt component#getminimumsize   
+        
+    
+       sets target multieditorpane multieditorpane several tabs tab instance tabmodeltarget tab displays model elements tab display target target argodiagram  
+        param t target 
+        
+    
+       enables tabs multieditorpane depending result shouldbeenabled method  
+        param t target shouldbeenabled test hold true  
+        
+    
+       returns index tab certain name jtabbedpane component shown multieditorpane moment  version 
+       0 13 3 argouml only 1 tab diagram tab  
+       
+        param tabname given tab name 
+        return index  
+        
+    
+       selects certain tab shows moment  version 
+       0 13 3 argouml only 1 tab diagram tab  
+        param tabname name tab 
+        
+    
+       selects next tab jtabbedpane moment  version 0 13 3 argouml only 1 tab diagram tab  
+        
+   
+       called user selects tab clicking otherwise  
+       
+        see javax swing event changelistener#statechanged javax swing event changeevent  
+        
+  todo fire event projectbrowser register listener 
+   
+        see java awt event mouselistener#mousepressed java awt event mouseevent  
+        
+   empty implementation only handle mouseclicked 
+   
+        see java awt event mouselistener#mousereleased java awt event mouseevent  
+        
+   empty implementation only handle mouseclicked 
+   
+        see java awt event mouselistener#mouseentered java awt event mouseevent  
+        
+   empty implementation only handle mouseclicked 
+   
+        see java awt event mouselistener#mouseexited java awt event mouseevent  
+        
+   empty implementation only handle mouseclicked 
+   
+       catches mouseevent calls mysingleclick mydoubleclick tab clicked selected  
+        see java awt event mouselistener#mouseclicked mouseevent  
+        
+    
+       called user clicks once tab  
+       
+        param tab tab clicked todo fire event projectbrowser register listener user double clicks tab tab spawned method selected  
+       
+        param tab index tab  
+        
+  todo fire event projectbrowser register listener 
+          jpanel t    jpanel  tabpanels elementat tab   
+   currently feature disabled argouml t instanceof abstractargojpanel  
+                 abstractargojpanel  t  spawn    
+   
+        see org argouml ui targetmanager targetlistener#targetadded  
+               org argouml ui targetmanager targetevent  
+        
+   
+        see org argouml ui targetmanager targetlistener#targetremoved  
+               org argouml ui targetmanager targetevent handle empty target lists?  probably multieditorpane only show empty pane case 
+   
+        see org argouml ui targetmanager targetlistener#targetset  
+               org argouml ui targetmanager targetevent  
+        
+    
+        return returns upper right panel tabs diagram tabs  
+       org argouml ui MultiEditorPane org argouml ui multieditorpane jpanel changelistener  mouselistener  targetlistener jpanel   tabinstances jpanel org argouml uml diagram ui tabdiagram list jpanel  tabpanels arraylist jpanel  arrays aslist tabinstances multieditorpane     
+        log info  making multieditorpane    
+ 
+        setlayout borderlayout     
+        add tabs  borderlayout center i   0  i   tabpanels size    i title    tab   
+            jpanel t   tabpanels get i t abstractargojpanel    
+                title     abstractargojpanel  t  gettitle    
+              
+              
+            tabs addtab  as     title  t   
+            tabs setenabledat i t targetlistener    
+                targetmanager getinstance   
+		     addtargetlistener  targetlistener  t   
+              
+          
+ 
+        tabs addchangelistener tabs addmouselistener settarget override dimension getpreferredsize dimension 400  500   
+      
+ 
+      
+     override dimension getminimumsize dimension 100  100 settarget object t    
+        enabletabs t i   0  i   tabs gettabcount    i      
+            component tab   tabs getcomponentat i tab isenabled      
+                tabs setselectedcomponent tab enabletabs object t i   0  i   tabs gettabcount    i      
+            component tab   tabs getcomponentat i tab tabtarget    
+                tabtarget targettab    tabtarget  tab shouldbeenabled   targettab shouldbeenabled t   
+                tabs setenabledat i  shouldbeenabled getindexofnamedtab tabname i   0  i   tabpanels size    i title   tabs gettitleat i title title equals tabname i 1 selecttabnamed tabname index   getindexofnamedtab tabname index    -1    
+            tabs setselectedindex index selectnexttab size   tabpanels size currenttab   tabs getselectedindex i   1  i   tabpanels size    i newtab    currenttab   i  % size tabs isenabledat newtab     
+                tabs setselectedindex newtab statechanged changeevent  e lasttab lasttab setvisible lasttab   tabs getselectedcomponent    
+        log debug  
+             multieditorpane state changed     lasttab getclass   getname     
+        lasttab setvisible lasttab tabmodeltarget    
+              tabmodeltarget  lasttab  refresh mousepressed mouseevent me mousereleased mouseevent me mouseentered mouseevent me mouseexited mouseevent me mouseclicked mouseevent me tab   tabs getselectedindex tab    -1    
+            rectangle tabbounds   tabs getboundsat tab tabbounds contains me getx    me gety me getclickcount      1    
+                mysingleclick tab   
+                me consume me getclickcount      2    
+                mydoubleclick tab   
+                me consume mysingleclick tab    
+          
+          
+        log debug  single      tabs getcomponentat tab  tostring mydoubleclick tab    
+          
+          
+        log debug tabs getcomponentat tab  tostring targetadded targetevent e    
+	settarget e getnewtarget targetremoved targetevent e    
+	  
+	  
+	settarget e getnewtarget targetset targetevent e    
+	settarget e getnewtarget jtabbedpane gettabs tabs  
+      
+ 
+  
+org argouml ui MultiEditorPane

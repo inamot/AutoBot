@@ -1,0 +1,60 @@
+ 
+    
+   serves public image stored google cloud storage using blobkey  br  
+   correct blobkey required image serving  
+    
+   todo   restrict image request those  public  files onlyteammates ui controller PublicImageServlet teammates ui controller  
+ 
+  
+  
+ 
+  
+  
+  
+ 
+  
+  
+  
+ 
+  
+  
+  
+  
+  
+  
+  
+  
+ 
+  
+ suppresswarnings  serial publicimageservlet httpservlet   
+ 
+  
+ 
+     override doget httpservletrequest req  httpservletresponse resp    
+        dopost req  resp   
+      
+ 
+     suppresswarnings  unchecked   
+     override dopost httpservletrequest req  httpservletresponse resp url   httprequesthelper getrequestedurl req   
+ 
+        usertype usertype gatekeeper   getcurrentuser    
+        map string    requestparameters   req getparametermap blobkey   httprequesthelper getvaluefromparammap requestparameters paramsnames blob_key   
+        assumption assertpostparamnotnull paramsnames blob_key  blobkey blobkey isempty message    failed to serve image with url   blobkey is missing   
+                map string    params   httprequesthelper getparametermap req   
+                log info logmessagegenerator   generatebasicactivitylogmessage url  params  message  usertype    
+                resp senderror 1   no image found resp setcontenttype  image png    
+                blobstoreservice blobstoreservice   blobstoreservicefactory getblobstoreservice    
+                blobstoreservice serve blobkey blobkey   resp message image request with url   br   
+                                   a href \     url    \  target \ _blank\  rel \ noopener noreferrer\     
+                                 url      a    
+ 
+                map string    params   httprequesthelper getparametermap req   
+                log info logmessagegenerator   generatebasicactivitylogmessage url  params  message  usertype ioexception ioe    
+            map string    params   httprequesthelper getparametermap req   
+            log warning logmessagegenerator   generateactionfailurelogmessage url  params  ioe  usertype exception e    
+            log severe  exception occured performing publicactionnames public_image_serve_action 
+                             teammatesexception tostringwithstacktrace e    
+          
+      
+ 
+ teammates ui controller PublicImageServlet

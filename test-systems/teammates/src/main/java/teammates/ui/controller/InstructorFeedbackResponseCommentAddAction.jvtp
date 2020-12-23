@@ -1,0 +1,65 @@
+ 
+    
+   action  create new   link feedbackresponsecommentattributes   
+    
+  set up comment text 
+  set up visibility settingsteammates ui controller InstructorFeedbackResponseCommentAddAction teammates ui controller instructorfeedbackresponsecommentaddaction action   
+ 
+     override actionresult execute entitydoesnotexistexception courseid   getrequestparamvalue paramsnames course_id   
+        assumption assertpostparamnotnull paramsnames course_id  courseid feedbacksessionname   getrequestparamvalue paramsnames feedback_session_name   
+        assumption assertpostparamnotnull paramsnames feedback_session_name  feedbacksessionname feedbackquestionid   getrequestparamvalue paramsnames feedback_question_id   
+        assumption assertpostparamnotnull paramsnames feedback_question_id  feedbackquestionid feedbackresponseid   getrequestparamvalue paramsnames feedback_response_id   
+        assumption assertpostparamnotnull paramsnames feedback_response_id  feedbackresponseid commentid   getrequestparamvalue paramsnames comment_id   
+        assumption assertpostparamnotnull paramsnames comment_id  commentid   
+ 
+        instructorattributes instructor   logic getinstructorforgoogleid courseid  account googleid   
+        feedbacksessionattributes session   logic getfeedbacksession feedbacksessionname  courseid   
+        feedbackresponseattributes response   logic getfeedbackresponse feedbackresponseid   
+        assumption assertnotnull response iscreatoronly gatekeeper verifyaccessible instructor  session   iscreatoronly  response giversection paramsnames instructor_permission_submit_session_in_sections   
+        gatekeeper verifyaccessible instructor  session   iscreatoronly  response recipientsection paramsnames instructor_permission_submit_session_in_sections   
+ 
+        instructorfeedbackresponsecommentajaxpagedata data instructorfeedbackresponsecommentajaxpagedata account  sessiontoken giveremail   response giver recipientemail   response recipient  
+        feedbacksessionresultsbundle bundle   
+                logic getfeedbacksessionresultsforinstructor feedbacksessionname  courseid  instructor email givername   bundle getgivernameforresponse response giverteamname   bundle getteamnameforemail giveremail   
+        data givername   bundle appendteamnametoname givername  giverteamname recipientname   bundle getrecipientnameforresponse response recipientteamname   bundle getteamnameforemail recipientemail   
+        data recipientname   bundle appendteamnametoname recipientname  recipientteamname commenttext   getrequestparamvalue paramsnames feedback_response_comment_text   
+        assumption assertpostparamnotnull paramsnames feedback_response_comment_text  commenttext commenttext trim   isempty      
+            data errormessage statusmessages feedback_response_comment_empty  
+            data iserror createajaxresult data   
+          
+ 
+        feedbackresponsecommentattributes feedbackresponsecomment feedbackresponsecommentattributes courseid  
+                feedbacksessionname  feedbackquestionid  instructor email  feedbackresponseid date text commenttext   response giversection  response recipientsection showcommentto   getrequestparamvalue paramsnames response_comments_showcommentsto showgivernameto   getrequestparamvalue paramsnames response_comments_showgiverto   
+        feedbackresponsecomment showcommentto arraylist showcommentto showcommentto isempty showcommenttoarray   showcommentto split viewer   showcommenttoarray    
+                feedbackresponsecomment showcommentto add feedbackparticipanttype valueof viewer trim      
+              
+          
+        feedbackresponsecomment showgivernameto arraylist showgivernameto showgivernameto isempty showgivernametoarray   showgivernameto split viewer   showgivernametoarray    
+                feedbackresponsecomment showgivernameto add feedbackparticipanttype valueof viewer trim      
+              
+          
+ 
+        feedbackresponsecommentattributes createdcomment feedbackresponsecommentattributes createdcomment   logic createfeedbackresponsecomment feedbackresponsecomment   
+            logic putdocument createdcomment invalidparametersexception e    
+            setstatusforexception e   
+            data errormessage   e getmessage    
+            data iserror data iserror    
+            statustoadmin     instructorfeedbackresponsecommentaddaction  br   
+                              adding comment to response      feedbackresponsecomment feedbackresponseid     br   
+                              in course feedback session      feedbackresponsecomment courseid       
+                             feedbackresponsecomment feedbacksessionname     br   
+                              by      feedbackresponsecomment giveremail     at   
+                             feedbackresponsecomment createdat     br   
+                              comment text      feedbackresponsecomment commenttext getvalue    
+          
+ 
+        data comment   createdcomment  
+        data commentid   commentid  
+        data showcommenttostring   stringhelper tostring createdcomment showcommentto        
+        data showgivernametostring   stringhelper tostring createdcomment showgivernameto        
+        data instructoremailnametable   bundle instructoremailnametable  
+        data question   logic getfeedbackquestion feedbackquestionid   
+        data sessiontimezone   session gettimezone createshowpageresult viewuris instructor_feedback_response_comments_add  data   
+      
+ 
+ teammates ui controller InstructorFeedbackResponseCommentAddAction

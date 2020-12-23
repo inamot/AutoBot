@@ -1,0 +1,510 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   component creation configuration class based around handing component 
+   definitions anttypetable old task type methods kept backward compatibly  
+   project delegate calls class very simple hook mechanism provided allows users plug custom code possible replace default behavior example app embedding ant ant1 6 
+    
+    map component name anttypedefinition    
+    map tasks generated anttypetable    
+    flag rebuild taskclassdefinitions    
+    map types generated anttypetable    
+    flag rebuild typeclassdefinitions    
+    set namespaces checked antlibs    
+    
+       stack antlib contexts used resolve definitions processing antlib 
+        
+    current antlib uri not appear used anywhere ant codebase 
+       even via accessors 
+        
+    
+       project owns component helper 
+        
+    
+       error string file taskdefs defaults properties cannot found 
+        
+    
+       error string typedefs defaults properties cannot found 
+        
+    
+       reference under register ourselves project -  value  
+        
+    
+       string used control build syspath policy   value  
+        
+    
+       special name ant's property task -  value some 
+       contrived work here enable early  
+        
+    tasks  types  
+    
+       find project component specific project  creating it not exist  
+        param project project  
+        return project component specific project  
+        
+   singleton now may change   per classloader   
+    
+       creates new componenthelper instance  
+        
+    
+       set next chained component helper  
+       
+        param next next chained component helper next chained component helper  
+       
+        return next chained component helper  
+        
+    
+       sets project component helper  
+       
+        param project project helper  
+        
+    
+       used creating child projects  each child 
+       project inherits component definitions parent  
+        param helper component helper parent project  
+        
+   add types parent project 
+   add parsed namespaces parent project 
+    
+       factory method create components called unknownelement  
+       
+        param ue unknown element creating component  
+        param ns namespace uri available ue getnamespace    
+        param componenttype component type available ue getcomponentname    
+        return created component  
+        throws buildexception error occurs  
+        
+    
+       create object component  
+       
+        param componentname name component component namespace name prefixed namespace uri return class found null not  
+        
+    
+       return class component name  
+       
+        param componentname name component component namespace name prefixed namespace uri return class found null not  
+        
+    
+       return anttypedefinition componentname  
+        param componentname name component  
+        return ant definition null not present method initialization code implementing original ant component 
+       loading org apache tools ant taskdefs default properties org apache tools ant types default properties  
+        
+    
+       adds new task definition project  
+       attempting override existing definition equivalent one e same classname  results verbose log message  attempting override existing definition different one results warning log message  
+       
+        param taskname name task add  
+                       must not code null  code   
+        param taskclass full name class implementing task  
+                        must not code null  code   
+       
+        exception buildexception class unsuitable being ant 
+                                 task error level message logged before exception thrown  
+       
+        see #checktaskclass class  
+        
+    
+       checks whether not class suitable serving ant task  
+       ant task implementation classes must public  concrete arg constructor  
+       
+        param taskclass class checked  
+                        must not code null  code   
+       
+        exception buildexception class unsuitable being ant 
+                                 task error level message logged before exception thrown  
+        
+   don't check public getconstructor finds public constructors only  
+    
+       returns current task definition hashtable returned hashtable live not modified  
+       
+        return map task name implementing class 
+                string class   
+        
+    
+       returns current type definition hashtable returned hashtable live not modified  
+       
+        return map type name implementing class 
+                string class   
+        
+    
+       adds new datatype definition  
+       attempting override existing definition equivalent one e same classname  results verbose log message  attempting override existing definition different one results warning log message definition changed  
+       
+        param typename name datatype  
+                       must not code null  code   
+        param typeclass full name class implementing datatype  
+                        must not code null  code   
+        
+    
+       describe  code adddatatypedefinition  code  method here  
+       
+        param def code anttypedefinition  code  value  
+        
+    
+       returns current datatype definition hashtable returned 
+       hashtable live not modified  
+       
+        return map datatype name implementing class 
+                string class   
+        
+    
+       creates new instance task  
+       
+        called project createtask called tasks  
+       
+        param tasktype name task create instance must not code null  code   
+       
+        return instance specified task code null  code task name not recognised  
+       
+        exception buildexception task name recognised task 
+                                 creation fails  
+        
+   quick fix ant java use property before 
+   initializing project 
+    
+       creates new instance task ant1 6 
+        param tasktype name task create instance must not code null  code   
+       
+        return instance specified task code null  code task name not recognised  
+       
+        exception buildexception task name recognised task 
+                                 creation fails  
+        
+   set default value changed user 
+    
+       creates new instance data type  
+       
+        param typename name data type create instance must not code null  code   
+       
+        return instance specified data type code null  code data type name not recognised  
+       
+        exception buildexception data type name recognised instance creation fails  
+        
+    
+       returns description type given element  
+        p useful logging purposes  
+       
+        param element element describe  
+                      must not code null  code   
+       
+        return description element type ant 1 6 
+        
+    
+       returns description type given element  
+        p useful logging purposes  
+       
+        param o element describe  
+                    must not code null  code   
+        param brief whether use brief description  
+        return description element type ant 1 7 
+        
+    pr not know object class multiple defines logging only    
+    
+       convenient way some element name even may not project context  
+        param p optional project instance  
+        param o element describe  
+                      must not code null  code   
+        param brief   whether use brief description  
+        return description element type ant 1 7 bad 
+    
+       check definition valid definition may definition optional task not exist  
+        param def definition test  
+        return true exposed type definition present  
+        
+    
+       check two definitions same  
+        param def new definition  
+        param old old definition  
+        return true two definitions same  
+        
+  must same validity valid must same  
+    
+       update component definition table new modified definition  
+        param def definition update insert  
+        
+    
+       called start processing antlib  
+        param uri uri associated antlib  
+        
+    
+        return current antlib uri  
+        
+    
+       called end processing antlib  
+        
+    
+       load ant's tasks  
+        
+    
+       load default task type definitions names class loading  
+       caches results between calls reduce overhead  
+        param type true typedefs  false taskdefs 
+        return mapping definition names class names 
+        throws buildexception some problem loading parsing definitions list 
+        
+    
+       load ant's datatypes  
+        
+    
+       called each component name  check associated uri examined antlibs  
+        
+   namespace not contain antlib 
+   already processed stop error messages being  null left out  bad things happen build files break first element encountered fishing expedition  - ignore errors antlib not present 
+    
+       handler called decent diagnosis instantiation failure  
+        param componentname component name  
+        param type component type  used error messages 
+        return string containing much diagnostics info possible  
+        
+  class problem 
+  running under ide doesn't set ant_home 
+  look up name 
+  not known type defined instantiation problem 
+  start instantiating class  
+  here successfully loaded class failed  
+  success  proceed steps 
+  hey nothing wrong map contains component definitions  
+       org apache tools ant ComponentHelper org apache tools ant componenthelper component_helper_reference    ant componenthelper componenthelper getcomponenthelper project project project null  
+          
+          
+        componenthelper ph    componenthelper  project getreference  
+                component_helper_reference ph ph  
+          
+        ph componenthelper    
+        ph setproject project   
+ 
+        project addreference component_helper_reference  ph ph componenthelper setnext componenthelper next next   next componenthelper getnext next setproject project project project   project  
+        anttypetable anttypetable project initsubproject componenthelper helper    
+          
+        anttypetable typetable   helper anttypetable iterator i   typetable values   iterator    i hasnext       
+            anttypedefinition def    anttypedefinition  i next    
+            anttypetable put def getname    def iterator i   helper checkednamespaces iterator    i hasnext       
+            checkednamespaces add i next object createcomponent unknownelement ue ns componenttype buildexception   
+        object component   createcomponent componenttype component task    
+            task task    task  component  
+            task setlocation ue getlocation     
+            task settasktype componenttype   
+            task settaskname ue gettaskname     
+            task setowningtarget ue getowningtarget     
+            task init component object createcomponent componentname    
+        anttypedefinition def   getdefinition componentname def null   def create project getcomponentclass componentname    
+        anttypedefinition def   getdefinition componentname def null   def getexposedclass project anttypedefinition getdefinition componentname    
+        checknamespace componentname anttypetable getdefinition componentname initdefaultdefinitions     
+        inittasks    
+        inittypes addtaskdefinition taskname taskclass    
+        checktaskclass taskclass   
+        anttypedefinition def anttypedefinition    
+        def setname taskname   
+        def setclassloader taskclass getclassloader     
+        def setclass taskclass   
+        def setadapterclass taskadapter def setclassname taskclass getname     
+        def setadapttoclass task updatedatatypedefinition def checktaskclass taskclass buildexception modifier ispublic taskclass getmodifiers message   taskclass     is not project log message  project msg_err buildexception message modifier isabstract taskclass getmodifiers message   taskclass     is project log message  project msg_err buildexception message taskclass getconstructor nosuchmethodexception e message    no no-arg constructor in   
+                      taskclass  
+            project log message  project msg_err buildexception message task isassignablefrom taskclass     
+            taskadapter checktaskclass taskclass  project hashtable gettaskdefinitions taskclassdefinitions anttypetable rebuildtaskclassdefinitions    
+                    taskclassdefinitions clear iterator i   anttypetable keyset   iterator    
+                         i hasnext name i next clazz   anttypetable getexposedclass name clazz task isassignablefrom clazz     
+                            taskclassdefinitions put  
+                                name  anttypetable gettypeclass name    
+                          
+                      
+                    rebuildtaskclassdefinitions taskclassdefinitions hashtable getdatatypedefinitions typeclassdefinitions anttypetable rebuildtypeclassdefinitions    
+                    typeclassdefinitions clear iterator i   anttypetable keyset   iterator    
+                         i hasnext name i next clazz   anttypetable getexposedclass name clazz task isassignablefrom clazz      
+                            typeclassdefinitions put  
+                                name  anttypetable gettypeclass name    
+                          
+                      
+                    rebuildtypeclassdefinitions typeclassdefinitions adddatatypedefinition typename typeclass    
+        anttypedefinition def anttypedefinition    
+        def setname typename   
+        def setclass typeclass   
+        updatedatatypedefinition def   
+        project log    user datatype      typename           
+                  typeclass getname    project msg_debug adddatatypedefinition anttypedefinition def    
+        updatedatatypedefinition def hashtable getanttypetable anttypetable task createtask tasktype buildexception   
+        task task   createnewtask tasktype task tasktype equals ant_property_task     
+              
+              
+            addtaskdefinition ant_property_task  
+                              org apache tools ant taskdefs property task   createnewtask tasktype task task createnewtask tasktype buildexception c   getcomponentclass tasktype c task isassignablefrom c object obj   createcomponent tasktype obj null obj task buildexception  
+                 expected a task from '    tasktype 
+                   ' but got an instance of     obj getclass   getname   
+                    instead    
+          
+        task task    task  obj  
+        task settasktype tasktype   
+ 
+          
+        task settaskname tasktype   
+ 
+        project log      task      tasktype  project msg_debug task object createdatatype typename buildexception createcomponent typename getelementname object element getelementname element getelementname object o brief elementclass   o getclass elementclassname   elementclass getname iterator i   anttypetable values   iterator    i hasnext       
+            anttypedefinition def    anttypedefinition  i next elementclassname equals def getclassname    
+                        elementclass    def getexposedclass project name   def getname brief ? name    the      name      type getunmappedelementname o getclass    brief getelementname project p  object o brief p p   getproject o p getunmappedelementname o getclass    brief  
+                  getcomponenthelper p  getelementname o  brief getunmappedelementname c brief brief name   c getname name substring name lastindexof ' '    1 c tostring project getproject object o o projectcomponent projectcomponent  o  getproject method m   o getclass   getmethod  getproject project m getreturntype project  m invoke o   object exception e validdefinition anttypedefinition def def gettypeclass project def getexposedclass project samedefinition  
+        anttypedefinition def  anttypedefinition old defvalid   validdefinition def samevalidity    defvalid    validdefinition old samevalidity      defvalid    def samedefinition old  project updatedatatypedefinition anttypedefinition def name   def getname anttypetable    
+            rebuildtaskclassdefinitions rebuildtypeclassdefinitions anttypedefinition old   anttypetable getdefinition name old samedefinition def  old oldclass   anttypetable getexposedclass name istask   
+                     oldclass task isassignablefrom oldclass    
+                project log  trying to override old definition of   
+                       istask ?  task      datatype      name  
+                     def similardefinition old  project   
+                    ? project msg_verbose   project msg_warn   
+              
+            project log    datatype     name         def getclassname    
+                        project msg_debug   
+            anttypetable put name  def enterantlib uri    
+        antlibcurrenturi   uri  
+        antlibstack push uri getcurrentantliburi antlibcurrenturi exitantlib     
+        antlibstack pop    
+        antlibcurrenturi    antlibstack size      0 antlibstack peek inittasks     
+        classloader classloader   getclassloader properties props   getdefaultdefinitions enumeration e   props propertynames e hasmoreelements name e nextelement classname   props getproperty name   
+            anttypedefinition def anttypedefinition    
+            def setname name   
+            def setclassname classname   
+            def setclassloader classloader   
+            def setadapttoclass task def setadapterclass taskadapter anttypetable put name  def classloader getclassloader classloader classloader buildsysclasspath   project getproperty magicnames build_sysclasspath project getcoreloader build_sysclasspath_only equals buildsysclasspath      
+            classloader   project getcoreloader classloader properties getdefaultdefinitions type buildexception idx   type ? 1   0 defaultdefinitions idx resource   type 
+                ? magicnames typedefs_properties_resource 
+                  magicnames taskdef_properties_resource errorstring   type 
+                ? error_no_type_list_load 
+                  error_no_task_list_load  
+            inputstream in in   componenthelper getresourceasstream  
+                    resource in buildexception errorstring   
+                  
+                properties p properties    
+                p load in   
+                defaultdefinitions idx    p ioexception e buildexception errorstring  e fileutils close in defaultdefinitions idx inittypes     
+        classloader classloader   getclassloader properties props   getdefaultdefinitions enumeration e   props propertynames e hasmoreelements name e nextelement classname   props getproperty name   
+            anttypedefinition def anttypedefinition    
+            def setname name   
+            def setclassname classname   
+            def setclassloader classloader   
+            anttypetable put name  def checknamespace componentname uri   projecthelper extracturifromcomponentname componentname equals uri     
+            uri   projecthelper ant_core_uri uri startswith projecthelper antlib_uri checkednamespaces contains uri checkednamespaces add uri   
+        typedef definer typedef    
+        definer setproject project   
+        definer init    
+        definer seturi uri   
+          
+        definer settaskname uri   
+          
+          
+        definer setresource definer makeresourcefromuri uri    
+          
+        definer setonerror typedef onerror typedef onerror policy_ignore    
+        definer execute diagnosecreationfailure componentname type    
+        stringwriter errortext stringwriter    
+        printwriter out printwriter errortext   
+        out println  problem  failed to create     type         componentname lowlevel jars definitions anttask home   system getproperty launcher user_homedir   
+        file libdir file home  launcher user_libdir anthomelib probablyide anthome   system getproperty magicnames ant_home anthome file anthomelibdir file anthome   lib    
+            anthomelib   anthomelibdir getabsolutepath probablyide anthomelib    ant_home    file separatorchar    lib   
+          
+        stringbuffer dirlistingtext stringbuffer tab            -   
+        dirlistingtext append tab   
+        dirlistingtext append anthomelib   
+        dirlistingtext append '\n probablyide    
+            dirlistingtext append tab   
+            dirlistingtext append  the ide ant configuration dialogs dirlistingtext append tab   
+            dirlistingtext append libdir   
+            dirlistingtext append '\n'   
+            dirlistingtext append tab   
+            dirlistingtext append  
+                     a directory added on the command line with the -lib argument dirlisting   dirlistingtext tostring    
+ 
+          
+        anttypedefinition def   getdefinition componentname def isantlib   componentname indexof magicnames antlib_prefix     0  
+            out println  cause  the name is undefined     
+            out println  action  check the spelling     
+            out println  action  check that any custom tasks types have been declared     
+            out println  action  check that any  presetdef   macrodef   
+                            declarations have taken place isantlib    
+                out println    
+                out println appears to be an antlib declaration      
+                out println  action  check that the implementing library exists in one of     
+                out println dirlisting   
+              
+            definitions classname   def getclassname    
+            anttask   classname startswith  org apache tools ant optional   classname startswith  org apache tools ant taskdefs optional    
+            optional    classname startswith  org apache tools ant types optional clazz clazz   def innergettypeclass classnotfoundexception e    
+                out println  cause  the classname     was not found     
+                jars optional    
+                    out println looks like one of ant's optional components     
+                    out println  action  check that the appropriate optional jar exists in    
+                    out println dirlisting out println  action  check that the component has been correctly declared    
+                    out println          and that the implementing jar is in one of     
+                    out println dirlisting   
+                    definitions noclassdeffounderror ncdfe    
+                jars out println  cause  could not load a dependent ncdfe getmessage optional    
+                    out println         it is not enough to have ant's optional jars    
+                    out println         you need the jar files that the  
+                                    optional tasks depend upon     
+                    out println         ant's optional task dependencies are  
+                                    listed in the manual out println may be in a separate jar  
+                                    that is not installed     
+                  
+                out println  action  determine what extra jar files are  
+                                needed  and place them in one of     
+                out println dirlisting clazz def innercreateandset clazz  project   
+                      
+                    out println  the component could be instantiated nosuchmethodexception e    
+                    lowlevel out println  cause  the classname 
+                                has no compatible constructor instantiationexception e    
+                    lowlevel out println  cause  the classname 
+                                is and cannot be instantiated illegalaccessexception e    
+                    lowlevel out println  cause  the constructor classname 
+                                is and cannot be invoked invocationtargetexception ex    
+                    lowlevel throwable t   ex gettargetexception    
+                    out println  cause  the constructor threw the exception    
+                    out println t tostring     
+                    t printstacktrace out noclassdeffounderror ncdfe    
+                    jars out println  cause   a needed by classname     cannot be found      
+                    out println             ncdfe getmessage     
+                    out println  action  determine what extra jar files are  
+                                    needed  and place them in     
+                    out println dirlisting   
+                  
+              
+            out println    
+            out println not panic is a common problem definitions    
+                out println  it may just be a typographical error in the build file   
+                           or the task type declaration jars    
+                out println  the commonest cause is a missing jar lowlevel    
+                out println is quite a low level problem  which may need   
+                           consultation with the author of the task anttask    
+                    out println may be the ant team  please file a   
+                               defect or contact the developer team out println does not appear to be a task bundled with ant     
+                    out println  please take it up with the supplier of the third-party   
+                              type         
+                    out println you have written it yourself  you probably have a bug to fix out println    
+                out println is not a bug  it is a configuration problem    
+              
+          
+        out flush    
+        out close errortext tostring anttypetable hashtable   
+  
+ 
+        anttypetable project project project   project  
+          
+ 
+        anttypedefinition getdefinition key anttypedefinition get key object get object key gettypeclass key   
+          
+ 
+        object create name    
+            anttypedefinition def   getdefinition name def null   def create project gettypeclass name    
+            anttypedefinition def   getdefinition name def null   def gettypeclass project getexposedclass name    
+            anttypedefinition def   getdefinition name def null   def getexposedclass project contains object clazz found clazz iterator i   values   iterator    i hasnext       found     
+                    found       anttypedefinition   i next     getexposedclass  
+                        project     clazz found containsvalue object value contains value   
+          
+      
+ 
+ org apache tools ant ComponentHelper

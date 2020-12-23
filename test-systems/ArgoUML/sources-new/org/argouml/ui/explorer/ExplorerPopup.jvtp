@@ -1,0 +1,295 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications  
+    
+   popup extra functionality explorer  
+   
+    author alexb 0 15 2 
+    
+    
+       creates new instance explorerpopup  
+       
+        param selecteditem item pointing param event  
+        
+   check multiple items selected     
+   profile elements not model elements 
+   todo ve made some attempt rationalize conditions here make readable d suggest conditions move each diagram  
+   break up one complex method few simple ones give diagrams knowledge themselves 
+    although diagrams may fact delegate turn model component   
+   bob tarling 31 jan 2004 
+   eg code here something activediagram canadd selecteditem     
+   umlaction action   
+   new actionaddexistingnode  
+   menulocalize  menu popup add diagram    
+   selecteditem   
+   action setenabled action shouldbeenabled add action profile element not considered selection 
+   avoids modifications profile models 
+   todo  make sure shouldn't go previous 
+   condition -tml 
+   avoids modifications profile models 
+    
+       initialize menu diagram construction explorer popup menu  
+       
+        
+    
+       initialize menu diagram construction explorer popup menu  
+       
+        
+   check see targets classifiers 
+   before adding option create association between attempt build menu item create given model element type relation betwen two existing model elements succesful menu item added given menu 
+        param metatype type model element menu item create 
+        param source source model element 
+        param dest destination model element 
+        param relationshipdescr textual description describes source relates dest 
+        param menu menu menu item added 
+        
+    
+       localize popup menu item navigator pane  
+       
+        param key key string localize  
+        return localized string  
+        
+    
+       add popup menu items adding diagram both edge ends  
+       
+        param edge edge menu item added uid uml object added diagram constructor  
+           
+            param name localized name action 
+            param o node uml object added 
+            
+    
+            see javax swing action#isenabled   
+            
+   end class actionaddexistingrelatednode action create relation between 2 model elements  
+       
+        author bob tarling action create association between 2 model elements  
+       
+        author bob tarling action create association between 2 model elements  
+       
+        author bob tarling 
+       org argouml ui explorer ExplorerPopup org argouml ui explorer explorerpopup jpopupmenu jmenu creatediagrams jmenu menulocalize  menu popup create-diagram explorerpopup object selecteditem  mouseevent me explorer popup menu project currentproject   
+            projectmanager getmanager   getcurrentproject multiselect   
+                targetmanager getinstance   gettargets   size     1 modelelementsonly iterator it   targetmanager getinstance   gettargets   iterator    
+                it hasnext      modelelementsonly      
+            object element   it next model getfacade   isaumlelement element  
+                      
+                       isrelatedtoprofiles currentproject  element     
+        	modelelementsonly argodiagram activediagram   currentproject getactivediagram multiselect 
+                  
+                    isrelatedtoprofiles currentproject  selecteditem     
+            initmenucreatediagrams add creatediagrams multiselect    selecteditem profile add actionexportprofilexmi  profile  selecteditem modelelementsonly    
+            initmenucreatemodelelements object projectmodel   currentproject getmodel modelelementselected   model getfacade   isaumlelement  
+                selecteditem  
+                  
+                    isrelatedtoprofiles currentproject  selecteditem modelelementselected naryassociationselected   
+                model getfacade   isanaryassociation selecteditem classifierselected   
+                model getfacade   isaclassifier selecteditem packageselected   
+                model getfacade   isapackage selecteditem commentselected   
+                model getfacade   isacomment selecteditem statevertexselected   
+                model getfacade   isastatevertex selecteditem instanceselected   
+                model getfacade   isainstance selecteditem datavalueselected   
+                model getfacade   isadatavalue selecteditem relationshipselected   
+                model getfacade   isarelationship selecteditem flowselected   
+                model getfacade   isaflow selecteditem linkselected   
+                model getfacade   isalink selecteditem transitionselected   
+                model getfacade   isatransition selecteditem activitydiagramactive   
+                activediagram umlactivitydiagram sequencediagramactive   
+                activediagram umlsequencediagram statediagramactive   
+                activediagram umlstatediagram object selectedstatemachine   
+                 statevertexselected  ? model 
+                     getstatemachineshelper   getstatemachine selecteditem object diagramstatemachine   
+                 statediagramactive  ?   umlstatediagram  activediagram  
+                     getstatemachine object diagramactivity   
+                 activitydiagramactive  
+                    ?   umlactivitydiagram  activediagram  getstatemachine multiselect classifierselected     relationshipselected  
+                            packageselected    selecteditem    projectmodel  
+                            statevertexselected 
+                                   activitydiagramactive 
+                                   diagramactivity    selectedstatemachine  
+                            statevertexselected 
+                                   statediagramactive 
+                                   diagramstatemachine    selectedstatemachine  
+                            instanceselected 
+                                    datavalueselected 
+                                    sequencediagramactive  
+                           naryassociationselected    commentselected    
+                    action action actionaddexistingnode  
+                            menulocalize  menu popup add-to-diagram    
+                            selecteditem add action relationshipselected 
+                            flowselected 
+                            naryassociationselected  
+                            linkselected     sequencediagramactive  
+                           transitionselected    
+ 
+                    action action actionaddexistingedge  
+                            menulocalize  menu popup add-to-diagram    
+                            selecteditem add action   
+                    addmenuitemforbothendsof selecteditem classifierselected 
+                           packageselected add actionsetsourcepath model getfacade   isaoperation selecteditem add actionresequencediagram packageselected 
+                           model getfacade   isamodel selecteditem add actionaddpackage selecteditem    projectmodel add actiondeletemodelelements multiselect selecteditem umlclassdiagram    
+                action action actionaddallclassesfrommodel  
+                        menulocalize  menu popup add-all-classes-to-diagram    
+                        selecteditem add action multiselect    
+            collection coll   targetmanager getinstance   gettargets    
+            iterator iter    coll coll iterator list object  classifiers arraylist object iter iter hasnext      
+                object o   iter next model getfacade   isaclassifier o  
+                         model getfacade   isarelationship o  
+ 
+                       
+                         isrelatedtoprofiles currentproject  o     
+                    classifiers add o classifiers isempty      
+                action action actionaddexistingnodes  
+                        menulocalize  menu popup add-to-diagram    
+                        classifiers add action selecteditem diagram add actionsavediagramtoclipboard     
+            actiondeletemodelelements ad actiondeletemodelelements    
+            ad setenabled ad shouldbeenabled add ad initmenucreatediagrams     
+        creatediagrams add actionusecasediagram     
+ 
+        creatediagrams add actionclassdiagram     
+ 
+        creatediagrams add actionsequencediagram     
+ 
+        creatediagrams add actioncollaborationdiagram     
+ 
+        creatediagrams add actionstatediagram     
+ 
+        creatediagrams add actionactivitydiagram     
+ 
+        creatediagrams add actiondeploymentdiagram initmenucreatemodelelements     
+	list targets   targetmanager getinstance   gettargets    
+        list jmenuitem  menuitems arraylist jmenuitem targets size      2 classifierrolefound classifierrolesonly iterator it   targets iterator    
+	            it hasnext      classifierrolesonly model getfacade   isaclassifierrole it next       
+		    classifierrolefound classifierrolesonly classifierrolesonly    
+                menuitems add jmenuitem actioncreateassociationrole  
+                	model getmetatypes   getassociationrole     
+                	targets classifierrolefound classifiersonly iterator it   targets iterator    
+                        it hasnext      classifiersonly model getfacade   isaclassifier it next       
+                        classifiersonly classifiersonly    
+                    menuitems add jmenuitem actioncreateassociation  
+                    	model getmetatypes   getassociation     
+                    	targets targets size      2    
+            addcreatemodelelementaction  
+        	    menuitems  
+        	    model getmetatypes   getdependency    
+        	          menulocalize  menu popup depends-on           
+             
+            addcreatemodelelementaction  
+        	    menuitems  
+        	    model getmetatypes   getgeneralization    
+        	          menulocalize  menu popup generalizes           
+            addcreatemodelelementaction  
+        	    menuitems  
+        	    model getmetatypes   getinclude    
+        	          menulocalize  menu popup includes           
+            addcreatemodelelementaction  
+        	    menuitems  
+        	    model getmetatypes   getextend    
+        	          menulocalize  menu popup addcreatemodelelementaction  
+        	    menuitems  
+        	    model getmetatypes   getpackageimport    
+        	          menulocalize  menu popup has-permission-on           
+            addcreatemodelelementaction  
+        	    menuitems  
+        	    model getmetatypes   getusage    
+        	          menulocalize  menu popup uses           
+            addcreatemodelelementaction  
+        	    menuitems  
+        	    model getmetatypes   getabstraction    
+        	          menulocalize  menu popup realizes menuitems size      1    
+	    add menuitems get 0 menuitems size     1    
+	    jmenu menu jmenu menulocalize  menu popup create-model-element     
+	    add menu iterator it   menuitems iterator    it hasnext        
+                menu add  jmenuitem  it next addcreatemodelelementaction  
+	        collection jmenuitem  menuitems  
+		object metatype relationshipdescr    
+	list targets   targetmanager getinstance   gettargets    
+	object source   targets get 0   
+	object dest   targets get 1   
+        jmenu submenu jmenu  
+        	menulocalize  menu popup create         
+        	  model getmetatypes   getname metatype    
+        builddirectionalcreatemenuitem  
+            metatype  dest  source  relationshipdescr  submenu   
+        builddirectionalcreatemenuitem  
+            metatype  source  dest  relationshipdescr  submenu submenu getmenucomponents   length   0    
+            menuitems add submenu builddirectionalcreatemenuitem  
+	    object metatype   
+	    object source   
+	    object dest relationshipdescr  
+	    jmenu menu model getumlfactory   isconnectionvalid  
+		    metatype  source  dest jmenuitem menuitem jmenuitem actioncreatemodelelement  
+			    metatype   
+			    source   
+			    dest   
+			    relationshipdescr menuitem menu add menuitem menulocalize key translator localize key addmenuitemforbothendsof object edge    
+        collection coll model getfacade   isaassociation edge  
+                   model getfacade   isalink edge     
+            coll   model getfacade   getconnections edge model getfacade   isaabstraction edge  
+                   model getfacade   isadependency edge     
+            coll arraylist    
+            coll addall model getfacade   getclients edge    
+            coll addall model getfacade   getsuppliers edge model getfacade   isageneralization edge     
+            coll arraylist    
+            object parent   model getfacade   getgeneral edge   
+            coll add parent   
+            coll addall model getfacade   getchildren parent coll iterator iter   coll iterator iter hasnext      
+            object me   iter next me model getfacade   isaassociationend me     
+                    me   model getfacade   gettype me me name   model getfacade   getname me name name length      0    
+                        name     anon element    
+                      
+                    action action actionaddexistingrelatednode  
+                            menulocalize  menu popup add-to-diagram          
+                               name  
+                            me add action actionaddexistingrelatednode actionaddexistingnode actionaddexistingrelatednode name  object o name  o   
+            object   o isenabled     
+            argodiagram dia   projectmanager getmanager    
+                getcurrentproject   getactivediagram dia mutablegraphmodel gm    mutablegraphmodel  dia getgraphmodel gm canaddnode object actioncreatemodelelement abstractaction logger log   
+	    logger getlogger actioncreatemodelelement actioncreatemodelelement  
+		object metatype   
+		object source   
+		object dest relationshipdescr messageformat format  
+		    relationshipdescr object     
+			    displaytexttree getmodelelementdisplayname source   
+			    displaytexttree getmodelelementdisplayname dest metatype   metatype source   source dest   dest actionperformed actionevent e    
+	    object rootmodel    
+                projectmanager getmanager   getcurrentproject   getmodel model getumlfactory   buildconnection  
+		    metatype  
+		    source dest null  
+		    rootmodel illegalmodelelementconnectionexception e1    
+		log error  exception   e1 actioncreateassociation abstractaction logger log   
+	    logger getlogger actioncreatemodelelement actioncreateassociation  
+		object metatype   
+		list classifiers menulocalize  menu popup create         
+		      model getmetatypes   getname metatype metatype   metatype classifiers   classifiers actionperformed actionevent e object newelement   model getumlfactory   buildconnection  
+		    metatype  
+		    classifiers get 0 classifiers get 1 null i   2  i   classifiers size      i    
+                    model getumlfactory   buildconnection  
+			    model getmetatypes   getassociationend    
+			    newelement classifiers get i null illegalmodelelementconnectionexception e1    
+		log error  exception   e1 actioncreateassociationrole abstractaction logger log   
+            logger getlogger actioncreatemodelelement actioncreateassociationrole  
+                object metatype   
+                list classifierroles menulocalize  menu popup create         
+                      model getmetatypes   getname metatype metatype   metatype classifierroles   classifierroles actionperformed actionevent e object newelement   model getumlfactory   buildconnection  
+                        metatype  
+                        classifierroles get 0 classifierroles get 1 null i   2  i   classifierroles size      i    
+                    model getumlfactory   buildconnection  
+                            model getmetatypes   getassociationendrole    
+                            newelement classifierroles get i null illegalmodelelementconnectionexception e1    
+                log error  exception   e1 isrelatedtoprofiles project currentproject  
+            object selecteditem found   selecteditem profileconfiguration 
+                   selecteditem profile 
+                   selecteditem argodiagram found profile profile   currentproject getprofileconfiguration   
+                     getprofiles      
+                collection models models   profile getprofilepackages object model   models model getfacade   getmodel selecteditem  
+                                 equals model      
+                            found profileexception e found  
+      
+ org argouml ui explorer ExplorerPopup

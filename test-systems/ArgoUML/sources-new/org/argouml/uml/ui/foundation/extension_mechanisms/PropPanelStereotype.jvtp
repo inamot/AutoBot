@@ -1,0 +1,146 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications properties panel stereotype serial version  
+        
+    
+       construct stereotype properties panel  
+        
+    
+       returns generalizationscroll  
+       
+        return jscrollpane 
+        
+    
+       returns specializationscroll  
+       
+        return jscrollpane 
+        
+    
+       returns tagdefinitionscroll  
+       
+        return jscrollpane 
+        
+    
+       initialise meta-classes list   p code necessary independent model repository implementation e ensure sorted list strings passed unmodifiable list   copy sort result list model baseclasses stereotype  
+       
+        author michiel 
+        
+    
+           construct model  listen changes baseclass   
+            
+   keep sorted action add baseclass stereotype  
+       
+        author michiel action remove baseclass stereotype  
+       
+        author michiel 
+       org argouml uml ui foundation extension_mechanisms PropPanelStereotype org argouml uml ui foundation extension_mechanisms proppanelstereotype proppanelmodelelement umlgeneralizableelementspecializationlistmodel 
+    specializationlistmodel umlgeneralizableelementspecializationlistmodel umlgeneralizableelementgeneralizationlistmodel 
+    generalizationlistmodel umlgeneralizableelementgeneralizationlistmodel umlstereotypetagdefinitionlistmodel 
+    tagdefinitionlistmodel umlstereotypetagdefinitionlistmodel umlextendedelementslistmodel 
+    extendedelementslistmodel umlextendedelementslistmodel proppanelstereotype label stereotype-title   lookupicon  stereotype     
+ 
+        addfield translator localize  label name    getnametextfield     
+ 
+        addfield translator localize  label namespace    
+                 getnamespaceselector     
+ 
+ 
+        jpanel modifierspanel   createborderpanel  
+                translator localize  label modifiers     
+        modifierspanel add umlgeneralizableelementabstractcheckbox     
+        modifierspanel add umlgeneralizableelementleafcheckbox     
+        modifierspanel add umlgeneralizableelementrootcheckbox     
+        add modifierspanel   
+         
+        add getnamespacevisibilitypanel     
+ 
+        addseparator    
+ 
+        addfield translator localize  label generalizations    
+                getgeneralizationscroll     
+ 
+        addfield translator localize  label specializations    
+                getspecializationscroll     
+ 
+        addfield translator localize  label tagdefinitions    
+                gettagdefinitionscroll     
+ 
+        addseparator    
+ 
+        initmetaclasses    
+        umlmutablelinkedlist umll umlmutablelinkedlist umlstereotypebaseclasslistmodel actionaddstereotypebaseclass umll setdeleteaction actiondeletestereotypebaseclass     
+        umll setcellrenderer defaultlistcellrenderer     
+        addfield translator localize  label base jscrollpane umll    
+ 
+        addfield translator localize  label extended-elements    
+                getextendedelementsscroll     
+ 
+        addaction actionnavigatenamespace     
+        addaction actionnewstereotype     
+        addaction actionnewtagdefinition     
+        addaction getdeleteaction jscrollpane getgeneralizationscroll generalizationscroll jlist list umllinkedlist generalizationlistmodel   
+            generalizationscroll jscrollpane list generalizationscroll jscrollpane getspecializationscroll specializationscroll jlist list umllinkedlist specializationlistmodel   
+            specializationscroll jscrollpane list specializationscroll jscrollpane gettagdefinitionscroll tagdefinitionscroll jlist list umllinkedlist tagdefinitionlistmodel   
+            tagdefinitionscroll jscrollpane list tagdefinitionscroll jscrollpane getextendedelementsscroll extendedelementsscroll jlist list umllinkedlist extendedelementslistmodel   
+            extendedelementsscroll jscrollpane list extendedelementsscroll initmetaclasses     
+        collection tmpmetaclasses    
+            model getcorehelper   getallmetatypenames tmpmetaclasses list    
+            metaclasses    list tmpmetaclasses metaclasses linkedlist tmpmetaclasses collections sort metaclasses unsupportedoperationexception e    
+              
+            metaclasses linkedlist tmpmetaclasses   
+            collections sort metaclasses umlstereotypebaseclasslistmodel umlmodelelementlistmodel2   
+ 
+          
+        umlstereotypebaseclasslistmodel baseclass    
+          
+ 
+         override buildmodellist     
+            removeallelements model getfacade   isastereotype gettarget       
+                  
+                linkedlist lst linkedlist model getfacade   getbaseclasses gettarget      
+                collections sort lst   
+                addall lst   
+              
+          
+ 
+         override isvalidelement object element model getfacade   isastereotype element actionaddstereotypebaseclass abstractactionaddmodelelement2  
+ 
+         override list getchoices metaclasses  
+          
+ 
+         override getdialogtitle translator localize  dialog title add-baseclasses    
+          
+ 
+         override list getselected     
+            list result arraylist model getfacade   isastereotype gettarget       
+                collection bases    
+                    model getfacade   getbaseclasses gettarget     
+                result addall bases result  
+          
+ 
+         override doit collection selected    
+            object stereo   gettarget    
+            set object  oldset hashset object  getselected     
+            set toberemoved hashset object  oldset object o   selected oldset contains o     
+                    toberemoved remove o model getextensionmechanismshelper   
+                             addbaseclass stereo  o object o   toberemoved    
+                model getextensionmechanismshelper   removebaseclass stereo  o actiondeletestereotypebaseclass abstractactionremoveelement actiondeletestereotypebaseclass translator localize  menu popup remove     
+          
+ 
+         override actionperformed actionevent e    
+            undomanager getinstance   startchain    
+            object baseclass   getobjecttoremove baseclass object st   gettarget model getfacade   isastereotype st     
+                    model getextensionmechanismshelper   removebaseclass st  
+                            baseclass   
+                  
+              
+          
+      
+ org argouml uml ui foundation extension_mechanisms PropPanelStereotype

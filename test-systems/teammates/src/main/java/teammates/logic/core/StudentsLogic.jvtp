@@ -1,0 +1,239 @@
+ 
+    
+   handles operations related students  
+   
+    see studentattributes 
+    see studentsdb 
+    
+   prevent initialization 
+    
+       gets students database method used admin only searching not restrict visibility according logged user's google id used admin search students whole system  
+        return null result found 
+        
+   finalemail string used represent student's email originalemail cannot used student's email being updated new valid email 
+            - student email cannot used always null non-email attributes student being updated new email updated invalid 
+            
+  untested case deletion not persisted immediately e  persistence delay  
+         reason  difficult reproduce persistence delay during testing 
+   adjust submissions moving different team 
+   todo  check delete comments section team section team longer existent course 
+   edit student uses keeporiginal policy unchanged fields set null  hence t isvalid student here updatewithreferencetoexistingstudentrecord method called student valid 
+   here db access avoided really want optimize code 
+   prepare new student 
+   cascade email change any 
+   edit student uses keeporiginal policy unchanged fields set null  hence t isvalid student here updatewithexistingrecordwithgoogleidreset method called student valid 
+   todo use batch persist operation here? 
+   enroll students 
+   add return list students not included enroll list  
+    
+       validates sections any limit violations teams any team name violations conflicts 
+    
+       validates teams any team name violations conflicts 
+   delete responses before deleting student need know student's team  
+   cascade delete students 
+    
+       batch creates updates documents given students  
+        
+    
+       builds   code studentlist user input   code lines empty lines lines only white spaces skipped  
+       
+        param lines enrollment lines entered instructor  
+        throws enrollexception some student instances created invalid exception message contains 
+               invalidity info invalid student instances html format  
+       teammates logic core StudentsLogic teammates logic core studentslogic studentslogic studentslogic inst instance createstudentcascade studentattributes studentdata invalidparametersexception  entityalreadyexistsexception  
+            entitydoesnotexistexception   
+        createstudentcascade studentdata createstudentcascadewithoutdocument  
+            studentattributes studentdata invalidparametersexception  
+            entityalreadyexistsexception  entitydoesnotexistexception   
+        createstudentcascade studentdata createstudentcascade studentattributes studentdata hasdocument invalidparametersexception  entityalreadyexistsexception  entitydoesnotexistexception   
+        studentsdb createstudent studentdata  hasdocument courseslogic iscoursepresent studentdata course entitydoesnotexistexception  
+                     course does not exist      studentdata course         
+          
+ 
+      
+ 
+      
+     suppresswarnings  deprecation list studentattributes  getallstudents studentsdb getallstudents studentattributes getstudentforemail courseid email studentsdb getstudentforemail courseid  email studentattributes getstudentforcourseidandgoogleid courseid googleid studentsdb getstudentforgoogleid courseid  googleid studentattributes getstudentforregistrationkey registrationkey studentsdb getstudentforregistrationkey registrationkey list studentattributes  getstudentsforgoogleid googleid studentsdb getstudentsforgoogleid googleid list studentattributes  getstudentsforcourse courseid studentsdb getstudentsforcourse courseid list studentattributes  getstudentsforteam teamname courseid studentsdb getstudentsforteam teamname  courseid list studentattributes  getstudentsforsection sectionname courseid studentsdb getstudentsforsection sectionname  courseid list studentattributes  getunregisteredstudentsforcourse courseid studentsdb getunregisteredstudentsforcourse courseid deletedocument studentattributes student    
+        studentsdb deletedocument student studentsearchresultbundle searchstudents querystring  list instructorattributes  instructors studentsdb search querystring  instructors studentsearchresultbundle searchstudentsinwholesystem querystring studentsdb searchstudentsinwholesystem querystring studentprofileattributes getstudentprofile googleid    
+        assumption assertnotnull googleid profileslogic getstudentprofile googleid getencryptedkeyforstudent courseid email entitydoesnotexistexception   
+ 
+        studentattributes studentdata   getstudentforemail courseid  email studentdata entitydoesnotexistexception  student does not exist       courseid         email stringhelper encrypt studentdata key isstudentinanycourse googleid studentsdb getstudentsforgoogleid googleid  size      0 isstudentincourse courseid studentemail studentsdb getstudentforemail courseid  studentemail isstudentinteam courseid teamname studentemail    
+ 
+        studentattributes student   getstudentforemail courseid  studentemail student list studentattributes  teammates   getstudentsforteam teamname  courseid studentattributes teammate   teammates teammate email equals student email isstudentsinsameteam courseid student1email student2email    
+        studentattributes student1   getstudentforemail courseid  student1email student1 isstudentinteam courseid  student1 team  student2email updatestudentcascade originalemail  
+            studentattributes student invalidparametersexception  
+            entitydoesnotexistexception   
+        updatestudentcascade originalemail  student updatestudentcascadewithoutdocument originalemail  
+            studentattributes student invalidparametersexception  
+            entitydoesnotexistexception   
+        updatestudentcascade originalemail  student updatestudentcascade originalemail  studentattributes student hasdocument invalidparametersexception  entitydoesnotexistexception   
+        studentattributes originalstudent   getstudentforemail student course  originalemail   
+        updatestudentcascadewithsubmissionadjustmentscheduled originalemail  student  hasdocument   
+ 
+          
+        fieldvalidator validator fieldvalidator finalemail   student email validator getinvalidityinfoforemail student email  isempty   
+                            ? originalemail 
+                              student email isteamchanged originalstudent team  student team     
+            frlogic updatefeedbackresponsesforchangingteam student course  finalemail  originalstudent team  student team issectionchanged originalstudent section  student section     
+            frlogic updatefeedbackresponsesforchangingsection student course  finalemail  originalstudent section  
+                                                              student section updatestudentcascadewithsubmissionadjustmentscheduled originalemail  
+            studentattributes student hasdocument entitydoesnotexistexception  invalidparametersexception   
+          
+          
+          
+          
+ 
+          
+        studentsdb verifystudentexists student course  originalemail   
+ 
+        studentattributes originalstudent   getstudentforemail student course  originalemail   
+ 
+          
+        student updatewithexistingrecord originalstudent student isvalid invalidparametersexception student getinvalidityinfo     
+          
+ 
+        studentsdb updatestudent student course  originalemail  student name  student team  student section  
+                                 student email  student googleid  student comments  hasdocument originalemail equals student email     
+            frlogic updatefeedbackresponsesforchangingemail student course  originalemail  student email   
+            fslogic updaterespondentsforstudent originalemail  student email  student course resetstudentgoogleid originalemail courseid hasdocument entitydoesnotexistexception  invalidparametersexception   
+          
+          
+          
+          
+ 
+        studentsdb verifystudentexists courseid  originalemail   
+        studentattributes originalstudent   getstudentforemail courseid  originalemail   
+        originalstudent googleid originalstudent isvalid invalidparametersexception originalstudent getinvalidityinfo     
+          
+        studentsdb updatestudent originalstudent course  originalemail  originalstudent name  
+                                 originalstudent team  originalstudent section  originalstudent email  
+                                 originalstudent googleid  originalstudent comments  hasdocument courseenrollmentresult enrollstudents enrolllines courseid entitydoesnotexistexception  enrollexception  invalidparametersexception  entityalreadyexistsexception enrollstudents enrolllines  courseid courseenrollmentresult enrollstudentswithoutdocument enrolllines courseid entitydoesnotexistexception  enrollexception  invalidparametersexception  entityalreadyexistsexception enrollstudents enrolllines  courseid courseenrollmentresult enrollstudents enrolllines courseid hasdocument entitydoesnotexistexception  enrollexception  invalidparametersexception  entityalreadyexistsexception courseslogic iscoursepresent courseid entitydoesnotexistexception  course does not exist    
+                      courseid enrolllines isempty enrollexception statusmessages enroll_line_empty   
+          
+ 
+        list studentattributes  studentlist   createstudents enrolllines  courseid   
+        arraylist studentattributes  returnlist arraylist      
+        arraylist studentenrolldetails  enrollmentlist arraylist      
+ 
+        verifyiswithinsizelimitperenrollment studentlist   
+        validatesectionsandteams studentlist  courseid studentattributes student   studentlist    
+            studentenrolldetails enrollmentdetails  
+ 
+            enrollmentdetails   enrollstudent student  hasdocument   
+            student updatestatus   enrollmentdetails updatestatus  
+ 
+            enrollmentlist add enrollmentdetails   
+            returnlist add student   
+          
+ 
+          
+        list studentattributes  studentsincourse   getstudentsforcourse courseid studentattributes student   studentsincourse isinenrolllist student  returnlist     
+                student updatestatus   studentupdatestatus not_in_enroll_list  
+                returnlist add student courseenrollmentresult returnlist  enrollmentlist verifyiswithinsizelimitperenrollment list studentattributes  students enrollexception students size size_limit_per_enrollment enrollexception statusmessages quota_per_enrollment_exceed validatesectionsandteams list studentattributes  studentlist courseid enrollexception   
+ 
+        list studentattributes  mergedlist   getmergedlist studentlist  courseid mergedlist size     2 errormessage   getsectioninvalidityinfo mergedlist    getteaminvalidityinfo mergedlist errormessage isempty enrollexception errormessage validateteams list studentattributes  studentlist courseid enrollexception   
+ 
+        list studentattributes  mergedlist   getmergedlist studentlist  courseid mergedlist size     2 errormessage   getteaminvalidityinfo mergedlist errormessage length     0 enrollexception errormessage list studentattributes  getmergedlist list studentattributes  studentlist courseid    
+ 
+        list studentattributes  mergedlist arraylist      
+        list studentattributes  studentsincourse   getstudentsforcourse courseid studentattributes student   studentlist    
+            mergedlist add student studentattributes student   studentsincourse isinenrolllist student  mergedlist     
+                mergedlist add student mergedlist getsectionforteam courseid teamname    
+ 
+        list studentattributes  students   getstudentsforteam teamname  courseid students isempty default_section students get 0  section getsectioninvalidityinfo list studentattributes  mergedlist    
+ 
+        studentattributes sortbysectionname mergedlist   
+ 
+        list invalidsectionlist arraylist studentscount   1 i   1  i   mergedlist size    i      
+            studentattributes currentstudent   mergedlist get i   
+            studentattributes previousstudent   mergedlist get i - 1 currentstudent section equals previousstudent section     
+                studentscount studentscount   section_size_limit    
+                    invalidsectionlist add previousstudent section   
+                  
+                studentscount   1 i    mergedlist size   - 1    studentscount   section_size_limit    
+                invalidsectionlist add currentstudent section   
+              
+          
+ 
+        stringbuilder errormessage stringbuilder section   invalidsectionlist    
+            errormessage append format statusmessages section_quota_exceed  section errormessage tostring getteaminvalidityinfo list studentattributes  mergedlist    
+ 
+        studentattributes sortbyteamname mergedlist   
+ 
+        list invalidteamlist arraylist i   1  i   mergedlist size    i      
+            studentattributes currentstudent   mergedlist get i   
+            studentattributes previousstudent   mergedlist get i - 1 currentstudent team equals previousstudent team  
+                        currentstudent section equals previousstudent section  
+                        invalidteamlist contains currentstudent team     
+                invalidteamlist add currentstudent team   
+              
+          
+ 
+        stringbuilder errormessage stringbuilder 100 team   invalidteamlist    
+            errormessage append format statusmessages team_invalid_section_edit  
+                                              sanitizationhelper sanitizeforhtml team errormessage length      0    
+            errormessage append  please use the enroll page to edit multiple students errormessage tostring deleteallstudentsincourse courseid    
+        list studentattributes  studentsincourse   getstudentsforcourse courseid studentattributes student   studentsincourse    
+            deletestudentcascade courseid  student email deletestudentcascade courseid studentemail    
+        deletestudentcascade courseid  studentemail deletestudentcascadewithoutdocument courseid studentemail    
+        deletestudentcascade courseid  studentemail deletestudentcascade courseid studentemail hasdocument    
+          
+        frlogic deletefeedbackresponsesforstudentandcascade courseid  studentemail   
+        fslogic deletestudentfromrespondentslist getstudentforemail courseid  studentemail    
+        studentsdb deletestudent courseid  studentemail  hasdocument deletestudentsforgoogleid googleid    
+        list studentattributes  students   studentsdb getstudentsforgoogleid googleid studentattributes student   students    
+            fslogic deletestudentfromrespondentslist student   
+          
+        studentsdb deletestudentsforgoogleid googleid deletestudentsforgoogleidwithoutdocument googleid    
+        list studentattributes  students   studentsdb getstudentsforgoogleid googleid studentattributes student   students    
+            fslogic deletestudentfromrespondentslist student   
+          
+        studentsdb deletestudentsforgoogleidwithoutdocument googleid deletestudentsforgoogleidandcascade googleid    
+        list studentattributes  students   studentsdb getstudentsforgoogleid googleid studentattributes student   students    
+            deletestudentcascade student course  student email deletestudentsforcourse courseid    
+        studentsdb deletestudentsforcourse courseid deletestudentsforcoursewithoutdocument courseid    
+        studentsdb deletestudentsforcoursewithoutdocument courseid adjustfeedbackresponseforenrollments  
+            list studentenrolldetails  enrollmentlist  
+            feedbackresponseattributes response invalidparametersexception  entitydoesnotexistexception studentenrolldetails enrollment   enrollmentlist enrollment updatestatus    studentupdatestatus modified isresponsedeleted isteamchanged enrollment oldteam  enrollment newteam     
+                isresponsedeleted   frlogic updatefeedbackresponseforchangingteam enrollment  response isresponsedeleted    issectionchanged enrollment oldsection  enrollment newsection     
+                frlogic updatefeedbackresponseforchangingsection enrollment  response putdocument studentattributes student    
+        studentsdb putdocument student putdocuments list studentattributes  students    
+        studentsdb putdocuments students studentenrolldetails enrollstudent studentattributes validstudentattributes hasdocument invalidparametersexception  entitydoesnotexistexception  entityalreadyexistsexception   
+        studentattributes originalstudentattributes   getstudentforemail  
+                validstudentattributes course  validstudentattributes email   
+ 
+        studentenrolldetails enrollmentdetails studentenrolldetails    
+        enrollmentdetails course   validstudentattributes course  
+        enrollmentdetails email   validstudentattributes email  
+        enrollmentdetails newteam   validstudentattributes team  
+        enrollmentdetails newsection   validstudentattributes section ismodifyingexistingstudent   originalstudentattributes validstudentattributes isenrollinfosameas originalstudentattributes     
+            enrollmentdetails updatestatus   studentupdatestatus unmodified ismodifyingexistingstudent    
+            updatestudentcascadewithsubmissionadjustmentscheduled originalstudentattributes email  
+                                                                  validstudentattributes enrollmentdetails updatestatus   studentupdatestatus modified originalstudentattributes team equals validstudentattributes team     
+                enrollmentdetails oldteam   originalstudentattributes team originalstudentattributes section equals validstudentattributes section     
+                enrollmentdetails oldsection   originalstudentattributes section createstudentcascade validstudentattributes  hasdocument   
+            enrollmentdetails updatestatus   studentupdatestatus enrollmentdetails list studentattributes  createstudents lines courseid enrollexception   
+        list invalidityinfo arraylist linesarray   lines split eol   
+        arraylist studentemaillist arraylist      
+        list studentattributes  studentlist arraylist      
+ 
+        studentattributesfactory saf studentattributesfactory linesarray 0 i   1  i   linesarray length  i line   linesarray i sanitizedline   sanitizationhelper sanitizeforhtml line stringhelper iswhitespace line studentattributes student   saf makestudent line  courseid student isvalid info   stringhelper tostring sanitizationhelper sanitizeforhtml student getinvalidityinfo     
+                                                      br statusmessages enroll_lines_problem_detail_prefix         
+                    invalidityinfo add format statusmessages enroll_lines_problem  sanitizedline  info isstudentemailduplicated student email  studentemaillist info   
+                            stringhelper tostring  
+                                    getinvalidityinfoinduplicatedemail student email  studentemaillist  linesarray   
+                                      br statusmessages enroll_lines_problem_detail_prefix         
+                    invalidityinfo add format statusmessages enroll_lines_problem  sanitizedline  info    
+                  
+ 
+                studentemaillist add student email   
+                studentlist add student enrollexception e info format statusmessages enroll_lines_problem  sanitizedline  e getmessage     
+                invalidityinfo add info invalidityinfo isempty enrollexception stringhelper tostring invalidityinfo    br studentlist list getinvalidityinfoinduplicatedemail email  
+            list studentemaillist linesarray    
+        list info arraylist      
+        info add  same email address as the student in line \     linesarray studentemaillist indexof email    1 info isstudentemailduplicated email  
+            list studentemaillist studentemaillist contains email isinenrolllist studentattributes student  
+            list studentattributes  studentinfolist studentattributes studentinfo   studentinfolist studentinfo email equalsignorecase student email isteamchanged originalteam newteam newteam originalteam originalteam equals newteam issectionchanged originalsection newsection newsection originalsection originalsection equals newsection teamdetailsbundle getteamdetailsforstudent studentattributes student student teamdetailsbundle teamresult teamdetailsbundle    
+            teamresult name   student team  
+            teamresult students   getstudentsforteam student team  student course   
+            studentattributes sortbynameandthenbyemail teamresult students teamresult teammates logic core StudentsLogic

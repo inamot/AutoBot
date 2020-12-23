@@ -1,0 +1,234 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license package based work done timothy gerard endres 
+    time ice com ant project very grateful great code class represents entry tar archive consists entry's header well entry's file  entries instantiated one three ways  depending used  
+    p  
+   tarentries created header bytes read archive instantiated tarentry  byte     
+   constructor entries used extracting listing contents archive entries header filled using header bytes set file null reference archive entry not file  
+    p  
+   tarentries created files written archive instantiated tarentry  file   
+   constructor entries header filled using file's information keep reference file convenience writing entries  
+    p  
+   finally  tarentries constructed nothing name allows programmer construct entry hand instance only inputstream available writing archive header information constructed information case header fields set defaults file set null  
+   
+    p c structure tar entry's header pre  
+   struct header   
+   char name namsiz   
+   char mode 8   
+   char uid 8   
+   char gid 8   
+   char size 12   
+   char mtime 12   
+   char chksum 8   
+   char linkflag  
+   char linkname namsiz   
+   char magic 8   
+   char uname tunmlen   
+   char gname tgnmlen   
+   char devmajor 8   
+   char devminor 8   
+     header  
+     pre entry's name entry's permission mode entry's user id entry's group id entry's size entry's modification time entry's link flag entry's link name entry's magic tag entry's user name entry's group name entry's major device number entry's minor device number entry's file reference    
+    maximum length user's name tar file    
+    default permissions bits directories    
+    default permissions bits files    
+    convert millis seconds    
+    
+       construct empty entry prepares header values  
+        
+    
+       construct entry only name allows programmer construct entry's header hand   file set null  
+       
+        param name entry name 
+        
+    
+       construct entry name link flag  
+       
+        param name entry name 
+        param linkflag entry link flag  
+        
+    
+       construct entry file  file set file header constructed information file  
+       
+        param file file entry represents  
+        
+   strip drive letters  
+   review better check file separator absolute pathnames 
+   windows posix?  paths start networkdrive loop starting  's  
+    
+       construct entry archive's header bytes  file set null  
+       
+        param headerbuf header bytes tar archive entry  
+        
+    
+       determine two entries equal  equality determined header names being equal  
+       
+        param entry checked equality  
+        return true entries equal  
+        
+    
+       determine two entries equal  equality determined header names being equal  
+       
+        param entry checked equality  
+        return true entries equal  
+        
+    
+       hashcodes based entry names  
+       
+        return entry hashcode 
+        
+    
+       determine given entry descendant entry  
+       descendancy determined name descendant 
+       starting entry's name  
+       
+        param desc entry checked descendent return true entry descendant this entry's name  
+       
+        return entry's name  
+        
+    
+       set entry's name  
+       
+        param name entry's new name  
+        
+    
+       set mode entry 
+       
+        param mode mode entry entry's link name  
+       
+        return entry's link name entry's user id  
+       
+        return entry's user id  
+        
+    
+       set entry's user id  
+       
+        param userid entry's new user id entry's group id  
+       
+        return entry's group id  
+        
+    
+       set entry's group id  
+       
+        param groupid entry's new group id entry's user name  
+       
+        return entry's user name  
+        
+    
+       set entry's user name  
+       
+        param username entry's new user name entry's group name  
+       
+        return entry's group name  
+        
+    
+       set entry's group name  
+       
+        param groupname entry's new group name  
+        
+    
+       convenience method set entry's group user ids  
+       
+        param userid entry's new user id  
+        param groupid entry's new group id  
+        
+    
+       convenience method set entry's group user names  
+       
+        param username entry's new user name  
+        param groupname entry's new group name  
+        
+    
+       set entry's modification time parameter passed method java time   
+       
+        param time entry's new modification time  
+        
+    
+       set entry's modification time  
+       
+        param time entry's new modification time  
+        
+    
+       set entry's modification time  
+       
+        return time entry's new modification time entry's file  
+       
+        return entry's file entry's mode  
+       
+        return entry's mode entry's file size  
+       
+        return entry's file size  
+        
+    
+       set entry's file size  
+       
+        param size entry's new file size  
+        
+    
+       indicate entry gnu long name block 
+       
+        return true long name extension provided gnu tar 
+        
+    
+       return whether not entry represents directory  
+       
+        return true entry directory entry represents file file directory  return array tarentries entry's children  
+       
+        return array tarentry's entry's children  
+        
+    
+       write entry's header information header buffer  
+       
+        param outbuf tar entry header buffer fill parse entry's header information header buffer  
+       
+        param header tar entry header buffer information org apache tools tar TarEntry org apache tools tar tarentry tarconstants max_namelen   31 default_dir_mode   040755 default_file_mode   0100644 millis_per_second   1000 tarentry magic stringbuffer tmagic name stringbuffer linkname stringbuffer user   system getproperty  user name user length     max_namelen    
+            user   user substring 0  max_namelen userid   0 groupid   0 username stringbuffer user groupname stringbuffer file tarentry name isdir   name endswith devmajor   0 devminor   0 name stringbuffer name mode   isdir ? default_dir_mode   default_file_mode linkflag   isdir ? lf_dir   lf_normal userid   0 groupid   0 size   0 modtime date    gettime     millis_per_second linkname stringbuffer username stringbuffer groupname stringbuffer devmajor   0 devminor   0 tarentry name linkflag name linkflag   linkflag tarentry file file this file   file filename   file getpath osname   system getproperty  os name   tolowercase locale us osname osname startswith  windows filename length     2 ch1   filename charat 0 ch2   filename charat 1 ch2    ' ' 
+                                 ch1    'a'    ch1    'z'  
+                                    ch1    'a'    ch1    'z'      
+                        filename   filename substring 2 osname indexof  netware     -1 colon   filename indexof colon    -1    
+                    filename   filename substring colon   1   
+                  
+              
+          
+ 
+        filename   filename replace file separatorchar filename startswith         
+            filename   filename substring 1 linkname stringbuffer name stringbuffer filename file isdirectory mode   default_dir_mode linkflag   lf_dir name charat name length   - 1 name append mode   default_file_mode linkflag   lf_normal size   file length modtime   file lastmodified     millis_per_second devmajor   0 devminor   0 tarentry headerbuf this parsetarheader headerbuf equals tarentry it getname   equals it getname equals object it it getclass      it getclass equals  tarentry  it hashcode getname   hashcode isdescendent tarentry desc desc getname   startswith getname getname name tostring setname name name stringbuffer name setmode mode mode   mode getlinkname linkname tostring getuserid userid setuserid userid userid   userid getgroupid groupid setgroupid groupid groupid   groupid getusername username tostring setusername username username stringbuffer username getgroupname groupname tostring setgroupname groupname groupname stringbuffer groupname setids userid groupid setuserid userid setgroupid groupid setnames username groupname setusername username setgroupname groupname setmodtime time modtime   time   millis_per_second setmodtime date time modtime   time gettime     millis_per_second date getmodtime date modtime   millis_per_second file getfile file getmode mode getsize size setsize size size   size isgnulongnameentry linkflag    lf_gnutype_longname 
+                              name tostring   equals gnu_longlink isdirectory file file isdirectory linkflag    lf_dir getname   endswith tarentry   getdirectoryentries file file isdirectory tarentry 0 list file list    
+        tarentry   result tarentry list length i   0  i   list length    i    
+            result i tarentry file file  list i result writeentryheader outbuf offset   0  
+ 
+        offset   tarutils getnamebytes name  outbuf  offset  namelen   
+        offset   tarutils getoctalbytes mode  outbuf  offset  modelen   
+        offset   tarutils getoctalbytes userid  outbuf  offset  uidlen   
+        offset   tarutils getoctalbytes groupid  outbuf  offset  gidlen   
+        offset   tarutils getlongoctalbytes size  outbuf  offset  sizelen   
+        offset   tarutils getlongoctalbytes modtime  outbuf  offset  modtimelen csoffset   offset c   0  c   chksumlen    c    
+            outbuf offset outbuf offset linkflag  
+        offset   tarutils getnamebytes linkname  outbuf  offset  namelen   
+        offset   tarutils getnamebytes magic  outbuf  offset  magiclen   
+        offset   tarutils getnamebytes username  outbuf  offset  unamelen   
+        offset   tarutils getnamebytes groupname  outbuf  offset  gnamelen   
+        offset   tarutils getoctalbytes devmajor  outbuf  offset  devlen   
+        offset   tarutils getoctalbytes devminor  outbuf  offset  devlen offset   outbuf length    
+            outbuf offset      0 chk   tarutils computechecksum outbuf   
+ 
+        tarutils getchecksumoctalbytes chk  outbuf  csoffset  chksumlen parsetarheader header offset   0 name   tarutils parsename header  offset  namelen   
+        offset    namelen mode tarutils parseoctal header  offset  modelen   
+        offset    modelen userid tarutils parseoctal header  offset  uidlen   
+        offset    uidlen groupid tarutils parseoctal header  offset  gidlen   
+        offset    gidlen size   tarutils parseoctal header  offset  sizelen   
+        offset    sizelen modtime   tarutils parseoctal header  offset  modtimelen   
+        offset    modtimelen  
+        offset    chksumlen linkflag   header offset linkname   tarutils parsename header  offset  namelen   
+        offset    namelen magic   tarutils parsename header  offset  magiclen   
+        offset    magiclen username   tarutils parsename header  offset  unamelen   
+        offset    unamelen groupname   tarutils parsename header  offset  gnamelen   
+        offset    gnamelen devmajor tarutils parseoctal header  offset  devlen   
+        offset    devlen devminor tarutils parseoctal header  offset  devlen   
+      
+ org apache tools tar TarEntry

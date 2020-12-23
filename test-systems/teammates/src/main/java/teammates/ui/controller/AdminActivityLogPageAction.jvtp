@@ -1,0 +1,125 @@
+ maximum time period retrieve logs time increment  
+        
+   24 hrs milliseconds 
+   two hours milliseconds maximum number times retrieve logs time increment  
+        
+    
+       maximum number versions query current version 5 preceding versions parameter determines whether logs requests contained excludedlogrequesturis adminactivitylogpagedata shown  use true url show logs keep showing logs despite any action change page unless page reloaded false simply reloaded parameter omitted determines whether logs related testing data shown  use  testdata true url show testing logs keep showing logs testing data despite any action change page unless page reloaded testdata false simply reloaded parameter omitted used parse filterquery query not parsed filter function ignore query 
+    
+       selects versions query versions not specified return 
+       max_versions_to_query most recent versions used query search space limited certain log user unregistered  try finding timezone course id passed search page search button continue searching previous fromdate 
+    
+       retrieves enough logs within max_search_period hours  
+        
+    
+       retrieves logs time period specified query  
+        
+    
+       filters logs shown admin activity log page  
+       teammates ui controller AdminActivityLogPageAction teammates ui controller adminactivitylogpageaction action   
+  
+      
+    
+    
+      
+  
+      
+    
+ 
+  
+  
+ 
+     override actionresult execute     
+        gatekeeper verifyadminprivileges account   
+ 
+        adminactivitylogpagedata data adminactivitylogpagedata account  sessiontoken searchtimeoffset   getrequestparamvalue  searchtimeoffset searchtimeoffset searchtimeoffset logrolefromajax   getrequestparamvalue  logrole loggoogleidfromajax   getrequestparamvalue  loggoogleid logtimeinadmintimezonefromajax   getrequestparamvalue  logtimeinadmintimezone isloadinglocaltimeajax   logrolefromajax loggoogleidfromajax logtimeinadmintimezonefromajax isloadinglocaltimeajax    
+            data setloglocaltime getlocaltimeinfo loggoogleidfromajax  
+                                                  logrolefromajax  
+                                                  logtimeinadmintimezonefromajax createajaxresult data shouldshowalllogs   getrequestparamasboolean  all    
+        data setshowalllogs shouldshowalllogs shouldshowtestdata   getrequestparamasboolean  testdata    
+        data setshowtestdata shouldshowtestdata filterquery   getrequestparamvalue  filterquery filterquery filterquery       
+          
+          
+        data generatequeryparameters filterquery iscontinuefromprevioussearch    data isfromdatespecifiedinquery       searchtimeoffset isempty iscontinuefromprevioussearch    
+            data settodate parselong searchtimeoffset    
+          
+ 
+        list versiontoquery   getversionsforquery data getversions     
+        adminlogquery query adminlogquery versiontoquery  data getfromdate    data gettodate     
+ 
+        list activitylogentry  logs data isfromdatespecifiedinquery      
+            logs   searchlogswithexacttimeperiod query  data logs   searchlogswithtimeincrement query  data courseidfromsearchpage   getrequestparamvalue  courseid    
+        generatestatusmessage versiontoquery  data  logs  courseidfromsearchpage   
+        data init logs searchtimeoffset isempty createshowpageresult viewuris admin_activity_log  data createshowpageresult viewuris admin_activity_log_ajax  data list getversionsforquery list versions isversionspecifiedinrequest   versions versions isempty isversionspecifiedinrequest versions  
+          
+        gaeversionapi versionapi gaeversionapi versionapi getmostrecentversions max_versions_to_query generatestatusmessage list versiontoquery  
+                                       adminactivitylogpagedata data  
+                                       list activitylogentry  logs courseid    
+        stringbuilder status stringbuilder 500   
+        status append  total logs gone through in last search      totallogssearched 
+                        br total relevant logs found in last search format  %s br    logs size earliestsearchtime   data getfromdate    
+        activitylogentry earliestlogchecked logs isempty      
+            earliestlogchecked   logs get logs size   - 1 logs size      relevant_logs_per_page    earliestlogchecked earliestsearchtime   earliestlogchecked getlogtime targettimezone double_uninitialized data ispersonspecified targetusergoogleid   data getpersonspecified    
+            targettimezone   getlocaltimezoneforrequest targetusergoogleid targettimezone double_uninitialized    courseid courseid isempty      
+                  
+                targettimezone   getlocaltimezoneforunregistereduserrequest courseid targettimezone systemparams admin_time_zone_double admintimezone systemparams admin_time_zone_double timeinadmintimezone   computetimewithoffset admintimezone  earliestsearchtime timeinusertimezone   computetimewithoffset targettimezone  earliestsearchtime   
+ 
+        status append  the earliest log entry checked on  b     timeinadmintimezone      b  in admin time zone    
+                        admintimezone      and targettimezone double_uninitialized    
+            status append timeinusertimezone  append    br status append  on  b     timeinusertimezone      b  in local time zone      targettimezone       br     
+          
+ 
+        status append  logs are from following version s i   0  i   versiontoquery size    i version   versiontoquery get i  replace i   versiontoquery size   - 1    
+                status append version  append status append version  append   br     
+              
+          
+ 
+        status append  all available version s       
+        gaeversionapi versionapi gaeversionapi    
+        list version  versionlist   versionapi getavailableversions i   0  i   versionlist size    i version   versionlist get i  tostring i   versionlist size   - 1    
+                status append version  append status append version  append   br     
+              
+          
+ 
+          
+        status append   button btn-link\  id \ button_older\  data-next-end-time-to-search \   
+                        nextendtimetosearch 
+                         \  search more  button  input id \ ifshowall\  type \ hidden\  value \   
+                        data getshouldshowalllogs   
+                         \    input id \ ifshowtestdata\  type \ hidden\  value \   
+                        data getshouldshowtestdata statusstring   status tostring    
+        data setstatusforajax statusstring   
+        statustouser add statusmessage statusstring  statusmessagecolor info list activitylogentry  searchlogswithtimeincrement adminlogquery query  adminactivitylogpagedata data    
+        list activitylogentry  applogs linkedlist      
+ 
+        totallogssearched   0  
+        gaelogapi logapi gaelogapi starttime   query getendtime   - search_time_increment  
+        query settimeperiod starttime  query getendtime i   0  i   max_search_times  i applogs size      relevant_logs_per_page list applogline  searchresult   logapi fetchlogs query   
+            list activitylogentry  filteredlogs   filterlogsforactivitylogpage searchresult  data   
+            applogs addall filteredlogs   
+            totallogssearched    searchresult size    
+            query movetimeperiodbackward search_time_increment   
+          
+        data setfromdate query getstarttime     search_time_increment   
+        nextendtimetosearch   query getendtime applogs list activitylogentry  searchlogswithexacttimeperiod adminlogquery query  adminactivitylogpagedata data    
+        gaelogapi logapi gaelogapi    
+        list applogline  searchresult   logapi fetchlogs query   
+ 
+        nextendtimetosearch   data getfromdate   - 1  
+        totallogssearched   searchresult size filterlogsforactivitylogpage searchresult  data list activitylogentry  filterlogsforactivitylogpage list applogline  apploglines  
+                                                                adminactivitylogpagedata data    
+        list activitylogentry  applogs linkedlist applogline applog   apploglines logmsg   applog getlogmessage isnotteammateslog    logmsg contains  teammateslog islogfromadminactivitylogpage   logmsg contains  adminactivitylogpage isnotteammateslog    islogfromadminactivitylogpage activitylogentry activitylogentry   activitylogentry buildfromapplog applog istoshow   data filterlog activitylogentry  
+                         activitylogentry istestingdata      data getshouldshowtestdata istoshow applogs add activitylogentry applogs getlocaltimezoneforrequest usergoogleid userrole userrole userrole contentequals  admin      userrole contains   m systemparams admin_time_zone_double localtimezone double_uninitialized usergoogleid usergoogleid isempty      
+            localtimezone   findavailabletimezonefromcourses logic getcoursesforinstructor usergoogleid localtimezone double_uninitialized localtimezone localtimezone   findavailabletimezonefromcourses logic getcoursesforstudentaccount usergoogleid entitydoesnotexistexception e    
+                localtimezone double_uninitialized localtimezone double_uninitialized localtimezone localtimezone findavailabletimezonefromcourses list courseattributes  courses localtimezone double_uninitialized courses localtimezone courseattributes course   courses    
+            list feedbacksessionattributes  fsl   logic getfeedbacksessionsforcourse course getid fsl isempty fsl get 0  gettimezone localtimezone getlocaltimezoneforunregistereduserrequest courseid localtimezone double_uninitialized courseid courseid isempty localtimezone  
+          
+ 
+        list feedbacksessionattributes  fsl   logic getfeedbacksessionsforcourse courseid fsl isempty fsl get 0  gettimezone localtimezone getlocaltimezoneinfo loggoogleid logrole loggoogleid contentequals  unknown       loggoogleid contentequals  unregistered getlocaltimezoneforrequest loggoogleid  logrole logrole contains  unregistered       logrole contentequals  unregistered courseid   logrole split      1 getlocaltimezoneforunregistereduserrequest courseid double_uninitialized getlocaltimeinfo loggoogleid logrole logtimeinadmintimezone timezone   getlocaltimezoneinfo loggoogleid  logrole timezone double_uninitialized local time unavailable timezoneoffset   timezone systemparams admin_time_zone_double computetimewithoffset timezoneoffset parselong logtimeinadmintimezone computetimewithoffset timezoneoffset logtime    
+        calendar appcal   calendar getinstance    
+        simpledateformat sdf simpledateformat  dd-mm-yyyy hh mm ss    
+        appcal settimeinmillis logtime   
+        appcal   timehelper converttousertimezone appcal  timezoneoffset sdf format appcal gettime     
+      
+ 
+ teammates ui controller AdminActivityLogPageAction

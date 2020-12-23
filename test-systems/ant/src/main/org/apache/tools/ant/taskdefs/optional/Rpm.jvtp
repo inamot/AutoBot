@@ -1,0 +1,118 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   invokes rpm tool build linux installation file spec file rpm top dir rpm command use executable use building packages ant 1 6 
+        
+    
+       clean build directory 
+        
+    
+       remove spec file 
+        
+    
+       remove sources file direct standard output command file direct standard error command 
+        
+    
+       halt error return value rpm build  
+        
+    
+       don't show output rpm build command console not affect printing output error messages files  
+        
+    
+       execute task 
+       
+        throws buildexception problem task execution directory expected 
+       subdirectories  specs  sources  build  srpms   optional isn't specified tt basedir  tt  value used 
+       
+        param td directory containing normal rpm directories command issue rpm build tool  optional default bb  
+        param c command use name spec file use  required  
+        param sf spec file name use  
+        
+    
+       flag  optional  default false remove generated files build directory 
+        param cbd code boolean  code  value  
+        
+    
+       flag  optional  default false remove spec file specs 
+        param rs code boolean  code  value  
+        
+    
+       flag  optional  default false remove sources build  
+       see tt --rmsource  tt   option rpmbuild  
+        param rs code boolean  code  value  
+        
+    
+       optional file save stdout param output file save stdout optional file save stderr param error file save error output executable run building  optional default code rpmbuild  code ant 1 6 
+        param c rpm build executable code true  code   stop build process rpmbuild command 
+       exits error status  
+        param value  code true  code halt  otherwise 
+        code false  code default code false  code ant 1 6 3 true  output rpm build command only logged debug  
+        param value  code false  code output logged  otherwise 
+        code true  code default code false  code ant 1 6 3 
+        
+    
+       checks whether  code rpmbuild  code path returns absolute path falls back code rpm  code  
+       otherwise  
+       
+        return command used build rpm's 1 6 execute object  
+        param toexecute command line use  
+        param streamhandler stream handler use  
+        return execute object ant 1 6 3 
+       org apache tools ant taskdefs optional Rpm org apache tools ant taskdefs optional rpm task execute buildexception   
+ 
+        commandline toexecute commandline    
+ 
+        toexecute setexecutable rpmbuildcommand guessrpmbuildcommand   
+                                  rpmbuildcommand topdir toexecute createargument   setvalue  --define    
+            toexecute createargument   setvalue  _topdir    topdir   
+          
+ 
+        toexecute createargument   setline command cleanbuilddir    
+            toexecute createargument   setvalue  --clean removespec    
+            toexecute createargument   setvalue  --rmspec removesource    
+            toexecute createargument   setvalue  --rmsource    
+          
+ 
+        toexecute createargument   setvalue  specs     specfile   
+ 
+        executestreamhandler streamhandler outputstream outputstream outputstream errorstream error output quiet    
+                streamhandler logstreamhandler project msg_info  
+                                                     project msg_warn streamhandler logstreamhandler project msg_debug  
+                                                     project msg_debug output bufferedoutputstream bos bufferedoutputstream fileoutputstream output    
+                    outputstream printstream bos ioexception e buildexception e  getlocation quiet    
+                outputstream logoutputstream project msg_info outputstream logoutputstream project msg_debug error bufferedoutputstream bos bufferedoutputstream fileoutputstream error    
+                    errorstream printstream bos ioexception e buildexception e  getlocation quiet    
+                errorstream logoutputstream project msg_warn errorstream logoutputstream project msg_debug   
+              
+            streamhandler pumpstreamhandler outputstream  errorstream   
+          
+ 
+        execute exe   getexecute toexecute  streamhandler log  building the rpm based on the     specfile     file returncode   exe execute execute isfailure returncode msg    '    toexecute getexecutable   
+                       ' failed with exit code     returncode failonerror buildexception msg log msg  project msg_err ioexception e buildexception e  getlocation fileutils close outputstream   
+            fileutils close errorstream settopdir file td topdir   td setcommand c command   c setspecfile sf sf sf trim   equals buildexception  you must specify a spec file   getlocation specfile   sf setcleanbuilddir cbd    
+        cleanbuilddir   cbd setremovespec rs    
+        removespec   rs setremovesource rs    
+        removesource   rs setoutput file output output   output seterror file error error   error setrpmbuildcommand c rpmbuildcommand   c setfailonerror value    
+        failonerror   value setquiet value    
+        quiet   value guessrpmbuildcommand     
+        vector env   execute getprocenvironment path enumeration e   env elements    e hasmoreelements e nextelement startswith path1 startswith path2 startswith path3     
+                path substring path_len path path p path getproject    path pelements   p list i   0  i   pelements length  i      
+                file f file pelements i   
+                                   rpmbuild  
+                                     os isfamily  dos   ?   exe f canread f getabsolutepath rpm execute getexecute commandline toexecute  
+                                 executestreamhandler streamhandler    
+        execute exe execute streamhandler exe setantrun getproject topdir topdir   getproject   getbasedir    
+          
+        exe setworkingdirectory topdir   
+ 
+        exe setcommandline toexecute getcommandline exe  
+      
+ org apache tools ant taskdefs optional Rpm

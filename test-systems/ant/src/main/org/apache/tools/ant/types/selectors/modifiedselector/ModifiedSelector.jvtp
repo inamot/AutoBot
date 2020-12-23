@@ -1,0 +1,425 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+   java 
+   ant 
+    
+    p selector class uses algorithm i cache i comparator work algorithm used computing hashvalue file comparator decides whether select not cache stores value comparison comparator persistent manner   p  
+   
+    p modifiedselector implemented b coreselector  b uses default 
+   values attributes therefore simpliest example pre  
+      lt copy todir  dest  gt  
+          lt filelist dir  src  gt  
+              lt modified  gt  
+          lt  filelist gt  
+      lt  copy gt  
+     pre   p  
+   
+    p same example rewritten coreselector setting values 
+    same defaults pre  
+      lt copy todir  dest  gt  
+          lt filelist dir  src  gt  
+              lt modified update  true  
+                       cache  propertyfile  
+                       algorithm  digest  
+                       comparator  equal  gt  
+                  lt param name  cache cachefile      value  cache properties   gt  
+                  lt param name  algorithm algorithm  value  md5   gt  
+              lt  modified gt  
+          lt  filelist gt  
+      lt  copy gt  
+     pre   p  
+   
+    p same rewritten customselector pre  
+      lt copy todir  dest  gt  
+          lt filelist dir  src  gt  
+              lt custom class  org apache tools ant type selectors modifiedselector  gt  
+                  lt param name  update      value  true   gt  
+                  lt param name  cache       value  propertyfile   gt  
+                  lt param name  algorithm   value  digest   gt  
+                  lt param name  comparator  value  equal   gt  
+                  lt param name  cache cachefile      value  cache properties   gt  
+                  lt param name  algorithm algorithm  value  md5   gt  
+              lt  custom gt  
+          lt  filelist gt  
+      lt  copy gt  
+     pre   p  
+   
+    p want provide interface implementation via classname attributes classes not ant's core 
+   classpath provide path via nested  lt classpath gt  
+   element selector find classes   pre  
+      lt modified cacheclassname  com mycompany mycache  gt  
+          lt classpath gt  
+              lt pathelement location  lib mycompony-antutil jar   gt  
+          lt  classpath gt  
+      lt  modified gt  
+     pre   p  
+   
+    p three examples copy files src dest using modifiedselector modifiedselector uses propertyfilecache digestalgorithm equalcomparator work propertyfilecache stores key-value-pairs simple java 
+   properties file filename cache properties update flag lets selector update values cache first call 
+   creates cache digestalgorithm computes hashvalue using java security messagedigest class md5-algorithm standard 
+   provider new computed hashvalue stored one compared equalcomparator returns 'true correct value not 
+   equals zero  1 values not same using simple string 
+   comparison   p  
+   
+    p useful scenario selector inside build environment homepage generation  e g href  http   forrest apache org    
+   apache forrest pre  
+    lt target name  generate upload-site  gt  
+        lt echo gt  generate site using forrest  lt  echo gt  
+        lt antcall target  site   gt  
+   
+        lt echo gt  upload changed files  lt  echo gt  
+        lt ftp server  $ ftp server   userid  $ ftp user   password  $ ftp pwd   gt  
+            lt fileset dir  htdocs manual  gt  
+                lt modified  gt  
+            lt  fileset gt  
+        lt  ftp gt  
+    lt  target gt  
+     pre  here b changed  b  files uploaded server modifiedselector saves therefore much upload time   p  
+   
+   
+    p selector uses reflection setting values three interfaces 
+    using org apache tools ant introspectionhelper  therefore special 
+   'configuration interfaces implemented new caches  algorithms comparators present set xx methods used  e g digestalgorithm use specified provider computing value selecting setprovider string providername method use nested lt param name  algorithm provider  value  myprovider   gt ant 1 6 
+    
+   -----  attributes  ----- 
+    cache name later instantiation     
+    user specified classname cache     
+    algorithm name later instantiation     
+    user specified classname algorithm     
+    comparator name later instantiation     
+    user specified classname comparator cache updated directories selected resources whithout inputstream therefore without checking selected? 
+        
+    delay writing cache file    
+   ----- internal member variables cached value new one compared?    
+    algorithm computing new values updating cache cache containing old values     
+    count modified properties    
+    flag whether object configured  configuration only done once     
+    
+       parameter vector parameters later initialization  
+        see #configure 
+        
+    
+       parameter vector special parameters later initialization names pattern '   '  e g  'cache cachefile parameters used  b b parameters pattern ' '  
+        see #configure classloader class     
+    provided classpath classloader    
+   -----  constructors  ----- 
+    bean-constructor     
+   ----- configuration  ----- 
+    overrides baseselector verifysettings       
+    
+       configures selector work only once per selector object  
+        p some problems configuring custom selector configuration done following order  ol  
+        li  collect configuration data   li  
+        li  wait first isselected   call   li  
+        li  set default values   li  
+        li  set values name pattern ' '  update  cache  algorithm  comparator   li  
+        li  set values name pattern '     cache cachefile        li  
+         ol   p  
+        p configuration algorithm needed don't know order arriving config-data  e g first set cache cachefilename cache itself default value cachefilename used setting cache implies creating new cache instance defaults   p singleton   ----- 
+   
+   
+   -----  set default values  ----- 
+   
+   normal use inside ant 
+   set self buildlistener delay cachefile saves reference project - e g  during normal junit tests 
+   
+   -----  set main attributes  pattern parameter later use 
+   specify algorithm classname 
+   use algorithm defined via name 
+   use algorithm specified classname 
+   nothing specified - use default 
+   specify cache classname 
+   use cache defined via name 
+   use cache specified classname 
+   nothing specified - use default 
+   specify comparator classname 
+   use algorithm defined via name 
+   todo problem constructor rbc provide rules constructors setters 
+   available think lazy initialization here     jhm 
+   comparator   new java text rulebasedcollator    
+   use algorithm specified classname 
+   nothing specified - use default 
+   
+   -----  set special attributes  pattern '   '  ----- 
+   
+    
+       loads specified class initializes object class  
+       throws buildexception using given message error occurs during 
+       loading instantiation object not given type  
+        param classname classname 
+        param msg message-part buildexception 
+        param type type check against 
+        return castable object 
+        
+   load specified class selection work  ----- 
+    
+       implementation resourceselector isselected    
+       
+        param resource resource check 
+        return whether resource selected 
+        see resourceselector#isselected resource resourced' file reconvert use old' implementation handle non-file-resources copy temporarily resource file use file-implementation  
+    
+       implementation baseextendselector isselected    
+       
+        param basedir described baseextendselector 
+        param filename described baseextendselector 
+        param file described baseextendselector 
+        return described baseextendselector business logic selector use resourceselector fileselector  
+       
+        param basedir described baseextendselector 
+        param filename described baseextendselector 
+        param cachekey name key storing hashvalue 
+        return not compute value directory values comparison 
+   maybe update cache 
+    
+      save cache file 
+       
+   -----  attribute nested element support  ----- 
+    
+       setter algorithmclass  
+        param classname  new value 
+        
+    
+       setter comparatorclass  
+        param classname  new value 
+        
+    
+       setter cacheclass  
+        param classname  new value 
+        
+    
+       support update attribute  
+        param update new value 
+        
+    
+       support seldirs attribute  
+        param seldirs new value 
+        
+    
+       support selres attribute  
+        param newvalue new value 
+        
+    
+       getter modified count 
+        return modified count 
+        
+    
+       setter modified count 
+        param modified count 
+        
+    
+       getter delay update 
+        return true delay performance 
+        
+    
+       setter delay update 
+        param delayupdate true delay performance 
+        
+    
+       add classpath  
+        param path classpath 
+        
+    
+       returns initializes classloader class  
+        return classloader usual classloader 
+   additional use provided classpath 
+    
+       set used classloader invoke selector api  e g  inside some testcases selector use different classloader loading interface implementations caller  therefore classcastexception implementations selector cast param loader classloader use 
+        
+    
+       support nested  lt param gt  tags  
+        param key key parameter 
+        param value value parameter 
+        
+    
+       support nested  lt param gt  tags  
+        param parameter parameter object 
+        
+    
+       defined org apache tools ant types parameterizable  
+       overwrite implementation superclass only special 
+       parameters valid  
+        see #addparam string object   
+        param parameters parameters set  
+        
+    
+       support nested  param name    value      tags  
+       parameter named cache i algorithm i comparator update mapped respective set-method  
+       parameter names starts cache algorithm comparator tried set appropriate object via set-methods parameters invalid buildexception thrown  
+       
+        param parameter  key value parameter object 
+        
+    
+       try set value object using reflection  
+       helper method easier access introspectionhelper setattribute    
+        param obj object attribute set 
+        param name attributename 
+        param value new value op 
+   ----- 'beautiful' output ----- 
+    
+       override object tostring    
+        return information selector 
+        
+   ----- buildlistener interface methods ----- 
+    
+       signals last target finished  
+        param event recieved buildevent 
+       
+    
+       signals target finished  
+        param event recieved buildevent 
+       
+    
+       signals task finished  
+        param event recieved buildevent 
+       
+    
+       signals build started  
+        param event recieved buildevent op 
+    
+       signals target starting  
+        param event received buildevent op 
+    
+       signals task starting  
+        param event recieved buildevent op 
+    
+       signals message logging event  
+        param event recieved buildevent op enumeratedattributes three interface implementations  
+   name-classname mapping done configure   method cache type use  
+        return enumerated cache type 
+        
+    
+       set cache type use  
+        param name enumerated cache type enumerated type cache values propertyfile   
+        
+     see enumeratedattribute#getvalues      
+      inheritdoc algorithm type use  
+        return enumerated algorithm type 
+        
+    
+       set algorithm type use  
+        param name enumerated algorithm type enumerated type algorithm values hashvalue    digest checksum   
+        
+     see enumeratedattribute#getvalues      
+      inheritdoc comparator type use  
+        return enumerated comparator type 
+        
+    
+       set comparator type use  
+        param name enumerated comparator type enumerated type algorithm values equal rule   
+        
+     see enumeratedattribute#getvalues      
+      inheritdoc    org apache tools ant types selectors modifiedselector ModifiedSelector org apache tools ant types selectors modifiedselector modifiedselector baseextendselector buildlistener  resourceselector modifiedselector verifysettings     
+        configure cache seterror  cache must be set algorithm seterror  algorithm must be set cache isvalid      
+            seterror  cache must be proper configured algorithm isvalid      
+            seterror  algorithm must be proper configured configure isconfigured isconfigured project p   getproject filename    cache properties   
+        file cachefile p cachefile file p getbasedir    filename   
+ 
+              
+            getproject   addbuildlistener cachefile file filename   
+            setdelayupdate cache      defaultcache propertiesfilecache cachefile   
+        algorithm  defaultalgorithm digestalgorithm    
+        comparator defaultcomparator equalcomparator    
+        update selectdirectories iterator itconfig   configparameter iterator    itconfig hasnext       
+            parameter par    parameter  itconfig next par getname   indexof        0    
+                  
+                specialparameter add par useparameter par   
+              
+          
+        configparameter vector algoname hashvalue  equals algoname getvalue       
+                algorithm hashvaluealgorithm digest  equals algoname getvalue       
+                algorithm digestalgorithm checksum  equals algoname getvalue       
+                algorithm checksumalgorithm algorithmclass algorithm    algorithm  loadclass  
+                    algorithmclass  
+                     is not an algorithm    
+                    algorithm algorithm   defaultalgorithm cachename propertyfile  equals cachename getvalue       
+                cache propertiesfilecache cacheclass cache    cache  loadclass cacheclass   is not a cache    cache cache   defaultcache compname equal  equals compname getvalue       
+                comparator equalcomparator rule  equals compname getvalue buildexception  rulebasedcollator not yet supported comparatorclass comparator    comparator  loadclass  
+                    comparatorclass  
+                     is not a comparator    
+                    comparator comparator   defaultcomparator iterator itspecial   specialparameter iterator    itspecial hasnext       
+            parameter par    parameter  itspecial next    
+            useparameter par   
+          
+        specialparameter vector object loadclass classname msg type classloader cl   getclassloader clazz cl clazz   cl loadclass classname clazz forname classname   
+              
+ 
+            object rv   clazz newinstance type isinstance rv buildexception  specified classname          msg rv classnotfoundexception e buildexception  specified classname      not found exception e buildexception e isselected resource resource resource isfilesystemonly      
+              
+              
+            fileresource fileresource    fileresource  resource  
+            file file   fileresource getfile filename   fileresource getname    
+            file basedir   fileresource getbasedir isselected basedir  filename  file fileutils fu   fileutils getfileutils    
+                file tmpfile   fu createtempfile  modified-     tmp resource tmpresource fileresource tmpfile   
+                resourceutils copyresource resource  tmpresource isselected   isselected tmpfile getparentfile    
+                                                tmpfile getname    
+                                                resource tolongstring     
+                tmpfile delete isselected unsupportedoperationexception uoe    
+                log  the resource '  
+                    resource getname   
+                     ' does not provide an inputstream  so it is not checked    
+                     akkording to 'selres' attribute value it is   
+                      selectresourceswithoutinputstream  ?        not   
+                     selected    project msg_info selectresourceswithoutinputstream exception e buildexception e isselected file basedir filename  file file isselected basedir  filename  file getabsolutepath isselected file basedir filename cachekey    
+        validate    
+        file f file basedir  filename f isdirectory selectdirectories cachedvalue valueof cache get f getabsolutepath newvalue   algorithm getvalue f rv    comparator compare cachedvalue  newvalue     0 update    rv    
+            cache put f getabsolutepath    newvalue   
+            setmodified getmodified     1 getdelayupdate      
+                savecache rv savecache getmodified     1    
+            cache save    
+            setmodified 0 setalgorithmclass classname    
+        algorithmclass   classname setcomparatorclass classname    
+        comparatorclass   classname setcacheclass classname    
+        cacheclass   classname setupdate update update   update setseldirs seldirs    
+        selectdirectories   seldirs setselres newvalue selectresourceswithoutinputstream   newvalue getmodified modified setmodified modified modified   modified getdelayupdate delayupdate setdelayupdate delayupdate delayupdate   delayupdate addclasspath path path classpath buildexception   classpath  can be set only once     
+          
+        classpath   path classloader getclassloader myclassloader myclassloader    classpath getclass   getclassloader   
+                  
+                  getproject   createclassloader classpath myclassloader setclassloader classloader loader    
+        myclassloader   loader addparam key  object value    
+        parameter par parameter    
+        par setname key   
+        par setvalue valueof value    
+        configparameter add par addparam parameter parameter    
+        configparameter add parameter setparameters parameter   parameters parameters i   0  i   parameters length  i      
+                configparameter add parameters i useparameter parameter parameter key   parameter getname value   parameter getvalue cache  equals key     
+            cachename cn cachename    
+            cn setvalue value   
+            setcache cn algorithm  equals key     
+            algorithmname an algorithmname    
+            an setvalue value   
+            setalgorithm an comparator  equals key     
+            comparatorname cn comparatorname    
+            cn setvalue value   
+            setcomparator cn update  equals key updatevalue equalsignorecase value setupdate updatevalue delayupdate  equals key updatevalue equalsignorecase value setdelayupdate updatevalue seldirs  equals key sdvalue equalsignorecase value setseldirs sdvalue key startswith  cache name   key substring 6   
+            trytosetaparameter cache  name  value key startswith  algorithm name   key substring 10   
+            trytosetaparameter algorithm  name  value key startswith  comparator name   key substring 11   
+            trytosetaparameter comparator  name  value seterror  invalid parameter     key trytosetaparameter object obj name value    
+        project prj    getproject getproject project    
+        introspectionhelper ihelper 
+              introspectionhelper gethelper prj  obj getclass ihelper setattribute prj  obj  name  value org apache tools ant buildexception e tostring     
+        stringbuffer buf stringbuffer   modifiedselector    
+        buf append   update    append update   
+        buf append   seldirs    append selectdirectories   
+        buf append   cache    append cache   
+        buf append   algorithm    append algorithm   
+        buf append   comparator    append comparator   
+        buf append buf tostring buildfinished buildevent event getdelayupdate      
+            savecache targetfinished buildevent event getdelayupdate      
+            savecache taskfinished buildevent event getdelayupdate      
+            savecache buildstarted buildevent event targetstarted buildevent event taskstarted buildevent event messagelogged buildevent event cache getcache cache setcache cachename name    
+        cachename   name cachename enumeratedattribute getvalues propertyfile algorithm getalgorithm algorithm setalgorithm algorithmname name    
+        algoname   name algorithmname enumeratedattribute getvalues hashvalue    digest    checksum comparator getcomparator comparator setcomparator comparatorname name    
+        compname   name comparatorname enumeratedattribute getvalues equal    rule     
+          
+      
+ 
+ org apache tools ant types selectors modifiedselector ModifiedSelector

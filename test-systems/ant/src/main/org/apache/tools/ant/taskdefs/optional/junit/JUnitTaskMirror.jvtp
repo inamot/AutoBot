@@ -1,0 +1,113 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   handles portions link junittask need directly access 
+   actual junit classes junit jar need not ant's startup classpath junittask java junittaskmirror java transitive static 
+   deps may import any junit    classes  
+   specifically  need not refer junitresultformatter subclasses 
+   - junitversionhelper 
+   - junittestrunner 
+   cf   junittask splitloader#issplit string  
+   public only permit access classes package not use directly 1 7 
+    see  bug #38799  
+    
+    
+       add formatter called jvm exits before test suite finishs  
+        param test test  
+        param formatter fomatter use  
+        param out output stream use  
+        param message message write out  
+        param testcase name test  
+        
+    
+       create new test runner test  
+        param test test run  
+        param haltonerror true halt tests error occurs  
+        param filtertrace true filter stack traces  
+        param haltonfailure true halt test failure occurs  
+        param showoutput true show output  
+        param logtestlistenerevents true log test listener events  
+        param classloader classloader use create runner  
+        return test runner  
+        
+    
+       create summary result formatter  
+        return created formatter interface junitresultformatter extends     
+    
+           set output stream  
+            param outputstream stream use interface summaryjunitresultformatter extends     
+    
+           set standard out standard error included  
+            param value true include outputs summary  
+            
+    interface test runners implement     
+    
+           used formatter arguments placeholder basename output file gets replaced test specific 
+           output file name later ant 1 6 3 problems test  
+            
+    
+           some tests failed error occurred  
+            
+    
+           permissions test run  
+            param perm permissions use  
+            
+    run test     
+    
+           add formatter test  
+            param formatter formatter use  
+            
+    
+           returns system exit return standalone version  
+           
+            return 2 errors occurred  1 tests failed 0  
+            
+    
+           handle output sent system err  
+           
+            param output coming system err 
+            
+    
+           handle output sent system err  
+           
+            param output output system err 
+            
+    
+           handle output sent system out  
+           
+            param output output system out  
+            
+    
+           handle input request  
+           
+            param buffer buffer data read  
+            param offset offset buffer data stored  
+            param length amount data read  
+           
+            return number bytes read  
+           
+            exception ioexception data cannot read  
+            
+    
+           handle output sent system out  
+           
+            param output output system out  
+           org apache tools ant taskdefs optional junit JUnitTaskMirror org apache tools ant taskdefs optional junit junittaskmirror addvmexit junittest test  junitresultformattermirror formatter  
+            outputstream out message testcase   
+ 
+      
+    junittestrunnermirror newjunittestrunner junittest test haltonerror filtertrace haltonfailure showoutput logtestlistenerevents  antclassloader classloader   
+ 
+      
+    summaryjunitresultformattermirror newsummaryjunitresultformatter junitresultformattermirror setoutput outputstream outputstream summaryjunitresultformattermirror junitresultformattermirror setwithoutanderr value junittestrunnermirror ignored_file_name    ignorethis success   0 failures   1 errors   2 setpermissions permissions perm run addformatter junitresultformattermirror formatter getretcode handleerrorflush output handleerroroutput output handleoutput output handleinput buffer offset length ioexception handleflush output   
+ 
+      
+ org apache tools ant taskdefs optional junit JUnitTaskMirror

@@ -1,0 +1,67 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   task import another build file current project  
+    p must top level execution read another ant file same project  
+     p  
+    p  
+    b important  b not finalized relative file references resolved deep complex build hierarchies happens imported file imports another file  use absolute references enhanced build file stability  especially imported files  
+     p  
+    p examples   p  
+    pre  
+    lt import file     common-targets xml   gt  
+     pre  
+    p import targets file parent directory   p  
+    pre  
+    lt import file  $ deploy-platform  xml   gt  
+     pre  
+    p import project defined property  code deploy-platform  code    p ant1 6 
+    ant task category  control  
+    
+    
+       sets optional attribute 
+       
+        param optional true ignore files not present  
+                       default false name file import relative paths resolved still flux  use absolute paths safety  
+        param file name file don't think use file - different rules relative paths relies task order model happens projecthelper not registered project happens ant used project 
+   helper doesn't set import  
+   paths relative build file re imported not current directory  same entity includes  org apache tools ant taskdefs ImportTask org apache tools ant taskdefs importtask task setoptional optional optional   optional setfile file file   file execute file buildexception requires file attribute getowningtarget equals getowningtarget   getname buildexception only allowed as a top-level task    
+          
+ 
+        projecthelper helper   
+                 projecthelper  getproject    
+                    getreference projecthelper projecthelper_reference helper buildexception requires support in projecthelper    
+          
+ 
+        vector importstack   helper getimportstack importstack size      0 buildexception requires support in projecthelper getlocation getlocation   getfilename buildexception  unable to get location of task    
+          
+ 
+        file buildfile file getlocation   getfilename    getabsolutefile    
+ 
+          
+          
+ 
+        file buildfileparent file buildfile getparent     
+        file importedfile   file_utils resolvefile buildfileparent  file   
+ 
+        getproject   log  importing file     importedfile     from   
+                           buildfile getabsolutepath    project msg_verbose importedfile exists message   
+                 cannot find     file     imported from   
+                  buildfile getabsolutepath optional    
+                getproject   log message  project msg_verbose buildexception message importstack contains importedfile     
+            getproject   log  
+                 skipped already imported file \n     
+                  importedfile    \n   project msg_verbose helper parse getproject    importedfile buildexception ex projecthelper addlocationtobuildexception  
+                ex  getlocation     
+          
+      
+ 
+ org apache tools ant taskdefs ImportTask

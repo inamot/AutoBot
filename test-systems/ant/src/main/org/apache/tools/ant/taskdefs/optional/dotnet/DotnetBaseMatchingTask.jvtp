@@ -1,0 +1,92 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   refactoring some stuff different things ilasm use shared code  
+    
+   checkstyle visibilitymodifier bc 
+    
+        output file not supplied derived source file 
+        
+    
+       filesets file compile 
+        
+    
+        source directory upon search pattern applied running windows ant 1 6 3 
+        
+   checkstyle constantnamecheck bc 
+   checkstyle constantnamecheck checkstyle visibilitymodifier overridden need to set srcdir  
+       return source directory  
+       
+    
+        set source directory files compiled  
+       
+       param  srcdirname new srcdir value 
+        
+    
+        set name exe library create  
+       
+       param  file new outputfile value 
+        
+    
+       add new source directory compile 
+        param src fileset destination file 
+        return dest file null not assigned 
+        
+    
+       create list files 
+        param command command create files param filestobuild vector add files param outputtimestamp timestamp compare against 
+        return number files out date 
+        
+  scan implicit fileset srcdir set srcdir set contained classes src dir here  set dependencies list any included source directories 
+    
+       add list files command 
+        param filestobuild vector files 
+        param command command append determine timestamp output file 
+        return timestamp 0 output file known exists 
+        
+    
+       finish command adding dependent files  execute 
+        param command command update  
+        param ignoretimestamps not used  
+        
+  now run command exe   settings   files 
+  add files commandorg apache tools ant taskdefs optional dotnet DotnetBaseMatchingTask org apache tools ant taskdefs optional dotnet dotnetbasematchingtask matchingtask file outputfile vector filesets vector file srcdir iswindows   os isfamily  windows file getsrcdir srcdir setsrcdir file srcdirname srcdir   srcdirname setdestfile file file    
+        outputfile   file addsrc fileset src    
+        filesets add src file getdestfile outputfile buildfilelist netcommand command  hashtable filestobuild outputtimestamp filesoutofdate   0 scanimplicitfileset 
+              getsrcdir filesets size      0 scanimplicitfileset getsrcdir setsrcdir getproject   resolvefile        
+              
+            log  working from source directory     getsrcdir    
+                    project msg_verbose   
+              
+            directoryscanner scanner   getdirectoryscanner getsrcdir     
+            filesoutofdate   command scanonefileset scanner  
+                    filestobuild  outputtimestamp i   0  i   filesets size    i      
+            fileset fs    fileset  filesets elementat i   
+            filesoutofdate    command scanonefileset  
+                    fs getdirectoryscanner getproject     
+                    filestobuild  
+                    outputtimestamp filesoutofdate addfilestocommand hashtable filestobuild  netcommand command count   filestobuild size    
+        log  compiling     count     file      count    1  ?       s    
+                project msg_verbose   
+        enumeration files   filestobuild elements files hasmoreelements      
+            file file    file  files nextelement    
+            command addargument file tostring getoutputfiletimestamp outputtimestamp getdestfile getdestfile   exists      
+            outputtimestamp   getdestfile   lastmodified outputtimestamp   0 outputtimestamp addfilesandexecute netcommand command ignoretimestamps outputtimestamp   getoutputfiletimestamp    
+        hashtable filestobuild hashtable filesoutofdate   buildfilelist command  filestobuild  outputtimestamp filesoutofdate   0    
+              
+            addfilestocommand filestobuild  command   
+            command runcommand log  output file is up to date   project msg_verbose   
+          
+      
+ 
+ 
+ 
+ org apache tools ant taskdefs optional dotnet DotnetBaseMatchingTask

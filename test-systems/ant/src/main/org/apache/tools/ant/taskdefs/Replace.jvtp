@@ -1,0 +1,352 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   replaces occurrences one string tokens given 
+   values indicated files  each value either string value property available designated property file want replace text crosses line boundaries must use nested  code  lt replacetoken gt   code  element ant 1 1 
+   
+    ant task category  filesystem encoding used read write files null  uses default inline string use replacement text text element  
+           
+            param val string add 
+            
+    
+            return text filter apply  
+        
+    
+           validate filter's configuration  
+            throws buildexception any part invalid  
+            
+  validate mandatory attributes 
+  value property mutually exclusive attributes property attribute must access property file 
+  make sure property exists property file replacement value filter token  
+            return replacement value 
+            
+  default empty string 
+    
+           set token replace  
+            param token  code string  code  token string search return current  code string  code  token replacement string  required code property code not set  
+            param value  code string  code  value replace replacement  code string  code   
+            return replacement null  
+            
+    
+           set name property whose value serve replacement value  required code value  code not set  
+            param property property name name property whose value serve replacement value  
+            return property null  
+            
+    
+           retrieves output buffer filter filter guarantees data only appended end stringbuffer  
+            return stringbuffer containing output filter  
+            
+    
+           sets input buffer filter filter expects component providing input data only added component end stringbuffer stringbuffer modified filter expects another component only apped stringbuffer  
+            param input input filter  
+            
+    
+           processes buffer far possible  takes account appended data may make possible replace end already 
+           received data token split over old new  
+           part  
+            return true some data made available output buffer  
+            
+    
+           processes buffer end not take account appended data may make possible replace end already 
+           received data  
+            
+   avoid runtime problem pre 1 4 compiling post 1 4 
+    
+           performs replace operation  
+            return position last character inserted replacement  
+            
+    
+       class reading file small chunks presenting chunks stringbuffer  compatible replacefilter 1 7 
+        
+    
+           constructs input component  opens file reading  
+            param source file read throws ioexception file cannot read retrieves output buffer filter component guarantees data only appended end stringbuffer  
+            return stringbuffer containing output filter  
+            
+    
+           reads some data file  
+            return true end file not reached  
+            throws ioexception file cannot read closes file  
+            throws ioexception file cannot closed  
+            
+    
+           closes file doesn't throw exception 
+            
+    
+       component writing file chunks  taking chunks replacefilter 1 7 
+        
+    
+           constructs output component  opens file writing  
+            param out file read throws ioexception file cannot read sets input buffer component filter expects component providing input data only added component end stringbuffer stringbuffer modified filter expects another component only append stringbuffer  
+            param input input filter  
+            
+    
+           writes buffer far possible  
+            return false inline replacefilter  
+            yes defining interface crossed mind publish internal behavior   
+            throws ioexception output cannot written  
+            
+    
+           processes buffer end  
+            throws ioexception output cannot flushed  
+            
+    
+           closes file  
+            throws ioexception file cannot closed  
+            
+    
+           closes file doesn't throw exception execution  
+        throws buildexception cant build 
+        
+   line separators values tokens n order compare file contents  replace needed 
+   end finally 
+    
+       validate attributes provided task xml build file  
+       
+        exception buildexception any supplied attribute invalid any 
+       mandatory attribute missing  
+        
+    
+       validate nested elements  
+       
+        exception buildexception any supplied attribute invalid any 
+       mandatory attribute missing  
+        
+    
+       load properties file  
+        param propertyfile file load properties return loaded  code properties  code  object  
+        throws buildexception file not found read  
+        
+    
+       perform replacement given file replacement performed temporary file replaces original file  
+       
+        param src source  code file  code   
+        
+    
+       flushes filters  
+        
+    
+       performs normal processing filters  
+        return true filter chain produced new output  
+        
+    
+       creates chain filters operate  
+        param inputbuffer  code stringbuffer  code  containing input first filter  
+        return  code stringbuffer  code  containing output last filter  
+        
+    
+       logs chain filters operate file  
+        param filename  code string  code   
+        
+    
+       set source file  required unless  code dir  code set  
+        param file source  code file  code   
+        
+    
+       indicates whether summary replace operation produced  detailing many token occurrences files processed  optional  default  code false  code   
+       
+        param summary  code boolean  code  whether summary replace operation logged  
+        
+    
+       sets name property file containing filters  optional  
+       each property treated replacefilter token name property value value property  
+        param replacefilterfile  code file  code load base directory use replacing token multiple files  
+       required code file  code not defined  
+        param dir  code file  code  representing base directory  
+        
+    
+       set string token replace  required unless nested 
+        code replacetoken  code  element code replacefilterfile  code  
+       attribute used  
+        param token token  code string  code   
+        
+    
+       set string value use token replacement  
+       optional  default empty string     
+        param value replacement value  
+        
+    
+       set file encoding use files read written task  
+       optional  defaults default jvm encoding  
+       
+        param encoding encoding use files  
+        
+    
+       create token filter text nested element  
+        return nested token  code nestedstring  code configure  
+        
+    
+       create string replace token text nested element  
+        return replacement value  code nestedstring  code configure name property file properties specified using nested 
+        code  lt replacefilter gt   code  elements drawn  required only property attribute code  lt replacefilter gt   code used  
+        param propertyfile  code file  code load  
+        
+    
+       add nested  lt replacefilter gt  element  
+        return nested  code replacefilter  code  object configured  
+        
+    
+       adds token value first  lt replacefilter gt  element token value always processed first  
+        return nested  code replacefilter  code  object configured  
+        
+    
+       replace occurrences str1 stringbuffer str str2  
+       org apache tools ant taskdefs Replace org apache tools ant taskdefs replace matchingtask nestedstring addtext val    
+            buf append val gettext buf tostring replacefilter validate buildexception token message    token is a mandatory attribute   
+                       of replacefilter buildexception message equals token message    the token attribute must not be an empty buildexception message value property message    either value or property   
+                       can be specified  but a replacefilter   
+                       element cannot have both buildexception message property propertyfile message    the replacefilter's property attribute   
+                           can only be used with the replacetask's   
+                           propertyfile attribute buildexception message properties properties getproperty property message    property \     property 
+                           \  was not found in     propertyfile getpath buildexception message   
+                  
+              
+ 
+            replacevalue   getreplacevalue getreplacevalue property properties getproperty property value value replace value replace value gettext settoken token token   token gettoken token setvalue value value   value getvalue value setproperty property property   property getproperty property  
+          
+ 
+          
+        stringbuffer getoutputbuffer outputbuffer setinputbuffer stringbuffer input    
+            inputbuffer   input process inputbuffer length     token length pos   replace    
+                pos   math max  inputbuffer length   - token length     pos   
+                outputbuffer append inputbuffer substring 0  pos    
+                inputbuffer delete 0  pos flush     
+            replace    
+              
+            outputbuffer append inputbuffer tostring     
+            inputbuffer delete 0  inputbuffer length replace found   inputbuffer tostring   indexof token pos   -1 found    0    
+                inputbuffer replace found  found   token length    
+                        replacevalue   
+                pos   found   replacevalue length    
+                found   inputbuffer tostring   indexof token  pos   
+                  replacecount pos fileinput   
+  
+  
+  
+  
+ 
+          
+        fileinput file source ioexception   
+            outputbuffer stringbuffer    
+            buffer buff_size encoding reader bufferedreader filereader source reader bufferedreader inputstreamreader fileinputstream source   encoding    
+              
+          
+ 
+          
+        stringbuffer getoutputbuffer outputbuffer readchunk ioexception bufferlength   0  
+            bufferlength   reader read buffer bufferlength   0 outputbuffer append buffer  0  bufferlength close ioexception   
+            reader close closequietly     
+            fileutils close reader fileoutput   
+  
+  
+ 
+          
+        fileoutput file out ioexception encoding writer bufferedwriter filewriter out writer bufferedwriter outputstreamwriter fileoutputstream out   encoding setinputbuffer stringbuffer input    
+            inputbuffer   input process ioexception   
+            writer write inputbuffer tostring     
+            inputbuffer delete 0  inputbuffer length flush ioexception   
+            process    
+            writer flush close ioexception   
+            writer close closequietly     
+            fileutils close writer execute buildexception   
+ 
+        vector savedfilters    vector  replacefilters clone    
+        properties savedproperties   
+            properties null    properties  properties clone token stringbuffer val stringbuffer value gettext     
+            stringreplace val   \r\n    \n    
+            stringreplace val   \n   stringutils line_sep   
+            stringbuffer tok stringbuffer token gettext     
+            stringreplace tok   \r\n    \n    
+            stringreplace tok   \n   stringutils line_sep   
+            replacefilter firstfilter   createprimaryfilter    
+            firstfilter settoken tok tostring     
+            firstfilter setvalue val tostring replacefilterfile properties props   getproperties replacefilterfile   
+                enumeration e   props keys e hasmoreelements tok    e nextelement   tostring    
+                    replacefilter replacefilter   createreplacefilter    
+                    replacefilter settoken tok   
+                    replacefilter setvalue props getproperty tok    
+                  
+              
+ 
+            validateattributes propertyfile properties   getproperties propertyfile   
+              
+ 
+            validatereplacefilters    
+            filecount   0  
+            replacecount   0 src processfile src dir directoryscanner ds getdirectoryscanner dir srcs   ds getincludedfiles i   0  i   srcs length  i      
+                    file file file dir  srcs i    
+                    processfile file summary    
+                log  replaced     replacecount     occurrences in   
+                      filecount     files    project msg_info replacefilters   savedfilters  
+            properties   savedproperties validateattributes buildexception src dir message    either the file or the dir attribute   
+                   must be specified buildexception message  getlocation propertyfile propertyfile exists message    property file     propertyfile getpath   
+                    does not exist buildexception message  getlocation token replacefilters size      0 message    either token or a nested replacefilter   
+                   must be specified buildexception message  getlocation token equals token gettext message    the token attribute must not be an empty buildexception message  getlocation validatereplacefilters buildexception i   0  i   replacefilters size    i      
+            replacefilter element   
+                 replacefilter  replacefilters elementat i   
+            element validate properties getproperties file propertyfile buildexception   
+        properties props properties    
+ 
+        fileinputstream in in fileinputstream propertyfile   
+            props load in filenotfoundexception e message    property file      propertyfile getpath   
+                     not found buildexception message ioexception e message    property file      propertyfile getpath   
+                     cannot be loaded buildexception message fileutils close in props processfile file src buildexception src exists buildexception  replace  source file     src getpath   
+                                         doesn't exist   getlocation     
+          
+ 
+        file temp fileinput in fileoutput out in fileinput src   
+ 
+            temp   file_utils createtempfile  rep     tmp   
+                    src getparentfile     
+            out fileoutput temp repcountstart   replacecount  
+ 
+            logfilterchain src getpath     
+ 
+            out setinputbuffer buildfilterchain in getoutputbuffer in readchunk processfilterchain      
+                    out process    
+                  
+              
+ 
+            flushfilterchain    
+ 
+            out flush    
+            in close    
+            in out close    
+            out changes    replacecount    repcountstart changes    
+                file_utils rename temp  src   
+                temp ioexception ioe buildexception  ioexception in     src     -   
+                      ioe getclass   getname         
+                      ioe getmessage    ioe  getlocation in    
+                in closequietly out    
+                out closequietly temp temp delete      
+                    temp deleteonexit flushfilterchain i   0  i   replacefilters size    i      
+            replacefilter filter    replacefilter  replacefilters elementat i   
+            filter flush processfilterchain i   0  i   replacefilters size    i      
+            replacefilter filter    replacefilter  replacefilters elementat i filter process stringbuffer buildfilterchain stringbuffer inputbuffer    
+        stringbuffer buf   inputbuffer i   0  i   replacefilters size    i      
+            replacefilter filter    replacefilter  replacefilters elementat i   
+            filter setinputbuffer buf   
+            buf   filter getoutputbuffer buf logfilterchain filename i   0  i   replacefilters size    i      
+            replacefilter filter    replacefilter  replacefilters elementat i   
+            log  replacing in     filename          filter gettoken   
+                        --      filter getreplacevalue    project msg_verbose setfile file file src   file setsummary summary summary   summary setreplacefilterfile file replacefilterfile replacefilterfile   replacefilterfile setdir file dir dir   dir settoken token    
+        createreplacetoken   addtext token setvalue value    
+        createreplacevalue   addtext value setencoding encoding encoding   encoding nestedstring createreplacetoken token token nestedstring token nestedstring createreplacevalue value setpropertyfile file propertyfile propertyfile   propertyfile replacefilter createreplacefilter     
+        replacefilter filter replacefilter    
+        replacefilters addelement filter filter replacefilter createprimaryfilter     
+        replacefilter filter replacefilter    
+        replacefilters insertelementat filter  0 filter stringreplace stringbuffer str str1 str2 found   str tostring   indexof str1 found    0    
+            str replace found  found   str1 length    str2   
+            found   str tostring   indexof str1  found   str2 length     
+          
+      
+ 
+ org apache tools ant taskdefs Replace

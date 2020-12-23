@@ -1,0 +1,196 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   named collection include exclude tags  
+   
+    p moved out matchingtask make standalone object referenced scripts example   
+   
+    
+    
+       inner class hold name list unless  attributes 
+       may used invalidate entry based existence property  typically set thru use available task   
+        
+    
+           sets name pattern  
+           
+            param name pattern string  
+            
+    
+           sets attribute attribute unless  
+           attribute used validate name  based existence property  
+           
+            param cond property name property not 
+                       present name invalid  
+            
+    
+           sets unless attribute attribute attribute used validate name  based existence property  
+           
+            param cond property name property present name invalid  
+            
+    
+            return name attribute validates name - checks unless 
+           properties  
+           
+            param p current project  used check presence absence property  
+            return name attribute null unless  
+                    properties not set  
+            
+    
+            return printable form object  
+            
+    
+       creates new  code patternset  code  instance  
+        
+    
+       makes instance effect reference another patternset 
+       instance  
+       
+        p must not set another attribute nest elements inside element make reference   p  
+        param r reference another patternset  
+        throws buildexception error patternset nested element  
+       
+        param p configured patternset nested element  
+        
+    
+       add name entry include list 
+        return nested include element configured  
+        
+    
+       add name entry include files list 
+        return nested includesfile element configured  
+        
+    
+       add name entry exclude list 
+        return nested exclude element configured  
+        
+    
+       add name entry exclude files list 
+        return nested excludesfile element configured  
+        
+    
+       appends  code includes  code current list include patterns  
+       patterns may separated comma space  
+       
+        param includes string containing include patterns 
+        
+    
+       appends  code excludes  code current list exclude patterns  
+       patterns may separated comma space  
+       
+        param excludes string containing exclude patterns 
+        
+    
+       add name entry given list 
+        
+    
+       sets name file containing includes patterns  
+       
+        param includesfile file fetch include patterns throws buildexception error  
+        
+    
+       sets name file containing excludes patterns  
+       
+        param excludesfile file fetch exclude patterns throws buildexception error  
+        
+    
+        reads path matching patterns file adds includes excludes list appropriate filereader 
+   create one nameentry appropriate pattern list each 
+   line file  
+  ignore exception 
+    
+       adds patterns instance set  
+        param patternset instance  
+        param p current project  
+        
+    
+       returns filtered include patterns  
+        param p current project  
+        return filtered included patterns  
+        
+    
+       returns filtered include patterns  
+        param p current project  
+        return filtered excluded patterns  
+        
+    
+       helper fileset classes  
+       check patterns defined  
+        param p current project  
+        return true patterns  
+        
+    
+       performs check circular references returns referenced patternset  
+        
+    
+       convert vector nameentry elements array strings  
+        
+    
+       read includesfile ot excludesfile not already done return printable form object ant 1 6 
+        return clone patternset  
+       org apache tools ant types PatternSet org apache tools ant types patternset datatype cloneable nameentry setname name name   name setif cond    
+            ifcond   cond setunless cond    
+            unlesscond   cond getname name evalname project p valid p  ? name valid project p ifcond p getproperty ifcond unlesscond p getproperty unlesscond tostring     
+            stringbuffer buf stringbuffer name buf append  noname buf append name ifcond unlesscond buf append connector ifcond buf append buf append ifcond   
+                    connector unlesscond buf append connector   
+                    buf append  unless-     
+                    buf append unlesscond buf tostring patternset setrefid reference r buildexception includelist isempty       excludelist isempty toomanyattributes setrefid r addconfiguredpatternset patternset p isreference nochildrenallowed nestedincludes   p getincludepatterns getproject nestedexcludes   p getexcludepatterns getproject nestedincludes i   0  i   nestedincludes length  i      
+                createinclude   setname nestedincludes i nestedexcludes i   0  i   nestedexcludes length  i      
+                createexclude   setname nestedexcludes i nameentry createinclude isreference nochildrenallowed addpatterntolist includelist nameentry createincludesfile isreference nochildrenallowed addpatterntolist includesfilelist nameentry createexclude isreference nochildrenallowed addpatterntolist excludelist nameentry createexcludesfile isreference nochildrenallowed addpatterntolist excludesfilelist setincludes includes isreference toomanyattributes includes includes length     0    
+            stringtokenizer tok stringtokenizer includes tok hasmoretokens      
+                createinclude   setname tok nexttoken setexcludes excludes isreference toomanyattributes excludes excludes length     0    
+            stringtokenizer tok stringtokenizer excludes tok hasmoretokens      
+                createexclude   setname tok nexttoken nameentry addpatterntolist vector list    
+        nameentry result nameentry    
+        list addelement result result setincludesfile file includesfile buildexception isreference toomanyattributes    
+           
+         createincludesfile   setname includesfile getabsolutepath setexcludesfile file excludesfile buildexception isreference toomanyattributes    
+           
+         createexcludesfile   setname excludesfile getabsolutepath readpatterns file patternfile  vector patternlist  project p buildexception   
+ 
+        bufferedreader patternreader patternreader bufferedreader filereader patternfile line   patternreader readline line line length     0    
+                    line   p replaceproperties line   
+                    addpatterntolist patternlist  setname line   
+                  
+                line   patternreader readline ioexception ioe msg    an error occurred reading from pattern file    
+                  patternfile buildexception msg  ioe patternreader patternreader close ioexception ioe append patternset other  project p isreference buildexception  cannot append to a reference incl   other getincludepatterns p incl i   0  i   incl length  i      
+                createinclude   setname incl i excl   other getexcludepatterns p excl i   0  i   excl length  i      
+                createexclude   setname excl i getincludepatterns project p isreference getref p  getincludepatterns p readfiles p makearray includelist  p getexcludepatterns project p isreference getref p  getexcludepatterns p readfiles p makearray excludelist  p haspatterns project p isreference getref p  haspatterns p includesfilelist size     0    excludesfilelist size     0 
+                   includelist size     0    excludelist size     0 patternset getref project p patternset  getcheckedref p makearray vector list  project p list size      0 vector tmpnames vector enumeration e   list elements    e hasmoreelements       
+            nameentry ne    nameentry  e nextelement pattern   ne evalname p pattern pattern length     0    
+                tmpnames addelement pattern result tmpnames size     
+        tmpnames copyinto result result readfiles project p includesfilelist size     0    
+            enumeration e   includesfilelist elements e hasmoreelements      
+                nameentry ne    nameentry  e nextelement filename   ne evalname p filename file inclfile   p resolvefile filename inclfile exists buildexception  includesfile   
+                                                   inclfile getabsolutepath   
+                                                     not found     
+                      
+                    readpatterns inclfile  includelist  p   
+                  
+              
+            includesfilelist removeallelements excludesfilelist size     0    
+            enumeration e   excludesfilelist elements e hasmoreelements      
+                nameentry ne    nameentry  e nextelement filename   ne evalname p filename file exclfile   p resolvefile filename exclfile exists buildexception  excludesfile   
+                                                   exclfile getabsolutepath   
+                                                     not found     
+                      
+                    readpatterns exclfile  excludelist  p   
+                  
+              
+            excludesfilelist removeallelements tostring patternset  includes      includelist 
+                    excludes      excludelist object clone patternset ps    patternset clone    
+            ps includelist    vector  includelist clone    
+            ps excludelist    vector  excludelist clone    
+            ps includesfilelist    vector  includesfilelist clone    
+            ps excludesfilelist    vector  excludesfilelist clone ps clonenotsupportedexception e buildexception e   
+          
+      
+ 
+ org apache tools ant types PatternSet

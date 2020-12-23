@@ -1,0 +1,302 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   runs rmic compiler against classes   p  
+    p rmic run single class specified classname 
+   attribute number classes once classes below base _stub _skel classes want rmic single 
+   class class class nested another class specify classname form  code outer$$inner  code  instead code outer inner  code    p  
+    p possible refine set files being rmiced done includes i includesfile i excludes i excludesfile i defaultexcludes attributes includes includesfile attribute specify files want included using patterns exclude excludesfile attribute used specify files want excluded done patterns finally defaultexcludes attribute specify whether want use default exclusions not  see section directory based tasks inclusion exclusion files works write patterns   p  
+    p task forms implicit fileset supports attributes code  lt fileset gt   code  
+     code dir  code  becomes  code base  code well nested 
+    code  lt include gt   code    code  lt exclude gt   code code  lt patternset gt   code  elements   p  
+    p possible use different compilers selected quot build rmic quot  property code compiler  code  
+   attribute name  compilervalues three choices p  
+    ul  
+      li sun standard compiler jdk   li  
+      li kaffe standard compiler link href  http   www kaffe org  kaffe li  
+      li weblogic  li  
+     ul  
+   
+    p href  http   dione zcu cz ~toman40 minirmi   minirmi project contains compiler implementation task well  
+   please consult minirmi's documentation learn use p ant 1 1 
+   
+    ant task category  java  
+    
+    rmic failed message    
+    unable verify message not found message    
+    not defined message    
+    loaded error message    
+    base not exists message    
+    base not directory message    
+    base attribute not set message    
+    
+       constructor rmic  
+        
+    
+       sets location store compiled files  required 
+        param base location store compiled files 
+        
+    
+       gets base directory output generated class  
+        return location compiled files 
+        
+    
+       sets class run  code rmic  code  against  
+       optional 
+        param classname name class rmic create code gets class name compile  
+        return name class compile 
+        
+    
+       optional directory save generated source files param sourcebase directory save source files gets source dirs find source java files  
+        return sourcebase directory containing source files  
+        
+    
+       specify jdk version generated stub code  
+       specify  quot 1 1 quot pass quot -v1 1 quot  option rmic   td  
+        param stubversion jdk version 
+        
+    
+       gets jdk version generated stub code  
+        return stubversion 
+        
+    
+       sets token filtering  optional   default false 
+        param filter turn token filtering 
+        
+    
+       gets whether token filtering set 
+        return filtering 
+        
+    
+       generate debug info  passes -g rmic   
+       optional  defaults false 
+        param debug turn debug info 
+        
+    
+       gets debug flag  
+        return debug 
+        
+    
+       set classpath used compilation  
+        param classpath classpath used compilation 
+        
+    
+       creates nested classpath element  
+        return classpath 
+        
+    
+       adds classpath reference lt path gt  defined elsewhere  
+        param pathref reference add classpath 
+        
+    
+       gets classpath  
+        return classpath 
+        
+    
+       flag enable verification classes 
+       found directory match checked see implement java rmi remote  
+       optional defaults false not set  
+        param verify turn verification classes verify flag  
+        return verify 
+        
+    
+       indicates iiop compatible stubs generated  optional  defaults false not set  
+        param iiop generate iiop compatible stubs 
+        
+    
+       gets iiop flags  
+        return iiop 
+        
+    
+       set additional arguments iiop 
+        param iiopopts additional arguments iiop 
+        
+    
+       gets additional arguments iiop  
+        return iiopopts 
+        
+    
+       indicates idl output generated defaults false not set  
+        param idl generate idl output 
+        
+    
+       gets idl flags  
+        return idl flag 
+        
+    
+       pass additional arguments idl compile 
+        param idlopts additional idl arguments 
+        
+    
+       gets additional arguments idl compile  
+        return idl options 
+        
+    
+       gets file list compile  
+        return list files compile  
+        
+    
+       sets whether not include ant's classpath task's 
+       classpath  
+       optional  default code true  code   
+        param include true include ant's classpath 
+        
+    
+       gets whether not ant classpath included task's classpath  
+        return true ant's classpath included 
+        
+    
+       task's classpath  
+       enables disables including default run-time 
+       libraries executing vm  optional  
+       defaults false 
+        param include true include default run-time libraries 
+        
+    
+       gets whether not java runtime included task's classpath  
+        return true default run-time libraries included 
+        
+    
+       sets extension directories used during compilation  optional  
+        param extdirs extension directories used 
+        
+    
+       maybe creates nested extdirs element  
+        return path object configured extension directories 
+        
+    
+       gets extension directories used during compilation  
+        return extension directories used 
+        
+    
+        return compile list  
+        
+    
+       sets compiler implementation use  optional  
+       defaults value code build rmic  code  property failing default compiler current vm 
+        param compiler compiler implemention use ant 1 5 name current compiler 
+        return name compiler ant 1 5 
+        
+    
+       adds implementation specific command line argument  
+        return object configured command line argument ant 1 5 additional implementation specific command line arguments  
+        return array command line arguments  guaranteed non-null ant 1 5 
+        
+    
+       execute creating instance implementation 
+       class getting work 
+        throws org apache tools ant buildexception s problem basedir rmic 
+        
+   now need populate compiler adapter 
+   scan base dirs build up compile lists only specific classname not given 
+   otherwise perform timestamp comparison least 
+   finally  lets execute compiler   
+   
+               move generated source file base directory base directory sourcebase same generated 
+               sources already place  
+                
+    
+       move generated source file s base directory 
+       
+        throws org apache tools ant buildexception error 
+       copying removing files  
+        
+   don't know handle idl file doesn't corresponding java source example source file generated  nothing move 
+    
+       scans directory looking class files compiled result returned class variable compilelist  
+        param basedir base direction 
+        param files list files scan 
+        param mapper mapper files target files 
+        
+    
+       load named class test whether rmic'ed 
+        param classname name class tested 
+        return true class rmic'ed 
+        
+   one cannot rmic interface classic  rmi  jrmp only here exception thrown 
+    
+       returns topmost interface extends remote given 
+       class one exists  
+        param testclass class tested 
+        return topmost interface extends remote null none  
+        
+    
+       check see class super interfaces implement 
+       java rmi remote  
+        
+    
+       classloader user-specified classpath  
+        return classloader 
+        
+    
+       adds compiler  attribute commandline$attribute used filter command line attributes based current 
+       implementation  
+        
+    
+           only pass specified argument chosen compiler implementation matches value attribute  legal values same those above list valid compilers   
+            param impl compiler used  
+           org apache tools ant taskdefs Rmic org apache tools ant taskdefs rmic matchingtask error_rmic_failed 
+           rmic failed  see the compiler error output details error_unable_to_verify_class    unable to verify error_not_found      it could not be found error_not_defined      it is not defined error_loading_caused_exception      loading caused exception error_no_base_exists    base does not exist error_not_a_dir    base is not a directory error_base_not_set    base attribute must be set rmic     
+        facade facadetaskhelper rmicadapterfactory default_compiler setbase file base basedir   base file getbase basedir setclassname classname classname   classname getclassname classname setsourcebase file sourcebase sourcebase   sourcebase file getsourcebase sourcebase setstubversion stubversion stubversion   stubversion getstubversion stubversion setfiltering filter filtering   filter getfiltering filtering setdebug debug debug   debug getdebug debug setclasspath path classpath compileclasspath compileclasspath   classpath compileclasspath append classpath path createclasspath compileclasspath compileclasspath path getproject compileclasspath createpath setclasspathref reference pathref    
+        createclasspath   setrefid pathref path getclasspath compileclasspath setverify verify verify   verify getverify verify setiiop iiop iiop   iiop getiiop iiop setiiopopts iiopopts iiopopts   iiopopts getiiopopts iiopopts setidl idl idl   idl getidl idl setidlopts idlopts idlopts   idlopts getidlopts idlopts vector getfilelist compilelist setincludeantruntime include    
+        includeantruntime   include getincludeantruntime includeantruntime setincludejavaruntime include    
+        includejavaruntime   include getincludejavaruntime includejavaruntime setextdirs path extdirs extdirs extdirs   extdirs extdirs append extdirs path createextdirs extdirs extdirs path getproject extdirs createpath path getextdirs extdirs vector getcompilelist compilelist setcompiler compiler compiler length     0    
+            facade setimplementation compiler getcompiler     
+        facade setmagicvalue getproject   getproperty  build rmic facade getimplementation implementationspecificargument createcompilerarg     
+        implementationspecificargument arg implementationspecificargument    
+        facade addimplementationargument arg arg getcurrentcompilerargs     
+        getcompiler facade getargs execute buildexception basedir buildexception error_base_not_set  getlocation basedir exists buildexception error_no_base_exists   basedir  getlocation basedir isdirectory buildexception error_not_a_dir   basedir  getlocation verify    
+            log  verify has been turned on    project msg_verbose   
+          
+ 
+        rmicadapter adapter   rmicadapterfactory getrmic getcompiler adapter setrmic path classpath   adapter getclasspath    
+        loader   getproject   createclassloader classpath classname directoryscanner ds getdirectoryscanner basedir files   ds getincludedfiles    
+                scandir basedir  files  adapter getmapper scandir basedir classname replace ' '  
+                                                        file separatorchar adapter getmapper filecount   compilelist size filecount   0    
+                log  rmi compiling     filecount filecount   1 ?  es            to     basedir  
+                    project msg_info adapter execute buildexception error_rmic_failed  getlocation sourcebase     basedir equals sourcebase  
+                   filecount   0 idl    
+                    log  cannot determine sourcefiles in idl mode     
+                        project msg_warn   
+                    log  sourcebase attribute will be ignored    
+                        project msg_warn j   0  j   filecount  j      
+                        movegeneratedfile basedir  sourcebase compilelist elementat j   
+                                          adapter compilelist removeallelements movegeneratedfile  file basedir  file sourcebasefile classname  
+                                    rmicadapter adapter buildexception classfilename   
+            classname replace ' '  file separatorchar generatedfiles   
+            adapter getmapper   mapfilename classfilename i   0  i   generatedfiles length  i generatedfile   generatedfiles i generatedfile endswith pos   generatedfile length length sourcefilename   
+                generatedfile substring 0  pos      java   
+ 
+            file oldfile file basedir  sourcefilename oldfile exists file newfile file sourcebasefile  sourcefilename filtering    
+                    file_utils copyfile oldfile  newfile filtersetcollection getproject   
+                                                 getglobalfilterset file_utils copyfile oldfile  newfile   
+                  
+                oldfile delete ioexception ioe msg    failed to copy     oldfile     to   
+                      newfile     due to     ioe getmessage buildexception msg  ioe  getlocation scandir file basedir files  
+                           filenamemapper mapper newfiles   files idl    
+            log  will leave uptodate test to rmic implementation in idl mode    
+                project msg_verbose iiop 
+                      iiopopts iiopopts indexof  -always     -1    
+            log  no uptodate test as -always option has been specified   
+                project msg_verbose sourcefilescanner sfs sourcefilescanner newfiles   sfs restrict files  basedir  basedir  mapper i   0  i   newfiles length  i name   newfiles i  replace file separatorchar  ' '   
+            name   name substring 0  name lastindexof compilelist addelement name isvalidrmiremote classname testclass   loader loadclass classname testclass isinterface       iiop     idl isvalidrmiremote testclass classnotfoundexception e    
+            log error_unable_to_verify_class   classname 
+                  error_not_found  project msg_warn noclassdeffounderror e    
+            log error_unable_to_verify_class   classname 
+                  error_not_defined  project msg_warn throwable t    
+            log error_unable_to_verify_class   classname 
+                  error_loading_caused_exception 
+                  t getmessage    project msg_warn getremoteinterface testclass remote isassignablefrom testclass interfaces   testclass getinterfaces interfaces i   0  i   interfaces length  i remote isassignablefrom interfaces i interfaces i isvalidrmiremote testclass getremoteinterface testclass classloader getloader loader implementationspecificargument org apache tools ant util facade implementationspecificargument setcompiler impl setimplementation impl   
+          
+      
+ 
+  
+org apache tools ant taskdefs Rmic

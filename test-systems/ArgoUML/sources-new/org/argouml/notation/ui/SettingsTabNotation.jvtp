@@ -1,0 +1,223 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications  
+    
+   settings tab panel handling notation settings   p supports different scopes  application project former stored properties file user-directory latter project file   zargo        p class written way supports  
+   adding scopes easily  
+   
+    author thierry lach 0 9 4 constructor currently support 2 scopes class written way easily extend param settingsscope scope settings 
+        
+   2002-07-31 
+   jaap branderhorst here made visibility etc  configurable 
+   
+        see org argouml ui guisettingstabinterface#handlesettingstabrefresh next one defaults true stay compatible older 
+               argouml versions not setting next one defaults true  despite not compatible older argouml versions  
+                before 0 24 not setting - see issue 1395 rationale boolean configuration  
+       
+        param key notation key  
+        return boolean 
+        
+   
+        see org argouml ui guisettingstabinterface#handlesettingstabsave   
+        
+   
+        see org argouml ui guisettingstabinterface#handlesettingstabcancel   
+        
+   
+        see org argouml ui guisettingstabinterface#handleresettodefault   
+        
+   
+        see org argouml ui guisettingstabinterface#gettabkey   
+        
+   
+        see org argouml ui guisettingstabinterface#gettabpanel   
+        
+    
+       create localized jcheckbox  
+       
+        param key key string localized 
+        return new checkbox localized text 
+        
+    
+       create localized jlabel  
+       
+        param key key text label 
+        return new label localized text given key 
+        
+   
+        see javax swing jcomponent#setvisible boolean  
+       org argouml notation ui SettingsTabNotation org argouml notation ui settingstabnotation jpanel guisettingstabinterface settingstabnotation settingsscope scope   settingsscope  
+        setlayout borderlayout     
+        jpanel top jpanel    
+ 
+        top setlayout gridbaglayout     
+ 
+        gridbagconstraints constraints gridbagconstraints    
+        constraints anchor   gridbagconstraints west  
+        constraints fill   gridbagconstraints horizontal  
+        constraints gridy   0  
+        constraints gridx   0  
+        constraints gridwidth   1  
+        constraints gridheight   1  
+        constraints weightx   1 0  
+        constraints insets insets 0  30  0  4   
+ 
+        constraints gridy   gridbagconstraints relative  
+ 
+        jpanel notationlanguagepanel jpanel flowlayout flowlayout left  5  0    
+        jlabel notationlanguagelabel   
+            createlabel  label notation-language    
+        notationlanguage notationcombobox    
+        notationlanguagelabel setlabelfor notationlanguage   
+        notationlanguagepanel add notationlanguagelabel   
+        notationlanguagepanel add notationlanguage   
+        top add notationlanguagepanel  constraints   
+ 
+        showboldnames   createcheckbox  label show-bold-names    
+        top add showboldnames  constraints   
+ 
+        useguillemots   createcheckbox  label use-guillemots    
+        top add useguillemots  constraints   
+ 
+          
+          
+          
+ 
+        showvisibility   createcheckbox  label show-visibility    
+        top add showvisibility  constraints   
+ 
+        showmultiplicity   createcheckbox  label show-multiplicity    
+        top add showmultiplicity  constraints   
+ 
+        showinitialvalue   createcheckbox  label show-initialvalue    
+        top add showinitialvalue  constraints   
+ 
+        showproperties   createcheckbox  label show-properties    
+        top add showproperties  constraints   
+ 
+        showtypes   createcheckbox  label show-types    
+        top add showtypes  constraints   
+ 
+        showstereotypes   createcheckbox  label show-stereotypes    
+        top add showstereotypes  constraints   
+         
+        showsingularmultiplicities    
+            createcheckbox  label show-singular-multiplicities    
+        top add showsingularmultiplicities  constraints   
+ 
+        constraints insets insets 5  30  0  4   
+        jpanel defaultshadowwidthpanel jpanel flowlayout flowlayout left  5  0    
+        jlabel defaultshadowwidthlabel   
+            createlabel  label shadow-width    
+        defaultshadowwidth shadowcombobox    
+        defaultshadowwidthlabel setlabelfor defaultshadowwidth   
+        defaultshadowwidthpanel add defaultshadowwidthlabel   
+        defaultshadowwidthpanel add defaultshadowwidth   
+        top add defaultshadowwidthpanel  constraints   
+ 
+        add top  borderlayout north handlesettingstabrefresh scope    argo scope_application    
+            showboldnames setselected getboolean  
+                    notation key_show_bold_names    
+            useguillemots setselected getboolean  
+                    notation key_use_guillemots    
+            notationlanguage setselecteditem notation getconfigurednotation     
+            showvisibility setselected getboolean  
+                    notation key_show_visibility    
+            showinitialvalue setselected getboolean  
+                    notation key_show_initial_value    
+            showproperties setselected getboolean  
+                    notation key_show_properties    
+              
+            showtypes setselected configuration getboolean  
+                    notation key_show_types showmultiplicity setselected getboolean  
+                    notation key_show_multiplicity    
+            showstereotypes setselected getboolean  
+                    notation key_show_stereotypes    
+              
+            showsingularmultiplicities setselected configuration getboolean  
+                    notation key_show_singular_multiplicities defaultshadowwidth setselectedindex configuration getinteger  
+                    notation key_default_shadow_width  1 scope    argo scope_project    
+            project p   projectmanager getmanager   getcurrentproject    
+            projectsettings ps   p getprojectsettings    
+ 
+            notationlanguage setselecteditem notation findnotation  
+                    ps getnotationlanguage      
+            showboldnames setselected ps getshowboldnamesvalue     
+            useguillemots setselected ps getuseguillemotsvalue     
+            showvisibility setselected ps getshowvisibilityvalue     
+            showmultiplicity setselected ps getshowmultiplicityvalue     
+            showinitialvalue setselected ps getshowinitialvaluevalue     
+            showproperties setselected ps getshowpropertiesvalue     
+            showtypes setselected ps getshowtypesvalue     
+            showstereotypes setselected ps getshowstereotypesvalue     
+            showsingularmultiplicities setselected  
+                    ps getshowsingularmultiplicitiesvalue     
+            defaultshadowwidth setselectedindex  
+                    ps getdefaultshadowwidthvalue getboolean configurationkey key configuration getboolean key handlesettingstabsave scope    argo scope_application    
+            notation setdefaultnotation  
+                     notationname  notationlanguage getselecteditem     
+            configuration setboolean notation key_show_bold_names  
+                    showboldnames isselected     
+            configuration setboolean notation key_use_guillemots  
+                    useguillemots isselected     
+            configuration setboolean notation key_show_visibility  
+                    showvisibility isselected     
+            configuration setboolean notation key_show_multiplicity  
+                    showmultiplicity isselected     
+            configuration setboolean notation key_show_initial_value  
+                    showinitialvalue isselected     
+            configuration setboolean notation key_show_properties  
+                    showproperties isselected     
+            configuration setboolean notation key_show_types  
+                    showtypes isselected     
+            configuration setboolean notation key_show_stereotypes  
+                    showstereotypes isselected     
+            configuration setboolean notation key_show_singular_multiplicities  
+                    showsingularmultiplicities isselected     
+            configuration setinteger notation key_default_shadow_width  
+                    defaultshadowwidth getselectedindex scope    argo scope_project    
+            project p   projectmanager getmanager   getcurrentproject    
+            projectsettings ps   p getprojectsettings    
+            notationname nn    notationname  notationlanguage getselecteditem nn ps setnotationlanguage nn getconfigurationvalue     
+            ps setshowboldnames showboldnames isselected     
+            ps setuseguillemots useguillemots isselected     
+            ps setshowvisibility showvisibility isselected     
+            ps setshowmultiplicity showmultiplicity isselected     
+            ps setshowinitialvalue showinitialvalue isselected     
+            ps setshowproperties showproperties isselected     
+            ps setshowtypes showtypes isselected     
+            ps setshowstereotypes showstereotypes isselected     
+            ps setshowsingularmultiplicities  
+                    showsingularmultiplicities isselected     
+            ps setdefaultshadowwidth defaultshadowwidth getselectedindex handlesettingstabcancel     
+        handlesettingstabrefresh handleresettodefault scope    argo scope_project    
+            notationlanguage setselecteditem notation getconfigurednotation     
+            showboldnames setselected getboolean  
+                    notation key_show_bold_names    
+            useguillemots setselected getboolean  
+                    notation key_use_guillemots    
+            showvisibility setselected getboolean  
+                    notation key_show_visibility    
+            showmultiplicity setselected getboolean  
+                    notation key_show_multiplicity    
+            showinitialvalue setselected getboolean  
+                    notation key_show_initial_value    
+            showproperties setselected configuration getboolean  
+                    notation key_show_properties    
+            showtypes setselected configuration getboolean  
+                    notation key_show_types showstereotypes setselected configuration getboolean  
+                    notation key_show_stereotypes    
+            showsingularmultiplicities setselected configuration getboolean  
+                    notation key_show_singular_multiplicities    
+            defaultshadowwidth setselectedindex configuration getinteger  
+                    notation key_default_shadow_width  1 gettabkey tab notation jpanel gettabpanel jcheckbox createcheckbox key    
+        jcheckbox j jcheckbox translator localize key j jlabel createlabel key jlabel translator localize key setvisible arg0 setvisible arg0 arg0  handlesettingstabrefresh    
+      
+ org argouml notation ui SettingsTabNotation

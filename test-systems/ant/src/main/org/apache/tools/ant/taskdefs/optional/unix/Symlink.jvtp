@@ -1,0 +1,256 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license initial version file developed clock nsf grant following boilerplate material based upon work supported national science 
+   foundaton under grant eia-0196404  any opinions  findings conclusions recommendations expressed material those author not necessarily reflect views national science foundation  
+    
+    
+   creates  deletes  records restores symlinks  
+   
+    p task performs several related operations most trivial default usage creates link specified link attribute resource specified resource attribute second usage task traverse directory structure specified fileset write properties file each included directory describing links found directory third usage traverse directory structure specified fileset  looking properties files specified included fileset recreate links previously recorded each directory  finally used remove symlink without deleting associated resource  
+   
+    p  usage examples  
+   
+    p  make link named  quot foo quot resource named 
+    quot bar foo quot subdir  
+    pre  
+    lt symlink link  quot $ dir top  foo quot  resource  quot $ dir top  subdir bar foo quot   gt  
+     pre  
+   
+    p  record links subdir descendants files named 
+    quot dir links quot   
+    pre  
+    lt symlink action  quot record quot  linkfilename  quot dir links quot  gt  
+       lt fileset dir  quot $ dir top  quot  includes  quot subdir #47    quot    gt  
+    lt  symlink gt  
+     pre  
+   
+    p  recreate links recorded previous example  
+    pre  
+    lt symlink action  quot recreate quot  gt  
+       lt fileset dir  quot $ dir top  quot  includes  quot subdir #47    #47 dir links quot    gt  
+    lt  symlink gt  
+     pre  
+   
+    p  delete link named  quot foo quot resource named 
+    quot bar foo quot subdir  
+    pre  
+    lt symlink action  quot delete quot  link  quot $ dir top  foo quot   gt  
+     pre  
+   
+    p  strong limitations   strong java direct support handling symlinks task divines comparing canonical absolute paths non-unix systems may cause false positives  
+   furthermore  any operating system command 
+    code ln -s link resource  code not valid command command line not use action  quot delete quot   action  quot single quot action  quot recreate quot action  quot record quot still 
+   work  finally lack support symlinks java means links recorded links strong canonical  strong  resource name  
+   therefore link   code link --  subdir dir    foo bar  code recorded code link subdir foo bar  code restored code link --  subdir foo bar  code   
+   
+    
+    
+       initialize task  
+        throws buildexception error standard method executing any task  
+        throws buildexception error  
+        
+    
+       create symlink  
+        throws buildexception error ant 1 7 
+        
+    
+       delete symlink  
+        throws buildexception error ant 1 7 
+        
+    
+       restore symlinks  
+        throws buildexception error ant 1 7 
+        
+   handle case lnk points directory  bug 25181 lnk exists nothing 
+    
+       record symlinks  
+        throws buildexception error ant 1 7 
+        
+   create hashtable group parent directory iterator file objects representing links  canonical   
+   write properties file each directory  
+   fill up properties object link resource names  
+    
+       return variables default state next invocation ant 1 7 
+        
+   default behavior fail error 
+   default behavior not overwrite 
+   default behavior make single link 
+    
+       set overwrite mode set false  default task not overwrite existing links may stop build link already exists depending setting failonerror  
+       
+        param owrite true overwrite existing links  
+        
+    
+       set failonerror mode set true  default entire build fails 
+       upon error  otherwise error logged build continue  
+       
+        param foe true throw buildexception error log set action performed   may quot single quot   
+        quot delete quot    quot recreate quot quot record quot   
+       
+        param action action perform  
+        
+    
+       set name link  used action    quot single quot   
+       
+        param lnk name link  
+        
+    
+       set name resource link created  
+       used action    quot single quot   
+       
+        param src resource linked  
+        
+    
+       set name file links written  
+       used action    quot record quot   
+       
+        param lf name file write links add fileset task  
+       
+        param set fileset add  
+        
+    
+       delete symlink  without deleting associated resource   
+       
+        p convenience method simply invokes 
+        code deletesymlink java io file   code   
+       
+        param path string containing path symlink delete  
+       
+        throws filenotfoundexception path results code file  code doesn't exist  
+        throws ioexception calls code file rename  code code file delete  code  fail  
+        
+    
+       delete symlink  without deleting associated resource   
+       
+        p utility method removes unix symlink without removing resource symlink points accidentally invoked real file real file not harmed exception thrown deletion attempted method works getting canonical path link  using canonical path rename resource  breaking link deleting link resource returned original name inside finally 
+       block ensure resource unharmed even event exception  
+       
+        param linkfil code file  code  object symlink delete  
+       
+        throws filenotfoundexception path results code file  code doesn't exist  
+        throws ioexception calls code file rename  code   
+                                          code file delete  code code file getcanonicalpath  code  
+                                         fail  
+        
+   find resource existing link  
+   rename resource  thus breaking link  
+   delete now  broken link  
+   return resource original name  
+    
+       write properties file method uses  code properties store  code thus may throw exceptions occur writing file  
+       
+        param properties properties object written  
+        param dir directory writing links  
+        
+    
+       handle errors based setting failonerror  
+       
+        param msg message log include code buildexception  code   
+        
+    
+       conduct actual construction link  
+       
+        p link constructed calling  code execute runcommand  code   
+       
+        param res path resource linking param lnk name link wish make  
+        
+    
+       find links supplied filesets  
+       
+        p method invoked action attribute quot record quot means filesets interpreted directories links may found  
+       
+        param v filesets specified user  
+        return hashset code file  code  objects containing links canonical parent directories   
+        
+    
+       load links properties files included one filesets  
+       
+        p method only invoked action attribute set quot recreate quot filesets passed assumed specify names property files link information subdirectories look param v code fileset  code s task  
+        return links made  
+        
+   loop through supplied file sets  
+   load included files properties files  
+   write contents master list links method assumes links defined terms absolute paths paths relative working directory org apache tools ant taskdefs optional unix Symlink org apache tools ant taskdefs optional unix symlink dispatchtask init buildexception init    
+        setdefaults execute buildexception executing buildexception  
+                 infinite recursion detected in symlink execute executing dispatchutils execute executing single buildexception resource handleerror  must define the resource to symlink to link handleerror  must define the link name symlink dolink resource  link setdefaults delete buildexception link handleerror  must define the link name symlink log  removing symlink      link   
+            deletesymlink link filenotfoundexception fnfe    
+            handleerror fnfe tostring ioexception ioe    
+            handleerror ioe tostring setdefaults recreate buildexception filesets isempty      
+                handleerror  file set identifying link file s    
+                               required action recreate properties links   loadlinks filesets iterator kitr   links keyset   iterator    kitr hasnext lnk kitr next res   links getproperty lnk file test file lnk file_utils issymboliclink lnk     
+                        dolink res  lnk test getcanonicalpath   equals file res  getcanonicalpath       
+                        deletesymlink lnk   
+                        dolink res  lnk ioexception ioe    
+                    handleerror  io exception creating link setdefaults record buildexception filesets isempty      
+                handleerror  fileset identifying links to record required linkfilename handleerror  name of file to record links in required hashtable bydir hashtable iterator litr   findlinks filesets  iterator    
+                litr hasnext       
+                file thislink    file  litr next    
+                file parent   thislink getparentfile    
+                vector v    vector  bydir get parent v v vector    
+                    bydir put parent  v   
+                  
+                v addelement thislink iterator dirs   bydir keyset   iterator    dirs hasnext       
+                file dir    file  dirs next    
+                vector linksindir    vector  bydir get dir   
+                properties linkstostore properties iterator dlnk   linksindir iterator    dlnk hasnext       
+                    file lnk    file  dlnk next linkstostore put lnk getname    lnk getcanonicalpath ioexception ioe    
+                        handleerror  couldn't get canonical name of parent link    
+                      
+                  
+                writepropertyfile linkstostore  dir setdefaults setdefaults     
+        resource link linkfilename failonerror overwrite setaction  single           
+        filesets clear setoverwrite owrite overwrite   owrite setfailonerror foe failonerror   foe setaction action setaction action setlink lnk link   lnk setresource src resource   src setlinkfilename lf linkfilename   lf addfileset fileset set    
+        filesets addelement set deletesymlink path ioexception  filenotfoundexception   
+        deletesymlink file path deletesymlink file linkfil ioexception  filenotfoundexception linkfil exists filenotfoundexception  no such symlink      linkfil   
+          
+          
+        file canfil   linkfil getcanonicalfile    
+ 
+          
+        file temp   file_utils createtempfile  symlink     tmp   
+                                              canfil getparentfile try   
+                file_utils rename canfil  temp ioexception e ioexception  
+                     couldn't rename resource when attempting to delete   
+                      linkfil linkfil delete ioexception  couldn't delete symlink      linkfil 
+                         was it a real file? is not a unix system file_utils rename temp  canfil ioexception e ioexception  couldn't resource     temp 
+                        to its original name      canfil getabsolutepath   
+                       \n the resource's name on disk has   
+                       been changed by error \n writepropertyfile properties properties  file dir buildexception   
+        bufferedoutputstream bos bos bufferedoutputstream fileoutputstream file dir  linkfilename     
+            properties store bos   symlinks from     dir ioexception ioe buildexception ioe  getlocation fileutils close bos handleerror msg failonerror buildexception msg   
+          
+        log msg dolink res lnk buildexception   
+        file linkfil file lnk overwrite    linkfil exists deletesymlink linkfil filenotfoundexception fnfe    
+                handleerror  symlink disappeared before it was deleted      lnk ioexception ioe    
+                handleerror  unable to overwrite preexisting link      lnk cmd ln    -s   res  lnk   
+        log commandline tostring cmd    
+        execute runcommand cmd hashset findlinks vector v    
+        hashset result hashset i   0  i   v size    i      
+            fileset fs    fileset  v get i   
+            directoryscanner ds   fs getdirectoryscanner getproject fnd ds getincludedfiles    ds getincludeddirectories     
+            file dir   fs getdir getproject j   0  j   fnd length  j k   0  k   fnd j  length  k file f file dir  fnd j  k    
+                        file pf   f getparentfile name   f getname file_utils issymboliclink pf  name     
+                            result add file pf getcanonicalfile    name ioexception e    
+                        handleerror  ioexception      fnd j  k      omitted result properties loadlinks vector v    
+        properties finallist properties i   0  i   v size    i      
+            fileset fs    fileset  v elementat i   
+            directoryscanner ds directoryscanner    
+            fs setupdirectoryscanner ds  getproject     
+            ds setfollowsymlinks ds scan incs   ds getincludedfiles    
+            file dir   fs getdir getproject j   0  j   incs length  j      
+                file inc file dir  incs j    
+                file pf   inc getparentfile    
+                properties lnks properties lnks load bufferedinputstream fileinputstream inc     
+                    pf   pf getcanonicalfile filenotfoundexception fnfe    
+                    handleerror  unable to find     incs j       skipping it ioexception ioe    
+                    handleerror  unable to open     incs j  
+                                    or its parent dir  skipping it lnks list printstream logoutputstream project msg_info iterator kitr   lnks keyset   iterator    kitr hasnext key kitr next    
+                    finallist put file pf  key  getabsolutepath    
+                        lnks getproperty key finallist  
+      
+ org apache tools ant taskdefs optional unix Symlink

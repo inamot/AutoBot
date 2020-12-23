@@ -1,0 +1,228 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   converts path classpath information specific target os 
+   format resulting formatted path placed specified property ant 1 4 
+    ant task category  utility  
+    
+    
+       set re running windows 
+        
+   members 
+    
+       path converted 
+        
+    
+       reference path fileset convert target os type 
+        
+    
+       set targetos set windows 
+        
+    
+       set create new property even result empty property receive conversion 
+        
+    
+       path prefix map 
+        
+    
+       user override path sep char 
+        
+    
+       user override directory sep char 
+        
+    filename mapper    
+    
+       construct new instance pathconvert task  
+        
+    
+       helper class  holds nested  lt map gt  values  elements look lt map quot d  quot quot  foo quot   gt running windows prefix comparison case 
+       insensitive  
+        
+   members 
+    
+           set quot quot  attribute map entry  
+            param prefix string search required  
+           note value case-insensitive build running windows platform case-sensitive running unix platform  
+            
+    
+           set replacement text use matched  required  
+            param new prefix  
+            
+    
+           apply map entry given path element  
+           
+            param elem path element process  
+            return string updated path element mapping re windows comparison ignoring case treat two directory characters same element starts configured prefix convert prefix configured value enumeration supported targets  
+        windows    unix    netware os 2   
+        
+    
+            return list values enumerated attribute  
+            
+    
+       create nested path element  
+        return path used ant reflection  
+        
+    
+       add arbitrary resourcecollection  
+        param rc resourcecollection add ant 1 7 
+        
+    
+       create nested map element  
+        return map configure  
+        
+    
+       set targetos platform one windows    unix    netware os 2   
+       current platform settings used default  
+        param target target os  
+        deprecated 1 5 x  
+                   use method taking targetos argument instead  
+        see #settargetos pathconvert targetos  
+        
+    
+       set targetos platform one windows    unix    netware os 2   
+       current platform settings used default  
+        param target target os ant 1 5 
+        
+   currently deal only two path formats  unix windows unix everything not windows netware os 2  piggy-back windows validatesetup code same assumptions made windows path separator 
+    
+       set whether specified property set result empty string  
+        param setonempty true false ant 1 5 
+        
+    
+       set name property converted path placed  
+        param p property name  
+        
+    
+       add reference path  fileset  dirset filelist defined elsewhere  
+        param r reference path  fileset  dirset filelist  
+        
+    
+       set default path separator string  defaults current jvm 
+         link java io file#pathseparator file pathseparator   
+        param sep path separator string  
+        
+    
+       set default directory separator string  
+       defaults current jvm   link java io file#separator file separator   
+        param sep directory separator string  
+        
+    
+       learn whether refid attribute element set  
+        return true refid valid execution  
+        throws buildexception something invalid  
+        
+   may altered validatesetup 
+   may altered validatesetup reference  create path reference 
+   validate setup 
+   currently deal only two path formats  unix windows unix everything not windows exception netware os 2 below netware os 2  piggy-back windows here apply code same assumptions made windows ok separator comparisons 
+   case-insensitive list path components canonical form 
+   apply path prefix map 
+   now convert path file separator characters current os target os  
+   place result specified property  
+   unless setonempty    false 
+    
+       apply configured map path element map used convert 
+       between windows drive letters unix paths map configured input string returned unchanged  
+       
+        param elem path element apply map return string updated element  
+        
+   iterate over map entries apply each one  
+   stop one entries actually changes element  
+   note m using see new object back apply method applied one re done 
+    
+       add mapper convert file names  
+       
+        param mapper code mapper  code  value  
+        
+    
+       add nested filenamemapper  
+        param filenamemapper mapper add ant 1 6 3 
+        
+    
+       validate parameters properly initialized  
+       
+        throws buildexception something not set up properly  
+        
+   determine separator strings dirsep pathsep attributes 
+   override targetos settings  
+   override pathsep  
+   override dirsep  
+    
+       creates exception indicates xml element must not child elements refid attribute set  
+        return buildexception  
+       org apache tools ant taskdefs PathConvert org apache tools ant taskdefs pathconvert task pathconvert mapentry setfrom from from   from setto to to   to apply elem from to buildexception  both 'from' and 'to' must be set   
+                        in a map entry cmpelem   
+                onwindows ? elem tolowercase   replace '\\'  ' '    elem cmpfrom   
+                onwindows ? from tolowercase   replace '\\'  ' '    from cmpelem startswith cmpfrom  
+                ? to   elem substring from length      elem targetos enumeratedattribute getvalues windows    unix    netware    os 2    tandem path createpath isreference nochildrenallowed    
+          
+        path result path getproject     
+        add result result add resourcecollection rc isreference nochildrenallowed    
+          
+        getpath   add rc union getpath path path union    
+            path setproject getproject path mapentry createmap     
+        mapentry entry mapentry    
+        prefixmap addelement entry entry settargetos target    
+        targetos to targetos    
+        to setvalue target   
+        settargetos to settargetos targetos target    
+        targetos   target getvalue    
+ 
+          
+          
+ 
+          
+          
+          
+ 
+        targetwindows    targetos equals  unix       targetos equals  tandem setsetonempty setonempty setonempty   setonempty setproperty p    
+        property   p setrefid reference r path nochildrenallowed    
+          
+        refid   r setpathsep sep    
+        pathsep   sep setdirsep sep    
+        dirsep   sep isreference refid execute buildexception   
+        union savedpath   path savedpathsep   pathsep saveddirsep   dirsep isreference      
+                object o   refid getreferencedobject getproject o resourcecollection buildexception  refid '    refid getrefid   
+                           ' does not refer to a resource collection     
+                  
+                getpath   add  resourcecollection  o   
+              
+            validatesetup fromdirsep   onwindows ?  \\         
+ 
+            stringbuffer rslt stringbuffer elems   path list mapper filenamemapper impl   mapper getimplementation    
+                list ret arraylist i   0  i   elems length    i mapped   impl mapfilename elems i m   0  mapped m   mapped length    m    
+                        ret add mapped m    
+                      
+                  
+                elems ret toarray ret size i   0  i   elems length  i elem   mapelement elems i i    0    
+                    rslt append pathsep   
+                  
+                stringtokenizer stdirectory stringtokenizer elem  fromdirsep stdirectory hasmoretokens token   stdirectory nexttoken    
+                    rslt append fromdirsep equals token  ? dirsep   token setonempty    rslt length     0 value   rslt tostring property log value log  set property     property           value  
+                        project msg_verbose   
+                    getproject   setnewproperty property  value path   savedpath  
+            dirsep   saveddirsep  
+            pathsep   savedpathsep mapelement elem size   prefixmap size size    0 i   0  i   size  i      
+                mapentry entry    mapentry  prefixmap elementat i newelem   entry apply elem newelem    elem    
+                    elem   newelem elem addmapper mapper mapper mapper buildexception  
+                 cannot define more than one mapper mapper   mapper add filenamemapper filenamemapper    
+        mapper m mapper getproject     
+        m add filenamemapper   
+        addmapper m validatesetup buildexception path buildexception  you must specify a path to convert dsep   file separator psep   file pathseparator targetos psep   targetwindows ?            
+            dsep   targetwindows pathsep psep   pathsep dirsep dsep   dirsep  
+          
+        pathsep   psep  
+        dirsep   dsep buildexception nochildrenallowed buildexception  you must not specify nested   
+                elements when using the refid attribute     
+      
+ 
+  
+org apache tools ant taskdefs PathConvert

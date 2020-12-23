@@ -1,0 +1,378 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications persist argo  xml file  storage  
+   
+    author bob tarling persistence_version increased every time persistence format 
+       changes controls conversion old persistence version files converted current one  keeping argouml backwards compatible total_phases_load constant number phases used load 
+       process  
+        
+    
+       logger constructor  
+        
+   
+        see org argouml persistence abstractfilepersister#getextension   
+        
+   
+        see org argouml persistence abstractfilepersister#getdesc being considered save out individual 
+       xmi's individuals diagrams make easier modularize output argo  
+       
+        param file file write  
+        param project project save 
+        throws saveexception anything goes wrong 
+        throws interruptedexception thread interrupted 
+       
+        see org argouml persistence projectfilepersister#save  
+       org argouml kernel project  java io file save not raise exception name  #  exists move name name correct backup file 
+   frank case exception 
+   delete name mv name  #  back name name  #  exists rollback old file give message user set system unsaved uml save format longer available save  
+        
+         inheritdoc  
+        
+    
+       write output project given stream  
+       
+        param project project output  
+        param stream stream write throws saveexception something goes wrong  
+        throws interruptedexception thread interrupted 
+        
+   write out header section 
+   write out xmi section first 
+   write out non-xmi sections 
+   
+        see org argouml persistence projectfilepersister#doload java io file s initialize progressmgr 
+   
+        see org argouml persistence projectfilepersister#doload java io file  
+        
+   run through any stylesheet upgrades re upgrade file lets take archive first  
+   uml 2 x files don't xmi outer 
+   tag   try again uml model s update progress re trying load file future version 
+   complain refuse  
+    
+       transform string xml data according service required  
+       
+        param file xml file transformed 
+        param version version persistence format xml transformed return transformed xml file 
+        throws openexception xslt transformation error file read 
+        
+   read xsltstream temporary file url temp file  
+   openstream url wrap streamsource 
+    
+       read stream argo format extracts persistence version number root tag  
+       
+        param file xml file 
+        return version number 
+        throws openexception any error 
+        
+   ignore 
+    
+       reads xml file uml format extracts persistence version number root tag  
+       
+        param inputstream stream pointing file read  
+        return version number 
+        throws openexception any error here failure 
+    
+       reads xml file uml format extracts persistence version number root tag  
+       
+        param file xml file 
+        return argouml release number 
+        throws openexception any error 
+        
+   ignore 
+    
+       reads xml file uml format extracts persistence version number root tag  
+       
+        param inputstream stream point xml file 
+        return argouml release number 
+        throws openexception any error here failure version attribute value string xml  
+        param rootline line 
+        return version memberfilepersister based given projectmember  
+       
+        param pm project member 
+        return persister memberfilepersister based given projectmember  
+       
+        param tag tag  
+        return persister 
+        
+    
+       returns true argo specific files icon  
+        
+         inheritdoc  
+        
+    
+       class filter xml declaration doctype declaration output stream allow use nested xml files  
+        
+        author tom morris input view same bytes read backslashes doubled up - one java  one regex 
+   todo  make efficient large os 
+   convert bytes back characters problems smallest possible 
+   data segment smaller size buffer 
+   needed regex matching 
+   rewind character buffer 
+   write any left over bytes partial character method effect keep sub-writers closing accidently master use method   link #reallyclose actually close underlying stream  
+            
+    
+           close stream  
+            
+            throws ioexception 
+            
+    
+           flush stream throw illegalstateexception stream flushed before header completely processed  
+           org argouml persistence UmlFilePersister org argouml persistence umlfilepersister abstractfilepersister persistence_version   5 uml_phases_load   2 logger log   
+        logger getlogger umlfilepersister argo_tee   
+	  org argouml persistence argo tee umlfilepersister getextension uml getdesc translator localize  combobox filefilter uml dosave project project  file file saveexception  interruptedexception   
+ 
+        progressmgr progressmgr progressmgr    
+        progressmgr setnumberofphases 4   
+        progressmgr nextphase    
+         
+        file lastarchivefile file file getabsolutepath      ~    
+        file tempfile tempfile   createtempfile file filenotfoundexception e saveexception  
+                     failed to archive the previous file version   e ioexception e saveexception  
+                     failed to archive the previous file version   e project setfile file   
+            project setversion applicationversion getversion     
+            project setpersistenceversion persistence_version   
+ 
+            outputstream stream fileoutputstream file   
+ 
+            writeproject project  stream  progressmgr   
+ 
+            stream close    
+ 
+            progressmgr nextphase path   file getparent log isinfoenabled      
+                log info  dir       path lastarchivefile exists      
+                lastarchivefile delete tempfile exists       lastarchivefile exists      
+                tempfile renameto lastarchivefile tempfile exists      
+                tempfile delete    
+              
+             
+            progressmgr nextphase exception e    
+            log error  exception occured during save attempt   e   
+ 
+              
+              
+              
+            file delete    
+            tempfile renameto file e interruptedexception interruptedexception  e saveexception e issaveenabled writeproject project project   
+            outputstream ostream   
+            progressmgr progressmgr saveexception   
+            interruptedexception   
+        outputstreamwriter outputstreamwriter outputstreamwriter outputstreamwriter ostream  argo getencoding unsupportedencodingexception e saveexception e   
+          
+        printwriter writer printwriter bufferedwriter outputstreamwriter    
+ 
+        xmlfilteroutputstream filteredstream xmlfilteroutputstream ostream  argo getencoding writer println   ?xml version   \ 1 0\    
+                       encoding   \    
+                      argo getencoding      \  ?     
+            writer println   uml version \     persistence_version hashtable templates   
+                    templatereader getinstance   read argo_tee   
+                oclexpander expander oclexpander templates   
+                expander expand writer  project expansionexception e saveexception e   
+              
+            writer flush size   project getmembers   size i   0  i   size  i      
+                projectmember projectmember   project getmembers   get i projectmember gettype   equalsignorecase  xmi log isinfoenabled      
+                        log info  saving member of type    
+                                project getmembers   get i  gettype     
+                      
+                    memberfilepersister persister 
+                          getmemberfilepersister projectmember   
+                    filteredstream startentry    
+                    persister save projectmember  filteredstream filteredstream flush ioexception e saveexception e progressmgr progressmgr nextphase i   0  i   size  i      
+                projectmember projectmember   project getmembers   get i projectmember gettype   equalsignorecase  xmi log isinfoenabled      
+                        log info  saving member of type    
+                                project getmembers   get i  gettype     
+                      
+                    memberfilepersister persister 
+                          getmemberfilepersister projectmember   
+                    filteredstream startentry    
+                    persister save projectmember  filteredstream filteredstream flush ioexception e saveexception e   
+                      
+                  
+              
+ 
+            writer println    uml     
+ 
+            writer flush writer close filteredstream reallyclose ioexception e saveexception e project doload file file openexception   
+    interruptedexception   
+          
+        progressmgr progressmgr progressmgr    
+        progressmgr setnumberofphases uml_phases_load   
+         
+        threadutils checkifinterrupted doload file  file  progressmgr project doload file originalfile  file file  progressmgr progressmgr openexception  interruptedexception   
+ 
+        xmlinputstream inputstream project p   projectfactory getinstance   
+                     createproject file touri fileversion   getpersistenceversionfromfile file   
+ 
+            log info  loading uml file of version     fileversion checkversion fileversion   getreleaseversionfromfile file release   getreleaseversionfromfile file   
+                copyfile  
+                    originalfile file originalfile getabsolutepath     '~'   release    
+                 
+                progressmgr setnumberofphases progressmgr getnumberofphases    
+                           persistence_version - fileversion fileversion   persistence_version    
+                      fileversion  
+                    log info  upgrading to version     fileversion starttime   system currenttimemillis    
+                    file   transform file  fileversion endtime   system currenttimemillis    
+                    log info  upgrading took   
+                                endtime - starttime    1000  
+                                seconds    
+                    progressmgr nextphase    
+                  
+              
+ 
+            progressmgr nextphase    
+ 
+            inputstream xmlinputstream  
+                        file touri   tourl   openstream    
+                         argo   
+                        file length    
+                        100000   
+ 
+            argoparser parser argoparser    
+            reader reader inputstreamreader inputstream   
+                            argo getencoding     
+            parser readproject p  reader   
+             
+            list memberlist   parser getmemberlist    
+ 
+            log info memberlist size       members i   0  i   memberlist size      i    
+                memberfilepersister persister 
+                      getmemberfilepersister memberlist get i    
+                log info  loading member with   
+                          persister getclass   getname     
+                inputstream reopen persister getmaintag persister load p  inputstream openexception e xmi  equals persister getmaintag     
+                               e getcause umlexception  
+                               e getcause   getcause ioexception    
+                        inputstream reopen  uml model    
+                        persister load p  inputstream e  
+                      
+                  
+              
+             
+              
+            progressmgr nextphase    
+            threadutils checkifinterrupted    
+            inputstream realclose    
+            p postload p interruptedexception e e openexception e e ioexception e openexception e saxexception e openexception e checkversion fileversion releaseversion openexception  versionexception fileversion   persistence_version versionexception  
+                 the file selected is from a more up to date version of   
+                   argouml  it has been saved with argouml version   
+                  releaseversion 
+                     please load with that or a more up to date  
+                   release of argouml fileversion    persistence_version file transform file file version openexception upgradefilespath     org argouml persistence upgrades upgradefile    upgrade    version     xsl xsltfilename   upgradefilespath   upgradefile  
+            url xslturl   umlfilepersister getresource xsltfilename   
+            log info  resource is     xslturl   
+ 
+              
+              
+              
+            streamsource xsltstreamsource streamsource xslturl openstream     
+            xsltstreamsource setsystemid xslturl toexternalform     
+ 
+            transformerfactory factory   transformerfactory newinstance    
+            transformer transformer   factory newtransformer xsltstreamsource   
+ 
+            file transformedfile   
+                file createtempfile  upgrade_    version    _     uml    
+            transformedfile deleteonexit    
+ 
+            fileoutputstream stream fileoutputstream transformedfile   
+            writer writer bufferedwriter outputstreamwriter stream   
+                        argo getencoding      
+            result result streamresult writer   
+ 
+            streamsource inputstreamsource streamsource file   
+            inputstreamsource setsystemid file   
+            transformer transform inputstreamsource  result   
+ 
+            writer close transformedfile ioexception e openexception e transformerexception e openexception e getpersistenceversionfromfile file file openexception   
+        inputstream stream stream bufferedinputstream file touri   tourl   
+                     openstream version   getpersistenceversion stream   
+            stream close version malformedurlexception e openexception e ioexception e openexception e stream stream close ioexception e getpersistenceversion inputstream inputstream openexception   
+        bufferedreader reader reader bufferedreader inputstreamreader inputstream   
+                    argo getencoding rootline   reader readline rootline rootline trim   startswith   argo       
+                rootline   reader readline rootline 1 integer parseint getversion rootline ioexception e openexception e numberformatexception e openexception e reader reader close ioexception e getreleaseversionfromfile file file openexception   
+        inputstream stream stream bufferedinputstream file touri   tourl   openstream version   getreleaseversion stream   
+            stream close version malformedurlexception e openexception e ioexception e openexception e stream stream close ioexception e getreleaseversion inputstream inputstream openexception   
+        bufferedreader reader reader bufferedreader inputstreamreader inputstream   
+                    argo getencoding versionline   reader readline versionline trim   startswith   version       
+                versionline   reader readline versionline openexception  
+                             failed to find the release  version  tag    
+                  
+              
+            versionline   versionline trim end   versionline lastindexof    version versionline trim   substring 9  end ioexception e openexception e numberformatexception e openexception e inputstream inputstream close reader reader close ioexception e getversion rootline version versionpos   rootline indexof  version versionpos   0 startpos   versionpos   9 endpos   rootline indexof  \    startpos   
+            version   rootline substring startpos  endpos version    1 version memberfilepersister getmemberfilepersister projectmember pm    
+        memberfilepersister persister pm projectmemberdiagram    
+            persister   
+		persistencemanager getinstance   
+		         getdiagrammemberfilepersister pm projectmembertodolist    
+            persister todolistmemberfilepersister pm profileconfiguration    
+            persister profileconfigurationfilepersister pm projectmembermodel    
+            persister modelmemberfilepersister persister memberfilepersister getmemberfilepersister tag    
+        memberfilepersister persister tag equals  pgml      
+            persister   
+		persistencemanager getinstance   
+                         getdiagrammemberfilepersister tag equals  todo      
+            persister todolistmemberfilepersister tag equals  profile      
+            persister profileconfigurationfilepersister tag equals  xmi      
+            persister modelmemberfilepersister persister hasanicon xmlfilteroutputstream filteroutputstream pattern pattern   pattern compile  
+                 \\s  \\?xml  \\? \\s    doctype   \\s xmlfilteroutputstream outputstream outputstream charsetname outputstream  charset forname charsetname xmlfilteroutputstream outputstream outputstream   
+                charset charset outputstream   
+            decoder   charset newdecoder    
+            decoder onmalformedinput codingerroraction report   
+            decoder onunmappablecharacter codingerroraction report   
+            startentry startentry     
+            headerprocessed resetbuffers resetbuffers     
+            inbb limit 0   
+            outbb position 0   
+            outcb position 0   
+          
+ 
+         override write b off len ioexception off   len    b length -  len   off      off   len     0 indexoutofboundsexception headerprocessed    
+                out write b  off  len i   0  i   len  i      
+                    write b off   i    
+                                  
+              
+ 
+          
+ 
+         override write b ioexception headerprocessed    
+                out write b outbb put b   
+                inbb limit outbb position     
+                  
+                coderresult result   decoder decode inbb  outcb result iserror runtimeexception  
+                             unknown character decoding error outcb position      outcb limit      
+                    processheader processheader ioexception   
+            headerprocessed outcb position 0     
+             
+            matcher matcher   pattern matcher outcb headerstring   matcher replaceall      
+             
+            bytebuffer bb   decoder charset   encode headerstring outbytes bb limit     
+            bb get outbytes   
+            out write outbytes  0  outbytes length inbb remaining     0    
+                out write inbb array    inbb position     
+                        inbb remaining     
+                inbb position 0   
+                inbb limit 0   
+              
+          
+ 
+ 
+          
+         override close ioexception   
+            flush reallyclose ioexception   
+            out close    
+          
+ 
+          
+         override flush ioexception headerprocessed illegalstateexception  
+                         attempted flush still processing header    
+              
+            out flush    
+          
+         
+      
+ org argouml persistence UmlFilePersister

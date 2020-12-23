@@ -1,0 +1,341 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license base class creating tasks executing commands visual sourcesafe  
+    p class extends exec' task operates executing ss exe program 
+   supplied sourcesafe default task expects ss exe path override specifying ssdir attribute  
+     p  
+    p class provides set methods login vsspath' attributes contains constants flags passed ss  
+     p  
+   
+    
+     version    
+     date    
+     label    
+     auto response    
+     local path    
+     comment label label    
+     output file name    
+     user date date    
+     history style    
+     quiet defaults false    
+     recursive defaults false    
+     writable defaults false    
+     fail error defaults true local copy checkout defaults true    
+     number days offset history    
+     date format history    
+     timestamp retreived files    
+     behaviour writable files    
+    
+       each sub-class must implemnt method return constructed 
+       command line executed up sub-task determine required attrubutes order  
+        return constructed command line  
+        
+    
+       directory code ss exe  code  resides default task expects path  
+        param  dir directory containing ss exe  
+        
+    
+       login use accessing vss  formatted username password   
+        p omit password database not password protected password omit ant hang  
+        param  vsslogin login string use  
+        
+    
+       sourcesafe path specifies project file s wish perform action p prefix vss removed specified  
+        param  vsspath vss project path  
+        ant attribute group  required  
+        
+          $non-nls-1$ 
+    
+       directory code srssafe ini  code  resides  
+        param  serverpath path vss server  
+        
+    
+       indicates build fail sourcesafe command defaults true  
+        param failonerror true task fail any error  
+        
+    
+       executes task   br  
+       builds command line execute ss exe calls exec's run method execute command line  
+        throws buildexception command cannot execute  
+        
+   special setters sub-classes 
+    
+       set internal comment attribute  
+        param comment value use  
+        
+    
+       set auto response attribute  
+        param autoresponse value use  
+        
+    
+       set date attribute  
+        param date value use  
+        
+    
+       set date format attribute  
+        param dateformat value use  
+        
+    
+       set failonerror attribute  
+        param failonerror value use  
+        
+    
+       set date attribute  
+        param fromdate value use  
+        
+    
+       set label attribute  
+        param fromlabel value use  
+        
+    
+       set label attribute  
+        param label value use  
+        
+    
+       set local path comment attribute  
+        param localpath value use  
+        
+    
+       set num days attribute  
+        param numdays value use  
+        
+    
+       set outputfilename comment attribute  
+        param outputfilename value use  
+        
+    
+       set quiet attribute  
+        param quiet value use  
+        
+    
+       set recursive attribute  
+        param recursive value use  
+        
+    
+       set style attribute  
+        param style value use  
+        
+    
+       set date attribute  
+        param todate value use  
+        
+    
+       set label attribute  
+        param tolabel value use  
+        
+    
+       set user attribute  
+        param user value use  
+        
+    
+       set version attribute  
+        param version value use  
+        
+    
+       set writable attribute  
+        param writable value use  
+        
+    
+       set timestamp attribute  
+        param timestamp value use  
+        
+    
+       set writablefiles attribute  
+        param writablefiles value use  
+        
+    
+       set getlocalcopy attribute  
+        param getlocalcopy value use  
+        
+    
+       gets sscommand string   ss c \path ss  
+        return path ss exe ss sscommand not set  
+        
+    
+       gets vssserverpath string  
+        return    null vssserverpath not set  
+        
+    
+       gets quiet string  -o- 
+        return empty string quiet not set false  
+        
+    
+       gets recursive string   -r  
+        return empty string recursive not set false  
+        
+    
+       gets writable string   -w  
+        return empty string writable not set false  
+        
+    
+       gets label string   -lbuild1  
+       max label length 32 chars 
+        return empty string label not set  
+        
+    
+       return most 30 first chars label  
+       logging warning message truncation 
+        return most 30 first chars label 
+        
+    
+       gets style string   -lbuild1  
+        return empty string label not set  
+        
+    
+       gets version string  returns first specified version  -v1 0   
+       date  -vd01 01 01   label  -vlbuild1   
+        return empty string version  date label not set  
+        
+   use getshortlabel labels longer 30 char truncated user warned 
+    
+       gets version string  
+        return empty string version not set  
+        
+    
+       gets localpath string   -glc \source   p localpath created didn't exist  
+        return empty string localpath not set  
+        
+  set empty str local path return 
+  make sure m_localdir exists  create it doesn't 
+    
+       gets comment string   -ccomment text  
+        return comment comment not set  
+        
+    
+       gets auto response string y y n n   
+        return default value autoresponse not set  
+        
+    
+       gets login string user password   -yuser password user  -yuser   
+        return empty string login not set  
+        
+    
+       gets output file string   -ooutput file  
+        return empty string user not set  
+        
+    
+       gets user string   -uusername  
+        return empty string user not set  
+        
+    
+       gets version string vlbuild2~lbuild1 lbuild1 vlbuild2   
+        return empty string tolabel fromlabel set  
+        
+    
+       gets version date string  
+        return empty string todate date set  
+        throws buildexception error  
+        
+    
+       builds returns g- flag required  
+        return empty string local copy true  
+        
+    
+       gets value fail error flag  
+        return    true failonerror flag set writablefiles skip'  
+        
+    
+       gets value set filetimestamp equals  current return -gtc equals  modified return -gtm equals  updated return -gtu 
+       otherwise return -gtc 
+       
+        return default file time flag not set  
+        
+    
+       gets value determine behaviour encountering writable files  
+        return empty string not set  
+        
+   ss exe exits 100 files skipped ignore failure 
+    
+        sets up required environment executes command line  
+       
+        param  cmd command line execute  
+        return return code exec'd process location ss ini specified need set environment-variable ssdir value 
+   use os launcher environment variables 
+    
+       calculates start date version comparison  
+        p  
+       calculates date numday days earlier startdate  
+        param   startdate start date  
+        param   daystoadd number days add  
+        return calculated date  
+        throws parseexception 
+        
+    
+       changes password isn't displayed screen build fails 
+       
+        param cmd command line clean 
+        return command line string out password 
+        
+    
+       extention enumeratedattribute hold values file time stamp  
+        
+    
+           gets list allowable values  
+            return values  
+            
+    
+       extention enumeratedattribute hold values writable filess  
+        
+    
+           gets list allowable values  
+            return values  
+           org apache tools ant taskdefs optional vss MSVSS org apache tools ant taskdefs optional vss msvss task msvssconstants commandline buildcmdline setssdir dir ssdir   fileutils translatepath dir setlogin vsslogin vsslogin   vsslogin setvsspath vsspath projectpath vsspath startswith  vss   
+            projectpath   vsspath substring 5 projectpath   vsspath projectpath startswith project_prefix vsspath   projectpath vsspath   project_prefix   projectpath setserverpath serverpath serverpath   serverpath setfailonerror failonerror failonerror   failonerror execute buildexception result   0  
+        commandline commandline   buildcmdline    
+        result   run commandline execute isfailure result     getfailonerror msg    failed executing      formatcommandline commandline  
+                         with a code of     result buildexception msg  getlocation setinternalcomment comment comment   comment setinternalautoresponse autoresponse autoresponse   autoresponse setinternaldate date date   date setinternaldateformat dateformat dateformat dateformat   dateformat setinternalfailonerror failonerror failonerror   failonerror setinternalfromdate fromdate fromdate   fromdate setinternalfromlabel fromlabel fromlabel   fromlabel setinternallabel label label   label setinternallocalpath localpath localpath   localpath setinternalnumdays numdays numdays   numdays setinternaloutputfilename outputfilename outputfilename   outputfilename setinternalquiet quiet quiet   quiet setinternalrecursive recursive recursive   recursive setinternalstyle style style   style setinternaltodate todate todate   todate setinternaltolabel tolabel tolabel   tolabel setinternaluser user user   user setinternalversion version version   version setinternalwritable writable writable   writable setinternalfiletimestamp currentmodupdated timestamp timestamp   timestamp setinternalwritablefiles writablefiles writablefiles writablefiles   writablefiles setinternalgetlocalcopy getlocalcopy getlocalcopy   getlocalcopy getsscommand ssdir ss_exe ssdir endswith file separator  ? ssdir   ss_exe   ssdir 
+                   file separator   ss_exe getvsspath vsspath getquiet quiet ? flag_quiet getrecursive recursive ? flag_recursion getwritable writable ? flag_writable getlabel shortlabel label label length     0    
+                shortlabel   flag_label   getshortlabel shortlabel getshortlabel shortlabel label label length     31    
+            shortlabel label substring 0  30   
+            log  label is longer than 31 characters  truncated to      shortlabel  
+                project msg_warn shortlabel   label shortlabel getstyle style style getversiondatelabel versiondatelabel version versiondatelabel   flag_version   version date versiondatelabel   flag_version_date   date shortlabel   getshortlabel shortlabel shortlabel equals        
+                versiondatelabel   flag_version_label   shortlabel versiondatelabel getversion version flag_version   version getlocalpath lclpath localpath file dir   getproject   resolvefile localpath dir exists done   dir mkdirs done msg    directory     localpath     creation was not   
+                               successful an unknown reason buildexception msg  getlocation     
+                  
+                getproject   log  created dir      dir getabsolutepath     
+              
+            lclpath   flag_override_working_dir   localpath lclpath getcomment comment flag_comment   comment   flag_comment getautoresponse autoresponse flag_autoresponse_def autoresponse equalsignorecase  y flag_autoresponse_yes autoresponse equalsignorecase  n flag_autoresponse_no flag_autoresponse_def getlogin vsslogin flag_login   vsslogin getoutput outputfilename flag_output   outputfilename getuser user flag_user   user getversionlabel fromlabel tolabel fromlabel tolabel fromlabel length     31    
+                fromlabel   fromlabel substring 0  30   
+                log  fromlabel is longer than 31 characters  truncated to    
+                      fromlabel  project msg_warn tolabel length     31    
+                tolabel   tolabel substring 0  30   
+                log  tolabel is longer than 31 characters  truncated to    
+                      tolabel  project msg_warn flag_version_label   tolabel   value_fromlabel   fromlabel fromlabel fromlabel length     31    
+                fromlabel   fromlabel substring 0  30   
+                log  fromlabel is longer than 31 characters  truncated to    
+                      fromlabel  project msg_warn flag_version   value_fromlabel   fromlabel tolabel length     31    
+                tolabel   tolabel substring 0  30   
+                log  tolabel is longer than 31 characters  truncated to    
+                      tolabel  project msg_warn flag_version_label   tolabel getversiondate buildexception fromdate todate numdays    integer min_value fromdate todate flag_version_date   todate   value_fromdate   fromdate todate numdays    integer min_value flag_version_date   todate   value_fromdate 
+                          calcdate todate  numdays parseexception ex msg    error parsing date      todate buildexception msg  getlocation fromdate numdays    integer min_value flag_version_date   calcdate fromdate  numdays  
+                          value_fromdate   fromdate parseexception ex msg    error parsing date      fromdate buildexception msg  getlocation fromdate flag_version   value_fromdate 
+                      fromdate   flag_version_date   todate getgetlocalcopy getlocalcopy  ? flag_no_get getfailonerror getwritablefiles   equals writable_skip failonerror getfiletimestamp timestamp timestamp getvalue   equals time_modified flag_filetime_modified timestamp getvalue   equals time_updated flag_filetime_updated flag_filetime_def getwritablefiles writablefiles writablefiles getvalue   equals writable_replace flag_replace_writable writablefiles getvalue   equals writable_skip     
+              
+              
+            failonerror flag_skip_writable run commandline cmd execute exe execute logstreamhandler project msg_info  
+                    project msg_warn serverpath env   exe getenvironment env env 0 newenv env length   1   
+                system arraycopy env  0  newenv  0  env length   
+                newenv env length     ssdir     serverpath  
+ 
+                exe setenvironment newenv   
+              
+ 
+            exe setantrun getproject     
+            exe setworkingdirectory getproject   getbasedir     
+            exe setcommandline cmd getcommandline     
+              
+            exe setvmlauncher exe execute ioexception e buildexception e  getlocation calcdate startdate daystoadd parseexception   
+        calendar calendar gregoriancalendar    
+        date currentdate   dateformat parse startdate   
+        calendar settime currentdate   
+        calendar add calendar date  daystoadd dateformat format calendar gettime formatcommandline commandline cmd    
+        stringbuffer sbuff stringbuffer cmd tostring indexuser   sbuff substring 0  indexof flag_login indexuser   0 indexpass   sbuff substring 0  indexof      indexuser indexafterpass   sbuff substring 0  indexof      indexpass i   indexpass   1  i   indexafterpass  i      
+                sbuff setcharat i sbuff tostring currentmodupdated enumeratedattribute getvalues time_current  time_modified  time_updated writablefiles enumeratedattribute getvalues writable_replace  writable_skip  writable_fail   
+          
+      
+ org apache tools ant taskdefs optional vss MSVSS

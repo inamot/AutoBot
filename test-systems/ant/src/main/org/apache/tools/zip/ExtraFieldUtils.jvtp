@@ -1,0 +1,80 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   zipextrafield related methods 
+   
+    
+    
+       static registry known extra fields 1 1 
+        
+    
+       register zipextrafield implementation  
+       
+        p given class must arg constructor implement link zipextrafield zipextrafield interface    p  
+        param c class register 1 1 
+        
+    
+       create instance approriate extrafield  falls back link unrecognizedextrafield unrecognizedextrafield   
+        param headerid header identifier 
+        return instance appropiate extrafield 
+        exception instantiationexception unable instantiate class 
+        exception illegalaccessexception not allowed instatiate class 1 1 
+        
+    
+       split array extrafields populate give data  
+        param data array bytes 
+        return array extrafields 1 1 
+        throws zipexception error 
+        
+   array not exhausted 
+    
+       merges local file data fields given zipextrafields  
+        param data array extrafiles 
+        return array bytes 1 1 
+        
+    
+       merges central directory fields given zipextrafields  
+        param data array extrafields 
+        return array bytes 1 1 
+       org apache tools zip ExtraFieldUtils org apache tools zip extrafieldutils implementations hashtable    
+        register asiextrafield register jarmarker register c zipextrafield ze    zipextrafield  c newinstance    
+            implementations put ze getheaderid    c classcastexception cc runtimeexception c     doesn\'t implement zipextrafield instantiationexception ie runtimeexception c     is not a concrete illegalaccessexception ie runtimeexception c    \'s no-arg constructor is not public zipextrafield createextrafield zipshort headerid instantiationexception  illegalaccessexception c implementations get headerid c zipextrafield  c newinstance    
+          
+        unrecognizedextrafield u unrecognizedextrafield    
+        u setheaderid headerid u zipextrafield   parse data zipexception   
+        vector v vector start   0 start    data length - 4    
+            zipshort headerid zipshort data  start length zipshort data  start   2   getvalue start   4   length   data length zipexception  data starting at     start 
+                        is in unknown format zipextrafield ze   createextrafield headerid   
+                ze parsefromlocalfiledata data  start   4  length   
+                v addelement ze instantiationexception ie zipexception ie getmessage illegalaccessexception iae zipexception iae getmessage     
+              
+            start     length   4 start    data length zipexception  data starting at     start 
+                    is in unknown format    
+          
+ 
+        zipextrafield   result zipextrafield v size     
+        v copyinto result result mergelocalfiledatadata zipextrafield   data sum   4   data length i   0  i   data length  i      
+            sum    data i  getlocalfiledatalength   getvalue result sum start   0 i   0  i   data length  i      
+            system arraycopy data i  getheaderid   getbytes    
+                             0  result  start  2   
+            system arraycopy data i  getlocalfiledatalength   getbytes    
+                             0  result  start   2  2 local   data i  getlocalfiledatadata    
+            system arraycopy local  0  result  start   4  local length   
+            start     local length   4 result mergecentraldirectorydata zipextrafield   data sum   4   data length i   0  i   data length  i      
+            sum    data i  getcentraldirectorylength   getvalue result sum start   0 i   0  i   data length  i      
+            system arraycopy data i  getheaderid   getbytes    
+                             0  result  start  2   
+            system arraycopy data i  getcentraldirectorylength   getbytes    
+                             0  result  start   2  2 local   data i  getcentraldirectorydata    
+            system arraycopy local  0  result  start   4  local length   
+            start     local length   4 result  
+      
+ org apache tools zip ExtraFieldUtils

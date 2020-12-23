@@ -1,0 +1,674 @@
+ 
+   $id$ 
+   copyright  c  2006-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications uml notation message shown collaboration diagram   p parse method parses message line form   p  
+   
+    pre  
+   intno    integer name 
+   seq    intno  ' ' intno   
+   recurrance    ' ' '  '    ' ' '  ' ' '  code iteration   code ' '   ' ' 
+    code condition   code ' ' 
+   seqelem      intno   ' 'recurrance' '   
+   seq2    seqelem  ' ' seqelem   
+   ret_list    lvalue  ' ' lvalue   
+   arg_list    rvalue  ' ' rvalue   
+   message     seq  ' ' seq   ' '  seq2 ' '  ret_list     name   arg_list   
+     pre   p complex few examples  p  ul  
+    li  2  display x  y  
+    li  1 3 1  p    find specs  
+    li   x  lt  0  4  invert color  
+    li  a3  b4  c3 1   update   
+     ul  p syntax compatible uml 1 3 specification  p  
+   
+   actually  only subset syntax currently supported some not even planned supported exceptions intno allows number possibly followed sequence letters range z'  seqelem not allow recurrance message allow one recurrance near seq2   formerly  name  action   
+   
+    author michiel standard error etc  logger list customseparators use tokenizing parameters constructor  
+       
+        param message uml object 
+        
+   
+        see org argouml notation providers notationprovider#parse java lang object  java lang string  
+        
+   
+        see org argouml notation providers notationprovider#getparsinghelp   
+        
+   
+       generates textual description message m  
+       
+        see org argouml notation providers notationprovider#tostring java lang object   
+       java util map  
+        
+  mmessage   rt  
+   mmessage next    
+   dirty fix issue 1758  needs amended start supporting parameters   
+                
+  mmessage   m  
+  mmessage   pre message pointed generates textual number message m number string numbers separated points describes message's order level collaboration  p plan modify number  make sure parserdisplay parsemessage adapted change  
+       
+        param message message generate number return string message number m  
+        
+  mmessage   maxmsg   null  
+    
+       generates textual description miterationexpression  
+       
+        param expr given expression 
+        return string arguments not show solves issue 1758  
+           arguments not supported anyhow ui brackets easily confused brackets operation callaction  
+            
+    
+       make string non-null  
+       
+        param un string null 
+        return string  guaranteed not null 
+        
+    
+       parse message textual description  p  
+       
+       todo method complex  lets break up   p  
+       
+       parses message line form  
+       
+        pre  
+       intno    integer name 
+       seq    intno  ' ' intno   
+       recurrance iteration i condition seqelem      intno   ' 'recurrance' '   
+       seq2    seqelem  ' ' seqelem   
+       ret_list    lvalue  ' ' lvalue   
+       arg_list    rvalue  ' ' rvalue   
+       message     seq  ' ' seq   ' '  seq2 ' '  ret_list     name   arg_list   
+         pre complex few examples  ul  
+        li  2  display x  y  
+        li  1 3 1  p    find specs  
+        li   x  lt  0  4  invert color  
+        li  a3  b4  c3 1   update   
+         ul syntax compatible uml 1 3 specification  p  
+       
+       actually  only subset syntax currently supported some not even planned supported exceptions intno allows number possibly followed sequence letters range z'  seqelem not allow recurrance message allow one recurrance near seq2   formerly  name  action   
+       
+        param mes mmessage apply any changes param s string parse 
+        throws parseexception detects error attribute string  see parseerror geterroroffset    
+        
+      
+    equals token     
+      
+    margument next     null   
+   mmessage   root  
+   find preceding message any either end association nothing 
+   disconnect message call graph 
+                   make copies returned live collections re modifying 
+                    
+    mmessage next    
+   connect message new spot 
+   mclassifierrole   r c2 empty re done cycle message graph bad c2 one element model crappy ll use one anyway 
+    mmessage next     
+   mmessage   pre   
+    mmessage next    majval - 1  false   
+   mmessage   post   successor pre  minval   
+   todo someone choose one one? 
+    mcallaction    model getfacade   getaction mes   
+    moperation    ops 0    
+   todo  predecessors not implemented causes some problems ve not found easy way handle d00mst specific problem notation currently ambiguous second message thread split not implement anyway? d00mst 
+    
+       walks call tree root node following directions given path destination node destination node cannot reached null returned  
+       
+        param root root call tree  
+        param path path walk call tree  
+        return message end path code null  code   
+        
+   things strange one candidate root obvious interpretation terms call tree  
+    mmessage next    
+    
+       finds steps'th successor r sense successor successor r  steps times first successor same 
+       activator r used each step not enough successors struct determines result struct true null returned  otherwise last successor found  
+        
+   mmessage   r  int steps  boolean strict    
+   mmessage   act   model getfacade   getactivator r   
+    mmessage next    
+    
+       finds root candidates collection c  ie messages c activator may null predecessor same 
+       activator veto isn't null message veto not included collection candidates  
+       
+        param c collection  
+        param message  
+        param veto veto message  
+        return found roots  
+        
+    mmessage next    
+    mmessage    it2 next    
+    
+       finds steps'th successor message r sense direct successor r  returns null r fewer successors  
+        
+   mmessage   successor object   mmessage   r  int steps    
+    mmessage next    
+    
+       compares two message numbers n1  n2 each determine n1 
+       specifies same position n2 call tree n1 specifies position father position specified n2  
+        
+    
+       compares two message numbers each see equal sense refer same position call tree  
+       
+        param n1 first number  
+        param n2 second number  
+        return  code true  code same  
+        
+    
+       finds break between message number possibly  message order  
+       
+        return position end number  
+        
+    
+       parses message order specification  
+        
+    
+       finds message classifierrole r message number written n isn't found  null returned  
+        
+   mclassifierrole   r  string n    
+    mmessage next    
+    
+       examines collection see any message given message activator  
+       
+        param r 
+                  mclassifierrole 
+        param m 
+                  mmessage 
+        
+    
+       examines call tree chld see ans ancestor  
+       
+        param ans 
+                  mmessage 
+        param chld 
+                  mmessage 
+        
+    
+       examines call tree suc see pre predecessor function recursive md specifies maximum level recursions 
+       allowed  
+       
+        param pre 
+                  mmessage 
+        param suc 
+                  mmessage 
+        
+    mmessage next    
+    
+       finds messages collection c message activator  
+        
+  mmessage mmessage next    
+    
+       inserts message s p'th successor message m  
+       
+        param m 
+                  mmessage 
+        param s 
+                  mmessage 
+        
+    
+       finds operations collection c name name params number parameters operation found  one created applicable 
+       operations returned  
+       
+        param c collection operations searched 
+        param name name operation found 
+        param params number parameters operation found 
+        return sought operation 
+        
+    mclassifier next    
+    mmodelelement    it2 next    
+    moperation jaap branderhorst 2002-23-09 added next lines link 
+   parameters operations figs represent counts number parameters not return values  
+       org argouml notation providers uml MessageNotationUml org argouml notation providers uml messagenotationuml messagenotation logger log   
+        logger getlogger messagenotationuml messagenotationuml object message message   
+        parametercustomsep arraylist customseparator     
+        parametercustomsep add mytokenizer single_quoted_separator   
+        parametercustomsep add mytokenizer double_quoted_separator   
+        parametercustomsep add mytokenizer paren_expr_string_separator parse object modelelement text parsemessage modelelement  text parseexception pe msg    statusmsg bar error parsing message object   args    pe getlocalizedmessage    
+                integer valueof pe geterroroffset        
+            argoeventpump fireevent argohelpevent  
+                    argoeventtypes help_changed translator messageformat msg  args getparsinghelp parsing help fig-message tostring object modelelement map args    
+        iterator it  
+        collection pre  
+        object act  
+        object  
+        msgptr ptr action number  
+        stringbuilder predecessors stringbuilder lpn modelelement ptr msgptr    
+        lpn   reccountpredecessors modelelement  ptr    1  
+        rt   model getfacade   getactivator modelelement   
+ 
+        pre   model getfacade   getpredecessors modelelement   
+        it    pre pre iterator it it hasnext      
+            msgptr ptr2 msgptr precnt   0 it hasnext      
+                object msg mpn   reccountpredecessors msg  ptr2    1 mpn    lpn - 1 
+                       rt    model getfacade   getactivator msg  
+                       model getfacade   getpredecessors msg  size     2 
+                        ptr2 message countsuccessors ptr2 message    2 predecessors length     0    
+                    predecessors append        
+                  
+                predecessors append  
+                        generatemessagenumber msg  ptr2 message  mpn    
+                precnt precnt   0    
+                predecessors append         
+              
+          
+ 
+        number   generatemessagenumber modelelement  ptr message  lpn   
+ 
+        act   model getfacade   getaction modelelement act model getfacade   getrecurrence act number   
+                    generaterecurrence model getfacade   getrecurrence act   
+                          
+                      number  
+              
+ 
+            action   generateaction act action endswith         
+        	action   action predecessors   number           action generatemessagenumber  
+            object  
+            object position    
+        collection c  
+        iterator it mname       
+        object act subpos   0  submax   1 m null  
+          
+ 
+        act   model getfacade   getactivator m act mname   generatemessagenumber act pre c   model getfacade   getsuccessors pre   
+            submax   c size    
+            it   c iterator it hasnext      it next      m    
+                subpos mname length     0 submax   1 mname         position a'   subpos mname         position submax   1 integer tostring position a'   subpos integer tostring position msgptr object message generatemessagenumber object message    
+        msgptr ptr msgptr pos   reccountpredecessors message  ptr    1 generatemessagenumber message  ptr message  pos reccountpredecessors object message  msgptr ptr    
+        collection predecessors  
+        iterator it pre   0 local   0  
+        object  
+        object activatormessage message ptr message 0  
+          
+ 
+        activatormessage   model getfacade   getactivator message   
+        predecessors   model getfacade   getpredecessors message   
+        it   predecessors iterator it hasnext      
+            object msg   it next model getfacade   getactivator msg     activatormessage p   reccountpredecessors msg 1 p   pre    
+                pre   p  
+                maxmsg   msg  
+              
+            local ptr ptr message   maxmsg math max pre  local countsuccessors object message count   0  
+        object activator   model getfacade   getactivator message   
+        collection successors   model getfacade   getsuccessors message successors iterator it   successors iterator it hasnext      
+                object msg   it next model getfacade   getactivator msg     activator count count generaterecurrence object expr expr return model getfacade   getbody expr  tostring generateaction object theaction    
+        collection arguments  
+        iterator it s  
+        stringbuilder p first  
+ 
+        object script   model getfacade   getscript theaction script model getfacade   getbody script s   model getfacade   getbody script  tostring s       
+          
+ 
+        p stringbuilder    
+        arguments   model getfacade   getactualarguments theaction arguments it   arguments iterator    
+            first it hasnext      
+                object arg   it next first    
+                    p append model getfacade   getvalue arg p append generateexpression  
+                            model getfacade   getvalue arg     
+                  
+                first s length      0    p length      0 p length      0 s s          p tostring generateexpression object expr model getfacade   isaexpression expr generateuninterpreted model getfacade   getbody expr model getfacade   isaconstraint expr generateexpression model getfacade   getbody expr generateuninterpreted un un return un parsemessage object mes s parseexception fname stringbuilder guard paramexpr token  
+        stringbuilder varname list list  predecessors arraylist list     
+        list seqno list currentseq arraylist    
+        list args mustbepre mustbeseq parallell iterative maydeleteexpr refindoperation haspredecessors i  
+ 
+        currentseq add currentseq add mytokenizer st mytokenizer s     \t               \\    
+                    mytokenizer paren_expr_string_separator st hasmoretokens      
+                token   st nexttoken equals token      \t  equals token currentseq varname fname varname append token equals token mustbepre msg    parsing error message pred-unqualified parseexception translator localize msg   
+                                st gettokenindex     
+                      
+                    mustbeseq guard msg    parsing error message several-specs parseexception translator localize msg   
+                                st gettokenindex     
+                      
+ 
+                    guard stringbuilder token   st nexttoken equals token guard append token equals token mustbepre msg    parsing error message pred-unqualified parseexception translator localize msg   
+                                st gettokenindex     
+                      
+                    mustbeseq currentseq iterative equals token currentseq msg    parsing error message unexpected-dot parseexception translator localize msg   
+                                st gettokenindex currentseq get currentseq size   - 2 currentseq get currentseq size   - 1 currentseq add currentseq add equals token st hasmoretokens t   st nexttoken equals t     
+                            st puttoken st puttoken t mustbepre msg    parsing error message pred-colon parseexception translator localize msg   
+                                st gettokenindex currentseq currentseq size     2 
+                               currentseq get currentseq size   - 2 currentseq get currentseq size   - 1 currentseq remove currentseq size   - 1   
+                            currentseq remove currentseq size   - 1   
+                          
+ 
+                        seqno   currentseq  
+                        currentseq maydeleteexpr equals token st hasmoretokens t   st nexttoken equals t     
+                            st puttoken st puttoken t mustbeseq msg    parsing error message sequence-slash parseexception translator localize msg   
+                                st gettokenindex     
+                      
+ 
+                    mustbepre mustbeseq currentseq size     2 
+                               currentseq get currentseq size   - 2 currentseq get currentseq size   - 1 currentseq remove currentseq size   - 1   
+                        currentseq remove currentseq size   - 1 currentseq get currentseq size   - 2 currentseq get currentseq size   - 1 predecessors add currentseq   
+ 
+                        currentseq arraylist    
+                        currentseq add currentseq add haspredecessors if  mustbepre msg    parsing error message pred-parallelized parseexception translator localize msg   
+                                st gettokenindex     
+                      
+                    mustbeseq currentseq parallell equals token currentseq mustbeseq msg    parsing error message many-numbers parseexception translator localize msg   
+                                    st gettokenindex     
+                          
+                        mustbepre currentseq size     2 
+                                currentseq get currentseq size   - 2 currentseq get currentseq size   - 1 currentseq remove currentseq size   - 1   
+                            currentseq remove currentseq size   - 1 currentseq get currentseq size   - 2 currentseq get currentseq size   - 1 predecessors add currentseq   
+ 
+                            currentseq arraylist    
+                            currentseq add currentseq add haspredecessors varname fname varname stringbuilder fname   token   
+                            fname varname fname varname append token msg    parsing error message found-comma parseexception  
+                                    translator localize msg   
+                                    st gettokenindex equals token          equals token currentseq varname varname stringbuilder fname   
+                            fname fname currentseq paramexpr token charat 0 token charat token length   - 1 msg   
+                                 parsing error message malformed-parameters parseexception translator localize msg   
+                                    st gettokenindex fname equals fname msg   
+                                 parsing error message function-not-found parseexception translator localize msg   
+                                    st gettokenindex varname varname stringbuilder    
+                          
+                        paramexpr   token substring 1  token length   - 1 varname fname varname append token fname fname length      0    
+                        fname   token msg    parsing error message unexpected-token   
+                        object   parseexcargs    token parseexception  
+                        		translator localize msg  parseexcargs   
+                                st gettokenindex hasval   
+                        currentseq get currentseq size   - 2 hasord   
+                        currentseq get currentseq size   - 1 assigned bp   findmsgorderbreak token hasval     assigned    bp    token length currentseq set currentseq size   - 2  integer valueof  
+                                    token    
+                            assigned numberformatexception nfe hasord     assigned    bp    0 currentseq set currentseq size   - 1  integer valueof  
+                                    parsemsgorder token     
+                            assigned numberformatexception nfe hasval     hasord     assigned    bp   0 
+                               bp   token length      
+                        integer nbr  ord nbr   integer valueof token substring 0  bp    
+                            ord   integer valueof  
+                                    parsemsgorder token substring bp     
+                            currentseq set currentseq size   - 2  nbr   
+                            currentseq set currentseq size   - 1  ord   
+                            assigned numberformatexception nfe assigned msg    parsing error message unexpected-token   
+                        object   parseexcargs    token parseexception  
+                        		translator localize msg  parseexcargs   
+                                st gettokenindex nosuchelementexception nsee msg    parsing error message unexpected-end-message parseexception translator localize msg   s length parseexception pre pre paramexpr mytokenizer st mytokenizer paramexpr   \\    
+                    parametercustomsep   
+            args arraylist st hasmoretokens      
+                token   st nexttoken equals token args size      0    
+                        args add args add args size      0 token trim   length      0 args add arg args get args size   - 1 arg arg   arg   token arg   token  
+                      
+                    args set args size   - 1  arg maydeleteexpr    
+            args arraylist log isdebugenabled      
+            stringbuffer buf stringbuffer    
+            buf append  parsemessage      s    \n    
+            buf append  message i   0  seqno i   1   seqno size    i    2 i   0    
+                    buf append        
+                  
+                buf append seqno get i           seqno get i   1          
+              
+            buf append  \n    
+            buf append  predecessors      predecessors size      \n i   0  i   predecessors size    i j  
+                list v   predecessors get i   
+                buf append      predecessor j   0  v j   1   v size    j    2 j   0    
+                        buf append        
+                      
+                    buf append v get j           v get j   1          
+                  
+              
+            buf append  guard      guard     it      iterative     pl    
+                      parallell    \n    
+            buf append varname            fname           paramexpr        
+                       \n    
+            log debug buf model getfacade   getaction mes object a   model getcommonbehaviorfactory   
+                     createcallaction    
+            model getcorehelper   addownedelement model getfacade   getcontext  
+                    model getfacade   getinteraction mes    a   
+            model getcollaborationshelper   setaction mes  a guard guard stringbuilder       guard tostring   trim iterative parallell    
+                    guard   guard insert 0 guard   guard insert 0        
+                  
+              
+            project project   
+                projectmanager getmanager   getcurrentproject    
+            projectsettings ps   project getprojectsettings    
+            object expr   
+                model getdatatypesfactory   createiterationexpression  
+                        ps getnotationlanguage    guard tostring     
+            model getcommonbehaviorhelper   setrecurrence  
+                    model getfacade   getaction mes   expr fname maydeleteexpr 
+                       model getfacade   getscript  
+                            model getfacade   getaction mes body model getfacade   getbody  
+                            model getfacade   getscript  
+                                    model getfacade   getaction mes idx   body indexof idx    0    
+                    idx idx   body indexof idx    0    
+                    fname   body substring idx   1 fname   body fname varname maydeleteexpr 
+                       model getfacade   getscript  
+                            model getfacade   getaction mes body model getfacade   getbody  
+                            model getfacade   getscript  
+                                    model getfacade   getaction mes idx   body indexof idx   0    
+                    idx   body indexof idx    0    
+                    varname stringbuilder body substring 0  idx varname stringbuilder varname stringbuilder    
+              
+          
+ 
+        project project   
+            projectmanager getmanager   getcurrentproject    
+        projectsettings ps   project getprojectsettings fname expr   fname trim varname length     0    
+                expr   varname tostring   trim              expr model getfacade   getscript  
+                    model getfacade   getaction mes expr equals model getfacade   getbody  
+                            model getfacade   getscript  
+                                    model getfacade   getaction mes        
+                object e   
+                    model getdatatypesfactory   
+                         createactionexpression  
+                                ps getnotationlanguage    
+                                expr trim     
+                model getcommonbehaviorhelper   setscript  
+                        model getfacade   getaction mes   e   
+                refindoperation args collection c arraylist  
+                model getfacade   getactualarguments  
+                        model getfacade   getaction mes     
+            iterator it   c iterator i   0  i   args size    i      
+                object arg    it hasnext arg arg   model getcommonbehaviorfactory   
+                             createargument    
+                    model getcommonbehaviorhelper   addactualargument  
+                            model getfacade   getaction mes   arg   
+                    refindoperation model getfacade   getvalue arg args get i  equals  
+                              model getfacade   getbody  
+                                      model getfacade   getvalue arg value    args get i args get i  
+                                   
+                    object e   
+                        model getdatatypesfactory   createexpression  
+                                ps getnotationlanguage    
+                            value trim     
+                    model getcommonbehaviorhelper   setvalue arg  e it hasnext      
+                model getcommonbehaviorhelper   
+                         removeactualargument model getfacade   getaction mes   
+                                it next     
+                refindoperation seqno object  
+              
+              
+            stringbuilder pname stringbuilder    
+            stringbuilder mname stringbuilder gname   generatemessagenumber mes swaproles majval   0 seqno get seqno size   - 2 majval   
+                    math max   integer  seqno get seqno size   - 2   intvalue   
+                             - 1  
+                             0 minval   0 seqno get seqno size   - 1 minval   
+                    math max   integer  seqno get seqno size   - 1   intvalue    
+                            0 i   0  i   1   seqno size    i    2 bv   1 seqno get i bv   math max   integer  seqno get i   intvalue    1 sv   0 seqno get i   1 sv   math max   integer  seqno get i   1   intvalue    0 i   0    
+                    mname append       
+                  
+                mname append integer tostring bv a'   sv i   3   seqno size i   0    
+                        pname append       
+                      
+                    pname append integer tostring bv a'   sv    
+                  
+              
+ 
+            root pname length     0    
+                root   findmsg model getfacade   getsender mes   pname tostring root root   findmsg model getfacade   getreceiver mes   pname tostring root swaproles hasmsgwithactivator model getfacade   getsender mes hasmsgwithactivator model getfacade   getreceiver mes swaproles comparemsgnumbers mname tostring    gname tostring ismsgnumberstartof gname tostring    mname tostring msg    parsing error message subtree-rooted-self parseexception translator localize msg   0 model getfacade   getpredecessors mes  size     1 
+                       model getfacade   getsuccessors mes  size     1 msg    parsing error message start-end-many-threads parseexception translator localize msg   0 root pname length     0 msg    parsing error message activator-not-found parseexception translator localize msg   0 swaproles 
+                       model getfacade   getactivatedmessages mes  size     0 
+                        model getfacade   getsender mes  
+                               model getfacade   getreceiver mes msg    parsing error message reverse-direction-message parseexception translator localize msg   0 collection c arraylist  
+                        model getfacade   getpredecessors mes    
+                collection c2 arraylist  
+                        model getfacade   getsuccessors mes    
+                iterator it  
+ 
+                it   c2 iterator it hasnext      
+                    model getcollaborationshelper   removesuccessor mes  
+                            it next     
+                  
+ 
+                it   c iterator it hasnext      
+                    iterator it2   c2 iterator    
+                    object pre     
+                    model getcollaborationshelper   removepredecessor mes  pre it2 hasnext      
+                        model getcollaborationshelper   addpredecessor  
+                                it2 next    pre   
+                      
+                  
+ 
+                  
+                model getcollaborationshelper   setactivator mes  root swaproles    
+                    object  
+                        model getfacade   getsender mes   
+                    model getcollaborationshelper   setsender mes  
+                            model getfacade   getreceiver mes    
+                    model getcommonbehaviorhelper   setreceiver mes  r root c   
+                        filterwithactivator  
+                            model getfacade   getsentmessages  
+                                    model getfacade   getsender mes c   model getfacade   getactivatedmessages root   
+                  
+                c2   findcandidateroots c  root  mes   
+                it   c2 iterator majval    0 it hasnext      
+                        model getcollaborationshelper   addsuccessor mes it hasnext      
+                    object  
+                        walk   
+                    object post model getcollaborationshelper   
+                             removepredecessor post  pre   
+                        model getcollaborationshelper   
+                             addpredecessor post  mes   
+                      
+                    insertsuccessor pre  mes  minval   
+                  
+                refindoperation fname refindoperation    
+            object role   model getfacade   getreceiver mes   
+            list ops   
+                getoperation  
+                        model getfacade   getbases role   
+                        fname trim    
+                        model getfacade   getactualarguments  
+                                model getfacade   getaction mes   size model getfacade   isacallaction  
+                    model getfacade   getaction mes      
+                object a ops size     0    
+                    model getcommonbehaviorhelper   setoperation a model getcommonbehaviorhelper   setoperation a haspredecessors    
+            collection roots   
+                findcandidateroots  
+                        model getfacade   getmessages  
+                                model getfacade   getinteraction mes null   
+            list pre arraylist    
+            iterator it  
+        predfor i   0  i   predecessors size    i      
+                it   roots iterator it hasnext      
+                    object msg   
+                        walktree it next    predecessors get i msg msg    mes isbadpremsg mes  msg parsemsg    parsing error message one-pred parseexception  
+                                    translator localize parsemsg   0   
+                          
+                        pre add msg predfor parsemsg    parsing error message pred-not-found parseexception translator localize parsemsg   0   
+              
+            msgptr ptr msgptr    
+            reccountpredecessors mes  ptr ptr message pre contains ptr message     
+                pre add ptr message   
+              
+            model getcollaborationshelper   setpredecessors mes  pre object walktree object root  list path i i   0  i   1   path size    i    2 bv   0 path get i bv   math max   integer  path get i   intvalue   - 1  0 sv   0 path get i   1 sv   math max   integer  path get i   1   intvalue    0   
+              
+ 
+            root   walk root  bv - 1 root null bv   0    
+                root   successor root  sv root null i   3   path size      
+                iterator it   
+                    findcandidateroots  
+                            model getfacade   getactivatedmessages root   
+                            root iterator it hasnext root root object walk object  
+        object steps   0    
+            iterator it   model getfacade   getsuccessors r  iterator it hasnext strict r   
+                  
+                r model getfacade   getactivator r     act   
+            steps r collection findcandidateroots collection c  object a  
+            object veto    
+        iterator it   c iterator    
+        list v arraylist it hasnext      
+            object m m    veto model getfacade   getactivator m     a iterator it2   model getfacade   getpredecessors m  iterator candidate it2 hasnext      
+                object m2 model getfacade   getactivator m2     a    
+                    candidate candidate    
+                v add m v object  
+        iterator it   model getfacade   getsuccessors r  iterator it hasnext      steps   0    
+            it next    
+            steps it hasnext return ismsgnumberstartof n1 n2 i  j  len  jlen  
+        len   n1 length    
+        jlen   n2 length    
+        i   0  
+        j   0 i   len ibv  isv jbv  jsv  
+ 
+            ibv   0 i   len  i c   n1 charat i c   '0'    c   '9 ibv    10  
+                ibv    c - '0'  
+              
+            isv   0 i   len  i c   n1 charat i c   'a'    c   'z isv    26  
+                isv    c - 'a'  
+              
+ 
+            jbv   0 j   jlen  j c   n2 charat j c   '0'    c   '9 jbv    10  
+                jbv    c - '0'  
+              
+            jsv   0 j   jlen  j c   n2 charat j c   'a'    c   'z jsv    26  
+                jsv    c - 'a ibv    jbv    isv    jsv i   len    n1 charat i i j   jlen    n2 charat j j comparemsgnumbers n1 n2 ismsgnumberstartof n1  n2     ismsgnumberstartof n2  n1 findmsgorderbreak s i  t  
+ 
+        t   s length i   0  i   t  i c   s charat i c   '0'    c   '9 i parsemsgorder s i  t v   0  
+ 
+        t   s length i   0  i   t  i c   s charat i c   'a'    c   'z numberformatexception    
+              
+            v    26  
+            v    c - 'a v object findmsg object  
+        collection c   model getfacade   getreceivedmessages r   
+        iterator it   c iterator it hasnext      
+            object msg gname   generatemessagenumber msg comparemsgnumbers gname  n msg hasmsgwithactivator object r  object m    
+        iterator it   model getfacade   getsentmessages r  iterator it hasnext model getfacade   getactivator it next       m isbadpremsg object ans  object chld chld ans    chld ispredecessormsg ans  chld  100 chld   model getfacade   getactivator chld ispredecessormsg object pre  object suc md    
+        iterator it   model getfacade   getpredecessors suc  iterator it hasnext      
+            object m m    pre md   0    ispredecessormsg pre  m  md - 1 collection filterwithactivator collection c  object  
+        iterator it   c iterator    
+        list v arraylist it hasnext      
+            object m model getfacade   getactivator m     a    
+                v add m v insertsuccessor object m  object s p    
+        list successors arraylist model getfacade   getsuccessors m successors size     p    
+            successors add p  s successors add s   
+          
+        model getcollaborationshelper   setsuccessors m  successors list getoperation collection c name params    
+        list options arraylist    
+        iterator it name name length      0 options  
+          
+ 
+        it   c iterator it hasnext      
+            object clf     
+            collection oe   model getfacade   getfeatures clf   
+            iterator it2   oe iterator it2 hasnext      
+                object me model getfacade   isaoperation me object op name equals model getfacade   getname op params    countparameters op options add op options size     0 options  
+          
+ 
+        it   c iterator it hasnext      
+            stringbuilder expr stringbuilder name i i   0  i   params  i i   0    
+                    expr append        
+                  
+                expr append  param     i   1    
+              
+            expr append       
+              
+              
+              
+            object cls   it next    
+            object returntype   
+                projectmanager getmanager   
+                         getcurrentproject   getdefaultreturntype    
+            object op   model getcorefactory   buildoperation cls  returntype operationnotationuml op   parseoperation  
+                        expr tostring    op parseexception pe    
+                log error  unexpected parseexception in getoperation      pe  
+                        pe   
+ 
+              
+            options add op options countparameters object bf count   0 object parameter   model getfacade   getparameters bf model getfacade   isreturn parameter     
+                count count  
+      
+ 
+ org argouml notation providers uml MessageNotationUml

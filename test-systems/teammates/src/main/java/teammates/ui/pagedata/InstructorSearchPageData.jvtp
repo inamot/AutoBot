@@ -1,0 +1,104 @@
+ 
+    
+   pagedata data used instructorsearchpage  
+    
+   whether checkbox checked search input    
+   whether search results empty    
+   tables containing search results    
+   1 table each course 
+    
+       filters students studentsearchresultbundle course id  
+        return students whose course id equal courseid given parameter 
+       teammates ui pagedata InstructorSearchPageData teammates ui pagedata instructorsearchpagedata pagedata instructorsearchpagedata accountattributes account sessiontoken account  sessiontoken init feedbackresponsecommentsearchresultbundle frcsearchresultbundle  
+                     studentsearchresultbundle studentsearchresultbundle searchkey issearchcommentforresponses issearchforstudents searchkey   searchkey issearchcommentforresponses   issearchcommentforresponses issearchforstudents   issearchforstudents iscommentsforresponsesempty   frcsearchresultbundle numberofresults    0 isstudentsempty   studentsearchresultbundle numberofresults    0  
+ 
+        setsearchcommentsforresponsestables frcsearchresultbundle   
+        setsearchstudentstables studentsearchresultbundle getsearchkey sanitizeforhtml searchkey iscommentsforresponsesempty iscommentsforresponsesempty isstudentsempty isstudentsempty issearchcommentforresponses issearchcommentforresponses issearchforstudents issearchforstudents list searchcommentsforresponsestable  getsearchcommentsforresponsestables searchcommentsforresponsestables list searchstudentstable  getsearchstudentstables searchstudentstables setsearchcommentsforresponsestables  
+                                    feedbackresponsecommentsearchresultbundle frcsearchresultbundle    
+ 
+        searchcommentsforresponsestables arraylist      
+        searchcommentsforresponsestables add searchcommentsforresponsestable  
+                                               createfeedbacksessionrows frcsearchresultbundle setsearchstudentstables studentsearchresultbundle studentsearchresultbundle    
+ 
+        searchstudentstables arraylist        
+        list courseidlist   getcourseidsfromstudentsearchresultbundle studentsearchresultbundle courseid   courseidlist    
+            searchstudentstables add searchstudentstable  
+                                       courseid  createstudentrows courseid  studentsearchresultbundle list feedbacksessionrow  createfeedbacksessionrows  
+                                    feedbackresponsecommentsearchresultbundle frcsearchresultbundle    
+ 
+        list feedbacksessionrow  rows arraylist fsname   frcsearchresultbundle questions keyset courseid   frcsearchresultbundle sessions get fsname  getcourseid    
+ 
+            rows add feedbacksessionrow fsname  courseid  createquestiontables  
+                                                                fsname  frcsearchresultbundle rows list questiontable  createquestiontables fsname  
+                                    feedbackresponsecommentsearchresultbundle frcsearchresultbundle    
+ 
+        list questiontable  questiontables arraylist      
+        list feedbackquestionattributes  questionlist   frcsearchresultbundle questions get fsname feedbackquestionattributes question   questionlist questionnumber   question questionnumber questiontext   question getquestiondetails   getquestiontext additionalinfo   question getquestiondetails   
+                                             getquestionadditionalinfohtml questionnumber       
+ 
+            questiontables add questiontable questionnumber  questiontext  additionalinfo  
+                                            createresponserows question  frcsearchresultbundle questiontables list responserow  createresponserows  
+                                    feedbackquestionattributes question  
+                                    feedbackresponsecommentsearchresultbundle frcsearchresultbundle    
+ 
+        list responserow  rows arraylist      
+        list feedbackresponseattributes  responselist   frcsearchresultbundle responses get question getid feedbackresponseattributes responseentry   responselist givername   frcsearchresultbundle responsegivertable get responseentry getid recipientname   frcsearchresultbundle responserecipienttable get responseentry getid response   responseentry getresponsedetails   getanswerhtmlinstructorview question getquestiondetails     
+ 
+            rows add responserow givername  recipientname  response  
+                                       createfeedbackresponsecommentrows responseentry  frcsearchresultbundle rows list feedbackresponsecommentrow  createfeedbackresponsecommentrows  
+                                    feedbackresponseattributes responseentry  
+                                    feedbackresponsecommentsearchresultbundle frcsearchresultbundle    
+ 
+        list feedbackresponsecommentrow  rows arraylist      
+        list feedbackresponsecommentattributes  frclist   frcsearchresultbundle 
+                                                               comments get responseentry getid feedbackresponsecommentattributes frc   frclist frcommentgiver   frcsearchresultbundle 
+                                             commentgivertable get frc getid   tostring anonymous  equals frcommentgiver     
+                frcommentgiver   frc giveremail sessiontimezone   frcsearchresultbundle sessions get responseentry feedbacksessionname  gettimezone    
+            feedbackresponsecommentrow frcdiv feedbackresponsecommentrow frc  frcommentgiver  
+                    frcsearchresultbundle instructoremailnametable  sessiontimezone   
+ 
+            rows add frcdiv rows list studentlistsectiondata  createstudentrows courseid  
+                                                           studentsearchresultbundle studentsearchresultbundle    
+        list studentlistsectiondata  rows arraylist      
+        list studentattributes  studentsincourse   filterstudentsbycourse  
+                                                       courseid  studentsearchresultbundle   
+        map list sectionnametoteamnamemap hashmap      
+        map list studentattributes   teamnametostudentsmap hashmap      
+        map string  emailtophotourlmap hashmap studentattributes student   studentsincourse teamname   student team sectionname   student section viewphotolink   adduseridtourl student getpublicprofilepictureurl     
+            emailtophotourlmap put student email  viewphotolink teamnametostudentsmap containskey teamname     
+                teamnametostudentsmap put teamname arraylist studentattributes      
+              
+            teamnametostudentsmap get teamname  add student sectionnametoteamnamemap containskey sectionname     
+                sectionnametoteamnamemap put sectionname arraylist sectionnametoteamnamemap get sectionname  contains teamname     
+                sectionnametoteamnamemap get sectionname  add teamname   
+              
+          
+        list sectiondetailsbundle  sections arraylist map entry list entry   sectionnametoteamnamemap entryset      
+            sectiondetailsbundle sdb sectiondetailsbundle    
+            sdb name   entry getkey    
+            arraylist teamdetailsbundle  teams arraylist teamname   entry getvalue      
+                teamdetailsbundle tdb teamdetailsbundle    
+                tdb name   teamname  
+                tdb students   teamnametostudentsmap get teamname   
+                teams add tdb   
+              
+            sdb teams   teams  
+            sections add sdb sectiondetailsbundle section   sections    
+            instructorattributes instructor   studentsearchresultbundle courseidinstructormap get courseid isallowedtoviewstudentinsection   
+                    instructor isallowedforprivilege  
+                            section name paramsnames instructor_permission_view_student_in_sections isallowedtomodifystudent   
+                    instructor isallowedforprivilege  
+                            section name paramsnames instructor_permission_modify_student   
+            rows add studentlistsectiondata section  isallowedtoviewstudentinsection  
+                                                isallowedtomodifystudent  
+                                                emailtophotourlmap  account googleid  getsessiontoken rows list getcourseidsfromstudentsearchresultbundle  
+                                    studentsearchresultbundle studentsearchresultbundle    
+        list courses arraylist studentattributes student   studentsearchresultbundle studentlist course   student course courses contains course     
+                courses add course courses list studentattributes  filterstudentsbycourse courseid  
+                                    studentsearchresultbundle studentsearchresultbundle    
+ 
+        list studentattributes  students arraylist studentattributes student   studentsearchresultbundle studentlist courseid equals student course     
+                students add student students  
+      
+ 
+ teammates ui pagedata InstructorSearchPageData

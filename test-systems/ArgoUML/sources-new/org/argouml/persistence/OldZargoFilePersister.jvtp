@@ -1,0 +1,112 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications persist zargo  zipped file  storage containing seperate 
+   xmi  argo  plgml todo zip entries  
+    author bob tarling 
+   todo  review use against zargofilepersister - bob 
+    
+    
+       logger old version argouml tee file not contain detail member elements constructor  
+        
+   
+        see org argouml persistence abstractfilepersister#getdesc   
+        
+   
+        see org argouml persistence abstractfilepersister#issaveenabled being considered save out individual xmi's individuals 
+       diagrams make easier modularize output argo  
+       
+        param file file write  
+        param project project save 
+        throws saveexception anything goes wrong 
+        throws interruptedexception thread interrupted 
+       
+        see org argouml persistence projectfilepersister#save  
+            org argouml kernel project  java io file  
+        
+   save argo entry save not raise exception name  #  exists move name name correct backup file nothing  
+   frank case exception 
+   delete name mv name  #  back name name  #  exists rollback old file give message user set system unsaved zargo save format save must override 
+       umlfilepersister turned suggests need some 
+       refactoring here  
+        see org argouml persistence abstractfilepersister#issaveenabled   
+        
+        return boolean 
+       org argouml persistence OldZargoFilePersister org argouml persistence oldzargofilepersister zargofilepersister logger log   
+	logger getlogger oldzargofilepersister argo_mini_tee   
+          org argouml persistence argo tee oldzargofilepersister getdesc translator localize  combobox filefilter zargo issaveenabled dosave project project  file file saveexception   
+    interruptedexception   
+ 
+        progressmgr progressmgr progressmgr    
+        progressmgr setnumberofphases 4   
+        progressmgr nextphase    
+         
+        file lastarchivefile file file getabsolutepath      ~    
+        file tempfile tempfile   createtempfile file filenotfoundexception e saveexception  
+                     failed to archive the previous file version   e ioexception e saveexception  
+                     failed to archive the previous file version   e   
+          
+ 
+        bufferedwriter writer project setfile file   
+            project setversion applicationversion getversion     
+            project setpersistenceversion persistence_version   
+ 
+            zipoutputstream stream zipoutputstream fileoutputstream file    
+            writer bufferedwriter outputstreamwriter stream   utf-8     
+ 
+              
+            zipentry zipentry zipentry project getbasename   
+                          fileconstants uncompressed_file_ext   
+            stream putnextentry zipentry   
+ 
+            hashtable templates   
+                templatereader getinstance   read argo_mini_tee   
+            oclexpander expander oclexpander templates   
+            expander expand writer  project   
+ 
+            writer flush    
+ 
+            stream closeentry counter   0 size   project getmembers   size    
+            collection names arraylist i   0  i   size  i      
+                projectmember projectmember   project getmembers   get i projectmember gettype   equalsignorecase  xmi log isinfoenabled      
+                        log info  saving member     
+                                  project getmembers   get i  getzipname name   projectmember getzipname originalname   name names contains name     
+                        name     counter   originalname  
+                      
+                    names add name   
+                    stream putnextentry zipentry name    
+                    memberfilepersister persister   
+                        getmemberfilepersister projectmember   
+                    persister save projectmember  stream   
+                    stream flush    
+                    stream closeentry i   0  i   size  i      
+                projectmember projectmember   project getmembers   get i projectmember gettype   equalsignorecase  xmi log isinfoenabled      
+                        log info  saving member of type    
+                                  project getmembers   get i  gettype     
+                      
+                    stream putnextentry zipentry projectmember getzipname      
+                    oldmodelmemberfilepersister persister oldmodelmemberfilepersister    
+                    persister save projectmember  stream   
+                    stream flush lastarchivefile exists      
+                lastarchivefile delete tempfile exists       lastarchivefile exists      
+                tempfile renameto lastarchivefile tempfile exists      
+                tempfile delete    
+              
+ 
+            progressmgr nextphase exception e    
+            log error  exception occured during save attempt   e writer close exception ex    
+                  
+              
+ 
+              
+              
+              
+            file delete    
+            tempfile renameto file saveexception e writer close ioexception ex    
+            log error  failed to close save output writer   ex isloadenabled org argouml persistence OldZargoFilePersister

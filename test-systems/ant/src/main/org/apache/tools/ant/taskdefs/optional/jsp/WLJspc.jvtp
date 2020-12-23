@@ -1,0 +1,179 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+  apache ant imports 
+    
+   precompiles jsp's using weblogic's jsp compiler  weblogic jspc   
+   
+   tested only weblogic 4 5 1 - nt4 0 solaris 5 7 
+   
+   required attributes 
+        src   root source tree jsp  ie document root weblogic server 
+        dest   root destination directory set workingdir weblogic properties 
+        package   start package name under jsp's compiled attributes 
+       classpath classpath set contains weblogic classes well application classes referenced jsp system classpath appended jspc called may choose put everything classpath calling ant presumably jsp's reference classes being build ant better explicitly add classpath task task checks timestamps jsp's generated classes compiles 
+   only those files changed follows weblogic naming convention putting classes b  _dirname _filename class dirname filename jsp     b  
+   
+   limitation compiles files thru classic compiler only  
+   limitation experience weblogic jspc throws out memory error being given many files one go called multiple times one jsp file each  
+   
+    pre  
+   example 
+    lt target name  jspcompile  depends  compile  gt  
+      lt wljspc src  c \\weblogic\\myserver\\public_html  
+             dest  c \\weblogic\\myserver\\serverclasses  package  myapp jsp  gt  
+      lt classpath gt  
+             lt pathelement location  $ weblogic classpath     gt  
+              lt pathelement path  $ compile dest     gt  
+         lt  classpath gt  
+   
+      lt  wljspc gt  
+    lt  target gt  
+     pre  
+   
+    
+  todo test versions weblogic 
+  todo add attributes task take care jspc options 
+  todo test unix 
+    root compiled files tree    
+    root source files tree    
+    package under resultant classes reside    
+    classpath used compile jsp files     
+  private string compilerpath    fully qualified name compiler executable 
+    
+       run task  
+        throws buildexception error files sourcedirectory 
+  use systemclasspath well include ant jar 
+  weblogic jspc calls system exit fork 
+   therefore  takes loads time pass directories time    jsp easily runs out memory hefty dirs  even sun  
+  xxx array stuff remnant prev trials   gotta remove  
+  todo  parameterise ?? 
+  call compiler class    dont want fork again 
+  use classic compiler parameterised? 
+  weblogic jspc not seem work unless u explicitly set not take classpath env missing something java task?? 
+  xxx package according weblogic standards written better hacky  
+   careful   similar code scandir slightly different   
+    
+       set classpath used compilation  
+        param classpath classpath use  
+        
+    
+       maybe creates nested classpath element  
+        return path configured  
+        
+    
+       set directory containing source jsp's 
+       
+       
+        param dirname directory containg source jsp's 
+        
+    
+       set directory containing source jsp's 
+       
+       
+        param dirname directory containg source jsp's 
+        
+    
+       set package under compiled classes go 
+       
+        param packagename package name clases 
+        
+    
+       scan array files add jsp 
+       files need compiled filestodo field  
+        param files files scan  
+        
+  xxx convert source destination directory according weblogic standards written better hacky  
+    
+       replace occurances string replacement string  
+        param inpstring string convert  
+        param escapechars string replace  
+        param replacechars string place  
+        return converted string  
+       org apache tools ant taskdefs optional jsp WLJspc org apache tools ant taskdefs optional jsp wljspc matchingtask execute buildexception destinationdirectory isdirectory buildexception  destination directory   
+                  destinationdirectory getpath       is not valid sourcedirectory isdirectory buildexception  src directory   
+                  sourcedirectory getpath       is not valid destinationpackage buildexception attribute must be present    
+                                     getlocation     
+          
+ 
+ 
+        pathtopackage destinationpackage replace ' '  file separatorchar   
+          
+        directoryscanner ds getdirectoryscanner sourcedirectory compileclasspath compileclasspath path getproject     
+          
+ 
+        compileclasspath   compileclasspath concatsystemclasspath files   ds getincludedfiles    
+ 
+          
+          
+          
+          
+        java helpertask java helpertask setfork helpertask setclassname  weblogic jspc    
+        helpertask settaskname gettaskname args 12   
+ 
+        file jspfile parents j   0  
+          
+        args j       -d   
+        args j      destinationdirectory getabsolutepath   trim    
+        args j       -docroot   
+        args j      sourcedirectory getabsolutepath   trim    
+        args j       -keepgenerated      
+          
+          
+        args j        -compilerclass   
+        args j       sun tools javac main   
+          
+          
+          
+        args j       -classpath   
+        args j      compileclasspath tostring scandir files   
+        log  compiling     filestodo size       jsp files i   0  i   filestodo size    i filename filestodo elementat i   
+            jspfile file filename   
+            args j parents   jspfile getparent parents equals parents      
+                parents replacestring parents  file separator   _     
+                args j   1    destinationpackage          _    parents args j   1    destinationpackage  
+              
+ 
+ 
+            args j   2     sourcedirectory   file separator   filename  
+            helpertask clearargs x   0  x   j   3  x      
+                helpertask createarg   setvalue args x    
+              
+ 
+            helpertask setclasspath compileclasspath helpertask executejava      0    
+                log filename     failed to compile   project msg_warn setclasspath path classpath compileclasspath compileclasspath   classpath compileclasspath append classpath path createclasspath compileclasspath compileclasspath path getproject compileclasspath setsrc file dirname    
+ 
+        sourcedirectory   dirname setdest file dirname    
+ 
+        destinationdirectory   dirname setpackage packagename    
+ 
+        destinationpackage   packagename scandir files now date    gettime    
+        file jspfile parents pack i   0  i   files length  i      
+            file srcfile file sourcedirectory  files i    
+              
+              
+              
+            jspfile file files i    
+            parents   jspfile getparent parents equals parents      
+                parents replacestring parents  file separator   _     
+                pack   pathtopackage   file separator    _    parents pack   pathtopackage filepath   pack   file separator    _ startingindex   files i  lastindexof file separator     -1 
+                    ? files i  lastindexof file separator    1   0 endingindex   files i  indexof   jsp endingindex    -1    
+                log  skipping     files i       not a jsp   
+                    project msg_verbose filepath    files i  substring startingindex  endingindex   
+            filepath file classfile file destinationdirectory  filepath srcfile lastmodified     now    
+                log  warning  file modified in the future    
+                      files i   project msg_warn srcfile lastmodified     classfile lastmodified      
+                filestodo addelement files i    
+                log  recompiling file     files i   project msg_verbose replacestring inpstring escapechars replacechars localstring numtokens   0  
+        stringtokenizer st stringtokenizer inpstring  escapechars numtokens   st counttokens i   0  i   numtokens  i test   st nexttoken    
+            test    test equals escapechars  ? replacechars   test   
+            localstring    test localstring  
+      
+ org apache tools ant taskdefs optional jsp WLJspc

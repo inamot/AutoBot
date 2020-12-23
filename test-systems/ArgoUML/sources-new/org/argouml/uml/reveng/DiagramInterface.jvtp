@@ -1,0 +1,197 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications  
+    
+   instances class interface current class diagram  p class used import mechanism create packages  
+   interfaces classes within diagrams used find correct diagram work author andreas rueckert 0 9 
+    
+    
+       logger know diagrams layout import store vector current graphmodel current classdiagram current layer current classdiagram current diagram isindiagram method  
+        
+    
+       creates new diagraminterface  
+       
+        param editor editor operate current editor  
+       
+        return current editor  
+        
+    
+       mark diagram modified layout import complete  p diagram not already marked  add list  p  
+       
+        param diagram diagram mark modified list modified diagrams  
+        
+        return list modified diagrams  
+        deprecated 0 25 4 tfmorris  use  
+         link #getmodifieddiagramlist list modified diagrams  
+       
+        return list modified diagrams  
+        
+    
+       reset list modified diagrams  
+        
+    
+       add package current diagram package already representation current diagram not    added  
+       
+        param newpackage package add  
+        
+    
+       check given package representation current 
+       diagram  
+       
+        param p package lookup current diagram  
+        return true package figure current diagram  
+               false otherwise  
+        
+    
+       check diagram already exists project  p  
+       
+        param name package name  converted class name  
+        return true diagram exists project  
+        
+    
+       create diagram name package name  
+       
+        param packagename package name  
+        return name diagram  
+        
+   
+           todo transformation java specific need language notation scheme specifying qualified names  
+           possible algorithm - replace punctuation internal separator  replace multiple separators single 
+           instance languages c i18n? - tfm 
+            
+    
+       select class diagram current diagram  creating necessary  
+       
+        param p package  
+        param name fully qualified name package  
+        
+   check diagram already exists project diagram already exists project  select current target  
+   otherwise create new classdiagram package  
+    
+       add new class diagram package project  
+        
+        param ns namespace contain diagram null root model used  
+        param name fully qualified name package used generate diagram name add class current diagram  
+       
+        param newclass new class add editor  
+        param minimise minimise class fig hiding compartiments attributes operations  
+        
+    
+       add classier current diagram  
+       
+        param classifier new class interface add editor  
+        param minimise minimise class fig hiding compartments attributes operations classifier not current diagram  add following calls order dependent  not sure layer add must come before model add ll end up duplicate figures diagram  - tfm class diagram second pass  
+   find fig class update visible state  
+   add edges 2-pass r e  process might already added class not edges 
+    
+       add interface current diagram  
+       
+        param newinterface interface add  
+        param minimise minimise class fig hiding compartiments attributes operations  
+        
+    
+       creates class diagram under root used classes out packages  
+       
+        
+    
+       selects diagram without affecting gui  
+       
+        param diagram diagram 
+       org argouml uml reveng DiagramInterface org argouml uml reveng diagraminterface logger log   
+        logger getlogger diagraminterface list argodiagram  modifieddiagrams arraylist argodiagram diagraminterface editor editor    
+  	currenteditor   editor  
+      
+ 
+      
+    editor geteditor currenteditor markdiagramasmodified argodiagram diagram modifieddiagrams contains diagram     
+            modifieddiagrams add diagram   
+          
+      
+     
+      
+     deprecated vector argodiagram  getmodifieddiagrams vector argodiagram  modifieddiagrams list argodiagram  getmodifieddiagramlist modifieddiagrams resetmodifieddiagrams     
+	modifieddiagrams arraylist argodiagram addpackage object newpackage isindiagram newpackage currentgm canaddnode newpackage     
+                figpackage newpackagefig figpackage currentgm  newpackage   
+                currentlayer add newpackagefig   
+                currentgm addnode newpackage   
+                currentlayer putinposition newpackagefig isindiagram object p currentdiagram currentdiagram getnodes   contains p isdiagraminproject name    
+        project project   projectmanager getmanager   getcurrentproject project getdiagram getdiagramname name getdiagramname packagename packagename replace ' '  diagram_name_separator  
+                  diagram_name_separator   diagram_name_suffix selectclassdiagram object p name    
+          
+        project project   projectmanager getmanager   getcurrentproject    
+        argodiagram m   project getdiagram getdiagramname name m setcurrentdiagram m addclassdiagram p  name addclassdiagram object ns name    
+        project p   projectmanager getmanager   getcurrentproject    
+ 
+        argodiagram d   diagramfactory getinstance   creatediagram  
+                diagramfactory diagramtype ns p getroot     ns d setname getdiagramname name propertyvetoexception pve     
+            log error  failed to set diagram name    pve   
+          
+        p addmember d   
+        setcurrentdiagram d addclass object newclass minimise    
+        addclassifier newclass  minimise addclassifier object classifier minimise currentgm canaddnode classifier     
+            figclassifierbox newfig model getfacade   isaclass classifier     
+                newfig figclass currentgm  classifier model getfacade   isainterface classifier     
+                newfig figinterface currentgm  classifier currentlayer add newfig   
+            currentgm addnode classifier   
+            currentlayer putinposition newfig   
+ 
+            newfig setoperationsvisible  minimise model getfacade   isaclass classifier                 
+                  figclass  newfig  setattributesvisible  minimise   
+              
+ 
+            newfig setsize newfig getminimumsize figclassifierbox existingfig list figs   currentlayer getcontentsnoedges i   0  i   figs size    i      
+                fig fig    fig  figs get i classifier    fig getowner      
+                    existingfig    figclassifierbox  fig  
+                  
+              
+            existingfig renderingchanged    
+          
+ 
+          
+          
+          
+	currentgm addnoderelatededges classifier addinterface object newinterface minimise    
+        addclassifier newinterface  minimise createrootclassdiagram     
+	selectclassdiagram setcurrentdiagram argodiagram diagram diagram runtimeexception  you can't select a diagram    
+          
+ 
+        currentgm    classdiagramgraphmodel  diagram getgraphmodel    
+        currentlayer   diagram getlayer    
+        currentdiagram   diagram  
+ 
+        markdiagramasmodified diagram   
+      
+ 
+  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+org argouml uml reveng DiagramInterface

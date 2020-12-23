@@ -1,0 +1,365 @@
+ 
+    
+   handles operations related courses  
+   
+    see courseattributes 
+    see coursesdb 
+    
+   explanation class depends coursesdb class db classes reading writing entities datastore responsibility matching  logic class class talk logic classes logic related one entity type involve logic related entity types  
+        
+   prevent initialization 
+    
+       creates course object instructor object course  
+        
+   create initial instructor course    
+  roll back transaction 
+    
+       gets course specified id  
+        
+    
+       returns true course id courseid present  
+        
+    
+       returns true course id courseid sample course  
+        
+    
+       used trigger link entitydoesnotexistexception course not present  
+        
+    
+       returns list link coursedetailsbundle courses given student enrolled param googleid google id student 
+        
+  todo remove excessive logging reason s null found 
+  todo failing might not best course action here  
+  maybe throw custom exception tell user wait due eventual consistency? 
+   skip course existence check course id obtained valid courseattributes resulting query 
+    
+       returns list section names course id courseid  
+        
+    
+       returns list section names specified course  
+        
+    
+       returns list section names course without need check course existent  
+       
+        param courseid course id course 
+        param iscourseverified determine whether necessary check course exists 
+        
+    
+       returns list link sectiondetailsbundle given course using course attributes course details bundle  
+       
+        param course   link courseattributes  
+        param cdd   link coursedetailsbundle  
+        
+   first student first section 
+   first student subsequent section 
+    
+       returns list link sectiondetailsbundle given course using courseid  
+        
+   first student first section 
+   first student subsequent section 
+    
+       returns teams particular courseid  br  
+        b note   b  br method not returns any loner information presently  br  
+       loner information must returned decide support loners br future  
+       
+        
+   first student first team 
+   student same team previous student 
+   first student subsequent teams  not first team last iteration 
+    
+       returns link coursedetailsbundle  course details course using   link courseattributes   
+        
+   todo  reduce calls function  use above function instead  
+    
+       returns link coursedetailsbundle  course details course using courseid  
+        
+    
+       returns link coursesummarybundle course summary   including feedback sessions using given   link instructorattributes   
+        
+    
+       returns link coursesummarybundle course summary  using link courseattributes   
+        
+    
+       returns link coursesummarybundle course summary  using courseid  
+        
+    
+       returns list link courseattributes courses given student enrolled param googleid google id student 
+        
+    
+       returns list link courseattributes courses given instructor belongs param googleid google id instructor 
+        
+    
+       returns list link courseattributes courses given instructor belongs param googleid google id instructor 
+        param omitarchived code true   omits archived courses return 
+        
+    
+       returns list link courseattributes courses given list instructors  
+        
+   check courseids queried returned course  
+    
+       returns course summaries instructor  br  
+       omits archived courses omitarchived    true br  
+       
+        param googleid google id instructor 
+        return map courseid key coursedetailsbundle value not include details within course feedback sessions  
+        
+    
+       returns course summaries instructors  br  
+       
+        return map courseid key coursedetailsbundle value not include details within course feedback sessions  
+        
+   check courseids queried returned course  
+    
+       returns map  courseid    link coursesummarybundle courses mapped given instructor  
+       
+        param omitarchived code true   omits archived courses return 
+        
+    
+       updates course details  
+        param newcourse course object containing new details course 
+        
+    
+       delete course given corresponding id cascade data databases related course  
+        
+   check courseids queried returned course  
+    
+       returns csv details  name  email  status students belonging given course  
+        
+    
+       returns list courseids archived courses instructors  
+       teammates logic core CoursesLogic teammates logic core courseslogic courseslogic courseslogic inst instance createcourse courseid coursename coursetimezone invalidparametersexception  entityalreadyexistsexception   
+ 
+        courseattributes coursetoadd courseattributes courseid  coursename  coursetimezone   
+        coursesdb createentity coursetoadd createcourseandinstructor instructorgoogleid courseid coursename coursetimezone invalidparametersexception  entityalreadyexistsexception   
+ 
+        accountattributes coursecreator   accountslogic getaccount instructorgoogleid   
+        assumption assertnotnull  trying to create a course a non-existent instructor      instructorgoogleid  
+                                 coursecreator   
+        assumption asserttrue  trying to create a course a person who doesn't have instructor privileges    
+                                    instructorgoogleid  
+                              coursecreator isinstructor   
+ 
+        createcourse courseid  coursename  coursetimezone   
+ 
+          
+        instructorprivileges privileges instructorprivileges instructorpermissionrolenames instructor_permission_role_coowner   
+        instructorattributes instructor   instructorattributes 
+                 builder instructorgoogleid  courseid  coursecreator name  coursecreator email  
+                 withprivileges privileges  
+                 build instructorslogic createinstructor instructor entityalreadyexistsexception   invalidparametersexception e    
+              
+            coursesdb deletecourse courseid errormessage    unexpected exception trying to create instructor a course eol 
+                                    instructor tostring eol 
+                                    teammatesexception tostringwithstacktrace e   
+            assumption fail errormessage courseattributes getcourse courseid coursesdb getcourse courseid iscoursepresent courseid coursesdb getcourse courseid issamplecourse courseid    
+        assumption assertnotnull  course id is courseid stringhelper ismatching courseid  fieldvalidator regex_sample_course_id verifycourseispresent courseid entitydoesnotexistexception iscoursepresent courseid entitydoesnotexistexception  course does not exist      courseid list coursedetailsbundle  getcoursedetailslistforstudent googleid entitydoesnotexistexception   
+ 
+        list courseattributes  courselist   getcoursesforstudentaccount googleid   
+        courseattributes sortbyid courselist   
+        list coursedetailsbundle  coursedetailslist arraylist courseattributes c   courselist    
+ 
+            studentattributes s   studentslogic getstudentforcourseidandgoogleid c getid    googleid s stringbuilder logmsgbuilder stringbuilder logmsg    student is in courseslogic getcoursedetailslistforstudent googleid   
+                            br  student google id    
+                          googleid     br  course      c getid   
+                            br  all courses retrieved using the google id    
+                logmsgbuilder append logmsg courseattributes course   courselist    
+                    logmsgbuilder append   br    append course getid     
+                  
+                log severe logmsgbuilder tostring     
+ 
+                  
+                  
+                assumption fail  student should not be at point     
+              
+ 
+              
+              
+            list feedbacksessionattributes  feedbacksessionlist   
+                    feedbacksessionslogic getfeedbacksessionsforuserincourseskipcheck c getid    s email   
+ 
+            coursedetailsbundle cdd coursedetailsbundle c feedbacksessionattributes fs   feedbacksessionlist    
+                cdd feedbacksessions add feedbacksessiondetailsbundle fs    
+              
+ 
+            coursedetailslist add cdd coursedetailslist list getsectionsnameforcourse courseid entitydoesnotexistexception getsectionsnameforcourse courseid list getsectionsnameforcourse courseattributes course entitydoesnotexistexception   
+        assumption assertnotnull  course is course getsectionsnameforcourse course getid list getsectionsnameforcourse courseid iscourseverified entitydoesnotexistexception iscourseverified    
+            verifycourseispresent courseid   
+          
+        list studentattributes  studentdatalist   studentslogic getstudentsforcourse courseid   
+ 
+        set sectionnameset hashset studentattributes sd   studentdatalist sd section equals default_section     
+                sectionnameset add sd section   
+              
+          
+ 
+        list sectionnamelist arraylist   sectionnameset   
+        collections sort sectionnamelist sectionnamelist list sectiondetailsbundle  getsectionsforcourse courseattributes course  coursedetailsbundle cdd    
+        assumption assertnotnull  course is course   
+ 
+        list studentattributes  students   studentslogic getstudentsforcourse course getid     
+        studentattributes sortbysectionname students   
+ 
+        list sectiondetailsbundle  sections arraylist      
+ 
+        sectiondetailsbundle section teamindexwithinsection   0 i   0  i   students size    i      
+ 
+            studentattributes s   students get i   
+            cdd stats studentstotal s isregistered      
+                cdd stats unregisteredtotal section section sectiondetailsbundle    
+                section name   s section  
+                section teams add teamdetailsbundle     
+                cdd stats teamstotal    
+                section teams get teamindexwithinsection  name   s team  
+                section teams get teamindexwithinsection  students add s s section equals section name s team equals section teams get teamindexwithinsection  name     
+                    section teams get teamindexwithinsection  students add s teamindexwithinsection    
+                    section teams add teamdetailsbundle     
+                    cdd stats teamstotal    
+                    section teams get teamindexwithinsection  name   s team  
+                    section teams get teamindexwithinsection  students add s sections add section section name equals default_section     
+                    cdd stats sectionstotal    
+                  
+                teamindexwithinsection   0  
+                section sectiondetailsbundle    
+                section name   s section  
+                section teams add teamdetailsbundle     
+                cdd stats teamstotal    
+                section teams get teamindexwithinsection  name   s team  
+                section teams get teamindexwithinsection  students add s islaststudent   i    students size   - 1 islaststudent    
+                sections add section section name equals default_section     
+                    cdd stats sectionstotal sections list sectiondetailsbundle  getsectionsforcoursewithoutstats courseid entitydoesnotexistexception   
+ 
+        verifycourseispresent courseid   
+ 
+        list studentattributes  students   studentslogic getstudentsforcourse courseid   
+        studentattributes sortbysectionname students   
+ 
+        list sectiondetailsbundle  sections arraylist      
+ 
+        sectiondetailsbundle section teamindexwithinsection   0 i   0  i   students size    i      
+            studentattributes s   students get i section section sectiondetailsbundle    
+                section name   s section  
+                section teams add teamdetailsbundle     
+                section teams get teamindexwithinsection  name   s team  
+                section teams get teamindexwithinsection  students add s s section equals section name s team equals section teams get teamindexwithinsection  name     
+                    section teams get teamindexwithinsection  students add s teamindexwithinsection    
+                    section teams add teamdetailsbundle     
+                    section teams get teamindexwithinsection  name   s team  
+                    section teams get teamindexwithinsection  students add s sections add section   
+                teamindexwithinsection   0  
+                section sectiondetailsbundle    
+                section name   s section  
+                section teams add teamdetailsbundle     
+                section teams get teamindexwithinsection  name   s team  
+                section teams get teamindexwithinsection  students add s islaststudent   i    students size   - 1 islaststudent    
+                sections add section sections list teamdetailsbundle  getteamsforcourse courseid entitydoesnotexistexception getcourse courseid entitydoesnotexistexception  the course     courseid     does not exist    
+          
+ 
+        list studentattributes  students   studentslogic getstudentsforcourse courseid   
+        studentattributes sortbyteamname students   
+ 
+        list teamdetailsbundle  teams arraylist      
+ 
+        teamdetailsbundle team i   0  i   students size    i      
+ 
+            studentattributes s   students get i team team teamdetailsbundle    
+                team name   s team  
+                team students add s s team equals team name       
+                team students add s teams add team   
+                team teamdetailsbundle    
+                team name   s team  
+                team students add s i    students size   - 1    
+                teams add team teams coursedetailsbundle getcoursesummary courseattributes cd    
+        assumption assertnotnull  supplied parameter was cd   
+ 
+        coursedetailsbundle cdd coursedetailsbundle cd   
+        cdd sections    arraylist sectiondetailsbundle   getsectionsforcourse cd  cdd cdd coursedetailsbundle getcoursesummary courseid entitydoesnotexistexception   
+        courseattributes cd   coursesdb getcourse courseid cd entitydoesnotexistexception  the course does not exist      courseid getcoursesummary cd coursesummarybundle getcoursesummarywithfeedbacksessionsforinstructor  
+            instructorattributes instructor entitydoesnotexistexception   
+        coursesummarybundle coursesummary   getcoursesummarywithoutstats instructor courseid   
+        coursesummary feedbacksessions addall feedbacksessionslogic getfeedbacksessionlistforinstructor instructor coursesummary coursesummarybundle getcoursesummarywithoutstats courseattributes course    
+        assumption assertnotnull  supplied parameter was course coursesummarybundle course coursesummarybundle getcoursesummarywithoutstats courseid entitydoesnotexistexception   
+        courseattributes cd   coursesdb getcourse courseid cd entitydoesnotexistexception  the course does not exist      courseid getcoursesummarywithoutstats cd list courseattributes  getcoursesforstudentaccount googleid entitydoesnotexistexception   
+        list studentattributes  studentdatalist   studentslogic getstudentsforgoogleid googleid studentdatalist isempty entitydoesnotexistexception  student with google id     googleid     does not exist    
+          
+ 
+        list courseids arraylist studentattributes s   studentdatalist    
+            courseids add s course coursesdb getcourses courseids list courseattributes  getcoursesforinstructor googleid getcoursesforinstructor googleid list courseattributes  getcoursesforinstructor googleid omitarchived    
+        list instructorattributes  instructorlist   instructorslogic getinstructorsforgoogleid googleid  omitarchived getcoursesforinstructor instructorlist list courseattributes  getcoursesforinstructor list instructorattributes  instructorlist    
+        assumption assertnotnull  supplied parameter was instructorlist   
+        list courseidlist arraylist instructorattributes instructor   instructorlist    
+            courseidlist add instructor courseid   
+          
+ 
+        list courseattributes  courselist   coursesdb getcourses courseidlist courseidlist size     courselist size courseattributes ca   courselist    
+                courseidlist remove ca getid     
+              
+            log severe  course s  was deleted but the instructor still exists eol   courseidlist tostring courselist map coursedetailsbundle  getcoursesummariesforinstructor googleid omitarchived entitydoesnotexistexception   
+ 
+        instructorslogic verifyinstructorexists googleid   
+ 
+        list instructorattributes  instructorattributeslist   instructorslogic getinstructorsforgoogleid googleid  
+                                                                                                         omitarchived getcoursesummariesforinstructor instructorattributeslist map coursedetailsbundle  getcoursesummariesforinstructor  
+            list instructorattributes  instructorattributeslist    
+ 
+        hashmap coursedetailsbundle  coursesummarylist hashmap      
+        list courseidlist arraylist instructorattributes instructor   instructorattributeslist    
+            courseidlist add instructor courseid   
+          
+ 
+        list courseattributes  courselist   coursesdb getcourses courseidlist courseidlist size     courselist size courseattributes ca   courselist    
+                courseidlist remove ca getid     
+              
+            log severe  course s  was deleted but the instructor still exists eol   courseidlist tostring courseattributes ca   courselist    
+            coursesummarylist put ca getid    getcoursesummary ca coursesummarylist map coursesummarybundle  getcoursessummarywithoutstatsforinstructor instructorid omitarchived    
+ 
+        list instructorattributes  instructorlist   instructorslogic getinstructorsforgoogleid instructorid  
+                                                                                               omitarchived getcoursesummarywithoutstatsforinstructor instructorlist updatecourse courseattributes newcourse invalidparametersexception  
+                                                                entitydoesnotexistexception   
+        assumption assertnotnull statuscodes null_parameter  newcourse   
+ 
+        courseattributes oldcourse   coursesdb getcourse newcourse getid oldcourse entitydoesnotexistexception  trying to update a course that does not exist     
+          
+ 
+        coursesdb updatecourse newcourse deletecoursecascade courseid    
+        studentslogic deletestudentsforcourse courseid   
+        instructorslogic deleteinstructorsforcourse courseid   
+        feedbacksessionslogic deletefeedbacksessionsforcoursecascade courseid   
+        coursesdb deletecourse courseid map coursesummarybundle  getcoursesummarywithoutstatsforinstructor  
+            list instructorattributes  instructorattributeslist    
+ 
+        hashmap coursesummarybundle  coursesummarylist hashmap      
+ 
+        list courseidlist arraylist instructorattributes ia   instructorattributeslist    
+            courseidlist add ia courseid   
+          
+        list courseattributes  courselist   coursesdb getcourses courseidlist courseidlist size     courselist size courseattributes ca   courselist    
+                courseidlist remove ca getid     
+              
+            log severe  course s  was deleted but the instructor still exists eol   courseidlist tostring courseattributes ca   courselist    
+            coursesummarylist put ca getid    getcoursesummarywithoutstats ca coursesummarylist getcoursestudentlistascsv courseid googleid entitydoesnotexistexception   
+ 
+        map coursedetailsbundle  courses   getcoursesummariesforinstructor googleid coursedetailsbundle course   courses get courseid hassection   hasindicatedsections courseid   
+ 
+        stringbuilder export stringbuilder 100 courseinfo    course id     sanitizationhelper sanitizeforcsv courseid eol 
+                         course name     sanitizationhelper sanitizeforcsv course course getname eol eol eol  
+        export append courseinfo header    hassection ?  section            team full name last name status email eol  
+        export append header sectiondetailsbundle section   course sections teamdetailsbundle team   section teams studentattributes student   team students studentstatus student googleid student googleid isempty      
+                        studentstatus student_course_status_yet_to_join studentstatus student_course_status_joined hassection    
+                        export append sanitizationhelper sanitizeforcsv section name   append ' '   
+                      
+ 
+                    export append sanitizationhelper sanitizeforcsv team name    ' ' 
+                              sanitizationhelper sanitizeforcsv stringhelper removeextraspace student name     ' ' 
+                              sanitizationhelper sanitizeforcsv stringhelper removeextraspace student lastname     ' ' 
+                              sanitizationhelper sanitizeforcsv studentstatus    ' ' 
+                              sanitizationhelper sanitizeforcsv student email eol export tostring hasindicatedsections courseid entitydoesnotexistexception   
+        verifycourseispresent courseid   
+ 
+        list studentattributes  studentlist   studentslogic getstudentsforcourse courseid studentattributes student   studentlist student section equals default_section list getarchivedcourseids list courseattributes  allcourses  
+                                             map instructorattributes  instructorsforcourses    
+        list archivedcourseids arraylist courseattributes course   allcourses    
+            instructorattributes instructor   instructorsforcourses get course getid instructor isarchived    
+                archivedcourseids add course getid archivedcourseids  
+      
+ 
+ teammates logic core CoursesLogic

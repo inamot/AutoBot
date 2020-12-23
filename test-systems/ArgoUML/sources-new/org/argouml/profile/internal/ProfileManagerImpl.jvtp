@@ -1,0 +1,90 @@
+ 
+   $id$ 
+   copyright  c  2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications  
+    
+   default  code profilemanager  code  implementation 
+   
+    author marcos aurélio configuration key default profiles configuration key search directories  
+        
+    
+       avoids recursive configuration update loading configuration 
+        
+    
+       constructor - includes initialization built default profiles profile not loaded default profile configuration loaded first need again 
+   todo  allow  zargo profile well exception raised file unusableorg argouml profile internal ProfileManagerImpl org argouml profile internal profilemanagerimpl profilemanager configurationkey key_default_profiles   configuration 
+             makekey  profiles configurationkey key_default_directories   configuration 
+             makekey  profiles    directories profilemanagerimpl profile uml profileuml    
+            defaultprofiles add uml   
+            registerprofile uml   
+            registerprofile profilejava uml profileexception e runtimeexception e   
+          
+ 
+        loaddirectoriesfromconfiguration    
+ 
+        refreshregisteredprofiles    
+ 
+        loaddefaultprofilesfromconfiguration loaddefaultprofilesfromconfiguration         
+        disableconfigurationupdate stringtokenizer tokenizer stringtokenizer configuration 
+                 getstring key_default_profiles   directory_separator tokenizer hasmoretokens desc   tokenizer nexttoken    
+            profile p desc charat 0     'u filename   desc substring 1   
+                p   finduserdefinedprofile file filename desc charat 0     'c classname   desc substring 1   
+                p   getprofileforclass classname p addtodefaultprofiles p   
+              
+          
+ 
+        disableconfigurationupdate updatedefaultprofilesconfiguration disableconfigurationupdate    
+            stringbuffer buf stringbuffer profile p   defaultprofiles p userdefinedprofile    
+                    buf append  u  
+                                userdefinedprofile  p  getmodelfile   
+                                     getabsolutepath buf append  c    p getclass   getname     
+                  
+ 
+                buf append directory_separator   
+              
+ 
+            configuration setstring key_default_profiles  buf tostring loaddirectoriesfromconfiguration     
+        disableconfigurationupdate stringtokenizer tokenizer stringtokenizer  
+                    configuration getstring key_default_directories    
+                    directory_separator tokenizer hasmoretokens      
+            searchdirectories add tokenizer nexttoken     
+          
+         
+        disableconfigurationupdate updatesearchdirectoriesconfiguration disableconfigurationupdate    
+            stringbuffer buf stringbuffer s   searchdirectories    
+                buf append s  append directory_separator   
+              
+ 
+            configuration setstring key_default_directories  buf tostring list profile  getregisteredprofiles profiles registerprofile profile p p profiles contains p p userdefinedprofile 
+                       getprofileforclass p getclass   getname profiles add p   
+                 
+                  
+                  
+                  
+                loaddefaultprofilesfromconfiguration removeprofile profile p p profiles remove p   
+            defaultprofiles remove p profile getprofileforclass profileclass    
+        profile found profile p   profiles p getclass   getname   equals profileclass     
+                found   p found addtodefaultprofiles profile p p profiles contains p   
+                    defaultprofiles contains p     
+            defaultprofiles add p   
+            updatedefaultprofilesconfiguration list profile  getdefaultprofiles collections unmodifiablelist defaultprofiles removefromdefaultprofiles profile p p profiles contains p     
+            defaultprofiles remove p   
+            updatedefaultprofilesconfiguration addsearchpathdirectory path path searchdirectories contains path     
+            searchdirectories add path   
+            updatesearchdirectoriesconfiguration list getsearchpathdirectories collections unmodifiablelist searchdirectories removesearchpathdirectory path path searchdirectories remove path   
+            updatesearchdirectoriesconfiguration refreshregisteredprofiles dirname   searchdirectories    
+            file dir file dirname dir exists file file   dir listfiles file getname   tolowercase   endswith   xmi found    
+                            finduserdefinedprofile file found    
+                            userdefinedprofile udp udp userdefinedprofile file   
+                                registerprofile udp profileexception e profile finduserdefinedprofile file file profile p   profiles p userdefinedprofile    
+                userdefinedprofile udp    userdefinedprofile  p udp getmodelfile   equals file udp profile getumlprofile profile p   getregisteredprofiles p getdisplayname p getdisplayname   contains  uml p  
+        profile p p profileuml profileexception e runtimeexception e p  
+      
+ 
+ org argouml profile internal ProfileManagerImpl

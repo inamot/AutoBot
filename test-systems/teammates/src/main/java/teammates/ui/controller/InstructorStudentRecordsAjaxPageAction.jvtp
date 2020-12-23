@@ -1,0 +1,43 @@
+teammates ui controller InstructorStudentRecordsAjaxPageAction teammates ui controller instructorstudentrecordsajaxpageaction action   
+ 
+     override actionresult execute entitydoesnotexistexception courseid   getrequestparamvalue paramsnames course_id   
+        assumption assertpostparamnotnull paramsnames course_id  courseid studentemail   getrequestparamvalue paramsnames student_email   
+        assumption assertpostparamnotnull paramsnames student_email  studentemail targetsessionname   getrequestparamvalue paramsnames feedback_session_name   
+        assumption assertpostparamnotnull paramsnames feedback_session_name  targetsessionname   
+ 
+        instructorattributes instructor   logic getinstructorforgoogleid courseid  account googleid   
+ 
+        gatekeeper verifyaccessible instructor  logic getcourse courseid    
+ 
+        studentattributes student   logic getstudentforemail courseid  studentemail student statustouser add statusmessage statusmessages student_not_found_for_records  
+                                               statusmessagecolor danger    
+            iserror createredirectresult actionuris instructor_home_page   
+          
+ 
+        list feedbacksessionattributes  feedbacks   logic getfeedbacksessionslistforinstructor account googleid filterfeedbacksessions courseid  feedbacks  instructor  student   
+ 
+        list sessionattributes  sessions arraylist      
+        sessions addall feedbacks   
+        collections sort sessions  sessionattributes descending_order   
+ 
+        list feedbacksessionresultsbundle  results arraylist sessionattributes session   sessions session feedbacksessionattributes targetsessionname isempty      targetsessionname equals session getsessionname       
+                    feedbacksessionresultsbundle result   logic getfeedbacksessionresultsforinstructor  
+                                                    session getsessionname    courseid  instructor email   
+                    results add result assumption fail  unknown session type    
+              
+          
+        statustoadmin    instructorstudentrecords ajax page load br   
+                         viewing  span bold\      studentemail    's  span  records session  span bold\       targetsessionname       span    
+                         in course  span bold\       courseid       span    
+ 
+        instructorstudentrecordsajaxpagedata data instructorstudentrecordsajaxpagedata account  student  sessiontoken  results createshowpageresult viewuris instructor_student_records_ajax  data filterfeedbacksessions courseid  list feedbacksessionattributes  feedbacks  
+                                        instructorattributes currentinstructor  studentattributes student    
+        iterator feedbacksessionattributes  iterfs   feedbacks iterator iterfs hasnext      
+            feedbacksessionattributes tempfs   iterfs next tempfs getcourseid   equals courseid  
+                        currentinstructor isallowedforprivilege student section  tempfs getsessionname paramsnames instructor_permission_view_session_in_sections     
+                iterfs remove    
+              
+          
+      
+ 
+ teammates ui controller InstructorStudentRecordsAjaxPageAction

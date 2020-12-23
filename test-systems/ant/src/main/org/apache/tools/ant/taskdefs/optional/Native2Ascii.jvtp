@@ -1,0 +1,117 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   converts files native encodings ascii ant 1 2 
+    
+   convert ascii back native 
+   encoding convert find input files put output files 
+   extension output files different args constructor    
+    
+       flag conversion run reverse sense ascii native encoding  
+       
+        param reverse true conversion reversed  
+                      otherwise false value reverse attribute  
+        return reverse attribute ant 1 6 3 
+        
+    
+       set encoding translate unset default encoding jvm used  
+       
+        param encoding string containing name native 
+                       encoding convert value encoding attribute  
+        return encoding attribute ant 1 6 3 
+        
+    
+       set source directory find files convert  
+       
+        param srcdir directory find input file set destination directory place converted files param destdir directory place output file set extension converted files unset  files not renamed  
+       
+        param ext file extension use converted files  
+        
+    
+       choose implementation particular task  
+        param impl name implemenation ant 1 6 3 
+        
+    
+       defines filenamemapper use  nested mapper element   
+       
+        return mapper use file name translations  
+       
+        throws buildexception one mapper defined nested filenamemapper 
+        param filenamemapper mapper add ant 1 6 3 
+        
+    
+       adds implementation specific command-line argument  
+        return implementationspecificargument configured ant 1 6 3 
+        
+    
+       execute task 
+       
+        throws buildexception problem task execution  
+        
+   scanner find inputs 
+   list files process 
+   default srcdir basedir 
+   require destdir src dest dirs same  require extension set don't stomp every file   one still 
+   include file same extension convert single file  
+       
+        param srcname name input file  
+        param destname name input file  
+        
+   file convert put results 
+   build full file names 
+   make sure re not clobber something 
+   make intermediate directories needed 
+   xxx jdk 1 1 doesn't file getparentfile  
+    
+       returns implementation specific  settings given nested 
+       arg elements  
+        return arguments ant 1 6 3 
+       org apache tools ant taskdefs optional Native2Ascii org apache tools ant taskdefs optional native2ascii matchingtask native2ascii     
+        facade facadetaskhelper native2asciiadapterfactory getdefault setreverse reverse reverse   reverse getreverse reverse setencoding encoding encoding   encoding getencoding encoding setsrc file srcdir srcdir   srcdir setdest file destdir destdir   destdir setext ext extension   ext setimplementation impl equals impl     
+            facade setimplementation native2asciiadapterfactory getdefault facade setimplementation impl mapper createmapper buildexception mapper buildexception  cannot define more than one mapper   
+                                     getlocation     
+          
+        mapper mapper getproject mapper add filenamemapper filenamemapper    
+        createmapper   add filenamemapper implementationspecificargument createarg     
+        implementationspecificargument arg implementationspecificargument    
+        facade addimplementationargument arg arg execute buildexception   
+ 
+        directoryscanner scanner files srcdir srcdir   getproject   resolvefile destdir buildexception  the dest attribute must be set srcdir equals destdir     extension mapper buildexception  the ext attribute or a mapper must be set src and dest dirs are the same     
+          
+ 
+        filenamemapper m mapper extension m identitymapper m extmapper m   mapper getimplementation    
+          
+ 
+        scanner   getdirectoryscanner srcdir   
+        files   scanner getincludedfiles    
+        sourcefilescanner sfs sourcefilescanner files   sfs restrict files  srcdir  destdir  m count   files length count    0 message    converting     count     file  
+               count    1 ?  s            from    
+        log message   srcdir     to     destdir i   0  i   files length  i      
+            convert files i   m mapfilename files i   0 convert srcname destname buildexception   
+        file srcfile                            
+        file destfile                           
+ 
+          
+        srcfile file srcdir  srcname   
+        destfile file destdir  destname srcfile equals destfile buildexception  file     srcfile 
+                                         would overwrite its self parentname   destfile getparent parentname file parentfile file parentname parentfile exists         parentfile mkdirs buildexception  cannot create parent directory   
+                                           parentname   
+              
+          
+ 
+        log  converting     srcname  project msg_verbose   
+        native2asciiadapter ad   
+            native2asciiadapterfactory getadapter facade getimplementation ad convert srcfile  destfile buildexception  conversion failed getcurrentargs facade getargs extmapper filenamemapper setfrom s setto s mapfilename filename lastdot   filename lastindexof lastdot    0 filename substring 0  lastdot  
+                                           extension filename   extension   
+              
+          
+      
+ org apache tools ant taskdefs optional Native2Ascii

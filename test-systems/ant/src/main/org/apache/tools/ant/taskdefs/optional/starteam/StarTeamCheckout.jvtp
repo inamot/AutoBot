@@ -1,0 +1,307 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   checks out files starteam project creates working directories local directory appropriate  ant usage  
+    pre  
+    lt taskdef name  starteamcheckout  
+   classname  org apache tools ant taskdefs starteamcheckout   gt  
+    lt starteamcheckout username  buildmaster  password  ant  starteamfolder  source  
+   starteamurl  servername portnum project view  
+   createworkingdirectories  true   gt  
+     pre  
+   
+    version 1 1 
+    see href  http   www borland com products starteam index html  
+    borland starteam web site ant task name  stcheckout  category  scm  
+    
+    
+       holder createdirs attribute 
+        
+    
+       holder deleteuncontrolled attribute true local files not starteam deleted  
+        
+    
+       holder deleteuncontrolled attribute true  
+        default  local non-binary files checked out using local 
+       platform's eol convention false  checkouts preserve server's eol convention  
+        
+    
+       flag  defaults true create directories starteam repository even empty  
+       
+        param value value set attribute whether not local files not starteam deleted  
+       optional  defaults code true  code   
+        param value value set attribute set whether not files checked out using local machine's eol convention  
+       optional  defaults code true  code   
+        param value value set attribute sets label starteam use checkout  defaults most recent file label must exist starteam exception thrown  
+        param label label used attribute tells whether locked checkout unlocked 
+       checkout leave checkout status alone  default locked 
+       checkout locks users out making changes unlocked 
+       checkout reverts local files previous repository status removes lock  
+        see #setlocked boolean  
+        see #setunlocked boolean  
+        
+    
+       set locked checkout  optional default false  
+        param v  true locked checkout  false checkout without 
+                 changing status   
+        exception buildexception both locked unlocked set true 
+        
+    
+       set unlocked checkout  default false  
+        param v  true unlocked checkout  false checkout without 
+                 changing status  
+        exception buildexception both locked unlocked set true checked out files timestamp repository time checked out   true means use repository 
+       timestamp  
+        
+    
+       sets userepositorytimestmp member  
+       
+        param userepositorytimestamp 
+                     true means checked out files repository timestamp  
+                     false means checked out files timestamped time checkout  
+        
+    
+       returns value userepositorytimestamp member 
+       
+        return value userepositorytimestamp member 
+        
+    
+       list files  dates statuses date  optional not specified most recent version each file listed  
+       
+        param asofdateparam date listing made ant 1 6 
+        
+    
+       date format asofdate parameter parsed  optional  
+       must simpledateformat compatible string not specified asofdateparam specified  parse use iso8601 
+       datetime date formats  
+       
+        param asofdateformat simpledateformat-compatible format string ant 1 6 
+        
+    
+       override base-class abstract function creates appropriately configured view checkouts - either current view view label raw 
+       view itself case revision label  
+       
+        param raw unconfigured  code view  code  
+       
+        return snapshot  code view  code  appropriately configured  
+        exception buildexception error label supplied view label  use configure view label supplied revision label  use raw view snapshot date supplied use view configured date  
+   otherwise  use view configured tip  
+    
+       implements base-class abstract function define tests any preconditons required task  
+       
+        exception buildexception thrown both rootlocalfolder viewrootlocalfolder defined 
+        
+    
+       extenders emit log entry describing parameters used operation  
+       
+        param starteamrootfolder 
+                     root folder starteam operation 
+        param targetrootfolder 
+                     root local folder operation  whether specified user not  
+        
+    
+       implements base-class abstract function perform checkout 
+       operation files each folder tree  
+       
+        param starteamfolder starteam folder files checked out 
+        param targetfolder local mapping rootstarteamfolder 
+        exception buildexception any error occurs 
+        
+   prune away any files not belonging revision label one ugly api starteam sdk 
+   note s important scan items before make unmatched file map creates bunch new 
+   folders files  unattached repository don't want include those traversal  
+    
+       provides string showing full paths logging 
+       
+        param remotefile star team file being processed  
+       
+        return string showing full paths 
+        
+    
+       processes  checks out   code stfiles  code files starteam folder  
+       
+        param eachfile repository file process 
+        param targetfolder java io file  folder work 
+        throws ioexception starteam api fails work files file doesn't pass include exclude tests  skip note  starteam status new implies item local machine not repository items show up not view starteam gui  
+   one think want perhaps checkin new items  not cases  - steve cohen 15 dec 2001  
+   unfortunately sdk doesn't really work t 
+   actually see  anything status new check out  everything here without worrying losing anything try update status once give starteam 
+   another chance  
+    
+       handles deletion uncontrolled items 
+        
+    
+           override base class init much simpler action taken simply delete local files further interaction repository necessary  
+           
+            param localfolder local folder mappings made  
+            param remotefolder 
+                  not used implementation 
+            
+   pr 31965 return null 
+    
+           deletes uncontrolled items local tree assumed method not called until items corresponding folder processed internal map contain only uncontrolled items  
+            
+    
+           deletes files file folder recursively deletes 
+           everything param local local file folder deleted  
+            
+   once find folder isn't repository  
+   anything below deleted org apache tools ant taskdefs optional starteam StarTeamCheckout org apache tools ant taskdefs optional starteam starteamcheckout treebasedtask setcreateworkingdirs value createdirs   value setdeleteuncontrolled value deleteuncontrolled   value setconverteol value converteol   value setlabel label    
+        _setlabel label setlocked v buildexception   
+        setlockstatus v  item locktype exclusive setunlocked v buildexception   
+        setlockstatus v  item locktype unlocked setlockstatus v newstatus buildexception v lockstatus    item locktype unchanged lockstatus   newstatus lockstatus    newstatus buildexception  
+                         error  cannot set locked and unlocked both setuserepositorytimestamp userepositorytimestamp userepositorytimestamp   userepositorytimestamp getuserepositorytimestamp userepositorytimestamp setasofdate asofdateparam    
+        _setasofdate asofdateparam setasofdateformat asofdateformat    
+        _setasofdateformat asofdateformat view createsnapshotview view raw buildexception labelid   getlabelid raw isusingviewlabel view raw  viewconfiguration createfromlabel labelid isusingrevisionlabel raw  
+          
+          
+        view view   getviewconfiguredbydate raw view view view raw  viewconfiguration createtip testpreconditions buildexception isusingrevisionlabel createdirs    
+            log  ignoring createworkingdirs using a revision label   
+                     folders will be created only as needed    
+                project msg_warn createdirs lockstatus    item locktype unchanged lockstatusbad getlabel      
+                log  neither locked nor unlocked may be when checking out a labeled version    
+                    project msg_err   
+                lockstatusbad getasofdate      
+                log  neither locked nor unlocked may be when checking out by date    
+                    project msg_err   
+                lockstatusbad lockstatusbad buildexception  
+                     lock status may not be changed  
+                        when checking out a non-current version getlabel getasofdate buildexception  
+                 both label and asofdate specified     
+                   unable to process request logoperationdescription  
+        folder starteamrootfolder  java io file targetrootfolder    
+        log isrecursive   ?  recursive     non-recursive   
+                checkout from      starteamrootfolder getfolderhierarchy     
+ 
+        log    checking out to getrootlocalfolder targetrootfolder getabsolutepath     
+ 
+ 
+        loglabel    
+        logasofdate    
+        logincludes    
+        logexcludes lockstatus    item locktype exclusive    
+            log    items will be checked out with exclusive locks lockstatus    item locktype unlocked    
+            log    items will be checked out unlocked   
+                     even presently locked log    items will be checked out with no change in lock status     
+          
+        log    items will be checked out with userepositorytimestamp ?  repository timestamps   
+                                           the current timestamp      
+        log    items will be checked out isforced   ?  regardless of     in accordance with   
+                repository status deleteuncontrolled    
+            log    local items not found in the repository will be deleted     
+          
+        log    items will be checked out converteol ?  using the local machine's eol convention  
+                without changing the eol convention used on the server     
+        log    directories will be created createdirs ?   wherever they exist in the repository  even empty   
+                 only where needed to check out files visit folder starteamfolder  java io file targetfolder buildexception getrootlocalfolder      
+                starteamfolder setalternatepathfragment  
+                    targetfolder getabsolutepath targetfolder exists isusingrevisionlabel createdirs targetfolder mkdirs      
+                            log  creating folder      targetfolder buildexception  
+                                 failed to create local folder     targetfolder   
+                          
+                      
+                  
+              
+ 
+ 
+            folder   folderslist   starteamfolder getsubfolders    
+            item   fileslist   starteamfolder getitems gettypenames   file isusingrevisionlabel      
+ 
+                  
+                  
+ 
+                hashtable labelitems hashtable fileslist length s   fileslist length ids s i   0  i   s  i      
+                    ids i    fileslist i  getitemid    
+                    labelitems put integer ids i integer i foundids   getlabelinuse   getlabeleditemids ids   
+                s   foundids length  
+                item   labeledfiles item s i   0  i   s  i      
+                    integer id integer foundids i    
+                    labeledfiles i    
+                        fileslist   integer  labelitems get id   intvalue     
+                  
+                fileslist   labeledfiles  
+              
+ 
+ 
+              
+              
+              
+              
+ 
+            unmatchedfilemap ufm checkoutmap    
+                    init targetfolder getabsolutefile    starteamfolder i   0  i   folderslist length  i      
+                folder stfolder   folderslist i   
+ 
+                java io file subfolder java io file targetfolder  stfolder getname     
+ 
+                 ufm removecontrolleditem subfolder isrecursive      
+                         visit stfolder  subfolder i   0  i   fileslist length  i      
+                com starbase starteam file stfile   
+                     com starbase starteam file  fileslist i   
+                processfile stfile  targetfolder   
+ 
+                ufm removecontrolleditem java io file targetfolder  stfile getname deleteuncontrolled    
+                ufm processuncontrolleditems ioexception e buildexception e describecheckout com starbase starteam file remotefile  
+                                    java io file localfile    
+        stringbuffer sb stringbuffer    
+        sb append getfullrepositorypath remotefile   
+           append localfile    
+            sb append remotefile getfullname sb append localfile sb tostring describecheckout com starbase starteam file remotefile describecheckout remotefile processfile com starbase starteam file eachfile  
+                             file targetfolder ioexception filename   eachfile getname    
+ 
+        java io file localfile java io file targetfolder  filename shouldprocess filename     
+            log  excluding     getfullrepositorypath eachfile   
+                project msg_info isusingrevisionlabel targetfolder exists targetfolder mkdirs      
+                    log  creating folder      targetfolder buildexception  
+                         failed to create local folder     targetfolder success   eachfile checkoutbylabelid  
+                localfile  
+                getidoflabelinuse lockstatus userepositorytimestamp success    
+                log  checked out     describecheckout eachfile  localfile checkout filestatus    eachfile getstatus filestatus    status merge 
+                   filestatus    status unknown    
+                eachfile updatestatus true   
+                filestatus    eachfile getstatus     
+              
+ 
+            log eachfile tostring       has status of   
+                  status name filestatus   project msg_debug filestatus status outofdate status missing  
+                log  checking out      describecheckout eachfile isforced      filestatus    status current    
+                    log  forced checkout of   
+                          describecheckout eachfile  
+                            over status     status name filestatus log  skipping      getfullrepositorypath eachfile  
+                            - status      status name filestatus    
+                    checkout checkout targetfolder exists targetfolder mkdirs      
+                        log  creating folder      targetfolder buildexception  
+                             failed to create local folder     targetfolder   
+                      
+                  
+                eachfile checkout lockstatus userepositorytimestamp converteol checkoutmap unmatchedfilemap isactive starteamcheckout deleteuncontrolled  
+          
+ 
+          
+        unmatchedfilemap init java io file localfolder  folder remotefolder localfolder exists localfiles   localfolder list localfiles i   0  i   localfiles length  i      
+                java io file localfile java io file localfolder  localfiles i   getabsolutefile    
+ 
+                log  adding     localfile     to unmatchedfilemap   
+                    project msg_debug localfile isdirectory put localfile put localfile processuncontrolleditems buildexception isactive      
+                enumeration e keys e hasmoreelements      
+                    java io file local    java io file  e nextelement    
+                    delete local delete java io file local local isdirectory      isrecursive contents   local list i   0  i   contents length  i      
+                    java io file file java io file local  contents i    
+                    delete file   
+                  
+              
+            local delete    
+            log  deleted uncontrolled item     local getabsolutepath     
+          
+      
+ 
+ 
+ org apache tools ant taskdefs optional starteam StarTeamCheckout

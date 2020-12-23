@@ -1,0 +1,31 @@
+ session opening reminder email always sent students 
+   without accounts need receive email to respondteammates ui controller InstructorFeedbackEditSaveAction teammates ui controller instructorfeedbackeditsaveaction instructorfeedbackabstractaction   
+ 
+     override actionresult execute entitydoesnotexistexception courseid   getrequestparamvalue paramsnames course_id feedbacksessionname   getrequestparamvalue paramsnames feedback_session_name   
+ 
+        assumption assertpostparamnotnull paramsnames course_id  courseid   
+        assumption assertpostparamnotnull paramsnames feedback_session_name  feedbacksessionname   
+ 
+        gatekeeper verifyaccessible  
+                logic getinstructorforgoogleid courseid  account googleid   
+                logic getfeedbacksession feedbacksessionname  courseid paramsnames instructor_permission_modify_session   
+ 
+        instructorfeedbackeditpagedata data instructorfeedbackeditpagedata account  sessiontoken   
+        feedbacksessionattributes feedbacksession   extractfeedbacksessiondata feedbacksession setopeningemailenabled logic updatefeedbacksession feedbacksession   
+            statustouser add statusmessage statusmessages feedback_session_edited  statusmessagecolor success    
+            statustoadmin   
+                     updated feedback session   
+                        span bold\       feedbacksession getfeedbacksessionname         span course   
+                        span bold\       feedbacksession getcourseid         span  created  br   
+                        span bold\  from   span      feedbacksession getstarttime   
+                        span bold\   to  span      feedbacksession getendtime   
+                        br  span bold\  session visible from   span      feedbacksession getsessionvisiblefromtime   
+                        br  span bold\  results visible from   span      feedbacksession getresultsvisiblefromtime   
+                        br  br  span bold\  instructions   span      feedbacksession getinstructions    
+            data setstatusforajax statusmessages feedback_session_edited   
+            data sethaserror invalidparametersexception e    
+            setstatusforexception e   
+            data setstatusforajax e getmessage     
+            data sethaserror createajaxresult data   
+      
+ teammates ui controller InstructorFeedbackEditSaveAction

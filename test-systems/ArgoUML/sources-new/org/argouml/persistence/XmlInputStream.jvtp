@@ -1,0 +1,167 @@
+ 
+   $id$ 
+   copyright  c  1996-2006 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications  
+  import javax swing event eventlistenerlist bufferinputstream aware xml structure searches first occurrence named tag reads only data  inclusively tag matching end tag search first 
+   occurrence named tag read child tags tag not expected empty tag  
+    p  
+   todo hardwired assume fixed single byte 
+   character encoding needs updated handle different 
+   encodings  including multi-byte encodings  - tfm 20070607 
+    
+    author bob tarling 
+    
+  private eventlistenerlist listenerlist   new eventlistenerlist    
+    
+       logger  
+        
+    
+       construct new xmlinputstream  
+       
+        param instream input stream wrap  
+        param thetag tag name start reading 
+        param thelength expected length input stream 
+        param theeventspacing number characters read before 
+              firing progress event  
+        
+    
+       reopen stream already reached end xml fragment  
+       
+        param thetag tag name 
+        param attribs attributes 
+        param child child only 
+        
+    
+       reopen stream already reached end xml fragment  
+       
+        param thetag tag name 
+        
+   
+        see java io inputstream#read   
+        
+   
+        see java io inputstream#read byte    int  int  
+        
+    
+       determines character last character last tag interest  
+       every character read first tag interest passed 
+       through method order  
+       
+        param ch character test  
+        return true end last tag  
+        
+   todo below not strictly correct cover case deal using real xml parser better  
+   look xml document single root element 
+    
+       keep reading input stream until specific 
+       sequence characters ben read method assumes least one match  
+       
+        throws ioexception 
+        
+   keep reading till left bracket opening tag 
+   compare each following character see matches tag want want match right bracket tag some terminator ve found matching tag correct instance matching attributes? 
+   search attributes found those expected any don't match turn found flag search next matching tag  
+   read name child tag reset read position 
+   back child tag nothing    
+    
+       having read inputstream up until tag name method continues read contents tag retrieve any attribute names values  
+        return map name value pairs  
+        throws ioexception 
+        
+   skip any whitespace till equals sign  
+   skip any whitespace till quote symbol close method overridden prevent some class out control closing stream sax parser   
+       use realclose finally close stream real  
+        throws ioexception satisfy ancestor never happen  
+        
+    
+       really close input  
+       
+        throws ioexception o error occurs  
+       org argouml persistence XmlInputStream org argouml persistence xmlinputstream bufferedinputstream logger log   
+        logger getlogger xmlinputstream xmlinputstream  
+            inputstream instream thetag thelength theeventspacing instream   
+        tagname   thetag  
+        endtagname   ' '   thetag  
+        attributes childonly reopen thetag  
+                map attribs child    
+        endstream xmlstarted intag tagname   thetag  
+        endtagname   ' '   thetag  
+        attributes   attribs  
+        childonly   child reopen thetag    
+        endstream xmlstarted intag tagname   thetag  
+        endtagname   ' '   thetag  
+        attributes childonly read ioexception xmlstarted    
+            skiptotag    
+            xmlstarted endstream 1 ch read    
+        endstream   islasttag ch ch read b off len ioexception xmlstarted    
+            skiptotag    
+            xmlstarted endstream 1 cnt cnt   0  cnt   len    cnt read   read read    -1 b cnt   off read cnt   0 cnt 1 islasttag ch ch    ' '    
+            intag currenttag setlength 0 ch    ' '    
+            intag tag   currenttag tostring tag equals endtagname  
+                      
+                      
+                      
+                      
+                        currenttag charat currenttag length   - 1     ' '  
+                           tag startswith tagname  
+                           tag indexof ' '     tagname indexof intag    
+            currenttag append ch skiptotag ioexception searchchars   tagname tochararray i found childonly    
+		mark 1000 realread childonly    
+		    mark 1000   
+		  
+              
+            found i   0  i   tagname length      i c   realread c    searchchars i     
+                    found terminator   realread found     isnameterminator terminator     
+                found found attributes map attributesfound hashmap terminator    ' '    
+                        attributesfound   readattributes    
+                      
+                      
+                      
+                      
+                    iterator it   attributes entryset   iterator found    it hasnext      
+                        map entry pair    map entry  it next pair getvalue   equals  
+                                attributesfound get pair getkey        
+                            found found instancecount   0    
+                    found instancecount found childonly    
+                      
+                      
+                      
+                    mark 1000 realread      ' '    
+                          
+		      
+                    tagname ch realread isnameterminator ch     
+                        tagname    ch  
+                        ch realread    
+                      
+                    endtagname         tagname  
+                    log info  start tag       tagname   
+                    log info  end tag       endtagname   
+                  
+                reset isnameterminator ch ch    ' '    character iswhitespace ch map readattributes ioexception   
+        map attributesfound hashmap character character   realread character iswhitespace character     
+                stringbuffer attributename stringbuffer    
+                attributename append character character   realread       ' ' 
+                            character iswhitespace character     
+                    attributename append character character iswhitespace character     
+                    character   realread character ioexception  
+                             expected   sign after attribute   
+                              attributename quotesymbol   realread character iswhitespace quotesymbol     
+                    quotesymbol   realread quotesymbol    ' '    quotesymbol ioexception  
+                             expected \  or ' around attribute value after   
+                               attribute     attributename   
+                  
+                stringbuffer attributevalue stringbuffer character   realread       quotesymbol    
+                    attributevalue append character   
+                  
+                attributesfound put  
+                        attributename tostring    
+                        attributevalue tostring attributesfound close ioexception realclose ioexception close realread ioexception read read read    -1 ioexception  tag     tagname     not found read  
+      
+ 
+ org argouml persistence XmlInputStream

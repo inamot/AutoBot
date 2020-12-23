@@ -1,0 +1,89 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications  
+    
+   wraps cmdsavegif cmdsave e ps allow selection output file  
+    
+    
+       constructor action  
+        
+   
+        see abstractaction#actionperformed actionevent  
+        
+  todo return value? 
+    
+       method everything class  p  
+       
+        return true went well  
+        
+   only specified format allowed  
+    
+       actually saving graphics file  
+       
+        return true successful  
+        param thefile file writing param suffix suffix  used deciding format file 
+       shall param useui true supposed use ui e g warn user replacing old file  
+        
+    
+       execute action command line  
+       
+       todo underlying gef library relies acme doesn't allow create files unless window showing reason split performing commands link org argouml application main#main string not supplying batch option  run commands window showing  hopefully eventually fixed  
+       
+        see org argouml application api commandlineinterface#docommand string  
+        param argument file name save return true ok  
+       org argouml uml ui ActionSaveGraphics org argouml uml ui actionsavegraphics abstractaction commandlineinterface logger log   
+        logger getlogger actionsavegraphics actionsavegraphics translator localize  action save-graphics    
+                resourceloaderwrapper lookupicon  action save-graphics actionperformed actionevent ae    
+        trysave trysave     
+        object target   
+            projectmanager getmanager   getcurrentproject   getactivediagram target diagram defaultname     diagram  target  getname    
+        defaultname   util stripjunk defaultname   
+ 
+        project p    projectmanager getmanager   getcurrentproject    
+        savegraphicsmanager sgm   savegraphicsmanager getinstance jfilechooser chooser p p geturi p geturi   tourl   getfile   length     0    
+ 
+                chooser jfilechooser p geturi   tourl   getfile chooser chooser jfilechooser    
+              
+ 
+            object   s    defaultname    
+            chooser setdialogtitle  
+                    translator messageformat  filechooser save-graphics   s    
+              
+            chooser setacceptallfilefilterused sgm setfilechooserfilters chooser  defaultname fn   configuration getstring  
+                    savegraphicsmanager key_save_graphics_path fn length     0    
+                chooser setselectedfile file fn retval   chooser showsavedialog argoframe getinstance retval    jfilechooser approve_option    
+                file thefile   chooser getselectedfile thefile path   thefile getpath    
+                    configuration setstring  
+                            savegraphicsmanager key_save_graphics_path  
+                            path   
+ 
+                    thefile file thefile getparentfile    
+                            sgm fixextension thefile getname suffix   sgm getfilterfromfilename thefile getname    
+                         getsuffix dosave thefile  suffix outofmemoryerror e exceptiondialog argoframe getinstance    
+                 you have run out of memory    
+                   close down argouml and restart with a larger heap size    e exception e exceptiondialog argoframe getinstance    e   
+            log error  got some exception   e dosave file thefile suffix useui filenotfoundexception  ioexception   
+ 
+        savegraphicsmanager sgm   savegraphicsmanager getinstance    
+        savegraphicsaction cmd cmd   sgm getsaveactionbysuffix suffix cmd useui    
+            projectbrowser getinstance   showstatus  
+                             writing     thefile thefile exists      useui response   joptionpane showconfirmdialog  
+                argoframe getinstance    
+                translator messageformat  optionpane confirm-overwrite object    thefile    
+                translator localize  optionpane confirm-overwrite-title    
+                joptionpane yes_no_option response    joptionpane yes_option fileoutputstream fo fileoutputstream thefile   
+	cmd setstream fo   
+        cmd setscale configuration getinteger  
+                savegraphicsmanager key_graphics_resolution  1    
+	cmd actionperformed fo close useui    
+            projectbrowser getinstance   showstatus  wrote     thefile docommand argument    
+	file file file argument suffix   suffixfilter getextension file suffix dosave file  suffix filenotfoundexception e    
+	    log error  file not found error when writing    e ioexception e    
+	    log error  io error when writing    e org argouml uml ui ActionSaveGraphics

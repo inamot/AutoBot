@@ -1,0 +1,240 @@
+ 
+    
+   handles crud operations feedback sessions  
+   
+    see feedbacksession 
+    see feedbacksessionattributes situation not tested replicating situation difficult during testing 
+    
+       preconditions   br parameters non-null  
+        return null not found  
+        
+    
+       returns empty list none found  
+        deprecated not scalable  created data migration purposes  
+        
+    
+       preconditions   br parameters non-null  
+        return empty list sessions found given course  
+        
+    
+       returns empty list sessions found unsent open emails  
+        
+    
+       returns empty list sessions found unsent closing emails  
+        
+    
+       returns empty list sessions found unsent closed emails  
+        
+    
+       returns empty list sessions found unsent published emails  
+        
+    
+       updates feedback session identified code newattributes feedbacksesionname code newattributes courseid remaining parameters existing value preserved parameter null  due keep existing' policy   br  
+       preconditions   br  
+           code newattributes feedbacksesionname code newattributes courseid non-null correspond existing feedback session   br  
+       teammates storage api FeedbackSessionsDb teammates storage api feedbacksessionsdb entitiesdb feedbacksession  feedbacksessionattributes error_update_non_existent    trying to update non-existent feedback session createfeedbacksessions collection feedbacksessionattributes  feedbacksessionstoadd invalidparametersexception   
+        list feedbacksessionattributes  feedbacksessionstoupdate   createentities feedbacksessionstoadd feedbacksessionattributes session   feedbacksessionstoupdate updatefeedbacksession session entitydoesnotexistexception e    
+                  
+                  
+                assumption fail  entity found be already existing and not existing simultaneously list feedbacksessionattributes  getallopenfeedbacksessions date start  date end zone    
+        list feedbacksessionattributes  list linkedlist      
+ 
+        calendar startcal   calendar getinstance    
+        startcal settime start   
+        calendar endcal   calendar getinstance    
+        endcal settime end   
+ 
+        date curstart   timehelper converttousertimezone startcal  -25  gettime    
+        date curend   timehelper converttousertimezone endcal  25  gettime    
+ 
+        list feedbacksession  endentities   load   
+                 filter  endtime     curstart  
+                 filter  endtime      curend  
+                 list    
+ 
+        list feedbacksession  startentities   load   
+                 filter  starttime      curstart  
+                 filter  starttime     curend  
+                 list    
+ 
+        list feedbacksession  endtimeentities arraylist   endentities   
+        list feedbacksession  starttimeentities arraylist   startentities   
+ 
+        endtimeentities removeall starttimeentities   
+        starttimeentities removeall endtimeentities   
+        endtimeentities addall starttimeentities feedbacksession feedbacksession   endtimeentities    
+            startcal settime start   
+            endcal settime end   
+            feedbacksessionattributes fs   makeattributes feedbacksession   
+ 
+            date standardstart   timehelper converttousertimezone startcal  fs gettimezone   - zone  gettime    
+            date standardend   timehelper converttousertimezone endcal  fs gettimezone   - zone  gettime isstarttimewithinrange   
+                    timehelper istimewithinperiod standardstart  standardend  fs getstarttime isendtimewithinrange   
+                    timehelper istimewithinperiod standardstart  standardend  fs getendtime isstarttimewithinrange    isendtimewithinrange    
+                list add fs list feedbacksessionattributes getfeedbacksession courseid feedbacksessionname    
+        assumption assertnotnull statuscodes dblevel_null_input  feedbacksessionname   
+        assumption assertnotnull statuscodes dblevel_null_input  courseid makeattributesornull getfeedbacksessionentity feedbacksessionname  courseid   
+                 trying to get non-existent session      feedbacksessionname         courseid   
+      
+ 
+      
+     deprecated list feedbacksessionattributes  getallfeedbacksessions makeattributes getallfeedbacksessionentities list feedbacksessionattributes  getfeedbacksessionsforcourse courseid    
+        assumption assertnotnull statuscodes dblevel_null_input  courseid makeattributes getfeedbacksessionentitiesforcourse courseid list feedbacksessionattributes  getfeedbacksessionspossiblyneedingopenemail makeattributes getfeedbacksessionentitiespossiblyneedingopenemail list feedbacksessionattributes  getfeedbacksessionspossiblyneedingclosingemail makeattributes getfeedbacksessionentitiespossiblyneedingclosingemail list feedbacksessionattributes  getfeedbacksessionspossiblyneedingclosedemail makeattributes getfeedbacksessionentitiespossiblyneedingclosedemail list feedbacksessionattributes  getfeedbacksessionspossiblyneedingpublishedemail makeattributes getfeedbacksessionentitiespossiblyneedingpublishedemail updatefeedbacksession feedbacksessionattributes newattributes invalidparametersexception  entitydoesnotexistexception   
+        assumption assertnotnull statuscodes dblevel_null_input  newattributes   
+ 
+        newattributes sanitizeforsaving newattributes isvalid invalidparametersexception newattributes getinvalidityinfo     
+          
+ 
+        feedbacksession fs   getentity newattributes fs entitydoesnotexistexception  
+                    error_update_non_existent   newattributes tostring     
+          
+        fs setinstructions newattributes getinstructions     
+        fs setstarttime newattributes getstarttime     
+        fs setendtime newattributes getendtime     
+        fs setsessionvisiblefromtime newattributes getsessionvisiblefromtime     
+        fs setresultsvisiblefromtime newattributes getresultsvisiblefromtime     
+        fs settimezone newattributes gettimezone     
+        fs setgraceperiod newattributes getgraceperiod     
+        fs setfeedbacksessiontype newattributes getfeedbacksessiontype     
+        fs setsentopenemail newattributes issentopenemail     
+        fs setsentclosingemail newattributes issentclosingemail     
+        fs setsentclosedemail newattributes issentclosedemail     
+        fs setsentpublishedemail newattributes issentpublishedemail     
+        fs setisopeningemailenabled newattributes isopeningemailenabled     
+        fs setsendclosingemail newattributes isclosingemailenabled     
+        fs setsendpublishedemail newattributes ispublishedemailenabled     
+ 
+        saveentity fs  newattributes addinstructorrespondent email  feedbacksessionattributes feedbacksession invalidparametersexception  entitydoesnotexistexception   
+        list emails arraylist      
+        emails add email   
+        addinstructorrespondents emails  feedbacksession addinstructorrespondents list emails  feedbacksessionattributes feedbacksession invalidparametersexception  entitydoesnotexistexception   
+        assumption assertnotnull statuscodes dblevel_null_input  emails   
+        assumption assertnotnull statuscodes dblevel_null_input  feedbacksession   
+ 
+        feedbacksession sanitizeforsaving feedbacksession isvalid invalidparametersexception feedbacksession getinvalidityinfo     
+          
+ 
+        feedbacksession fs   getentity feedbacksession fs entitydoesnotexistexception error_update_non_existent   feedbacksession tostring     
+          
+ 
+        fs getrespondinginstructorlist   addall emails   
+ 
+        saveentity fs  feedbacksession updateinstructorrespondent oldemail newemail  feedbacksessionattributes feedbacksession invalidparametersexception  entitydoesnotexistexception   
+        assumption assertnotnull statuscodes dblevel_null_input  oldemail   
+        assumption assertnotnull statuscodes dblevel_null_input  newemail   
+        assumption assertnotnull statuscodes dblevel_null_input  feedbacksession   
+ 
+        feedbacksession sanitizeforsaving feedbacksession isvalid invalidparametersexception feedbacksession getinvalidityinfo     
+          
+ 
+        feedbacksession fs   getentity feedbacksession fs entitydoesnotexistexception error_update_non_existent   feedbacksession tostring fs getrespondinginstructorlist   contains oldemail     
+            fs getrespondinginstructorlist   remove oldemail   
+            fs getrespondinginstructorlist   add newemail   
+          
+ 
+        saveentity fs  feedbacksession clearinstructorrespondents feedbacksessionattributes feedbacksession invalidparametersexception  entitydoesnotexistexception   
+        assumption assertnotnull statuscodes dblevel_null_input  feedbacksession   
+ 
+        feedbacksession sanitizeforsaving feedbacksession isvalid invalidparametersexception feedbacksession getinvalidityinfo     
+          
+ 
+        feedbacksession fs   getentity feedbacksession fs entitydoesnotexistexception error_update_non_existent   feedbacksession tostring     
+          
+ 
+        fs getrespondinginstructorlist   clear    
+ 
+        saveentity fs  feedbacksession addstudentrespondent email  feedbacksessionattributes feedbacksession entitydoesnotexistexception  invalidparametersexception   
+        list emails arraylist      
+        emails add email   
+        addstudentrespondents emails  feedbacksession deleteinstructorrespondent email  feedbacksessionattributes feedbacksession invalidparametersexception  entitydoesnotexistexception   
+        assumption assertnotnull statuscodes dblevel_null_input  email   
+        assumption assertnotnull statuscodes dblevel_null_input  feedbacksession   
+ 
+        feedbacksession sanitizeforsaving feedbacksession isvalid invalidparametersexception feedbacksession getinvalidityinfo     
+          
+ 
+        feedbacksession fs   getentity feedbacksession fs entitydoesnotexistexception error_update_non_existent   feedbacksession tostring     
+          
+ 
+        fs getrespondinginstructorlist   remove email   
+ 
+        saveentity fs  feedbacksession addstudentrespondents list emails  feedbacksessionattributes feedbacksession invalidparametersexception  entitydoesnotexistexception   
+        assumption assertnotnull statuscodes dblevel_null_input  emails   
+        assumption assertnotnull statuscodes dblevel_null_input  feedbacksession   
+ 
+        feedbacksession sanitizeforsaving feedbacksession isvalid invalidparametersexception feedbacksession getinvalidityinfo     
+          
+ 
+        feedbacksession fs   getentity feedbacksession fs entitydoesnotexistexception error_update_non_existent   feedbacksession tostring     
+          
+ 
+        fs getrespondingstudentlist   addall emails   
+ 
+        saveentity fs  feedbacksession updatestudentrespondent oldemail newemail  feedbacksessionattributes feedbacksession invalidparametersexception  entitydoesnotexistexception   
+        assumption assertnotnull statuscodes dblevel_null_input  oldemail   
+        assumption assertnotnull statuscodes dblevel_null_input  newemail   
+        assumption assertnotnull statuscodes dblevel_null_input  feedbacksession   
+ 
+        feedbacksession sanitizeforsaving feedbacksession isvalid invalidparametersexception feedbacksession getinvalidityinfo     
+          
+ 
+        feedbacksession fs   getentity feedbacksession fs entitydoesnotexistexception error_update_non_existent   feedbacksession tostring fs getrespondingstudentlist   contains oldemail     
+            fs getrespondingstudentlist   remove oldemail   
+            fs getrespondingstudentlist   add newemail   
+          
+ 
+        saveentity fs  feedbacksession clearstudentrespondents feedbacksessionattributes feedbacksession invalidparametersexception  entitydoesnotexistexception   
+        assumption assertnotnull statuscodes dblevel_null_input  feedbacksession   
+ 
+        feedbacksession sanitizeforsaving feedbacksession isvalid invalidparametersexception feedbacksession getinvalidityinfo     
+          
+ 
+        feedbacksession fs   getentity feedbacksession fs entitydoesnotexistexception error_update_non_existent   feedbacksession tostring     
+          
+ 
+        fs getrespondingstudentlist   clear    
+ 
+        saveentity fs  feedbacksession deletestudentrespondent email  feedbacksessionattributes feedbacksession entitydoesnotexistexception  invalidparametersexception   
+        assumption assertnotnull statuscodes dblevel_null_input  email   
+        assumption assertnotnull statuscodes dblevel_null_input  feedbacksession   
+ 
+        feedbacksession sanitizeforsaving feedbacksession isvalid invalidparametersexception feedbacksession getinvalidityinfo     
+          
+ 
+        feedbacksession fs   getentity feedbacksession fs entitydoesnotexistexception  
+                    error_update_non_existent   feedbacksession tostring     
+          
+ 
+        fs getrespondingstudentlist   remove email   
+ 
+        saveentity fs  feedbacksession deletefeedbacksessionsforcourse courseid    
+        assumption assertnotnull statuscodes dblevel_null_input  courseid   
+ 
+        deletefeedbacksessionsforcourses arrays aslist courseid deletefeedbacksessionsforcourses list courseids    
+        assumption assertnotnull statuscodes dblevel_null_input  courseids   
+ 
+        ofy   delete   keys load   filter  courseid in   courseids  keys    now list feedbacksession  getallfeedbacksessionentities load   list list feedbacksession  getfeedbacksessionentitiesforcourse courseid load   filter  courseid     courseid  list list feedbacksession  getfeedbacksessionentitiespossiblyneedingopenemail load   
+                 filter  starttime     timehelper getdateoffsettocurrenttime -2   
+                 filter  sentopenemail list list feedbacksession  getfeedbacksessionentitiespossiblyneedingclosingemail load   
+                 filter  endtime     timehelper getdateoffsettocurrenttime -2   
+                 filter  sentclosingemail filter  isclosingemailenabled list list feedbacksession  getfeedbacksessionentitiespossiblyneedingclosedemail load   
+                 filter  endtime     timehelper getdateoffsettocurrenttime -2   
+                 filter  sentclosedemail filter  isclosingemailenabled list list feedbacksession  getfeedbacksessionentitiespossiblyneedingpublishedemail load   
+                 filter  sentpublishedemail filter  ispublishedemailenabled filter  feedbacksessiontype      feedbacksessiontype list feedbacksession getfeedbacksessionentity feedbacksessionname courseid load   
+                 filter  feedbacksessionname     feedbacksessionname  
+                 filter  courseid     courseid  
+                 first   now    
+      
+ 
+     override loadtype feedbacksession  load ofy   load   type feedbacksession override feedbacksession getentity feedbacksessionattributes attributes getfeedbacksessionentity attributes getfeedbacksessionname    attributes getcourseid     
+      
+ 
+     override querykeys feedbacksession  getentityquerykeys feedbacksessionattributes attributes load   
+                 filter  feedbacksessionname     attributes getfeedbacksessionname    
+                 filter  courseid     attributes getcourseid    keys    
+      
+ 
+     override feedbacksessionattributes makeattributes feedbacksession entity    
+        assumption assertnotnull statuscodes dblevel_null_input  entity feedbacksessionattributes entity   
+      
+ teammates storage api FeedbackSessionsDb

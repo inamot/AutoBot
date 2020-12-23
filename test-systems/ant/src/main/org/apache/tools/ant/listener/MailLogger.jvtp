@@ -1,0 +1,145 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+    buffers log messages defaultlogger sends e-mail results following project properties used send mail  
+     ul  
+       li  maillogger mailhost  default  localhost  - mail server use  li  
+       li  maillogger port  default  25  - default port smtp   li  
+       li  maillogger required  - mail address  li  
+       li  maillogger failure notify  default  true  - send build failure 
+      e-mails?  li  
+       li  maillogger success notify  default  true  - send build success 
+      e-mails?  li  
+       li  maillogger failure required failure mail sent  - address send failure messages li  
+       li  maillogger success required success mail sent  - address send success messages li  
+       li  maillogger failure subject  default   build failure   - subject failed build  li  
+       li  maillogger success subject  default   build success   - subject successful build  li  
+      ul properties set using standard ant property setting mechanisms 
+      lt property gt   command-line -d  etc   ant properties overridden specifying filename properties file maillogger properties file property any properties defined file override ant properties  
+   
+    
+    buffer message constructed prior sending    
+    
+        sends e-mail log results  
+       
+        param event build finished event 
+        
+   overlay specified properties file any overrides project 
+   settings 
+   ignore properties file not required 
+   ignore 
+    
+        receives buffers log messages  
+       
+        param message message being logger 
+        
+    
+        gets value property  
+       
+        param  properties     properties obtain value param  name           suffix property name   maillogger prepended internally  
+        param  defaultvalue   value returned not present properties  
+            set null make required  
+        return value property default value  
+        exception  exception  thrown default value specified property not present properties  
+        
+    
+        send mail 
+        param  mailhost         mail server 
+        param  port             mail server port number 
+        param from address 
+        param  replytolist      comma-separated replyto list 
+        param  tolist           comma-separated recipient list 
+        param  subject          mail subject 
+        param  message          mail body 
+        exception  ioexception  thrown sending message fails 
+        
+    
+        send mail   mimemail  
+        param  project          current ant project 
+        param  host             mail server 
+        param  port             mail server port number 
+        param  user             user name smtp auth 
+        param  password         password smtp auth 
+        param  ssl true send message over ssl 
+        param from address 
+        param  replytostring    comma-separated replyto list 
+        param  tostring         comma-separated recipient list 
+        param  subject          mail subject 
+        param  message          mail body 
+        
+   convert replyto string vector emailaddressesorg apache tools ant listener MailLogger org apache tools ant listener maillogger defaultlogger buildfinished buildevent event buildfinished event   
+ 
+        project project   event getproject    
+        hashtable properties   project getproperties    
+ 
+          
+          
+        properties fileproperties properties filename properties get  maillogger properties file filename inputstream is is fileinputstream filename   
+                fileproperties load is ioexception ioe is is close ioexception e enumeration e   fileproperties keys    e hasmoreelements key e nextelement value   fileproperties getproperty key   
+            properties put key  project replaceproperties value success    event getexception prefix   success ?  success     failure notify   project toboolean getvalue properties  
+                    prefix     notify    on notify mailhost   getvalue properties   mailhost    localhost port   integer parseint getvalue properties   port valueof mailmessage default_port user   getvalue properties   user password   getvalue properties   password ssl   project toboolean getvalue properties  
+                      ssl    off from   getvalue properties   from replytolist   getvalue properties   replyto tolist   getvalue properties  prefix     to subject   getvalue properties  prefix     subject   
+                     success  ?  build success     build failure user equals        password equals         ssl    
+                sendmail mailhost  port   from  replytolist  tolist  
+                         subject  buffer substring 0 sendmimemail event getproject    mailhost  port  user  
+                             password  ssl  from  replytolist  tolist  
+                             subject  buffer substring 0 exception e    
+            system out println  maillogger failed to send e-mail     
+            e printstacktrace system err log message    
+        buffer append message  append stringutils line_sep getvalue hashtable properties name defaultvalue exception propertyname    maillogger     name value properties get propertyname value value   defaultvalue value exception  missing required parameter      propertyname value sendmail mailhost port from replytolist tolist subject message ioexception   
+        mailmessage mailmessage mailmessage mailhost  port   
+        mailmessage setheader  date   dateutils getdateforheader     
+ 
+        mailmessage from from replytolist equals        
+            stringtokenizer t stringtokenizer replytolist t hasmoretokens      
+                mailmessage replyto t nexttoken     
+              
+          
+        stringtokenizer t stringtokenizer tolist t hasmoretokens      
+            mailmessage to t nexttoken     
+          
+ 
+        mailmessage setsubject subject   
+ 
+        printstream ps   mailmessage getprintstream    
+        ps println message   
+ 
+        mailmessage sendandclose sendmimemail project project host port user password ssl from replytostring tostring subject message     
+          
+        mailer mailer mailer    mailer  classpathutils newinstance  
+                     org apache tools ant taskdefs email mimemailer   
+                    maillogger getclassloader    mailer buildexception e    
+            throwable t   e getcause e   e getcause    
+            log  failed to initialise mime mail      t getmessage vector replytolist   vectorizeemailaddresses replytostring   
+        mailer sethost host   
+        mailer setport port   
+        mailer setuser user   
+        mailer setpassword password   
+        mailer setssl ssl   
+        message mymessage message message   
+        mymessage setproject project   
+        mailer setmessage mymessage   
+        mailer setfrom emailaddress from    
+        mailer setreplytolist replytolist   
+        vector tolist   vectorizeemailaddresses tostring   
+        mailer settolist tolist   
+        mailer setcclist vector     
+        mailer setbcclist vector     
+        mailer setfiles vector     
+        mailer setsubject subject   
+        mailer send vector vectorizeemailaddresses liststring    
+        vector emaillist vector    
+        stringtokenizer tokens stringtokenizer liststring tokens hasmoretokens      
+            emaillist addelement emailaddress tokens nexttoken emaillist  
+      
+  
+ 
+org apache tools ant listener MailLogger

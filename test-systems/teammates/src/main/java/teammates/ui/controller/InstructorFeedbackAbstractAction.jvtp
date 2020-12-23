@@ -1,0 +1,65 @@
+ 
+    
+       creates feedback session attributes object request parameters  
+        param iscreatingnewsession true creating new session  false editing existing session  
+        return feedback session attributes object  
+        
+   todo creating new session  assert parameters not null  
+   not necessary editing existing session null values not affect data integrity  
+   handle session visible results visible avoid having results visible date session private  session not visible  
+   overwrite private 
+    
+       gets map courseid key instructorattributes value  
+       teammates ui controller InstructorFeedbackAbstractAction teammates ui controller instructorfeedbackabstractaction action feedbacksessionattributes extractfeedbacksessiondata iscreatingnewsession    
+          
+          
+ 
+        feedbacksessionattributes attributes feedbacksessionattributes    
+        attributes setcourseid getrequestparamvalue paramsnames course_id title   getrequestparamvalue paramsnames feedback_session_name iscreatingnewsession    
+            title   sanitizationhelper sanitizetitle title   
+          
+        attributes setfeedbacksessionname title   
+        attributes setcreatoremail getrequestparamvalue paramsnames feedback_session_creator    
+ 
+        attributes setstarttime timehelper combinedatetime  
+                getrequestparamvalue paramsnames feedback_session_startdate   
+                getrequestparamvalue paramsnames feedback_session_starttime     
+        attributes setendtime timehelper combinedatetime  
+                getrequestparamvalue paramsnames feedback_session_enddate   
+                getrequestparamvalue paramsnames feedback_session_endtime paramtimezone   getrequestparamvalue paramsnames feedback_session_timezone paramtimezone attributes settimezone parsedouble paramtimezone numberformatexception nfe    
+                log warning  failed to parse time zone parameter      paramtimezone paramgraceperiod   getrequestparamvalue paramsnames feedback_session_graceperiod attributes setgraceperiod integer parseint paramgraceperiod numberformatexception nfe    
+            log warning  failed to parse graced period parameter      paramgraceperiod iscreatingnewsession    
+            attributes setcreatedtime date     
+            attributes setsentopenemail attributes setsentpublishedemail attributes setfeedbacksessiontype feedbacksessiontype standard   
+        attributes setinstructions text getrequestparamvalue paramsnames feedback_session_instructions type   getrequestparamvalue paramsnames feedback_session_resultsvisiblebutton type instructor_feedback_results_visible_time_custom  
+            attributes setresultsvisiblefromtime timehelper combinedatetime  
+                        getrequestparamvalue paramsnames feedback_session_publishdate   
+                        getrequestparamvalue paramsnames feedback_session_publishtime instructor_feedback_results_visible_time_atvisible  
+            attributes setresultsvisiblefromtime time_represents_follow_visible instructor_feedback_results_visible_time_later  
+            attributes setresultsvisiblefromtime time_represents_later instructor_feedback_results_visible_time_never  
+            attributes setresultsvisiblefromtime time_represents_never log severe  invalid sessionvisiblefrom setting     attributes getidentificationstring type   getrequestparamvalue paramsnames feedback_session_sessionvisiblebutton type instructor_feedback_session_visible_time_custom  
+            attributes setsessionvisiblefromtime timehelper combinedatetime  
+                        getrequestparamvalue paramsnames feedback_session_visibledate   
+                        getrequestparamvalue paramsnames feedback_session_visibletime instructor_feedback_session_visible_time_atopen  
+            attributes setsessionvisiblefromtime time_represents_follow_opening instructor_feedback_session_visible_time_never  
+            attributes setsessionvisiblefromtime time_represents_never   
+              
+            attributes setresultsvisiblefromtime time_represents_never   
+            attributes setfeedbacksessiontype feedbacksessiontype iscreatingnewsession    
+                attributes setendtime log severe  invalid sessionvisiblefrom setting     attributes getidentificationstring sendreminderemailsarray   getrequestparamvalues paramsnames feedback_session_sendreminderemail   
+        list sendreminderemailslist   sendreminderemailsarray arraylist arrays aslist sendreminderemailsarray   
+        attributes setopeningemailenabled sendreminderemailslist contains emailtype feedback_opening tostring      
+        attributes setclosingemailenabled sendreminderemailslist contains emailtype feedback_closing tostring      
+        attributes setpublishedemailenabled sendreminderemailslist contains emailtype feedback_published tostring attributes list feedbacksessionattributes  loadfeedbacksessionslist  
+            list instructorattributes  instructorlist logic getfeedbacksessionslistforinstructor instructorlist list courseattributes  loadcourseslist list instructorattributes  instructorlist    
+ 
+        list courseattributes  courses   logic getcoursesforinstructor instructorlist   
+ 
+        collections sort courses comparator courseattributes      
+             override compare courseattributes c1  courseattributes c2 c1 getid   compareto c2 getid courses map instructorattributes  loadcourseinstructormap omitarchived    
+        hashmap instructorattributes  courseinstructormap hashmap      
+        list instructorattributes  instructors   logic getinstructorsforgoogleid account googleid  omitarchived instructorattributes instructor   instructors    
+            courseinstructormap put instructor courseid  instructor courseinstructormap  
+      
+ 
+ teammates ui controller InstructorFeedbackAbstractAction

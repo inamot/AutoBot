@@ -1,0 +1,104 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   load file's contents ant properties ant 1 5 
+    ant task category  utility  
+    
+    
+       source resource  
+        
+    
+       holds filterchains 
+        
+    
+       encoding use input  defaults platform's default encoding  
+        
+    
+       set file load  
+       
+        param srcfile new srcfile value 
+        
+    
+       set resource name property file load  
+       
+        param resource resource classpath 
+        
+    
+       encoding use input  defaults platform's default 
+       encoding   p list possible values see href  http   java sun com j2se 1 5 0 docs guide intl encoding doc html   
+       http   java sun com j2se 1 5 0 docs guide intl encoding doc html p  
+       
+        param encoding new encoding value 
+        
+    
+       set classpath use looking up resource  
+        param classpath add any existing classpath 
+        
+    
+       add classpath use looking up resource  
+        return classpath configured 
+        
+    
+       set classpath use looking up resource  
+       given reference lt path gt  defined elsewhere 
+        param r reference value classpath used code loadproperties  code   
+        return classpath 
+        
+    
+       load ant properties source file resource 
+       
+        exception buildexception something goes wrong build 
+        
+  validation 
+   dreaded backwards compatibility 
+    
+       adds filterchain  
+        param filter filter add 
+        
+    
+       set source resource  
+        param resource load single element resource collection ant 1 7 
+       org apache tools ant taskdefs LoadProperties org apache tools ant taskdefs loadproperties task setsrcfile file srcfile    
+        addconfigured fileresource srcfile setresource resource    
+        assertsrcisjavaresource    
+          javaresource  src  setname resource setencoding encoding encoding   encoding setclasspath path classpath    
+        assertsrcisjavaresource    
+          javaresource  src  setclasspath classpath path createclasspath     
+        assertsrcisjavaresource javaresource  src  createclasspath setclasspathref reference r    
+        assertsrcisjavaresource    
+          javaresource  src  setclasspathref r path getclasspath     
+        assertsrcisjavaresource javaresource  src  getclasspath execute buildexception src buildexception  a source resource is required src isexists src javaresource    
+                  
+                log  unable to find resource     src  project msg_warn buildexception  source resource does not exist      src   
+          
+ 
+        bufferedinputstream bis reader instream bytearrayinputstream tis bis bufferedinputstream src getinputstream encoding instream inputstreamreader bis instream inputstreamreader bis  encoding   
+              
+ 
+            chainreaderhelper crh chainreaderhelper    
+            crh setprimaryreader instream   
+            crh setfilterchains filterchains   
+            crh setproject getproject     
+            instream   crh getassembledreader text   crh readfully instream text text endswith  \n      
+                    text   text    \n encoding tis bytearrayinputstream text getbytes tis bytearrayinputstream text getbytes encoding properties props properties    
+                props load tis   
+ 
+                property propertytask property    
+                propertytask bindtoowner propertytask addproperties props ioexception ioe message    unable to load file      ioe tostring buildexception message  ioe  getlocation fileutils close bis   
+            fileutils close tis addfilterchain filterchain filter    
+        filterchains addelement filter addconfigured resourcecollection a src buildexception  only a single source is supported a size      1 buildexception  only single argument resource collections  
+                                         are supported    
+          
+        src    resource  a iterator   next assertsrcisjavaresource src src javaresource    
+            src setproject getproject src javaresource buildexception  expected a java resource as source    
+          
+      
+ org apache tools ant taskdefs LoadProperties

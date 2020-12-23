@@ -1,0 +1,59 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   class used generate xml changelog  
+   
+    
+    output format dates written xml file    
+    output format times written xml file    
+    stateless helper writing xml document    
+    
+       print out specified entries  
+       
+        param output writer send output  
+        param entries entries written  
+        
+    
+       print out individual entry changelog  
+       
+        param doc document used create elements  
+        param entry entry print 
+        param output writer send output  
+       org apache tools ant taskdefs cvslib ChangeLogWriter org apache tools ant taskdefs cvslib changelogwriter simpledateformat output_date simpledateformat  yyyy-mm-dd simpledateformat output_time simpledateformat  hh mm timezone utc   timezone gettimezone  utc    
+        output_date settimezone utc   
+        output_time settimezone utc printchangelog printwriter output cvsentry   entries output println   ?xml version \ 1 0\  encoding \ utf-8\ ?     
+            document doc   domutils newdocument    
+            element root   doc createelement  changelog    
+            dom_writer openelement root  output  0   \t    
+            output println i   0  i   entries length  i cvsentry entry   entries i   
+ 
+                printentry doc  output  entry   
+              
+            dom_writer closeelement root  output  0   \t output flush    
+            output close ioexception e org apache tools ant buildexception e printentry document doc printwriter output cvsentry entry ioexception   
+        element ent   doc createelement  entry    
+        domutils appendtextelement ent   date   
+                                   output_date format entry getdate      
+        domutils appendtextelement ent   time   
+                                   output_time format entry getdate      
+        domutils appendcdataelement ent   author   entry getauthor enumeration enumeration   entry getfiles   elements enumeration hasmoreelements rcsfile file    rcsfile  enumeration nextelement    
+ 
+            element f   domutils createchildelement ent   file    
+            domutils appendcdataelement f   name   file getname     
+            domutils appendtextelement f   revision   file getrevision previousrevision   file getpreviousrevision previousrevision domutils appendtextelement f   prevrevision   
+                                           previousrevision   
+              
+          
+        domutils appendcdataelement ent   msg   entry getcomment     
+        dom_writer write ent  output  1   \t    
+      
+  
+org apache tools ant taskdefs cvslib ChangeLogWriter

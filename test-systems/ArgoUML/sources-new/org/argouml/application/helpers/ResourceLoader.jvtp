@@ -1,0 +1,81 @@
+ 
+   $id$ 
+   copyright  c  1996-2006 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications class manages resource locations needed within application  
+   already loaded resources cached resources searched different locations  
+    p  
+   derived org tigris gef util resourceloader formatting variable naming changed conform argouml coding standard  
+    p use local copy reduce coupling gef gef isn't trying uplevel accesses application resources won't work environments enforce strict partitioning between projects eg eclipse   
+    
+    author original author  thorsten sturm 
+    
+   note package scope force callers use resourceloaderwrapper method tries find imageicon given name known 
+       locations file extension used image file any known extensions  
+        
+        param resource 
+                  name image looked param desc description imageicon  
+        param loader class loader used loading resource  
+        return imageicon given name  null image found  
+        
+    
+       search given resource one registered extensions one registered locations url first found returned  
+        
+        param resource 
+                  base name resource search param loader 
+                  class loader use 
+        return url representing first location resource found null not found any registered locations  
+        
+   system out println   resourceloader  try loading     imagename   
+    
+       adds location  path list known locations  locations searched order added best performance add most likely locations first  
+        
+        param location 
+                  string representation new location  
+        
+    
+       add extension list known extensions  extensions searched order added best performance add most likely 
+       extensions first  
+        
+        param extension 
+                  string representation new extension method removes location list known locations  
+        
+        param location 
+                  string representation location removed method removes extension list known extensions  
+       
+        param extension string representation extension removed  
+        
+   
+       strip characters out var s  var not part valid java identifier  return either given string characters valid new string invalid characters stripped out allows automatic conversion strings containing punctuation spaces resource name looked up  
+        
+   skip pos know s not valid char above 
+   end class resourceloader   org argouml application helpers ResourceLoader org argouml application helpers resourceloader hashmap icon  resourcecache hashmap icon imageicon lookupiconresource resource lookupiconresource resource  resource imageicon lookupiconresource resource desc lookupiconresource resource  desc imageicon lookupiconresource resource  
+            classloader loader lookupiconresource resource  resource  loader imageicon lookupiconresource resource desc  
+            classloader loader    
+        resource   tojavaidentifier resource isincache resource imageicon  resourcecache get resource   
+          
+     
+        imageicon res java net url imgurl   lookupiconurl resource  loader imgurl res imageicon imgurl  desc resourcecache    
+                resourcecache put resource  res res java net url lookupiconurl resource   
+            classloader loader    
+        java net url imgurl iterator extensions   resourceextensions iterator     
+                extensions hasnext tmpext extensions next iterator locations   resourcelocations iterator     
+                    locations hasnext imagename   
+                        locations next           resource         tmpext loader imgurl   resourceloader getresource imagename imgurl   loader getresource imagename imgurl imgurl imgurl addresourcelocation location containslocation location     
+            resourcelocations add location addresourceextension extension containsextension extension     
+            resourceextensions add extension removeresourcelocation location iterator iter   resourcelocations iterator    iter hasnext loc iter next loc equals location     
+                resourcelocations remove loc removeresourceextension extension iterator iter   resourceextensions iterator    iter hasnext ext iter next ext equals extension     
+                resourceextensions remove ext containsextension extension resourceextensions contains extension containslocation location resourcelocations contains location isincache resource resourcecache containskey resource tojavaidentifier s len   s length pos   0 i   0  i   len  i    pos character isjavaidentifierpart s charat i pos    len s  
+          
+ 
+        stringbuffer buf stringbuffer len   
+        buf append s substring 0  pos i   pos   1  i   len  i c   s charat i character isjavaidentifierpart c     
+                buf append c buf tostring    
+      
+    
+org argouml application helpers ResourceLoader

@@ -1,0 +1,128 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications helper class generates codepiece based code needs some work  see issue 
+   http   argouml tigris org issues show_bug cgi?id 435 
+   
+   javare - code generation reverse engineering uml java  
+   
+    author marcus andersson andersson users sourceforge net 
+    
+    
+       generate code class  
+       
+        param mclass class generate code param reader reader read param writer writer write throws ioexception problem reading writing  
+        
+  mclass   mclass  
+   features 
+   moperation    feature  mclass  
+   mattribute    feature  mclass  
+   inner classes 
+    
+       generate code interface  
+       
+        param minterface interface generate code param reader reader read param writer writer write throws ioexception problem reading writing  
+        
+   features 
+   moperation    feature  
+   mattribute    feature  
+   inner classes 
+    
+       generate code operation  
+       
+        param moperation operation generate code param mclassifier classifier operation belongs param reader reader read param writer writer write throws ioexception problem reading writing  
+        
+    
+       generate code attribute  
+       
+        param mattribute attribute generate code param mclassifier classifier attribute belongs param reader reader read param writer writer write throws ioexception problem reading writing  
+       org argouml language generator CodeGenerator org argouml language java generator codegenerator generateclass object  
+				     bufferedreader reader  
+				     bufferedwriter writer ioexception   
+ 
+	classcodepiece ccp classcodepiece model getfacade   getname mclass    
+	stack parsestate  parsestatestack stack parsestate     
+	parsestatestack push parsestate model getfacade   getnamespace mclass     
+	ccp write reader  writer  parsestatestack   
+ 
+	writer write   \n    
+ 
+	  
+	collection features   model getfacade   getfeatures mclass object feature   features model getfacade   isaoperation feature     
+		generateoperation   
+				  reader  writer model getfacade   isaattribute feature     
+		generateattribute   
+				  reader  writer   
+	      
+	  
+ 
+	  
+	collection elements   model getfacade   getownedelements mclass object element   elements model getfacade   isaclass element     
+		generateclass element  reader  writer model getfacade   isainterface element     
+		generateinterface element  reader  writer   
+	      
+	  
+ 
+	writer write   \n generateinterface object minterface  
+					 bufferedreader reader  
+					 bufferedwriter writer ioexception   
+	interfacecodepiece icp interfacecodepiece model getfacade   getname minterface    
+	stack parsestate  parsestatestack stack parsestate     
+	parsestatestack push parsestate model getfacade   getnamespace minterface     
+	icp write reader  writer  parsestatestack   
+ 
+	writer write   \n    
+ 
+	  
+	collection features   model getfacade   getfeatures minterface object feature   features model getfacade   isaoperation feature     
+		generateoperation   
+				  minterface  reader  writer model getfacade   isaattribute feature     
+		generateattribute   
+				  minterface  reader  writer   
+	      
+	  
+ 
+	  
+	collection elements   model getfacade   getownedelements minterface object element   elements model getfacade   isaclass element     
+		generateclass element  reader  writer model getfacade   isainterface element     
+		generateinterface element  reader  writer   
+	      
+	  
+ 
+	writer write   \n generateoperation object moperation  
+					 object mclassifier  
+					 bufferedreader reader  
+					 bufferedwriter writer ioexception   
+ 
+	operationcodepiece ocp operationcodepiece simplecodepiece stringbuffer    
+						       0  0  0 simplecodepiece stringbuffer    
+						       0  0  0   
+				   model getfacade   getname moperation    
+	stack parsestate  parsestatestack stack parsestate     
+	parsestatestack push parsestate mclassifier    
+	ocp write reader  writer  parsestatestack model getfacade   isabstract moperation  
+	       model getfacade   isainterface mclassifier     
+ 
+	    writer write   \n writer write    \n generateattribute object mattribute  
+					 object mclassifier  
+					 bufferedreader reader  
+					 bufferedwriter writer ioexception   
+ 
+	list codepiece  names arraylist codepiece     
+	stringbuffer sbname stringbuffer model getfacade   getname mattribute    
+	names add simplecodepiece sbname  0  0  0    
+	attributecodepiece acp attributecodepiece simplecodepiece stringbuffer    
+						       0  0  0   
+				   names   
+	stack parsestate  parsestatestack stack parsestate     
+	parsestatestack push parsestate mclassifier    
+	acp write reader  writer  parsestatestack   
+	writer write   \n    
+      
+ org argouml language generator CodeGenerator

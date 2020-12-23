@@ -1,0 +1,117 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications properties panel link  
+   
+    
+    
+       construct property panel link element  
+        
+    
+       returns namespace selecter component allows user select single item namespace  
+       
+        return component selecting namespace uid  
+        
+   end class proppanellink model combobox show association link  
+   
+    author michiel 
+    
+    
+       constructor umlmodelelementnamespacecomboboxmodel  
+        
+   
+        see org argouml uml ui umlcomboboxmodel2#isvalidelement object simplify implementation list associations 
+       found any classifiers 
+       represented linked instances   p  
+       
+       todo  make foolproof algorithm only allows selecting associations create correct model take account n-ary associations associationclasses algo best goes model subsystem  e g method getallpossibleassociationsforalink    
+       
+        see org argouml uml ui umlcomboboxmodel2#buildmodellist   
+        
+   
+        see org argouml uml ui umlcomboboxmodel2#getselectedmodelelement   
+        
+   
+       see java beans propertychangelistener#propertychange java beans propertychangeevent  
+       
+   
+           rebuild list scratch sure s correct some cases  se issue 3780 list remains same selected item differs  without next step combo not refreshed uid  
+        
+    
+       constructor actionsetmodelelementnamespace  
+        
+   set tooltip string  
+   
+        see java awt event actionlistener#actionperformed java awt event actionevent uid  
+       org argouml uml ui behavior common_behavior PropPanelLink org argouml uml ui behavior common_behavior proppanellink proppanelmodelelement umllinkassociationcomboboxmodel associationcomboboxmodel umllinkassociationcomboboxmodel proppanellink label link   lookupicon  link     
+ 
+        addfield translator localize  label name    
+                getnametextfield     
+        addfield translator localize  label namespace    
+                getnamespaceselector     
+        addfield translator localize  label association    
+                getassociationselector     
+        addseparator    
+ 
+        jlist connectionlist umllinkedlist umllinkconnectionlistmodel     
+        jscrollpane connectionscroll jscrollpane connectionlist   
+        addfield translator localize  label connections    
+                connectionscroll   
+ 
+        addaction actionnavigatenamespace     
+        addaction actionnewstereotype     
+        addaction getdeleteaction jcomponent getassociationselector associationselector associationselector umlsearchablecombobox  
+                    associationcomboboxmodel actionsetlinkassociation umlcomboboxnavigator  
+                translator localize  label association navigate tooltip    
+                associationselector umllinkassociationcomboboxmodel umlcomboboxmodel2 umllinkassociationcomboboxmodel assocation isvalidelement object o model getfacade   isaassociation o buildmodellist     
+        collection linkends  
+        collection associations hashset    
+        object t   gettarget model getfacade   isalink t     
+            linkends   model getfacade   getconnections t   
+            iterator ile   linkends iterator ile hasnext      
+                object instance   model getfacade   getinstance ile next     
+                collection c   model getfacade   getclassifiers instance   
+                iterator ic   c iterator ic hasnext      
+                    object classifier   ic next    
+                    collection ae   
+                        model getfacade   getassociationends classifier   
+                    iterator iae   ae iterator iae hasnext      
+                        object associationend   iae next    
+                        object association   
+                            model getfacade   getassociation associationend   
+                        associations add association   
+                      
+                  
+              
+          
+        setelements associations object getselectedmodelelement model getfacade   isalink gettarget model getfacade   getassociation gettarget override propertychange propertychangeevent evt    
+          
+        object t   gettarget t evt getsource      t 
+                   evt getnewvalue buildmodellist    
+              
+            setselecteditem getselectedmodelelement actionsetlinkassociation undoableaction actionsetlinkassociation translator localize  set putvalue action short_description  translator localize  set     
+      
+ 
+      
+     override actionperformed actionevent e actionperformed e   
+        object source   e getsource    
+        object oldassoc object newassoc object link source umlcombobox2    
+            umlcombobox2 box    umlcombobox2  source  
+            object o   box gettarget model getfacade   isalink o     
+                link   o  
+                oldassoc   model getfacade   getassociation o   
+              
+            object n   box getselecteditem model getfacade   isaassociation n     
+                newassoc   n newassoc    oldassoc    link newassoc model getcorehelper   setassociation link  newassoc   
+          
+      
+ 
+      
+  
+ org argouml uml ui behavior common_behavior PropPanelLink

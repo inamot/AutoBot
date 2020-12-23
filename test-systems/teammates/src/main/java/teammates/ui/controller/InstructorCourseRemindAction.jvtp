@@ -1,0 +1,70 @@
+ 
+    
+   action  remind instructor student register course sending reminder emails sending registration emails students course check instructor 
+   canmodifystudent course level modifystudent privilege only course level setting now 
+   process sending emails setup status shown user admin    
+   create redirection url based type sending email   teammates ui controller InstructorCourseRemindAction teammates ui controller instructorcourseremindaction action   
+ 
+     override actionresult execute entitydoesnotexistexception courseid   getrequestparamvalue paramsnames course_id   
+        assumption assertpostparamnotnull paramsnames course_id  courseid   
+ 
+        courseattributes course   logic getcourse courseid course entitydoesnotexistexception  course with id     courseid     does not exist studentemail   getrequestparamvalue paramsnames student_email instructoremail   getrequestparamvalue paramsnames instructor_email   
+ 
+        instructorattributes instructor   logic getinstructorforgoogleid courseid  account googleid issendingtostudent   studentemail issendingtoinstructor   instructoremail issendingtostudent    
+            gatekeeper verifyaccessible  
+                    instructor  course paramsnames instructor_permission_modify_student issendingtoinstructor    
+            gatekeeper verifyaccessible  
+                    instructor  course paramsnames instructor_permission_modify_instructor gatekeeper verifyaccessible  
+                    instructor  course paramsnames instructor_permission_modify_student   
+          
+ 
+          
+        map joinemaildata  emaildatamap treemap redirecturl issendingtostudent    
+            taskqueuer schedulecourseregistrationinvitetostudent courseid  studentemail studentattributes studentdata   logic getstudentforemail courseid  studentemail studentdata entitydoesnotexistexception  student with email     studentemail     does not exist   
+                                                         in course     courseid         
+              
+            emaildatamap put studentemail joinemaildata studentdata getname    extractstudentregistrationkey studentdata     
+ 
+            statustouser add statusmessage statusmessages course_reminder_sent_to   studentemail  
+                                               statusmessagecolor success    
+            redirecturl actionuris instructor_course_details_page issendingtoinstructor    
+            taskqueuer schedulecourseregistrationinvitetoinstructor loggedinuser googleid  
+                    instructoremail  courseid   
+ 
+            instructorattributes instructordata   logic getinstructorforemail courseid  instructoremail instructordata entitydoesnotexistexception  instructor with email     instructoremail     does not exist   
+                                                         in course     courseid         
+              
+ 
+            emaildatamap put instructoremail joinemaildata instructordata getname    stringhelper encrypt instructordata key     
+ 
+            statustouser add statusmessage statusmessages course_reminder_sent_to   instructoremail  
+                                               statusmessagecolor success    
+            redirecturl actionuris instructor_course_edit_page list studentattributes  studentdatalist   logic getunregisteredstudentsforcourse courseid studentattributes student   studentdatalist    
+                taskqueuer schedulecourseregistrationinvitetostudent course getid    student getemail emaildatamap put student getemail joinemaildata student getname    extractstudentregistrationkey student     
+              
+ 
+            statustouser add statusmessage statusmessages course_reminders_sent  statusmessagecolor success    
+            redirecturl actionuris instructor_course_details_page  
+          
+ 
+        statustoadmin   generatestatustoadmin emaildatamap  courseid   
+ 
+          
+        redirectresult response   createredirectresult redirecturl   
+        response addresponseparam paramsnames course_id  courseid response generatestatustoadmin map joinemaildata  emaildatamap courseid    
+        stringbuilder statustoadmin stringbuilder 200   
+        statustoadmin append  registration key sent to the following users in course  span bold\      
+                      append courseid  
+                      append     span   br     
+ 
+        set entry joinemaildata   entries   emaildatamap entryset entry joinemaildata  entry   entries useremail   entry getkey    
+            joinemaildata joinemaildata   entry getvalue    
+ 
+            statustoadmin append joinemaildata username  
+                          append   span bold\       append useremail  append     span   br    
+                          append joinemaildata regkey  append   br statustoadmin tostring extractstudentregistrationkey studentattributes student joinlink   config getappurl student getregistrationurl    toabsolutestring keyparam paramsnames regkey startindex   joinlink indexof keyparam    keyparam length joinlink substring startindex joinemaildata username regkey  
+ 
+        joinemaildata username regkey username   username regkey   regkey  
+          
+      
+ teammates ui controller InstructorCourseRemindAction

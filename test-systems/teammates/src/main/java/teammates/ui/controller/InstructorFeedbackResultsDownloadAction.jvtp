@@ -1,0 +1,34 @@
+ 
+   not tested test file not large enough reach catch blockteammates ui controller InstructorFeedbackResultsDownloadAction teammates ui controller instructorfeedbackresultsdownloadaction action   
+ 
+     override actionresult execute entitydoesnotexistexception courseid   getrequestparamvalue paramsnames course_id feedbacksessionname   getrequestparamvalue paramsnames feedback_session_name section   getrequestparamvalue paramsnames section_name ismissingresponsesshown   getrequestparamasboolean paramsnames feedback_results_indicate_missing_responses isstatsshown   getrequestparamasboolean paramsnames feedback_results_showstats questionid   getrequestparamvalue paramsnames feedback_question_id questionnumber   getrequestparamvalue paramsnames feedback_question_number   
+ 
+        assumption assertpostparamnotnull paramsnames course_id  courseid   
+        assumption assertpostparamnotnull paramsnames feedback_session_name  feedbacksessionname   
+ 
+        instructorattributes instructor   logic getinstructorforgoogleid courseid  account googleid   
+        feedbacksessionattributes session   logic getfeedbacksession feedbacksessionname  courseid iscreatoronly gatekeeper verifyaccessible instructor  session   iscreatoronly filecontent filename questionname questionnumber questionname    _question    questionnumber section all  equals section     
+                filecontent   logic getfeedbacksessionresultsummaryascsv  
+                        courseid  feedbacksessionname  instructor email  
+                        ismissingresponsesshown  isstatsshown  questionid   
+ 
+                filename   courseid    _    feedbacksessionname   questionname  
+                statustoadmin    summary data feedback session     feedbacksessionname 
+                                  in course     courseid     was downloaded filecontent   logic getfeedbacksessionresultsummaryinsectionascsv  
+                        courseid  feedbacksessionname  instructor email  section  
+                        questionid  ismissingresponsesshown  isstatsshown   
+                filename   courseid    _    feedbacksessionname    _    section   questionname  
+                statustoadmin    summary data feedback session     feedbacksessionname 
+                                  in course     courseid     within     section     was downloaded exceedingrangeexception e    
+              
+            statustouser add statusmessage session has more responses than that can be downloaded in one go    
+                           please download responses questionnumber one question at a time instead    
+                           to download responses a specific question  click on the corresponding question number   
+                                                    section instead     
+                                                 statusmessagecolor danger    
+            iserror redirectresult result   createredirectresult actionuris instructor_feedback_results_page   
+            result addresponseparam paramsnames course_id  courseid   
+            result addresponseparam paramsnames feedback_session_name  feedbacksessionname result createfiledownloadresult filename  filecontent   
+      
+ 
+ teammates ui controller InstructorFeedbackResultsDownloadAction

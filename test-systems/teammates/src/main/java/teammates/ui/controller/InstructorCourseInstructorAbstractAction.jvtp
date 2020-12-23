@@ -1,0 +1,151 @@
+ 
+    
+       updates section session level privileges instructor  
+       
+        param courseid   course instructor being added param instructor instructor added modified within method  
+        
+  check session-specific permissions used 
+    
+       updates course level privileges instructor retrieving request parameters  
+       
+        param instructor instructor edited modified within method  
+        
+    
+       removes session level privileges instructor under given sections  
+       
+        param instructor   instructor added modified within method  
+        param sectionnames list section names removed  
+        
+    
+       gets sections special instructor added  
+       
+        param instructor          instructor added  
+        param sectionnames             list section names course  
+        param issectionspecialmappings mapping names sections boolean values indicating special modified within method  
+        return list section group names associated special sections  
+        
+    
+       gets sections special custom instructor added  
+       prereq added instructor must given custom role  
+       
+        param sectionnames                   list section names course  
+        param issectionspecialmappings       mapping names sections boolean values indicating special modified within method  
+        param specialsectionsinsectiongroups mapping section group names special sections contain modified within method  
+        
+    
+       marks   code sectiontomark special associated mappings  
+       
+        param issectionspecialmappings       mapping names sections boolean values indicating special modified within method  
+        param specialsectionsinsectiongroups mapping section group names special sections contain modified within method  
+        param sectiongroupindex              index section group updated  
+        param sectiontomark                  section marked special  
+        
+   indicate section group covers section mark section special 
+    
+       updates instructor privileges section level retrieving request parameters parameters retrieved based code sectiongroupname   
+       
+        param sectiongroupname              name section group  
+        param specialsectionsinsectiongroup sections marked special under section group  
+        param instructor                    instructor edited modified within method  
+        
+    
+       updates instructor privileges session level retrieving request parameters parameters retrieved based code sectiongroupname code feedbacknames   
+       
+        param sectiongroupname              name section group  
+        param specialsectionsinsectiongroup sections marked special under section group  
+        param feedbacknames                 list feedback names under course  
+        param instructor                    instructor added modified within method  
+       teammates ui controller InstructorCourseInstructorAbstractAction teammates ui controller instructorcourseinstructorabstractaction action updateinstructorwithsectionlevelprivileges courseid  instructorattributes instructor    
+        list sectionnames sectionnames   logic getsectionnamesforcourse courseid entitydoesnotexistexception e hashmap issectionspecialmappings hashmap sectionname   sectionnames    
+            issectionspecialmappings put sectionname list feedbacknames arraylist      
+ 
+        list feedbacksessionattributes  feedbacks   logic getfeedbacksessionsforcourse courseid feedbacksessionattributes feedback   feedbacks    
+            feedbacknames add feedback getfeedbacksessionname     
+          
+        map list sectionnamesmap   getsectionswithspecialprivilegesfromparameters  
+                                                                instructor  sectionnames  
+                                                                issectionspecialmappings entry list entry   sectionnamesmap entryset sectiongroupname   entry getkey    
+            list specialsectionsinsectiongroup   entry getvalue    
+ 
+            updateinstructorprivilegesforsectioninsectionlevel sectiongroupname  
+                    specialsectionsinsectiongroup  instructor setsessionsstr   getrequestparamvalue  is    sectiongroupname    sessionsset issessionsforsectiongroupspecial parseboolean setsessionsstr issessionsforsectiongroupspecial    
+                updateinstructorprivilegesforsectioninsessionlevel sectiongroupname  
+                        specialsectionsinsectiongroup  feedbacknames  instructor removesessionlevelprivileges instructor  specialsectionsinsectiongroup entry entry   issectionspecialmappings entryset sectionnametobechecked   entry getkey issectionspecial   entry getvalue   booleanvalue issectionspecial    
+                instructor privileges removesectionlevelprivileges sectionnametobechecked updateinstructorcourselevelprivileges instructorattributes instructor ismodifycoursechecked   
+                getrequestparamvalue paramsnames instructor_permission_modify_course ismodifyinstructorchecked   
+                getrequestparamvalue paramsnames instructor_permission_modify_instructor ismodifysessionchecked   
+                getrequestparamvalue paramsnames instructor_permission_modify_session ismodifystudentchecked   
+                getrequestparamvalue paramsnames instructor_permission_modify_student isviewstudentinsectionschecked   
+                getrequestparamvalue paramsnames instructor_permission_view_student_in_sections isviewsessioninsectionschecked   
+                getrequestparamvalue paramsnames instructor_permission_view_session_in_sections issubmitsessioninsectionschecked   
+                getrequestparamvalue paramsnames instructor_permission_submit_session_in_sections ismodifysessioninsectionschecked   
+                getrequestparamvalue paramsnames instructor_permission_modify_session_comment_in_sections instructor privileges updateprivilege paramsnames instructor_permission_modify_course  
+                                              ismodifycoursechecked   
+        instructor privileges updateprivilege paramsnames instructor_permission_modify_instructor  
+                                              ismodifyinstructorchecked   
+        instructor privileges updateprivilege paramsnames instructor_permission_modify_session  
+                                              ismodifysessionchecked   
+        instructor privileges updateprivilege paramsnames instructor_permission_modify_student  
+                                              ismodifystudentchecked   
+ 
+        instructor privileges updateprivilege paramsnames instructor_permission_view_student_in_sections  
+                                              isviewstudentinsectionschecked   
+ 
+        instructor privileges updateprivilege paramsnames instructor_permission_view_session_in_sections  
+                                              isviewsessioninsectionschecked   
+        instructor privileges updateprivilege paramsnames instructor_permission_submit_session_in_sections  
+                                              issubmitsessioninsectionschecked   
+        instructor privileges updateprivilege paramsnames instructor_permission_modify_session_comment_in_sections  
+                                              ismodifysessioninsectionschecked removesessionlevelprivileges instructorattributes instructor  list sectionnames sectionname   sectionnames    
+            instructor privileges removesessionsprivilegesforsection sectionname map list getsectionswithspecialprivilegesfromparameters  
+            instructorattributes instructor  list sectionnames  
+            map issectionspecialmappings    
+        hashmap list specialsectionsinsectiongroups hashmap instructor role equals instructorpermissionrolenames instructor_permission_role_custom     
+            getsectionswithspecialprivilegesforcustominstructor sectionnames  issectionspecialmappings  
+                                                                specialsectionsinsectiongroups specialsectionsinsectiongroups getsectionswithspecialprivilegesforcustominstructor list sectionnames  
+            map issectionspecialmappings  
+            map list specialsectionsinsectiongroups i   0  i   sectionnames size    i sectiongroupissetstr   
+                    getrequestparamvalue  is paramsnames instructor_section_group   i    set issectiongroupspecial parseboolean sectiongroupissetstr j   0  j   sectionnames size    j sectionnamefromparam   getrequestparamvalue paramsnames instructor_section_group   i paramsnames instructor_section   j issectionparamvalid   sectionnamefromparam issectionspecialmappings containskey sectionnamefromparam issectiongroupspecial    issectionparamvalid    
+                    marksectionasspecial issectionspecialmappings  specialsectionsinsectiongroups  
+                                         i  sectionnamefromparam marksectionasspecial map issectionspecialmappings  
+            map list specialsectionsinsectiongroups sectiongroupindex sectiontomark sectiongroupparamname paramsnames instructor_section_group   sectiongroupindex specialsectionsinsectiongroups get sectiongroupparamname specialsectionsinsectiongroups put sectiongroupparamname arraylist specialsectionsinsectiongroups get sectiongroupparamname  add sectiontomark   
+        issectionspecialmappings put sectiontomark updateinstructorprivilegesforsectioninsectionlevel sectiongroupname  
+            list specialsectionsinsectiongroup  instructorattributes instructor isviewstudentinsectionschecked   
+                getrequestparamvalue paramsnames instructor_permission_view_student_in_sections 
+                                       sectiongroupname isviewsessioninsectionschecked   
+                getrequestparamvalue paramsnames instructor_permission_view_session_in_sections 
+                                       sectiongroupname issubmitsessioninsectionschecked   
+                getrequestparamvalue paramsnames instructor_permission_submit_session_in_sections 
+                                       sectiongroupname ismodifysessioninsectionschecked   
+                getrequestparamvalue paramsnames instructor_permission_modify_session_comment_in_sections 
+                                       sectiongroupname sectionname   specialsectionsinsectiongroup    
+            instructor privileges updateprivilege  
+                    sectionname paramsnames instructor_permission_view_student_in_sections  
+                    isviewstudentinsectionschecked   
+            instructor privileges updateprivilege  
+                    sectionname paramsnames instructor_permission_view_session_in_sections  
+                    isviewsessioninsectionschecked   
+            instructor privileges updateprivilege  
+                    sectionname paramsnames instructor_permission_submit_session_in_sections  
+                    issubmitsessioninsectionschecked   
+            instructor privileges updateprivilege  
+                    sectionname paramsnames instructor_permission_modify_session_comment_in_sections  
+                    ismodifysessioninsectionschecked updateinstructorprivilegesforsectioninsessionlevel sectiongroupname  
+            list specialsectionsinsectiongroup  list feedbacknames  
+            instructorattributes instructor feedbackname   feedbacknames isviewsessioninsectionschecked   
+                    getrequestparamvalue paramsnames instructor_permission_view_session_in_sections 
+                                           sectiongroupname    feedback    feedbackname issubmitsessioninsectionschecked   
+                    getrequestparamvalue paramsnames instructor_permission_submit_session_in_sections 
+                                           sectiongroupname    feedback    feedbackname ismodifysessioninsectionschecked   
+                    getrequestparamvalue paramsnames instructor_permission_modify_session_comment_in_sections 
+                                           sectiongroupname    feedback    feedbackname sectionname   specialsectionsinsectiongroup    
+                instructor privileges updateprivilege sectionname  feedbackname paramsnames instructor_permission_view_session_in_sections  
+                        isviewsessioninsectionschecked   
+                instructor privileges updateprivilege sectionname  feedbackname paramsnames instructor_permission_submit_session_in_sections  
+                        issubmitsessioninsectionschecked   
+                instructor privileges updateprivilege sectionname  feedbackname paramsnames instructor_permission_modify_session_comment_in_sections  
+                        ismodifysessioninsectionschecked   
+              
+          
+      
+ teammates ui controller InstructorCourseInstructorAbstractAction

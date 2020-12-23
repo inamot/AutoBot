@@ -1,0 +1,152 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license class represents recorder listener build process ant 1 4 
+    
+                                                                       
+   attributes name file associated recorder entry state recorder  recorder current verbosity level record output printstream record start time last know target      
+    strip task banners true      
+    project instance recorder associated constructors   initializers 
+    
+        param name name recorder  used filename   
+        
+                                                                       
+   accessor methods 
+    
+        return name file output sent turns recorder  
+       
+        param state true false null change  
+        
+    
+        see org apache tools ant buildlistener#buildstarted buildevent  
+        
+      inheritdoc      
+    
+        see org apache tools ant buildlistener#buildfinished buildevent  
+        
+      inheritdoc      
+    
+       cleans up any resources held recorder entry end subbuild created subbuild's project 
+       instance  
+       
+        param event buildfinished event ant 1 6 2 
+        
+    
+       empty implementation satisfy buildlistener interface  
+       
+        param event buildstarted event ant 1 6 2 
+        
+    
+        see org apache tools ant buildlistener#targetstarted buildevent  
+        
+      inheritdoc      
+    
+        see org apache tools ant buildlistener#targetfinished buildevent  
+        
+      inheritdoc      
+    
+        see org apache tools ant buildlistener#taskstarted buildevent  
+        
+      inheritdoc      
+    
+        see org apache tools ant buildlistener#taskfinished buildevent  
+        
+      inheritdoc      
+    
+        see org apache tools ant buildlistener#messagelogged buildevent  
+        
+      inheritdoc thing actually sends information output  
+       
+        param mesg message log  
+        param level verbosity level message  
+        
+    
+        see buildlogger#setmessageoutputlevel int  
+        
+      inheritdoc      
+    
+        see buildlogger#setoutputprintstream printstream  
+        
+      inheritdoc      
+    
+        see buildlogger#setemacsmode boolean  
+        
+      inheritdoc      
+    
+        see buildlogger#seterrorprintstream printstream  
+        
+      inheritdoc      
+    
+       set project associated recorder entry  
+       
+        param project project instance 1 6 2 1 6 2 
+        
+    
+       initially opens file associated recorder  
+       used recorder  
+        param append indicates output must appended logfile logfile overwritten  
+        throws buildexception 1 6 3 
+        
+    
+       closes file associated recorder  
+       used recorder 1 6 3 
+        
+    
+       re-opens file associated recorder  
+       used recorder  
+        throws buildexception 1 6 3 
+       org apache tools ant taskdefs RecorderEntry org apache tools ant taskdefs recorderentry buildlogger  subbuildlistener recorderentry name    
+        targetstarttime   system currenttimemillis    
+        filename   name getfilename filename setrecordstate state state flush    
+            record   state booleanvalue buildstarted buildevent event    
+        log    build started   project msg_debug buildfinished buildevent event    
+        log    build finished   project msg_debug record    out throwable error   event getexception error out println stringutils line_sep    build successful out println stringutils line_sep    build failed  
+                              stringutils line_sep   
+                error printstacktrace out   
+              
+          
+        cleanup subbuildfinished buildevent event event getproject      project    
+            cleanup subbuildstarted buildevent event targetstarted buildevent event    
+        log     target started --     event gettarget    project msg_debug   
+        log stringutils line_sep   event gettarget   getname          
+            project msg_info   
+        targetstarttime   system currenttimemillis targetfinished buildevent event    
+        log     target finished --     event gettarget    project msg_debug time   formattime system currenttimemillis   - targetstarttime   
+ 
+        log event gettarget         duration     time  project msg_verbose   
+        flush taskstarted buildevent event    
+        log      task started --     event gettask    project msg_debug taskfinished buildevent event    
+        log      task finished --     event gettask    project msg_debug   
+        flush messagelogged buildevent event    
+        log  --- message logged   project msg_debug   
+ 
+        stringbuffer buf stringbuffer event gettask name   event gettask   gettaskname emacsmode label         name size   defaultlogger left_column_size - label length i   0  i   size  i      
+                    buf append       
+                  
+                buf append label   
+              
+          
+        buf append event getmessage     
+ 
+        log buf tostring    event getpriority log mesg level record     level    loglevel     out out println mesg flush record    out out flush setmessageoutputlevel level level    project msg_err    level    project msg_debug    
+            loglevel   level setoutputprintstream printstream output    
+        closefile    
+        out   output setemacsmode emacsmode emacsmode   emacsmode seterrorprintstream printstream err    
+        setoutputprintstream err formattime millis seconds   millis   1000 minutes   seconds   60 minutes   0 tostring minutes      minute  
+                    minutes    1 ?        s tostring seconds % 60      second  
+                    seconds % 60    1 ?       s tostring seconds      second  
+                    seconds % 60    1 ?       s setproject project project project   project project project addbuildlistener cleanup     
+        closefile project project removebuildlistener project openfile append buildexception   
+        openfileimpl append closefile out out close    
+            out reopenfile buildexception   
+        openfileimpl openfileimpl append buildexception out out printstream fileoutputstream filename  append ioexception ioe buildexception  problems opening file using a   
+                                            recorder entry   ioe   
+              
+          
+      
+ 
+ org apache tools ant taskdefs RecorderEntry

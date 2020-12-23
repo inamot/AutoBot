@@ -1,0 +1,107 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license helper class performs actual work ejbc task class run classpath includes weblogic tools home remote 
+   interface class files referenced deployment descriptors being processed root directory tree containing serialised deployment desciptors directory generated files placed name manifest file generated ejb jar source directory home remote interfaces used determine generated deployment classes out date  
+        
+   checkstyle visibilitymodifier bc names serialised deployment descriptors 
+        
+   checkstyle visibilitymodifier command line interface ejbc helper task  
+        param args command line arguments  
+        throws exception problem  
+        
+    
+       initialise ejbchelper reading command arguments  
+        
+    
+       determine weblogic ejb support classes need regenerated given deployment descriptor process attempts determine support classes need rebuilt examining only some support classes typically generated ejbc task interrupted generating support classes bean support classes removed force regeneration support classes  
+       
+        param descriptorfile serialised deployment descriptor 
+       
+        return true support classes need regenerated  
+       
+        throws ioexception descriptor file cannot closed  
+        
+   read descriptor  under weblogic descriptor weblogic 
+   specific subclass references implementation classes classes must  therefore classpath deployment 
+   descriptor loaded ser file any above out date find implementation classes see older any above ser file itself implementation classes don t exist regenerate ser file any source files newer class files  
+   firstly find oldest two class files  
+   any problems regenerate 
+    
+       process descriptors turn generating support classes each manifest 
+       file beans  
+        
+    
+       perform weblogic ejbc call regenerate support classes  
+       
+       note method relies undocumented -noexit option ejbc tool stop ejbc tool exiting vm altogether  
+        
+   create java task rebuild 
+   run exit better reportingorg apache tools ant taskdefs optional ejb EjbcHelper org apache tools ant taskdefs optional ejb ejbchelper descriptors main args exception   
+        ejbchelper helper ejbchelper args   
+        helper process ejbchelper args index   0  
+        descriptordirectory file args index      
+        generatedfilesdirectory file args index      
+        sourcedirectory file args index      
+        manifestfile file args index      
+        keepgenerated valueof args index     booleanvalue    
+ 
+        descriptors args length - index i   0  index   args length    i    
+            descriptors i    args index getcommandline debug  file descriptorfile    
+        vector v vector debug    
+            v addelement  -noexit keepgenerated    
+            v addelement  -keepgenerated    
+          
+        v addelement  -d    
+        v addelement generatedfilesdirectory getpath     
+        v addelement descriptorfile getpath args v size     
+        v copyinto args args isregenrequired file descriptorfile ioexception   
+          
+          
+          
+          
+        fileinputstream fis fis fileinputstream descriptorfile   
+            objectinputstream ois objectinputstream fis   
+            deploymentdescriptor dd    deploymentdescriptor  ois readobject    
+            fis close homeinterfacepath 
+                  dd gethomeinterfaceclassname   replace ' '  ' '      java remoteinterfacepath 
+                  dd getremoteinterfaceclassname   replace ' '  ' '      java primarykeyclasspath dd entitydescriptor    
+                primarykeyclasspath 
+                        entitydescriptor  dd  getprimarykeyclassname    
+                primarykeyclasspath 
+                      primarykeyclasspath replace ' '  ' '      java   
+              
+ 
+            file homeinterfacesource file sourcedirectory  homeinterfacepath   
+            file remoteinterfacesource file sourcedirectory  remoteinterfacepath   
+            file primarykeyclasssource primarykeyclasspath primarykeyclasssource file sourcedirectory  remoteinterfacepath beanclassbase   dd getenterprisebeanclassname   replace ' '  ' '   
+            file ejbimplentationclass file generatedfilesdirectory  beanclassbase    eoimpl file homeimplementationclass file generatedfilesdirectory  beanclassbase    homeimpl file beanstubclass file generatedfilesdirectory  beanclassbase    eoimpl_wlstub ejbimplentationclass exists   
+                    homeimplementationclass exists   
+                    beanstubclass exists classmodificationtime   ejbimplentationclass lastmodified homeimplementationclass lastmodified     classmodificationtime    
+                classmodificationtime   homeimplementationclass lastmodified beanstubclass lastmodified     classmodificationtime    
+                classmodificationtime   beanstubclass lastmodified descriptorfile lastmodified     classmodificationtime 
+                   homeinterfacesource lastmodified     classmodificationtime 
+                   remoteinterfacesource lastmodified     classmodificationtime primarykeyclasssource primarykeyclasssource lastmodified     classmodificationtime throwable descriptorloadexception    
+            system out println  exception occurred reading   
+                  descriptorfile getname       - continuing fis fis close process exception manifest    manifest-version  1 0\n\n i   0  i   descriptors length    i descriptorname   descriptors i   
+            file descriptorfile file descriptordirectory  descriptorname isregenrequired descriptorfile     
+                system out println  running ejbc descriptorfile getname     
+                regeneratesupportclasses descriptorfile system out println descriptorfile getname       is up to date    
+              
+            manifest     name      descriptorname replace '\\'  ' '  
+                           \nenterprise-bean n\n   
+          
+ 
+        filewriter fw filewriter manifestfile   
+        printwriter pw printwriter fw   
+        pw print manifest   
+        fw flush    
+        fw close regeneratesupportclasses file descriptorfile exception args   getcommandline descriptorfile weblogic ejbc main args exception e newargs   getcommandline descriptorfile   
+            weblogic ejbc main newargs   
+          
+      
+ org apache tools ant taskdefs optional ejb EjbcHelper

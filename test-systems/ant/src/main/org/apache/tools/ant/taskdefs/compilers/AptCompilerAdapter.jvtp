@@ -1,0 +1,112 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license implementation apt compiler jdk 1 5 
+    p usual low level entry points java tools documented stable entry point may change 1 5 0_01-b08 without any 
+   warning ide decompile tool entry points follows  
+    pre  
+   public class main   
+   public main     
+    p   
+   public static transient void main string    strings    
+    p   
+   public static transient int process string    strings   
+    p   
+   public static transient int process printwriter printwriter  
+        string    strings    
+   public static transient int process  
+        annotationprocessorfactory annotationprocessorfactory  
+        string    strings    
+    p   
+   public static transient int process  
+        annotationprocessorfactory annotationprocessorfactory  
+        printwriter printwriter  
+        string    strings   
+   private static transient int processing  
+        annotationprocessorfactory annotationprocessorfactory  
+        printwriter printwriter  
+        string    strings    
+     
+     pre adapter designed run apt jvm option not actually 
+   exposed end-users brittle during beta testing  classpath 
+   problems being core issue ant 1 7 
+    
+    
+       integer returned apt compiler indicate success  
+        
+    
+       class tools jar implements apt 
+        
+    
+       method used compile facade task fronts adapter 
+       
+        return task instance 
+        see defaultcompileradapter#getjavac   
+        
+    
+       using front end arguments  set up command line run apt 
+       
+        param apt task 
+        param cmd command set up various switches task 
+                  options 
+        
+   process factory class 
+   process factory path 
+   process processor options 
+    
+       using front end task  set up command line switches 
+       
+        param cmd command line set up 
+        
+    
+       run compilation  
+        return true success  
+        throws buildexception compilation problems  
+        
+  set up javac options add apt options 
+  finally invoke apt 
+   use reflection to build jdks  
+  rethrow build exceptions 
+  cast everything build exceptionorg apache tools ant taskdefs compilers AptCompilerAdapter org apache tools ant taskdefs compilers aptcompileradapter defaultcompileradapter apt_entry_point    com sun tools apt main apt_method_name    process apt getapt apt  getjavac setaptcommandlineswitches apt apt  commandline cmd apt iscompile      
+            cmd createargument   setvalue  -nocompile factory   apt getfactory factory cmd createargument   setvalue  -factory    
+            cmd createargument   setvalue factory   
+          
+ 
+          
+        path factorypath   apt getfactorypath factorypath cmd createargument   setvalue  -factorypath    
+            cmd createargument   setpath factorypath   
+          
+ 
+        file preprocessdir   apt getpreprocessdir preprocessdir cmd createargument   setvalue  -s    
+            cmd createargument   setfile preprocessdir   
+          
+ 
+          
+        vector options   apt getoptions    
+        enumeration elements   options elements    
+        apt option opt  
+        stringbuffer arg elements hasmoreelements      
+            opt    apt option  elements nextelement    
+            arg stringbuffer    
+            arg append  -a   append opt getname opt getvalue arg append      append opt getvalue     
+              
+            cmd createargument   setvalue arg tostring setaptcommandlineswitches commandline cmd    
+        apt apt   getapt    
+        setaptcommandlineswitches apt  cmd execute buildexception   
+        attributes log  using apt compiler   project msg_verbose   
+          
+        commandline cmd   setupmodernjavaccommand    
+          
+        setaptcommandlineswitches cmd c forname apt_entry_point   
+            object compiler   c newinstance    
+            method compile   c getmethod apt_method_name new getclass result     integer  compile invoke 
+                     compiler object   cmd getarguments      
+                     intvalue result    apt_compiler_success buildexception be be exception ex buildexception  error starting apt compiler   
+                    ex  location   
+          
+      
+ org apache tools ant taskdefs compilers AptCompilerAdapter

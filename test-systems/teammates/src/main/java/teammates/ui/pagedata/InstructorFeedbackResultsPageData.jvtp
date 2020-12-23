@@ -1,0 +1,785 @@
+ 
+   islargenumberofrespondents attribute used testing ui viewtype question 
+   used html table ajax loading question view giver   question   recipient  recipient   question   giver  
+   giver   recipient   question  recipient   giver   question 
+   todo multiple page data classes inheriting each view type enum determining behavior many methods 
+    
+       prepares question tables viewing  
+       
+        p   code bundle set before method one question omit generation responserows load ajax question question 
+    
+       creates   code instructorfeedbackresultssectionpanel s sectionpanels  
+       
+        p iterates through responses creates panels questions keeps track missing sections  teams participants not responses create panels missing sections  teams participants  
+       
+         code bundle set before method 
+       todo  simplify logic method 
+        
+   results page loaded ajax 
+   note page needs load ajax responses may empty therefore check ajax come before responses  nothing initialize 
+   iterate through primary participant 
+   construct missing participant panels previous team 
+   build participant panel current primary participant last section responses 
+    
+       constructs section panel code sortedresponses   
+       
+        p builds team statistics tables every team  
+        
+   iterate through primary participant 
+   construct missing participant panels previous team 
+   build participant panel current participant last section responses 
+   first build secondary participant panels primary participant panel 
+   construct primary participant panel 
+   participant responses current question 
+   construct instructorfeedbackresultsgroupbyquestionpanel current giver 
+   moderation button participant panels only shown panel giver panel participant student 
+   teamswithresponses include teams anonymous student   anonymous student #'s team update teams previous section 
+   create every remaining team section  participantresultspanels every team member 
+   create missing participants panels previous team 
+    
+       builds participant panels specified team add sectionpanel  
+        
+    
+       constructs instructorfeedbackresultsquestiontable containing statistics each team statistics tables added sectionpanel  
+        
+   skip team responses team anonymous student's team anonymous team builds question tables without response rows stats  
+        param responses  responses compute statistics builds question table given question response rows given responses  
+       
+        param participantidentifier viewtypes     question      constructs missing response rows 
+                                     only given participant 
+        param isshowingresponserows false  hides response rows question specific sorting not needed  responses sorted default order  first team name display name  
+   setup classes loading responses ajax 
+   ajax_submit  user needs click panel load 
+   ajax_auto  responses loaded automatically 
+    
+       builds response rows given question not only builds response rows existing responses includes missing responses between pairs givers recipients  
+        param responses  existing responses question 
+        
+   keep track possible givers not give response 
+   keep track possible recipients without response current giver 
+   keep track possible participant not give receive response participantidentifier 
+   todo consider using url future 
+   todo check determining whether show profile picture improved use isstudent 
+    
+       construct missing response rows between giver identified code giveridentifier code possiblereceivers   
+        
+    
+       construct missing response rows between recipient identified code recipientidentifier code possiblegivers   
+        
+    
+       given participantidentifier  remove participantidentifierlist  
+        
+    
+       gets moderation button giver  
+       
+        return 
+        ul  
+        li null participant not visible  li  
+        li disabled moderation button instructor not sufficient permissions  li  
+        li working moderation button otherwise  li  
+         ul  
+        
+   
+       getinstructorfeedbacksessionpublishandunpublishaction not covered action test covered ui tests  
+        
+  todo investigate fix differences between question isresponsevisibleto method 
+   todo  swap groupbyteam normal boolean 
+   todo  swap showstats normal boolean 
+   todo  place below getter methods template objects some init method common views 
+   only used testing uiteammates ui pagedata InstructorFeedbackResultsPageData teammates ui pagedata instructorfeedbackresultspagedata pagedata instructorfeedbackresultspagedata accountattributes account sessiontoken account  sessiontoken initforviewbyquestion instructorattributes instructor selectedsection showstats groupbyteam ismissingresponsesshown viewtype   instructorfeedbackresultspageviewtype question sorttype   instructorfeedbackresultspageviewtype question tostring    
+        initcommonvariables instructor  selectedsection  showstats  groupbyteam  ismissingresponsesshown   
+ 
+        map feedbackquestionattributes  list feedbackresponseattributes   questiontoresponsemap   
+                bundle getquestionresponsemap    
+        questionpanels arraylist isloadingstructureonly   questiontoresponsemap size     1 map entry feedbackquestionattributes  list feedbackresponseattributes   
+                     entry   questiontoresponsemap entryset      
+            feedbackquestionattributes question   entry getkey    
+            list feedbackresponseattributes  responses   entry getvalue    
+ 
+            instructorfeedbackresultsquestiontable questionpanel isloadingstructureonly    
+                questionpanel   buildquestiontablewithoutresponserows question  responses       
+                questionpanel sethasresponses questionpanel   buildquestiontableandresponserows question  responses       
+              
+ 
+            questionpanels add questionpanel initcommonvariables instructorattributes instructor selectedsection showstats groupbyteam ismissingresponsesshown    
+        assumption assertnotnull bundle instructor   instructor selectedsection   selectedsection showstats   showstats groupbyteam   groupbyteam ismissingresponsesshown   ismissingresponsesshown feedbackquestionattributes question   bundle questions values      
+            feedbackquestiondetails questiondetails   question getquestiondetails    
+            questiontodetailsmap put question  questiondetails sections   getsectionsfrombundle    
+ 
+        displayablefsname   sanitizeforhtml bundle feedbacksession getfeedbacksessionname     
+        displayablecourseid   sanitizeforhtml bundle feedbacksession getcourseid list getsectionsfrombundle     
+        list sectionnames arraylist section   bundle sectionsincourse section equals default_section     
+                sectionnames add section   
+              
+          
+ 
+        collections sort sectionnames sectionnames initforsectionpanelviews instructorattributes instructor selectedsection showstats groupbyteam  instructorfeedbackresultspageviewtype view ismissingresponsesshown    
+        assumption assertnotnull bundle viewtype   view sorttype   view tostring    
+        initcommonvariables instructor  selectedsection  showstats  groupbyteam  
+                            ismissingresponsesshown isallsectionsselected bundle iscomplete    
+                buildsectionpanelsforforajaxloading getsections buildsectionpanelwitherrormessage bundle responses isempty viewtype recipient_giver_question  
+            map map list feedbackresponseattributes    sortedresponsesforrgq   
+                    bundle getresponsessortedbyrecipientgiverquestion buildsectionpanelforviewbyparticipantparticipantquestion selectedsection  
+                    sortedresponsesforrgq  viewtype additionalinfoid recipient_question_giver  
+            map map feedbackquestionattributes  list feedbackresponseattributes    sortedresponsesforrqg   
+                    bundle getresponsessortedbyrecipientquestiongiver buildsectionpanelforviewbyparticipantquestionparticipant selectedsection  
+                    sortedresponsesforrqg  viewtype additionalinfoid giver_question_recipient  
+            map map feedbackquestionattributes  list feedbackresponseattributes    sortedresponsesforgqr   
+                    bundle getresponsessortedbygiverquestionrecipient buildsectionpanelforviewbyparticipantquestionparticipant selectedsection  
+                    sortedresponsesforgqr  viewtype additionalinfoid giver_recipient_question  
+            map map list feedbackresponseattributes    sortedresponsesforgrq   
+                    bundle getresponsessortedbygiverrecipientquestion buildsectionpanelforviewbyparticipantparticipantquestion selectedsection  
+                    sortedresponsesforgrq  viewtype additionalinfoid assumption fail buildsectionpanelforviewbyparticipantparticipantquestion section  
+                                    map map list feedbackresponseattributes    sortedresponses additionalinfoid    
+        sectionpanels linkedhashmap      
+        instructorfeedbackresultssectionpanel sectionpanel instructorfeedbackresultssectionpanel prevteam sectionprefix format  section-%s-   getsectionposition section    
+ 
+        set teamswithresponses hashset      
+        set teammemberswithresponses hashset primaryparticipantindex getstartindex entry map list feedbackresponseattributes    primarytosecondaryparticipanttoresponsesmap 
+                  sortedresponses entryset      
+            primaryparticipantindex    1 primaryparticipantidentifier   primarytosecondaryparticipanttoresponsesmap getkey currentteam   getcurrentteam bundle  primaryparticipantidentifier isstudent   bundle isparticipantidentifierstudent primaryparticipantidentifier participantsection   bundle getsectionfromroster primaryparticipantidentifier isstudent     participantsection equals section isdifferentteam    prevteam equals currentteam isdifferentteam isfirstteam   prevteam isempty isfirstteam    
+                      
+                    buildmissingparticipantpanelsforteam  
+                            sectionpanel  prevteam  teammemberswithresponses   
+                    teammemberswithresponses clear    
+                  
+ 
+                teamswithresponses add currentteam   
+                sectionpanel getisteamwithresponses   put currentteam instructorfeedbackresultsparticipantpanel recipientpanel   
+                    buildgroupbyparticipantpanel primaryparticipantidentifier  primarytosecondaryparticipanttoresponsesmap  
+                                                 sectionprefix   additionalinfoid  primaryparticipantindex   
+ 
+            sectionpanel addparticipantpanel currentteam  recipientpanel   
+ 
+            teammemberswithresponses add primaryparticipantidentifier   
+ 
+            prevteam   currentteam  
+          
+ 
+          
+        buildmissingparticipantpanelsforteam sectionpanel  prevteam  teammemberswithresponses   
+ 
+        teamswithresponses add prevteam   
+        buildmissingteamandparticipantpanelsforsection sectionpanel  section  teamswithresponses   
+ 
+        finalizebuildingsectionpanelwithoutteamstats sectionpanel  section   
+        sectionpanels put section  sectionpanel buildsectionpanelforviewbyparticipantquestionparticipant section  
+                                map map feedbackquestionattributes  
+                                list feedbackresponseattributes    sortedresponses additionalinfoid    
+        sectionpanels linkedhashmap      
+ 
+        map map feedbackquestionattributes  list feedbackresponseattributes    responsesgroupedbyteam   
+                viewtype isprimarygroupingofgivertype   ? bundle getquestionresponsemapbygiverteam   
+                                                          bundle getquestionresponsemapbyrecipientteam prevteam sectionprefix format  section-%s-   getsectionposition section    
+ 
+        set teamswithresponses linkedhashset      
+        set teammemberswithresponses hashset      
+ 
+        instructorfeedbackresultssectionpanel sectionpanel instructorfeedbackresultssectionpanel primaryparticipantindex getstartindex entry map feedbackquestionattributes  list feedbackresponseattributes    
+                     primarytosecondaryparticipanttoresponsesmap 
+                  sortedresponses entryset      
+            primaryparticipantindex    1 primaryparticipantidentifier   primarytosecondaryparticipanttoresponsesmap getkey isstudent   bundle isparticipantidentifierstudent primaryparticipantidentifier participantsection   bundle getsectionfromroster primaryparticipantidentifier isstudent     participantsection equals section currentteam   getcurrentteam bundle  primaryparticipantidentifier isdifferentteam    prevteam equals currentteam isdifferentteam isfirstteam   prevteam isempty isfirstteam    
+                      
+                    buildmissingparticipantpanelsforteam  
+                            sectionpanel  prevteam  teammemberswithresponses   
+                    teammemberswithresponses clear    
+                  
+ 
+                teamswithresponses add currentteam   
+                sectionpanel getisteamwithresponses   put currentteam instructorfeedbackresultsparticipantpanel primaryparticipantpanel   
+                    buildgroupbyquestionpanel primaryparticipantidentifier  
+                                              primarytosecondaryparticipanttoresponsesmap  
+                                              sectionprefix   additionalinfoid  primaryparticipantindex   
+ 
+            sectionpanel addparticipantpanel currentteam  primaryparticipantpanel   
+ 
+            teammemberswithresponses add primaryparticipantidentifier   
+ 
+            prevteam   currentteam  
+          
+ 
+          
+        buildmissingparticipantpanelsforteam sectionpanel  prevteam  teammemberswithresponses   
+ 
+        teamswithresponses add prevteam   
+        buildmissingteamandparticipantpanelsforsection sectionpanel  section  teamswithresponses   
+ 
+        finalizebuildingsectionpanel sectionpanel  section  responsesgroupedbyteam  teamswithresponses   
+        sectionpanels put section  sectionpanel instructorfeedbackresultsgroupbyparticipantpanel buildgroupbyparticipantpanel primaryparticipantidentifier  
+            entry map list feedbackresponseattributes    recipienttogivertoresponsesmap additionalinfoid primaryparticipantindex    
+          
+        map list feedbackresponseattributes   givertoresponsesmap   
+                recipienttogivertoresponsesmap getvalue    
+        list instructorfeedbackresultssecondaryparticipantpanelbody  secondaryparticipantpanels   
+                buildsecondaryparticipantpanels  
+                        additionalinfoid  primaryparticipantindex  givertoresponsesmap primaryparticipantnamewithteamname   
+                bundle appendteamnametoname bundle getnameforemail primaryparticipantidentifier   
+                                            bundle getteamnameforemail primaryparticipantidentifier    
+ 
+        instructorfeedbackresultsmoderationbutton moderationbutton viewtype isprimarygroupingofgivertype      
+            moderationbutton   
+                    buildmoderationbuttonforgiver primaryparticipantidentifier  
+                                                   btn btn-primary btn-xs   
+                                                  moderate_responses_for_giver moderationbutton buildinstructorfeedbackresultsgroupbysecondaryparticipantpanel  
+                        primaryparticipantidentifier  primaryparticipantnamewithteamname  
+                        secondaryparticipantpanels  moderationbutton list instructorfeedbackresultssecondaryparticipantpanelbody  buildsecondaryparticipantpanels additionalinfoid primaryparticipantindex  
+                                    map list feedbackresponseattributes   secondaryparticipanttoresponsesmap    
+        list instructorfeedbackresultssecondaryparticipantpanelbody  secondaryparticipantpanels arraylist secondaryparticipantindex   0 map entry list feedbackresponseattributes   secondaryparticipantresponses 
+                                                                 secondaryparticipanttoresponsesmap entryset      
+            secondaryparticipantindex    1 secondaryparticipantidentifier   secondaryparticipantresponses getkey isemail   validator getinvalidityinfoforemail secondaryparticipantidentifier  isempty secondaryparticipantdisplayablename isemail     bundle getteamnameforemail secondaryparticipantidentifier  isempty      
+                secondaryparticipantdisplayablename   
+                        bundle getnameforemail secondaryparticipantidentifier  
+                                 bundle getteamnameforemail secondaryparticipantidentifier secondaryparticipantdisplayablename   bundle getnameforemail secondaryparticipantidentifier   
+              
+            list instructorfeedbackresultsresponsepanel  responsepanels   
+                    buildresponsepanels additionalinfoid  primaryparticipantindex  
+                                        secondaryparticipantindex  secondaryparticipantresponses getvalue     
+ 
+            instructorfeedbackresultssecondaryparticipantpanelbody secondaryparticipantpanel instructorfeedbackresultssecondaryparticipantpanelbody  
+                            secondaryparticipantidentifier  secondaryparticipantdisplayablename  
+                            responsepanels   
+ 
+            secondaryparticipantpanel 
+                 setprofilepicturelink getprofilepictureifemailvalid secondaryparticipantidentifier viewtype isprimarygroupingofgivertype sectionname   bundle getsectionfromroster secondaryparticipantidentifier isallowedtomoderate   isallowedtomoderate instructor  sectionname  feedbacksessionname   
+ 
+                secondaryparticipantpanel setmoderationbutton  
+                        isallowedtomoderate 
+                        ? buildmoderationbuttonforgiver secondaryparticipantidentifier   btn btn btn-xs   
+                                                        moderate_responses_for_giver secondaryparticipantpanels add secondaryparticipantpanel secondaryparticipantpanels list instructorfeedbackresultsresponsepanel  buildresponsepanels additionalinfoid primaryparticipantindex secondaryrecipientindex  
+                                    list feedbackresponseattributes  giverresponses    
+        list instructorfeedbackresultsresponsepanel  responsepanels arraylist responseindex   0  responseindex   giverresponses size    responseindex      
+            feedbackresponseattributes response   giverresponses get responseindex questionid   response feedbackquestionid  
+            feedbackquestionattributes question   bundle questions get questionid questiontext   bundle getquestiontext questionid giverindex   viewtype isprimarygroupingofgivertype   ? primaryparticipantindex 
+                                                                       secondaryrecipientindex recipientindex   viewtype isprimarygroupingofgivertype   ? secondaryrecipientindex 
+                                                                           primaryparticipantindex additionalinfotext   
+                    questiontodetailsmap get question  getquestionadditionalinfohtml  
+                            question getquestionnumber format  
+                                    additionalinfoid  giverindex  recipientindex displayableresponse   bundle getresponseanswerhtml response  question givername   bundle getnameforemail response giver recipientname   bundle getnameforemail response recipient giverteam   bundle getteamnameforemail response giver recipientteam   bundle getteamnameforemail response recipient   
+ 
+            givername   bundle appendteamnametoname givername  giverteam   
+            recipientname   bundle appendteamnametoname recipientname  recipientteam   
+ 
+            list feedbackresponsecommentrow  comments   buildresponsecomments givername  recipientname  question  response isallowedtosubmitsessionsinbothsection   
+                    instructor isallowedforprivilege response giversection  
+                                                     response feedbacksessionname paramsnames instructor_permission_submit_session_in_sections  
+                       instructor isallowedforprivilege response recipientsection  
+                                                        response feedbacksessionname paramsnames instructor_permission_submit_session_in_sections iscommentsonresponsesallowed   question getquestiondetails   
+                     iscommentsonresponsesallowed    
+            matcher matcher   sectionidpattern matcher additionalinfoid matcher find      
+                sectionid   integer parseint matcher group 1    
+              
+ 
+            instructorfeedbackresultsresponsepanel responsepanel instructorfeedbackresultsresponsepanel  
+                            question  response  questiontext  sectionid  additionalinfotext displayableresponse  comments  isallowedtosubmitsessionsinbothsection  
+                            iscommentsonresponsesallowed   
+            responsepanel setcommentsindexes recipientindex  giverindex  responseindex   1 iscommentsonresponsesallowed    
+                map feedbackparticipanttype responsevisibilitymap   getresponsevisibilitymap question   
+                feedbackresponsecommentrow frcforadding   buildfeedbackresponsecommentaddform question  response  
+                                                            responsevisibilitymap  givername  recipientname   
+ 
+                responsepanel setfrcforadding frcforadding   
+ 
+              
+            responsepanels add responsepanel responsepanels instructorfeedbackresultsgroupbyquestionpanel buildgroupbyquestionpanel participantidentifier  
+            entry map feedbackquestionattributes  list feedbackresponseattributes    recipienttogivertoresponsesmap additionalinfoid participantindex    
+        list instructorfeedbackresultsquestiontable  questiontables arraylist questionindex   0 entry feedbackquestionattributes  list feedbackresponseattributes   responsesforparticipantforquestion 
+                  recipienttogivertoresponsesmap getvalue   entryset responsesforparticipantforquestion getvalue   isempty questionindex    1  
+ 
+            feedbackquestionattributes currentquestion   responsesforparticipantforquestion getkey    
+            list feedbackresponseattributes  responsesforquestion   responsesforparticipantforquestion getvalue    
+ 
+            instructorfeedbackresultsquestiontable questiontable   
+                    buildquestiontableandresponserows currentquestion  responsesforquestion format additionalinfoid  participantindex  questionindex   
+                                                      participantidentifier questiontable setboldquestionnumber questiontables add questiontable   
+ 
+          
+ 
+        instructorfeedbackresultsquestiontable sortbyquestionnumber questiontables   
+        instructorfeedbackresultsgroupbyquestionpanel participantpanel viewtype isprimarygroupingofgivertype       bundle isparticipantidentifierstudent participantidentifier  
+                                                       bundle isparticipantidentifierinstructor participantidentifier      
+              
+              
+            instructorfeedbackresultsmoderationbutton moderationbutton   
+                    buildmoderationbuttonforgiver participantidentifier   btn btn-primary btn-xs   
+                                                  moderate_responses_for_giver   
+            participantpanel instructorfeedbackresultsgroupbyquestionpanel  
+                                            participantidentifier  bundle getnameforemail participantidentifier   
+                                            questiontables  
+                                            getstudentprofilepicturelink participantidentifier  instructor courseid moderationbutton participantpanel instructorfeedbackresultsgroupbyquestionpanel  
+                                            questiontables  
+                                            getstudentprofilepicturelink participantidentifier  instructor courseid   
+                                            viewtype isprimarygroupingofgivertype    participantidentifier  
+                                            bundle getnameforemail participantidentifier participantpanel finalizebuildingsectionpanelwithoutteamstats instructorfeedbackresultssectionpanel sectionpanel sectionname    
+        linkedhashmap map feedbackquestionattributes  list feedbackresponseattributes    emptyresponsemap linkedhashmap      
+        linkedhashset emptyteamlist linkedhashset      
+        finalizebuildingsectionpanel sectionpanel  sectionname  emptyresponsemap  emptyteamlist finalizebuildingsectionpanel  
+            instructorfeedbackresultssectionpanel sectionpanel sectionname  
+            map map feedbackquestionattributes  list feedbackresponseattributes    responsesgroupedbyteam  
+            set teamswithresponses viewtype giver_question_recipient recipient_question_giver  
+            prepareheadersforteampanelsinsectionpanel sectionpanel responsesgroupedbyteam isempty      
+                buildteamsstatisticstableforsectionpanel sectionpanel  responsesgroupedbyteam  
+                                                         teamswithresponses   
+              
+ 
+            map isteamdisplayingstatistics hashmap team   teamswithresponses    
+                  
+                  
+                isteamdisplayingstatistics put team  isteamvisible team    
+              
+            sectionpanel setdisplayingteamstatistics isteamdisplayingstatistics   
+            sectionpanel setsectionname sectionname   
+            sectionpanel setsectionnamefordisplay sectionname equals default_section no_specific_recipient 
+                                                  sectionname recipient_giver_question giver_recipient_question  
+ 
+            sectionpanel setsectionname sectionname   
+            sectionpanel setsectionnamefordisplay sectionname equals default_section no_specific_recipient 
+                                                  sectionname assumption fail isteamvisible team bundle rosterteamnamememberstable containskey team buildmissingteamandparticipantpanelsforsection  
+                                    instructorfeedbackresultssectionpanel sectionpanel sectionname  
+                                    set teamwithresponses    
+ 
+          
+        set teamsinsection   bundle getteamsinsectionfromroster sectionname   
+        set teamswithoutresponses hashset   teamsinsection   
+        teamswithoutresponses removeall teamwithresponses teamwithoutresponses   teamswithoutresponses    
+            list teammembers arraylist   bundle getteammembersfromroster teamwithoutresponses    
+            collections sort teammembers viewtype isprimarygroupingofgivertype      
+                addmissingparticipantspanelswithmoderationbuttonforteam  
+                                                sectionpanel  teamwithoutresponses  teammembers addmissingparticipantspanelswithoutmoderationbuttonforteam  
+                                                sectionpanel  teamwithoutresponses  teammembers getcurrentteam feedbacksessionresultsbundle bundle giveridentifier currentteam bundle isparticipantidentifierinstructor giveridentifier     
+            currentteam user_team_for_instructor currentteam   bundle getteamnameforemail giveridentifier currentteam isempty      
+                currentteam   bundle getnameforemail giveridentifier currentteam buildmissingparticipantpanelsforteam  
+                                    instructorfeedbackresultssectionpanel sectionpanel teamname  
+                                    set teammemberswithresponses    
+ 
+        set teammembersemail hashset      
+        teammembersemail addall bundle getteammembersfromroster teamname    
+ 
+        set teammemberswithoutresponses hashset   teammembersemail   
+        teammemberswithoutresponses removeall teammemberswithresponses   
+ 
+          
+        list sortedteammemberswithoutresponses arraylist   teammemberswithoutresponses   
+        collections sort sortedteammemberswithoutresponses viewtype isprimarygroupingofgivertype      
+            addmissingparticipantspanelswithmoderationbuttonforteam sectionpanel  
+                                                        teamname  sortedteammemberswithoutresponses addmissingparticipantspanelswithoutmoderationbuttonforteam sectionpanel  
+                                                        teamname  sortedteammemberswithoutresponses buildsectionpanelsforforajaxloading list sections    
+        sectionpanels linkedhashmap      
+ 
+        instructorfeedbackresultssectionpanel sectionpanel instructorfeedbackresultssectionpanel default_section no_specific_recipient sectionpanels put default_section  sectionpanel section   sections    
+            sectionpanel instructorfeedbackresultssectionpanel section  section sectionpanels put section  sectionpanel getsectionposition name    
+        list sections   getsectionsfrombundle    
+        sections add 0 default_section sections indexof name buildsectionpanelwitherrormessage     
+        sectionpanels linkedhashmap      
+ 
+        instructorfeedbackresultssectionpanel sectionpanel instructorfeedbackresultssectionpanel    
+        sectionpanel setsectionname selectedsection   
+        sectionpanel setsectionnamefordisplay selectedsection   
+        sectionpanel setabletoloadresponses sectionpanels put selectedsection  sectionpanel addmissingparticipantspanelswithmoderationbuttonforteam  
+                                                             instructorfeedbackresultssectionpanel sectionpanel teamname  list teammembers teammember   teammembers    
+            instructorfeedbackresultsmoderationbutton moderationbutton   
+                    buildmoderationbuttonforgiver teammember   btn btn btn-xs   
+                                                  moderate_responses_for_giver   
+            instructorfeedbackresultsparticipantpanel giverpanel viewtype issecondarygroupingofparticipanttype teammembernamewithteamnameappended   bundle getfullnamefromroster teammember  
+                                                         bundle getteamnamefromroster teammember         
+                giverpanel   buildinstructorfeedbackresultsgroupbysecondaryparticipantpanel  
+                                 teammember  teammembernamewithteamnameappended arraylist instructorfeedbackresultssecondaryparticipantpanelbody     
+                                 moderationbutton giverpanel instructorfeedbackresultsgroupbyquestionpanel  
+                                teammember  bundle getfullnamefromroster teammember arraylist instructorfeedbackresultsquestiontable     
+                                getstudentprofilepicturelink teammember  instructor courseid   
+                                viewtype isprimarygroupingofgivertype    moderationbutton   
+              
+ 
+            giverpanel sethasresponses sectionpanel addparticipantpanel teamname  giverpanel addmissingparticipantspanelswithoutmoderationbuttonforteam  
+                                    instructorfeedbackresultssectionpanel sectionpanel teamname  list teammembers teammember   teammembers    
+ 
+            instructorfeedbackresultsparticipantpanel giverpanel viewtype issecondarygroupingofparticipanttype teammemberwithteamnameappended   bundle getfullnamefromroster teammember  
+                                                         bundle getteamnamefromroster teammember         
+                giverpanel   buildinstructorfeedbackresultsgroupbysecondaryparticipantpanel  
+                                 teammember  teammemberwithteamnameappended arraylist instructorfeedbackresultssecondaryparticipantpanelbody giverpanel instructorfeedbackresultsgroupbyquestionpanel arraylist instructorfeedbackresultsquestiontable     
+                                 getstudentprofilepicturelink teammember  instructor courseid   
+                                 viewtype isprimarygroupingofgivertype    teammember  
+                                 bundle getfullnamefromroster teammember    
+              
+            giverpanel sethasresponses sectionpanel addparticipantpanel teamname  giverpanel buildteamsstatisticstableforsectionpanel  
+                     instructorfeedbackresultssectionpanel sectionpanel  
+                     map map feedbackquestionattributes  list feedbackresponseattributes    responsesgroupedbyteam  
+                     set teamsinsection    
+        map list instructorfeedbackresultsquestiontable   teamtostatisticstables hashmap team   teamsinsection responsesgroupedbyteam containskey team      isteamvisible team list instructorfeedbackresultsquestiontable  statisticstablesforteam arraylist feedbackquestionattributes question   bundle questions values responsesgroupedbyteam get team  containskey question list feedbackresponseattributes  responsesforteamandquestion   
+                        responsesgroupedbyteam get team  get question   
+ 
+                instructorfeedbackresultsquestiontable statstable   buildquestiontablewithoutresponserows  
+                                                                               question  responsesforteamandquestion  
+                                                                                    
+                statstable setcollapsible statstable getquestionstatisticstable   isempty      
+                    statisticstablesforteam add statstable   
+                  
+              
+ 
+            instructorfeedbackresultsquestiontable sortbyquestionnumber statisticstablesforteam   
+            teamtostatisticstables put team  statisticstablesforteam   
+          
+ 
+        sectionpanel setteamstatisticstable teamtostatisticstables prepareheadersforteampanelsinsectionpanel  
+                                    instructorfeedbackresultssectionpanel sectionpanel viewtype giver_question_recipient  
+            sectionpanel setstatisticsheadertext  statistics given responses    
+            sectionpanel setdetailedresponsesheadertext  detailed responses recipient_question_giver  
+            sectionpanel setstatisticsheadertext  statistics received responses    
+            sectionpanel setdetailedresponsesheadertext  detailed responses assumption fail  there should be no headers the view type instructorfeedbackresultsquestiontable buildquestiontableandresponserows  
+                                    feedbackquestionattributes question  
+                                    list feedbackresponseattributes  responses additionalinfoid buildquestiontableandresponserows question  responses  additionalinfoid instructorfeedbackresultsquestiontable buildquestiontablewithoutresponserows  
+                                    feedbackquestionattributes question  
+                                    list feedbackresponseattributes  responses additionalinfoid buildquestiontableandresponserows question  responses  additionalinfoid instructorfeedbackresultsquestiontable buildquestiontableandresponserows  
+                                                              feedbackquestionattributes question  
+                                                              list feedbackresponseattributes  responses additionalinfoid participantidentifier isshowingresponserows    
+ 
+        list elementtag  columntags arraylist      
+        map issortable hashmap iscollapsible list instructorfeedbackresultsresponserow  responserows feedbackquestiondetails questiondetails   questiontodetailsmap get question isshowingresponserows viewtype question  
+                buildtablecolumnheaderforquestionview columntags  issortable   
+                responserows   buildresponserowsforquestion question  responses giver_question_recipient  
+                buildtablecolumnheaderforgiverquestionrecipientview columntags  issortable   
+                responserows   buildresponserowsforquestionforsinglegiver question  responses  participantidentifier   
+                iscollapsible recipient_question_giver  
+                buildtablecolumnheaderforrecipientquestiongiverview columntags  issortable   
+                responserows   buildresponserowsforquestionforsinglerecipient question  responses  participantidentifier   
+                iscollapsible assumption fail  view type should not involve question tables questiondetails isquestionspecificsortingrequired      
+                collections sort responserows  questiondetails getresponserowssortorder responserows   instructorfeedbackresultsresponserow sortlistwithdefaultorder responserows studentemail   student null   student email statisticstable   questiondetails getquestionresultstatisticshtml responses  question  studentemail  
+                                                                                 bundle  viewtype tostring questiontext   questiondetails getquestiontext additionalinfotext   questiondetails getquestionadditionalinfohtml question questionnumber  additionalinfoid   
+ 
+        instructorfeedbackresultsquestiontable questiontable instructorfeedbackresultsquestiontable  
+                                                                         responses isempty    statisticstable  
+                                                                        responserows  question  
+                                                                        questiontext  additionalinfotext  
+                                                                        columntags  issortable viewtype    instructorfeedbackresultspageviewtype question    
+              
+              
+              
+            questiontable setajaxclass islargenumberofresponses   
+                                     ?   ajax_submit  
+                                         ajax_auto    
+          
+        questiontable setshowresponserows isshowingresponserows   
+        questiontable setcollapsible iscollapsible questiontable buildtablecolumnheaderforquestionview list elementtag  columntags  
+                                                       map issortable    
+        elementtag giverteamelement elementtag  team    id    button_sortfromteam button-sort-none toggle-sort   
+                         style    width  10%  min-width  67px     
+        elementtag giverelement elementtag  giver    id    button_sortfromname button-sort-none toggle-sort   
+                         style    width  10%  min-width  65px     
+        elementtag recipientteamelement elementtag  team    id    button_sorttoteam button-sort-ascending toggle-sort   
+                         style    width  10%  min-width  67px     
+        elementtag recipientelement elementtag  recipient    id    button_sorttoname button-sort-none toggle-sort   
+                         style    width  10%  min-width  90px     
+        elementtag responseelement elementtag  feedback    id    button_sortfeedback button-sort-none toggle-sort   
+                         style    width  45%  min-width  95px     
+        elementtag actionelement elementtag  actions action-header   
+                                                   style    width  15%  min-width  75px     
+ 
+        columntags add giverteamelement   
+        columntags add giverelement   
+        columntags add recipientteamelement   
+        columntags add recipientelement   
+        columntags add responseelement   
+        columntags add actionelement   
+ 
+        issortable put giverelement getcontent issortable put giverteamelement getcontent issortable put recipientelement getcontent issortable put responseelement getcontent issortable put actionelement getcontent buildtablecolumnheaderforgiverquestionrecipientview list elementtag  columntags  
+                                                                     map issortable    
+        elementtag photoelement elementtag  photo    
+        elementtag recipientteamelement elementtag  team    id    button_sortfromteam button-sort-ascending toggle-sort   
+                         style    width  15%  min-width  67px     
+        elementtag recipientelement elementtag  recipient    id    button_sortto button-sort-none toggle-sort   
+                         style    width  15%  min-width  90px     
+        elementtag responseelement elementtag  feedback    id    button_sortfeedback button-sort-none toggle-sort   
+                         style    min-width  95px     
+ 
+        columntags add photoelement   
+        columntags add recipientteamelement   
+        columntags add recipientelement   
+        columntags add responseelement   
+ 
+        issortable put photoelement getcontent issortable put recipientteamelement getcontent issortable put recipientelement getcontent issortable put responseelement getcontent buildtablecolumnheaderforrecipientquestiongiverview list elementtag  columntags  
+                                                                     map issortable    
+        elementtag photoelement elementtag  photo    
+        elementtag giverteamelement elementtag  team    id    button_sortfromteam button-sort-ascending toggle-sort   
+                         style    width  15%  min-width  67px     
+        elementtag giverelement elementtag  giver    id    button_sortfromname button-sort-none toggle-sort   
+                         style    width  15%  min-width  65px     
+        elementtag responseelement elementtag  feedback    id    button_sortfeedback button-sort-none toggle-sort   
+                         style    min-width  95px     
+        elementtag actionelement elementtag  actions action-header    
+ 
+        columntags add photoelement   
+        columntags add giverteamelement   
+        columntags add giverelement   
+        columntags add responseelement   
+        columntags add actionelement   
+ 
+        issortable put photoelement getcontent issortable put giverteamelement getcontent issortable put giverelement getcontent issortable put responseelement getcontent issortable put actionelement getcontent list instructorfeedbackresultsresponserow  buildresponserowsforquestion  
+            feedbackquestionattributes question  list feedbackresponseattributes  responses    
+        list instructorfeedbackresultsresponserow  responserows arraylist      
+ 
+        list possiblegiverswithoutresponses   bundle getpossiblegivers question   
+        list possiblereceiverswithoutresponsesforgiver arraylist prevgiver feedbackresponseattributes response   responses bundle isgivervisible response      bundle isrecipientvisible response     
+                possiblegiverswithoutresponses clear    
+                possiblereceiverswithoutresponsesforgiver clear    
+              
+ 
+              
+            removeparticipantidentifierfromlist possiblegiverswithoutresponses  response giver isnewgiver    prevgiver equals response giver isnewgiver ismissingresponsesshown    
+                    responserows addall  
+                            buildmissingresponserowsbetweengiverandpossiblerecipients  
+                                        question  possiblereceiverswithoutresponsesforgiver  prevgiver  
+                                        bundle getnameforemail prevgiver   
+                                        bundle getteamnameforemail prevgiver giveridentifier   response giver  
+ 
+                possiblereceiverswithoutresponsesforgiver   bundle getpossiblerecipients question  giveridentifier   
+              
+ 
+              
+            removeparticipantidentifierfromlist possiblereceiverswithoutresponsesforgiver  response recipient   
+            prevgiver   response giver  
+ 
+            instructorfeedbackresultsmoderationbutton moderationbutton   buildmoderationbuttonforexistingresponse  
+                                                                                question  response   
+            instructorfeedbackresultsresponserow responserow instructorfeedbackresultsresponserow  
+                                                                       bundle getgivernameforresponse response   
+                                                                       bundle getteamnameforemail response giver   
+                                                                       bundle getrecipientnameforresponse response   
+                                                                       bundle getteamnameforemail response recipient   
+                                                                       bundle getresponseanswerhtml response  question   
+                                                                       moderationbutton   
+            configureresponserow prevgiver  response recipient  responserow   
+            responserows add responserow responses isempty      
+            responserows addall getremainingmissingresponserows question  possiblegiverswithoutresponses  
+                                                                possiblereceiverswithoutresponsesforgiver  
+                                                                prevgiver responserows list instructorfeedbackresultsresponserow  
+            buildresponserowsforquestionforsinglegiver feedbackquestionattributes question  
+                                                       list feedbackresponseattributes  responses giveridentifier buildresponserowsforquestionforsingleparticipant question  responses  giveridentifier list instructorfeedbackresultsresponserow  
+            buildresponserowsforquestionforsinglerecipient feedbackquestionattributes question  
+                                                           list feedbackresponseattributes  responses recipientidentifier buildresponserowsforquestionforsingleparticipant question  responses  recipientidentifier list instructorfeedbackresultsresponserow  buildresponserowsforquestionforsingleparticipant  
+                                    feedbackquestionattributes question  
+                                    list feedbackresponseattributes  responses participantidentifier isfirstgroupedbygiver    
+        list instructorfeedbackresultsresponserow  responserows arraylist      
+ 
+        list possibleparticipantswithoutresponses   isfirstgroupedbygiver 
+                                                          ? bundle getpossiblerecipients question  participantidentifier  
+                                                            bundle getpossiblegivers question  participantidentifier feedbackresponseattributes response   responses bundle isgivervisible response      bundle isrecipientvisible response     
+                possibleparticipantswithoutresponses clear participantwithresponse   isfirstgroupedbygiver ? response recipient   response giver  
+            removeparticipantidentifierfromlist possibleparticipantswithoutresponses  
+                                                participantwithresponse   
+ 
+            instructorfeedbackresultsmoderationbutton moderationbutton   
+                    buildmoderationbuttonforexistingresponse question  response   
+ 
+            instructorfeedbackresultsresponserow responserow instructorfeedbackresultsresponserow  
+                            bundle getgivernameforresponse response   
+                            bundle getteamnameforemail response giver   
+                            bundle getrecipientnameforresponse response   
+                            bundle getteamnameforemail response recipient   
+                            bundle getresponseanswerhtml response  question   moderationbutton   
+ 
+            configureresponserow response giver  response recipient  responserow   
+ 
+            responserows add responserow ismissingresponsesshown isfirstgroupedbygiver    
+                responserows addall  
+                        buildmissingresponserowsbetweengiverandpossiblerecipients  
+                                                question  possibleparticipantswithoutresponses  
+                                                participantidentifier  
+                                                bundle getnameforemail participantidentifier   
+                                                bundle getteamnameforemail participantidentifier responserows addall  
+                        buildmissingresponserowsbetweenrecipientandpossiblegivers  
+                                                question  possibleparticipantswithoutresponses  
+                                                participantidentifier  
+                                                bundle getnameforemail participantidentifier   
+                                                bundle getteamnameforemail participantidentifier responserows configureresponserow giver recipient  
+                                      instructorfeedbackresultsresponserow responserow viewtype question  
+            responserow setgiverprofilepicturelink getprofilepictureifemailvalid giver    
+            responserow setrecipientprofilepicturelink getprofilepictureifemailvalid recipient    
+ 
+            responserow setactionsdisplayed giver_question_recipient  
+            responserow setgiverdisplayed responserow setgiverprofilepicturelink responserow setrecipientprofilepictureacolumn responserow setrecipientprofilepicturelink getprofilepictureifemailvalid recipient    
+            responserow setactionsdisplayed recipient_question_giver  
+            responserow setrecipientdisplayed responserow setgiverprofilepictureacolumn responserow setgiverprofilepicturelink getprofilepictureifemailvalid giver    
+            responserow setactionsdisplayed assumption fail getprofilepictureifemailvalid email isemailvalid   validator getinvalidityinfoforemail email  isempty isemailvalid ? getstudentprofilepicturelink email  instructor courseid list instructorfeedbackresultsresponserow  buildmissingresponserowsbetweengiverandpossiblerecipients  
+                                                                    feedbackquestionattributes question  
+                                                                    list possiblereceivers giveridentifier givername giverteam    
+        list instructorfeedbackresultsresponserow  missingresponses arraylist      
+        feedbackquestiondetails questiondetails   questiontodetailsmap get question possiblerecipient   possiblereceivers questiondetails shouldshownoresponsetext question texttodisplay   questiondetails getnoresponsetextinhtml  
+                                               giveridentifier  possiblerecipient  bundle  question possiblerecipientname   bundle getfullnamefromroster possiblerecipient possiblerecipientteam   bundle getteamnamefromroster possiblerecipient   
+ 
+                instructorfeedbackresultsmoderationbutton moderationbutton   
+                        buildmoderationbuttonforgiver question  giveridentifier   btn btn btn-xs   
+                                                      moderate_single_response   
+                instructorfeedbackresultsresponserow missingresponse instructorfeedbackresultsresponserow  
+                                givername  giverteam  possiblerecipientname  possiblerecipientteam  
+                                texttodisplay  moderationbutton missingresponse setrowattributes elementtag pending_response_row     
+                configureresponserow giveridentifier  possiblerecipient  missingresponse   
+                missingresponses add missingresponse missingresponses list instructorfeedbackresultsresponserow  buildmissingresponserowsbetweenrecipientandpossiblegivers  
+                                    feedbackquestionattributes question  
+                                    list possiblegivers recipientidentifier recipientname recipientteam    
+        list instructorfeedbackresultsresponserow  missingresponses arraylist      
+        feedbackquestiondetails questiondetails   questiontodetailsmap get question possiblegiver   possiblegivers possiblegivername   bundle getfullnamefromroster possiblegiver possiblegiverteam   bundle getteamnamefromroster possiblegiver texttodisplay   questiondetails getnoresponsetextinhtml recipientidentifier  possiblegiver  
+                                                                           bundle  question questiondetails shouldshownoresponsetext question     
+                instructorfeedbackresultsmoderationbutton moderationbutton   buildmoderationbuttonforgiver  
+                                                                                 question  possiblegiver  
+                                                                                  btn btn btn-xs   
+                                                                                 moderate_single_response   
+                instructorfeedbackresultsresponserow missingresponse instructorfeedbackresultsresponserow  
+                                                                                    possiblegivername  possiblegiverteam  
+                                                                                    recipientname  recipientteam  
+                                                                                    texttodisplay  moderationbutton missingresponse setrowattributes elementtag pending_response_row     
+                configureresponserow possiblegiver  recipientidentifier  missingresponse   
+ 
+                missingresponses add missingresponse missingresponses removeparticipantidentifierfromlist  
+                    list participantidentifierlist participantidentifier    
+        participantidentifierlist remove participantidentifier list instructorfeedbackresultsresponserow  getremainingmissingresponserows  
+            feedbackquestionattributes question  list remainingpossiblegivers  
+            list possiblerecipientsforgiver prevgiver    
+        list instructorfeedbackresultsresponserow  responserows arraylist possiblerecipientsforgiver ismissingresponsesshown    
+            responserows addall buildmissingresponserowsbetweengiverandpossiblerecipients  
+                                            question  possiblerecipientsforgiver  
+                                            prevgiver  bundle getnameforemail prevgiver   
+                                            bundle getteamnameforemail prevgiver     
+          
+ 
+        removeparticipantidentifierfromlist remainingpossiblegivers  prevgiver possiblegiverwithnoresponses   remainingpossiblegivers isallsectionsselected   
+                        bundle getsectionfromroster possiblegiverwithnoresponses  equals selectedsection list possiblerecipientsforremaininggiver   
+                                            bundle getpossiblerecipients question  possiblegiverwithnoresponses ismissingresponsesshown    
+                responserows addall  
+                        buildmissingresponserowsbetweengiverandpossiblerecipients  
+                                    question  
+                                    possiblerecipientsforremaininggiver  
+                                    possiblegiverwithnoresponses  
+                                    bundle getfullnamefromroster possiblegiverwithnoresponses   
+                                    bundle getteamnamefromroster possiblegiverwithnoresponses responserows instructorfeedbackresultsmoderationbutton 
+            buildmoderationbuttonforexistingresponse feedbackquestionattributes question  
+                                                     feedbackresponseattributes response isgiverinstructor   question givertype    feedbackparticipanttype instructors isgiverstudentorteam   question givertype    feedbackparticipanttype students 
+                                          question givertype    feedbackparticipanttype teams isgiverstudentorteam    isgiverinstructor buildmoderationbuttonforgiver question  response giver   btn btn btn-xs   
+                                                 moderate_single_response instructorfeedbackresultsmoderationbutton buildmoderationbuttonforgiver feedbackquestionattributes question giveridentifier classname buttontext isgiverinstructorofcourse   bundle roster isinstructorofcourse giveridentifier isgivervisiblestudentorteam   isteamvisible giveridentifier  
+                                                 bundle roster isstudentincourse giveridentifier isgivervisiblestudentorteam     isgiverinstructorofcourse sectionname   bundle getsectionfromroster giveridentifier isallowedtomoderate   isallowedtomoderate instructor  sectionname  getfeedbacksessionname isdisabled    isallowedtomoderate moderatefeedbackresponselink   isgiverinstructorofcourse actionuris instructor_edit_instructor_feedback_page actionuris instructor_edit_student_feedback_page  
+        moderatefeedbackresponselink   adduseridtourl moderatefeedbackresponselink instructorfeedbackresultsmoderationbutton isdisabled  classname  giveridentifier  getcourseid    
+                                                             getfeedbacksessionname    question  buttontext  
+                                                             moderatefeedbackresponselink instructorfeedbackresultsgroupbyparticipantpanel buildinstructorfeedbackresultsgroupbysecondaryparticipantpanel participantidentifier participantname  
+                                   list instructorfeedbackresultssecondaryparticipantpanelbody  secondaryparticipantpanels  
+                                   instructorfeedbackresultsmoderationbutton moderationbutton    
+ 
+        instructorfeedbackresultsgroupbyparticipantpanel bysecondaryparticipantpanel instructorfeedbackresultsgroupbyparticipantpanel secondaryparticipantpanels   
+        bysecondaryparticipantpanel setparticipantidentifier participantidentifier   
+        bysecondaryparticipantpanel setname participantname   
+        bysecondaryparticipantpanel setisgiver viewtype isprimarygroupingofgivertype isemailvalid   validator getinvalidityinfoforemail participantidentifier  isempty    
+        bysecondaryparticipantpanel setemailvalid isemailvalid   
+ 
+        bysecondaryparticipantpanel setprofilepicturelink getprofilepictureifemailvalid participantidentifier    
+ 
+        bysecondaryparticipantpanel setmoderationbutton moderationbutton   
+ 
+        bysecondaryparticipantpanel sethasresponses bysecondaryparticipantpanel feedbacksessionpublishbutton getinstructorfeedbacksessionpublishandunpublishaction feedbacksessionpublishbutton bundle feedbacksession actionuris instructor_feedback_sessions_page  
+                                                instructor  
+                                                 btn-primary btn-block list feedbackresponsecommentrow  buildresponsecomments givername recipientname  
+            feedbackquestionattributes question  feedbackresponseattributes response    
+        list feedbackresponsecommentrow  comments arraylist      
+        list feedbackresponsecommentattributes  frcattributeslist   bundle responsecomments get response getid frcattributeslist feedbackresponsecommentattributes frcattributes   frcattributeslist    
+                comments add buildresponsecomment givername  recipientname  question  response  frcattributes comments feedbackresponsecommentrow buildresponsecomment givername recipientname  
+            feedbackquestionattributes question  feedbackresponseattributes response  
+            feedbackresponsecommentattributes frcattributes isinstructorgiver   instructor email equals frcattributes giveremail isinstructorwithprivilegestomodify   
+                instructor isallowedforprivilege  
+                        response giversection  response feedbacksessionname paramsnames instructor_permission_modify_session_comment_in_sections  
+                   instructor isallowedforprivilege  
+                           response recipientsection  response feedbacksessionname paramsnames instructor_permission_modify_session_comment_in_sections isinstructorallowedtoeditanddeletecomment   isinstructorgiver    isinstructorwithprivilegestomodify  
+ 
+        map feedbackparticipanttype responsevisibilitymap   getresponsevisibilitymap question whocanseecomment isvisibilityiconshown bundle feedbacksession ispublished isresponsecommentpublictorecipient    frcattributes showcommentto isempty    
+            isvisibilityiconshown   isresponsecommentpublictorecipient isvisibilityiconshown    
+                whocanseecomment   gettypeofpeoplecanviewcomment frcattributes  question   
+              
+          
+ 
+        feedbackresponsecommentrow frc feedbackresponsecommentrow  
+                                           frcattributes  frcattributes giveremail  givername  recipientname  
+                                           getresponsecommentvisibilitystring frcattributes  question   
+                                           getresponsecommentgivernamevisibilitystring frcattributes  question   
+                                           responsevisibilitymap  bundle instructoremailnametable  
+                                           bundle gettimezone     
+        frc setvisibilityicon isvisibilityiconshown  whocanseecomment isinstructorallowedtoeditanddeletecomment    
+            frc enableeditdelete frc feedbackresponsecommentrow buildfeedbackresponsecommentaddform feedbackquestionattributes question  
+                        feedbackresponseattributes response  map feedbackparticipanttype responsevisibilitymap givername recipientname    
+        feedbackresponsecommentattributes frca feedbackresponsecommentattributes question courseid  question feedbacksessionname  
+                                                      question getfeedbackquestionid    response getid     
+ 
+        feedbackparticipanttype   relevanttypes     
+                feedbackparticipanttype giver  
+                feedbackparticipanttype receiver  
+                feedbackparticipanttype own_team_members  
+                feedbackparticipanttype receiver_team_members  
+                feedbackparticipanttype students  
+                feedbackparticipanttype instructors 
+           
+ 
+        frca showcommentto arraylist      
+        frca showgivernameto arraylist feedbackparticipanttype type   relevanttypes isresponsecommentvisibleto question  type     
+                frca showcommentto add type isresponsecommentgivernamevisibleto question  type     
+                frca showgivernameto add type feedbackresponsecommentrow frca  givername  recipientname  
+                                              getresponsecommentvisibilitystring question   
+                                              getresponsecommentgivernamevisibilitystring question   responsevisibilitymap  
+                                              bundle gettimezone map feedbackparticipanttype getresponsevisibilitymap feedbackquestionattributes question    
+        map feedbackparticipanttype responsevisibilitymap hashmap      
+ 
+        feedbackparticipanttype   relevanttypes     
+                feedbackparticipanttype giver  
+                feedbackparticipanttype receiver  
+                feedbackparticipanttype own_team_members  
+                feedbackparticipanttype receiver_team_members  
+                feedbackparticipanttype students  
+                feedbackparticipanttype instructors feedbackparticipanttype participanttype   relevanttypes    
+            responsevisibilitymap put participanttype  isresponsevisibleto participanttype  question responsevisibilitymap isresponsevisibleto feedbackparticipanttype participanttype  feedbackquestionattributes question participanttype giver question isresponsevisibleto feedbackparticipanttype giver instructors question isresponsevisibleto feedbackparticipanttype instructors own_team_members question givertype    feedbackparticipanttype instructors 
+                      question givertype    feedbackparticipanttype self 
+                      question isresponsevisibleto feedbackparticipanttype own_team_members receiver question recipienttype    feedbackparticipanttype self 
+                      question recipienttype    feedbackparticipanttype none 
+                      question isresponsevisibleto feedbackparticipanttype receiver receiver_team_members question recipienttype    feedbackparticipanttype instructors 
+                       question recipienttype    feedbackparticipanttype self 
+                       question recipienttype    feedbackparticipanttype none 
+                       question isresponsevisibleto feedbackparticipanttype receiver_team_members students question isresponsevisibleto feedbackparticipanttype students assumption fail  invalid participant type map instructorfeedbackresultsmoderationbutton  buildmoderatebuttonsfornoresponsepanel     
+        map instructorfeedbackresultsmoderationbutton  moderationbuttons hashmap giveridentifier   bundle responsestatus emailnametable keyset isstudent   bundle isparticipantidentifierstudent giveridentifier isstudent sectionname   bundle getsectionfromroster giveridentifier isallowedtomoderate   isallowedtomoderate instructor  sectionname  feedbacksessionname moderatefeedbacklink   adduseridtourl actionuris instructor_edit_student_feedback_page   
+ 
+            instructorfeedbackresultsmoderationbutton moderationbutton instructorfeedbackresultsmoderationbutton  isallowedtomoderate   btn btn btn-xs   
+                                                                  giveridentifier  
+                                                                  bundle feedbacksession getcourseid    
+                                                                  bundle feedbacksession getfeedbacksessionname submit responses   moderatefeedbacklink   
+            moderationbuttons put giveridentifier  moderationbutton moderationbuttons instructorfeedbackresultsremindbutton buildremindbuttonfornoresponsepanel issessionclosed   bundle getfeedbacksession   isclosed actionlink   adduseridtourl actionuris instructor_feedback_remind_particular_students_page   
+        actionlink   url addparamtourl actionlink paramsnames course_id  bundle feedbacksession getcourseid     
+        actionlink   url addparamtourl actionlink paramsnames feedback_session_name  
+                bundle feedbacksession getfeedbacksessionname     
+        actionlink   addsessiontokentourl actionlink instructorfeedbackresultsremindbutton issessionclosed  
+                 btn btn btn-xs btn-tm-actions remind-btn-no-response   
+                bundle feedbacksession getcourseid    
+                bundle feedbacksession getfeedbacksessionname    
+                 remind all   actionlink getremindparticularstudentslink remindparticularstudentslink actionuris instructor_feedback_remind_particular_students nexturl   adduseridtourl actionuris instructor_feedback_results_page   
+        nexturl   url addparamtourl nexturl paramsnames course_id  bundle feedbacksession getcourseid     
+        nexturl   url addparamtourl nexturl paramsnames feedback_session_name  
+                bundle feedbacksession getfeedbacksessionname     
+        remindparticularstudentslink   url addparamtourl remindparticularstudentslink paramsnames next_url  
+                nexturl   
+        remindparticularstudentslink   addsessiontokentourl remindparticularstudentslink remindparticularstudentslink  
+      
+ 
+     override getstudentprofilepicturelink studentemail courseid profilepicturelinks containskey studentemail     
+            profilepicturelinks put studentemail getstudentprofilepicturelink stringhelper encrypt studentemail   
+                                                                       stringhelper encrypt courseid profilepicturelinks get studentemail setbundle feedbacksessionresultsbundle bundle bundle   bundle feedbacksessionresultsbundle getbundle bundle instructorattributes getinstructor instructor list getsections sections getselectedsection selectedsection getsorttype sorttype  
+      
+ 
+     deprecated getgroupbyteam groupbyteam null    groupbyteam isgroupedbyteam on  equals groupbyteam isstatsshown showstats ismissingresponsesshown ismissingresponsesshown getstartindex startindex getcourseid displayablecourseid getfeedbacksessionname displayablefsname getajaxstatus ajaxstatus getsessionresultshtmltableasstring sessionresultshtmltableasstring list instructorfeedbackresultsquestiontable  getquestionpanels questionpanels map instructorfeedbackresultssectionpanel  getsectionpanels sectionpanels getinstructorfeedbacksessioneditlink instructor isallowedforprivilege paramsnames instructor_permission_modify_session  
+               ? getinstructorfeedbackeditlink bundle feedbacksession getcourseid    
+                                                      bundle feedbacksession getfeedbacksessionname getinstructorfeedbacksessionresultslink getinstructorfeedbackresultslink bundle feedbacksession getcourseid    
+                                                bundle feedbacksession getfeedbacksessionname isallowedtomoderate instructorattributes instructor sectionname feedbacksessionname instructor isallowedforprivilege sectionname  feedbacksessionname paramsnames instructor_permission_modify_session_comment_in_sections isallsectionsselected all  equals selectedsection instructorfeedbackresultssessionpanel getsessionpanel instructorfeedbackresultssessionpanel  
+                bundle feedbacksession  getinstructorfeedbacksessioneditlink    
+                getinstructorfeedbacksessionpublishandunpublishaction    selectedsection  
+                ismissingresponsesshown  isstatsshown instructorfeedbackresultsfilterpanel getfilterpanel instructorfeedbackresultsfilterpanel  
+                isstatsshown    bundle feedbacksession  isallsectionsselected    selectedsection  
+                isgroupedbyteam    sorttype  getinstructorfeedbacksessionresultslink    
+                getsections    ismissingresponsesshown instructorfeedbackresultsnoresponsepanel getnoresponsepanel instructorfeedbackresultsnoresponsepanel bundle responsestatus  
+                buildmoderatebuttonsfornoresponsepanel    
+                buildremindbuttonfornoresponsepanel    
+                getremindparticularstudentslink setstartindex startindex startindex   startindex setajaxstatus ajaxstatus ajaxstatus   ajaxstatus setsessionresultshtmltableasstring sessionresultshtmltableasstring sessionresultshtmltableasstring   sessionresultshtmltableasstring islargenumberofresponses isquestionviewtype   viewtype    instructorfeedbackresultspageviewtype question isquestionviewtype    islargenumberofrespondents      isallsectionsselected   
+                    bundle iscomplete islargenumberofrespondents numrespondents   bundle feedbacksession getrespondinginstructorlist   size   
+                             bundle feedbacksession getrespondingstudentlist   size islargenumberofrespondents 
+               numrespondents   respondents_limit_for_autoloading setlargenumberofrespondents needajax islargenumberofrespondents   needajax  
+      
+ 
+ teammates ui pagedata InstructorFeedbackResultsPageData

@@ -1,0 +1,229 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   validate xml schema documents task validates xml schema documents requires xml parser handles relevant sax  xerces jaxp options resolve remote referencies  ant may need proxy set up  using setproxy task  
+   
+   hands most work parent    link xmlvalidatetask ant1 7 
+    
+    map declared schemas catch complain redefinitions    
+    full checking schema    
+    
+       flag disable dtd support  best left enabled  
+        
+    
+       default url nonamespace schemas 
+        
+   error strings 
+    sax1 not supported    
+    schema features not supported many default schemas    
+    unable create parser    
+    adding schema    
+    duplicate declaration schema     
+    
+       called project task initialize properly default 
+       implementation op  
+       
+        throws buildexception something goes wrong build 
+        
+  validating 
+    
+       turn xsd support xerces  
+        return true success  false failure 
+        
+  set schema source doc 
+    
+       set nonamespace handling up xerces parsers 
+        param property name property set 
+        
+    
+       set schema attributes jaxp 1 2 engine  
+        see href  http   java sun com xml jaxp change-requests-11 html   
+       jaxp 1 2 approved changes return true success  false failure 
+        
+  enable xsd 
+  set schema source doc 
+    
+       add schema 
+        param location schema location  
+        throws buildexception namespace already declaration schema different value 
+        
+    
+       enable full schema checking  slower better  
+        param fullchecking code boolean  code  value  
+        
+    
+       create schema location hold anonymous 
+       schema 
+        
+    
+       identify url default schema 
+        param defaultschemaurl url default schema  
+        
+    
+       identify file containing default schema 
+        param defaultschemafile location default schema  
+        
+    
+       flag disable dtd support  
+        param disabledtd code boolean  code  value  
+        
+    
+       init parser   load parser class set features necessary only reader valid 
+       
+        throws buildexception something went wrong 
+        
+  validate parser type 
+  enable schema 
+  setfeature xmlconstants feature_validation  false   
+  couldnt use xerces jaxp calls 
+  enable schema checking 
+  turn dtds desired 
+  schema declarations go next 
+    
+       create reader use class not specify another one reason not use   link jaxputils#getxmlreader create factory options  
+        return default xml parser 
+        
+    
+       build string list schema locations set relevant 
+       property url namespace schema 
+        return schema url 
+        
+    
+       set feature supported  log verbose level not 
+        param feature feature  
+        param value code boolean  code  value  
+        
+    
+       handler called successful file validation  
+       
+        param fileprocessed number files processed  
+        
+    
+       representation schema location uri plus either file url namespace uri    
+    both url file given schema    
+    file not found    
+    cannot make url location provided arg constructor namespace  
+            return namespace  
+            
+    
+           set namespace schema  any uri 
+            param namespace namespace use file  
+            return file containing schema  
+            
+    
+           identify file contains namespace's schema file must exist  
+            param file file contains schema url containing schema  
+            return url string  
+            
+    
+           identify url hosts schema  
+            param url url string url schema 
+            return url schema 
+            throws buildexception not 
+            
+  error both empty both set implausible required handling 
+    
+           validate fields create uri location  string 
+           
+            return string uri location 
+            throws buildexception error  
+            
+    
+           assert namespace valid 
+            throws buildexception not 
+            
+    
+           check property set 
+            param property string check 
+            return true not null empty 
+            
+    
+           equality test checks namespace  location filename must match  
+            param o object compare against 
+            return true iff objects considered equal value 
+            
+    
+           generate hashcode depending namespace  url file name  
+            return hashcode  
+            
+    
+           returns string representation object error messages return string representation object  
+            
+  schemalocationorg apache tools ant taskdefs optional SchemaValidate org apache tools ant taskdefs optional schemavalidate xmlvalidatetask error_sax_1    sax1 parsers are not supported error_no_xsd_support 
+           parser does not support xerces or jaxp schema features error_too_many_default_schemas 
+           only one of defaultschemafile and defaultschemaurl allowed error_parser_creation_failure 
+           could not create parser message_adding_schema    adding schema error_duplicate_schema 
+           duplicate declaration of schema init buildexception init    
+          
+        setlenient enablexercesschemavalidation setfeature xmlconstants feature_xsd setnonamespaceschemaproperty xmlconstants property_no_namespace_schema_location buildexception e    
+            log e tostring    project msg_verbose setnonamespaceschemaproperty property anonschema   getnonamespaceschemaurl anonschema setproperty property  anonschema enablejaxp12schemavalidation setproperty xmlconstants feature_jaxp12_schema_language  xmlconstants uri_xsd   
+              
+            setnonamespaceschemaproperty xmlconstants feature_jaxp12_schema_source buildexception e    
+            log e tostring    project msg_verbose addconfiguredschema schemalocation location    
+        log  adding schema     location  project msg_debug   
+        location validatenamespace    
+        schemalocation old    schemalocation  schemalocations get location getnamespace old old equals location buildexception error_duplicate_schema   location   
+          
+        schemalocations put location getnamespace    location setfullchecking fullchecking fullchecking   fullchecking createanonymousschema anonymousschema anonymousschema schemalocation    
+          
+        anonymousschema setnamespace   no namespace setnonamespaceurl defaultschemaurl    
+        createanonymousschema anonymousschema seturl defaultschemaurl setnonamespacefile file defaultschemafile    
+        createanonymousschema anonymousschema setfile defaultschemafile setdisabledtd disabledtd disabledtd   disabledtd initvalidator initvalidator issax1parser buildexception error_sax_1   
+          
+ 
+          
+          
+        setfeature xmlconstants feature_namespaces enablexercesschemavalidation       enablejaxp12schemavalidation buildexception error_no_xsd_support   
+          
+ 
+          
+        setfeature xmlconstants feature_xsd_full_validation  fullchecking   
+ 
+          
+        setfeatureifsupported xmlconstants feature_disallow_dtd  disabledtd   
+ 
+          
+        addschemalocations xmlreader createdefaultreader     
+        saxparserfactory factory   saxparserfactory newinstance    
+        factory setvalidating factory setnamespaceaware xmlreader reader saxparser saxparser   factory newsaxparser    
+            reader   saxparser getxmlreader parserconfigurationexception e buildexception error_parser_creation_failure  e saxexception e buildexception error_parser_creation_failure  e reader addschemalocations     
+        iterator it   schemalocations values   iterator    
+        stringbuffer buffer stringbuffer count   0 it hasnext count   0    
+                buffer append ' '   
+              
+            schemalocation schemalocation    schemalocation  it next tuple   schemalocation geturiandlocation    
+            buffer append tuple   
+            log  adding schema     tuple  project msg_verbose   
+            count count   0    
+            setproperty xmlconstants property_schema_location  buffer tostring getnonamespaceschemaurl anonymousschema null anonymousschema getschemalocationurl setfeatureifsupported feature value getxmlreader   setfeature feature  value saxnotrecognizedexception e    
+            log  not recognizied      feature  project msg_verbose saxnotsupportedexception e    
+            log  not supported      feature  project msg_verbose onsuccessfulvalidation fileprocessed    
+        log fileprocessed   message_files_validated  project msg_verbose schemalocation error_no_uri    no namespace uri error_two_locations 
+               both url and file were given schema error_no_file    file not found error_no_url_representation 
+               cannot make a url of error_no_location 
+               no file or url supplied the schema schemalocation getnamespace namespace setnamespace namespace namespace   namespace file getfile file setfile file file file   file geturl url seturl url url   url getschemalocationurl hasfile   file hasurl   isset url hasfile     hasurl buildexception error_no_location   namespace hasfile    hasurl buildexception error_two_locations   namespace schema   url hasfile file exists buildexception error_no_file   file schema   fileutils getfileutils   getfileurl file  tostring malformedurlexception e buildexception error_no_url_representation   file  e schema geturiandlocation buildexception   
+            validatenamespace    
+            stringbuffer buffer stringbuffer    
+            buffer append namespace   
+            buffer append ' '   
+            buffer append getschemalocationurl buffer validatenamespace isset getnamespace buildexception error_no_uri isset property property property length      0 equals object o o o schemalocation schemalocation schemalocation    schemalocation  o file file equals schemalocation file    schemalocation file namespace namespace equals schemalocation namespace  
+                      schemalocation namespace url url equals schemalocation url    schemalocation url hashcode result  
+            result    namespace namespace hashcode     0   
+            result   29   result    file file hashcode     0   
+            result   29   result    url url hashcode     0 result tostring     
+            stringbuffer buffer stringbuffer    
+            buffer append namespace namespace     anonymous     
+            buffer append ' '   
+            buffer append url url               
+            buffer append file file getabsolutepath buffer tostring    
+          
+        
+ org apache tools ant taskdefs optional SchemaValidate

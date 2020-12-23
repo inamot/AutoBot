@@ -1,0 +1,131 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications class loads property panel tab classes specified configuration 
+   file  
+    
+    
+        return orientation 
+        deprecated 0 25 4 tfmorris   use getorientation parent component s orientation want match  
+        
+    
+       load tab panels defined configuration file system 
+       property  code argo config  code used override default 
+       config file code org argouml argo ini  code  
+        
+        param tabs list return tabs loaded  
+        param panelname panel name 
+        param orientation orientation  horizontal vertical  
+        deprecated 0 25 4 tfmorris   callers instantiate  
+       required classes directly allowing dependencies hidden argo ini  
+        
+    
+       read each line config file  parsing each line adding relevant tabs  
+        
+        param tabs list tabs added  
+        param panelname 
+        param orientation 
+        param position property specified 
+   
+      try load file 
+    
+       instantiates class tab saved position matches requested position saves orientation tabprops tab encountered  
+        param tabclass class instantiated new tab 
+        param position requested position  north  south  etc  
+        
+    
+        return saved position given class 
+        
+    
+       parse line text file containing configuration argouml  
+         org argouml argo ini side effect loading named 
+       class one found  
+        
+        param line given line 
+        param panelname name panel 
+        param linenum number current line 
+        param configfile configuration file name 
+        return resulting class tabpanel 
+        
+  todo  arguments 
+    
+        param s input string 
+        return string everything before  including  colon stripped jpanel tab   tabs tab instanceof org argouml uml ui tabprops    
+                  tabpropsorientation   orientation  
+                
+           org argouml util ConfigLoader org argouml util configloader   
+ 
+  
+ 
+  
+  
+  
+  
+ 
+      
+     deprecated orientation gettabpropsorientation tabpropsorientation  
+      
+ 
+      
+     deprecated loadtabs list tabs panelname orientation orientation position panelname equals  north      panelname equals  south   
+	       panelname equals  west      panelname equals  east   
+	       panelname equals  northwest      panelname equals  northeast   
+	       panelname equals  southwest      panelname equals  southeast      
+            position   panelname  
+            panelname    detail   
+          
+ 
+        list jpanel   tabclasses   readconfigfile panelname  orientation  
+                position tabclasses jpanel  tabclass   tabclasses    
+                jpanel tab   createtab tabclass  position tab tabs add tab   
+                  
+              
+            updateorientation tabs  orientation list jpanel   readconfigfile panelname  
+            orientation orientation position    
+ 
+        inputstream is linenumberreader lnr configfile   system getproperty config_file_property configfile is fileinputstream configfile filenotfoundexception e    
+                is   configloader getresourceasstream configfile is log info  file specified by argo config    
+                              configfile 
+                                 could not be loaded \n   
+                               loading configuration is configfile   default_config_file  
+            is   configloader getresourceasstream configfile is log error  unable to instantiate a config file reader lnr linenumberreader inputstreamreader is   
+                    argo getencoding unsupportedencodingexception ueexc    
+            lnr linenumberreader inputstreamreader is    
+          
+ 
+        list jpanel   tabs arraylist jpanel line   lnr readline line tabclass   parseconfigline line  panelname   
+                        lnr getlinenumber    configfile tabclass tabs add tabclass   
+                  
+                line   lnr readline ioexception io    
+            log error io tabs jpanel createtab jpanel  tabclass position classname   tabclass getname position position equalsignorecase getsavedposition classname      
+                jpanel newtab   tabclass newinstance newtab instantiationexception ex    
+            log error  could not make instance of   
+                      tabclass getname illegalaccessexception ex    
+            log error  could not make instance of   
+                      tabclass getname getsavedposition classname shortclassname   classname substring  
+                classname lastindexof ' '    1  tolowercase    
+        configurationkey key   configuration makekey  layout   shortclassname configuration getstring key   south parseconfigline line panelname linenum configfile line startswith  tabpath newpath   stripbeforecolon line  trim newpath length     0    
+	        tabpath   newpath line startswith panelname tabnames   stripbeforecolon line  trim    
+	    stringtokenizer tabalternatives stringtokenizer tabnames res tabalternatives hasmoreelements tabspec   tabalternatives nexttoken   trim tabname   tabspec tabclassname tabname indexof ' '    0    
+		    tabclassname   tabname tabclassname   tabpath         tabname res forname tabclassname classnotfoundexception cnfe exception e    
+		    log error  unanticipated exception  skipping    
+                              tabname  e res res log isdebugenabled      
+		log debug  \ncould not find any of these classes \n  
+			     tabpath     tabpath    \n  
+			     config file     configfile    \n  
+			     config line #    linenum         line stripbeforecolon s colonpos   s indexof s substring colonpos    1 updateorientation list jpanel  tabs  
+            orientation orientation    
+  
+  
+  
+  
+  
+      
+ 
+ org argouml util ConfigLoader

@@ -1,0 +1,294 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications persist zargo  zipped file  storage  
+   
+    author bob tarling 
+    
+    
+       logger constructor  
+        
+   
+        see org argouml persistence abstractfilepersister#getextension   
+        
+   
+        see org argouml persistence abstractfilepersister#getdesc being considered save out individual xmi's individuals 
+       diagrams make easier modularize output argo  
+       
+        param file file write  
+        param project project save 
+        throws saveexception anything goes wrong 
+        throws interruptedexception thread interrupted 
+       
+        see org argouml persistence projectfilepersister#save  
+            org argouml kernel project  java io file save not raise exception name  #  exists move name name correct backup file nothing  
+   frank case exception 
+   delete name mv name  #  back name name  #  exists rollback old file give message user set system unsaved  
+   
+        see org argouml persistence abstractfilepersister#issaveenabled   
+        
+   
+        see org argouml persistence projectfilepersister#doload java io file  
+        
+   todo commented code below commented out bob tarling order resolve bugs 4845 4857  hopefully determine cause reintroduce  
+  boolean upgraderequired    checkversion fileversion  releaseversion  
+   load  argo project descriptor 
+   load  xmi file before any pgml files 
+   load rest 
+   copy todo items model diagrams any model elements figs todo items refer exist before creating critics  
+   first read argo file zip 
+   keep reading till hit argo  tag version tag  
+   skip 1 lines 
+   loop round loading diagrams 
+   skip 2 lines 
+   ?xml version  1 0  encoding  utf-8  ?  
+    doctype pgml system  pgml dtd   
+   skip 2 lines 
+   ?xml version  1 0  encoding  utf-8  ?  
+    doctype todo system  todo dtd    
+    
+       open zipinputstream first file found given extension  
+       
+        param url url zip file  
+        param ext required extension  
+        return zip stream positioned required location null requested extension not found  
+        throws ioexception problem opening file stream input streams reading zipped file constructor  
+           
+            param z zip input stream 
+            
+   
+            see java io inputstream#close   
+            
+    
+           reads next zip file entry positions stream beginning entry data  
+           
+            return zipentry read 
+            throws ioexception o error occurred list zip file entries end given extension extension null entries returned  
+       org argouml persistence ZargoFilePersister org argouml persistence zargofilepersister umlfilepersister logger log   
+	logger getlogger zargofilepersister zargofilepersister     
+      
+ 
+      
+     override getextension zargo   
+      
+ 
+      
+     override getdesc translator localize  combobox filefilter zargo    
+      
+ 
+      
+     override dosave project project  file file saveexception   
+    interruptedexception   
+ 
+        log info  saving    
+        progressmgr progressmgr progressmgr    
+        progressmgr setnumberofphases 4   
+        progressmgr nextphase    
+         
+        file lastarchivefile file file getabsolutepath      ~    
+        file tempfile tempfile   createtempfile file filenotfoundexception e saveexception  
+                     failed to archive the previous file version   e ioexception e saveexception  
+                     failed to archive the previous file version   e   
+          
+ 
+        bufferedwriter writer project setfile file   
+            project setversion applicationversion getversion     
+            project setpersistenceversion persistence_version   
+ 
+            zipoutputstream stream zipoutputstream fileoutputstream file    
+            writer bufferedwriter outputstreamwriter stream   utf-8 projectmember projectmember   project getmembers projectmember gettype   equalsignorecase  xmi log isinfoenabled      
+                        log info  saving member of type    
+                                  projectmember gettype     
+                      
+                    stream putnextentry zipentry projectmember getzipname      
+                    memberfilepersister persister   
+                        getmemberfilepersister projectmember   
+                    persister save projectmember  writer lastarchivefile exists      
+                lastarchivefile delete tempfile exists       lastarchivefile exists      
+                tempfile renameto lastarchivefile tempfile exists      
+                tempfile delete    
+              
+ 
+            progressmgr nextphase exception e    
+            log error  exception occured during save attempt   e writer close exception ex    
+                  
+              
+ 
+              
+              
+              
+            file delete    
+            tempfile renameto file saveexception e writer close ioexception ex    
+            log error  failed to close save output writer   ex issaveenabled override project doload file file openexception  interruptedexception   
+         
+        progressmgr progressmgr progressmgr    
+        progressmgr setnumberofphases 3   uml_phases_load   
+        threadutils checkifinterrupted fileversion releaseversion argoentry   getentrynames file    argo   iterator   next    
+            url argourl   makezipentryurl tourl file   argoentry   
+            fileversion   getpersistenceversion argourl openstream     
+            releaseversion   getreleaseversion argourl openstream malformedurlexception e openexception e ioexception e openexception e upgraderequired log info  loading zargo file of version     fileversion project p upgraderequired    
+            file combinedfile   zargotouml file  progressmgr   
+            p doload file  combinedfile  progressmgr p   loadfromzargo file  progressmgr   
+          
+ 
+        progressmgr nextphase    
+ 
+        p seturi file touri p project loadfromzargo file file  progressmgr progressmgr openexception   
+ 
+        project p   projectfactory getinstance   createproject file touri progressmgr nextphase    
+ 
+              
+            argoparser parser argoparser argoentry   getentrynames file    argo   iterator   next    
+            parser readproject p inputsource makezipentryurl tourl file   
+                    argoentry  toexternalform      
+ 
+            list memberlist   parser getmemberlist    
+ 
+            log info memberlist size       members xmientry   getentrynames file    xmi   iterator   next    
+            memberfilepersister persister   getmemberfilepersister  xmi    
+            persister load p  makezipentryurl tourl file   xmientry    
+             
+              
+            list entries   getentrynames file name   entries ext   name substring name lastindexof ' '    1 argo  equals ext       xmi  equals ext     
+                    persister   getmemberfilepersister ext   
+                    log info  loading member with   
+                              persister getclass   getname     
+                    persister load p  openzipentry tourl file   name    
+                  
+              
+ 
+            progressmgr nextphase    
+            threadutils checkifinterrupted    
+            p postload p interruptedexception e malformedurlexception e openexception e ioexception e openexception e saxexception e openexception e url tourl file file malformedurlexception file touri   tourl file zargotouml file file  progressmgr progressmgr openexception  interruptedexception   
+        file combinedfile combinedfile   file createtempfile  combinedzargo_     uml    
+            log info  
+                 combining old style zargo sub files into style uml file   
+                      combinedfile getabsolutepath     
+            combinedfile deleteonexit encoding   argo getencoding    
+            fileoutputstream stream fileoutputstream combinedfile   
+            printwriter writer printwriter bufferedwriter outputstreamwriter stream  encoding     
+ 
+            writer println   ?xml version   \ 1 0\       encoding   \   
+                      encoding    \  ?     
+             
+            copyargo file  encoding  writer   
+             
+            progressmgr nextphase    
+             
+            copyxmi file  encoding  writer   
+ 
+            copydiagrams file  encoding  writer   
+ 
+              
+              
+              
+            copymember file   todo   encoding  writer   
+             
+            copymember file   profile   encoding  writer   
+             
+            progressmgr nextphase    
+             
+            writer println    uml     
+            writer close    
+            log info  completed combining files ioexception e openexception e combinedfile copyargo file file encoding  printwriter writer ioexception  malformedurlexception  openexception  
+            unsupportedencodingexception pgmlcount   getpgmlcount file containstodo   containstodo file containsprofile   containsprofile file   
+ 
+          
+        zipinputstream zis   
+            openzipstreamat tourl file   fileconstants project_file_ext zis openexception  
+                     there is no  argo file in the  zargo line  
+        bufferedreader reader bufferedreader inputstreamreader zis  encoding rootline rootline   reader readline rootline openexception  
+                         can't find an  argo  tag in the argo file rootline startswith   argo version   getversion rootline   
+        writer println   uml version \     version    \      
+        writer println rootline   
+        log info  transfering argo contents membercount   0 line   reader readline line trim   startswith   member      
+                  membercount line trim   equals    argo       membercount    0    
+                log info  inserting member info    
+                writer println   member type 'xmi' name ' xmi i   0  i   pgmlcount    i    
+                    writer println   member type 'pgml' name ' pgml containstodo    
+                    writer println   member type 'todo' name ' todo containsprofile type   profileconfiguration extension  
+                    writer println   member type '    type    ' name '   
+                              type    '       
+                  
+              
+            writer println line log isinfoenabled      
+            log info  member count       membercount   
+          
+        zis close    
+        reader close copyxmi file file encoding  printwriter writer ioexception  malformedurlexception  
+            unsupportedencodingexception   
+ 
+        zipinputstream zis   openzipstreamat tourl file     xmi    
+        bufferedreader reader bufferedreader inputstreamreader zis  encoding    
+          
+        reader readline    
+ 
+        readertowriter reader  writer   
+ 
+        zis close    
+        reader close copydiagrams file file encoding  printwriter writer ioexception   
+         
+          
+        zipinputstream zis zipinputstream tourl file  openstream     
+        subinputstream sub subinputstream zis   
+ 
+        zipentry currententry currententry   sub getnextentry currententry getname   endswith   pgml      
+ 
+                bufferedreader reader bufferedreader inputstreamreader sub  encoding firstline   reader readline firstline startswith   ?xml      
+                      
+                      
+                      
+                    reader readline writer println firstline   
+                  
+                 
+                readertowriter reader  writer   
+                sub close    
+                reader close    
+              
+          
+        zis close copymember file file tag outputencoding  printwriter writer ioexception  malformedurlexception  
+            unsupportedencodingexception   
+ 
+        zipinputstream zis   openzipstreamat tourl file         tag zis inputstreamreader isr inputstreamreader zis  outputencoding   
+            bufferedreader reader bufferedreader isr firstline   reader readline firstline startswith   ?xml      
+                  
+                  
+                  
+                reader readline writer println firstline   
+              
+ 
+            readertowriter reader  writer   
+ 
+            zis close    
+            reader close readertowriter  
+            reader reader  
+            writer writer ioexception ch ch   reader read       -1 ch    0xffff    
+                log info  stripping out 0xffff from save file ch    8    
+                log info  stripping out 0x8 from save file writer write ch zipinputstream openzipstreamat url url ext ioexception   
+        zipinputstream zis zipinputstream url openstream     
+        zipentry entry   zis getnextentry entry entry getname   endswith ext     
+            entry   zis getnextentry entry zis close zis inputstream openzipentry url url entryname malformedurlexception  ioexception makezipentryurl url  entryname  openstream url makezipentryurl url url entryname malformedurlexception entryurl    jar     url          entryname url entryurl subinputstream filterinputstream subinputstream zipinputstream z z   
+            in   z  
+          
+ 
+          
+         override close ioexception   
+            in closeentry zipentry getnextentry ioexception in getnextentry getpgmlcount file file ioexception getentrynames file    pgml   size containstodo file file ioexception getentrynames file    todo   isempty containsprofile file file ioexception getentrynames file        profileconfiguration extension  
+                 isempty list getentrynames file file extension ioexception  malformedurlexception   
+        zipinputstream zis zipinputstream tourl file  openstream     
+        list result arraylist zipentry entry   zis getnextentry entry name   entry getname extension name endswith extension     
+                result add name   
+              
+            entry   zis getnextentry    
+          
+        zis close result  
+      
+     
+ 
+ org argouml persistence ZargoFilePersister

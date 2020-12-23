@@ -1,0 +1,174 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   generates jni header files using javah task take following arguments  
+    ul  
+    li classname fully-qualified name class  li  
+    li outputfile - concatenates resulting header source files classes listed file  li  
+    li destdir - sets directory javah saves header files stub files  li  
+    li classpath  li  
+    li bootclasspath  li  
+    li force - specifies output files always written 
+        jdk1 2 only   li  
+    li old - specifies old jdk1 0-style header files generated 
+        otherwise output file contain jni-style native method 
+        function prototypes   jdk1 2 only   li  
+    li stubs - generate c declarations java object file  used old   li  
+    li verbose - causes javah print message stdout concerning status generated files  li  
+    li extdirs - override location installed extensions  li  
+     ul arguments  either  b outputfile  b b destdir  b required not both one classname may specified  using comma-separated 
+   list using  code  lt class name  xxx  gt   code  elements within task  
+    p task executes generate c header source files needed implement native methods  
+   
+    
+  private path extdirs arg constructor fully-qualified name class classes  separated commas   
+        param cls classname classnames   
+        
+    
+       adds class process  
+        return code classargument  code configured class corresponding the nested  class  element contains name  attribute  
+        
+    constructor classargument     
+    
+           set name attribute  
+            param name name attribute name attribute  
+            return name attribute  
+            
+    
+       names classes process  
+        return array classes ant 1 6 3 
+        
+    
+       set destination directory java source 
+       files compiled  
+        param destdir destination directory destination directory any  
+        return destination directory ant 1 6 3 classpath use  
+        param src classpath  
+        
+    
+       path use classpath  
+        return path configured  
+        
+    
+       adds reference classpath defined elsewhere  
+        param r reference classpath  
+        todo needs documented html docs classpath use  
+        return classpath ant 1 6 3 
+        
+    
+       location bootstrap class files  
+        param src bootstrap classpath  
+        
+    
+       adds path bootstrap class files  
+        return path configured bootstrap path adds reference classpath defined elsewhere  
+        param r reference classpath 
+        todo needs documented html bootclasspath use  
+        return bootclass path ant 1 6 3 
+        
+    
+       concatenates resulting header source files classes listed file  
+        param outputfile output file destination file any  
+        return destination file ant 1 6 3 true  output files always written  jdk1 2 only   
+        param force value use  
+        
+    
+       whether output files always written  
+        return force attribute ant 1 6 3 true  specifies old jdk1 0-style header files generated  
+        otherwise output file contain jni-style native method function 
+        prototypes   jdk1 2 only   
+        param old true use old 1 0 style header files  
+        
+    
+       whether old jdk1 0-style header files generated  
+        return old attribute ant 1 6 3 true  generate c declarations java object file  used old   
+        param stubs true  generated c declarations  
+        
+    
+       whether c declarations java object file generated  
+        return stubs attribute ant 1 6 3 true  causes javah print message concerning status generated files  
+        param verbose true verbose printing  
+        
+    
+       whether verbose output generated  
+        return verbose attribute ant 1 6 3 
+        
+    
+       choose implementation particular task  
+        param impl name implemenation ant 1 6 3 
+        
+    
+       adds implementation specific command-line argument  
+        return implementationspecificargument configured ant 1 6 3 
+        
+    
+       returns implementation specific  settings given nested 
+       arg elements  
+        return arguments ant 1 6 3 
+        
+    
+       execute task 
+       
+        throws buildexception problem task execution  
+        
+   first make sure ve srcdir 
+    
+       logs compilation parameters  adds files compile logs quot nicesourcelist quot  
+        param cmd command line  
+        
+    
+       logs compilation parameters  adds files compile logs quot nicesourcelist quot  
+        param cmd command line add parameters org apache tools ant taskdefs optional Javah org apache tools ant taskdefs optional javah task javah     
+        facade facadetaskhelper javahadapterfactory getdefault setclass cls cls   cls classargument createclass     
+        classargument ga classargument    
+        classes addelement ga ga classargument classargument setname name name   name getname name getclasses     
+        arraylist al arraylist cls stringtokenizer tok stringtokenizer cls tok hasmoretokens      
+                al add tok nexttoken   trim     
+              
+          
+ 
+        enumeration e   classes elements e hasmoreelements      
+            classargument arg    classargument  e nextelement    
+            al add arg getname al toarray al size setdestdir file destdir destdir   destdir file getdestdir destdir setclasspath path src classpath classpath   src classpath append src path createclasspath classpath classpath path getproject classpath createpath setclasspathref reference r    
+        createclasspath   setrefid r path getclasspath classpath setbootclasspath path src bootclasspath bootclasspath   src bootclasspath append src path createbootclasspath bootclasspath bootclasspath path getproject bootclasspath createpath setbootclasspathref reference r    
+        createbootclasspath   setrefid r path getbootclasspath bootclasspath setoutputfile file outputfile outputfile   outputfile file getoutputfile outputfile setforce force force   force getforce force setold old old   old getold old setstubs stubs stubs   stubs getstubs stubs setverbose verbose verbose   verbose getverbose verbose setimplementation impl equals impl     
+            facade setimplementation javahadapterfactory getdefault facade setimplementation impl implementationspecificargument createarg     
+        implementationspecificargument arg implementationspecificargument    
+        facade addimplementationargument arg arg getcurrentargs facade getargs execute buildexception cls classes size      0 buildexception attribute must be set    
+                getlocation cls classes size     0 buildexception  set attribute or element    
+                   not both    getlocation destdir destdir isdirectory buildexception  destination directory \     destdir 
+                       \  does not exist or is not a directory   getlocation outputfile buildexception  destdir and outputfile are mutually   
+                       exclusive   getlocation classpath classpath path getproject     concatsystemclasspath  last classpath   classpath concatsystemclasspath  ignore    
+          
+ 
+        javahadapter ad   
+            javahadapterfactory getadapter facade getimplementation ad compile buildexception  compilation failed logandaddfiles commandline cmd    
+        logandaddfilestocompile cmd logandaddfilestocompile commandline cmd    
+        log  compilation     cmd describearguments    
+            project msg_verbose   
+ 
+        stringbuffer niceclasslist stringbuffer c   getclasses i   0  i   c length  i      
+            cmd createargument   setvalue c i    
+            niceclasslist append          
+            niceclasslist append c i    
+            niceclasslist append lsep   
+          
+ 
+        stringbuffer prefix stringbuffer c length   1    
+            prefix append  es    
+          
+        prefix append   to be compiled     
+        prefix append lsep   
+ 
+        log prefix tostring     niceclasslist tostring    project msg_verbose   
+      
+  
+org apache tools ant taskdefs optional Javah

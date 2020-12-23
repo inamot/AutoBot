@@ -1,0 +1,186 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications base class use case diagram  p  
+   
+   defines toolbar  provides initialization provides 
+   constructors top level diagram one within defined 
+   namespace  p  
+    
+   actions specific use case diagram toolbar 
+    
+       tool add actor node  p  
+        
+    
+       tool add use case node  p  
+        
+    
+       tool create association between uml artifacts using polyedge  p  
+        
+    
+       tool create generalization between uml artifacts using polyedge  p  
+        
+    
+       tool create extend relationship between uml use cases 
+       using polyedge  p  
+        
+    
+       tool create include relationship between uml use cases 
+       using polyedge  p  
+        
+    
+       tool create dependency between uml artifacts using polyedge  p  
+        
+    
+       construct new use case diagram defined namespace  p  
+       
+       note must never call directly defining namespace makes everything work gef call directly loading new diagram must remain 
+       public  p unique name constructed using serial index allow possibility setting may fail case name set  p  
+        
+   todo super constrctors take graphmodel 
+    
+       construct new use case diagram defined namespace  p  
+       
+       invokes generic constructor   link #umlusecasediagram intialises namespace initializes graphics   p constructor always used  p  
+       
+        param m desired namespace diagram  
+        
+    
+       constructor  
+       
+        param name name diagram 
+        param namespace namespace diagram 
+        
+    
+       perform number important initializations em use case 
+       diagram  em   p  
+       
+       creates new graph model diagram  settings namespace supplied  p  
+       
+       changed  em lay  em em layerperspective  em em layerperspectivemutable  em class child em layerperspective  em implemented correct some 
+       difficulties changing model   em lay  em used mainly em layermanager  em  gef control adding  changing deleting items layer diagram  p  
+       
+       set renderer suitable use case diagram  p  
+       
+        em note  em declared public  not clear classes allowed invoke method  p  
+       
+        param handle namespace used diagram  
+       
+        author   psager tigris org  jan 24  2002 renderer singleton 
+   todo  needs tidied up stable release  graph model created constructor 
+   
+        see org argouml uml diagram ui umldiagram#getumlactions   
+        
+   
+        see org argouml uml diagram ui umldiagram#getlabelname   
+        
+    
+        return returns actionactor  
+        
+    
+        return returns actionaggregation  
+        
+    
+        return returns actionassociation  
+        
+    
+        return returns actioncomposition  
+        
+    
+        return returns actiondependency  
+        
+    
+        return returns actionextend  
+        
+    
+        return returns actiongeneralize  
+        
+    
+        return returns actioninclude  
+        
+    
+        return returns actionuniaggregation  
+        
+    
+        return returns actionuniassociation  
+        
+    
+        return returns actionunicomposition  
+        
+    
+        return returns actionusecase  
+        
+    
+        return action create extension point 
+        
+   
+        see org argouml uml diagram ui umldiagram#isrelocationallowed java lang object  
+        
+   
+        see org argouml uml diagram ui umldiagram#relocate java lang object nothing         org argouml uml diagram use_case ui UMLUseCaseDiagram org argouml uml diagram use_case ui umlusecasediagram umldiagram umlusecasediagram setname getnewdiagramname propertyvetoexception pve      
+          
+        setgraphmodel creategraphmodel umlusecasediagram object m model getfacade   isanamespace m illegalargumentexception    
+          
+ 
+        setnamespace m umlusecasediagram name  object namespace namespace model getfacade   isanamespace namespace illegalargumentexception setname name propertyvetoexception v setnamespace object handle model getfacade   isanamespace handle     
+            log error  
+                 illegal argument  object     handle     is not a namespace illegalargumentexception  
+                 illegal argument  object     handle     is not a namespace    
+          
+        object m   handle setnamespace m   
+ 
+        usecasediagramgraphmodel gm   creategraphmodel    
+        gm sethomemodel m   
+        layerperspective lay layerperspectivemutable model getfacade   getname m   gm   
+        usecasediagramrenderer rend usecasediagramrenderer    
+        lay setgraphnoderenderer rend   
+        lay setgraphedgerenderer rend   
+        setlayer lay usecasediagramgraphmodel creategraphmodel getgraphmodel usecasediagramgraphmodel usecasediagramgraphmodel  getgraphmodel usecasediagramgraphmodel object   getumlactions     
+        object   actions   
+          
+            getactionactor    
+            getactionusecase getassociationactions    
+	    getactiondependency    
+	    getactiongeneralize    
+	    getactionextend    
+	    getactioninclude getactionextensionpoint actions object   getassociationactions     
+        object     actions     
+	     getactionassociation    getactionuniassociation      
+	     getactionaggregation    getactionuniaggregation      
+	     getactioncomposition    getactionunicomposition      
+           
+        toolbarutility managedefault actions   diagram usecase association actions getlabelname translator localize  label usecase-diagram action getactionactor actionactor actionactor radioaction cmdcreatenode  
+                    model getmetatypes   getactor     button actor actionactor action getactionaggregation actionaggregation actionaggregation radioaction actionsetaddassociationmode  
+                        model getaggregationkind   getaggregate button aggregation actionaggregation action getactionassociation actionassociation actionassociation radioaction actionsetaddassociationmode  
+                        model getaggregationkind   getnone button association actionassociation action getactioncomposition actioncomposition actioncomposition radioaction actionsetaddassociationmode  
+                        model getaggregationkind   getcomposite button composition actioncomposition action getactiondependency actiondependency actiondependency radioaction actionsetmode  
+                        modecreatepolyedge edgeclass   
+                        model getmetatypes   getdependency    
+                         button dependency actiondependency action getactionextend actionextend actionextend radioaction actionsetmode  
+                        modecreatepolyedge edgeclass   
+                        model getmetatypes   getextend    
+                         button extend actionextend action getactiongeneralize actiongeneralize actiongeneralize radioaction actionsetmode  
+                        modecreatepolyedge edgeclass   
+                        model getmetatypes   getgeneralization    
+                         button generalization actiongeneralize action getactioninclude actioninclude actioninclude radioaction actionsetmode  
+                        modecreatepolyedge edgeclass   
+                        model getmetatypes   getinclude    
+                         button include actioninclude action getactionuniaggregation actionuniaggregation actionuniaggregation radioaction actionsetaddassociationmode  
+                            model getaggregationkind   getaggregate button uniaggregation actionuniaggregation action getactionuniassociation actionuniassociation actionuniassociation radioaction actionsetaddassociationmode  
+                            model getaggregationkind   getnone button uniassociation actionuniassociation action getactionunicomposition actionunicomposition actionunicomposition radioaction actionsetaddassociationmode  
+                            model getaggregationkind   getcomposite button unicomposition actionunicomposition action getactionusecase actionusecase actionusecase radioaction cmdcreatenode  
+                    model getmetatypes   getusecase     button usecase actionusecase action getactionextensionpoint actionextensionpoint actionextensionpoint   actionaddextensionpoint singleton actionextensionpoint isrelocationallowed object base model getfacade   isapackage base  
+        	   model getfacade   isaclassifier base relocate object base    
+        setnamespace base   
+        damage encloserchanged fignode enclosed   
+            fignode oldencloser  fignode newencloser    
+          
+      
+ 
+ org argouml uml diagram use_case ui UMLUseCaseDiagram

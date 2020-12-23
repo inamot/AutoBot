@@ -1,0 +1,265 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   runs jdepend tests  
+   
+    p jdepend tool generate design quality metrics each java package initially created mike clark  jdepend found href  http   www clarkware com software jdepend html  http   www clarkware com software jdepend html current implementation spawn new java vm  
+   
+    
+  private commandlinejava commandline   new commandlinejava    
+   required attributes 
+   deprecated  
+   use going forward 
+   optional attributes true  
+        include jdepend jar forked vm  
+       
+        param b include ant run time yes ant 1 6 
+        
+    
+       set timeout value milliseconds   
+       
+        p operation running value jdepend canceled   works only fork' mode    p  
+        param value maximum time milliseconds  allowed before 
+       declaring test timed-out' 
+        see #setfork boolean  
+        
+    
+        return timeout value output file name  
+       
+        param outputfile output file name 
+        
+    
+        return output file name 
+        
+    
+       whether not halt failure  default  false  
+        param haltonerror value set 
+        
+    
+        return value haltonerror attribute true  forks new jvm  default  false  
+       
+        param   value    tt true  tt jvm forked  
+                        otherwise  tt false tt  
+        
+    
+        return value fork attribute command used invoke forked java virtual machine  
+       
+       default tt java  tt   ignored jvm forked  
+        param   value new vm use instead tt java  tt  
+        see #setfork boolean  
+        
+    
+       adds path source code analyze  
+        return source path 
+        deprecated 1 6 x  
+        
+    
+       gets sourcepath  
+        return sources path 
+        deprecated 1 6 x  
+        
+    
+       adds path class code analyze  
+        return classes path 
+        
+    
+       gets classespath  
+        return classes path directory invoke vm ignored jvm forked  
+        param   dir directory invoke jvm see #setfork boolean  
+        
+    
+        return dir attribute 
+        
+    
+       set classpath used compilation  
+        param classpath class path used 
+        
+    
+       gets classpath used compilation  
+        return class path used compilation 
+        
+    
+       adds path classpath  
+        return classpath 
+        
+    
+       create new jvm argument  ignored jvm forked  
+        param commandline commandline create argument return  create new jvm argument any argument passed jvm  
+        see #setfork boolean  
+        
+    
+       adds reference classpath defined elsewhere  
+        param r classpath reference 
+        
+    
+       add name entry exclude list 
+        return pattern excludes 
+        
+    
+        return excludes patterns format write output xml text   
+       
+        param ea xml text class enumerated attribute format  
+       values xml text  
+        see enumeratedattribute 
+        
+    
+            return enumerated values problems test error occurred  
+        
+    
+       search given resource add directory archive contains classpath  
+       
+        p doesn't work archives jdk 1 1 url returned getresource doesn't contain name archive   p  
+       
+        param resource resource one lookup ant 1 6 
+        
+   
+           pre ant 1 6 method used call getclass   getresource ant 1 6 call classloader getresource difference class getresource expects leading 
+           slash absolute  resources strip before 
+           delegating classloader getresource now emulate class's behavior  
+            
+    
+       execute task 
+       
+        exception buildexception error occurs 
+        
+   execute test return code 
+   null watchdog means timeout d better not check null error failure halt  stop 
+   everything otherwise log statement comment extract junit task may apply here vm not very nice probably hang whole build  imho method avoided best remove future versions  tbd   sba   
+    
+       execute inside vm  
+       
+        param commandline command line 
+        return return value mvm 
+        exception buildexception error occurs new  better way - use classespath instead sourcespath code currently same need class files directory use jar files  
+   not necessary jdepend fail loose 
+   some time old way deprecated - classespath right way above 
+   not necessary jdepend fail loose 
+   some time bit turns  exclude  child tags patters ignore 
+    
+       execute task forking new jvm command block until finishes know process destroyed not  use tt killedprocess    tt  method watchdog class  
+        param commandline commandline forked jvm 
+        param  watchdog watchdog charge cancelling test exceeds certain amount time tt null  tt   
+        return result running jdepend 
+        throws buildexception case error 
+        
+   jl  comment extracted junittask slightly modified not set  auto-create classpath project 
+   not sure whether test needed cost nothing put  
+   hope reviewed anybody competent 
+   having space between file path causes commandline add quotes around argument thus making jdepend not taking account  thus split two find cleaner way put output deprecated - use classespath future 
+   not necessary jdepend fail loose 
+   some time new way - use classespath - code same now 
+   not necessary jdepend fail loose 
+   some time? 
+    
+        return  tt null  tt timeout value  otherwise watchdog instance  
+        throws buildexception case error 
+       org apache tools ant taskdefs optional jdepend JDependTask org apache tools ant taskdefs optional jdepend jdependtask task packagefilter forname  jdepend framework packagefilter    
+            packagefilterc   
+                packagefilter getconstructor java util collection setfilter   
+                jdepend textui jdepend getdeclaredmethod  setfilter packagefilter throwable t setfilter packagefilterc setincluderuntime b    
+        includeruntime   b settimeout value    
+        timeout   value gettimeout timeout setoutputfile file outputfile outputfile   outputfile file getoutputfile outputfile sethaltonerror haltonerror haltonerror   haltonerror gethaltonerror haltonerror setfork value    
+        fork   value getfork fork setjvm value    
+        jvm   value path createsourcespath sourcespath sourcespath path getproject sourcespath createpath path getsourcespath sourcespath path createclassespath classespath classespath path getproject classespath createpath path getclassespath classespath setdir file dir dir   dir file getdir dir setclasspath path classpath compileclasspath compileclasspath   classpath compileclasspath append classpath path getclasspath compileclasspath path createclasspath compileclasspath compileclasspath path getproject compileclasspath createpath commandline argument createjvmarg commandlinejava commandline commandline createvmargument setclasspathref reference r    
+        createclasspath   setrefid r patternset nameentry createexclude defaultpatterns createexclude patternset getexcludes defaultpatterns setformat formatattribute ea    
+        format   ea getvalue formatattribute enumeratedattribute getvalues formats addclasspathentry resource resource startswith         
+            resource   resource substring 1 resource    org apache tools ant taskdefs optional jdepend   
+                  resource  
+          
+ 
+        file f   loaderutils getresourcesource getclass   getclassloader    
+                                               resource f log  found     f getabsolutepath    project msg_debug   
+            runtimeclasses createpath   setlocation f log  couldn\'t find     resource  project msg_debug execute buildexception   
+ 
+        commandlinejava commandline commandlinejava text  equals format     
+            commandline setclassname  jdepend textui jdepend xml  equals format     
+                commandline setclassname  jdepend xmlui jdepend jvm commandline setvm jvm getsourcespath getclassespath buildexception  missing classespath required argument getclassespath msg   
+                 sourcespath is deprecated in jdepend    2 5   
+                   - please convert to classespath   
+            log msg exitvalue   jdependtask errors waskilled getfork      
+            exitvalue   executeinvm commandline executewatchdog watchdog   createwatchdog    
+            exitvalue   executeasforked commandline  watchdog watchdog waskilled   watchdog killedprocess erroroccurred   exitvalue    jdependtask errors    waskilled erroroccurred errormessage    jdepend failed  
+                   waskilled ?   - timed out gethaltonerror buildexception errormessage  getlocation log errormessage  project msg_err executeinvm commandlinejava commandline buildexception   
+        jdepend textui jdepend jdepend xml  equals format     
+            jdepend jdepend xmlui jdepend jdepend jdepend textui jdepend    
+          
+ 
+        filewriter fw getoutputfile fw filewriter getoutputfile   getpath ioexception e msg    jdepend failed when creating the output file    
+                      e getmessage    
+                log msg buildexception msg   
+              
+            jdepend setwriter printwriter fw    
+            log  output to be stored in     getoutputfile   getpath getclassespath cp   getclassespath   list i   0  i   cp length  i      
+                    file f file cp i f exists msg    \   
+                              f getpath   
+                               \  does not represent a valid  
+                                file or directory  jdepend would fail    
+                        log msg buildexception msg jdepend adddirectory f getpath ioexception e msg   
+                             jdepend failed when adding a directory    
+                              e getmessage    
+                        log msg buildexception msg getsourcespath sp   getsourcespath   list i   0  i   sp length  i      
+                    file f file sp i f exists       f isdirectory msg    \   
+                              f getpath   
+                               \  does not represent a valid  
+                                directory  jdepend would fail    
+                        log msg buildexception msg jdepend adddirectory f getpath ioexception e msg   
+                             jdepend failed when adding a source directory    
+                              e getmessage    
+                        log msg buildexception msg patterns   defaultpatterns getexcludepatterns getproject patterns patterns length   0 setfilter vector v vector i   0  i   patterns length  i      
+                        v addelement patterns i object o   packagefilterc newinstance object    v    
+                        setfilter invoke jdepend object    o throwable e    
+                        log  excludes will be ignored as jdepend doesn't like me    
+                              e getmessage    project msg_warn log  sorry  your version of jdepend doesn't support excludes   
+                        project msg_warn   
+                  
+              
+ 
+            jdepend analyze fileutils close fw success executeasforked commandlinejava commandline  
+                               executewatchdog watchdog buildexception   
+        runtimeclasses path getproject     
+        addclasspathentry   jdepend textui jdepend createclasspath getclasspath   tostring   length     0    
+            createjvmarg commandline  setvalue  -classpath    
+            createjvmarg commandline  setvalue getclasspath   tostring includeruntime    
+            vector v   execute getprocenvironment    
+            enumeration e   v elements e hasmoreelements s e nextelement s startswith  classpath       
+                    commandline createclasspath getproject    createpath   
+                         append path getproject    
+                                         s substring  classpath   length   
+                                                          
+                  
+              
+            log  implicitly adding     runtimeclasses     to classpath   
+                project msg_verbose   
+            commandline createclasspath getproject    createpath   
+                 append runtimeclasses getoutputfile commandline createargument   setvalue  -file    
+            commandline createargument   setvalue outputfile getpath getsourcespath sp   getsourcespath   list i   0  i   sp length  i      
+                file f file sp i f exists       f isdirectory buildexception  \     f getpath   
+                                                \  does not represent a valid  
+                                                 directory  jdepend would  
+                                                 fail     
+                  
+                commandline createargument   setvalue f getpath getclassespath cp   getclassespath   list i   0  i   cp length  i      
+                file f file cp i f exists buildexception  \     f getpath   
+                                                \  does not represent a valid  
+                                                 file or directory  jdepend would  
+                                                 fail     
+                  
+                commandline createargument   setvalue f getpath     
+              
+          
+ 
+        execute execute execute logstreamhandler project msg_info  project msg_warn   watchdog   
+        execute setcommandline commandline getcommandline getdir execute setworkingdirectory getdir     
+            execute setantrun getproject getoutputfile log  output to be stored in     getoutputfile   getpath     
+          
+        log commandline describecommand    project msg_verbose execute execute ioexception e buildexception  process fork failed    e  getlocation executewatchdog createwatchdog buildexception gettimeout null executewatchdog gettimeout   longvalue     
+      
+ org apache tools ant taskdefs optional jdepend JDependTask

@@ -1,0 +1,84 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   plays sound file end build  according whether build failed succeeded three attributes set  
+   
+    code source  code location audio file played 
+    code duration  code   play sound file continuously until  duration  milliseconds expired 
+    code loops  code number times sound file played until stopped only tested wav aiff sound file formats  both seem work fine  
+   
+   plans future  
+   - use midi api define sounds drum beat etc xml ant play back 
+   
+    
+    
+       add sound build succeeds 
+        return buildalert configured 
+        
+    
+       add sound build fails 
+        return buildalert configured 
+        
+    constructor soundtask     
+    
+       initialize task  
+        
+    
+       execute task class extended any buildalert's require output sound  
+        
+    
+           sets duration milliseconds file played  optional  
+            param duration duration millisconds 
+            
+    
+           sets location file audio  required  
+           
+            param source name sound-file directory audio file 
+            
+    
+           sets number times source file played  optional  
+           
+            param loops number loops play source file 
+            
+    
+           gets location file audio  
+            return file location 
+            
+   check source directory list files dir random number between 0 number files 
+   set source file location 
+    
+           sets number times source file played  
+           
+            return number loops play source file 
+            
+    
+           gets duration milliseconds file played  
+            return duration milliseconds 
+           org apache tools ant taskdefs optional sound SoundTask org apache tools ant taskdefs optional sound soundtask task buildalert createsuccess     
+        success buildalert success buildalert createfail     
+        fail buildalert fail soundtask init execute     
+ 
+        antsoundplayer soundplayer antsoundplayer success log  no nested success element found    project msg_warn soundplayer addbuildsuccessfulsound success getsource    
+              success getloops    success getduration fail log  no nested failure element found    project msg_warn soundplayer addbuildfailedsound fail getsource    
+              fail getloops    fail getduration     
+          
+ 
+        getproject   addbuildlistener soundplayer buildalert setduration duration duration   duration setsource file source source   source setloops loops loops   loops file getsource     
+            file nofile source exists source isdirectory entries   source list    
+                    vector files vector i   0  i   entries length  i      
+                        file f file source  entries i f isfile      
+                            files addelement f files size     1 buildexception  no files found in directory     source numfiles   files size    
+                      
+                    random rn random x   rn nextint numfiles source    file  files elementat x log source      invalid path    project msg_warn source   nofile source getloops loops getduration duration  
+          
+      
+  
+org apache tools ant taskdefs optional sound SoundTask

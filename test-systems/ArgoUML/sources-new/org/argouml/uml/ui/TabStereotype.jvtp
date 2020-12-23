@@ -1,0 +1,166 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications tab details pane displaying stereotypes applied model element allowing adding removal stereotypes list  p code 2 lists buttons move items one side based perspectiveconfigurator class  
+    
+    
+       insets pixels  
+        
+    
+       construct new stereotype tab title looks better 
+    
+       create jpanel everything return newly created jpanel  
+        
+   make lists 
+   make buttons 
+   make buttons layout 
+   make listeners 
+   put everything together 
+    
+       checks tab enabled  returns true target 
+       returned gettarget modelelement target shows up fig active diagram modelelement owner  
+       
+        return true tab enabled  otherwise false  
+        
+   
+        see org argouml uml ui proppanel#shouldbeenabled java lang object  
+        
+   
+        see org argouml ui tabtarget#settarget java lang object  
+        
+    
+       add currently selected stereotype library modelelement  
+        
+    
+       add currently selected stereotype library modelelement list model stereotypes available models - except ones already applied  
+        
+    
+           constructor umlmodelelementnamespacelistmodel  
+            
+   
+            see org argouml uml ui umlmodelelementlistmodel2#buildmodellist   
+            
+   now remove ones already applied  
+   
+            see org argouml uml ui umlmodelelementlistmodel2#isvalidelement object uid  
+            
+    
+       handles pressing buttons  
+        
+   
+            see java awt event actionlistener#actionperformed  
+                   java awt event actionevent  
+            
+    
+       handles selection changes available stereotypes list  
+        
+   
+            see javax swing event listselectionlistener#valuechanged javax swing event listselectionevent  
+            
+    
+       handles selection changes stereotypes list  
+        
+   
+            see javax swing event listselectionlistener#valuechanged javax swing event listselectionevent uid  
+       org argouml uml ui TabStereotype org argouml uml ui tabstereotype proppanel orientation   
+        configuration getstring configuration 
+             makekey  layout    tabstereotype tabstereotype translator localize  tab stereotype     imageicon setorientation  orientation 
+                 equals  west      orientation equals  east    ? vertical 
+                 getinstance     horizontal getinstance     
+        setlayout borderlayout     
+        remove gettitlelabel       
+ 
+        panel   makepanel    
+        add panel jpanel makepanel     
+          
+        selectedlistmodel umlmodelelementstereotypelistmodel    
+        selectedlist umllinkedlist selectedlistmodel   
+        selectedscroll jscrollpane selectedlist   
+        selectedscroll setborder borderfactory createemptyborder  
+                inset_px  inset_px  inset_px  inset_px    
+        selectedscroll setcolumnheaderview jlabel  
+                translator localize  label applied-stereotypes      
+ 
+        availablelistmodel umlmodelstereotypelistmodel    
+        availablelist umllinkedlist availablelistmodel   
+        availablescroll jscrollpane availablelist   
+        availablescroll setborder borderfactory createemptyborder  
+                inset_px  inset_px  inset_px  inset_px    
+        availablescroll setcolumnheaderview jlabel  
+                translator localize  label available-stereotypes      
+ 
+          
+        addstbutton jbutton        
+        addstbutton settooltiptext translator localize  button add-stereo     
+        removestbutton jbutton        
+        removestbutton settooltiptext translator localize  
+                 button remove-stereo     
+        addstbutton setenabled removestbutton setenabled addstbutton setmargin insets 2  15  2  15    
+        removestbutton setmargin insets 2  15  2  15    
+        addstbutton setpreferredsize addstbutton getminimumsize     
+        removestbutton setpreferredsize removestbutton getminimumsize     
+ 
+          
+        boxlayout box  
+        xferbuttons jpanel    
+        box boxlayout xferbuttons  boxlayout y_axis   
+        xferbuttons setlayout box   
+        xferbuttons add spacerpanel     
+        xferbuttons add addstbutton   
+        xferbuttons add spacerpanel     
+        xferbuttons add removestbutton   
+        dimension dmax   box maximumlayoutsize xferbuttons   
+        dimension dmin   box minimumlayoutsize xferbuttons   
+        xferbuttons setmaximumsize dimension dmin width  dmax height    
+ 
+          
+        addstbutton addactionlistener addremovelistener     
+        removestbutton addactionlistener addremovelistener     
+        availablelist addlistselectionlistener availablelistselectionlistener     
+        selectedlist addlistselectionlistener selectedlistselectionlistener     
+ 
+          
+        jpanel thepanel jpanel    
+        thepanel setlayout boxlayout thepanel  boxlayout x_axis    
+        thepanel setborder borderfactory createemptyborder  
+                inset_px  inset_px  inset_px  inset_px    
+        thepanel add availablescroll   
+        thepanel add xferbuttons   
+        thepanel add box createrigidarea dimension 5  1     
+        thepanel add selectedscroll thepanel shouldbeenabled     
+        object target   gettarget shouldbeenabled target   
+      
+     
+      
+     override shouldbeenabled object target target fig    
+            target     fig  target  getowner model getfacade   isamodelelement target   
+      
+ 
+      
+     override settarget object thetarget settarget thetarget isvisible      
+            object me   getmodelelement me selectedlistmodel settarget me   
+                validate doaddstereotype     
+        object stereotype   availablelist getselectedvalue    
+        object modelelement   targetmanager getinstance   getmodeltarget modelelement model getcorehelper   addstereotype modelelement  stereotype doremovestereotype     
+        object stereotype   selectedlist getselectedvalue    
+        object modelelement   targetmanager getinstance   getmodeltarget modelelement model getfacade   getstereotypes modelelement  
+                 contains stereotype     
+            model getcorehelper   removestereotype modelelement  stereotype umlmodelstereotypelistmodel umlmodelelementlistmodel2 umlmodelstereotypelistmodel stereotype buildmodellist     
+            removeallelements model getfacade   isamodelelement gettarget       
+                collection s  
+                s   stereotypeutility getavailablestereotypes gettarget     
+                  
+                s removeall model getfacade   getstereotypes gettarget      
+                addall s isvalidelement object element model getfacade   isastereotype element addremovelistener actionlistener actionperformed actionevent e    
+ 
+            object src   e getsource src    addstbutton    
+                doaddstereotype src    removestbutton    
+                doremovestereotype availablelistselectionlistener listselectionlistener valuechanged listselectionevent lse lse getvalueisadjusting object selrule   availablelist getselectedvalue    
+            addstbutton setenabled selrule selectedlistselectionlistener listselectionlistener valuechanged listselectionevent lse lse getvalueisadjusting object selrule   selectedlist getselectedvalue    
+            removestbutton setenabled selrule org argouml uml ui TabStereotype

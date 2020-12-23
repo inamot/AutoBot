@@ -1,0 +1,186 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+   
+    build notes reference cd listen editing file underworld everything  everything 
+    variable naming policy fowler's refactoring book  
+    
+   place below optional ant tasks package 
+   imports helper class spawn net commands out initial form contains net specifics contains command line exe 
+    construction stuff may handy future means setting path point dotnet bin directory case shared code go here  
+   
+   version    0 5 
+    
+   checkstyle visibilitymodifier bc 
+    
+        owner project 
+        
+    
+        executable command line 
+        
+    
+        title command 
+        
+    
+        actual program invoke 
+        
+    
+        trace flag 
+        
+    
+        flag control action execution trouble 
+        
+   checkstyle visibilitymodifier directory execute command null current 
+       directory used  
+        
+    
+       flag set to use  file based command cache 
+        
+    
+       name temp file  may null 
+        
+    
+       internal threshold auto-switch 
+        
+    
+        constructor 
+       
+       param  title logging errors  
+       param  owner        owner task 
+       param  program      app run 
+        
+    
+        turn tracing param  b  trace flag 
+        
+    
+        set fail error flag 
+       
+       param  b  fail flag -set true cause exception raised return value    0 
+        
+    
+        query fail error flag 
+       
+       return failfailonerror value 
+        
+    
+       set directory run default inadequate 
+        param directory directory use  
+        
+    
+        verbose text log 
+       
+       param  msg  string add log verbose defined build 
+        
+    
+        error text log 
+       
+       param  msg  message display error 
+        
+    
+        add argument command line nothing arg null empty string 
+       
+       param  argument feature added argument attribute 
+        
+    
+        add argument command line nothing arg null empty string 
+       
+       param  arguments features added argument attribute 
+        
+    
+        concatenate two strings together add single argument only argument2 non-null non-zero length 
+       
+       param  argument1 first argument 
+       param  argument2 second argument 
+        
+    
+       getter 
+        return response file state 
+        
+    
+       set true always use response file 
+        param useresponsefile code boolean  code  value  
+        
+    
+       getter threshold 
+        return 0 disabled threshold enabling response files 
+        
+    
+       set threshold automatically using response files -use 0 param automaticresponsefilethreshold threshold value use  
+        
+    
+        set up command sequence   
+        
+   default directory project's base directory 
+    
+        run command using given execute instance  
+       
+       exception  buildexception something goes wrong failonerror flag true 
+        
+   assume worst verbose mode always log stuff 
+    
+       set executable command line 
+        
+  always trigger file mode commands big enough simple action send command line big operations save params temp file set  tmpfile command remember delete tempfile 
+  afterwards 
+  start 1 element 0 executable name 
+    
+       scan through one fileset files include 
+        param scanner directory scanner use  
+        param filestobuild map place files  
+        param outputtimestamp timestamp compare against 
+        return files out date 
+        todo fat granularity included here? 
+        
+  add listorg apache tools ant taskdefs optional dotnet NetCommand org apache tools ant taskdefs optional dotnet netcommand task owner execute executable commandline commandline title program tracecommandline failonerror netcommand task owner title program owner   owner title   title program   program  
+        commandline commandline    
+        commandline setexecutable program settracecommandline b    
+        tracecommandline   b setfailonerror b    
+        failonerror   b getfailfailonerror failonerror setdirectory file directory directory   directory logverbose msg    
+        owner getproject   log msg  project msg_verbose logerror msg    
+        owner getproject   log msg  project msg_err addargument argument argument argument length      0    
+            commandline createargument   setvalue argument addarguments arguments arguments arguments length    0 i   0  i   arguments length  i      
+                addargument arguments i addargument argument1 argument2 argument2 argument2 length      0    
+            commandline createargument   setvalue argument1   argument2 isuseresponsefile useresponsefile setuseresponsefile useresponsefile useresponsefile   useresponsefile getautomaticresponsefilethreshold automaticresponsefilethreshold setautomaticresponsefilethreshold automaticresponsefilethreshold automaticresponsefilethreshold   automaticresponsefilethreshold prepareexecutor owner runtimeexception  no owner owner getproject runtimeexception  owner has no project    
+          
+        file dir   owner getproject   getbasedir directory dir   directory  
+          
+ 
+        executestreamhandler handler logstreamhandler owner  
+                project msg_info  project msg_warn   
+        executable execute handler executable setantrun owner getproject     
+        executable setworkingdirectory dir runcommand buildexception   
+        prepareexecutor err   -1 tracecommandline    
+                owner log  in directory     executable getworkingdirectory     
+                owner log commandline describecommand logverbose  in directory     executable getworkingdirectory     
+                logverbose commandline describecommand     
+              
+            setexecutablecommandline    
+            err   executable execute execute isfailure err failonerror buildexception title     returned      err  owner getlocation owner log title      result      err  project msg_err ioexception e buildexception title     failed      e  e  owner getlocation temporarycommandfile temporarycommandfile delete setexecutablecommandline commands   commandline getcommandline automaticresponsefilethreshold   0 
+               commands length   automaticresponsefilethreshold    
+            useresponsefile useresponsefile    commands length    1    
+              
+            executable setcommandline commands fileoutputstream fos temporarycommandfile   file_utils createtempfile  cmd     txt owner log  using response file     temporarycommandfile  project msg_verbose fos fileoutputstream temporarycommandfile   
+                printwriter out printwriter bufferedoutputstream fos i   1  i   commands length    i    
+                    out println commands i    
+                  
+                out flush    
+                out close ioexception ex buildexception  saving command stream to     temporarycommandfile  ex newcommandline 2   
+            newcommandline 0    commands 0   
+            newcommandline 1          temporarycommandfile getabsolutepath    
+            logverbose commandline describecommand newcommandline    
+            executable setcommandline newcommandline scanonefileset directoryscanner scanner  hashtable filestobuild outputtimestamp filesoutofdate   0 dependencies   scanner getincludedfiles    
+        file base   scanner getbasedir i   0  i   dependencies length  i      
+            file targetfile file base  dependencies i filestobuild get targetfile filestobuild put targetfile  targetfile targetfile lastmodified     outputtimestamp    
+                    filesoutofdate    
+                    owner log targetfile tostring       is out of date   
+                              project msg_verbose owner log targetfile tostring    
+                              project msg_verbose filesoutofdate  
+      
+ org apache tools ant taskdefs optional dotnet NetCommand

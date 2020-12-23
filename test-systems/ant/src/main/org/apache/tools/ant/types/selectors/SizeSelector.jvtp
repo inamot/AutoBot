@@ -1,0 +1,111 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   selector filters files based size 1 5 
+    
+    used parameterized custom selector    
+    used parameterized custom selector    
+    used parameterized custom selector    
+    
+       creates new  code sizeselector  code  instance  
+       
+        
+    
+       returns code string  code  object representing specified 
+       sizeselector sizeselector value        compare   
+        less equal          
+        return string describing object size selector needs know size base selecting further modified multiplier actual size limit  
+       
+        param size size select against expressed units  
+        
+    
+       sets units use comparison little 
+       complicated common usage created standards play havoc capitalization rules  thus  some people use  k indicating 1000's si standard calls k   others tried introduce  k multiple 1024 falls down reach  m m already 
+       defined 0 001  
+        p around complexity number standards bodies proposed 2^10 standard least one adopted still left populace isn't clear capitalization work  
+        p therefore ignore capitalization much possible  
+       completely mixed case not possible upper lower 
+       forms accepted long short forms need work 0 001 case practice works here  
+        p function translates long short forms unit prefix occur translates single 
+       multiplier  
+       
+        param units units compare size using enumeratedattribute specifies file selected  whether file matches particular size smaller whether larger  
+       
+        param comparison perform enumeratedattribute using custom selector method called translates each parameter appropriate setxxx   call  
+       
+        param parameters complete set parameters selector  
+        
+    
+        p checks make sure settings kosher case means size attribute set positive value multiplier valid setting size limit valid latter calculated value only 
+       fail due programming error  
+         p  
+        p problem detected seterror   method called  
+         p heart matter selector gets decide inclusion file particular fileset  
+       
+        param basedir java io file object base directory  
+        param filename name file check  
+        param file file object filename  
+        return whether file selected not  
+        
+   throw buildexception error 
+   directory size never selected enumerated attribute values units  
+        p treats standard si units representing powers ten want powers 2 approximate si units  use first two characters followed code bi  code 1024  2^10  becomes  code kibi  code   
+       1048576  2^20  becomes  code mebi  code   1073741824  2^30  
+       becomes  code gibi  code symbols accepted first letter capitalized followed code code    code ki  code    code mi  code   
+        code gi  code capitalization variations accepted  
+        p binary prefix system approved iec appears way approval agencies not si 
+       standard disambiguates things though  
+        
+    
+            return values array strings wish           ti    ti    ti    tebi    tebi  
+    
+       enumerated attribute values size comparison  
+       org apache tools ant types selectors SizeSelector org apache tools ant types selectors sizeselector baseextendselector size_key    value units_key    units when_key    when sizeselector tostring     
+        stringbuffer buf stringbuffer   sizeselector value      
+        buf append sizelimit   
+        buf append  compare     append when getvalue     
+        buf append buf tostring setvalue size size   size multiplier    0    size   -1    
+            sizelimit   size   multiplier setunits byteunits units i   units getindex    
+        multiplier   0 i   -1    i   4    
+            multiplier   1000 i   3    i   9    
+            multiplier   1024 i   8    i   13    
+            multiplier   1000000 i   12    i   18    
+            multiplier   1048576 i   17    i   22    
+            multiplier   1000000000l i   21    i   27    
+            multiplier   1073741824l i   26    i   31    
+            multiplier   1000000000000l i   30    i   36    
+            multiplier   1099511627776l multiplier   0    size   -1    
+            sizelimit   size   multiplier setwhen sizecomparisons when when   when setparameters parameter   parameters setparameters parameters parameters i   0  i   parameters length  i paramname   parameters i  getname size_key equalsignorecase paramname setvalue parameters i  getvalue   
+                          longvalue numberformatexception nfe    
+                        seterror  invalid size setting   
+                                  parameters i  getvalue units_key equalsignorecase paramname     
+                    byteunits units byteunits    
+                    units setvalue parameters i  getvalue     
+                    setunits units when_key equalsignorecase paramname     
+                    sizecomparisons scmp sizecomparisons    
+                    scmp setvalue parameters i  getvalue     
+                    setwhen scmp seterror  invalid parameter     paramname verifysettings size   0    
+            seterror  the value attribute is required  and must be positive multiplier   1    
+            seterror  invalid units supplied  must be k ki m mi g gi t or ti sizelimit   0    
+            seterror  internal error  code is not setting sizelimit correctly isselected file basedir filename  file file    
+ 
+          
+        validate file isdirectory diff   file length   - sizelimit when evaluate diff    0 ? 0 diff   math abs diff byteunits enumeratedattribute getvalues k    k    kilo    kilo   
+                                 ki    ki    ki    kibi    kibi   
+                                 m    m    mega    mega   
+                                 mi    mi    mi    mebi    mebi   
+                                 g    g    giga    giga   
+                                 gi    gi    gi    gibi    gibi   
+                                 t    t    tera    tera sizecomparisons comparison   
+      
+ 
+  
+org apache tools ant types selectors SizeSelector

@@ -1,0 +1,83 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   some utilities might useful manipulating dom trees  
+   
+    
+    unused constructor    
+    
+       filter interface applied iterating over dom tree think tt filefilter  tt  clone  
+        
+    
+            param       node node check acceptance  
+            return       tt true  tt node accepted filter  
+                                otherwise  tt false  tt  
+            
+    
+       list set node match specific filter list made 
+       recursively not  
+        param   parent parent node search param   filter filter children match  
+        param   recurse  tt true  tt want list made recursively 
+                        otherwise  tt false  tt   
+        return node list matches filter  
+        
+    custom implementation nodelist number nodes list  
+            return length list particular node  
+            param index node return node index bounds  null otherwise  
+            
+   conforming nodelist interface 
+    
+       return attribute value element  
+        param node node attribute param name name attribute looking value  
+        return value requested attribute tt null  tt attribute not found tt node  tt not tt element  tt   
+        
+    
+       iterate over children given node return first node specific name  
+        param   parent node search child tt null  tt   
+        param   tagname child name looking cannot tt null  tt   
+        return first child matches given name tt null  tt parent tt null  tt child not match given name  
+        
+    
+       simple tree walker clone recursively node avoid using parser-specific api sun's  tt changenodeowner  tt dealing dom l1 implementations tt clonenode boolean   tt not change owner document  
+        tt changenodeowner  tt much faster avoid costly cloning process  
+        tt importnode  tt dom l2 interface  
+        param   parent node parent import param   child node clone recursively clone appended tt parent  tt   
+        return cloned node appended tt parent  tt never happen 
+   okay copy child  now child becomes parent iterating recursively over children  
+   ignore 
+   bingo append normally not done here org apache tools ant taskdefs optional junit DOMUtil org apache tools ant taskdefs optional junit domutil domutil nodefilter accept node node nodelist listchildnodes node parent  nodefilter filter recurse    
+        nodelistimpl matches nodelistimpl    
+        nodelist children   parent getchildnodes children len   children getlength i   0  i   len  i      
+                node child   children item i filter accept child     
+                    matches addelement child recurse    
+                    nodelist recmatches   listchildnodes child  filter  recurse reclength   recmatches getlength j   0  j   reclength  j      
+                        matches addelement recmatches item i matches nodelistimpl vector nodelist getlength size node item i node  elementat i arrayindexoutofboundsexception e getnodeattribute node node name node element    
+            element element    element  node element getattribute name element getchildbytagname  node parent tagname parent null  
+          
+        nodelist childlist   parent getchildnodes len   childlist getlength i   0  i   len  i      
+            node child   childlist item i child child getnodetype      node element_node 
+                   child getnodename   equals tagname element  child node importnode node parent  node child    
+        node copy document doc   parent getownerdocument child getnodetype node cdata_section_node  
+            copy   doc createcdatasection   cdatasection  child  getdata node comment_node  
+            copy   doc createcomment   comment  child  getdata node document_fragment_node  
+            copy   doc createdocumentfragment node element_node element elem   doc createelement   element  child  gettagname     
+            copy   elem namednodemap attributes   child getattributes attributes size   attributes getlength i   0  i   size  i attr attr    attr  attributes item i   
+                    elem setattribute attr getname    attr getvalue node entity_reference_node  
+            copy   doc createentityreference child getnodename node processing_instruction_node processinginstruction pi    processinginstruction  child  
+            copy   doc createprocessinginstruction pi gettarget    pi getdata node text_node  
+            copy   doc createtextnode   text  child  getdata illegalstateexception  invalid node type      child getnodetype nodelist children   child getchildnodes children size   children getlength i   0  i   size  i node newchild   children item i newchild domexception ignored    
+              
+          
+ 
+          
+        parent appendchild copy copy  
+      
+ org apache tools ant taskdefs optional junit DOMUtil

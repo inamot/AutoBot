@@ -1,0 +1,284 @@
+ 
+    
+   handles operations related feedback questions  
+   
+    see feedbackquestionattributes 
+    see feedbackquestionsdb 
+    
+   prevent initialization 
+    
+       used creating initial questions only not check feedback session exists not check question number supplied valid not check clashes make adjustments  
+        
+    
+       gets single question corresponding given parameters   br  br  
+        b note   b  br method only used question already exists br  
+       datastore id already generated  
+        
+    
+       gets single question corresponding given parameters  
+        
+    
+       gets link list every feedbackquestion given session  
+        
+   todo removed once sure question numbers consistent 
+    
+        gets link list every feedbackquestion instructor copy  
+        
+    
+       gets code list questions given session instructor view submit  
+        
+    
+       gets code list questions list questions instructor creator course view submit  
+        
+   return self  creator  questions 
+    
+       filters through given list questions returns code list questions instructor view submit  
+        
+    
+       gets code list questions given session students view submit  
+        
+    
+       filters through given list questions returns code list questions students view submit  
+        
+   ensure student not evaluate himself 
+   ensure instructor not evaluate himself 
+   ensure student 's team not evaluate team  
+   recipientemail doubles team name case  
+   accepts self feedback checks question fully answered team  
+        return   code true recipients give feedback given 
+         code teamname     code false not  
+        
+    
+       updates feedback question number  shifts questions up down 
+       depending change  
+        
+    
+       adjust questions between old new number new number smaller shift up  increase qn questions between new number bigger shift down decrease qn questions between  
+        
+    
+       updates feedback question each attribute code newattributes existing value preserved attribute null  due keep existing' policy   existing responses question automatically deleted givertype recipienttype changed response visibility increased response rate feedback session not updated  br  
+       precondition   br  
+         code newattributes not   code null  
+        
+    
+       updates feedback question each attribute code newattributes existing value preserved attribute null  due keep existing' policy   existing responses question automatically deleted response rate feedback 
+       session updated givertype recipienttype changed response visibility increased  br  
+       precondition   br  
+         code newattributes not   code null  
+        
+    
+       deletes question auto-generated id   br  
+       cascade deletion existing responses question shifts larger question numbers down one preserve number order response rate feedback session not updated  
+       
+        p silently fails question not exist  
+        
+    
+       deletes question auto-generated id   br  
+       cascade deletion existing responses question shifts larger question numbers down one preserve number order response rate feedback session updated accordingly  
+       
+        p silently fail question not exist  
+        
+    
+       deletes feedback questions sessions course specified non-cascade delete responses questions comments responses handled  
+       
+        
+    
+       deletes question  br  question identified s question number feedback session name course id question  br used question id unknown   br  
+       cascade deletion existing responses question shifts larger question numbers down one preserve number order  
+        
+   silently fail question not exist  
+   cascade delete responses question  
+   shifts question numbers questionnumbertoshiftfrom down one  
+   
+       removes questions recipients  
+       teammates logic core FeedbackQuestionsLogic teammates logic core feedbackquestionslogic feedbackquestionslogic feedbackquestionslogic inst instance createfeedbackquestion feedbackquestionattributes fqa invalidparametersexception feedbacksessionname   fqa feedbacksessionname courseid   fqa courseid  
+        list feedbackquestionattributes  questions questions   getfeedbackquestionsforsession feedbacksessionname  courseid entitydoesnotexistexception e    
+            assumption fail  session disappeared fqa questionnumber   0    
+            fqa questionnumber   questions size     1  
+          
+        adjustquestionnumbers questions size     1  fqa questionnumber  questions   
+        createfeedbackquestionnointegritycheck fqa  fqa questionnumber feedbackquestionattributes createfeedbackquestionnointegritycheck  
+            feedbackquestionattributes fqa questionnumber invalidparametersexception   
+        fqa questionnumber   questionnumber  
+        fqa removeirrelevantvisibilityoptions fqdb createfeedbackquestionwithoutexistencecheck fqa feedbackquestionattributes copyfeedbackquestion feedbackquestionid feedbacksessionname courseid instructoremail invalidparametersexception   
+ 
+        feedbackquestionattributes question   getfeedbackquestion feedbackquestionid   
+        question feedbacksessionname   feedbacksessionname  
+        question courseid   courseid  
+        question creatoremail   instructoremail  
+        question questionnumber   -1  
+        question setid createfeedbackquestion question question feedbackquestionattributes getfeedbackquestion feedbackquestionid fqdb getfeedbackquestion feedbackquestionid feedbackquestionattributes getfeedbackquestion feedbacksessionname courseid questionnumber fqdb getfeedbackquestion feedbacksessionname  
+                courseid  questionnumber list feedbackquestionattributes  getfeedbackquestionsforsession feedbacksessionname courseid entitydoesnotexistexception fslogic getfeedbacksession feedbacksessionname  courseid entitydoesnotexistexception  
+                     trying to get questions a feedback session that does not exist     
+          
+        list feedbackquestionattributes  questions   
+                fqdb getfeedbackquestionsforsession feedbacksessionname  courseid   
+        collections sort questions questions size     1     arequestionnumbersconsistent questions     
+            log severe courseid          feedbacksessionname     has invalid question numbers questions arequestionnumbersconsistent list feedbackquestionattributes  questions    
+        set integer  questionnumbersinsession hashset feedbackquestionattributes question   questions questionnumbersinsession add question questionnumber i   1  i    questions size    i questionnumbersinsession contains i list feedbackquestionattributes  getcopiablefeedbackquestionsforinstructor googleid entitydoesnotexistexception   
+ 
+        list feedbackquestionattributes  copiablequestions arraylist      
+        list courseattributes  courses   courseslogic getcoursesforinstructor googleid courseattributes course   courses    
+            list feedbacksessionattributes  sessions   fslogic getfeedbacksessionsforcourse course getid feedbacksessionattributes session   sessions    
+                list feedbackquestionattributes  questions   
+                        getfeedbackquestionsforsession session getfeedbacksessionname    course getid     
+                copiablequestions addall questions   
+              
+          
+        collections sort copiablequestions comparator feedbackquestionattributes      
+             override compare feedbackquestionattributes q1  feedbackquestionattributes q2 order   q1 courseid compareto q2 courseid order    0 order  
+                  
+ 
+                order   q1 feedbacksessionname compareto q2 feedbacksessionname order    0 order  
+                  
+ 
+                feedbackquestiondetails q1details   q1 getquestiondetails    
+                feedbackquestiondetails q2details   q2 getquestiondetails q1displayname   q1details getquestiontypedisplayname q2displayname   q2details getquestiontypedisplayname    
+ 
+                order   q1displayname compareto q2displayname order    0 order q1details getquestiontext   compareto q2details getquestiontext copiablequestions list feedbackquestionattributes  getfeedbackquestionsforinstructor feedbacksessionname courseid useremail entitydoesnotexistexception fslogic getfeedbacksession feedbacksessionname  courseid entitydoesnotexistexception  
+                     trying to get questions a feedback session that does not exist fslogic iscreatorofsession feedbacksessionname  courseid  useremail getfeedbackquestionsforcreatorinstructor feedbacksessionname  courseid   
+          
+ 
+        list feedbackquestionattributes  questions arraylist      
+ 
+        instructorattributes instructor   instructorslogic getinstructorforemail courseid  useremail isinstructor   instructor isinstructor    
+            questions addall fqdb getfeedbackquestionsforgivertype  
+                            feedbacksessionname  courseid  feedbackparticipanttype instructors    
+          
+        collections sort questions questions list feedbackquestionattributes  getfeedbackquestionsforcreatorinstructor feedbacksessionname courseid entitydoesnotexistexception   
+ 
+        feedbacksessionattributes fsa   fslogic getfeedbacksession feedbacksessionname  courseid fsa entitydoesnotexistexception  
+                     trying to get questions a feedback session that does not exist getfeedbackquestionsforcreatorinstructor fsa list feedbackquestionattributes  getfeedbackquestionsforcreatorinstructor  
+                                    feedbacksessionattributes fsa    
+ 
+        list feedbackquestionattributes  questions arraylist feedbacksessionname   fsa getfeedbacksessionname courseid   fsa getcourseid    
+ 
+        questions addall fqdb getfeedbackquestionsforgivertype  
+                                       feedbacksessionname  courseid  feedbackparticipanttype instructors    
+ 
+          
+        questions addall fqdb getfeedbackquestionsforgivertype feedbacksessionname  
+                courseid  feedbackparticipanttype self    
+ 
+        collections sort questions questions list feedbackquestionattributes  getfeedbackquestionsforinstructor  
+            list feedbackquestionattributes  allquestions iscreator    
+ 
+        list feedbackquestionattributes  questions arraylist feedbackquestionattributes question   allquestions question givertype    feedbackparticipanttype instructors 
+                       question givertype    feedbackparticipanttype self    iscreator    
+                questions add question questions list feedbackquestionattributes  getfeedbackquestionsforstudents feedbacksessionname courseid    
+ 
+        list feedbackquestionattributes  questions arraylist      
+ 
+        questions addall  
+                fqdb getfeedbackquestionsforgivertype  
+                        feedbacksessionname  courseid  feedbackparticipanttype students    
+        questions addall  
+                fqdb getfeedbackquestionsforgivertype  
+                        feedbacksessionname  courseid  feedbackparticipanttype teams    
+ 
+        collections sort questions questions list feedbackquestionattributes  getfeedbackquestionsforstudents  
+            list feedbackquestionattributes  allquestions    
+ 
+        list feedbackquestionattributes  questions arraylist feedbackquestionattributes question   allquestions question givertype    feedbackparticipanttype students 
+                       question givertype    feedbackparticipanttype teams    
+                questions add question questions map string  getrecipientsforquestion feedbackquestionattributes question giver entitydoesnotexistexception   
+ 
+        instructorattributes instructorgiver   instructorslogic getinstructorforemail question courseid  giver   
+        studentattributes studentgiver   studentslogic getstudentforemail question courseid  giver getrecipientsforquestion question  giver  instructorgiver  studentgiver map string  getrecipientsforquestion  
+            feedbackquestionattributes question giver  
+            instructorattributes instructorgiver  studentattributes studentgiver entitydoesnotexistexception   
+ 
+        map string  recipients hashmap      
+ 
+        feedbackparticipanttype recipienttype   question recipienttype giverteam   getgiverteam giver  instructorgiver  studentgiver recipienttype self question givertype    feedbackparticipanttype teams    
+                recipients put studentgiver team  studentgiver team recipients put giver user_name_for_self students  
+            list studentattributes  studentsincourse   studentslogic getstudentsforcourse question courseid studentattributes student   studentsincourse giver equals student email     
+                    recipients put student email  student name instructors  
+            list instructorattributes  instructorsincourse   instructorslogic getinstructorsforcourse question courseid instructorattributes instr   instructorsincourse giver equals instr email     
+                    recipients put instr email  instr name teams  
+            list teamdetailsbundle  teams   courseslogic getteamsforcourse question courseid teamdetailsbundle team   teams giverteam equals team name     
+                      
+                    recipients put team name  team name own_team  
+            recipients put giverteam  giverteam own_team_members  
+            list studentattributes  students   studentslogic getstudentsforteam giverteam  question courseid studentattributes student   students student email equals giver     
+                    recipients put student email  student name own_team_members_including_self  
+            list studentattributes  teammembers   studentslogic getstudentsforteam giverteam  question courseid studentattributes student   teammembers    
+                  
+                recipients put student email  student name none  
+            recipients put general_question general_question recipients getgiverteam defaultteam  instructorattributes instructorgiver  
+            studentattributes studentgiver giverteam   defaultteam isstudentgiver   studentgiver isinstructorgiver   instructorgiver isstudentgiver    
+            giverteam   studentgiver team isinstructorgiver    
+            giverteam user_team_for_instructor giverteam arethereresponsesforquestion feedbackquestionid frlogic getfeedbackresponsesforquestionwithinrange feedbackquestionid  1  
+                        isempty isquestionfullyansweredbyuser feedbackquestionattributes question email entitydoesnotexistexception numberofresponsesgiven   
+                frlogic getfeedbackresponsesfromgiverforquestion question getid    email  size numberofresponsesneeded   
+                question numberofentitiestogivefeedbackto numberofresponsesneeded max_possible_recipients    
+            numberofresponsesneeded   getrecipientsforquestion question  email  size numberofresponsesgiven    numberofresponsesneeded isquestionfullyansweredbyteam feedbackquestionattributes question teamname entitydoesnotexistexception   
+ 
+        list studentattributes  studentsinteam   
+                studentslogic getstudentsforteam question courseid  teamname numberofpendingresponses   
+                question numberofentitiestogivefeedbackto numberofpendingresponses max_possible_recipients    
+            numberofpendingresponses   getrecipientsforquestion question  teamname  size studentattributes student   studentsinteam    
+            list feedbackresponseattributes  responses   
+                    frlogic getfeedbackresponsesfromgiverforquestion question getid    student email feedbackresponseattributes response   responses response giver equals student email     
+                    numberofpendingresponses -  1 numberofpendingresponses    0 updatefeedbackquestionnumber feedbackquestionattributes newquestion invalidparametersexception  entitydoesnotexistexception   
+ 
+        feedbackquestionattributes oldquestion   
+                fqdb getfeedbackquestion newquestion getid oldquestion entitydoesnotexistexception  trying to update a feedback question that does not exist oldquestionnumber   oldquestion questionnumber newquestionnumber   newquestion questionnumber feedbacksessionname   oldquestion feedbacksessionname courseid   oldquestion courseid  
+        list feedbackquestionattributes  questions questions   getfeedbackquestionsforsession feedbacksessionname  courseid entitydoesnotexistexception e    
+            assumption fail  session disappeared     
+          
+ 
+        adjustquestionnumbers oldquestionnumber  newquestionnumber  questions   
+        updatefeedbackquestion newquestion adjustquestionnumbers oldquestionnumber newquestionnumber  list feedbackquestionattributes  questions oldquestionnumber   newquestionnumber    oldquestionnumber    1 i   oldquestionnumber - 1  i    newquestionnumber  i--    
+                feedbackquestionattributes question   questions get i - 1   
+                question questionnumber    1  
+                updatefeedbackquestionwithoutresponserateupdate question oldquestionnumber   newquestionnumber    oldquestionnumber   questions size i   oldquestionnumber   1  i    newquestionnumber  i      
+                feedbackquestionattributes question   questions get i - 1   
+                question questionnumber -  1  
+                updatefeedbackquestionwithoutresponserateupdate question updatefeedbackquestionwithoutresponserateupdate feedbackquestionattributes newattributes updatefeedbackquestion newattributes invalidparametersexception e    
+            assumption fail  invalid question entitydoesnotexistexception e    
+            assumption fail  question disappeared updatefeedbackquestion feedbackquestionattributes newattributes invalidparametersexception  entitydoesnotexistexception   
+ 
+        updatefeedbackquestion newattributes updatefeedbackquestion feedbackquestionattributes newattributes hasresponserateupdate invalidparametersexception  entitydoesnotexistexception   
+        feedbackquestionattributes oldquestion newattributes getid oldquestion   fqdb getfeedbackquestion newattributes feedbacksessionname  
+                    newattributes courseid  newattributes questionnumber oldquestion   fqdb getfeedbackquestion newattributes getid oldquestion entitydoesnotexistexception  
+                     trying to update a feedback question that does not exist oldquestion areresponsedeletionsrequiredforchanges newattributes     
+            frlogic deletefeedbackresponsesforquestionandcascade oldquestion getid    hasresponserateupdate   
+          
+ 
+        oldquestion updatevalues newattributes   
+        newattributes removeirrelevantvisibilityoptions    
+        fqdb updatefeedbackquestion newattributes deletefeedbackquestionsforsession feedbacksessionname courseid entitydoesnotexistexception   
+        list feedbackquestionattributes  questions   
+                getfeedbackquestionsforsession feedbacksessionname  courseid feedbackquestionattributes question   questions    
+            deletefeedbackquestioncascadewithoutresponserateupdate question getid deletefeedbackquestioncascadewithoutresponserateupdate feedbackquestionid    
+        feedbackquestionattributes questiontodeletebyid   
+                        getfeedbackquestion feedbackquestionid questiontodeletebyid log warning  trying to delete question that does not exist      feedbackquestionid deletefeedbackquestioncascade questiontodeletebyid feedbacksessionname  
+                                            questiontodeletebyid courseid  
+                                            questiontodeletebyid questionnumber deletefeedbackquestioncascade feedbackquestionid    
+        feedbackquestionattributes questiontodeletebyid   
+                        getfeedbackquestion feedbackquestionid questiontodeletebyid log warning  trying to delete question that does not exist      feedbackquestionid deletefeedbackquestioncascade questiontodeletebyid feedbacksessionname  
+                                            questiontodeletebyid courseid  
+                                            questiontodeletebyid questionnumber deletefeedbackquestionsforcourse courseid    
+        fqdb deletefeedbackquestionsforcourse courseid deletefeedbackquestioncascade feedbacksessionname courseid questionnumber hasresponserateupdate    
+ 
+        feedbackquestionattributes questiontodelete   
+                getfeedbackquestion feedbacksessionname  courseid  questionnumber questiontodelete frlogic deletefeedbackresponsesforquestionandcascade questiontodelete getid    hasresponserateupdate   
+ 
+        list feedbackquestionattributes  questionstoshiftqnnumber questionstoshiftqnnumber   getfeedbackquestionsforsession feedbacksessionname  courseid entitydoesnotexistexception e    
+            assumption fail  session disappeared     
+          
+ 
+        fqdb deleteentity questiontodelete questiontodelete questionnumber   questionstoshiftqnnumber size      
+            shiftquestionnumbersdown questiontodelete questionnumber  questionstoshiftqnnumber shiftquestionnumbersdown questionnumbertoshiftfrom  
+            list feedbackquestionattributes  questionstoshift feedbackquestionattributes question   questionstoshift question questionnumber   questionnumbertoshiftfrom    
+                question questionnumber -  1  
+                updatefeedbackquestionwithoutresponserateupdate question list feedbackquestionattributes  getquestionswithrecipients  
+            list feedbackquestionattributes  questions giver entitydoesnotexistexception   
+        list feedbackquestionattributes  questionswithrecipients arraylist feedbackquestionattributes question   questions numrecipients   question numberofentitiestogivefeedbackto numrecipients max_possible_recipients    
+                numrecipients getrecipientsforquestion question  giver  
+                         size numrecipients   0    
+                questionswithrecipients add question questionswithrecipients  
+      
+ 
+ teammates logic core FeedbackQuestionsLogic

@@ -1,0 +1,220 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   sets property name set properties file resource project     p  
+   properties immutable  whoever sets property first freezes rest build most definitely not variable  
+    p five ways set properties   p  
+    ul  
+      li supplying both name i value attribute   li  
+      li supplying both name i refid attribute   li  
+      li setting file attribute filename property 
+       file load property file format defined file used class java util properties   li  
+      li setting resource attribute resource name property file load property file format defined file used class java util properties   li  
+      li setting environment attribute prefix use  
+       properties defined every environment variable prefixing supplied name period name variable   li  
+     ul  
+    p although combinations ways possible  only one used time  problems might occur order properties set instance   p  
+    p value part properties being set  might contain references properties references resolved time properties set holds properties loaded property file   p  
+   properties case sensitive ant 1 1 
+   
+    ant attribute group name  name  description  one using name attribute  
+    ant attribute group name  noname  description  one not using name attribute  
+    ant task category  property  
+    
+   checkstyle visibilitymodifier bc 
+   set read-only properties 
+   checkstyle visibilitymodifier constructor property  
+        
+    
+       constructor property  
+        param userproperty true user property ant 1 5 
+        
+    
+       constructor property  
+        param userproperty true user property 
+        param fallback project use look references reference not current project ant 1 5 name property set  
+        param name property name property name  
+        return property name 
+        
+    
+       sets property absolute filename given file value attribute absolute path left unchanged characters converted current platforms conventions   otherwise taken path 
+       relative project's basedir expanded  
+        param location path set 
+       
+        ant attribute group  name value property  
+        param value value assign 
+       
+        ant attribute group  name property value  
+        return property value 
+        
+    
+       filename property file load  
+        param file filename 
+       
+        ant attribute group  noname file attribute  
+        return file attribute url load properties  
+        param url url string 
+       
+        ant attribute group  noname url attribute  
+        return url attribute 
+        
+    
+       prefix apply properties loaded using  code file  code code resource  code appended prefix not specified  
+        param prefix prefix string ant 1 5 prefix attribute  
+        return prefix attribute ant 1 5 
+        
+    
+       sets reference ant datatype 
+       declared elsewhere  
+       only yields reasonable results references 
+       path structures properties  
+        param ref reference 
+       
+        ant attribute group  name refid attribute  
+        return refid attribute resource name property file load 
+        param resource resource classpath 
+       
+        ant attribute group  noname resource attribute  
+        return resource attribute 
+        
+    
+       prefix use retrieving environment variables  
+       thus specify environment  quot myenv quot access os-specific 
+       environment variables via property names  quot myenv path quot quot myenv term quot   
+        p  
+       note supply property name final 
+        quot   quot not doubled  ie environment  quot myenv  quot still 
+       allow access environment variables through  quot myenv path quot quot myenv term quot functionality currently only implemented select platforms  feel free send patches increase number platforms functionality supported br  
+       note properties case sensitive  even environment variables operating system not  e g env path  not $ env path windows 2000  
+        param env prefix 
+       
+        ant attribute group  noname environment attribute  
+        return environment attribute ant 1 5 classpath use looking up resource  
+        param classpath add any existing classpath classpath use looking up resource  
+        return path configured classpath use looking up resource  
+       given reference lt path gt  defined elsewhere 
+        param r reference classpath classpath used looking up resource  
+        return classpath ant 1 5 
+        
+    
+        param userproperty ignored 
+        deprecated 1 5 x never supported feature deprecated without replacement  
+        ant attribute ignore  true value property 
+        return current value empty string 
+        
+    
+       set property project value task give file  resource env attribute 
+       here loaded 
+        throws buildexception error 
+        
+    
+       load properties url 
+        param url url load throws buildexception error 
+        
+    
+       load properties file 
+        param file file load 
+        throws buildexception error 
+        
+    
+       load properties resource current classpath 
+        param name name resource load 
+        
+   ignore 
+    
+       load environment values 
+        param prefix prefix place before iterate through set properties  
+       resolve assign param props properties iterate over 
+        
+    
+       add name value pair project property set 
+        param n name property 
+        param v value set 
+        
+    
+       resolve properties inside properties hashtable 
+        param props properties object resolve 
+        
+    
+       recursively expand named property using project's 
+       reference table given set properties - fail circular definition detected  
+       
+        param props properties object resolve 
+        param name property resolve 
+        param referencesseen stack property names tried expand before coming here  
+       org apache tools ant taskdefs Property org apache tools ant taskdefs property task name value file file url url resource path classpath env reference ref prefix userproperty property property userproperty userproperty property userproperty  project fallback userproperty   userproperty fallback   fallback setname name name   name getname name setlocation file location    
+        setvalue location getabsolutepath setvalue value value   value getvalue value setfile file file file   file file getfile file seturl url url url   url url geturl url setprefix prefix prefix   prefix prefix endswith prefix getprefix prefix setrefid reference ref ref   ref reference getrefid ref setresource resource resource   resource getresource resource setenvironment env env   env getenvironment env setclasspath path classpath classpath classpath   classpath classpath append classpath path createclasspath classpath classpath path getproject classpath createpath setclasspathref reference r    
+        createclasspath   setrefid r path getclasspath classpath setuserproperty userproperty    
+        log  deprecated  ignoring request to set user property in property  
+                task    project msg_warn tostring value value execute buildexception getproject illegalstateexception  project has not been set name value ref buildexception  you must specify value  location or   
+                                            refid with the name attribute   
+                                         getlocation url file resource env buildexception  you must specify url  file  resource or   
+                                            environment when not using the   
+                                            name attribute   getlocation url file resource prefix buildexception  prefix is only valid when loading from   
+                                        a url  file or resource   getlocation name value addproperty name  value file loadfile file url loadurl url resource loadresource resource env loadenvironment env name ref addproperty name  
+                            ref getreferencedobject getproject    tostring buildexception be fallback addproperty name  
+                                ref getreferencedobject fallback  tostring be loadurl url url buildexception   
+        properties props properties    
+        log  loading     url  project msg_verbose inputstream is   url openstream props load is is is close    
+                  
+              
+            addproperties props ioexception ex buildexception ex  getlocation loadfile file file buildexception   
+        properties props properties    
+        log  loading     file getabsolutepath    project msg_verbose file exists      
+                fileinputstream fis fileinputstream file props load fis fis fis close    
+                      
+                  
+                addproperties props log  unable to find property file      file getabsolutepath    
+                    project msg_verbose ioexception ex buildexception ex  getlocation loadresource name    
+        properties props properties    
+        log  resource loading     name  project msg_verbose   
+        inputstream is classloader cl classpath cl   getproject   createclassloader classpath cl getclass   getclassloader cl is   classloader getsystemresourceasstream name is   cl getresourceasstream name is props load is   
+                addproperties props log  unable to find resource     name  project msg_warn ioexception ex buildexception ex  getlocation is is close ioexception e loadenvironment prefix    
+        properties props properties prefix endswith         
+            prefix         
+          
+        log  loading environment     prefix  project msg_verbose   
+        vector osenv   execute getprocenvironment enumeration e   osenv elements    e hasmoreelements entry e nextelement pos   entry indexof pos    -1    
+                log  ignoring      entry  project msg_warn props put prefix   entry substring 0  pos   
+                entry substring pos   1    
+              
+          
+        addproperties props addproperties properties props    
+        resolveallproperties props   
+        enumeration e   props keys e hasmoreelements propertyname e nextelement propertyvalue   props getproperty propertyname v   getproject   replaceproperties propertyvalue prefix propertyname   prefix   propertyname  
+              
+ 
+            addproperty propertyname  v addproperty n v userproperty getproject   getuserproperty n getproject   setinheritedproperty n  v log  override ignored n  project msg_verbose getproject   setnewproperty n  v resolveallproperties properties props buildexception enumeration e   props keys    e hasmoreelements propertyname e nextelement    
+            stack referencesseen stack    
+            resolve props  propertyname  referencesseen resolve properties props name  stack referencesseen buildexception referencesseen contains name buildexception  property     name     was circularly   
+                                        defined propertyvalue   props getproperty name   
+        vector fragments vector    
+        vector propertyrefs vector    
+        propertyhelper getpropertyhelper getproject    parsepropertystring  
+                propertyvalue  fragments  propertyrefs propertyrefs size      0    
+            referencesseen push name   
+            stringbuffer sb stringbuffer    
+            enumeration i   fragments elements    
+            enumeration j   propertyrefs elements i hasmoreelements fragment i nextelement fragment propertyname j nextelement    
+                    fragment   getproject   getproperty propertyname fragment props containskey propertyname     
+                            resolve props  propertyname  referencesseen   
+                            fragment   props getproperty propertyname fragment    $     propertyname        
+                          
+                      
+                  
+                sb append fragment   
+              
+            propertyvalue   sb tostring    
+            props put name  propertyvalue   
+            referencesseen pop    
+          
+      
+ org apache tools ant taskdefs Property

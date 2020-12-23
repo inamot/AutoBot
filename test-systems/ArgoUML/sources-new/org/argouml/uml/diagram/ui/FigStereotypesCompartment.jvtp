@@ -1,0 +1,190 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications fig designed child some fignode figedge display stereotypes model element represented parent fig  
+   currently display multiple stereotypes stacked one top each enclosed guillemets  p minimum width fig largest minimum width child 
+   figs  p minimum height fig total minimum height child 
+   figs  p  
+    
+   todo  allow uml2 style display stereotypes displayed same guillemet pair delimited commas style changeable calling getorientation orientation swidget orientation 
+   class used author bob tarling uid  
+        
+    
+       logger  
+        
+    
+       one uml keyword allowed not strictly stereotypes displayed e g   lt  lt interface gt  gt constructor  
+       
+        param x x 
+        param y y 
+        param w width 
+        param h height 
+        
+   
+        see org tigris gef presentation fig#setowner java lang object  
+        
+   
+        see org tigris gef presentation fig#removefromdiagram   
+        
+    
+       keep figs likely invisible end list  
+        
+    
+       todo become private only called setowner 
+       
+        see org argouml uml diagram ui figeditablecompartment#populate   
+        
+   todo block removed issue 4075 tackled 
+   bounds not relevant here 
+   bounds not relevant here 
+  cleanup unused figtext's 
+   remove stereotypes graphical icon 
+   
+        see org tigris gef presentation fig#setboundsimpl int  int  int  int  
+        
+    
+       allows parent fig specify some keyword text display amongst stereotypes example usage display  lt  lt interface gt  gt figinterface  
+        param word text pseudo stereotype 
+        
+    
+        return true textual stereotypes being hidden preference displaying icon  
+        
+    
+       turn textual stereotype display preference icon  
+        
+        param hidingstereotypeswithicon true hide textual stereotypes show icon instead  
+       org argouml uml diagram ui FigStereotypesCompartment org argouml uml diagram ui figstereotypescompartment figcompartment logger log   
+        logger getlogger figstereotypescompartment figstereotypescompartment x y w h x  y  w  h   
+        setfilled override setowner object own own setowner own   
+            populate    
+            model getpump   addmodeleventlistener own   stereotype    
+          
+      
+     
+      
+     override removefromdiagram     
+        model getpump   
+                 removemodeleventlistener getowner     stereotype    
+      
+     
+     override propertychange propertychangeevent event event addassociationevent    
+            addassociationevent aae    addassociationevent  event event getpropertyname   equals  stereotype      
+                object stereotype   aae getchangedvalue findfig stereotype fig bigport getbigport    
+                    figtext stereotypetextfig figstereotype  
+                                bigport getx     1  
+                                bigport gety     1 
+                                     stereotypecount  
+                                  fignodemodelelement rowheight  
+                                0  
+                                fignodemodelelement rowheight - 2  
+                                bigport  
+                                stereotype   
+                    stereotypetextfig setjustification figtext justify_center   
+                    stereotypetextfig seteditable stereotypetextfig settext  
+                            model getfacade   getname stereotype    
+                    stereotypetextfig setowner stereotype   
+                    addfig stereotypetextfig   
+                    reorderstereotypefigs    
+                    damage log warn  unexpected property     event getpropertyname event removeassociationevent event getpropertyname   equals  stereotype      
+                removeassociationevent rae    removeassociationevent  event  
+                object stereotype   rae getchangedvalue    
+                fig f   findfig stereotype f removefig f   
+                    --stereotypecount log warn  unexpected property     event getpropertyname reorderstereotypefigs     
+	list fig  allfigs   getfigs    
+	list fig  figswithicon arraylist fig     
+	list fig  figswithouticon arraylist fig     
+	list fig  others arraylist fig fig f   allfigs f figstereotype    
+                figstereotype s    figstereotype  f geticonforstereotype s figswithicon add s figswithouticon add s others add f   
+              
+          
+ 
+	list fig  n arraylist fig     
+	 
+	n addall others   
+	n addall figswithouticon   
+	n addall figswithicon  	 
+	 
+	setfigs n fig findfig object stereotype iterator it   getfigs   iterator    it hasnext        
+            fig f    fig  it next f getowner      stereotype f populate     
+        
+        stereotypecount   0  
+        object modelelement   getowner modelelement log debug  cannot populate the stereotype compartment   
+                        unless the parent has an owner log isdebugenabled      
+            log debug  populating stereotypes compartment model getfacade   getname modelelement acounter   1  
+        fig bigport getbigport xpos   bigport getx ypos   bigport gety    
+ 
+        list figs   getfigs    
+        compartmentfigtext stereotypetextfig keyword figs size      acounter    
+                  stereotypecount  
+                stereotypetextfig figstereotype  
+                            xpos   1  
+                            ypos   1 
+                               acounter - 1  
+                                  fignodemodelelement rowheight  
+                            0  
+                            fignodemodelelement rowheight - 2  
+                            bigport stereotypetextfig setjustification figtext justify_center   
+                stereotypetextfig seteditable addfig stereotypetextfig stereotypetextfig   
+                     compartmentfigtext  figs get acounter   
+              
+            stereotypetextfig settext keyword   
+            acounter    
+          
+ 
+        collection stereos   model getfacade   getstereotypes modelelement stereos iterator iter   stereos iterator iter hasnext      
+                object stereotype   iter next figs size      acounter    
+                      stereotypecount  
+                    stereotypetextfig figstereotype  
+                                xpos   1  
+                                ypos   1 
+                                   acounter - 1  
+                                	  fignodemodelelement rowheight  
+                                0  
+                                fignodemodelelement rowheight - 2  
+                                bigport  
+                                stereotype   
+                      
+                    stereotypetextfig setjustification figtext justify_center   
+                    stereotypetextfig seteditable addfig stereotypetextfig stereotypetextfig   
+                         compartmentfigtext  figs get acounter   
+                  
+                stereotypetextfig setowner stereotype   
+ 
+                acounter figs size     acounter i   figs size   - 1  i    acounter  i--    
+                    removefig  fig  figs get i    
+                  
+              
+ 
+            reorderstereotypefigs    
+             
+              
+            updatehiddenstereotypes updatehiddenstereotypes     
+        list fig  figs   getfigs fig f   figs f figstereotype    
+                figstereotype fs    figstereotype  f  
+                fs setvisible geticonforstereotype fs ishidingstereotypeswithicon image geticonforstereotype figstereotype fs    
+        project project   getproject project log warn  getproject   returned null project getprofileconfiguration   getfignodestrategy   
+                 geticonforstereotype fs getowner     
+      
+ 
+      
+     override setboundsimpl x y w h    
+        fig fig yy   y  
+        iterator figs   iterator figs hasnext      
+            fig    fig  figs next fig    getbigport      
+                fig setbounds x   1  yy   1  w - 2  
+                              fig getminimumsize   height   
+                yy    fig getminimumsize   height  
+              
+          
+        getbigport   setbounds x  y  w  h   
+        calcbounds setkeyword word    
+        keyword   word createmodelelement ishidingstereotypeswithicon hidingstereotypeswithicon sethidingstereotypeswithicon hidingstereotypeswithicon hidingstereotypeswithicon   hidingstereotypeswithicon  
+        updatehiddenstereotypes    
+      
+ org argouml uml diagram ui FigStereotypesCompartment

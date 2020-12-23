@@ -1,0 +1,175 @@
+ 
+   $id$ 
+   copyright  c  1996-2006 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications  
+    
+   provides facade argouml uml model ocl compiler  p  
+   
+   note file two different collections active  
+   java util collection tudresden ocl check types collection sure explicitly specify mean every time  
+   import java util collection  
+   import tudresden ocl check types collection target instance connected construtor  
+       
+        param t target create facade see tudresden ocl check types modelfacade#getclassifier java lang string  
+        
+    
+               added search defined types 2001-10-18 steffen zschaler class wrapper any type  
+    
+    
+       logger argoany class  
+        
+    
+       constructor  
+       
+        param cl argouml classifier  
+        
+   
+        see tudresden ocl check types type#navigatequalified  
+               java lang string  tudresden ocl check types type    
+        
+   mclassifiers 
+   cannot bag 
+   first search appropriate attributes 
+   look associations 
+  massociationend 
+   
+        see tudresden ocl check types type2#navigateparameterizedquery  
+               java lang string  tudresden ocl check types type    
+        
+   
+        see tudresden ocl check types type#navigateparameterized  
+               java lang string  tudresden ocl check types type    
+        
+  moperation 
+   query checking added 05 21 01  sz9    
+   
+        see tudresden ocl check types type#conformsto tudresden ocl check types type  
+        
+   
+        see java lang object#equals java lang object  
+        
+   
+        see java lang object#hashcode   
+        
+   
+        see java lang object#tostring   
+        
+   
+        see tudresden ocl check types type#hasstate java lang string  
+        
+    
+        param operation operation  
+        param callname name trying match  
+        param callparams parameters trying match  
+        return  code true  code given operation names parameters 
+      	       match given name parameters  
+        
+   skip first parameter    return type 
+  mclassifierorg argouml ocl ArgoFacade org argouml ocl argofacade tudresden ocl check types modelfacade argofacade object t model getfacade   isaclassifier t     
+	    target   t any getclassifier name    
+	project p   projectmanager getmanager   getcurrentproject target model getfacade   getname target  equals name argoany target   
+	  
+        object classifier   p findtypeinmodel name  p getmodel classifier classifier   p findtype name classifier ocltypeexception  cannot find classifier      name argoany classifier argoany any  type2   
+      
+  
+ 
+  
+ 
+      
+    argoany object cl    
+	classifier   cl type navigatequalified name  type   qualifiers ocltypeexception classifier ocltypeexception  attempting to access features of qualifiers ocltypeexception  qualified associations   
+				          not supported yet     
+	  
+ 
+	type type   basic navigateanyqualified name qualifiers type type  
+	  
+ 
+	object foundassoctype foundattribtype isset issequence collection attributes   
+	    model getcorehelper   getattributesinh classifier   
+	iterator iter   attributes iterator iter hasnext      foundattribtype object attr   iter next model getfacade   getname attr  equals name     
+		foundattribtype   model getfacade   gettype attr   
+	      
+	  
+ 
+	  
+	collection associationends   
+	    model getcorehelper   getassociateendsinh classifier   
+	iterator asciter   associationends iterator asciter hasnext      foundassoctype object ae   asciter next model getfacade   getname ae name equals model getfacade   getname ae      
+ 
+		foundassoctype   model getfacade   gettype ae model getfacade   getname ae model getfacade   getname ae  equals oppositename   
+		    model getfacade   getname model getfacade   gettype ae oppositename loweroppositename   
+			oppositename substring 0  1  tolowercase    
+		    loweroppositename    oppositename substring 1 loweroppositename equals name     
+		        foundassoctype   model getfacade   gettype ae foundassoctype object multiplicity   model getfacade   getmultiplicity ae multiplicity model getfacade   getupper multiplicity    1 
+			   model getfacade   getupper multiplicity  
+                              -1     
+		    collection c   model getfacade   getstereotypes ae   
+		    iterator i   c iterator stname i hasnext      
+		        object o   i next    
+		        stname   model getfacade   getname o ordered  equals stname ordered  equals stname     
+			issequence isset foundassoctype foundattribtype ocltypeexception  cannot access feature     name 
+				           of classifier     tostring   
+				           because both an attribute and   
+				          an association end of name   
+				          where found    
+	  
+ 
+	object foundtype foundassoctype foundtype   foundattribtype foundtype   foundassoctype foundtype ocltypeexception  attribute     name 
+				           not found in classifier   
+				         tostring     
+	  
+ 
+	type result   getoclrepresentation foundtype isset    
+	    result tudresden ocl check types collection  
+		        tudresden ocl check types collection set  
+			result issequence    
+	    result tudresden ocl check types collection  
+			tudresden ocl check types collection sequence  
+			result result type navigateparameterizedquery name  type   qualifiers ocltypeexception internalnavigateparameterized name  qualifiers type navigateparameterized name  type   qualifiers ocltypeexception internalnavigateparameterized name  qualifiers type internalnavigateparameterized name type   params fcheckisquery ocltypeexception classifier ocltypeexception  attempting to access features of type type   basic navigateanyparameterized name  params type type  
+	  
+ 
+	object foundop java util collection operations   
+                model getfacade   getoperations classifier   
+	iterator iter   operations iterator iter hasnext      foundop object op   iter next operationmatchescall op  name  params     
+		foundop   op foundop ocltypeexception  operation     name 
+				           not found in classifier   
+				         tostring fcheckisquery model getfacade   isquery foundop ocltypeexception  non-query operations cannot   
+					      be used in ocl expressions     
+					     name         
+	      
+	  
+ 
+        collection returnparams    
+            model getcorehelper   getreturnparameters foundop   
+        object rp returnparams size      0    
+            rp rp   returnparams iterator   next returnparams size     1     
+            log warn  ocl compiler only handles one parameter  
+                        - found     returnparams size model getfacade   getname foundop rp model getfacade   gettype rp log warn  warning  supposing type argoany object returntype   model getfacade   gettype rp getoclrepresentation returntype conformsto type type type argoany    
+	    argoany other    argoany  type equals type  
+		   model getcorehelper   
+		     getallsupertypes classifier  contains other classifier equals object o    
+	argoany any o argoany    
+	    any    argoany  o any classifier    classifier hashcode classifier 0 classifier hashcode tostring classifier model getfacade   getname classifier hasstate name    
+	log warn  argoany hasstate   has been called  but is   
+		    not implemented yet type getoclrepresentation object foundtype    
+	type result model getfacade   getname foundtype  equals model getfacade   getname foundtype  equals  integer      
+	    result   basic integer model getfacade   getname foundtype  equals model getfacade   getname foundtype  equals result   basic real model getfacade   getname foundtype  equals  bool   
+	       model getfacade   getname foundtype  equals model getfacade   getname foundtype  equals result   basic model getfacade   getname foundtype  equals result   basic result result argoany foundtype result operationmatchescall object operation callname  
+					   type   callparams callname equals model getfacade   getname operation collection operationparameters   
+                model getfacade   getparameters operation model getfacade   isreturn  
+                        operationparameters iterator   next       
+	    log warn  
+                 argofacade$argoany expects the first operation parameter   
+		   to be the type isn't the model getfacade   isreturn operationparameters iterator   next    
+	         operationparameters size       callparams length   1 iterator paramiter   operationparameters iterator    
+	paramiter next index   0 paramiter hasnext      
+	    object nextparam   paramiter next    
+	    object paramtype   
+                    model getfacade   gettype nextparam     
+	    type operationparam   getoclrepresentation paramtype callparams index  conformsto operationparam index org argouml ocl ArgoFacade

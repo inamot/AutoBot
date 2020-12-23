@@ -1,0 +1,243 @@
+ action performed system logged user allowed perform requested action object talk back end perform action used ensure unregistered users don't access certain pages system regkey may contain next url parameter well admin user application running under masquerade mode nominal' user  need not logged user unregistered not loggedin student's attributes full request url e g     code  page instructorhome?user abc course c1      
+    parameters received request     
+    execution status info shown admin activity log'      
+   todo  make list? 
+    execution status info shown user     
+    
+       whether execution completed without any errors unable perform requested action s   
+         
+    session contains status message information     
+    session token used forms links actions requiring origin validation blobinfo any file upload prev pages authentication action level     
+    initializes variables  
+       aborts link unauthorizedaccessexception user not 
+       logged non-admin tried masquerade another user  
+       
+        
+   set error status forwarded previous action 
+    
+       parses initializes regkey http request  
+        
+   
+               here regkey may contain nexturl well due workaround replaces placeholder  $ amp    thus next parameter  nexturl treated part regkey methods used cross-site request forgery  csrf  prevention 
+    
+       validates http referrer against request url origin base url http referrer includes protocol authority 
+        host name   port number specified   similarly target base 
+       url requested action url referrer considered valid  
+       origin target must match exactly  otherwise request likely csrf attack considered invalid  
+       
+        p example malicious request originating embedded image email  
+        pre  
+       request url  https   teammatesv4 appspot com page instructorcoursedelete?courseid abcdef 
+       referrer     https   mail google com mail u 0  
+       
+       target  https   teammatesv4 appspot com 
+       origin  https   mail google com 
+         pre  
+       origin not match target request invalid   p  
+       
+        p example legitimate request originating instructor courses page  
+        pre  
+       request url  https   teammatesv4 appspot com page instructorcoursedelete?courseid abcdef 
+       referrer     https   teammatesv4 appspot com page instructorcoursespage 
+       
+       target  https   teammatesv4 appspot com 
+       origin  https   teammatesv4 appspot com 
+         pre  
+       origin matches target request valid   p  
+        
+   due malformedurlexception 
+   newly-created session methods used user authentication 
+    
+       retrieves registration key http request  
+       
+        return registration key null key not http request 
+        
+   unregistered loggedin user 
+   unregistered not logged access given page 
+   allowing admin masquerade another user 
+   unregistered user admin masquerading  fabricate regkey user go through persistence issue 
+   todo  encrypt email currently anyone regkey email redirect methods used crud operations urls used redirecting users login page 
+    ------------------------------------------------    
+    
+       executes action implemented child class   before passing result caller some post processing   br  
+       1 original request contained url redirect performing action result replaced new 'redirect' type 
+          result  note  redirection not allowed third-party destinations   br  
+       2  user id  error flag status message added response encoded url error flag added code iserror  flag link actionresult  object result child class  
+   set error flag result 
+   set common parameters response 
+   pass status message using session prevent xss attack 
+    
+       adds list status messages actionresult session variables  
+        param response actionresult method expected br  
+       1  check user rights execute action   br  
+       2  execute action  br  
+       3 action requires showing page  prepare matching pagedata object  br  
+       4  set status messages shown user any admin  compulsory latter used generating adminactivitylogpage  
+        
+   todo handle entitydoesnotexistexception properly method body not re-thrown here 
+    
+       returns log message special format used generating activity log admin  
+        
+    
+       returns null specified parameter not found request  
+        
+    
+       returns value specified parameter expected present http request  
+       assumption requested parameter not null  
+       
+        param paramname constant link const paramsnames  class  
+        
+    
+       returns null specified parameter not found request  
+        
+    
+       returns values specified parameter expected present http request  
+       assumption requested parameter not null  
+       
+        param paramname constant link const paramsnames  class  
+        
+    
+       returns false specified parameter not found request  
+        
+    
+       generates link showpageresult information object  
+        
+  todo  replace overloaded constructor ajaxresult? 
+    
+       generates link ajaxresult information object  
+        
+    
+       generates link ajaxresult information code pagedata without removing any status message session  
+        
+    
+       generates link redirectresult information object  
+        
+    
+       generates link filedownloadresult information object  
+        
+    
+       status messages shown user admin set based error message exception   code e   br  
+         code iserror set true  
+        
+    
+       status messages shown admin set based error message exception   code e   br  
+       status message shown user set code statusmessagetouser   br  
+         code iserror set true  
+        
+                         utility methods used some child classes        teammates ui controller Action teammates ui controller action regkey nexturlfromregkey accountattributes loggedinuser accountattributes account studentattributes student logic logic gatekeeper gatekeeper taskqueuer taskqueuer emailsender emailsender requesturl map string    requestparameters statustoadmin list statusmessage  statustouser arraylist iserror httpsession session sessiontoken httpservletrequest request init httpservletrequest req    
+        initialiseattributes req   
+        validateoriginifrequired    
+        authenticateuser    
+      
+ 
+     suppresswarnings  unchecked initialiseattributes httpservletrequest req    
+        request   req  
+        requesturl   httprequesthelper getrequestedurl request   
+        logic logic    
+        gatekeeper gatekeeper    
+        settaskqueuer taskqueuer     
+        setemailsender emailsender     
+        requestparameters   request getparametermap    
+        session   request getsession    
+        sessiontoken   cryptohelper computesessiontoken session getid     
+        parseandinitializeregkeyfromrequest    
+          
+        iserror   getrequestparamasboolean paramsnames error parseandinitializeregkeyfromrequest regkeyfromrequest   getregkeyfromrequest isnextparaminregkey   regkeyfromrequest regkeyfromrequest contains  $ amp paramsnames next_url isnextparaminregkey split   regkeyfromrequest split  \\$\\ amp paramsnames next_url         
+            regkey   split 0   
+            nexturlfromregkey   sanitizationhelper desanitizefromnexturl split 1 regkey   regkeyfromrequest  
+            nexturlfromregkey taskqueuer gettaskqueuer taskqueuer settaskqueuer taskqueuer taskqueuer taskqueuer   taskqueuer emailsender getemailsender emailsender setemailsender emailsender emailsender emailsender   emailsender validateoriginifrequired systemparams pages_requiring_origin_validation contains request getrequesturi referrer   request getheader  referer referrer invalidoriginexception  missing http referrer ishttpreferrervalid referrer invalidoriginexception  invalid http referrer sessiontoken   getrequestparamvalue paramsnames session_token sessiontoken invalidoriginexception  missing session token issessiontokenvalid sessiontoken invalidoriginexception  invalid session token ishttpreferrervalid referrer origin origin url referrer  getbaseurl assertionerror e requesturl   request getrequesturl   tostring target url requesturl  getbaseurl origin equals target issessiontokenvalid actualtoken sessionid   request getrequestedsessionid sessionid sessionid   session getid expectedtoken   cryptohelper computesessiontoken sessionid actualtoken equals expectedtoken authenticateuser     
+        usertype currentuser   gatekeeper getcurrentuser    
+        loggedinuser   authenticateandgetactualuser currentuser isvaliduser      
+            account   authenticateandgetnominaluser currentuser accountattributes authenticateandgetactualuser usertype currentuser doesuserneedtologin currentuser accountattributes loggedinuser email   getrequestparamvalue paramsnames student_email courseid   getrequestparamvalue paramsnames course_id currentuser assumption assertpostparamnotnull paramsnames regkey  regkey   
+            loggedinuser   authenticatenotloggedinuser email  courseid loggedinuser   logic getaccount currentuser id doesregkeymatchloggedinusergoogleid currentuser id     
+                loggedinuser   createdummyaccountifuserisunregistered currentuser  loggedinuser loggedinuser getregkeyfromrequest getrequestparamvalue paramsnames regkey accountattributes createdummyaccountifuserisunregistered usertype currentuser  
+            accountattributes loggedinuser loggedinuser accountattributes newloggedinuser accountattributes    
+            newloggedinuser googleid   currentuser id newloggedinuser loggedinuser doesregkeymatchloggedinusergoogleid loggedinuserid regkey loggedinuserid student   logic getstudentforregistrationkey regkey isknownkey   student isknownkey    student isregistered       loggedinuserid equals student googleid expectedid   stringhelper obscure student googleid   
+                expectedid   stringhelper encrypt expectedid redirecturl   config getappurl actionuris logout  
+                                           withuserid stringhelper encrypt loggedinuserid   
+                                           withparam paramsnames next_url  gatekeeper getloginurl requesturl   
+                                           withparam paramsnames hint  expectedid  
+                                           tostring    
+ 
+                setredirectpage redirecturl accountattributes authenticatenotloggedinuser email courseid    
+        student   logic getstudentforregistrationkey regkey isunknownkey   student isaregistereduser    isunknownkey    student googleid student googleid isempty ismissingadditionalauthenticationinfo   email courseid isauthenticationfailure    isunknownkey 
+                                               student email equals email      student course equals courseid    
+ 
+        accountattributes loggedinuser isunknownkey unauthorizedaccessexception  unknown registration key     regkey isaregistereduser    
+            setredirectpage gatekeeper getloginurl requesturl isnotlegacylink      ismissingadditionalauthenticationinfo unauthorizedaccessexception  insufficient information to authenticate user isnotlegacylink      isauthenticationfailure unauthorizedaccessexception  invalid email course given registration key loggedinuser accountattributes    
+            loggedinuser email   student email loggedinuser isnotlegacylink systemparams legacy_pages_with_reduced_security contains request getrequesturi doesuserneedtologin usertype currentuser isgoogleloginrequired systemparams pages_accessible_without_google_login contains request getrequesturi isuserloggedin   currentuser hasregkey   getregkeyfromrequest isuserloggedin     isgoogleloginrequired     hasregkey     
+            setredirectpage gatekeeper getloginurl requesturl accountattributes authenticateandgetnominaluser usertype loggedinusertype paramrequesteduserid   request getparameter paramsnames user_id   
+ 
+        accountattributes account ismasquerademoderequested loggedinuser  paramrequesteduserid loggedinusertype isadmin    
+                  
+                account   logic getaccount paramrequesteduserid account regkey regkey    any-non value   
+                      
+                    account accountattributes    
+                    account googleid   paramrequesteduserid account unauthorizedaccessexception  user     loggedinusertype id 
+                                                    is trying to masquerade as     paramrequesteduserid 
+                                                    without admin permission     
+          
+ 
+        account   loggedinuser ispersistenceissue      ishomepage doesuserneedregistration account      loggedinusertype isadmin regkey student joinurl   config getappurl student getregistrationurl    
+                                     withparam paramsnames next_url  requesturl  
+                                     tostring    
+                setredirectpage joinurl unauthorizedaccessexception  unregistered user a page that needs registration isuserloggedin   account googleid ispagenotcoursejoinrelated      doesregkeybelongtounregisteredstudent      isuserloggedin redirecturl   config getappurl student getregistrationurl    
+                                   withparam paramsnames next_url  requesturl  
+                                   tostring    
+            setredirectpage redirecturl account ispersistenceissue persistencecheckstring1   
+                getrequestparamvalue paramsnames check_persistence_course persistencecheckstring1 ispagenotcoursejoinrelated currenturi   request getrequesturi currenturi equals actionuris student_course_join  
+                   currenturi equals actionuris student_course_join_new  
+                   currenturi equals actionuris student_course_join_authenticated ishomepage currenturi   request getrequesturi currenturi equals actionuris student_home_page  
+                  currenturi equals actionuris instructor_home_page doesregkeybelongtounregisteredstudent student student isregistered doesuserneedregistration accountattributes user userneedsregistrationforpage systemparams pages_accessible_without_registration contains request getrequesturi systemparams pages_accessible_without_google_login contains request getrequesturi userisnotregistered   user createdat userneedsregistrationforpage    userisnotregistered isvaliduser authenticationredirecturl isempty setredirectpage redirecturl    
+        authenticationredirecturl   redirecturl  
+        statustoadmin    redirecting user to     redirecturl getauthenticationredirecturl authenticationredirecturl actionresult executeandpostprocess isvaliduser createredirectresult getauthenticationredirecturl     
+          
+ 
+          
+        actionresult response response   execute entitydoesnotexistexception e entitynotfoundexception e   
+          
+ 
+          
+        response iserror   iserror gatekeeper getcurrentuser response responseparams put paramsnames user_id  account googleid regkey response responseparams put paramsnames regkey  getregkeyfromrequest student response responseparams put paramsnames student_email  student email   
+                response responseparams put paramsnames course_id  student course getrequestparamvalue paramsnames feedback_session_name response responseparams put paramsnames feedback_session_name  
+                        getrequestparamvalue paramsnames feedback_session_name    
+              
+          
+        response responseparams put paramsnames error tostring response iserror response getstatusmessage   isempty      
+            putstatusmessagetosession response response putstatusmessagetosession actionresult response    
+         suppresswarnings  unchecked   
+        list statusmessage  statusmessagestouser   
+                 list statusmessage   session getattribute paramsnames status_messages_list statusmessagestouser statusmessagestouser arraylist      
+          
+ 
+        statusmessagestouser addall response statustouser   
+        session setattribute paramsnames status_messages_list  statusmessagestouser actionresult execute entitydoesnotexistexception getlogmessage     
+        usertype curruser   gatekeeper getcurrentuser logmessagegenerator   generatepageactionlogmessage requesturl  requestparameters  curruser  
+                                                                      account  student  statustoadmin getrequestparamvalue paramname httprequesthelper getvaluefromparammap requestparameters  paramname getnonnullrequestparamvalue paramname getnonnullrequestparamvalues paramname  0 getrequestparamvalues paramname httprequesthelper getvaluesfromparammap requestparameters  paramname getnonnullrequestparamvalues paramname values   getrequestparamvalues paramname   
+        assumption assertpostparamnotnull paramname  values values getrequestparamasboolean paramname parseboolean getrequestparamvalue paramname showpageresult createshowpageresult destination  pagedata pagedata showpageresult destination  
+                                  account  
+                                  pagedata  
+                                  statustouser ajaxresult createajaxresult pagedata pagedata ajaxresult account  
+                              statustouser  
+                              pagedata ajaxresult createajaxresultwithoutclearingstatusmessage pagedata pagedata ajaxresult account  
+                              statustouser  
+                              pagedata isjoinedcourse courseid student logic getstudentforgoogleid courseid  account googleid redirectresult createredirectresult destination redirectresult destination  
+                                  account  
+                                  statustouser filedownloadresult createfiledownloadresult filename filecontent filedownloadresult  filedownload   
+                                      account  
+                                      statustouser  
+                                      filename  
+                                      filecontent actionresult createpleasejoincourseresponse courseid errormessage    you are not registered in the course     sanitizationhelper sanitizeforhtml courseid   
+        statustouser add statusmessage errormessage  statusmessagecolor danger    
+        iserror statustoadmin action_result_failure           errormessage createredirectresult actionuris student_home_page actionresult createimageresult blobkey imageresult  imagedisplay   
+                               blobkey  
+                               account  
+                               statustouser setstatusforexception exception e    
+        iserror exceptionmessageforhtml   e getmessage   replace eol html_br_tag   
+        statustouser add statusmessage exceptionmessageforhtml  statusmessagecolor danger    
+        statustoadmin action_result_failure           exceptionmessageforhtml setstatusforexception exception e statusmessagetouser    
+        iserror statusmessageforhtml   statusmessagetouser replace eol html_br_tag   
+        statustouser add statusmessage statusmessageforhtml  statusmessagecolor danger exceptionmessageforhtml   e getmessage   replace eol html_br_tag   
+        statustoadmin action_result_failure           exceptionmessageforhtml ismasquerademoderequested accountattributes loggedinuser requesteduserid loggedinuser requesteduserid null  equals requesteduserid trim    
+                  loggedinuser googleid loggedinuser googleid equals requesteduserid excludestudentdetailsfromresponseparams     
+        regkey teammates ui controller Action

@@ -1,0 +1,106 @@
+ 
+    
+   holds functions operations related google cloud storage  
+    
+   utility class 
+    
+       returns true file specified   link blobkey  exists google cloud storage  
+        
+    
+       deletes file specified   link blobkey google cloud storage  
+        
+    
+       writes byte array   code imagedata image google cloud storage code googleid identifier name image  
+        return link blobkey  used image's identifier google cloud storage 
+        
+    
+       creates invokes url uploading large blob google cloud storage  
+       upon completion upload callback made specified   code callbackurl   br  
+       refer link com google appengine api blobstore blobstoreservice#createuploadurl   
+        
+    
+       gets file specified   link blobkey google cloud storage  
+       parses returns list list  br  
+       assumption file represented code blobkey valid txt file parsed comma-separated list turns out error occur read around 900000 bytes data per time blobstream brings problems large number emails stored one 
+   list result prevent unexpected errors read txt file several times each time most 900000 bytes read new list created store emails addresses happen newly read bytes email address happens broken according two consecutive reading check done 
+   before storing emails separated second reading new list  
+   broken email fixed deleting first item email list current reading appending last item email list last reading email list each reading inserted upper list  list list structure below  
+   listoflist  
+         listfromreading_1   
+                        example email com  
+                                  
+         listfromreading_2   
+                        example email com list list 
+   offset needed remembering stops last reading 
+   file size needed track number unread bytes 
+   make sure not over-read 
+   remember stops reading 
+   decrease unread bytes read bytes string split first time reading 
+   check last reading stopped middle email address string last item list last reading first item list current reading broken email last reading found  simply add list current reading upper list  
+   either left part right part broken email string not contains simply append right part left part  last item list last reading needs delete right part first item list current readingteammates common util GoogleCloudStorageHelper teammates common util googlecloudstoragehelper googlecloudstoragehelper doesfileexistingcs blobkey filekey blobstoreservicefactory getblobstoreservice   fetchdata filekey  0  1 illegalargumentexception e deletefile blobkey filekey blobstoreservicefactory getblobstoreservice   delete filekey exception e    
+            log warning  trying to delete non-existent file with key      filekey getkeystring writeimagedatatogcs googleid imagedata ioexception   
+        gcsfilename gcsfilename gcsfilename config gcs_bucketname  googleid   
+        gcsoutputchannel outputchannel   
+                gcsservicefactory creategcsservice retryparams getdefaultinstance    
+                                  createorreplace gcsfilename gcsfileoptions builder   mimetype  image png   build     
+ 
+        outputchannel write bytebuffer wrap imagedata    
+        outputchannel close blobstoreservicefactory getblobstoreservice   
+                 creategsblobkey   gs     config gcs_bucketname         googleid  getkeystring getnewuploadurl callbackurl    
+        uploadoptions uploadoptions   
+                uploadoptions builder withdefaults   
+                              googlestoragebucketname config gcs_bucketname  
+                              maxuploadsizebytes systemparams max_file_limit_for_blobstoreapi blobstoreservicefactory getblobstoreservice   
+                                       createuploadurl callbackurl  uploadoptions list list getgroupreceiverlist blobkey blobkey ioexception   
+        assumption assertnotnull blobkey   
+ 
+          
+          
+          
+          
+          
+ 
+          
+          
+          
+          
+ 
+          
+          
+ 
+          
+          
+          
+          
+          
+          
+          
+ 
+          
+        list list listoflist linkedlist offset   0 size getfilesize blobkey size   0 bytestoread   math min size  max_reading_length   
+            inputstream blobstream blobstoreinputstream blobkey  offset array bytestoread   
+ 
+            blobstream read array   
+ 
+              
+            offset    max_reading_length  
+              
+            size -  max_reading_length readstring array   
+            list newlist   arrays aslist readstring split listoflist isempty      
+                  
+                listoflist add newlist list lastaddedlist   listoflist get listoflist size   - 1 laststringoflastaddedlist   lastaddedlist get lastaddedlist size   - 1 firststringofnewlist   newlist get 0 laststringoflastaddedlist contains         firststringofnewlist contains         
+                      
+                      
+                    listoflist add newlist listoflist get listoflist size   - 1  
+                               set lastaddedlist size   - 1  laststringoflastaddedlist   firststringofnewlist   
+ 
+                      
+                    listoflist add newlist sublist 1  newlist size   - 1    
+                  
+              
+ 
+            blobstream close listoflist getfilesize blobkey blobkey    
+        blobinfofactory blobinfofactory blobinfofactory blobinfofactory loadblobinfo blobkey  getsize    
+      
+ 
+ teammates common util GoogleCloudStorageHelper

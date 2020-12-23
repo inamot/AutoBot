@@ -1,0 +1,347 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license object represents path used classpath path 
+   environment variable path might described collection unique filesystem resources  
+    p  
+    code  
+    lt sometask gt  br  
+    nbsp  nbsp  lt somepath gt  br  
+    nbsp  nbsp  nbsp  nbsp  lt pathelement location   path file jar    gt  br  
+    nbsp  nbsp  nbsp  nbsp  lt pathelement 
+    path   path file2 jar  path class2  path class3    gt  
+    br  
+    nbsp  nbsp  nbsp  nbsp  lt pathelement location   path file3 jar    gt  br  
+    nbsp  nbsp  nbsp  nbsp  lt pathelement location   path file4 jar    gt  br  
+    nbsp  nbsp  lt  somepath gt  br  
+    lt  sometask gt  br  
+     code  
+    p object implemention  code sometask  code  must provide method called 
+    code createsomepath  code returns instance code path  code   
+   nested path definitions handled path object must labeled 
+    code pathelement  code   p path element takes parameter  code path  code parsed split single elements usually used define path environment variable  
+    
+   checkstyle visibilitymodifier bc system classpath path object system bootclasspath path object ant 1 6 2 
+        
+   checkstyle visibilitymodifier bc 
+    
+       helper class  holds nested  code  lt pathelement gt   code  values  
+        
+    
+           set location  
+           
+            param loc code file  code  value 
+            
+    
+           set path  
+           
+            param path code string  code  value 
+            
+    
+           return converted pathelements  
+           
+            return code string    code  value 
+            
+    
+           create iterator  
+            return iterator  
+            
+    
+           check resource only filesystems  
+            return true number resources  
+            return number parts  
+            
+    
+       invoked introspectionhelper code setxxx path p   code  
+       attribute setters  
+        param p code project  code path  
+        param path code string  code  path definition  
+        
+    
+       construct empty  code path  code   
+        param project code project  code path  
+        
+    
+       adds element definition path  
+        param location location element add  must not code null  code empty  
+        throws buildexception error 
+        
+    
+       parses path definition creates single pathelements  
+        param path code string  code  path definition  
+        throws buildexception error 
+        
+    
+       makes instance effect reference another path instance  
+       
+        p must not set another attribute nest elements inside element make reference   p  
+        param r reference another path 
+        throws buildexception error 
+        
+    
+       creates nested  code  lt pathelement gt   code  element  
+        return code pathelement  code configured 
+        throws buildexception error 
+        
+    
+       adds nested  code  lt fileset gt   code  element  
+        param fs code fileset  code added path 
+        throws buildexception error 
+        
+    
+       adds nested  code  lt filelist gt   code  element  
+        param fl code filelist  code added path 
+        throws buildexception error 
+        
+    
+       adds nested  code  lt dirset gt   code  element  
+        param dset code dirset  code added path 
+        throws buildexception error 
+        
+    
+       adds nested path 
+        param path code path  code added path 
+        throws buildexception error ant 1 6 
+        
+    
+       add nested  code resourcecollection  code   
+        param c resourcecollection add ant 1 7 
+        
+    
+       creates nested  code  lt path gt   code  element  
+        return code path  code configured 
+        throws buildexception error 
+        
+    
+       append contents path instance param code path  code added path 
+        
+    
+       adds components given path exist path  components don't exist aren't added  
+       
+        param source - source path whose components examined existence 
+        
+    
+       same addexisting support classpath behavior tryuserdir true  classpaths relative user dir  not project base used break jspc test 
+       
+        param source source path 
+        param tryuserdir true try user directory file not present 
+        
+   probably not best choice solves problem relative paths classpath 
+    
+       returns path elements defined nested path objects  
+        return list path elements  
+        
+    
+       returns textual representation path used classpath path environment variable definition  
+        return textual representation path  
+        
+    
+       splits path separators parts  
+        param project project use 
+        param source code string  code  value 
+        return array strings  one each path element 
+        
+    
+       returns argument file separator characters 
+       replaced match local os conventions  
+        param source path convert 
+        return converted path 
+        
+    
+       translates occurrences position correct separator current platform returns whether replacement  
+        param buffer buffer containing string 
+        param pos position string buffer convert 
+        return true character fulfill resourcecollection contract  
+        return number elements int  
+        
+    
+       clone path  
+        return path shallowly cloned resource children  
+        
+    
+       overrides version datatype recurse datatype 
+       child elements may added  
+        param stk stack data types use  recursively   
+        param p project use dereference references  
+        throws buildexception error  
+        
+    
+       resolve filename project's help know one concatenates system class path order specified build sysclasspath  property - using  quot last quot default value  
+        return concatenated path 
+        
+    
+       concatenates system class path order specified build sysclasspath  property - using supplied value build sysclasspath not set  
+        param defvalue order   first    last    only   
+        return concatenated path 
+        
+    
+       concatenates system boot class path order specified build sysclasspath  property - using supplied 
+       value build sysclasspath not set  
+        param defvalue order   first    last    only   
+        return concatenated path 
+        
+    
+       concatenates class path order specified build sysclasspath  property - using supplied value build sysclasspath not set  
+        
+   only developer knows s doing 
+   first  developer use little help 
+   ignore  don't trust anyone 
+   last  don't trust developer 
+    
+       add java runtime classes path instance  
+        
+   newer versions kaffe  1 1 1   won't this sorted fileset anyway  
+   xxx code still necessary any 1 2  port? 
+   pull zip packages directory 
+   jdk 1 2  seems set java home jre directory keep old version well addexisting 
+   sort out  
+   sun's apple's 1 4 jce jsse separate jars  
+   ibm's 1 4 rt jar split 4 smaller jars combined 
+   jce jsse security jar  
+   added macos x 
+    
+       emulation extdirs feature java    1 2 method adds files given 
+       directories not sub-directories classpath don't specify one one  
+        param extdirs - path append files fulfill resourcecollection contract iterator returned throw concurrentmodificationexceptions resourcecollections added container iterator use  
+        return fail-fast  iterator  
+        
+    
+       fulfill resourcecollection contract  
+        return whether filesystem-only resource collection  
+        
+    
+       verify specified resourcecollection filesystem-only  
+        param rc resourcecollection check  
+        throws buildexception code rc  code not filesystem-only  
+        return passed resourcecollection  
+       org apache tools ant types Path org apache tools ant types path datatype cloneable  resourcecollection path systemclasspath path system getproperty  java path path systembootclasspath path system getproperty  sun boot path iterator empty_iterator 
+          collections empty_set iterator pathelement resourcecollection setlocation file loc    
+            parts translatefile loc getabsolutepath setpath path    
+            parts   path translatepath getproject    path getparts parts iterator iterator fileresourceiterator parts isfilesystemonly size parts 0   parts length path project p path p   
+        createpathelement   setpath path path project project    
+        setproject project setlocation file location buildexception   
+        checkattributesallowed    
+        createpathelement   setlocation location setpath path buildexception   
+        checkattributesallowed    
+        createpathelement   setpath path setrefid reference r buildexception union toomanyattributes setrefid r pathelement createpathelement buildexception isreference nochildrenallowed    
+          
+        pathelement pe pathelement    
+        add pe pe addfileset fileset fs buildexception fs getproject fs setproject getproject     
+          
+        add fs addfilelist filelist fl buildexception fl getproject fl setproject getproject     
+          
+        add fl adddirset dirset dset buildexception dset getproject dset setproject getproject     
+          
+        add dset add path path buildexception path circularreference path getproject path setproject getproject     
+          
+        add  resourcecollection  path add resourcecollection c    
+        checkchildrenallowed c union union union    
+            union setproject getproject     
+            union setcache union add c   
+        setchecked path createpath buildexception   
+        path p path getproject     
+        add p p append path other other add other addexisting path source    
+         addexisting source addexisting path source tryuserdir list   source list    
+        file userdir    tryuserdir file system getproperty  user dir i   0  i   list length  i      
+            file f   resolvefile getproject    list i tryuserdir     f exists      
+                f file userdir  list i f exists      
+                setlocation f log  dropping     f     from path as it doesn't exist   
+                    project msg_verbose list isreference path  getcheckedref    list assertfilesystemonly union 0    union list tostring isreference   ? getcheckedref   tostring   
+              union union tostring translatepath project project source vector result vector source 0   
+          
+        pathtokenizer tok pathtokenizer source   
+        stringbuffer element stringbuffer tok hasmoretokens pathelement   tok nexttoken element append resolvefile project  pathelement  getpath buildexception e    
+                project log  dropping path element     pathelement 
+                        as it is not valid relative to the project   
+                    project msg_verbose i   0  i   element length    i      
+                translatefilesep element  i   
+              
+            result addelement element tostring     
+            element stringbuffer res result size     
+        result copyinto res res translatefile source source stringbuffer result stringbuffer source i   0  i   result length    i      
+            translatefilesep result  i result tostring translatefilesep stringbuffer buffer pos buffer charat pos     ' '    buffer charat pos     '\\'    
+            buffer setcharat pos  file separatorchar size isreference path  getcheckedref    size    
+          
+        dieoncircularreference union 0   assertfilesystemonly union  size object clone path result    path clone    
+            result union   union union    union  union clone result clonenotsupportedexception e buildexception e dieoncircularreference stack stk  project p buildexception ischecked isreference dieoncircularreference stk  p union stk push union   
+                invokecircularreferencecheck union  stk  p   
+                stk pop    
+              
+            setchecked file resolvefile project project relativename fileutils getfileutils   resolvefile  
+             project null   project getbasedir    relativename path concatsystemclasspath concatsystemclasspath  last path concatsystemclasspath defvalue concatspecialpath defvalue  path systemclasspath path concatsystembootclasspath defvalue concatspecialpath defvalue  path systembootclasspath path concatspecialpath defvalue  path p    
+        path result path getproject order   defvalue getproject o   getproject   getproperty  build sysclasspath o order   o order equals  only      
+              
+            result addexisting p order equals  first      
+              
+            result addexisting p result addexisting order equals  ignore      
+              
+            result addexisting order equals  last      
+                log  invalid value build sysclasspath      order  
+                    project msg_warn   
+              
+            result addexisting result addexisting p result addjavaruntime javaenvutils iskaffe      
+              
+              
+            file kaffeshare file system getproperty  java home   
+                                         file separator    share  
+                                         file separator    kaffe kaffeshare isdirectory      
+                fileset kaffejarfiles fileset    
+                kaffejarfiles setdir kaffeshare   
+                kaffejarfiles setincludes    jar    
+                addfileset kaffejarfiles gnu libgcj  equals system getproperty  java vm name       
+            addexisting systembootclasspath system getproperty  java vendor   tolowercase locale us  indexof  microsoft      0    
+              
+              
+            fileset mszipfiles fileset    
+            mszipfiles setdir file system getproperty  java home   
+                  file separator    packages     
+            mszipfiles setincludes    zip    
+            addfileset mszipfiles addexisting path system getproperty  java home   
+                                   file separator    lib  
+                                   file separator    rt jar     
+              
+              
+            addexisting path system getproperty  java home   
+                                   file separator    jre  
+                                   file separator    lib  
+                                   file separator    rt jar secjars     jce    jsse i   0  i   secjars length  i      
+                addexisting path system getproperty  java home   
+                                       file separator    lib  
+                                       file separator   secjars i      jar     
+                addexisting path system getproperty  java home   
+                                       file separator        
+                                       file separator    classes  
+                                       file separator   secjars i      jar ibmjars 
+                    core    graphics    security    server    xml i   0  i   ibmjars length  i      
+                addexisting path system getproperty  java home   
+                                       file separator    lib  
+                                       file separator   ibmjars i      jar     
+              
+ 
+              
+            addexisting path system getproperty  java home   
+                                   file separator        
+                                   file separator    classes  
+                                   file separator    classes jar     
+            addexisting path system getproperty  java home   
+                                   file separator        
+                                   file separator    classes  
+                                   file separator    ui jar addextdirs path extdirs extdirs extprop   system getproperty  java ext dirs extprop extdirs path getproject    extprop dirs   extdirs list i   0  i   dirs length  i      
+            file dir   resolvefile getproject    dirs i dir exists      dir isdirectory      
+                fileset fs fileset    
+                fs setdir dir   
+                fs setincludes       
+                addfileset fs iterator iterator isreference path  getcheckedref    iterator    
+          
+        dieoncircularreference union empty_iterator 
+              assertfilesystemonly union  iterator isfilesystemonly isreference path  getcheckedref    isfilesystemonly    
+          
+        dieoncircularreference    
+        assertfilesystemonly union resourcecollection assertfilesystemonly resourcecollection rc rc rc isfilesystemonly buildexception getdatatypename   
+                    allows only filesystem resources rc  
+      
+ org apache tools ant types Path

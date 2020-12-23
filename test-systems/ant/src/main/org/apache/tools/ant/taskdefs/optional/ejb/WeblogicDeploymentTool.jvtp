@@ -1,0 +1,376 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license weblogic element used control weblogic ejbc compiler generating weblogic ejb jars  prior ant 1 3 method locating cmp 
+    descriptors use ejbjar naming convention ejb-jar called  customer-ejb-jar xml weblogic descriptor called customer- 
+    weblogic-ejb-jar xml cmp descriptor customer-weblogic-cmp- 
+    rdbms-jar xml addition lt type-storage gt  element weblogic 
+    descriptor set standard name meta-inf weblogic-cmp-rdbms- 
+    jar xml cmp descriptor mapped generated 
+    jar  
+   
+    ejb11 id    
+  sun microsystems  inc   dtd enterprise javabeans 1 1  en   
+    ejb20 id    
+  sun microsystems  inc   dtd enterprise javabeans 2 0  en   
+    weblogic 5 1 0 id    
+  bea systems  inc   dtd weblogic 5 1 0 ejb  en   
+    weblogic 6 0 0 id    
+  bea systems  inc   dtd weblogic 6 0 0 ejb  en   
+    weblogic 7 0 0 id    
+  bea systems  inc   dtd weblogic 7 0 0 ejb  en   
+    weblogic 5 1 dtd location    
+    weblogic 6 0 ejb 1 1 dtd location    
+    weblogic 6 0 ejb 2 0 dtd location    
+    file utilities instance copying jars    
+    instance variable stores suffix weblogic jarfile     
+    instance variable stores location weblogic dtd file     
+    instance variable stores location ejb 1 1 dtd file     
+    instance variable determines whether generic ejb jars kept     
+    
+       instance variable stores fully qualified classname weblogic ejbc compiler 
+        
+    
+       additional args pass spawned jvm 
+        
+    controls whether ejbc run generated jar    
+    indicates old cmp location convention used classpath weblogic classes     
+    system properties jvm weblogic stdoutseveritylevel use running jvm executes ejbc  set 16 avoid warnings ejb home remotes being classpath 
+        
+    
+       add nested sysproperty element  
+        param sysp element add classpath weblogic classpaths  
+        return classpath configure set ejbc use directory output 
+       destination jar file allows generation quot exploded quot  jars  
+        param outputdir directory used  
+        
+    
+       optional classpath wl6 0  
+       weblogic 6 0 give warning home remote interfaces bean system classpath used run weblogic ejbc case standard weblogic classes set attribute equivalent nested element home remote interfaces located standard classpath 
+       attribute  
+        param wlclasspath path used compiler  switch  code -compiler  code use  optional allows selection different compiler used compilation generated java 
+       files set example jikes compile jikes compiler not set code build compiler  code  property set jikes jikes compiler used not desired value  quot  code default  code  quot  
+       may given use default compiler  
+        param compiler compiler used  
+        
+    
+       set rebuild flag false only update changes jar rerunning ejbc  optional  default true flag controls whether weblogic ejbc always 
+       invoked build jar file certain circumstances only bean class changed jar generated merely replacing changed classes not rerunning ejbc  setting false reduce time run ejbjar  
+        param rebuild code boolean  code  value  
+        
+    
+       sets weblogic stdoutseveritylevel use running jvm executes ejbc  optional  set 16 avoid warnings ejb home remotes being classpath 
+        param jvmdebuglevel value use debug level  
+        return jvm debug level  may null   
+        
+    
+       setter used store suffix generated weblogic jar file  
+       
+        param instring string use suffix  
+        
+    
+       controls whether generic file used input ejbc retained  defaults false 
+       
+        param invalue true keep generic 
+        
+    
+       controls whether weblogic keep generated java 
+       files used build class files added jar useful debugging  default false  
+       
+        param invalue either 'true false' 
+        
+    
+       any optional extra arguments pass weblogic ejbc 
+       tool  
+        param args extra arguments pass ejbc tool  
+        
+    
+       set any additional arguments pass weblogic jvm  optional  
+        param args arguments passed jvm 
+        
+    
+       set classname ejbc compiler   optional 
+       normally ejbjar determines appropriate class based dtd used ejb ejb 2 0 compiler 
+       featured weblogic 6 deprecated version 7 using version 7 attribute set quot weblogic ejbc quot avoid deprecation warning  
+        param ejbcclass name class use ejbc compiler class  
+        return name ejbc compiler class  
+        
+    
+        b deprecated  b   defines location ejb-jar dtd weblogic class hierarchy not needed nested  lt dtd gt  element recommended param instring string use dtd location  
+        
+    
+        b deprecated  b   defines location weblogic dtd weblogic class hierarchy not needed nested  lt dtd gt  element recommended param instring string use dtd location  
+        
+    
+        b deprecated  b   defines location sun's ejb dtd weblogic class hierarchy not needed nested  lt dtd gt  element recommended param instring string use dtd location  
+        
+    
+       set value oldcmp scheme antonym newcmp 
+        ant attribute ignore  true' 
+        param oldcmp code boolean  code  value set true new method locating 
+       cmp descriptors used  optional  default false  
+        p old cmp scheme locates weblogic cmp descriptor based naming convention weblogic cmp file expected named bean name prefix  under scheme name cmp descriptor not match name actually used main weblogic ejb descriptor descriptors contain multiple cmp references not used  
+        param newcmp code boolean  code  value not ejbc jar put together  
+       optional  default false 
+        param noejbc code boolean  code  value  
+        
+    
+       register dtds  
+        param handler handler use  
+        
+   register known dtds weblogic descriptor handler  
+        param srcdir source directory  
+        return descriptor filename vendor specific descriptor 
+  trim meta_inf file name 
+    
+       add any vendor specific files included ejb jar  
+        param ejbfiles hash table populated  
+        param ddprefix prefix use the weblogic cmp deployment descriptor 
+   now weblogic descriptor parse file find descriptors needed deploy bean weblogic-cmp-rdbms xml any o r 
+   mapping tool descriptors vendor specific name jar output modification date jar checked against dependent 
+       bean classes  
+        
+    
+       helper method invoked execute each weblogic jar built  
+       encapsulates logic constructing java task calling 
+       weblogic ejbc executing param sourcejar java io file representing source  ejb1 1  jarfile  
+        param destjar java io file representing destination  weblogic 
+            jarfile  
+        
+   try determine publicid 
+   try use compiler specified build compiler  
+   right now going allow jikes catch semantics calling main   
+    
+       method used encapsulate writing jar file  iterates over filenames java io files hashtable stored instance 
+       variable ejbfiles  
+        param basename base name  
+        param jarfile jar file populate  
+        param files hash table files write  
+        param publicid id use  
+        throws buildexception problem  
+        
+   need create generic jar first  
+    
+       called validate tool parameters configured  
+        throws buildexception error  
+        
+    
+       helper method check see weblogic ebj1 1 jar needs rebuilt using ejbc  called writejar sees bean  classes only thing needs updated either updates jar bean classfile returns true  saying whole weblogic 
+       jar needs regened ejbc allows faster build times working developers   p way weblogic ejbc works creates wrappers publicly 
+       defined methods exposed remote interface actual bean changes without changing the method signatures only bean classfile needs updated rest weblogic jar file remain same interfaces  ie method signatures change xml deployment descriptors changed whole jar needs rebuilt ejbc not strictly true xml files jndi name changes jar doesnt rebuild resources references change point weblogic jar gets rebuilt xml files change param genericjarfile java io file generic jar file  
+        param weblogicjarfile java io file weblogic jar file check see needs rebuilt  
+        return true jar needs rebuilt  
+        
+   only go forward generic weblogic file both exist 
+  open jar files list generic jar entries list weblogic jar entries 
+  cycle through generic make sure weblogic 
+   file name path match 
+   check files see same 
+  file different see object interface 
+  interface changed   rebuild jar  
+  object class changed   update it manifest ignore file class changed   rebuild file doesnt exist rebuild 
+  copy files old weblogic jar 
+   update changed bean class 
+   use entry generic jar 
+  use fle original weblogic jar 
+   need close files perhaps rename output 
+   empty 
+   empty 
+   empty 
+    
+       helper method invoked isrebuildrequired classloader jar file passed param classjar java io file representing jar file classes return classloader jarfile  
+        throws ioexception problem  
+       org apache tools ant taskdefs optional ejb WeblogicDeploymentTool org apache tools ant taskdefs optional ejb weblogicdeploymenttool genericdeploymenttool publicid_ejb11 publicid_ejb20 publicid_weblogic_ejb510 publicid_weblogic_ejb600 publicid_weblogic_ejb700 default_wl51_ejb11_dtd_location 
+             weblogic ejb deployment xml ejb-jar dtd default_wl60_ejb11_dtd_location 
+             weblogic ejb20 dd xml ejb11-jar dtd default_wl60_ejb20_dtd_location 
+             weblogic ejb20 dd xml ejb20-jar dtd default_wl51_dtd_location 
+             weblogic ejb deployment xml weblogic-ejb-jar dtd default_wl60_51_dtd_location 
+             weblogic ejb20 dd xml weblogic510-ejb-jar dtd default_wl60_dtd_location 
+             weblogic ejb20 dd xml weblogic600-ejb-jar dtd default_wl70_dtd_location 
+             weblogic ejb20 dd xml weblogic700-ejb-jar dtd default_compiler wl_dd    weblogic-ejb-jar xml wl_cmp_dd    weblogic-cmp-rdbms-jar xml compiler_ejb11    weblogic ejbc compiler_ejb20    weblogic ejbc20 addsysproperty environment variable sysp    
+        sysprops add sysp path createwlclasspath wlclasspath wlclasspath path gettask   getproject wlclasspath createpath setoutputdir file outputdir outputdir   outputdir setwlclasspath path wlclasspath wlclasspath   wlclasspath setcompiler compiler compiler   compiler setrebuild rebuild alwaysrebuild   rebuild setjvmdebuglevel integer jvmdebuglevel jvmdebuglevel   jvmdebuglevel integer getjvmdebuglevel jvmdebuglevel setsuffix instring jarsuffix   instring setkeepgeneric invalue keepgeneric   invalue setkeepgenerated invalue keepgenerated valueof invalue  booleanvalue setargs args additionalargs   args setjvmargs args additionaljvmargs   args setejbcclass ejbcclass ejbcclass   ejbcclass getejbcclass ejbcclass setweblogicdtd instring    
+        setejbdtd instring setwldtd instring weblogicdtd   instring setejbdtd instring ejb11dtd   instring setoldcmp oldcmp newcmp    oldcmp setnewcmp newcmp newcmp   newcmp setnoejbc noejbc noejbc   noejbc registerknowndtds descriptorhandler handler    
+          
+        handler registerdtd publicid_ejb11  default_wl51_ejb11_dtd_location   
+        handler registerdtd publicid_ejb11  default_wl60_ejb11_dtd_location   
+        handler registerdtd publicid_ejb11  ejb11dtd   
+        handler registerdtd publicid_ejb20  default_wl60_ejb20_dtd_location descriptorhandler getweblogicdescriptorhandler file srcdir    
+        descriptorhandler handler descriptorhandler gettask    srcdir processelement currentelement equals  type-storage filenamewithmeta   currenttext filename 
+                               filenamewithmeta substring meta_dir length    
+                            filenamewithmeta length     
+                        file descriptorfile file srcdir  filename   
+ 
+                        ejbfiles put filenamewithmeta  descriptorfile   
+                      
+                  
+               
+ 
+        handler registerdtd publicid_weblogic_ejb510  default_wl51_dtd_location   
+        handler registerdtd publicid_weblogic_ejb510  default_wl60_51_dtd_location   
+        handler registerdtd publicid_weblogic_ejb600  default_wl60_dtd_location   
+        handler registerdtd publicid_weblogic_ejb700  default_wl70_dtd_location   
+        handler registerdtd publicid_weblogic_ejb510  weblogicdtd   
+        handler registerdtd publicid_weblogic_ejb600  weblogicdtd iterator i   getconfig   dtdlocations iterator    i hasnext       
+            ejbjar dtdlocation dtdlocation    ejbjar dtdlocation  i next    
+ 
+            handler registerdtd dtdlocation getpublicid    dtdlocation getlocation handler addvendorfiles hashtable ejbfiles ddprefix    
+        file weblogicdd file getconfig   descriptordir  ddprefix   wl_dd weblogicdd exists      
+            ejbfiles put meta_dir   wl_dd  
+                weblogicdd log  unable to locate weblogic deployment descriptor    
+                   it was expected to be in   
+                  weblogicdd getpath    project msg_warn newcmp    
+            log  the old method locating cmp files has been deprecated    project msg_verbose   
+            log  please adjust your weblogic descriptor and set   
+                   newcmp to use the cmp descriptor   
+                   inclusion mechanism     project msg_verbose   
+              
+            file weblogiccmpdd file getconfig   descriptordir  ddprefix   wl_cmp_dd weblogiccmpdd exists      
+                ejbfiles put meta_dir   wl_cmp_dd  
+                    weblogiccmpdd file ejbdescriptor    file  ejbfiles get meta_dir   ejb_dd   
+                saxparserfactory saxparserfactory   saxparserfactory newinstance    
+ 
+                saxparserfactory setvalidating saxparser saxparser   saxparserfactory newsaxparser    
+                descriptorhandler handler 
+                      getweblogicdescriptorhandler ejbdescriptor getparentfile     
+ 
+                saxparser parse inputsource fileinputstream weblogicdd    
+                        handler   
+ 
+                hashtable ht   handler getfiles    
+                enumeration e   ht keys e hasmoreelements key e nextelement    
+ 
+                    ejbfiles put key  ht get key exception e msg    exception adding vendor specific files      e tostring buildexception msg  e   
+              
+          
+      
+ 
+ 
+      
+    file getvendoroutputjarfile basename file getdestdir    basename   jarsuffix buildweblogicjar file sourcejar  file destjar publicid    
+        java javatask noejbc file_utils copyfile sourcejar  destjar keepgenerated    
+                    sourcejar delete ioexception e buildexception  unable to write ejb jar   e ejbcclassname   ejbcclass javatask java gettask     
+            javatask settaskname  ejbc    
+ 
+            javatask createjvmarg   setline additionaljvmargs sysprops isempty enumeration en   sysprops elements    en hasmoreelements       
+                    environment variable entry 
+                           environment variable  en nextelement    
+                    javatask addsysproperty entry getjvmdebuglevel javatask createjvmarg   setline   -dweblogic stdoutseveritylevel     jvmdebuglevel ejbcclassname publicid_ejb11 equals publicid     
+                    ejbcclassname   compiler_ejb11 publicid_ejb20 equals publicid     
+                    ejbcclassname   compiler_ejb20 log  unrecognized publicid     publicid 
+                            - using ejb 1 1 compiler   project msg_warn   
+                    ejbcclassname   compiler_ejb11  
+                  
+              
+ 
+            javatask setclassname ejbcclassname   
+            javatask createarg   setline additionalargs keepgenerated    
+                javatask createarg   setvalue  -keepgenerated compiler buildcompiler 
+                      gettask   getproject   getproperty  build compiler buildcompiler buildcompiler equals  jikes      
+                    javatask createarg   setvalue  -compiler    
+                    javatask createarg   setvalue  jikes compiler equals default_compiler     
+                    javatask createarg   setvalue  -compiler    
+                    javatask createarg   setline compiler   
+                  
+              
+ 
+            path combinedclasspath   getcombinedclasspath wlclasspath combinedclasspath combinedclasspath tostring   trim   length     0    
+                javatask createarg   setvalue  -classpath    
+                javatask createarg   setpath combinedclasspath   
+              
+ 
+            javatask createarg   setvalue sourcejar getpath outputdir javatask createarg   setvalue destjar getpath javatask createarg   setvalue outputdir getpath     
+              
+ 
+            path classpath   wlclasspath classpath classpath   getcombinedclasspath    
+              
+ 
+            javatask setfork classpath javatask setclasspath classpath   
+              
+ 
+            log  calling     ejbcclassname sourcejar tostring    
+                project msg_verbose javatask executejava      0 buildexception  ejbc reported an error exception e msg    exception calling     ejbcclassname 
+                     details      e tostring buildexception msg  e writejar basename  file jarfile  hashtable files publicid buildexception   
+          
+        file genericjarfile getvendoroutputjarfile basename writejar basename  genericjarfile  files  publicid alwaysrebuild    isrebuildrequired genericjarfile  jarfile     
+            buildweblogicjar genericjarfile  jarfile  publicid keepgeneric    
+            log  deleting generic jar     genericjarfile tostring    
+                project msg_verbose   
+            genericjarfile delete validateconfigured buildexception validateconfigured isrebuildrequired file genericjarfile  file weblogicjarfile rebuild jarfile genericjar jarfile wljar file newwljarfile jaroutputstream newjarstream classloader genericloader log  checking weblogic jar needs to be rebuilt jar     weblogicjarfile getname    
+                project msg_verbose genericjarfile exists      genericjarfile isfile   
+                    weblogicjarfile exists      weblogicjarfile isfile      
+                  
+                genericjar jarfile genericjarfile   
+                wljar jarfile weblogicjarfile   
+ 
+                hashtable genericentries hashtable    
+                hashtable wlentries hashtable    
+                hashtable replaceentries hashtable enumeration e   genericjar entries    e hasmoreelements       
+                    jarentry je    jarentry  e nextelement    
+ 
+                    genericentries put je getname   replace '\\'  ' '   je enumeration e   wljar entries    e hasmoreelements       
+                    jarentry je    jarentry  e nextelement    
+ 
+                    wlentries put je getname    je   
+                  
+ 
+                  
+                genericloader   getclassloaderfromjar genericjarfile enumeration e   genericentries keys    e hasmoreelements filepath e nextelement wlentries containskey filepath     
+                          
+ 
+                          
+                        jarentry genericentry    jarentry  genericentries get filepath   
+                        jarentry wlentry    jarentry  wlentries get filepath genericentry getcrc      wlentry getcrc    
+                                genericentry getsize      wlentry getsize genericentry getname   endswith classname 
+                                      genericentry getname   replace file separatorchar  ' '   
+ 
+                                classname   classname substring 0  classname lastindexof class genclass   genericloader loadclass classname genclass isinterface      
+                                      
+                                    log genclass getname   
+                                            has changed   project msg_verbose   
+                                    rebuild replaceentries put filepath  genericentry genericentry getname   equals  meta-inf manifest mf      
+                                      
+                                    log  non file     genericentry getname   
+                                            has changed   project msg_verbose   
+                                    rebuild log  file     filepath     not present in weblogic jar   
+                            project msg_verbose   
+                        rebuild rebuild    
+                    log  no rebuild needed - updating jar   project msg_verbose   
+                    newwljarfile file weblogicjarfile getabsolutepath       temp newwljarfile exists      
+                        newwljarfile delete    
+                      
+ 
+                    newjarstream jaroutputstream fileoutputstream newwljarfile    
+                    newjarstream setlevel 0 enumeration e   wlentries elements    e hasmoreelements buffer default_buffer_size bytesread  
+                        inputstream is  
+                        jarentry je    jarentry  e nextelement je getcompressedsize      -1 
+                               je getcompressedsize      je getsize      
+                            newjarstream setlevel 0 newjarstream setlevel jar_compress_level replaceentries containskey je getname       
+                            log  updating bean from generic jar   
+                                  je getname    project msg_verbose   
+                              
+                            je    jarentry  replaceentries get je getname     
+                            is   genericjar getinputstream je is   wljar getinputstream je   
+                          
+                        newjarstream putnextentry jarentry je getname bytesread   is read buffer      -1    
+                            newjarstream write buffer  0  bytesread   
+                          
+                        is close log  weblogic jar rebuild needed due to changed or xml   project msg_verbose rebuild classnotfoundexception cnfe cnfmsg    classnotfoundexception processing ejb-jar file  
+                      details    
+                   cnfe getmessage buildexception cnfmsg  cnfe ioexception ioe msg    ioexception processing ejb-jar file   
+                      details    
+                   ioe getmessage buildexception msg  ioe genericjar genericjar close ioexception closeexception wljar wljar close ioexception closeexception newjarstream newjarstream close ioexception closeexception file_utils rename newwljarfile  weblogicjarfile ioexception renameexception    
+                    log renameexception getmessage    project msg_warn   
+                    rebuild genericloader genericloader antclassloader    
+                antclassloader loader    antclassloader  genericloader  
+                loader cleanup rebuild classloader getclassloaderfromjar file classjar ioexception   
+        path lookuppath path gettask   getproject     
+ 
+        lookuppath setlocation classjar   
+ 
+        path classpath   getcombinedclasspath classpath lookuppath append classpath gettask   getproject   createclassloader lookuppath   
+      
+ org apache tools ant taskdefs optional ejb WeblogicDeploymentTool

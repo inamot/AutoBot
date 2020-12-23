@@ -1,0 +1,321 @@
+ 
+   $id$ 
+   copyright  c  2005-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications  
+    
+   uml notation text shown next transition  
+     
+    author mvw tigris org constructor  
+       
+        param transition transition represented notation 
+        
+   
+        see org argouml uml notation notationprovider#parse java lang object  java lang string  
+        
+    
+       parse transition description line form  pre  
+           event-signature  guard-condition    action-expression   
+         pre last character line ignored  p event-signature  may one 4 
+       formats  ul  
+        li  changeevent condition   
+        li  timeevent duration   
+        li  callevent parameter-list    
+        li  signalevent  any string without     
+         ul  
+       
+       remark uml standard not make distinction between syntax callevent signalevent  
+       both may parameters between simplicity user-friendlyness chose distinction user parameters signalevent may add properties panels not diagram  p alternative solution create callevent default editing existing event not change type  p  
+       
+       todo function fails event-signature contains param trans transition object string applies 
+        param s string parsed 
+        return transition object 
+        throws parseexception matching found 
+        
+   parseeventsignature trans  eventsignature   
+    
+       parse event trigger given transition  
+       
+        param trans transition triggered given event 
+        param trigger given trigger 
+        throws parseexception s look timeevent  changeevent  callevent signalevent part s nothing between the empty s distinguish between 4 cases  
+           1 trigger given  none exists 2 name trigger present same altered  
+           3 trigger not given  none exists 4 name trigger present removed reaction cases 1  create new trigger  name hook transition  
+           2  rename trigger  
+           3  nop  
+           4  unhook erase existing trigger  
+            
+   case 1 2 
+   case 1 operation paramlist parse parameter list 
+   signalname 
+   case 2 parse parameter list 
+   case 3 4 
+   case 3    
+   case 4 
+   erase handle guard transition  p distinct between 4 cases  ol  
+        li guard given  none exists li expression guard present altered  
+        li guard not given  none exists li expression guard present removed  
+         ol reaction cases ol  
+        li create new guard  set name  language   expression hook transition  
+        li change guard's expression  leave name   language 
+           untouched  see issue 2742  
+        li nop  
+        li unhook erase existing guard  
+         ol  
+       
+        param trans uml element transition 
+        param guard string represents guard expression 
+        
+   case 1 
+  todo next line use buildguard doesn't show guard diagram mvw  
+                    
+   nsuml model getfacade   setguard trans  g   
+   case 2 
+   todo not work   mvw  
+                 model getfacade   setbody expr guard   
+                 model getfacade   setexpression g expr      
+  hence less elegant workaround works  
+   todo case properties panel not updated changed expression     
+   case 3    
+   case 4 
+   erase handle effect  action transition  p distinct between 4 cases  ul  
+        li 1 effect given  none exists li 2 expression effect present altered  
+        li 3 effect not given  none exists li 4 expression effect present removed  
+         ul reaction cases ul  
+        li 1  create new callaction  set name  language   
+       expression hook transition  
+        li 2  change effect's expression  leave actiontype  name 
+         language untouched  
+        li 3  nop  
+        li 4  unhook erase existing effect  
+         ul  
+       
+        param actions string parsed 
+        param trans transition causes effect  actions  
+        
+   case 1 
+  language    
+   case 2 
+   case 3   4 
+   case 3 
+   case 4 
+   erase deletes modelelements swallows null without barking  
+       
+        author mvw tigris org 
+        param obj modelelement deleted 
+        
+   
+        see org argouml uml notation notationprovider#getparsinghelp   
+        
+   
+        see org argouml uml notation notationprovider#tostring java lang object  java util map  
+        
+    
+       generates text trigger  event  
+       
+        param m object any mevent kind 
+        return string representing event 
+        
+    
+       generates list parameters parameters belong given object returned string following 
+       syntax  p  
+       
+        param1  param2  param3       paramn  p parameters returned  
+       
+        param parameterlistowner owner parameters 
+        return generated parameter list 
+        
+    
+       generates representation parameter display 
+        diagram string returned following 
+       syntax  p  
+       
+       kind name   type-expression   default-value 
+       
+        param parameter parameter 
+        return generated text 
+        
+  parameter etc    kind default see issue 3421     
+   return nothing 
+    
+       generate type parameter e reference classifier  
+        
+        param cls classifier 
+        return generated text 
+        
+   
+        see org argouml uml notation notationprovider#initialiselistener java beans propertychangelistener  java lang object  
+        
+   todo  action isn't valid property name double check validity checking codeorg argouml notation providers uml TransitionNotationUml org argouml notation providers uml transitionnotationuml transitionnotation transitionnotationuml object transition transition parse object modelelement text parsetransition modelelement  text parseexception pe msg    statusmsg bar error parsing transition   
+            object   args     
+                pe getlocalizedmessage    
+                integer valueof pe geterroroffset     
+               
+            argoeventpump fireevent argohelpevent  
+                    argoeventtypes help_changed translator messageformat msg  args object parsetransition object trans s parseexception   
+        s   s trim a   s indexof b   s indexof c   s indexof a   0      b    0        b   0      a    0       b   a msg    parsing error transition no-matching-square-brackets parseexception translator localize msg    
+                    0 c    0      c   b msg    parsing error transition found-bracket-instead-slash parseexception translator localize msg    
+                    0   
+          
+ 
+        stringtokenizer tokenizer stringtokenizer s eventsignature guardcondition actionexpression tokenizer hasmoretokens nexttoken   tokenizer nexttoken   trim nexttoken endswith         
+                guardcondition   nexttoken substring 0  nexttoken length   - 1 s startswith nexttoken     
+                    eventsignature   nexttoken s endswith nexttoken     
+                        actionexpression   nexttoken eventsignature parsetrigger trans  eventsignature guardcondition parseguard trans  
+                    guardcondition substring guardcondition indexof ' '    1 actionexpression parseeffect trans  actionexpression trim trans parsetrigger object trans trigger parseexception s timeevent changeevent callevent signalevent trigger   trigger trim    
+ 
+        stringtokenizer tokenizer stringtokenizer trigger name   tokenizer nexttoken   trim name equalsignorecase  after      
+            timeevent name equalsignorecase  when      
+            changeevent tokenizer hasmoretokens   
+                        trigger indexof        0  
+                        trigger indexof        1     
+                callevent trigger endswith           trigger indexof        0 msg    
+                    	 parsing error transition no-matching-brackets parseexception  
+                            translator localize msg   0 signalevent timeevent    changeevent    callevent tokenizer hasmoretokens      
+                s   tokenizer nexttoken   trim    
+                
+          
+ 
+          
+        object evt   model getfacade   gettrigger trans   
+        object model   
+                projectmanager getmanager   getcurrentproject   getmodel    
+        object ns   
+            model getstatemachineshelper   
+                 findnamespaceforevent trans  model   
+        statemachinesfactory smfactory   
+                model getstatemachinesfactory createdevent trigger length     0 evt timeevent      
+                    evt   smfactory buildtimeevent s  ns changeevent      
+                    evt   smfactory buildchangeevent s  ns callevent triggername   
+                        trigger indexof        0 
+                        ? trigger substring 0  trigger indexof       trim   
+                          trigger  
+                    evt   smfactory buildcallevent trans  triggername  ns   
+                      
+                    notationutilityuml parseparamlist evt  s  0 signalevent      
+                    evt   smfactory buildsignalevent trigger  ns   
+                  
+                createdevent model getfacade   getname evt  equals trigger     
+                    model getcorehelper   setname evt  trigger timeevent     model getfacade   isatimeevent evt     
+                        delete evt   
+                        evt   smfactory buildtimeevent s  ns   
+                        createdevent changeevent     model getfacade   isachangeevent evt     
+                        delete evt   
+                        evt   smfactory buildchangeevent s  ns   
+                        createdevent callevent     model getfacade   isacallevent evt     
+                        delete evt   
+                        evt   smfactory buildcallevent trans  trigger  ns   
+                          
+                        notationutilityuml parseparamlist evt  s  0   
+                        createdevent signalevent 
+                                model getfacade   isasignalevent evt     
+                        delete evt   
+                        evt   smfactory buildsignalevent trigger  ns   
+                        createdevent createdevent     evt model getstatemachineshelper   seteventastrigger trans  evt evt delete evt parseguard object trans guard    
+        object g   model getfacade   getguard trans guard length     0 g g   model getstatemachinesfactory   createguard g model getstatemachineshelper   setexpression g  
+                            model getdatatypesfactory   
+                                 createbooleanexpression     guard    
+                    model getcorehelper   setname g   anon    
+                    model getcommonbehaviorhelper   settransition g  trans object expr   model getfacade   getexpression g language expr language   model getdatatypeshelper   getlanguage expr   
+                  
+                model getstatemachineshelper   setexpression g  
+                        model getdatatypesfactory   
+                                 createbooleanexpression language  guard g delete g parseeffect object trans actions    
+        object effect   model getfacade   geteffect trans actions length     0 effect effect   
+                    model getcommonbehaviorfactory   
+                         createcallaction    
+                model getcommonbehaviorhelper   setscript effect  
+                        model getdatatypesfactory   
+                                 createactionexpression     
+                                                        actions    
+                model getcorehelper   setname effect   anon    
+                model getstatemachineshelper   seteffect trans  effect object script   model getfacade   getscript effect language    script null 
+                          model getdatatypeshelper   getlanguage  
+                            model getfacade   getscript effect    
+                model getcommonbehaviorhelper   setscript effect  
+                        model getdatatypesfactory   
+                                 createactionexpression language  actions effect delete effect delete object obj obj projectmanager getmanager   getcurrentproject   movetotrash obj getparsinghelp parsing help fig-transition tostring object modelelement  map args    
+        object trigger   model getfacade   gettrigger modelelement   
+    	object guard   model getfacade   getguard modelelement   
+        object effect   model getfacade   geteffect modelelement t   generateevent trigger g   generateguard guard e   notationutilityuml generateactionsequence effect g length     0    
+            t           g e length     0    
+            t            e t generateevent object m m stringbuffer event stringbuffer model getfacade   isachangeevent m     
+            event append  when     
+            event append  
+                    generateexpression model getfacade   getexpression m     
+            event append model getfacade   isatimeevent m     
+            event append  after     
+            event append  
+                    generateexpression model getfacade   getexpression m     
+            event append model getfacade   isasignalevent m     
+            event append model getfacade   getname m model getfacade   isacallevent m     
+            event append model getfacade   getname m    
+            event append generateparameterlist m event tostring generateguard object m m model getfacade   getexpression m generateexpression model getfacade   getexpression m generateparameterlist object parameterlistowner    
+        iterator it   
+            model getfacade   getparameters parameterlistowner  iterator    
+        stringbuffer list stringbuffer    
+        list append it hasnext it hasnext      
+                object param   it next    
+                list append generateparameter param it hasnext      
+                    list append        
+                  
+              
+          
+        list append list tostring generateexpression object expr model getfacade   isaexpression expr     
+            object body   model getfacade   getbody expr body body generateparameter object parameter    
+        stringbuffer s stringbuffer    
+        s append generatekind model getfacade   getkind parameter s length     0    
+            s append       
+          
+        s append model getfacade   getname parameter classref   
+            generateclassifierref model getfacade   gettype parameter classref length     0    
+            s append         
+            s append classref defaultvalue   
+            generateexpression model getfacade   getdefaultvalue parameter defaultvalue length     0    
+            s append         
+            s append defaultvalue s tostring generatekind object   
+        stringbuffer s stringbuffer kind kind    model getdirectionkind   getinparameter      
+            s append kind    model getdirectionkind   getinoutparameter      
+            s append  inout kind    model getdirectionkind   getreturnparameter kind    model getdirectionkind   getoutparameter      
+            s append  out s tostring generateclassifierref object cls cls return model getfacade   getname cls initialiselistener propertychangelistener listener   
+            object modelelement    
+        addlistenersfortransition listener  modelelement addlistenersforaction propertychangelistener listener   
+            object action action addelementlistener listener  action script    actualargument    action  
+                        
+            collection args   model getfacade   getactualarguments action   
+            iterator i   args iterator i hasnext      
+                object argument   i next    
+                addelementlistener listener  argument   value model getfacade   isaactionsequence action     
+                collection subactions   model getfacade   getactions action   
+                i   subactions iterator i hasnext      
+                    object a   i next    
+                    addlistenersforaction listener  a addlistenersforevent propertychangelistener listener   
+            object event event model getfacade   isaevent event     
+                addelementlistener listener  event parameter    name model getfacade   isatimeevent event     
+                addelementlistener listener  event when model getfacade   isachangeevent event     
+                addelementlistener listener  event changeexpression                     
+                 
+ 
+            collection prms   model getfacade   getparameters event   
+            iterator i   prms iterator i hasnext      
+                object parameter   i next    
+                addelementlistener listener  parameter addlistenersfortransition propertychangelistener listener   
+            object transition    
+        addelementlistener listener  transition guard    trigger    effect     
+ 
+        object guard   model getfacade   getguard transition guard addelementlistener listener  guard   expression    
+          
+ 
+        object trigger   model getfacade   gettrigger transition   
+        addlistenersforevent listener  trigger   
+ 
+        object effect   model getfacade   geteffect transition   
+        addlistenersforaction listener  effect   
+          
+ 
+ org argouml notation providers uml TransitionNotationUml

@@ -1,0 +1,87 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   load resource property ant 1 7 
+    ant task category  utility resource load goes pear-shaped 
+        
+    
+       suppress error message goes pear-shaped  sets failonerror false 
+        
+    
+       encoding use filenames  defaults platform's default 
+       encoding  
+        
+    
+       name property 
+        
+    
+       holds filterchains 
+        
+    
+       encoding use input  defaults platform's default 
+       encoding   p list possible values see href  http   java sun com j2se 1 5 0 docs guide intl encoding doc html   
+       http   java sun com j2se 1 5 0 docs guide intl encoding doc html p  
+       
+        param encoding new encoding value 
+        
+    
+       property name save param property new property value true  fail load error  
+       
+        param fail new failonerror value true  suppress load error report set the failonerror value false  
+        param quiet new quiet value 
+        
+    
+       read source file property 
+       
+        exception buildexception something goes wrong build 
+        
+  validation 
+  discard most really big resources 
+  open up resource 
+    
+       add filterchain element  
+        param filter filter add 
+        
+    
+       set source resource  
+        param resource load single element resource collection  
+       org apache tools ant taskdefs LoadResource org apache tools ant taskdefs loadresource task setencoding encoding encoding   encoding setproperty property property   property setfailonerror fail    
+        failonerror   fail setquiet quiet quiet   quiet quiet failonerror execute buildexception src buildexception  source resource not defined property buildexception  output property not defined quiet    failonerror buildexception  quiet and failonerror cannot both be   
+                                        set to src isexists message   src     doesn't exist failonerror buildexception message log message  quiet ? project msg_warn   project msg_err inputstream is bufferedinputstream bis reader instream log  loading     src     into property     property  
+            project msg_verbose len   src getsize    
+            log  resource size     
+                   len    resource unknown_size valueof len  
+                      unknown    project msg_debug size len  
+              
+            is   src getinputstream    
+            bis bufferedinputstream is encoding instream inputstreamreader bis instream inputstreamreader bis  encoding text size    0    
+                chainreaderhelper crh chainreaderhelper len    resource unknown_size    
+                    crh setbuffersize size   
+                  
+                crh setprimaryreader instream   
+                crh setfilterchains filterchains   
+                crh setproject getproject     
+                instream   crh getassembledreader    
+ 
+                text   crh readfully instream text text length     0    
+                    getproject   setnewproperty property  text   
+                    log  loaded     text length       characters   
+                        project msg_verbose   
+                    log property            text  project msg_debug ioexception ioe message    unable to load resource    
+                  ioe tostring failonerror buildexception message  ioe  getlocation log message  quiet ? project msg_verbose   project msg_err buildexception be failonerror be log be getmessage    
+                    quiet ? project msg_verbose   project msg_err fileutils close is addfilterchain filterchain filter    
+        filterchains addelement filter addconfigured resourcecollection a a size      1 buildexception  only single argument resource collections  
+                                         are supported    
+          
+        src    resource  a iterator   next    
+      
+ 
+ org apache tools ant taskdefs LoadResource

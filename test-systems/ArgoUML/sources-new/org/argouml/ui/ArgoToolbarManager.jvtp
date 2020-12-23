@@ -1,0 +1,141 @@
+ 
+   $id$ 
+   copyright  c  2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications  
+    
+   class handles toolbars show hide functionality  
+    
+    author aleksandar 
+    
+    
+       menu item shown popup menu submenu  
+        
+        author aleksandar 
+        
+    
+           key action associated 
+            
+    
+           toolbars shown hidden according action 
+            
+   make change persistant 
+    
+       key name toolabar settings  every toolbar settings subkey key  
+        
+    
+       single instance  
+        
+    
+       popup menu  
+        
+    
+       menu menu items 
+        
+    
+       private constructor single instance  
+        
+        return single instance  
+        
+    
+       registers new toolbar  
+        
+        param key class toolbar connected toolbar object itself one toolbar kind application  
+        param toolbar new toolbar register 
+        param prefferedmenuposition preffered menu postition  -1 last 
+                  postition menus don't containt menu item necessary class  create persistant state toolbar  respect add persistance data 
+   create new menu item doesn't exist class visibility already changed class  respect add toolbar  
+   register popup menu toolbar  
+    
+       registers container containing toolbars toolbars hidden  container hidden means toolbars placed jpanel toolbars hidden panel needs hidden param container container 
+        param toolbars toolbars container 
+        
+    
+       registers new toolbar specific group  
+        
+        param key group toolbar belongs param newtoolbar new toolbar register  
+        param prefferedmenuposition preffered menu postition  -1 last 
+                  postition 
+        
+    
+       gets popup menu 
+        
+        return popup menu 
+        
+    
+       gets menu toolbars  
+        
+        return menu shown view menu 
+        
+    
+       gets toolbar visibility status configuration doesn't exist configuration not create new entries configuration toolbar  
+        
+        param toolbarname name toolbar visibility status 
+        return visibility status 
+       org argouml ui ArgoToolbarManager org argouml ui argotoolbarmanager toolbarmanagermenuitemaction abstractaction toolbarmanagermenuitemaction name  object newkey name key   newkey  
+            toolbars arraylist jtoolbar object getkey key arraylist jtoolbar  gettoolbars toolbars actionperformed actionevent e    
+            swingutilities invokelater runnable run jtoolbar toolbar   gettoolbars      
+                        toolbar setvisible   jcheckboxmenuitem  e getsource    
+                                 isselected     
+ 
+                          
+                        configurationkey configurationkey   configuration 
+                                 makekey argotoolbarmanager key_name  toolbar 
+                                         getname     
+                        configuration setstring configurationkey toolbar isvisible    tostring jmenuitem menuitem   allmenuitems menuitem getaction   equals menuitem setselected   jcheckboxmenuitem  e getsource    
+                             isselected argotoolbarmanager argotoolbarmanager getinstance instance instance argotoolbarmanager instance registernew object key  jtoolbar newtoolbar prefferedmenuposition    
+          
+        jcheckboxmenuitem wantedmenuitem i   0  i   getmenu   getitemcount    i      
+            toolbarmanagermenuitemaction menuitemaction    
+                 toolbarmanagermenuitemaction  getmenu   
+                     getitem i  getaction menuitemaction getkey   equals key     
+                wantedmenuitem    jcheckboxmenuitem  getmenu   getitem i visibility   getconfiguredtoolbarappearance newtoolbar 
+                 getname     
+        newtoolbar setvisible visibility wantedmenuitem toolbarmanagermenuitemaction action toolbarmanagermenuitemaction  
+                    translator localize newtoolbar getname     key   
+            wantedmenuitem jcheckboxmenuitem translator 
+                     localize newtoolbar getname     newtoolbar isvisible     
+            wantedmenuitem setaction action   
+ 
+            jcheckboxmenuitem menuitem2 jcheckboxmenuitem translator 
+                     localize newtoolbar getname     newtoolbar isvisible     
+            menuitem2 setaction action   
+ 
+            getmenu   insert wantedmenuitem  prefferedmenuposition   
+            getpopupmenu   insert menuitem2  prefferedmenuposition   
+            allmenuitems add wantedmenuitem   
+            allmenuitems add menuitem2   
+          
+ 
+        arraylist jtoolbar  toolbarsforclass    
+              toolbarmanagermenuitemaction  wantedmenuitem 
+                 getaction    gettoolbars visible toolbarsforclass size     0    
+            visible   toolbarsforclass get 0  isvisible    
+            newtoolbar setvisible visible   
+          
+ 
+          
+        toolbarsforclass add newtoolbar   
+ 
+          
+        newtoolbar addmouselistener mouseadapter     
+             override mousereleased mouseevent e mousereleased e e ispopuptrigger      
+                    getpopupmenu   show e getcomponent    e getx    e gety     
+                  
+              
+ 
+             override mousepressed mouseevent e mousepressed e e ispopuptrigger      
+                    getpopupmenu   show e getcomponent    e getx    e gety registercontainer jcomponent container jtoolbar   toolbars jtoolbar toolbar   toolbars    
+            registernew toolbar  toolbar  -1 jtoolbar toolbar   toolbars    
+            toolbar addcomponentlistener componentadapter componenthidden componentevent e allhidden jtoolbar bar   toolbars bar isvisible      
+                            allhidden allhidden    
+                        container setvisible componentshown componentevent e    
+                    jtoolbar onevisible jtoolbar bar   toolbars bar isvisible      
+                            onevisible   bar onevisible container setvisible registertoolbar object key  jtoolbar newtoolbar prefferedmenuposition    
+        registernew key  newtoolbar  prefferedmenuposition jpopupmenu getpopupmenu popup popup jpopupmenu popup jmenu getmenu menu menu jmenu menu getconfiguredtoolbarappearance toolbarname    
+        configurationkey key   configuration makekey  toolbars   toolbarname visibilityasstring   configuration getstring key visibilityasstring equals false org argouml ui ArgoToolbarManager

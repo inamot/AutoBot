@@ -1,0 +1,73 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license implementation jasper compiler cut paste original jspc task ant1 5 
+    
+   checkstyle visibilitymodifier bc produces java classes jsp files 
+        
+   checkstyle visibilitymodifier constructor jasperc  
+        param mangler filename converter execute method  
+        return true successful 
+        throws buildexception error 
+        
+   create instance compiler  redirecting output project log really irritating need way set stuff forking here sure jspc calls 
+  system exit doesn't halt build 
+    
+       build up command line 
+        return command line jasper 
+        
+    
+        return instance mangler compiler uses ant 1 6 2 ant 1 6 2 
+       org apache tools ant taskdefs optional jsp compilers JasperC org apache tools ant taskdefs optional jsp compilers jasperc defaultjspcompileradapter   
+ 
+      
+ 
+      
+    jspmangler mangler jasperc jspmangler mangler mangler   mangler execute buildexception   
+        getjspc   log  using jasper compiler   project msg_verbose   
+        commandlinejava cmd   setupjaspercommand java java java owner   
+            path p   getclasspath getjspc   getclasspath getproject   log  using user supplied classpath      p  
+                                 project msg_debug getproject   log  using system classpath      p  
+                                 project msg_debug   
+              
+            java setclasspath p   
+            java setdir getproject   getbasedir     
+            java setclassname  org apache jasper jspc args   cmd getjavacommand   getarguments i   0  i   args length  i      
+                java createarg   setvalue args i    
+              
+            java setfailonerror getjspc   getfailonerror     
+              
+              
+            java setfork java settaskname  jasperc    
+            java execute exception ex ex buildexception buildexception  ex buildexception  error running jsp compiler     
+                                         ex  getjspc   getlocation getjspc   deleteemptyjavafiles commandlinejava setupjaspercommand     
+        commandlinejava cmd commandlinejava    
+        jspc jspc   getjspc    
+        addarg cmd   -d   jspc getdestdir     
+        addarg cmd   -p   jspc getpackage istomcat5x      
+            addarg cmd   -v    jspc getverbose getproject   log task doesn't support tomcat 5 x properly    
+                                please use the tomcat provided jspc task   
+                                instead    
+          
+ 
+        addarg cmd   -uriroot   jspc geturiroot     
+        addarg cmd   -uribase   jspc geturibase     
+        addarg cmd   -ieplugin   jspc getieplugin     
+        addarg cmd   -webinc   jspc getwebinc     
+        addarg cmd   -webxml   jspc getwebxml     
+        addarg cmd   -die9 jspc ismapped      
+            addarg cmd   -mapped jspc getwebapp file dir   jspc getwebapp   getdirectory    
+            addarg cmd   -webapp   dir   
+          
+        logandaddfilestocompile getjspc    getjspc   getcompilelist    cmd cmd jspmangler createmangler mangler path getclasspath     
+        path p   getjspc   getclasspath p p path getproject p concatsystemclasspath  only p concatsystemclasspath  ignore istomcat5x     
+        antclassloader l l   getproject   createclassloader getclasspath     
+            l loadclass  org apache jasper tagplugins jstl classnotfoundexception e l l cleanup    
+              
+          
+      
+ org apache tools ant taskdefs optional jsp compilers JasperC

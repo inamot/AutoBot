@@ -1,0 +1,71 @@
+ 
+   $id$ 
+   copyright  c  2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications  
+    
+   swing component monitor java heap usage  
+    
+    author tom morris  tfmorris gmail com  
+    
+   % thresholds bar color changes 
+   virtual memory  heap  stats 
+    
+       construct graphical jvm heap monitor component  
+        
+   todo  add button force garbage collection 
+        g setcolor green   
+   todo want something minimally distracting here   another option 
+   might background color solid end line  
+   
+       timer action method   periodically update stats force repaint  
+       org argouml ui HeapMonitor org argouml ui heapmonitor jcomponent actionlistener heapmonitor dimension size dimension 200  20   
+        setpreferredsize size   
+ 
+          
+ 
+        updatestats    
+ 
+        timer timer timer 1000 timer start paint  graphics g            
+        rectangle bounds   getbounds usedx used   bounds width   total warnx   orange_threshold   bounds width   100 dangerx   red_threshold   bounds width   100  
+         
+        color savedcolor   g getcolor    
+         
+  
+          
+          
+        g setcolor getbackground   darker     
+        g fillrect 0  0  math min usedx  warnx   bounds height   
+         
+        g setcolor orange   
+        g fillrect warnx  0   
+                math min usedx - warnx  dangerx - warnx    
+                bounds height   
+         
+        g setcolor red   
+        g fillrect dangerx  0   
+                math min usedx - dangerx  bounds width - dangerx    
+                bounds height   
+ 
+        g setcolor getforeground s   messageformat format   0 m used of  1 m total object used   m total   m x    bounds width - g getfontmetrics   stringwidth s     2 y    bounds height   g getfontmetrics   getheight      2  
+        g drawstring s  x  y   
+         
+        g setcolor savedcolor actionperformed actionevent e    
+        updatestats    
+        repaint updatestats     
+        free   runtime getruntime   freememory    
+        total   runtime getruntime   totalmemory    
+        max   runtime getruntime   maxmemory    
+        used   total - free tip   messageformat format  
+                 heap use   0 %   1 m used of  2 m total   max   3 m object    used   100   total used   m total   m max   m  
+                    
+        settooltiptext tip gc     
+        runtime getruntime   gc    
+      
+     
+ org argouml ui HeapMonitor

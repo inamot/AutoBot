@@ -1,0 +1,170 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   produces listing contents starteam repository specified view starteamfolder  
+   
+   created  tue dec 25 06 51 14 2001 
+   
+    version 1 0 
+   
+    ant task name  stlist  category  scm  
+    
+    
+       list files  dates statuses label  optional label must exist starteam exception thrown not specified most recent version each file listed  
+       
+        param label label listed 
+        
+    
+       list files  dates statuses date  optional not specified most recent version each file listed  
+       
+        param asofdateparam date listing made ant 1 6 
+        
+    
+       date format asofdate parameter parsed  optional  
+       must simpledateformat compatible string not specified asofdateparam specified  parse use iso8601 
+       datetime date formats  
+       
+        param asofdateformat simpledateformat-compatible format string ant 1 6 
+        
+    
+       override base-class abstract function creates appropriately configured view checkoutlists - either current view view label  
+       
+        param raw unconfigured  code view  code  
+        return snapshot  code view  code  appropriately configured label supplied  use configure view 
+   otherwise use current view date supplied use view configured date  
+   otherwise  use view configured tip  
+    
+       required base-class abstract function implementation checks incompatible parameters  
+       
+        exception buildexception thrown incompatible params specified 
+        
+    
+       extenders emit log entry describing parameters used operation  
+       
+        param starteamrootfolder 
+                     root folder starteam operation 
+        param targetrootfolder 
+                     root local folder operation  whether specified user not  
+        
+    
+       implements base-class abstract function perform checkout 
+       operation files each folder tree  
+       
+        param starteamfolder starteam folder files checked out 
+        param targetfolder local mapping rootstarteamfolder 
+        throws buildexception error files folder need check modifications file doesn't pass include exclude tests  skip now recursively call method sub folders folder unless recursive attribute log repositary file s corresponding local file  
+        param reposfile repositary file log 
+        param localfile corresponding local file 
+        throws ioexception error getting information files 
+        
+    
+       return padded string  
+        param s string pad 
+        param padlen size padded string 
+        return padded string 
+        
+    
+       return right padded string  
+        param s string pad 
+        param padlen size padded string 
+        return padded string 
+        
+    
+       handles list uncontrolled items 
+        
+    
+           lists uncontrolled items local tree assumed method not called until items corresponding folder processed internal map contain only uncontrolled items  
+            
+   handle files appear first 
+   once find folder isn't repository know add now again directories appear last  
+   once find folder isn't repository know add org apache tools ant taskdefs optional starteam StarTeamList org apache tools ant taskdefs optional starteam starteamlist treebasedtask setlabel label    
+        _setlabel label setasofdate asofdateparam    
+        _setasofdate asofdateparam setasofdateformat asofdateformat    
+        _setasofdateformat asofdateformat view createsnapshotview view raw labelid   getlabelid raw labelid    0 view raw  viewconfiguration createfromlabel labelid    
+          
+          
+        view view   getviewconfiguredbydate raw view view view raw  viewconfiguration createtip testpreconditions buildexception getlabel getasofdate buildexception  
+                 both label and asofdate specified     
+                   unable to process request logoperationdescription folder starteamrootfolder  
+                                           java io file targetrootfolder    
+        log isrecursive   ?  recursive     non-recursive   
+                listing of      starteamrootfolder getfolderhierarchy     
+ 
+        log  listing against local folder getrootlocalfolder targetrootfolder getabsolutepath    
+                    project msg_info   
+        loglabel    
+        logasofdate    
+        logincludes    
+        logexcludes visit folder starteamfolder  java io file targetfolder buildexception getrootlocalfolder      
+                starteamfolder setalternatepathfragment  
+                    targetfolder getabsolutepath     
+ 
+              
+            folder   subfolders   starteamfolder getsubfolders    
+            item   files   starteamfolder getitems gettypenames   file   
+ 
+            unmatchedfilemap ufm unmatchedlistingmap   init  
+                    targetfolder getabsolutefile    starteamfolder   
+ 
+            log      
+            log  listing starteam folder   
+                  starteamfolder getfolderhierarchy     
+            log   against local folder     targetfolder getabsolutepath i   0  i   files length  i      
+                file eachfile    file  files i filename   eachfile getname    
+                java io file localfile java io file targetfolder  filename   
+ 
+                ufm removecontrolleditem localfile shouldprocess filename list eachfile  localfile i   0  i   subfolders length  i      
+                java io file targetsubfolder java io file targetfolder  subfolders i  getname     
+                ufm removecontrolleditem targetsubfolder isrecursive      
+                    visit subfolders i   targetsubfolder listuncontrolled    
+                ufm processuncontrolleditems ioexception e buildexception e simpledateformat sdf simpledateformat  yyyy-mm-dd hh mm ss zzz list file reposfile  java io file localfile ioexception   
+        stringbuffer b stringbuffer status   reposfile getstatus    
+        java util date displaydate status    status displaydate java util date localfile lastmodified displaydate   reposfile getmodifiedtime   createdate    
+          
+        b append pad status name status   12   append ' '   
+        b append pad getusername reposfile getlocker     20   
+                 append ' '  
+                 append sdf format displaydate   
+                 append rpad valueof reposfile getsize     9   
+                 append ' '  
+                 append reposfile getname     
+ 
+        log b tostring blanks len    
+        stringbuffer b stringbuffer i   0  i   len  i      
+            b append b tostring pad s padlen s   blank_string  substring 0  padlen rpad s padlen    
+        s   blank_string   s s substring s length   - padlen unmatchedlistingmap unmatchedfilemap isactive starteamlist listuncontrolled processuncontrolleditems buildexception isactive      
+                enumeration e keys e hasmoreelements      
+                    java io file local    java io file  e nextelement    
+                    item remoteitem    item get local local isfile      
+                        com starbase starteam file remotefile   
+                             com starbase starteam file  remoteitem list remotefile  local ioexception ie buildexception  ioerror in stlist   ie   
+                          
+                      
+                  
+                  
+                e keys e hasmoreelements      
+                    java io file local    java io file  e nextelement    
+                    item remoteitem    item get local local isdirectory      
+                        folder folder    folder  remoteitem isrecursive      
+                            log  listing uncontrolled folder   
+                                  folder getfolderhierarchy   
+                                    from     local getabsolutefile     
+                            unmatchedfilemap submap unmatchedlistingmap   init local  folder   
+                            submap processuncontrolleditems    
+                          
+                      
+                  
+              
+          
+      
+  
+ 
+org apache tools ant taskdefs optional starteam StarTeamList

@@ -1,0 +1,224 @@
+ 
+    
+   provides additional business logic non-production usage  e g  testing  client scripts   
+    
+    
+       persists data given   link databundle datastore  including 
+       accounts  courses  instructors  students  sessions  questions  responses  comments admin emails  
+       
+        p accounts generated students instructors google ids corresponding accounts not found data bundle question id injection responses comments work properly questions 
+       referenced responses comments must included data bundle session respondent lists properly populated instructors  questions responses 
+       relevant each session must included data bundle   p  
+       
+        return   link const statuscodes#backdoor_status_success successful  
+        throws invalidparametersexception invalid data encountered ensuring only one account per google id created updating student instructor respondent lists sessions before persisted flushes previously deferred operations 
+   inject real question id 
+   question id already injected 
+    
+       creates document entities document e  searchable  
+        return status request form 'status meassage' 'additional 
+               info any ' e g     backend_status_success   e g   
+                 backend_status_failure nullpointerexception query entity db first actual data create document actual entity account account already exists data bundle account  account already exists data bundle instructor account already exists e  instructor student  
+   contains question number before injection method necessary generate feedbackquestionid question response br  
+      normally id already generated creation json file not contain actual response id   br  
+      therefore question number corresponding created response inserted json file place actual response id  br method generate correct id replace field  
+        
+   question id already injected method necessary generate feedbackquestionid feedbackresponseid question response comment br  
+      normally id already generated creation json file not contain actual response id   br  
+      therefore question number questionnumber%giveremail%recipient 
+      corresponding created comment inserted json 
+      file place actual id  br method generate correct id replace field  
+        
+   question id already injected 
+    
+       checks role code instructor  matches privileges  
+       
+        param instructor link instructorattributes instructor  cannot code null method ensures consistency private feedback sessions 
+       between type visibility times allows easier creation private sessions setting feedbacksessiontype field private json file  
+        
+   questions responses deleted automatically don't attempt delete again save time  
+   retrieve email subject fields emailid  createdate cannot specified databundle expected email may not datastore fail silently teammates logic backdoor BackDoorLogic teammates logic backdoor backdoorlogic logic persistdatabundle databundle databundle invalidparametersexception databundle invalidparametersexception statuscodes null_parameter data bundle    
+          
+ 
+        collection accountattributes  accounts   databundle accounts values    
+        collection courseattributes  courses   databundle courses values    
+        collection instructorattributes  instructors   databundle instructors values    
+        collection studentattributes  students   databundle students values    
+        collection feedbacksessionattributes  sessions   databundle feedbacksessions values    
+        collection feedbackquestionattributes  questions   databundle feedbackquestions values    
+        collection feedbackresponseattributes  responses   databundle feedbackresponses values    
+        collection feedbackresponsecommentattributes  responsecomments   databundle feedbackresponsecomments values    
+        collection adminemailattributes  adminemails   databundle adminemails values    
+ 
+          
+        map accountattributes  googleidaccountmap hashmap      
+ 
+          
+        setmultimap instructorattributes  courseinstructorsmap   hashmultimap create    
+        setmultimap feedbackquestionattributes  sessionquestionsmap   hashmultimap create    
+        setmultimap feedbackresponseattributes  sessionresponsesmap   hashmultimap create    
+ 
+        processaccountsandpopulateaccountsmap accounts  googleidaccountmap   
+        processinstructorsandpopulatemapandaccounts instructors  courseinstructorsmap  googleidaccountmap   
+        processstudentsandpopulateaccounts students  googleidaccountmap   
+        processquestionsandpopulatemap questions  sessionquestionsmap   
+        processresponsesandpopulatemap responses  sessionresponsesmap   
+        processsessionsandupdaterespondents sessions  courseinstructorsmap  sessionquestionsmap  sessionresponsesmap   
+ 
+        accountsdb createentitiesdeferred googleidaccountmap values     
+        coursesdb createentitiesdeferred courses   
+        instructorsdb createentitiesdeferred instructors   
+        studentsdb createentitiesdeferred students   
+        fbdb createentitiesdeferred sessions   
+ 
+          
+        list feedbackquestionattributes  createdquestions   fqdb createfeedbackquestionswithoutexistencecheck questions   
+ 
+        injectrealids responses  responsecomments  createdquestions   
+ 
+        frdb createentitiesdeferred responses   
+        fcdb createentitiesdeferred responsecomments   
+ 
+        adminemailsdb createentitiesdeferred adminemails   
+ 
+        entitiesdb flush statuscodes backdoor_status_success createfeedbackresponseandupdatesessionrespondents feedbackresponseattributes response invalidparametersexception  entitydoesnotexistexception questionnumber   integer parseint response feedbackquestionid   
+            response feedbackquestionid   feedbackquestionslogic 
+                     getfeedbackquestion response feedbacksessionname  response courseid  questionnumber  
+                     getid numberformatexception e    
+              
+          
+        frdb createentitywithoutexistencecheck response   
+        updaterespondents response feedbacksessionname  response courseid statuscodes backdoor_status_success putdocuments databundle databundle    
+          
+ 
+        map studentattributes  students   databundle students studentattributes student   students values      
+            studentattributes studentindb   studentsdb getstudentforemail student course  student email   
+            studentsdb putdocument studentindb   
+          
+ 
+        map instructorattributes  instructors   databundle instructors instructorattributes instructor   instructors values      
+            instructorattributes instructorindb   
+                    instructorsdb getinstructorforemail instructor courseid  instructor email   
+            instructorsdb putdocument instructorindb   
+          
+ 
+        map feedbackresponsecommentattributes  responsecomments   databundle feedbackresponsecomments feedbackresponsecommentattributes responsecomment   responsecomments values      
+            feedbackresponsecommentattributes fcindb   fcdb getfeedbackresponsecomment  
+                    responsecomment courseid  responsecomment createdat  responsecomment giveremail   
+            fcdb putdocument fcindb statuscodes backdoor_status_success getaccountasjson googleid    
+        accountattributes accountdata   getaccount googleid jsonutils tojson accountdata getstudentprofileasjson googleid    
+        studentprofileattributes profiledata   getstudentprofile googleid jsonutils tojson profiledata getinstructorasjsonbyid instructorid courseid    
+        instructorattributes instructordata   getinstructorforgoogleid courseid  instructorid jsonutils tojson instructordata getinstructorasjsonbyemail instructoremail courseid    
+        instructorattributes instructordata   getinstructorforemail courseid  instructoremail jsonutils tojson instructordata getcourseasjson courseid    
+        courseattributes course   getcourse courseid jsonutils tojson course getstudentasjson courseid email    
+        studentattributes student   getstudentforemail courseid  email jsonutils tojson student getallstudentsasjson courseid    
+        list studentattributes  studentlist   studentslogic getstudentsforcourse courseid jsonutils tojson studentlist getfeedbacksessionasjson feedbacksessionname courseid    
+        feedbacksessionattributes fs   getfeedbacksession feedbacksessionname  courseid jsonutils tojson fs getfeedbackquestionasjson feedbacksessionname courseid qnnumber    
+        feedbackquestionattributes fq   
+                feedbackquestionslogic getfeedbackquestion feedbacksessionname  courseid  qnnumber jsonutils tojson fq getfeedbackquestionforidasjson questionid    
+        feedbackquestionattributes fq   feedbackquestionslogic getfeedbackquestion questionid jsonutils tojson fq getfeedbackresponseasjson feedbackquestionid giveremail recipient    
+        feedbackresponseattributes fq   
+                feedbackresponseslogic getfeedbackresponse feedbackquestionid  giveremail  recipient jsonutils tojson fq getfeedbackresponsesforgiverasjson courseid giveremail    
+        list feedbackresponseattributes  responselist   
+                feedbackresponseslogic getfeedbackresponsesfromgiverforcourse courseid  giveremail jsonutils tojson responselist getfeedbackresponsesforreceiverasjson courseid recipient    
+        list feedbackresponseattributes  responselist   
+                feedbackresponseslogic getfeedbackresponsesforreceiverforcourse courseid  recipient jsonutils tojson responselist editaccountasjson newvalues invalidparametersexception  entitydoesnotexistexception   
+        accountattributes account   jsonutils fromjson newvalues  accountattributes updateaccount account editstudentasjson originalemail newvalues invalidparametersexception  entitydoesnotexistexception   
+        studentattributes student   jsonutils fromjson newvalues  studentattributes populatenullsection student   
+        updatestudentwithoutdocument originalemail  student editfeedbacksessionasjson feedbacksessionjson invalidparametersexception  entitydoesnotexistexception   
+        feedbacksessionattributes feedbacksession   
+                jsonutils fromjson feedbacksessionjson  feedbacksessionattributes updatefeedbacksession feedbacksession editfeedbackquestionasjson feedbackquestionjson invalidparametersexception  entitydoesnotexistexception   
+        feedbackquestionattributes feedbackquestion   
+                jsonutils fromjson feedbackquestionjson  feedbackquestionattributes updatefeedbackquestion feedbackquestion processaccountsandpopulateaccountsmap collection accountattributes  accounts  
+            map accountattributes  googleidaccountmap    
+        populatenullstudentprofiles accounts accountattributes account   accounts    
+            googleidaccountmap put account googleid  account processinstructorsandpopulatemapandaccounts collection instructorattributes  instructors  
+            setmultimap instructorattributes  courseinstructorsmap  
+            map accountattributes  googleidaccountmap instructorattributes instructor   instructors    
+            validateinstructorprivileges instructor   
+ 
+            courseinstructorsmap put instructor courseid  instructor stringhelper isempty instructor googleid     googleidaccountmap containskey instructor googleid googleidaccountmap put instructor googleid  makeaccount instructor processstudentsandpopulateaccounts collection studentattributes  students  
+            map accountattributes  googleidaccountmap studentattributes student   students    
+            populatenullsection student stringhelper isempty student googleid     googleidaccountmap containskey student googleid googleidaccountmap put student googleid  makeaccount student processquestionsandpopulatemap collection feedbackquestionattributes  questions  
+            setmultimap feedbackquestionattributes  sessionquestionsmap feedbackquestionattributes question   questions    
+            question removeirrelevantvisibilityoptions sessionkey   makesessionkey question feedbacksessionname  question courseid   
+            sessionquestionsmap put sessionkey  question processresponsesandpopulatemap collection feedbackresponseattributes  responses  
+            setmultimap feedbackresponseattributes  sessionresponsesmap feedbackresponseattributes response   responses sessionkey   makesessionkey response feedbacksessionname  response courseid   
+            sessionresponsesmap put sessionkey  response processsessionsandupdaterespondents collection feedbacksessionattributes  sessions  
+            setmultimap instructorattributes  courseinstructorsmap  
+            setmultimap feedbackquestionattributes  sessionquestionsmap  
+            setmultimap feedbackresponseattributes  sessionresponsesmap feedbacksessionattributes session   sessions    
+            cleansessiondata session sessionkey   makesessionkey session getfeedbacksessionname    session getcourseid     
+ 
+            set instructorattributes  courseinstructors   courseinstructorsmap get session getcourseid     
+            set feedbackquestionattributes  sessionquestions   sessionquestionsmap get sessionkey   
+            set feedbackresponseattributes  sessionresponses   sessionresponsesmap get sessionkey   
+ 
+            updaterespondents session  courseinstructors  sessionquestions  sessionresponses updaterespondents feedbacksessionattributes session  
+            set instructorattributes  courseinstructors  
+            set feedbackquestionattributes  sessionquestions  
+            set feedbackresponseattributes  sessionresponses sessionkey   makesessionkey session getfeedbacksessionname    session getcourseid     
+ 
+        setmultimap string  instructorquestionkeysmap   hashmultimap create instructorattributes instructor   courseinstructors    
+            list feedbackquestionattributes  questionsforinstructor   
+                    feedbackquestionslogic getfeedbackquestionsforinstructor arraylist   sessionquestions   session iscreator instructor email    
+ 
+            list questionkeys   makequestionkeys questionsforinstructor  sessionkey   
+            instructorquestionkeysmap putall instructor email  questionkeys   
+          
+ 
+        set respondinginstructors hashset      
+        set respondingstudents hashset feedbackresponseattributes response   sessionresponses respondent   response giver responsequestionnumber   response feedbackquestionid responsequestionkey   makequestionkey sessionkey  responsequestionnumber   
+ 
+            set instructorquestionkeys   instructorquestionkeysmap get respondent instructorquestionkeys contains responsequestionkey     
+                respondinginstructors add respondent respondingstudents add respondent   
+              
+          
+ 
+        session setrespondinginstructorlist respondinginstructors   
+        session setrespondingstudentlist respondingstudents injectrealids  
+            collection feedbackresponseattributes  responses  collection feedbackresponsecommentattributes  responsecomments  
+            list feedbackquestionattributes  createdquestions    
+        map string  questionidmap   makequestionidmap createdquestions   
+ 
+        injectrealidsintoresponses responses  questionidmap   
+        injectrealidsintoresponsecomments responsecomments  questionidmap map string  makequestionidmap list feedbackquestionattributes  createdquestions    
+        map string  questionidmap hashmap feedbackquestionattributes createdquestion   createdquestions sessionkey   makesessionkey createdquestion feedbacksessionname  createdquestion courseid questionkey   makequestionkey sessionkey  createdquestion questionnumber   
+            questionidmap put questionkey  createdquestion getid questionidmap injectrealidsintoresponses collection feedbackresponseattributes  responses  
+            map string  questionidmap feedbackresponseattributes response   responses questionnumber questionnumber   integer parseint response feedbackquestionid numberformatexception e sessionkey   makesessionkey response feedbacksessionname  response courseid questionkey   makequestionkey sessionkey  questionnumber   
+            response feedbackquestionid   questionidmap get questionkey injectrealidsintoresponsecomments collection feedbackresponsecommentattributes  responsecomments  
+            map string  questionidmap feedbackresponsecommentattributes comment   responsecomments questionnumber questionnumber   integer parseint comment feedbackquestionid numberformatexception e sessionkey   makesessionkey comment feedbacksessionname  comment courseid questionkey   makequestionkey sessionkey  questionnumber   
+            comment feedbackquestionid   questionidmap get questionkey responseidparam   comment feedbackresponseid split  %    
+            comment feedbackresponseid   comment feedbackquestionid    %    responseidparam 1     %    responseidparam 2 validateinstructorprivileges instructorattributes instructor instructor getrole instructorprivileges privileges   instructor privileges instructor getrole instructorpermissionrolenames instructor_permission_role_coowner  
+            assumption asserttrue privileges hascoownerprivileges instructorpermissionrolenames instructor_permission_role_manager  
+            assumption asserttrue privileges hasmanagerprivileges instructorpermissionrolenames instructor_permission_role_observer  
+            assumption asserttrue privileges hasobserverprivileges instructorpermissionrolenames instructor_permission_role_tutor  
+            assumption asserttrue privileges hastutorprivileges instructorpermissionrolenames instructor_permission_role_custom assumption fail  invalid instructor permission role name cleansessiondata feedbacksessionattributes session session getfeedbacksessiontype   equals feedbacksessiontype session setsessionvisiblefromtime time_represents_never   
+            session setresultsvisiblefromtime time_represents_never populatenullstudentprofiles collection accountattributes  accounts accountattributes account   accounts account studentprofile account studentprofile   studentprofileattributes builder   withgoogleid account googleid  build populatenullsection studentattributes student    
+        student section   student section none    student section accountattributes makeaccount instructorattributes instructor accountattributes  
+                instructor googleid  instructor name instructor email   teammates test institute 1 accountattributes makeaccount studentattributes student accountattributes  
+                student googleid  student name student email   teammates test institute 1 makesessionkey feedbacksessionname courseid feedbacksessionname    %    courseid list makequestionkeys list feedbackquestionattributes  questions sessionkey    
+        list questionkeys arraylist feedbackquestionattributes question   questions questionkey   makequestionkey sessionkey  question questionnumber   
+            questionkeys add questionkey questionkeys makequestionkey sessionkey questionnumber makequestionkey sessionkey valueof questionnumber makequestionkey sessionkey questionnumber sessionkey    %    questionnumber removedatabundle databundle databundle    
+ 
+          
+          
+        deletecourses databundle courses values     
+ 
+        populatenullstudentprofiles databundle accounts values     
+        accountsdb deleteaccounts databundle accounts values adminemailattributes email   databundle adminemails values      
+              
+            adminemailattributes emailindb   adminemailsdb getadminemailbysubject email subject emailindb adminemailsdb deleteentity emailindb deletecourses collection courseattributes  courses    
+        list courseids arraylist courseattributes course   courses    
+            courseids add course getid courseids isempty      
+            coursesdb deleteentities courses   
+            instructorsdb deleteinstructorsforcourses courseids   
+            studentsdb deletestudentsforcourses courseids   
+            fbdb deletefeedbacksessionsforcourses courseids   
+            fqdb deletefeedbackquestionsforcourses courseids   
+            frdb deletefeedbackresponsesforcourses courseids   
+            fcdb deletefeedbackresponsecommentsforcourses courseids ispicturepresentingcs picturekey googlecloudstoragehelper doesfileexistingcs blobkey picturekey uploadandupdatestudentprofilepicture googleid picturedata entitydoesnotexistexception  ioexception picturekey   googlecloudstoragehelper writeimagedatatogcs googleid  picturedata   
+        updatestudentprofilepicture googleid  picturekey isgrouplistfilepresentingcs grouplistkey googlecloudstoragehelper doesfileexistingcs blobkey grouplistkey deletegrouplistfile grouplistfilekey    
+        googlecloudstoragehelper deletefile blobkey grouplistfilekey    
+      
+ teammates logic backdoor BackDoorLogic

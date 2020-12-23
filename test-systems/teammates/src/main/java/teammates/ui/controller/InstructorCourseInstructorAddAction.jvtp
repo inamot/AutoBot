@@ -1,0 +1,66 @@
+ 
+    
+   action  add another instructor course already exists  
+    
+   process adding instructor setup status shown user admin    
+    
+       creates new instructor information filled using request parameters includes basic information well custom privileges applicable   
+       
+        param courseid        id course instructor being added param instructorname  name instructor  
+        param instructoremail email instructor  
+        return instructor relevant info filled creates new instructor basic information consists everything apart custom privileges  
+       
+        param courseid              id course instructor being added param instructorname        name instructor  
+        param instructoremail       email instructor  
+        param instructorrole        role instructor  
+        param isdisplayedtostudents whether instructor visible students  
+        param displayedname         name visible students not code null  even code isdisplayedtostudents false  
+        return instructor basic info  excluding custom privileges 
+       teammates ui controller InstructorCourseInstructorAddAction teammates ui controller instructorcourseinstructoraddaction instructorcourseinstructorabstractaction   
+ 
+     override actionresult execute courseid   getrequestparamvalue paramsnames course_id   
+        assumption assertpostparamnotnull paramsnames course_id  courseid instructorname   getrequestparamvalue paramsnames instructor_name   
+        assumption assertpostparamnotnull paramsnames instructor_name  instructorname instructoremail   getrequestparamvalue paramsnames instructor_email   
+        assumption assertpostparamnotnull paramsnames instructor_email  instructoremail   
+ 
+        instructorattributes instructor   logic getinstructorforgoogleid courseid  account googleid   
+        gatekeeper verifyaccessible  
+                instructor  logic getcourse courseid paramsnames instructor_permission_modify_instructor   
+ 
+        instructorattributes instructortoadd   extractcompleteinstructor  
+                courseid  instructorname  instructoremail logic createinstructor instructortoadd   
+            taskqueuer schedulecourseregistrationinvitetoinstructor  
+                    loggedinuser googleid  instructoremail  courseid   
+ 
+            statustouser add statusmessage format statusmessages course_instructor_added  
+                                                             instructorname  instructoremail   
+                                               statusmessagecolor success    
+            statustoadmin instructor   span bold\       instructoremail      span course  span bold\       courseid       span  created  br entityalreadyexistsexception e    
+            setstatusforexception e statusmessages course_instructor_exists invalidparametersexception e    
+            setstatusforexception e   
+          
+ 
+        redirectresult redirectresult   createredirectresult actionuris instructor_course_edit_page   
+        redirectresult addresponseparam paramsnames course_id  courseid redirectresult instructorattributes extractcompleteinstructor courseid instructorname instructoremail instructorrole   getrequestparamvalue paramsnames instructor_role_name   
+        assumption assertpostparamnotnull paramsnames instructor_role_name  instructorrole isdisplayedtostudents   getrequestparamvalue paramsnames instructor_is_displayed_to_student displayedname   getrequestparamvalue paramsnames instructor_display_name displayedname displayedname isempty      
+            displayedname   instructorattributes default_display_name  
+          
+        instructorrole   sanitizationhelper sanitizename instructorrole   
+        displayedname   sanitizationhelper sanitizename displayedname   
+ 
+        instructorattributes instructortoadd   createinstructorwithbasicattributes courseid  instructorname  
+                instructoremail  instructorrole  isdisplayedtostudents  displayedname instructorrole equals instructorpermissionrolenames instructor_permission_role_custom     
+            updateinstructorcourselevelprivileges instructortoadd   
+          
+ 
+        updateinstructorwithsectionlevelprivileges courseid  instructortoadd   
+ 
+        instructortoadd privileges validateprivileges instructortoadd instructorattributes createinstructorwithbasicattributes courseid instructorname instructoremail instructorrole isdisplayedtostudents displayedname instrname   sanitizationhelper sanitizename instructorname instremail   sanitizationhelper sanitizeemail instructoremail instrrole   sanitizationhelper sanitizename instructorrole instrdisplayedname   sanitizationhelper sanitizename displayedname   
+        instructorprivileges privileges instructorprivileges instructorrole instructorattributes builder courseid  instrname  instremail  
+                 withrole instrrole  
+                 withisdisplayedtostudents isdisplayedtostudents  
+                 withdisplayedname instrdisplayedname  
+                 withprivileges privileges  
+                 build    
+      
+ teammates ui controller InstructorCourseInstructorAddAction

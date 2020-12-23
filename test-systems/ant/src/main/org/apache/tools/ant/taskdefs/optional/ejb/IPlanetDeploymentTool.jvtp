@@ -1,0 +1,178 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license class used generate iplanet application server  ias  6 0 stubs skeletons build ejb jar file designed used ant 
+    code ejbjar  code  task only stubs skeletons need generated words jar file needs created   refer code iplanet-ejbc  code  task code iplanetejbctask  code  class  
+    p following attributes may specified user  
+      ul  
+        li destdir base directory generated jar 
+                             files written   each jar file written directories correspond location 
+                             within descriptordir  namespace required attribute  
+        li classpath classpath used generating ejb stubs skeletons optional attribute omitted classpath specified ejbjar  
+                               parent task used specified classpath elements prepended classpath specified parent  ejbjar  task  
+                               note nested  classpath  elements may used  
+        li keepgenerated indicates whether not java source 
+                                   files generated ejbc saved automatically deleted yes source files retained optional attribute omitted defaults li debug indicates whether not ejbc utility log additional debugging statements standard 
+                           output yes additional debugging statements generated omitted defaults li iashome may used specify home  directory iplanet application server installation used find ejbc utility isn't 
+                             included user's system path optional attribute specified refer code  install-location  iplanet ias6 ias 
+                               code  directory omitted ejbc utility 
+                             must user's system path  
+        li suffix string value appended jar filename creating each jar attribute not required omitted defaults jar    
+       ul  
+    p each ejb descriptor found ejbjar  parent task deployment 
+   tool locate three classes comprise ejb class 
+   files cannot located specified  code srcdir  code  directory task fail task attempt locate ejb stubs skeletons directory found timestamps stubs skeletons checked ensure up date   only files 
+   cannot found out date ejbc called  
+   
+    see    iplanetejbc 
+    
+   attributes set ant build file    
+   
+       filenames standard ejb descriptor passed class parent  ejbjar  task ias-specific ejb descriptor 
+        whose name determined class    both filenames relative directory specified srcdir  attribute ejbjar task displayname variable stores value display-name  element standard ejb descriptor future enhancement task may determine name ejb jar file using display-name not implemented regardless name ias-specific ejb descriptor file written completed jar file ias-ejb-jar xml naming convention implemented ias  
+        
+    
+       setter method used store home  directory user's ias 
+       installation directory specified typically code  install-location  iplanet ias6 ias  code   
+       
+        param iashome home directory user's ias installation  
+        
+    
+       setter method used specify whether java source files generated ejbc utility saved automatically deleted  
+       
+        param keepgenerated boolean code true  code   indicates java source files generated ejbc stubs skeletons kept  
+        
+    
+       sets whether not debugging output generated ejbc executed  
+       
+        param debug boolean indicating debugging output generated 
+        
+    
+       setter method used specify filename suffix example    jar jar files created  
+       
+        param jarsuffix string use jar filename suffix ias doesn't generate generic  jar part processing attribute ignored warning message displayed user  
+       
+        param instring string use suffix parameter ignored  
+        
+      inheritdoc      
+    
+       verifies user selections valid  
+       
+        param descriptorfilename string representing file name ejb 
+                                 descriptor processed 
+        param saxparser          saxparser may used parse xml 
+                                 descriptor 
+        throws buildexception user selections invalid method returns list ejb files found specified ejb 
+       descriptor parsed processed  
+       
+        param descriptorfilename string representing file name ejb 
+                                 descriptor processed 
+        param saxparser          saxparser may used parse xml 
+                                 descriptor 
+        return                   hashtable ejb class files added completed jar file 
+        throws ioexception ioexception parser  possibly byte stream character stream 
+        throws saxexception      any sax exception  possibly wrapping another 
+                                 exception 
+        
+   build populate instance ejbc utility    
+   execute ejbc utility -- stubs skeletons rebuilt needed    
+   add cmp descriptors list ejb files    
+    
+       add ias-specific ejb descriptor list files written jar file  
+       
+        param ejbfiles hashtable ejb class files added completed jar file  
+        param ddprefix not used name jar written modification date jar checked against dependent bean classes  
+       
+        param basename string name ejb jar file written  without filename extension   
+       
+        return file representing jar file written ias ejbc utility doesn't require public id descriptor's 
+       dtd process correctly method always returns  code null 
+         code   
+       
+        return  code null  code   
+        
+    
+       determines name ias-specific ejb descriptor using specified standard ejb descriptor name general standard 
+       descriptor named   basename -ejb-jar xml method return   basename -ias-ejb-jar xml   
+       
+        return name ias-specific ejb descriptor file  
+        
+   only calculate descriptor name once    
+   directory path ejb descriptor 
+   filename appearing before name terminator 
+   filename appearing name terminator 
+   find end standard descriptor's relative path    
+   check see standard name used s basename     
+   
+               check odd case terminator filename 
+               extension aren't found ensure  ias-  appears end name before present   
+               org apache tools ant taskdefs optional ejb IPlanetDeploymentTool org apache tools ant taskdefs optional ejb iplanetdeploymenttool genericdeploymenttool setiashome file iashome iashome   iashome setkeepgenerated keepgenerated keepgenerated   keepgenerated setdebug debug debug   debug setsuffix jarsuffix jarsuffix   jarsuffix setgenericjarsuffix instring    
+        log  since a generic jar file is not created during processing  the   
+                   iplanet deployment tool does not support the   
+                   \ genericjarsuffix\  attribute   it will be ignored    
+            project msg_warn processdescriptor descriptorname  saxparser saxparser descriptorname   descriptorname iasdescriptorname log  iplanet deployment tool processing      descriptorname      and   
+                  getiasdescriptorname          project msg_verbose processdescriptor descriptorname  saxparser checkconfiguration descriptorfilename  
+                                    saxparser saxparser buildexception startofname   descriptorfilename lastindexof file separatorchar    1 stdxml   descriptorfilename substring startofname stdxml equals ejb_dd      getconfig   basejarname msg    no name specified the completed jar file   the ejb  
+                                descriptor should be prepended with the jar   
+                               name or it should be specified using the   
+                               attribute \ basejarname\  in the \ ejbjar\  task buildexception msg  getlocation     
+          
+ 
+        file iasdescriptor file getconfig   descriptordir  
+                                        getiasdescriptorname iasdescriptor exists         iasdescriptor isfile msg    the ias-specific ejb descriptor    
+                              iasdescriptor      was not found buildexception msg  getlocation iashome iashome isdirectory msg iashome\  is specified  it must be a valid   
+                               directory  it was set to     iashome buildexception msg  getlocation hashtable parseejbfiles descriptorfilename  
+                         saxparser saxparser ioexception  saxexception   
+ 
+        hashtable files  
+ 
+          
+        iplanetejbc ejbc iplanetejbc file getconfig   descriptordir  
+                                                descriptorfilename file getconfig   descriptordir  
+                                                getiasdescriptorname     
+                                    getconfig   srcdir  
+                                    getcombinedclasspath   tostring    
+                                    saxparser   
+        ejbc setretainsource keepgenerated   
+        ejbc setdebugoutput debug iashome ejbc setiashomedir iashome ejbc execute iplanetejbc ejbcexception e buildexception  an error has occurred trying to   
+                           execute the ias ejbc utility   e  getlocation     
+          
+ 
+        displayname      ejbc getdisplayname    
+        files            ejbc getejbfiles cmpdescriptors   ejbc getcmpdescriptors cmpdescriptors length   0    
+            file basedir   getconfig   descriptordir endofpath   descriptorfilename lastindexof file separator relativepath   descriptorfilename substring 0  endofpath   1 i   0  i   cmpdescriptors length  i endofcmp   cmpdescriptors i  lastindexof cmpdescriptor   cmpdescriptors i  substring endofcmp   1   
+ 
+                file   cmpfile file basedir  relativepath   cmpdescriptor cmpfile exists buildexception  the cmp descriptor file    
+                              cmpfile      could not be found    getlocation     
+                  
+                files put cmpdescriptors i   cmpfile files addvendorfiles hashtable ejbfiles ddprefix    
+        ejbfiles put meta_dir   ias_dd file getconfig   descriptordir  
+                     getiasdescriptorname      
+      
+ 
+      
+    file getvendoroutputjarfile basename    
+        file jarfile file getdestdir    basename   jarsuffix   
+        log  jar file name      jarfile tostring    project msg_verbose jarfile getpublicid getiasdescriptorname iasdescriptorname iasdescriptorname path basename remainder startoffilename   descriptorname lastindexof file separatorchar startoffilename    -1    
+            path   descriptorname substring 0  startoffilename   1 descriptorname substring startoffilename   1  equals ejb_dd     
+            basename       
+            remainder   ejb_dd endofbasename   descriptorname indexof  
+                                                getconfig   basenameterminator  
+                                                startoffilename endofbasename   0    
+                endofbasename   descriptorname lastindexof ' '  - 1 endofbasename   0    
+                    endofbasename   descriptorname length   - 1  
+                  
+              
+ 
+            basename   descriptorname substring startoffilename   1  
+                                                endofbasename   1   
+            remainder   descriptorname substring endofbasename   1   
+          
+ 
+        iasdescriptorname   path   basename    ias-    remainder iasdescriptorname  
+      
+ org apache tools ant taskdefs optional ejb IPlanetDeploymentTool

@@ -1,0 +1,172 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications  
+    
+   presentation logic boxed compartment common e g operations 
+   compartment attributes compartment  p class adds possibility make whole compartment invisible notationprovideer used handle  generate parse texts shown compartment e compartment texts editable user  
+    
+    
+       logger constructor   p  
+        
+       two figs added figgroup bigport e box encloses compartments seperator  
+       
+        param x x 
+        param y y 
+        param w width 
+        param h height adds bigport e  number 1 
+   number 2 
+    
+        return separator figure boxed compartment set invisible remove children save resources increase efficiency multiple 
+       figs need not exist resized  moved etc not visible compartment later made visible child figs rebuilt model  
+         inheritdoc  
+        
+   
+        see org tigris gef presentation figgroup#addfig org tigris gef presentation fig  
+        
+    
+        return collection uml objects compartment based 
+        
+    
+        return type notationprovider  
+                    used handle text compartment  
+        
+    
+       fills fig adding figs within remove going add ones still valid   new ones right sequence don't fig uml object ll need add 
+   one set bounds reset later  
+   bounds not relevant here one still useable s retain position may changed     
+   bounds not relevant here perfectionist need set new notationprovider notation language may changed      
+   add again now right sequence  
+   now put text must handle case text null last one needs extra space below find compartment fig umlobject     
+   ignore first 2 figs seperator bigport 
+    
+       returns new size figgroup  either attributes operations calculation new bounds sub-figs  
+       considering minimal sizes  figgroup need not displayed update event fired  p method side effects sometimes used  
+       
+        param x x 
+        param y y 
+        param w w 
+        param h h 
+        return new dimension minimum width minimum width widest child element minimum height total minimum height child figs less 21 pixels  
+        return minimum width 
+        
+   
+        see org tigris gef presentation fig#setboundsimpl int  int  int  int  
+        
+    
+       fig representing separator compartment  
+        
+    
+           constructor  
+           
+            param x 
+            param y 
+            param len 
+            
+   
+            see org tigris gef presentation fig#getsize   
+            
+   
+            see org tigris gef presentation fig#getminimumsize   
+            
+   
+            see org tigris gef presentation fig#setboundsimpl  
+                   int  int  int  int uid  
+           org argouml uml diagram ui FigEditableCompartment org argouml uml diagram ui figeditablecompartment figcompartment figeditablecompartment x y w h x  y  w  h     
+        compartmentseperator figseperator 10  10  11   
+        addfig compartmentseperator figseperator getseperatorfig compartmentseperator setvisible visible isvisible      visible setvisible visible visible    
+            populate i   getfigs   size   - 1  i    0  --i    
+                fig f   getfigat i f compartmentfigtext    
+                    removefig f addfig fig fig fig    getbigport   
+                     fig compartmentfigtext  
+                     fig figseperator     
+            log error  illegal fig added to a figeditablecompartment illegalargumentexception  
+                     a figeditablecompartment can only   
+                       contain compartmentfigtexts    
+                       received a     fig getclass   getname addfig fig collection getumlcollection getnotationtype populate isvisible fig bigport getbigport xpos   bigport getx ypos   bigport gety    
+ 
+        list figs   getelementfigs    
+          
+        iterator i   figs iterator i hasnext      
+            fig f    fig  i next    
+            removefig f       
+          
+ 
+          
+          
+        figsinglelinetext comp collection umlobjects   getumlcollection acounter   -1  
+            iterator iter   umlobjects iterator iter hasnext      
+                object umlobject   iter next    
+                comp   findcompartmentfig figs  umlobject   
+                acounter                    
+ 
+                notationprovider np    
+                    notationproviderfactory2 getinstance   
+                         getnotationprovider getnotationtype    umlobject comp comp   createfigtext  
+                                xpos   1  
+                                ypos   1   acounter 
+                                  fignodemodelelement rowheight  
+                                0  
+                                fignodemodelelement rowheight - 2  
+                                bigport  
+                                np   
+                      
+                    comp setowner umlobject   
+                    np initialiselistener comp  umlobject rectangle b   comp getbounds    
+                    b y   ypos   1   acounter   fignodemodelelement rowheight  
+                      
+                    comp setbounds b   
+                      
+                    comp setnotationprovider np   
+                    np initialiselistener comp  umlobject   
+                  
+                addfig comp fttext   
+                        comp getnotationprovider   tostring umlobject fttext fttext       
+                  
+                comp settext fttext   
+ 
+                comp setbotmargin 0 invalidelementexception e    
+            log debug  attempted to populate a figeditablecompartment   
+                        using a deleted model element - aborting   e comp comp setbotmargin 6 compartmentfigtext findcompartmentfig list figs  object umlobject    
+        iterator it   figs iterator it hasnext      
+            compartmentfigtext candidate  
+            object fig   it next fig compartmentfigtext    
+                candidate    compartmentfigtext  fig candidate getowner      umlobject candidate list getelementfigs     
+        list figs arraylist getfigs figs size     1    
+              
+            figs remove 1     
+            figs remove 0 figs figsinglelinetext createfigtext x y w h  fig afig  notationprovider np dimension updatefiggroupsize x y w h checksize rowheight getminimumsize dimension getminimumsize     
+        dimension d getminimumsize d height   21    
+            d height   21 d setboundsimpl x y w h neww   w newh   h  
+ 
+        iterator figs   iterator    
+        fig fig fw yy   y figs hasnext      
+            fig    fig  figs next fig isvisible      fig    getbigport fig figseperator    
+                    fw   w fw   fig getminimumsize   width  
+                  
+                fig setbounds x   1  yy   1  fw  fig getminimumsize   height neww   fw   2    
+                    neww   fw   2  
+                  
+                yy    fig getminimumsize   height  
+              
+          
+        getbigport   setbounds x   1  y   1  neww - 3  newh - 1   
+        calcbounds figseperator figline   
+          
+        figseperator x y len x  y   x   len  - 1  y dimension getsize dimension  _x2 - _x1    1  getlinewidth dimension getminimumsize dimension 0  getlinewidth setboundsimpl x y w h    
+            setx1 x   
+            sety1 y   
+            setx2  x   w  - 1   
+            sety2  y   h  - 1   
+          
+ 
+          
+  
+      
+ org argouml uml diagram ui FigEditableCompartment

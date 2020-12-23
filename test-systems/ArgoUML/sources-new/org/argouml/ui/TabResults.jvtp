@@ -1,0 +1,185 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications results tab find dialog  
+   
+    
+    
+       logger  
+        
+    
+       insets pixels  
+        
+   todo some non-gef type argodiagram constructor constructor  
+       
+        param showrelated true related results shown 
+        
+    
+        param p predicate search 
+        
+    
+        param r root object search 
+        
+    
+        param gen generator 
+        
+    
+        param res results 
+        param dia diagrams 
+        
+   
+        see org argouml ui abstractargojpanel#spawn   
+        
+    
+       handle doubleclick results tab  
+        
+    
+       select result given index  
+       
+        param index given index 
+        
+                                                                 
+   actionlistener implementation 
+   
+        see java awt event actionlistener#actionperformed java awt event actionevent  
+        
+   ignored 
+                                                                 
+   mouselistener implementation 
+   
+        see java awt event mouselistener#mousepressed java awt event mouseevent  
+        
+   ignored 
+   
+        see java awt event mouselistener#mousereleased java awt event mouseevent  
+        
+   ignored 
+   
+        see java awt event mouselistener#mouseclicked java awt event mouseevent  
+        
+   
+        see java awt event mouselistener#mouseentered java awt event mouseevent  
+        
+   ignored 
+   
+        see java awt event mouselistener#mouseexited java awt event mouseevent  
+        
+   ignored 
+                                                                 
+   keylistener implementation 
+   
+        see java awt event keylistener#keypressed java awt event keyevent  
+        
+   
+        see java awt event keylistener#keyreleased java awt event keyevent  
+        
+   ignored 
+   
+        see java awt event keylistener#keytyped java awt event keyevent  
+        
+   ignored 
+                                                                 
+   listselectionlistener implementation 
+   
+        see javax swing event listselectionlistener#valuechanged javax swing event listselectionevent  
+        
+   
+        see java lang runnable#run recursive depth first search project children root user models diagrams  searches diagrams terminate immediately fail match models searched leaves  even diagram predicate doesn't match empty diagram name inefficient shouldn't common 
+       case  p  
+       
+       another effect current algorithm model elements appear once each diagram included plus additional 
+       time diagram name given slightly friendly non-diagram list only includes those elements didn't 
+       appear any diagram re not going bookkeeping now   - tfm 20060214 
+        
+   diagrams not placed search results uid  
+       org argouml ui TabResults org argouml ui tabresults abstractargojpanel runnable  
+                mouselistener  
+                actionlistener  
+                listselectionlistener  
+                keylistener tabresults tabresults showrelated results relatedshown   showrelated  
+	setlayout borderlayout     
+	resultstable jtable 10  showrelated ? 4   3   
+	resultsmodel tmresults showrelated   
+ 
+	jpanel resultsw jpanel    
+	jscrollpane resultssp jscrollpane resultstable   
+	resultsw setlayout borderlayout     
+	resultslabel setborder borderfactory createemptyborder  
+                inset_px  inset_px  inset_px  inset_px    
+	resultsw add resultslabel  borderlayout north   
+	resultsw add resultssp  borderlayout center   
+	resultstable setmodel resultsmodel   
+	resultstable addmouselistener resultstable addkeylistener resultstable getselectionmodel   addlistselectionlistener resultstable setselectionmode  
+				       listselectionmodel single_selection   
+	resultsw setminimumsize dimension 100  100    
+ 
+	jpanel relatedw jpanel relatedshown    
+	    jscrollpane relatedsp jscrollpane relatedtable   
+	    relatedw setlayout borderlayout     
+            relatedlabel setborder borderfactory createemptyborder  
+                    inset_px  inset_px  inset_px  inset_px    
+	    relatedw add relatedlabel  borderlayout north   
+	    relatedw add relatedsp  borderlayout center   
+	    relatedtable setmodel relatedmodel   
+	    relatedtable addmouselistener relatedtable addkeylistener relatedw setminimumsize dimension 100  100 relatedshown    
+	    mainpane jsplitpane jsplitpane vertical_split  
+			       resultsw  
+			       relatedw   
+	    add mainpane  borderlayout center add resultsw  borderlayout center setpredicate predicatefind p    
+	pred   p setroot object r    
+	root   r setgenerator childgenerator gen    
+	cg   gen setresults list res  list dia    
+        results   res  
+        diagrams   dia  
+        object   msgargs    integer valueof results size       
+        resultslabel settext translator messageformat  
+             dialog tabresults results-items   msgargs    
+        resultsmodel settarget results  diagrams   
+        relatedmodel settarget  list list relatedlabel settext  
+            translator localize  dialog tabresults related-items abstractargojpanel spawn     
+	tabresults newpanel    tabresults spawn newpanel newpanel setresults results  diagrams newpanel dodoubleclick     
+	mydoubleclick resultstable selectresult index index   resultstable getrowcount      
+	    resultstable getselectionmodel   setselectioninterval index  
+								   index actionperformed actionevent ae mousepressed mouseevent me mousereleased mouseevent me mouseclicked mouseevent me me getclickcount      2    
+            mydoubleclick me getsource mouseentered mouseevent me mouseexited mouseevent me mydoubleclick object src    
+	object sel diagram d src    resultstable row   resultstable getselectionmodel   getminselectionindex row   0 sel   results get row   
+	    d    diagram  diagrams get row src    relatedtable row   relatedtable getselectionmodel   getminselectionindex row   0 numjumptorelated    
+	    sel   related get row d log debug  go     sel     in     d getname     
+            targetmanager getinstance   settarget d   
+          
+	targetmanager getinstance   settarget sel keypressed keyevent e e isconsumed      e getkeychar      keyevent vk_enter    
+            e consume    
+            mydoubleclick e getsource keyreleased keyevent e keytyped keyevent e valuechanged listselectionevent lse lse getvalueisadjusting relatedshown row   lse getfirstindex    
+	    object sel   results get row   
+	    log debug  selected     sel   
+	    related clear    
+	    enumeration elems   
+		childgenrelated getsingleton   gen sel elems elems hasmoreelements      
+		    related add elems nextelement     
+		  
+	      
+	    relatedmodel settarget related object   msgargs    integer valueof related size       
+	    relatedlabel settext translator messageformat  
+                 dialog find related-elements   msgargs run     
+	resultslabel settext translator localize  dialog find searching     
+	results clear    
+	depthfirst root setresults results  diagrams depthfirst object node  diagram lastdiagram node diagram    
+	    lastdiagram    diagram  node pred matchdiagram lastdiagram enumeration elems   cg gen node elems hasmoreelements      
+	    object c   elems nextelement pred predicate c  
+                        lastdiagram pred matchdiagram         
+		results add c   
+		diagrams add lastdiagram   
+	      
+	    depthfirst c  lastdiagram   
+	  
+      
+ 
+      
+  
+ org argouml ui TabResults

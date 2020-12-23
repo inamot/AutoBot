@@ -1,0 +1,401 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license deployment tool creates generic ejb jars  generic jars contains 
+   only those classes meta-inf entries specified ejb 1 1 standard class used framework creation vendor specific 
+   deployment tools number template methods provided through vendor specific tool hook ejb creation process default buffer byte size use io level use compression standard meta-inf directory jar files standard manifest file    
+    name ejb deployment descriptor within ejb jars dependency analyzer name find ancestor classes dependency analyzer name find related classes dependency analyzer name analyzer default analyzer analyzer class super analyzer analyzer class super analyzer configuration containing task config combined settings individual attributes here constitues complete config deployment tool  
+        
+    stores handle directory put jar files classpath use deployment tool appended any paths ejbjar task itself    
+    instance variable stores suffix generated jarfile task tool belongs used access services 
+       provided ant core logging classloader generated given classpath load super classes super interfaces  
+        
+    
+       set files loaded ejb jar 
+        
+    
+       handler used parse ejb xml descriptor 
+        
+    
+       dependency analyzer used collect class dependencies arg constructor    
+    
+       set destination directory  required  
+        param indir destination directory destination directory  
+       
+        return destination directory ejb jars written 
+        
+    
+       set task owns tool 
+       
+        param task task deployment tool associated task tool  
+       
+        return task instance tool associated basename terminator  
+       
+        return ejbjar task configuration 
+        
+    
+       indicate build using base jar name  
+       
+        return true name generated jar coming basejarname attribute 
+        
+    
+       set suffix generated jar file  
+        param instring string use suffix  
+        
+    
+       add classpath user classes 
+       
+        return path instance configured ant  
+        
+    
+       set classpath used compilation  
+       
+        param classpath classpath used build classpath combining one surrounding task any one tool  
+       
+        return combined classpath 
+        
+    
+       log message ant output  
+       
+        param message message logged  
+        param level severity message build file location associated element's task  
+       
+        return task's location instance  
+        
+    
+       configure tool use ejbjar task  
+       
+        param config configuration surrounding ejbjar task  
+        
+    
+       utility method encapsulates logic adding file entry jar file   used execute add entries jar file constructed  
+        param jstream jaroutputstream write jar entry  
+        param inputfile file read contents file being added  
+        param logicalfilename string representing name  including relevant path information stored entry 
+              being added  
+        throws buildexception problem  
+        
+   create zip entry add jar file 
+   create file input stream buffer everything over jar output stream 
+  add list files jar 
+   close up file input stream class file 
+   ignore descriptionhandler  
+        param srcdir source directory  
+        return handler  
+        
+   register any dtds supplied user 
+    
+       register locations known dtds  
+       
+       vendor-specific subclasses override method define vendor-specific locations ejb dtds 
+        param handler used class  
+        
+   none register generic 
+      inheritdoc      
+   retrive files added jar ejb descriptor 
+   add any support classes specified build file 
+   determine jar filename  without filename extension  
+   first regular deployment descriptor 
+   now vendor specific files any 
+   add any dependent files 
+   lastly create file object jar files using flat destination dir need redefine basename  
+   check see need build start doing work  
+   log going build    
+   use helper method write jarfile 
+   log file up date method called first step processdescriptor method allow vendor-specific subclasses validate task configuration 
+       prior processing descriptor configuration invalid buildexception thrown  
+       
+        param descriptorfilename string representing file name ejb 
+                                 descriptor processed 
+        param saxparser          saxparser may used parse xml 
+                                 descriptor 
+        throws buildexception problem genericdeploymenttool nothing   vendor specific 
+           subclasses throw buildexception configuration invalid server method returns list ejb files found specified ejb 
+       descriptor parsed processed  
+       
+        param descriptorfilename string representing file name ejb 
+                                 descriptor processed 
+        param saxparser          saxparser may used parse xml 
+                                 descriptor 
+        return                   hashtable ejb class files added completed jar file 
+        throws saxexception      any sax exception  possibly wrapping another 
+                                 exception 
+        throws ioexception ioexception parser  possibly byte stream character stream 
+        
+   parse ejb deployment descriptor may not 
+               look much use saxparser inner class hold classfile names descriptor  
+                
+   ignore 
+    
+       adds any classes user specifies using support nested elements code ejbfiles  code  hashtable  
+       
+        param ejbfiles hashtable ejb classes files added completed jar file 
+        
+   add support classes any 
+    
+       using ejb descriptor file name passed code ejbjar  code  
+       task method returns basename used name completed jar file  
+       
+        param descriptorfilename string representing file name ejb 
+                                 descriptor processed 
+        return basename used name completed jar file 
+        
+   work out base name prefix vendor deployment descriptors contain path start descriptor name  
+       depending naming scheme 
+        param basename base name use  
+        param descriptorfilename file name use  
+        return prefix  
+        
+    
+       add any vendor specific files included ejb jar  
+        param ejbfiles hashtable entryname -  file  
+        param ddprefix prefix use  
+        
+   nothing add generic tool vendor specific name jar output modification date jar checked against dependent bean classes  
+        param basename basename use method checks timestamp each file listed code  
+       ejbfiles  code compares timestamp code jarfile 
+         code code jarfile  code 's timestamp recent each ejb file   code true  code returned   otherwise   code false 
+         code returned  
+       todo  find way check manifest-file found naming convention 
+       
+        param ejbfiles hashtable ejb classes files added completed jar file 
+        param jarfile  jar file contain ejb classes files 
+        return         boolean indicating whether not code jarfile  code up date 
+        
+   loop through files seeing any touched recently destination jar  
+    
+       returns public id dtd specified ejb descriptor   not 
+       every vendor-specific  code deploymenttool  code need reference value may want determine value vendor-specific way  
+       
+        return public id dtd specified ejb descriptor manifets file use building generic jar file not exist global manifest config used 
+       otherwise default ant manifest used  
+       
+        param prefix prefix llook manifest file based naming convention  
+       
+        return manifest file null manifest file not exist 
+        
+    
+       method used encapsulate writing jar file  iterates over filenames java io files hashtable stored instance variable 
+       ejbfiles  
+        param basename base name use  
+        param jarfile jar file write param files files write jar  
+        param publicid id use  
+        throws buildexception problem  
+        
+   clean addedfiles set jarfile already exists whack recreate probably think elegant way handle case errors don't leave people worse started    
+                
+   create streams necessary write jarfile 
+   loop through class files found add jar 
+   see any inner classes class add clean up innerclass name 
+   link file 
+   ignore 
+   end writejar 
+    
+       add available classes depend remote  home  bean  pk 
+        param checkentries files extracted deployment descriptor 
+        throws buildexception problem  
+        
+    
+       returns classloader object parses passed generic ejbjar classpath loader used dynamically load classes javax ejb classes 
+       being added jar  
+        return classloader  
+        
+   only generate new classloader classpath 
+    
+       called validate tool parameters configured  
+       
+        throws buildexception deployment tool's configuration isn't 
+                              valid 
+       org apache tools ant taskdefs optional ejb GenericDeploymentTool org apache tools ant taskdefs optional ejb genericdeploymenttool ejbdeploymenttool default_buffer_size   1024 jar_compress_level    9 meta_dir     meta-inf manifest    meta_dir    manifest mf ejb_dd       ejb-jar xml analyzer_super analyzer_full    full analyzer_none    none default_analyzer   analyzer_super analyzer_class_super 
+           org apache tools ant util depend bcel ancestoranalyzer analyzer_class_full 
+           org apache tools ant util depend bcel fullanalyzer genericdeploymenttool setdestdir file indir destdir   indir file getdestdir destdir settask task task task   task task gettask task ejbjar config getconfig config usingbasejarname config basejarname setgenericjarsuffix instring genericjarsuffix   instring path createclasspath classpath classpath path task getproject classpath createpath setclasspath path classpath classpath   classpath path getcombinedclasspath     
+        path combinedpath   classpath config classpath combinedpath combinedpath   config classpath combinedpath append config classpath combinedpath log message level    
+        gettask   log message  level location getlocation gettask   getlocation createanalyzer analyzer   config analyzer analyzer analyzer   default_analyzer analyzer equals analyzer_none analyzerclassname analyzer equals analyzer_super     
+            analyzerclassname   analyzer_class_super analyzer equals analyzer_full     
+            analyzerclassname   analyzer_class_full analyzerclassname   analyzer analyzerclass forname analyzerclassname   
+            dependencyanalyzer 
+                   dependencyanalyzer  analyzerclass newinstance    
+            dependencyanalyzer addclasspath path task getproject    
+                config srcdir getpath      
+            dependencyanalyzer addclasspath config classpath noclassdeffounderror e    
+            dependencyanalyzer task log  unable to load dependency analyzer      analyzerclassname 
+                    - dependent not found      e getmessage    
+                project msg_warn exception e    
+            dependencyanalyzer task log  unable to load dependency analyzer      analyzerclassname 
+                         - exception      e getmessage    
+                project msg_warn configure ejbjar config config config   config  
+ 
+        createanalyzer    
+        classpathloader addfiletojar jaroutputstream jstream  
+                                file inputfile logicalfilename buildexception   
+        fileinputstream istream addedfiles contains logicalfilename     
+                istream fileinputstream inputfile   
+                  
+                zipentry zipentry zipentry logicalfilename replace '\\'  ' '    
+                jstream putnextentry zipentry bytebuffer 2   default_buffer_size count   0 jstream write bytebuffer  0  count   
+                    count   istream read bytebuffer  0  bytebuffer length count    -1   
+ 
+                  
+                addedfiles add logicalfilename ioexception ioe    
+            log  warning  ioexception adding entry   
+                  logicalfilename     to jarfile from   
+                  inputfile getpath            ioe getclass   getname   
+                   -    ioe getmessage    project msg_warn istream istream close ioexception closeexception descriptorhandler getdescriptorhandler file srcdir    
+        descriptorhandler h descriptorhandler gettask    srcdir   
+ 
+        registerknowndtds h iterator i   getconfig   dtdlocations iterator    i hasnext       
+            ejbjar dtdlocation dtdlocation    ejbjar dtdlocation  i next    
+            h registerdtd dtdlocation getpublicid    dtdlocation getlocation h registerknowndtds descriptorhandler handler processdescriptor descriptorfilename  saxparser saxparser    
+ 
+        checkconfiguration descriptorfilename  saxparser handler   getdescriptorhandler config srcdir   
+ 
+              
+            hashtable ejbfiles   parseejbfiles descriptorfilename  saxparser   
+ 
+              
+            addsupportclasses ejbfiles basename   getjarbasename descriptorfilename ddprefix   getvendorddprefix basename  descriptorfilename   
+ 
+            file manifestfile   getmanifestfile ddprefix manifestfile ejbfiles put manifest  manifestfile   
+              
+ 
+ 
+ 
+              
+            ejbfiles put meta_dir   ejb_dd file config descriptordir  descriptorfilename    
+ 
+              
+            addvendorfiles ejbfiles  ddprefix   
+ 
+              
+            checkandadddependants ejbfiles config flatdestdir    basename length      0 startname   basename lastindexof file separator startname    -1    
+                    startname   0 endname     basename length    
+                basename   basename substring startname  endname   
+              
+ 
+            file jarfile   getvendoroutputjarfile basename needtorebuild ejbfiles  jarfile     
+                  
+                log  building   
+                                jarfile getname   
+                                  with valueof ejbfiles size    
+                                  files   
+                              project msg_info publicid   getpublicid    
+                writejar basename  jarfile  ejbfiles  publicid log jarfile tostring       is up to date    
+                              project msg_verbose saxexception se msg    saxexception parsing '  
+                  descriptorfilename probably indicates badly-formed xml   
+                     details    
+                  se getmessage buildexception msg  se ioexception ioe msg    ioexception parsing'  
+                  descriptorfilename tostring probably indicates that the descriptor  
+                    doesn't exist  details    
+                  ioe getmessage buildexception msg  ioe checkconfiguration descriptorfilename  
+                                    saxparser saxparser buildexception hashtable parseejbfiles descriptorfilename  saxparser saxparser ioexception  saxexception   
+        fileinputstream descriptorstream hashtable ejbfiles descriptorstream fileinputstream file config descriptordir  descriptorfilename    
+            saxparser parse inputsource descriptorstream   handler   
+ 
+            ejbfiles   handler getfiles descriptorstream descriptorstream close ioexception closeexception ejbfiles addsupportclasses hashtable ejbfiles    
+          
+        project project   task getproject iterator i   config supportfilesets iterator    i hasnext       
+            fileset supportfileset    fileset  i next    
+            file supportbasedir   supportfileset getdir project   
+            directoryscanner supportscanner   supportfileset getdirectoryscanner project   
+            supportscanner scan supportfiles   supportscanner getincludedfiles j   0  j   supportfiles length    j    
+                ejbfiles put supportfiles j file supportbasedir  supportfiles j getjarbasename descriptorfilename basename config namingscheme getvalue   equals ejbjar namingscheme basejarname canonicaldescriptor   descriptorfilename replace index   canonicaldescriptor lastindexof index    -1    
+                basename   descriptorfilename substring 0  index   1   
+              
+            basename    config basejarname config namingscheme getvalue   equals ejbjar namingscheme descriptor lastseparatorindex   descriptorfilename lastindexof file separator endbasename   -1 lastseparatorindex    -1    
+                endbasename   descriptorfilename indexof config basenameterminator  
+                                                            lastseparatorindex endbasename   descriptorfilename indexof config basenameterminator endbasename    -1    
+                basename   descriptorfilename substring 0  endbasename buildexception  unable to determine jar name   
+                       from descriptor \     descriptorfilename config namingscheme getvalue   equals ejbjar namingscheme directory     
+            file descriptorfile file config descriptordir  descriptorfilename path   descriptorfile getabsolutepath lastseparatorindex 
+                  path lastindexof file separator lastseparatorindex    -1 buildexception  unable to determine directory name holding descriptor dirname   path substring 0  lastseparatorindex dirseparatorindex   dirname lastindexof file separator dirseparatorindex    -1    
+                dirname   dirname substring dirseparatorindex   1   
+              
+ 
+            basename   dirname config namingscheme getvalue   equals ejbjar namingscheme ejb_name     
+            basename   handler getejbname basename getvendorddprefix basename descriptorfilename ddprefix config namingscheme getvalue   equals ejbjar namingscheme descriptor     
+            ddprefix   basename   config basenameterminator config namingscheme getvalue   equals ejbjar namingscheme basejarname  
+               config namingscheme getvalue   equals ejbjar namingscheme ejb_name  
+               config namingscheme getvalue   equals ejbjar namingscheme directory canonicaldescriptor   descriptorfilename replace index   canonicaldescriptor lastindexof index    -1    
+                ddprefix ddprefix   descriptorfilename substring 0  index   1 ddprefix addvendorfiles hashtable ejbfiles ddprefix    
+          
+      
+ 
+ 
+      
+    file getvendoroutputjarfile basename file destdir  basename   genericjarsuffix needtorebuild hashtable ejbfiles  file jarfile jarfile exists lastbuild   jarfile lastmodified    
+ 
+            iterator fileiter   ejbfiles values   iterator fileiter hasnext      
+                file currentfile    file  fileiter next lastbuild   currentfile lastmodified      
+                    log  build needed because     currentfile getpath       is out of date   
+                        project msg_verbose getpublicid handler getpublicid file getmanifestfile prefix    
+        file manifestfile file getconfig   descriptordir  prefix    manifest mf manifestfile exists manifestfile config manifest config manifest writejar basename  file jarfile  hashtable files publicid buildexception   
+ 
+        jaroutputstream jarstream addedfiles addedfiles hashset addedfiles clear jarfile exists      
+                jarfile delete    
+              
+            jarfile getparentfile   mkdirs    
+            jarfile createnewfile    
+ 
+            inputstream in manifest manifest file manifestfile    file  files get manifest manifestfile manifestfile exists      
+                    in fileinputstream manifestfile defaultmanifest     org apache tools ant defaultmanifest mf   
+                    in getclass   getresourceasstream defaultmanifest in buildexception  could not find manifest      defaultmanifest   
+                      
+                  
+ 
+                manifest manifest in ioexception e buildexception   unable to read manifest   e  getlocation in in close    
+                  
+              
+ 
+              
+ 
+            jarstream jaroutputstream fileoutputstream jarfile   manifest   
+            jarstream setmethod jaroutputstream deflated iterator entryiterator   files keyset   iterator    entryiterator hasnext entryname entryiterator next entryname equals manifest file entryfile    file  files get entryname   
+ 
+                log  adding file '    entryname    '   
+                              project msg_verbose   
+ 
+                addfiletojar jarstream  entryfile  entryname   
+ 
+                  
+                innerclassfilenamefilter flt innerclassfilenamefilter entryfile getname     
+                file entrydir   entryfile getparentfile innerfiles   entrydir list flt innerfiles i   0  n   innerfiles length  i   n  i entryindex   entryname lastindexof entryfile getname    - 1 entryindex   0    
+                            entryname   innerfiles i entryname   entryname substring 0  entryindex  
+                                  file separatorchar   innerfiles i   
+                          
+                          
+                        entryfile file config srcdir  entryname   
+ 
+                        log  adding innerclass file '    entryname    '   
+                                project msg_verbose   
+ 
+                        addfiletojar jarstream  entryfile  entryname ioexception ioe msg    ioexception processing ejb-jar file '  
+                  jarfile tostring   
+                   '  details    
+                  ioe getmessage buildexception msg  ioe jarstream jarstream close ioexception closeexception checkandadddependants hashtable checkentries buildexception dependencyanalyzer dependencyanalyzer reset    
+ 
+        iterator i   checkentries keyset   iterator i hasnext entryname i next entryname endswith classname   entryname substring 0  
+                    entryname length length     
+                classname   classname replace file separatorchar  ' '   
+                classname   classname replace ' '  ' '   
+ 
+                dependencyanalyzer addrootclass classname   
+              
+          
+ 
+        enumeration e   dependencyanalyzer getclassdependencies e hasmoreelements classname e nextelement location 
+                  classname replace ' '  file separatorchar file classfile file config srcdir  location classfile exists      
+                checkentries put location  classfile   
+                log  dependent classname     -     classfile  
+                    project msg_verbose classloader getclassloaderforbuild classpathloader classpathloader  
+          
+ 
+        path combinedclasspath   getcombinedclasspath combinedclasspath classpathloader   getclass   getclassloader classpathloader 
+                  gettask   getproject   createclassloader combinedclasspath classpathloader validateconfigured buildexception destdir destdir isdirectory msg    a valid destination directory must be specified   
+                               using the \ destdir\  attribute buildexception msg  getlocation     
+          
+      
+ org apache tools ant taskdefs optional ejb GenericDeploymentTool

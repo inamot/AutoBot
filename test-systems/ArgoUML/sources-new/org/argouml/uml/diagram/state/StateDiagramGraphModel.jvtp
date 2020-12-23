@@ -1,0 +1,162 @@
+ 
+   $id$ 
+   copyright  c  1996-2006 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications class defines bridge between uml meta-model representation design graphmodel interface used gef class handles uml 
+   statemachine diagrams used activity diagrams  
+    
+    
+       logger statemachine diagramming  
+        
+                                                                 
+   accessors 
+    
+        return statemachine diagram 
+        
+    
+        param sm statemachine diagram 
+        
+                                                                 
+   graphmodel implementation 
+   
+        see org tigris gef graph graphmodel#getports java lang object  
+        
+   
+        see org tigris gef graph basegraphmodel#getowner java lang object  
+        
+   
+        see org tigris gef graph graphmodel#getinedges java lang object  
+        
+   
+        see org tigris gef graph graphmodel#getoutedges java lang object  
+        
+                                                                 
+   mutablegraphmodel implementation 
+   
+        see org tigris gef graph mutablegraphmodel#canaddnode java lang object next solves issue 3665 not allow addition element statemachine contained statemachine one represented diagram  
+                
+   
+        see org tigris gef graph mutablegraphmodel#canaddedge java lang object s not allowed directly draw transition composite state one s substates  
+   both ends must defined nodes graph already  
+   
+        see org tigris gef graph mutablegraphmodel#addnode java lang object  
+        
+   
+        see org tigris gef graph mutablegraphmodel#addedge java lang object  
+        
+   
+        see org tigris gef graph mutablegraphmodel#addnoderelatededges java lang object  
+        
+    mtransition    iter next    
+   
+        see org tigris gef graph mutablegraphmodel#canconnect java lang object  
+            java lang object  
+        
+   
+        see org tigris gef graph mutablegraphmodel#connect java lang object  
+            java lang object  java lang class  
+        
+                                                                 
+   vetoablechangelistener implementation 
+   
+        see java beans vetoablechangelistener#vetoablechange java beans propertychangeevent  
+        
+  throws propertyvetoexception 
+    melementimport    pce getnewvalue uid  
+        
+    
+        param newnode new node one ends dragged param oldnode existing node already connected  
+        param edge edge being dragged rerouted 
+        return true transition being rerouted between two states  
+        
+   prevent changes    
+   check parameter types s not allowed move transition go composite substate vice versa  see issue 2865  
+    
+       reroutes connection old node connected new node  
+       
+        param newnode new node one ends dragged param oldnode existing node already connected  
+        param edge edge being dragged rerouted 
+        param issource 
+                  tells end being rerouted  
+        
+   
+        see org argouml uml diagram umlmutablegraphsupport#isremovefromdiagramallowed collection nothing selected not allowed remove uml object found not remove selected elms only figs without owner selected remove end class statediagramgraphmodel   org argouml uml diagram state StateDiagramGraphModel org argouml uml diagram state statediagramgraphmodel umlmutablegraphsupport vetoablechangelistener logger log   
+        logger getlogger statediagramgraphmodel object getmachine machine setmachine object sm model getfacade   isastatemachine sm illegalargumentexception sm machine   sm list getports object nodeoredge    
+        list res arraylist model getfacade   isastate nodeoredge     
+	    res add nodeoredge model getfacade   isapseudostate nodeoredge     
+	    res add nodeoredge res object getowner object port port list getinedges object port model getfacade   isastatevertex port arraylist model getfacade   getincomings port    
+	  
+        log debug  todo  getinedges of mstate collections empty_list list getoutedges object port model getfacade   isastatevertex port arraylist model getfacade   getoutgoings port    
+	  
+        log debug  todo  getoutedges of mstate collections empty_list canaddnode object node node model getfacade   isamodelelement node  
+                   containsnode node model getfacade   isacomment node model getfacade   isastatevertex node  
+                   model getfacade   isapartition node     
+              
+            object nodemachine   
+                model getstatemachineshelper   getstatemachine node nodemachine nodemachine    getmachine canaddedge object edge canaddedge edge edge containsedge edge object end0 object end1 model getfacade   isatransition edge     
+            end0   model getfacade   getsource edge   
+            end1   model getfacade   gettarget edge model getfacade   isacompositestate end0  
+                       model getstatemachineshelper   getallsubstates end0  
+                                                         contains end1 edge commentedge    
+            end0     commentedge  edge  getsource    
+            end1     commentedge  edge  getdestination end0 end1 log error  edge rejected  its ends are not attached to anything containsnode end0  
+                    containsedge end0     
+            log error  edge rejected  its source end is attached to   
+                      end0 
+                        but is not in the graph model containsnode end1  
+                    containsedge end1     
+            log error  edge rejected  its destination end is attached to   
+                      end1 
+                        but is not in the graph model addnode object node    
+        log debug  adding statechart activity diagram node      node canaddnode node containsnode node getnodes   add node model getfacade   isastatevertex node     
+            object top   model getstatemachineshelper   gettop getmachine     
+            model getstatemachineshelper   addsubvertex top  node   
+          
+ 
+        firenodeadded node addedge object edge    
+        log debug  adding statechart activity diagram edge canaddedge edge getedges   add edge   
+        fireedgeadded edge addnoderelatededges object node addnoderelatededges node model getfacade   isastatevertex node     
+            collection transen arraylist model getfacade   getoutgoings node    
+            transen addall model getfacade   getincomings node    
+            iterator iter   transen iterator iter hasnext      
+                object dep canaddedge dep     
+                    addedge dep canconnect object fromport  object toport model getfacade   isastatevertex fromport      
+            log error  internal error not from sv model getfacade   isastatevertex toport      
+            log error  internal error not to sv model getfacade   isafinalstate fromport model getfacade   isapseudostate toport model getpseudostatekind   getinitial    equals  
+                    model getfacade   getkind toport object connect object fromport  object toport  
+			  object edgeclass model getfacade   isafinalstate fromport model getfacade   isapseudostate toport  
+                   model getpseudostatekind   getinitial   equals  
+			model getfacade   getkind toport model getmetatypes   gettransition   equals edgeclass     
+            object tr tr   
+                model getstatemachinesfactory   
+                     buildtransition fromport  toport canaddedge tr     
+                addedge tr projectmanager getmanager   getcurrentproject   movetotrash tr   
+                tr tr edgeclass    commentedge object connection   
+                    buildconnection  
+                            edgeclass  fromport toport null  
+                            projectmanager getmanager   getcurrentproject   
+                             getmodel     
+                addedge connection connection exception ex    
+                log error  buildconnection   failed   ex log debug  wrong kind of edge in statediagram connect3   
+                      edgeclass vetoablechange propertychangeevent pce ownedelement  equals pce getpropertyname       
+            collection oldowned    collection  pce getoldvalue    
+            object eo     
+            object me   model getfacade   getmodelelement eo oldowned contains eo     
+                log debug  model removed     me model getfacade   isastate me     
+                    removenode me model getfacade   isapseudostate me     
+                    removenode me model getfacade   isatransition me     
+                    removeedge me log debug  model added     me serialversionuid   -8056507319026044174l canchangeconnectednode object newnode  object oldnode  
+            object edge newnode    oldnode model getfacade   isastate newnode  
+	         model getfacade   isastate oldnode  
+	         model getfacade   isatransition edge object othersidenode   model getfacade   getsource edge othersidenode    oldnode    
+            othersidenode   model getfacade   gettarget edge model getfacade   isacompositestate newnode  
+                   model getstatemachineshelper   getallsubstates newnode  
+                                                     contains othersidenode changeconnectednode object newnode  object oldnode  
+            object edge issource issource    
+            model getstatemachineshelper   setsource edge  newnode model getcommonbehaviorhelper   settarget edge  newnode isremovefromdiagramallowed collection figs figs isempty iterator i   figs iterator i hasnext      
+            object obj   i next obj fig object uml     fig  obj  getowner uml org argouml uml diagram state StateDiagramGraphModel

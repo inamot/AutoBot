@@ -1,0 +1,766 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   runs junit tests  
+   
+    p  junit framework create unit tests initially 
+   created erich gamma kent beck   junit found href  http   www junit org  http   www junit org p   code junittask  code run single specific 
+    code junittest  code  using code test  code  element   p example following target  code  pre  
+      lt target name  test-int-chars  depends  jar-test  gt  
+          lt echo message  testing international characters   gt  
+          lt junit printsummary haltonfailure  yes  fork  false  gt  
+              lt classpath refid  classpath   gt  
+              lt formatter type  plain  usefile  false    gt  
+              lt test name  org apache ecs internationalchartest    gt  
+          lt  junit gt  
+      lt  target gt  
+     pre   code  
+    p runs single junit test 
+     code org apache ecs internationalchartest  code current 
+   vm using path id  code classpath  code classpath presents results formatted using standard 
+    code plain  code  formatter command line   p  
+   
+    p task run batches tests code batchtest  code  element creates code batchtest  code  
+   based fileset allows example classes found directory run testcases   p  
+   
+    p example   p  code  pre  
+    lt target name  run-tests  depends  dump-info compile-tests junit present  gt  
+      lt junit printsummary haltonfailure  yes  fork  $ junit fork   gt  
+        lt jvmarg value  -classic   gt  
+        lt classpath refid  tests-classpath   gt  
+        lt sysproperty key  build tests  value  $ build tests    gt  
+        lt formatter type  brief  usefile  false    gt  
+        lt batchtest gt  
+          lt fileset dir  $ tests dir   gt  
+            lt include name     #047  test     gt  
+          lt  fileset gt  
+        lt  batchtest gt  
+      lt  junit gt  
+    lt  target gt  
+     pre   code  
+    p target finds any classes code test  code  directory 
+   anywhere path  under top  code $ tests dir   code course creates  code junittest  code 's each one   p  
+   
+    p course   code  lt junit gt   code code  lt batch gt   code  elements combined complex tests example  see ant  code build xml  code  
+   target  code run-tests  code second example edited 
+   version    p  
+   
+    p spawn new java vm prevent interferences between 
+   different testcases need enable  code fork  code number attributes elements allow set up jvm 
+   runs ant 1 2 
+   
+    see junittest 
+    see batchtest send output system out  err addition formatters send output formatters ? 
+     attributes basetest ant 1 7 true  force ant re-classload classes each junit testcase 
+       
+        param value force class reloading each test case true  smartly filter stack frames junit errors failures before reporting p property applied batchtest  batchtest junittest  test possibly overridden properties   p  
+        param value  tt false  tt not filter  otherwise 
+        tt true tt ant 1 5 true  stop build process error test property applied batchtest  batchtest junittest 
+        test possibly overridden properties  
+        param value  tt true  tt halt  otherwise 
+        tt false  tt ant 1 2 
+        
+    
+       property set true error test  
+       
+        p property applied batchtest  batchtest junittest  test possibly overriden properties   p  
+        param propertyname name property set event error ant 1 4 true  stop build process test fails 
+        errors considered failures well property applied batchtest  batchtest junittest  test possibly overridden properties  
+        param value  tt true  tt halt  otherwise 
+        tt false  tt ant 1 2 
+        
+    
+       property set true failure test  
+       
+        p property applied batchtest  batchtest junittest  test possibly overriden properties   p  
+        param propertyname name property set event failure ant 1 4 true  jvm forked each test  
+       
+        p avoids interference between testcases possibly avoids 
+       hanging build property applied batchtest 
+        batchtest junittest  test possibly overridden properties   p  
+        param value  tt true  tt jvm forked  otherwise 
+        tt false  tt  
+        see #settimeout ant 1 2 
+        
+    
+       set behavior link #setfork fork  fork enabled  
+       
+        p possible values once    pertest perbatch set once   only single java vm forked tests pertest default  each test run fresh java vm perbatch run tests same 
+        lt batchtest gt same java vm   p  
+       
+        p attribute ignored tests run same vm ant   p  
+       
+        p only tests same configuration haltonerror  
+       haltonfailure  errorproperty  failureproperty filtertrace share forked java vm even set value once   ant may need fork mutliple vms   p  
+        param mode mode use ant 1 6 2 true  print one-line statistics each test withoutanderr show standard output error take values withoutanderr  
+        param value  tt true  tt print summary  
+        tt withoutanderr  tt include test apos s output well   tt false  tt  otherwise  
+        see summaryjunitresultformatter ant 1 2 
+        
+    
+       print summary enumeration values  
+        
+    
+           list possible values 
+            return  array allowed values 
+            
+    
+           gives boolean equivalent authorized values 
+            return boolean equivalent value 
+            
+    
+       set timeout value milliseconds   
+       
+        p test running value test canceled   works only fork' mode    p  
+        param value maximum time milliseconds  allowed before 
+       declaring test timed-out' 
+        see #setfork boolean ant 1 2 
+        
+    
+       set maximum memory used forked jvms  
+        param   max value defined tt -mx  tt tt -xmx  tt java command line options ant 1 2 command used invoke java virtual machine  
+       default java command resolved java lang runtime exec    ignored fork disabled  
+       
+        param   value new vm use instead tt java  tt  
+        see #setfork boolean ant 1 2 
+        
+    
+       adds jvm argument  ignored not forking  
+       
+        return create new jvm argument any argument passed jvm  
+        see #setfork boolean ant 1 2 directory invoke vm ignored jvm forked  
+        param   dir directory invoke jvm see #setfork boolean ant 1 2 
+        
+    
+       adds system property tests access might useful tranfer ant properties testcases jvm forking not enabled ant 1 3 
+        deprecated ant 1 6 
+        param sysp environment variable add 
+        
+    
+       adds system property tests access might useful tranfer ant properties testcases jvm forking not enabled  
+        param sysp new environment variable add ant 1 6 build exception missing key value 
+   see bugzilla report 21684 
+    
+       adds set properties used system properties tests access might useful tranfer ant properties testcases jvm forking not enabled  
+       
+        param sysp set properties added ant 1 6 
+        
+    
+       adds path classpath used tests  
+       
+        return reference classpath embedded java command line ant 1 2 
+        
+    
+       adds path bootclasspath  
+        return reference bootclasspath embedded java command line ant 1 6 
+        
+    
+       adds environment variable  used forking  
+       
+        p ignored not forking new vm   p  
+        param var environment variable added ant 1 5 true  use new environment forked  
+       
+        p ignored not forking new vm   p  
+       
+        param newenv boolean indicating setting new environment wished ant 1 5 
+        
+    
+       preset attributes test 
+       before configuration build 
+       script allows attributes junit  task be defaults tests allows 
+       individual tests override defaults  
+        
+    
+       add new single testcase  
+        param   test new single testcase 
+        see junittest ant 1 2 
+        
+    
+       adds set tests based pattern matching  
+       
+        return new instance batch test  
+        see batchtest ant 1 2 
+        
+    
+       add new formatter tests task  
+       
+        param fe formatter element ant 1 2 true  include ant jar  optional jar junit jar forked vm  
+       
+        param b include ant run time yes ant 1 5 true  send any output generated tests ant's logging system well formatters default only formatters receive output  
+       
+        p output always passed formatters not shown default option example set tests interactive prompt user something   p  
+       
+        param showoutput true  send output ant's logging system ant 1 5 true  send any output generated tests formatters  
+       
+        param outputtoformatters true  send output formatters  default true ant 1 7 0 
+        
+    
+       assertions enable program fork true ant 1 6 
+        param asserts assertion set 
+        
+    
+       sets permissions application run inside same jvm ant 1 6 
+        return set  system properties copied cloned vm well bootclasspath unless explicitly specified bootclaspath  
+       
+        p doesn't any effect unless fork true   p  
+        param clonevm code boolean  code  value ant 1 7 
+        
+    
+       creates new junitrunner enables fork new java vm  
+       
+        throws exception under ??? circumstances ant 1 2 ant place temporary files  
+       
+        param tmpdir location temporary files go ant 1 6 
+        
+    
+       adds jars directories containing ant task junit classpath make forked jvm work 
+       without having specify directly ant 1 4 
+        
+   sanity check 
+   forceloadclass not convenient here not 
+   properly deal inner classes classes  
+    
+       runs testcase  
+       
+        throws buildexception case test failures errors ant 1 2 
+        
+   forkmode getvalue   equals forkmode per_batch     
+    
+       run tests  
+        param arg one junittest 
+        throws buildexception case test failures errors 
+        
+   set default values not specified 
+   todo moved test class instead  
+   execute test return code 
+   null watchdog means timeout d better not check null 
+    
+       execute list tests single forked java vm  
+        param tests list tests execute  
+        throws buildexception error  
+        
+   create temporary file pass test cases run runner  one test case per line  
+   execute test return code 
+    
+       execute testcase forking new jvm command block 
+       until finishes know process destroyed not whether forked java vm exited abnormally  use attributes returned holder object  
+        param  test testcase execute  
+        param  watchdog watchdog charge cancelling test exceeds certain amount time tt null  tt case test probably hang forever  
+        param casesfile list test cases execute tt null  tt case only one test executed  
+        throws buildexception case error creating temporary property file junit process not forked 
+        
+   #31885 
+   ignored  
+    
+       create temporary file pass properties new process auto-delete graceful  exit file project basedir unless tmpdir declares 
+       something param prefix 
+        return created file 
+        
+    
+       pass output sent system out testrunner collect ot formatters  
+       
+        param output output coming system out ant 1 5 
+        
+    
+       handle input request task  
+        see task#handleinput byte    int  int implementation delegates runner present  
+        param buffer buffer data read  
+        param offset offset buffer data stored  
+        param length amount data read  
+       
+        return number bytes read  
+        exception ioexception data cannot read ant 1 6 
+        
+    
+       pass output sent system out testrunner collect ot formatters  
+       
+        param output output coming system out ant 1 5 2 
+        
+    
+       pass output sent system err testrunner collect formatters  
+       
+        param output output coming system err ant 1 5 
+        
+    
+       pass output sent system err testrunner collect formatters  
+       
+        param output coming system err ant 1 5 2 vm not very nice probably hang whole build  imho method avoided best remove future versions  tbd   sba  
+    
+       execute inside vm  
+        param arg one junittest 
+        throws buildexception under unspecified circumstances 
+        
+    
+        return  tt null  tt timeout value  otherwise watchdog instance  
+       
+        throws buildexception under unspecified circumstances ant 1 2 default output formatter  
+       
+        return default output stream formatter ant 1 3 
+        
+    
+       merge individual tests batchtest individual tests return enumeration over tt junittest  tt   
+       
+        return enumeration over individual tests ant 1 3 
+        
+    
+       return enumeration listing each test each batchtest 
+        return enumeration ant 1 3 
+        
+    
+        param test junit test 
+        return array formatterelement ant 1 3 formatter sends output file  return file  
+       null otherwise  
+        param fe  formatter element 
+        param test one junit test 
+        return file reference ant 1 3 
+        
+    
+       search given resource add directory archive contains classpath  
+       
+        p doesn't work archives jdk 1 1 url returned getresource doesn't contain name archive   p  
+       
+        param resource resource one lookup 
+        return true something fact added ant 1 4 
+        
+   
+           pre ant 1 6 method used call getclass   getresource ant 1 6 call classloader getresource difference class getresource expects leading 
+           slash absolute  resources strip before 
+           delegating classloader getresource now emulate class's behavior  
+            
+    
+       take care some output produced report files watchdog kills test ant 1 5 2 
+        
+    
+       take care some output produced report files forked machine exited before test suite finished reason not timeout ant 1 7 
+        
+    
+       take care some output produced report files forked machine terminated before test suite finished ant 1 7 
+        
+   ignore 
+    
+       creates configures antclassloader instance nested classpath element ant 1 6 
+        
+   make sure test accepted testcase 
+   make sure test annotation accepted cause trouble jdk 1 1 omitted 
+    
+       removes classloader needed ant 1 7 command line used run tests  
+        return command line ant 1 6 2 
+        
+    
+       forked test support ant 1 6 2 
+        
+    
+           constructor forked test configuration 
+            param filtertrace 
+            param haltonerror 
+            param haltonfailure 
+            param errorproperty 
+            param failureproperty 
+            
+    
+           configure test  sets member variables attributes test 
+            param test 
+            
+    
+           equality test checks member variables 
+            param return true everything equal 
+            
+    
+           hashcode based only boolean members returns value range 0-7  
+            return hash code value different forking options 1 6 2 
+        
+    
+           fork once only 
+            
+    
+           fork once per test class 
+            
+    
+           fork once per batch tests arg constructor     
+    
+           constructor using value  
+            param value value use - once  pertest perbatch  
+            
+      inheritdoc      
+    
+       executes tests don't need forked tests runindividual argument true   returns collection lists tests share same vm configuration haven't executed param testlist list tests executed queued  
+        param runindividual true execute each test individually  
+        return list tasks executed 1 6 2 
+        
+    
+       logs information failed tests  potentially stops 
+       processing throwing buildexception failure error 
+       occurred sets property  
+        param exitvalue exitvalue test  
+        param waskilled true test killed  
+        param test test question  
+        param name name test ant 1 6 2 
+        
+    
+       logs information failed tests  potentially stops 
+       processing throwing buildexception failure error 
+       occurred sets property  
+        param result result test  
+        param test test question  
+        param name name test ant 1 7 error failure halt  stop 
+   everything otherwise log statement value class contains thee result test  
+        
+   checkstyle visibilitymodifier bc exit code test     
+    true test timed out    
+    true test crashed    
+   checkstyle visibilitymodifier stream handler handling junit task ant 1 7 
+        
+   local copy logoutputstream task private 
+    
+           constructor  
+            param task task being logged  
+            param level log level used log data written stream  
+            
+    
+           logs line line starts junit framework testlistener  set level msg_verbose  
+            param line line log  
+            param level logging level use log stream handler junit ant 1 7 
+        
+    
+           constructor  
+            param task task log  
+            param outlevel level use standard output  
+            param errlevel level use error output  
+           org apache tools ant taskdefs optional junit JUnitTask org apache tools ant taskdefs optional junit junittask task testlistener_prefix   
+         junit framework testlistener setreloading value    
+        reloading   value setfiltertrace value filtertrace   value sethaltonerror value haltonerror   value seterrorproperty propertyname errorproperty   propertyname sethaltonfailure value haltonfail   value setfailureproperty propertyname failureproperty   propertyname setfork value fork   value setforkmode forkmode mode forkmode   mode setprintsummary summaryattribute value    
+        summaryvalue   value getvalue    
+        summary   value asboolean summaryattribute enumeratedattribute getvalues yes no   
+                                  on    off    withoutanderr asboolean v   getvalue equals v  
+                    on  equals v  
+                    yes  equals v  
+                    withoutanderr  equals v settimeout integer value    
+        timeout   value setmaxmemory max    
+        getcommandline   setmaxmemory max setjvm value    
+        getcommandline   setvm value commandline argument createjvmarg getcommandline   createvmargument setdir file dir dir   dir addsysproperty environment variable sysp    
+ 
+        getcommandline   addsysproperty sysp addconfiguredsysproperty environment variable sysp teststring   sysp getcontent    
+        getproject   log  sysproperty added       teststring  project msg_debug   
+        getcommandline   addsysproperty sysp addsyspropertyset propertyset sysp    
+        getcommandline   addsyspropertyset sysp path createclasspath getcommandline   createclasspath getproject    createpath path createbootclasspath getcommandline   createbootclasspath getproject    createpath addenv environment variable env addvariable setnewenvironment newenv    
+        newenvironment   newenv preconfigure basetest test    
+        test setfiltertrace filtertrace   
+        test sethaltonerror haltonerror errorproperty test seterrorproperty errorproperty   
+          
+        test sethaltonfailure haltonfail failureproperty test setfailureproperty failureproperty   
+          
+        test setfork fork addtest junittest test    
+        tests addelement test   
+        preconfigure test batchtest createbatchtest     
+        batchtest test batchtest getproject     
+        batchtests addelement test   
+        preconfigure test test addformatter formatterelement fe    
+        formatters addelement fe setincludeantruntime b    
+        includeantruntime   b setshowoutput showoutput showoutput   showoutput setoutputtoformatters outputtoformatters outputtoformatters   outputtoformatters addassertions assertions asserts getcommandline   getassertions buildexception  only one assertion declaration is allowed    
+          
+        getcommandline   setassertions asserts permissions createpermissions perm perm permissions perm setclonevm clonevm    
+        getcommandline   setclonevm clonevm junittask exception   
+        getcommandline   
+             setclassname  org apache tools ant taskdefs optional junit junittestrunner settempdir file tmpdir tmpdir tmpdir exists       tmpdir isdirectory buildexception tmpdir tostring   
+                                             is not a valid temp directory tmpdir   tmpdir init     
+        antruntimeclasses path getproject     
+        splitjunit    addclasspathentry   junit framework testcase addclasspathentry   org apache tools ant launch antmain addclasspathentry   org apache tools ant task addclasspathentry   org apache tools ant taskdefs optional junit junittestrunner junittaskmirror createmirror junittask task  classloader loader loader loadclass  junit framework test classnotfoundexception e buildexception  
+                     the  classpath junit  must include junit jar not in ant's own classpath   
+                    e  task getlocation c   loader loadclass junittaskmirror getname      impl c getclassloader      loader buildexception  overdelegating loader   task getlocation     
+              
+            constructor cons   c getconstructor junittask junittaskmirror  cons newinstance object    task exception e buildexception e  task getlocation splitloader antclassloader splitloader classloader parent  path path parent  getproject    path loadclass classname resolve classnotfoundexception theclass   findloadedclass classname theclass theclass issplit classname     
+                theclass   findclass classname resolve    
+                    resolveclass theclass theclass loadclass classname  resolve splitclasses     
+             briefjunitresultformatter   
+             junitresultformatter   
+             junittaskmirrorimpl   
+             junittestrunner   
+             junitversionhelper   
+             outerrsummaryjunitresultformatter   
+             plainjunitresultformatter   
+             summaryjunitresultformatter   
+             xmljunitresultformatter issplit classname simplename   classname substring classname lastindexof ' '    1 i   0  i   splitclasses length  i simplename equals splitclasses i   
+                           simplename startswith splitclasses i execute buildexception   
+        classloader myloader   junittask getclassloader    
+        classloader mirrorloader splitjunit    
+            path path path getproject     
+            path add antruntimeclasses   
+            path add getcommandline   getclasspath     
+            mirrorloader splitloader myloader  path mirrorloader   myloader  
+          
+        delegate   createmirror mirrorloader   
+ 
+        list testlists arraylist forkpertest   forkmode getvalue   equals forkmode per_test forkpertest    forkmode getvalue   equals forkmode once     
+            testlists addall executeorqueue getindividualtests    
+                                            forkpertest count   batchtests size i   0  i   count  i      
+                batchtest batchtest    batchtest  batchtests elementat i   
+                testlists addall executeorqueue batchtest elements testlists addall executeorqueue tests elements    forkpertest iterator iter   testlists iterator iter hasnext      
+                list l    list  iter next l size      1    
+                    execute  junittest  l get 0 execute l deleteclassloader mirrorloader splitloader    
+                  splitloader  mirrorloader  cleanup    
+              
+            delegate execute junittest arg buildexception   
+        junittest test    junittest  arg clone test gettodir test settodir getproject   resolvefile test getoutfile test setoutfile  test-    test getname     
+          
+ 
+          
+        testresultholder result test getfork      
+            result   executeinvm test executewatchdog watchdog   createwatchdog    
+            result   executeasforked test  watchdog actontestresult result  test   test     test getname execute list tests buildexception   
+        junittest test file casesfile   createtemppropertiesfile  junittestcases    
+        printwriter writer writer printwriter bufferedwriter filewriter casesfile     
+            iterator iter   tests iterator iter hasnext      
+                test    junittest  iter next    
+                writer print test getname test gettodir writer print       getproject   resolvefile writer print       test gettodir test getoutfile writer println        test-    test getname writer println       test getoutfile     
+                  
+              
+            writer flush    
+            writer close    
+            writer executewatchdog watchdog   createwatchdog    
+            testresultholder result   
+                executeasforked test  watchdog  casesfile   
+            actontestresult result  test   tests ioexception e    
+            log e tostring    project msg_err buildexception e writer writer close casesfile delete exception e    
+                log e tostring    project msg_err testresultholder executeasforked junittest test  
+                                             executewatchdog watchdog  
+                                             file casesfile buildexception perm log  permissions ignored when running in forked mode    
+                project msg_warn   
+          
+ 
+        commandlinejava cmd cmd    commandlinejava   getcommandline   clone clonenotsupportedexception e buildexception shouldn't happen   e  getlocation     
+          
+        cmd setclassname  org apache tools ant taskdefs optional junit junittestrunner casesfile cmd createargument   setvalue test getname log  running multiple tests in the same vm   project msg_verbose   
+            cmd createargument   setvalue constants testsfile   casesfile   
+          
+ 
+        cmd createargument   setvalue constants filtertrace   test getfiltertrace     
+        cmd createargument   setvalue constants halt_on_error   test gethaltonerror     
+        cmd createargument   setvalue constants halt_on_failure 
+                                        test gethaltonfailure includeantruntime    
+            vector v   execute getprocenvironment    
+            enumeration e   v elements e hasmoreelements s e nextelement s startswith classpath     
+                    cmd createclasspath getproject    createpath   
+                         append path getproject    
+                                         s substring classpath length   
+                                                          
+                  
+              
+            log  implicitly adding     antruntimeclasses     to classpath   
+                project msg_verbose   
+            cmd createclasspath getproject    createpath   
+                 append antruntimeclasses summary prefix withoutanderr  equalsignorecase summaryvalue     
+                prefix    outerr   
+              
+            cmd createargument   
+                 setvalue constants formatter 
+                             org apache tools ant taskdefs optional junit   
+                            prefix    summaryjunitresultformatter    
+          
+ 
+        cmd createargument   setvalue constants showoutput valueof showoutput    
+        cmd createargument   setvalue constants output_to_formatters valueof outputtoformatters    
+ 
+        cmd createargument   setvalue  
+            constants logtestlistenerevents stringbuffer formatterarg stringbuffer string_buffer_size formatterelement   fearray   mergeformatters test i   0  i   fearray length  i      
+            formatterelement fe   fearray i fe shoulduse formatterarg append constants formatter   
+                formatterarg append fe getclassname     
+                file outfile   getoutput fe  test outfile formatterarg append       
+                    formatterarg append outfile   
+                  
+                cmd createargument   setvalue formatterarg tostring     
+                formatterarg stringbuffer    
+              
+          
+ 
+        file vmwatcher   createtemppropertiesfile  junitvmwatcher    
+        cmd createargument   setvalue constants crashfile 
+                                        vmwatcher getabsolutepath     
+        file propsfile   createtemppropertiesfile  junit    
+        cmd createargument   setvalue constants propsfile 
+                                        propsfile getabsolutepath     
+        hashtable p   getproject   getproperties    
+        properties props properties enumeration e   p keys    e hasmoreelements       
+            object key   e nextelement    
+            props put key  p get key fileoutputstream outstream fileoutputstream propsfile   
+            props store outstream   ant junittask generated properties file    
+            outstream close java io ioexception e    
+            propsfile delete buildexception  error creating temporary properties   
+                                        file    e  getlocation     
+          
+ 
+        execute execute execute junitlogstreamhandler project msg_info  
+                project msg_warn   
+            watchdog   
+        execute setcommandline cmd getcommandline     
+        execute setantrun getproject dir execute setworkingdirectory dir environment   env getvariables environment i   0  i   environment length  i      
+                log  setting environment variable      environment i   
+                    project msg_verbose   
+              
+          
+        execute setnewenvironment newenvironment   
+        execute setenvironment environment   
+ 
+        log cmd describecommand    project msg_verbose   
+        testresultholder result testresultholder result exitcode   execute execute ioexception e buildexception  process fork failed    e  getlocation vmcrashstring    unknown   
+            bufferedreader br br bufferedreader filereader vmwatcher    
+                vmcrashstring   br readline exception e    
+                e printstacktrace fileutils close br watchdog watchdog killedprocess      
+                result timedout logtimeout fearray  test  vmcrashstring constants terminated_successfully equals vmcrashstring     
+                result crashed logvmcrash fearray  test  vmcrashstring   
+              
+            vmwatcher delete propsfile delete buildexception  could not delete temporary   
+                                            properties file result file createtemppropertiesfile prefix    
+        file propsfile   
+            file_utils createtempfile prefix    properties   
+                tmpdir tmpdir   getproject   getbasedir propsfile handleoutput output output startswith testlistener_prefix     
+            log output  project msg_verbose runner outputtoformatters    
+                runner handleoutput output showoutput handleoutput output handleoutput output handleinput buffer offset length ioexception runner runner handleinput buffer  offset  length handleinput buffer  offset  length handleflush output runner runner handleflush output showoutput handleflush output handleflush output handleerroroutput output runner runner handleerroroutput output showoutput handleerroroutput output handleerroroutput output handleerrorflush output runner runner handleerrorflush output showoutput handleerrorflush output handleerrorflush output testresultholder executeinvm junittest arg buildexception   
+        junittest test    junittest  arg clone    
+        test setproperties getproject   getproperties dir log  dir attribute ignored running in the same vm   
+                project msg_warn newenvironment env getvariables      
+            log  changes to environment variables are ignored running in   
+                   the same vm    project msg_warn getcommandline   getbootclasspath log  bootclasspath is ignored running in the same vm    
+                project msg_warn   
+          
+ 
+        commandlinejava sysproperties sysproperties   
+                getcommandline   getsystemproperties sysproperties sysproperties setsystem log  using system properties     system getproperties    
+                project msg_verbose splitjunit    
+                classloader    antclassloader  delegate getclass   getclassloader createclassloader classloader classloader setthreadcontextloader    
+              
+            runner   delegate newjunittestrunner test  test gethaltonerror    
+                                         test getfiltertrace    
+                                         test gethaltonfailure classloader summary    
+ 
+                junittaskmirror summaryjunitresultformattermirror f   
+                    delegate newsummaryjunitresultformatter    
+                f setwithoutanderr  withoutanderr  
+                                    equalsignorecase summaryvalue    
+                f setoutput getdefaultoutput     
+                runner addformatter f   
+              
+ 
+            runner setpermissions perm formatterelement   fearray   mergeformatters test i   0  i   fearray length  i      
+                formatterelement fe   fearray i fe shoulduse file outfile   getoutput fe  test outfile fe setoutfile outfile fe setoutput getdefaultoutput     
+                      
+                    runner addformatter fe createformatter classloader    
+                  
+              
+ 
+            runner run    
+            testresultholder result testresultholder    
+            result exitcode   runner getretcode result sysproperties sysproperties restoresystem classloader classloader resetthreadcontextloader executewatchdog createwatchdog buildexception timeout null executewatchdog timeout intvalue outputstream getdefaultoutput logoutputstream project msg_info enumeration getindividualtests count   batchtests size enumeration   enums enumeration  count   1 i   0  i   count  i      
+            batchtest batchtest    batchtest  batchtests elementat i   
+            enums i    batchtest elements    
+          
+        enums enums length - 1    tests elements enumerations fromcompound enums enumeration alltests     
+        enumeration   enums    tests elements    batchtests elements enumerations fromcompound enums formatterelement   mergeformatters junittest test    
+        vector fevector    vector  formatters clone    
+        test addformattersto fevector   
+        formatterelement   fearray formatterelement fevector size     
+        fevector copyinto fearray fearray file getoutput formatterelement fe  junittest test fe getusefile base   test getoutfile base base   junittaskmirror junittestrunnermirror ignored_file_name filename   base   fe getextension    
+            file destfile file test gettodir    filename absfilename   destfile getabsolutepath getproject   resolvefile absfilename addclasspathentry resource resource startswith         
+            resource   resource substring 1 resource    org apache tools ant taskdefs optional junit   
+                  resource  
+          
+ 
+        file f   loaderutils getresourcesource getclass   getclassloader    
+                                               resource f log  found     f getabsolutepath    project msg_debug   
+            antruntimeclasses createpath   setlocation f log  couldn\'t find     resource  project msg_debug logtimeout formatterelement   fearray  junittest test testcase    
+        logvmexit  
+            fearray  test  
+             timeout occurred  please note the time in the report does  
+                not reflect the time until the timeout    
+            testcase logvmcrash formatterelement   fearray  junittest test testcase    
+        logvmexit  
+            fearray  test  
+             forked java vm exited abnormally  please note the time in the report  
+                does not reflect the time until the vm exit    
+            testcase logvmexit formatterelement   fearray  junittest test message testcase log  using system properties     system getproperties    
+                project msg_verbose splitjunit    
+                classloader    antclassloader  delegate getclass   getclassloader createclassloader classloader classloader setthreadcontextloader    
+              
+ 
+            test setcounts 1  0  1   
+            test setproperties getproject   getproperties i   0  i   fearray length  i      
+                formatterelement fe   fearray i   
+                file outfile   getoutput fe  test   
+                junittaskmirror junitresultformattermirror formatter   
+                    fe createformatter classloader outfile formatter outputstream out fileoutputstream outfile   
+                        delegate addvmexit test  formatter  out  message  testcase ioexception e summary    
+                junittaskmirror summaryjunitresultformattermirror f   
+                    delegate newsummaryjunitresultformatter    
+                f setwithoutanderr  withoutanderr  equalsignorecase summaryvalue    
+                delegate addvmexit test  f  getdefaultoutput    message  testcase classloader classloader resetthreadcontextloader createclassloader     
+        path userclasspath   getcommandline   getclasspath userclasspath reloading    classloader deleteclassloader    
+                path classpath    path  userclasspath clone includeantruntime    
+                    log  implicitly adding     antruntimeclasses 
+                            to classpath   project msg_verbose   
+                    classpath append antruntimeclasses   
+                  
+                classloader   getproject   createclassloader classpath getclass   getclassloader getclass   getclassloader      project getclassloader      
+                    classloader setparent getclass   getclassloader     
+                  
+                classloader setparentfirst classloader addjavalibraries    
+                log  using classpath     classloader getclasspath    
+                    project msg_verbose   
+                  
+                classloader addsystempackageroot  junit    
+                  
+                classloader addsystempackageroot  org junit    
+                  
+                classloader addsystempackageroot  org apache tools ant deleteclassloader classloader classloader cleanup    
+            classloader commandlinejava getcommandline commandline commandline commandlinejava commandline forkedtestconfiguration   
+  
+  
+  
+  
+  
+ 
+          
+        forkedtestconfiguration filtertrace haltonerror haltonfailure errorproperty failureproperty filtertrace   filtertrace haltonerror   haltonerror haltonfailure   haltonfailure errorproperty   errorproperty failureproperty   failureproperty  
+          
+ 
+          
+        forkedtestconfiguration junittest test test getfiltertrace    
+                    test gethaltonerror    
+                    test gethaltonfailure    
+                    test geterrorproperty    
+                    test getfailureproperty equals object other other other getclass      forkedtestconfiguration forkedtestconfiguration o    forkedtestconfiguration  other filtertrace    o filtertrace 
+                   haltonerror    o haltonerror 
+                   haltonfailure    o haltonfailure 
+                     errorproperty o errorproperty errorproperty errorproperty equals o errorproperty    
+                     failureproperty o failureproperty failureproperty failureproperty equals o failureproperty hashcode filtertrace ? 1   0  
+                   haltonerror ? 2   0  
+                   haltonfailure ? 4   0 forkmode enumeratedattribute once    once per_test    pertest per_batch    perbatch forkmode forkmode value setvalue value getvalues once  per_test  per_batch collection executeorqueue enumeration testlist runindividual    
+        map testconfigurations hashmap testlist hasmoreelements      
+            junittest test    junittest  testlist nextelement test shouldrun getproject runindividual     test getfork      
+                    execute test forkedtestconfiguration c forkedtestconfiguration test   
+                    list l    list  testconfigurations get c l l arraylist    
+                        testconfigurations put c  l   
+                      
+                    l add test testconfigurations values actontestresult exitvalue waskilled  
+                                   junittest test name    
+        testresultholder t testresultholder    
+        t exitcode   exitvalue  
+        t timedout   waskilled  
+        actontestresult t  test  name actontestresult testresultholder result  junittest test name fatal   result timedout    result crashed erroroccurredhere   
+            result exitcode    junittaskmirror junittestrunnermirror errors    fatal failureoccurredhere   
+            result exitcode    junittaskmirror junittestrunnermirror success    fatal erroroccurredhere    failureoccurredhere erroroccurredhere    test gethaltonerror    
+                    failureoccurredhere    test gethaltonfailure buildexception name     failed  
+                       result timedout ?    timeout         
+                       result crashed ?    crashed          getlocation log name     failed  
+                       result timedout ?    timeout         
+                       result crashed ?    crashed          project msg_err erroroccurredhere    test geterrorproperty getproject   setnewproperty test geterrorproperty failureoccurredhere    test getfailureproperty getproject   setnewproperty test getfailureproperty testresultholder exitcode   junittaskmirror junittestrunnermirror errors timedout crashed junitlogoutputstream logoutputstream junitlogoutputstream task task level task  level task   task processline line level line startswith testlistener_prefix     
+                task log line  project msg_verbose processline line  level junitlogstreamhandler pumpstreamhandler junitlogstreamhandler task task outlevel errlevel junitlogoutputstream task  outlevel logoutputstream task  errlevel    
+          
+      
+ org apache tools ant taskdefs optional junit JUnitTask

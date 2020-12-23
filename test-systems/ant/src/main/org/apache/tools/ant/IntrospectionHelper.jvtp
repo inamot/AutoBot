@@ -1,0 +1,612 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   helper class collects methods task nested element 
+   holds set attributes  create nested elements hold pcdata 
+   elements class final private constructor  
+    
+    
+       empty_map added java 1 3  empty_set empty_list java 1 2   
+        
+    
+       helper instances ve already created  class getname introspectionhelper   
+        
+    
+       map primitive types wrapper classes use createattributesetter  class class   note char boolean here even though special treatment way only need test wrapper class  
+        
+   set up primitive_type_map 
+    
+       map attribute names attribute types 
+        string class   
+        
+    
+       map attribute names attribute setter methods 
+        string attributesetter   
+        
+    
+       map attribute names nested types 
+        string class   
+        
+    
+       map attribute names methods create nested types 
+        string nestedcreator   
+        
+    
+       vector methods matching add configured  class  pattern method invoke add pcdata class introspected instance  
+        
+    
+       sole constructor private ensure introspectionhelpers created via   link #gethelper class  gethelper   
+       introspects given class bean methods  
+       each method examined turn following rules applied  
+        p  
+        ul  
+        li method code task setlocation location   code   
+        code task settasktype string   code code taskcontainer addtask task   code ignored methods handled differently elsewhere  
+        li  code void addtext string   code recognised method adding pcdata bean  
+        li  code void setfoo bar   code recognised method setting value attribute  code foo  code long code bar  code non-void not array type  non-string 
+       parameter types always overload string parameter types only guarantee made terms priority  
+        li  code foo createbar    code recognised method creating nested element called  code bar  code type 
+        code foo  code long code foo  code not primitive array type  
+        li  code void addconfiguredfoo bar   code recognised method storing pre-configured element called 
+        code foo  code type  code bar  code long code bar  code not array  primitive string type  
+        code bar  code  must accessible constructor taking arguments  
+        li  code void addfoo bar   code recognised method storing element called  code foo  code type  code bar  code long code bar  code not array  primitive string type  
+        code bar  code  must accessible constructor taking arguments distinct addconfigured' idiom nested element added parent immediately constructed practice means code addfoo bar   code little nothing argument besides storing later use  
+         ul  
+       note only one method retained create set addconfigured add 
+       any element attribute  
+       
+        param bean bean type introspect  
+                   must not code null  code   
+       
+        see #gethelper class  
+        
+   check add configured  class  pattern 
+   not really user settable properties tasks project components 
+   hide addtask taskcontainers 
+   
+                            ignore method m overloaded 
+                            form method takes non-string argument gains higher 
+                            priority argument not string location overloaded form method already defined override new one mechanism not guarantee any specific order methods selected any code depends order set  methods defined not guaranteed selected any 
+                        particular order  
+                       
+   check create property already present 
+   add takes preference over create cb purposes 
+   ignore 
+   
+                            ignore method addconfigured 
+                            form method higher 
+                            priority 
+                            
+   ignore 
+    
+       certain set methods part ant core interface tasks therefore not considered introspection 
+       
+        param name name set method 
+        param type type set method's parameter 
+        return true given set method hidden  
+        
+    
+       returns helper given class  either cache creating new instance  
+       
+        param c class helper required  
+                must not code null  code   
+       
+        return helper specified class 
+        
+    
+       returns helper given class  either cache creating new instance method make sure helper cleaned up end project only one instance created each class  
+       
+        param p project instance  
+        param c class helper required  
+                must not code null  code   
+       
+        return helper specified class helper cannot found helper another 
+   classloader  create new ih 
+   #30162 not  cache project cannot guarantee cache cleared  
+    
+       sets named attribute given element part given project  
+       
+        param p project containing element used files 
+                need resolved  must not code null  code   
+        param element element set attribute must not code null  code   
+        param attributename name attribute set  must not code null  code   
+        param value value set attribute may interpreted converted necessary type setter method 
+                    doesn't take string  must not code null  code   
+       
+        exception buildexception introspected class doesn't support given attribute setting 
+                                 method fails  
+        
+   ignore attribute unknown uri's 
+   impossible getmethods only return public methods 
+    
+       adds pcdata element  using element's 
+        code void addtext string   code  method one method present buildexception thrown given text contains non-whitespace  
+       
+        param project project element part must not code null  code   
+        param element element add text must not code null  code   
+        param text text add  
+                      must not code null  code   
+       
+        exception buildexception non-whitespace text provided method available handle handling method fails  
+        
+   element doesn't handle text content 
+   only whitespace - ignore 
+   not whitespace - fail 
+   impossible getmethods only return public methods 
+    
+       utility method throw notsupported exception 
+       
+        param project project instance  
+        param parent object doesn't support requested element 
+        param elementname name element trying created  
+        
+    
+       creates named nested element  depending results initial introspection  either method given parent instance simple arg constructor used create instance specified element type  
+       
+        param project project parent object belongs  
+                      must not code null  code resulting 
+                      object instance projectcomponent project reference set parameter value  
+        param parent  parent object used create instance  
+                      must not code null  code   
+        param elementname name element create instance must not code null  code   
+       
+        return instance specified element type 
+        deprecated 1 6 x not namespace aware method  
+       
+        exception buildexception method available create element instance creating method 
+                                 fails  
+        
+   impossible getmethods only return public methods 
+   impossible getmethods only return public methods 
+    
+       returns object creates stores object element parent  
+       
+        param project      project parent object belongs  
+        param parenturi namespace uri parent object  
+        param parent       parent object used create creator object create store instance subelement  
+        param elementname  name element create instance param ue unknown element associated element  
+        return creator object create store element instance  
+        
+    
+       indicates whether introspected class dynamic one  
+       supporting arbitrary nested elements attributes  
+       
+        return  code true code introspected class dynamic  
+                code false code  otherwise ant 1 6 3 
+       
+        see dynamicelement 
+        see dynamicelementns 
+        
+    
+       indicates whether introspected class task container  
+       supporting arbitrary nested tasks types  
+       
+        return  code true code introspected class container  
+                code false code  otherwise ant 1 6 3 
+       
+        see taskcontainer 
+        
+    
+       indicates element supports nested element given name  
+       
+        param elementname name nested element being checked 
+       
+        return true given nested element supported 
+        
+    
+       indicate element supports nested element given name  
+       
+        param parenturi uri parent 
+        param elementname name nested element being checked 
+       
+        return true given nested element supported 
+        
+    
+       stores named nested element using storage method determined initial introspection appropriate storage method available method returns immediately  
+       
+        param project ignored implementation  
+                      may code null  code   
+       
+        param parent  parent instance store child must not code null  code   
+       
+        param child   child instance store parent not code null  code   
+       
+        param elementname  name child element store  
+                           may code null  code case method returns immediately  
+       
+        exception buildexception storage method fails  
+        
+   impossible getmethods only return public methods 
+   impossible getmethods only return public methods 
+    
+       returns type named nested element  
+       
+        param elementname name element find type must not code null  code   
+       
+        return type nested element specified name never code null  code   
+       
+        exception buildexception introspected class not 
+                                 support named nested element  
+        
+    
+       returns type named attribute  
+       
+        param attributename name attribute find type must not code null  code   
+       
+        return type attribute specified name never code null  code   
+       
+        exception buildexception introspected class not 
+                                 support named attribute  
+        
+    
+       returns addtext method introspected 
+       class supports nested text  
+       
+        return method introspected class adds nested text  
+               cannot code null  code   
+        throws buildexception introspected class not 
+               support nested text ant 1 6 3 
+        
+    
+       returns adder creator method named nested element  
+       
+        param  elementname name attribute find setter 
+               method must not code null  code   
+        return method introspected class adds creates nested element code null  code introspected 
+               class dynamic configurator  
+        throws buildexception introspected class not 
+               support named nested element ant 1 6 3 
+        
+    
+       returns setter method named attribute  
+       
+        param  attributename name attribute find setter 
+               method must not code null  code   
+        return method introspected class sets attribute never code null  code   
+        throws buildexception introspected class not 
+               support named attribute ant 1 6 3 
+        
+    
+       returns whether not introspected class supports pcdata  
+       
+        return whether not introspected class supports pcdata  
+        
+    
+       returns enumeration names attributes supported introspected class  
+       
+        return enumeration names attributes supported introspected class  
+        see #getattributemap 
+        
+    
+       returns read-only map attributes supported introspected class  
+       
+        return attribute name attribute  code class  code  
+               unmodifiable map empty never  code null  code ant 1 6 3 
+        
+    
+       returns enumeration names nested elements supported introspected class  
+       
+        return enumeration names nested elements supported introspected class  
+        see #getnestedelementmap 
+        
+    
+       returns read-only map nested elements supported introspected class  
+       
+        return nested-element name nested-element  code class  code  
+               unmodifiable map empty never  code null  code ant 1 6 3 
+        
+    
+       returns read-only list extension points supported introspected class  
+        p task type nested element void methods named  code add   code code addconfigured    code   taking single class interface 
+       argument  supports extensions point method returns list em void add configured  type   em  methods  
+       
+        return list void  single argument add addconfigured   
+                code method code s supported extension points methods sorted argument type method derives another type argument method list method most derived argument always appear first empty never  code null  code ant 1 6 3 
+        
+    
+       creates implementation attributesetter given 
+       attribute type  conversions necessary automatically 
+       made following types  
+        ul  
+        li string  left li character char  first character used  
+        li boolean boolean 
+          link project#toboolean string  project toboolean string used  
+        li class  class forname used  
+        li file  resolved relative appropriate project  
+        li path  resolve relative appropriate project  
+        li enumeratedattribute  uses link enumeratedattribute#setvalue string  setvalue  method  
+        li primitive types  wrapper classes used constructors 
+       taking string  
+         ul none above covers given parameters constructor appropriate class taking string parameter used available  
+       
+        param m method invoke bean setter invoked  
+                must not code null  code   
+        param arg type single argument bean's method  
+                  must not code null  code   
+        param attrname name attribute setter being 
+                       created  
+       
+        return appropriate attributesetter instance code null  code appropriate conversion available  
+        
+   use wrappers primitive classes  e g  int integer treated identically 
+   simplest case - setattribute expects string 
+   char character special treatment - take first character 
+   boolean boolean special treatment nice method project 
+   class doesn't string constructor decent factory method 
+   resolve relative paths through project 
+   enumeratedattributes helper class 
+   worst case  look public string constructor use supports new whatever project  string path reference used  deliberately primitives wrappers char boolean 
+   first try project  
+   ok  try without  
+   well matching constructor  
+    
+       returns description type given element relation given project used logging purposes element asked cope some data way handling  
+       
+        param project project element defined must not code null  code   
+       
+        param element element describe  
+                      must not code null  code   
+       
+        return description element type 
+        
+    
+       extracts name property method name subtracting given prefix converting lower case up calling 
+       code make sure method name actually begin specified prefix checking done method  
+       
+        param methodname name method question  
+                         must not code null  code   
+        param prefix prefix remove  
+                         must not code null  code   
+       
+        return lower-cased method name prefix removed  
+        
+    
+       creator - allows use create store external introspectionhelper class final private constructor  
+        
+    
+           creates new creator instance object given unknownelement create 
+           objects sub-elements  unknownelement calls 
+           create create object object gets 
+           configured unknownelement calls store  
+           setpolytype may used override type used create object setpolytype gets called 
+           before create  
+           
+            param project current project 
+            param parent parent object create object param nestedcreator nested creator object use 
+            
+    
+           used override class used create object  
+           
+            param polytype ant component type name 
+            
+    
+           create object using creator determined introspection  
+           
+            return created object 
+            
+    
+            return real object  used currently only preset def   
+            
+    
+           stores nested element object using storage method 
+           determined introspection  
+           
+            
+    
+       internal interface used create nested elements  not documented detail reasons source code readability method called add create nested element nothing 
+    version use addxxx addconfiguredxxx    
+   add add_configured 
+    
+       internal interface used setting element attributes  not documented detail reasons source code readability method called set attribute 
+    
+       clears static cache build finished  
+        
+    
+       
+        
+    
+       inserts add addconfigured method addtypemethods array array ordered derived classes first both add addconfigured present addconfigured take priority  
+        param method code method  code insert  
+        
+   add configured replaces add method 
+   already present 
+   higher derived 
+    
+       search list methods find first method parameter accepts nested element object  
+        param paramclass code class  code  type search param methods code list  code methods search  
+        return matching  code method  code   null none found  
+       org apache tools ant IntrospectionHelper org apache tools ant introspectionhelper map empty_map 
+          collections unmodifiablemap hashmap 0 primitives type type  character type type  integer type type type type wrappers class  character integer i   0  i   primitives length  i      
+            primitive_type_map put  primitives i   wrappers i introspectionhelper bean bean   bean  
+        method   methods   bean getmethods i   0  i   methods length  i method m   methods i name   m getname returntype   m getreturntype args   m getparametertypes args length    1    java lang type equals returntype  
+                     add  equals name      addconfigured  equals name      
+                insertaddtypemethod m org apache tools ant projectcomponent isassignablefrom  
+                    bean  
+                    args length    1    ishiddensetmethod name  args 0 iscontainer      args length    1     addtask  equals name  
+                   org apache tools ant task equals args 0 addtext  equals name     java lang type equals returntype  
+                   args length    1    java lang equals args 0      
+ 
+                addtext   methods i name startswith  set   
+                          java lang type equals returntype  
+                          args length    1     args 0  isarray propname   getpropertyname name   set attributesetters get propname java lang equals args 0 attributesetter as   createattributesetter m  args 0   propname as attributetypes put propname  args 0    
+                    attributesetters put propname  as name startswith  create       returntype isarray   
+                           returntype isprimitive      args length    0 propname   getpropertyname name   create nestedcreators get propname nestedtypes put propname  returntype   
+                    nestedcreators put propname createnestedcreator m name startswith  addconfigured   
+                   java lang type equals returntype     args length    1 
+                    java lang equals args 0   
+                    args 0  isarray       args 0  isprimitive constructor constructor constructor   args 0  getconstructor nosuchmethodexception ex    
+                        constructor   
+                            args 0  getconstructor project propname   getpropertyname name   addconfigured    
+                    nestedtypes put propname  args 0    
+                    nestedcreators put propname addnestedcreator m  
+                        constructor  addnestedcreator add_configured nosuchmethodexception nse name startswith  add   
+                   java lang type equals returntype     args length    1 
+                    java lang equals args 0   
+                    args 0  isarray       args 0  isprimitive constructor constructor constructor   args 0  getconstructor nosuchmethodexception ex    
+                        constructor   
+                            args 0  getconstructor project propname   getpropertyname name   add nestedtypes get propname nestedtypes put propname  args 0    
+                    nestedcreators put propname addnestedcreator m  
+                        constructor  addnestedcreator add nosuchmethodexception nse ishiddensetmethod name type setlocation  equals name  
+                org apache tools ant location equals type settasktype  equals name  
+                java lang equals type introspectionhelper gethelper c gethelper c introspectionhelper gethelper project p c    
+        introspectionhelper ih    introspectionhelper  helpers get c getname ih ih bean    c    
+            ih introspectionhelper c p helpers put c getname    ih ih setattribute project p  object element attributename value buildexception   
+        attributesetter as 
+               attributesetter  attributesetters get  
+                attributename tolowercase locale us as element dynamicattributens    
+                dynamicattributens dc    dynamicattributens  element uriplusprefix   
+                    projecthelper extracturifromcomponentname attributename uri   
+                    projecthelper extracturifromcomponentname uriplusprefix localname   
+                    projecthelper extractnamefromcomponentname attributename qname       equals uri  
+                                ? localname    uri         localname    
+ 
+                dc setdynamicattribute uri  localname  qname  value element dynamicattribute    
+                dynamicattribute dc    dynamicattribute  element  
+                dc setdynamicattribute attributename tolowercase locale us   value attributename indexof ' '     -1 msg   getelementname p  element  
+                        doesn't support the \     attributename 
+                       \  attribute unsupportedattributeexception msg  attributename as set p  element  value illegalaccessexception ie buildexception ie invocationtargetexception ite    
+            throwable t   ite gettargetexception t buildexception buildexception  t buildexception t addtext project project  object element text buildexception addtext text   text trim text length      0 msg   project getelementname element  
+                        doesn't support nested text data  \   
+                      condensetext text buildexception msg addtext invoke element object    text illegalaccessexception ie buildexception ie invocationtargetexception ite    
+            throwable t   ite gettargetexception t buildexception buildexception  t buildexception t thrownotsupported project project  object parent elementname msg   project getelementname parent  
+                doesn't support the nested \     elementname    \  element unsupportedelementexception msg  elementname nestedcreator getnestedcreator  
+        project project parenturi  object parent elementname  unknownelement child buildexception uri   projecthelper extracturifromcomponentname elementname name   projecthelper extractnamefromcomponentname elementname uri equals projecthelper ant_core_uri     
+            uri parenturi equals projecthelper ant_core_uri     
+            parenturi       
+          
+        nestedcreator nc uri equals parenturi     uri equals        
+            nc    nestedcreator  nestedcreators get  
+                name tolowercase locale us nc nc   createaddtypecreator project  parent  elementname nc parent dynamicelementns    
+            dynamicelementns dc    dynamicelementns  parent qname    child name   child getqname object nestedelement   
+                dc createdynamicelement  
+                     child child getnamespace     
+                    name  qname nestedelement nc nestedcreator object create  
+                        project project  object parent  object ignore nestedelement nc parent dynamicelement    
+            dynamicelement dc    dynamicelement  parent object nestedelement   
+                dc createdynamicelement name tolowercase locale us nestedelement nc nestedcreator object create  
+                        project project  object parent  object ignore nestedelement nc thrownotsupported project  parent  elementname nc object createelement project project  object parent elementname buildexception   
+        nestedcreator nc   getnestedcreator project      parent  elementname object nestedelement   nc create project  parent project project setprojectreference nestedelement nestedelement illegalaccessexception ie buildexception ie instantiationexception ine buildexception ine invocationtargetexception ite    
+            throwable t   ite gettargetexception t buildexception buildexception  t buildexception t creator getelementcreator  
+        project project parenturi  object parent elementname  
+        unknownelement ue    
+        nestedcreator nc   getnestedcreator  
+            project  parenturi  parent  elementname  ue creator project  parent  nc isdynamic dynamicelement isassignablefrom bean  
+               dynamicelementns isassignablefrom bean iscontainer taskcontainer isassignablefrom bean supportsnestedelement elementname nestedcreators containskey elementname tolowercase locale us   
+               isdynamic   
+               addtypemethods size      0 supportsnestedelement parenturi elementname parenturi equals projecthelper ant_core_uri     
+            parenturi uri   projecthelper extracturifromcomponentname elementname uri equals projecthelper ant_core_uri     
+            uri name   projecthelper extractnamefromcomponentname elementname nestedcreators containskey name tolowercase locale us   
+                uri equals parenturi        equals uri    
+               isdynamic      addtypemethods size      0 storeelement project project  object parent  object child elementname buildexception elementname nestedcreator ns    nestedcreator  nestedcreators get  
+            elementname tolowercase locale us ns ns store parent  child illegalaccessexception ie buildexception ie instantiationexception ine buildexception ine invocationtargetexception ite    
+            throwable t   ite gettargetexception t buildexception buildexception  t buildexception t getelementtype elementname buildexception nt nestedtypes get elementname nt unsupportedelementexception bean getname       doesn't support the nested \   
+                  elementname    \  element    elementname nt getattributetype attributename buildexception at attributetypes get attributename at unsupportedattributeexception bean getname       doesn't support the \   
+                  attributename    \  attribute    attributename at method getaddtextmethod buildexception supportscharacters buildexception bean getname   
+                    doesn't support nested text data addtext method getelementmethod elementname buildexception   
+        object creator   nestedcreators get elementname creator unsupportedelementexception bean getname       doesn't support the nested \   
+                  elementname    \  element    elementname nestedcreator  creator  method method getattributemethod attributename buildexception   
+        object setter   attributesetters get attributename setter unsupportedattributeexception bean getname       doesn't support the \   
+                  attributename    \  attribute    attributename attributesetter  setter  method supportscharacters addtext enumeration getattributes attributesetters keys map getattributemap attributetypes size     1  
+            ? empty_map   collections unmodifiablemap attributetypes enumeration getnestedelements nestedtypes keys map getnestedelementmap nestedtypes size     1  
+            ? empty_map   collections unmodifiablemap nestedtypes list getextensionpoints addtypemethods size     1  ? collections empty_list 
+              collections unmodifiablelist addtypemethods attributesetter createattributesetter method m arg attrname reflectedarg   primitive_type_map containskey arg primitive_type_map get arg    arg java lang equals reflectedarg attributesetter m set project p  object parent value invocationtargetexception  illegalaccessexception   
+                    m invoke parent   object value java lang character equals reflectedarg attributesetter m set project p  object parent value invocationtargetexception  illegalaccessexception value length      0 buildexception  the value \ \  is not a   
+                               legal value attribute \     attrname    \     
+                      
+                    m invoke parent   object character character value charat 0 java lang equals reflectedarg attributesetter m set project p  object parent value invocationtargetexception  illegalaccessexception   
+                    m invoke parent   object project toboolean value java lang class equals reflectedarg attributesetter m set project p  object parent value invocationtargetexception  illegalaccessexception  buildexception m invoke parent object forname value classnotfoundexception ce buildexception ce java io file equals reflectedarg attributesetter m set project p  object parent value invocationtargetexception  illegalaccessexception   
+                    m invoke parent object    p resolvefile value enumeratedattribute isassignablefrom reflectedarg attributesetter m set project p  object parent value invocationtargetexception  illegalaccessexception  buildexception enumeratedattribute ea   
+                             enumeratedattribute  reflectedarg newinstance    
+                        ea setvalue value   
+                        m invoke parent object    ea instantiationexception ie buildexception ie reflectedarg getsuperclass reflectedarg getsuperclass   getname   equals  java lang attributesetter m set project p  object parent value invocationtargetexception  illegalaccessexception  buildexception m invoke parent object     
+                            reflectedarg getmethod  valueof invoke object    value invocationtargetexception x x gettargetexception illegalargumentexception buildexception  
+                                 '    value    ' is not a permitted value reflectedarg getname buildexception x gettargetexception exception x buildexception x includeproject  
+            constructor c c   reflectedarg getconstructor project includeproject nosuchmethodexception nme c   reflectedarg getconstructor includeproject nosuchmethodexception nme2 finalincludeproject   includeproject constructor finalconstructor   c attributesetter m set project p  object parent value invocationtargetexception  illegalaccessexception  buildexception object   args    finalincludeproject object    p  value object    value   
+ 
+                        object attribute   finalconstructor newinstance args p p setprojectreference attribute   
+                          
+                        m invoke parent object    attribute instantiationexception ie buildexception ie getelementname project project  object element project getelementname element getpropertyname methodname prefix methodname substring prefix length    tolowercase locale us creator creator  
+            project project  object parent  nestedcreator nestedcreator project   project parent   parent nestedcreator   nestedcreator setpolytype polytype polytype   polytype object create polytype nestedcreator ispolymorphic buildexception  
+                         not allowed to use the polymorphic form element    
+                  
+                componenthelper helper   
+                    componenthelper getcomponenthelper project   
+                nestedobject   helper createcomponent polytype nestedobject buildexception  
+                         unable to create object of type     polytype nestedobject   nestedcreator create  
+                    project  parent  nestedobject project project setprojectreference nestedobject nestedobject illegalaccessexception ex buildexception ex instantiationexception ex buildexception ex illegalargumentexception ex polytype buildexception  
+                         invalid type used     polytype ex invocationtargetexception ex    
+                throwable t   ex gettargetexception t buildexception buildexception  t buildexception t object getrealobject nestedcreator getrealobject store nestedcreator store parent  nestedobject illegalaccessexception ex buildexception ex instantiationexception ex buildexception ex illegalargumentexception ex polytype buildexception  
+                         invalid type used     polytype ex invocationtargetexception ex    
+                throwable t   ex gettargetexception t buildexception buildexception  t buildexception t nestedcreator   
+    
+ 
+        nestedcreator method m method   m  
+          
+        method getmethod method ispolymorphic object getrealobject object create project project  object parent  object child invocationtargetexception  
+                               illegalaccessexception  
+                               instantiationexception store object parent  object child invocationtargetexception  
+                    illegalaccessexception  
+                    instantiationexception createnestedcreator nestedcreator   
+        createnestedcreator method m m   
+          
+ 
+        object create project project  object parent  object ignore invocationtargetexception  illegalaccessexception getmethod   invoke parent object addnestedcreator nestedcreator add   1 add_configured   2  
+ 
+  
+    
+ 
+        addnestedcreator method m  constructor c behavior m constructor   c behavior   behavior ispolymorphic object create project project  object parent  object child invocationtargetexception  
+                illegalaccessexception  instantiationexception child child   constructor newinstance  
+                     constructor getparametertypes   length    0 object object    project child presetdef presetdefinition    
+                child     presetdef presetdefinition  child  
+                     createobject project behavior    add    
+                istore parent  child child store object parent  object child invocationtargetexception  
+                illegalaccessexception  instantiationexception behavior    add_configured    
+                istore parent  child istore object parent  object child invocationtargetexception  
+                illegalaccessexception  instantiationexception   
+            getmethod   invoke parent object    child attributesetter   
+    
+        attributesetter method m method   m set project p  object parent value invocationtargetexception  
+                             illegalaccessexception  
+                             buildexception clearcache     
+        helpers clear nestedcreator createaddtypecreator  
+        project project  object parent elementname buildexception addtypemethods size      0 componenthelper helper   componenthelper getcomponenthelper project   
+ 
+        object addedobject method addmethod clazz   helper getcomponentclass elementname clazz null  
+          
+        addmethod   findmatchingmethod clazz  addtypemethods addmethod null  
+          
+        addedobject   helper createcomponent elementname addedobject null  
+          
+        object robject   addedobject addedobject presetdef presetdefinition    
+            robject     presetdef presetdefinition  addedobject  createobject  
+                project object nestedobject   addedobject object realobject   robject nestedcreator addmethod    
+            object create project project  object parent  object ignore invocationtargetexception  illegalaccessexception getmethod   getname   endswith  configured      
+                    getmethod   invoke parent object    realobject nestedobject  
+              
+ 
+            object getrealobject realobject store object parent  object child invocationtargetexception  illegalaccessexception  
+                    instantiationexception getmethod   getname   endswith  configured      
+                    getmethod   invoke parent object    realobject insertaddtypemethod method method argclass   method getparametertypes   0 c   0  c   addtypemethods size      c    
+            method current    method  addtypemethods get c current getparametertypes   0  equals argclass method getname   equals  addconfigured      
+                      
+                    addtypemethods set c  method current getparametertypes   0  isassignablefrom  
+                            argclass     
+                addtypemethods add c  method addtypemethods add method method findmatchingmethod paramclass  list methods matchedclass method matchedmethod i   0  i   methods size      i    
+            method method    method  methods get i methodclass   method getparametertypes   0 methodclass isassignablefrom paramclass matchedclass matchedclass   methodclass  
+                    matchedmethod   method methodclass isassignablefrom matchedclass buildexception  ambiguous  types   
+                              matchedclass getname       and   
+                              methodclass getname       match   
+                              paramclass getname matchedmethod condensetext text text length      max_report_nested_text text ends    max_report_nested_text - ellipsis length      2 stringbuffer text  replace ends  text length   - ends  
+            ellipsis  tostring    
+      
+ org apache tools ant IntrospectionHelper

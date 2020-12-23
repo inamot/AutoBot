@@ -1,0 +1,148 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   transform junit xml report default transformation generates html report either framed non-framed 
+   style non-framed style convenient concise report via mail framed report much convenient want browse different 
+   packages testcases javadoc report  
+   
+    
+    
+       name frames format  
+        
+    
+       name frames format  
+        
+    
+       defines acceptable formats  
+        
+    
+           list authorized values  
+            return authorized values  
+            
+   checkstyle visibilitymodifier bc 
+    task xml document process style directory  xsls read here necessary destination directory root html generated params sent xsl transformation ant 1 7 
+        
+    
+       instance utility class use file operations ant 1 7 
+        
+    
+       used ensure uniqueness property format use report  must tt frames  tt tt noframes  tt     
+    xml parser factory    
+    xml parser factory accessible subclasses    
+   checkstyle visibilitymodifier constructor creating transformer junitreport task  
+        param task  task delegating class document builder factory 
+       
+        return documentbuilderfactory instance use 
+        
+    
+       sets format  
+        param format  must tt frames  tt tt noframes  tt  
+        
+    
+       sets input document  
+        param doc input dom tree 
+        
+    
+       set xml file processed helper want set file directly  much testing purposes  
+        param xmlfile xml file processed 
+        throws buildexception document cannot parsed  
+        
+    
+       set style directory optional override default xsl used  
+        param styledir directory containing xsl files user override style  
+        
+    set destination directory  
+        param todir destination directory 
+        
+    set extension output files 
+        param ext extension  
+        
+    
+       create instance xsl parameter configuration ant  
+       
+        return instance param class configured ant 1 7 
+        
+    
+       transformation 
+        throws buildexception exception something goes wrong transformation  
+        
+   acrobatic cast  
+    
+       access stylesheet used resource  
+        return stylesheet resource style dir not specified retrieve stylesheet classloader here style dir here read stylesheet filesystem 
+    check invalid options 
+        throws buildexception something goes wrong  
+        
+   set destination directory relative project needed systemid appropriate stylesheet based name styledir styledir defined load java resource xsl child package  otherwise given directory  
+        return system id stylesheet  
+        throws ioexception thrown requested stylesheet not exist  
+       org apache tools ant taskdefs optional junit AggregateTransformer org apache tools ant taskdefs optional junit aggregatetransformer frames    frames noframes    noframes format enumeratedattribute getvalues frames  noframes task task document document file styledir file todir format   frames documentbuilderfactory dbfactory dbfactory   privatedbfactory aggregatetransformer task task task   task  
+        params vector documentbuilderfactory getdocumentbuilderfactory privatedbfactory setformat format format format   format getvalue setxmldocument document doc document   doc setxmlfile file xmlfile buildexception documentbuilder builder   privatedbfactory newdocumentbuilder    
+            inputstream in fileinputstream xmlfile document doc   builder parse in   
+                setxmldocument doc in close exception e buildexception  error parsing document      xmlfile  e setstyledir file styledir styledir   styledir settodir file todir todir   todir setextension ext    
+        task log  extension is not used anymore   project msg_warn xsltprocess param createparam     
+        xsltprocess param p xsltprocess param    
+        params add p p transform buildexception   
+        checkoptions    
+        project project   task getproject    
+ 
+        tempfile tempfiletask tempfile    
+        tempfiletask bindtoowner task   
+ 
+        xsltprocess xslttask xsltprocess    
+        xslttask bindtoowner task   
+ 
+        xslttask setxslresource getstylesheet     
+ 
+          
+        xslttask setin   xmlresultaggregator  task  getdestinationfile     
+        file outputfile format equals frames tempfileproperty   getclass   getname valueof counter     
+            file tmp   file_utils resolvefile project getbasedir    
+                    project getproperty  java io tmpdir     
+            tempfiletask setdestdir tmp   
+            tempfiletask setproperty tempfileproperty   
+            tempfiletask execute    
+            outputfile file project getproperty tempfileproperty outputfile file todir   junit-noframes html    
+          
+        xslttask setout outputfile iterator i   params iterator    i hasnext       
+            xsltprocess param param    xsltprocess param  i next    
+            xsltprocess param newparam   xslttask createparam    
+            newparam setproject task getproject     
+            newparam setname param getname     
+            newparam setexpression param getexpression     
+          
+        xsltprocess param paramx   xslttask createparam    
+        paramx setproject task getproject     
+        paramx setname  output dir    
+        paramx setexpression todir getabsolutepath t0   system currenttimemillis xslttask execute exception e buildexception  errors applying transformations    
+                      e getmessage    e dt   system currenttimemillis   - t0  
+        task log  transform time      dt    ms format equals frames     
+            delete delete delete    
+            delete bindtoowner task   
+            delete setfile outputfile   
+            delete execute resource getstylesheet xslname    junit-frames xsl noframes equals format     
+            xslname    junit-noframes xsl styledir urlresource stylesheet urlresource    
+            url stylesheeturl   getclass   getclassloader   getresource  
+                     org apache tools ant taskdefs optional junit xsl     xslname   
+            stylesheet seturl stylesheeturl stylesheet  
+          
+          
+          
+        fileresource stylesheet fileresource    
+        file stylesheetfile file styledir  xslname   
+        stylesheet setfile stylesheetfile stylesheet checkoptions buildexception todir todir   task getproject   resolvefile todir isabsolute      
+            todir   task getproject   resolvefile todir getpath getstylesheetsystemid ioexception xslname    junit-frames xsl noframes equals format     
+            xslname    junit-noframes xsl styledir url url   getclass   getresource  xsl     xslname url filenotfoundexception  could not find jar resource     xslname url toexternalform    
+          
+        file file file styledir  xslname file exists filenotfoundexception  could not find file '    file jaxputils getsystemid file   
+      
+ 
+ org apache tools ant taskdefs optional junit AggregateTransformer

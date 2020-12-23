@@ -1,0 +1,107 @@
+ 
+   $id$ 
+   copyright  c  2003-2006 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications button used change zoom magnification current 
+   diagram user presses button popup displayed contains vertical slider representing range zoom magnifications  
+   dragging slider changes zoom magnification current diagram  
+   
+    author jeremy jones 
+    
+    
+       used loading zoom icon zoom reset action  
+        
+    
+       font used slider tick labels current magnification 
+       value label minimum zoom magnification slider value maximum zoom magnification slider value preferred height slider component slider component text field shows current zoom magnification value  
+        
+    
+       constructs new zoomsliderbutton  
+        
+    
+       creates slider popup component  
+        
+    
+       update slider value every time popup shown  
+        
+    
+       called slider value changes source getvalueisadjusting      
+    
+    
+       called text field value changes  
+        
+    
+       sets current value label's text current slider value  
+       org argouml ui ZoomSliderButton org argouml ui zoomsliderbutton popupbutton zoomsliderbutton icon icon   resourceloaderwrapper lookupicon resource_name   
+ 
+        seticon icon   
+        settooltiptext translator localize  button zoom createpopupcomponent     
+        slider jslider  
+                    jslider vertical  
+                    minimum_zoom  
+                    maximum_zoom  
+                    minimum_zoom   
+        slider setinverted slider setmajortickspacing maximum_zoom   10   
+        slider setminortickspacing maximum_zoom   20   
+        slider setpaintticks slider setpainttrack sliderbasewidth   slider getpreferredsize   width  
+        slider setpaintlabels enumeration components   slider getlabeltable   elements    
+             components hasmoreelements       
+              component  components nextelement    setfont label_font   
+          
+ 
+        slider settooltiptext translator localize  
+                 button zoom slider-tooltip     
+ 
+        slider addchangelistener changelistener statechanged changeevent e    
+                handleslidervaluechange labelwidth   
+            slider getfontmetrics label_font  stringwidth valueof maximum_zoom     6  
+ 
+        slider setpreferredsize dimension  
+            sliderbasewidth   labelwidth  slider_height    
+ 
+        currentvalue jtextfield 5   
+        currentvalue sethorizontalalignment jlabel center   
+        currentvalue setfont label_font   
+        currentvalue settooltiptext translator localize  
+             button zoom current-zoom-magnification     
+        updatecurrentvaluelabel    
+        currentvalue addactionlistener actionlistener actionperformed actionevent e    
+                handletextentry    
+              
+            
+        currentvalue addfocuslistener focusadapter focuslost focusevent e    
+                handletextentry    
+              
+            
+ 
+        jpanel currentvaluepanel jpanel flowlayout  
+                    flowlayout center  0  0    
+        currentvaluepanel add currentvalue   
+ 
+        jpanel zoompanel jpanel borderlayout 0  0    
+        zoompanel add slider  borderlayout center   
+        zoompanel add currentvaluepanel  borderlayout north   
+ 
+        setpopupcomponent zoompanel showpopup slider createpopupcomponent    
+          
+ 
+        editor ed   globals cureditor ed slider setvalue ed getscale     100d showpopup    
+ 
+        slider requestfocus handleslidervaluechange     
+        updatecurrentvaluelabel zoompercentage   slider getvalue     100d  
+ 
+        editor ed   globals cureditor ed zoompercentage    0 0 zoompercentage    ed getscale      
+            ed setscale zoompercentage   
+            ed damageall handletextentry value   currentvalue gettext value endswith  %      
+            value   value substring 0  value length   - 1 newzoom   integer parseint value newzoom   minimum_zoom    newzoom   maximum_zoom numberformatexception    
+              
+            slider setvalue newzoom numberformatexception ex    
+            updatecurrentvaluelabel updatecurrentvaluelabel     
+        currentvalue settext valueof slider getvalue      '%'   
+      
+ org argouml ui ZoomSliderButton

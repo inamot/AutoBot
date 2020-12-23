@@ -1,0 +1,188 @@
+ 
+   $id$ 
+   copyright  c  2003-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications properties panel objectflowstate  
+   
+    author mkl 
+    
+    
+       construct property panel objectflowstate elements  
+        
+   field type  classifier  
+   field states 
+   field parameters 
+   
+        see org argouml uml ui behavior state_machines abstractproppanelstate#addextrabuttons not want internal transitions button here     
+   
+        see org argouml uml ui proppanel#settarget java lang object  
+        
+   
+        see java beans propertychangelistener#propertychange java beans propertychangeevent  
+        
+    
+        return combo box type  classifier classifierinstate  
+        
+    
+       utility function remove top states given collection states  
+       
+        param ret collection states 
+        
+    
+           constructor umlofsstatelistmodel  
+            
+   todo needs work need listen addition removal states classifierinstate  
+                
+   
+            see org argouml uml ui umlmodelelementlistmodel2#buildmodellist   
+            
+   
+            see org argouml uml ui umlmodelelementlistmodel2#isvalidelement java lang object uid constructor found classifier not classifierinstate least one state selected  
+                       well s correct uid  
+            
+    
+           constructor  
+            
+   
+            see org tigris gef undo undoableaction#actionperformed java awt event actionevent uid model list parameters objectflowstate  p  
+       
+        author tom morris 6 may 2007 
+        
+    
+           constructor umlobjectflowstateparameterlistmodel  
+            
+   
+            see org argouml uml ui umlmodelelementlistmodel2#buildmodellist   
+            
+   
+            see org argouml uml ui umlmodelelementlistmodel2#isvalidelement object constructor  
+            
+   todo may want restrict list parameters conform following wfr  
+                parameter type   ofstype parameter kind ofstype allsupertypes- includes type parameter kind   #out parameter kind   #return type allsupertypes- includes ofstype parameter kind   #inout ofstype allsupertypes- includes type type allsupertypes- includes ofstype     
+    
+           constructor  
+            
+   
+            see org tigris gef undo undoableaction#actionperformed java awt event actionevent  
+           org argouml uml ui behavior activity_graphs PropPanelObjectFlowState org argouml uml ui behavior activity_graphs proppanelobjectflowstate abstractproppanelstate propertychangelistener umlobjectflowstateclassifiercomboboxmodel classifiercomboboxmodel umlobjectflowstateclassifiercomboboxmodel proppanelobjectflowstate label object-flow-state   lookupicon  objectflowstate     
+ 
+        addfield translator localize  label name    getnametextfield     
+        addfield translator localize  label container    getcontainerscroll     
+ 
+        addfield translator localize  label synch-state umlactionsynchcheckbox     
+         
+          
+        addfield translator localize  label type umlcomboboxnavigator  
+                translator localize  label classifierinstate navigate tooltip    
+                getclassifiercombobox      
+ 
+          
+        umlmutablelinkedlist list umlmutablelinkedlist umlofsstatelistmodel actionaddofsstate actionremoveofsstate statesscroll jscrollpane list   
+        addfield translator localize  label instate    
+                statesscroll   
+ 
+        addseparator    
+ 
+        addfield translator localize  label incoming    
+                getincomingscroll     
+        addfield translator localize  label outgoing    
+                getoutgoingscroll     
+         
+          
+        addfield translator localize  label parameters jscrollpane umlmutablelinkedlist umlobjectflowstateparameterlistmodel actionaddofsparameter actionnewofsparameter actionremoveofsparameter override addextrabuttons     
+          
+ 
+        actionnewcis actionnewclassifierinstate    
+        actionnewcis putvalue action short_description  
+                translator localize  button classifierinstate     
+        icon icon   resourceloaderwrapper lookupicon  classifierinstate    
+        actionnewcis putvalue action small_icon  icon   
+        addaction actionnewcis   
+      
+ 
+      
+     override settarget object t    
+        object oldtarget   gettarget settarget t   
+        actionnewcis setenabled actionnewcis isenabled model getfacade   isaobjectflowstate oldtarget     
+            model getpump   removemodeleventlistener oldtarget   type model getfacade   isaobjectflowstate t     
+            model getpump   addmodeleventlistener t   type propertychange propertychangeevent evt    
+        actionnewcis setenabled actionnewcis isenabled jcombobox getclassifiercombobox classifiercombobox classifiercombobox umlsearchablecombobox  
+                    classifiercomboboxmodel actionsetobjectflowstateclassifier classifiercombobox removetopstatefrom collection ret    
+        collection tops arraylist object state   ret model getfacade   isacompositestate state  
+                       model getfacade   istop state     
+                tops add state   
+              
+          
+        ret removeall tops object gettype object target    
+        object type   model getfacade   gettype target model getfacade   isaclassifierinstate type     
+            type   model getfacade   gettype type type umlofsstatelistmodel umlmodelelementlistmodel2 umlofsstatelistmodel type buildmodellist gettarget object classifier   model getfacade   gettype gettarget model getfacade   isaclassifierinstate classifier     
+                    collection c   model getfacade   getinstates classifier   
+                    setallelements c isvalidelement object elem    
+            object t   gettarget model getfacade   isastate elem  
+                       model getfacade   isaobjectflowstate t     
+                object type   model getfacade   gettype t model getfacade   isaclassifierinstate type     
+                    collection c   model getfacade   getinstates type c contains elem actionaddofsstate abstractactionaddmodelelement2 actionaddofsstate setmultiselect doit collection selected    
+            object t   gettarget model getfacade   isaobjectflowstate t     
+                object type   model getfacade   gettype t model getfacade   isaclassifierinstate type     
+                    model getactivitygraphshelper   setinstates type  selected model getfacade   isaclassifier type  
+                            selected selected size     0     
+                      
+                    object cis   
+                        model getactivitygraphsfactory   
+                             buildclassifierinstate type  selected   
+                    model getcorehelper   settype t  cis list getchoices     
+            list ret arraylist    
+            object t   gettarget model getfacade   isaobjectflowstate t     
+                object classifier   gettype t model getfacade   isaclassifier classifier     
+                    ret addall model getmodelmanagementhelper   
+                             getallmodelelementsofkindwithmodel classifier  
+                                    choiceclass    
+                  
+                removetopstatefrom ret ret getdialogtitle translator localize  dialog title add-state list getselected     
+            object t   gettarget model getfacade   isaobjectflowstate t     
+                object type   model getfacade   gettype t model getfacade   isaclassifierinstate type arraylist model getfacade   getinstates type arraylist actionremoveofsstate abstractactionremoveelement actionremoveofsstate translator localize  menu popup remove     
+          
+ 
+          
+         override actionperformed actionevent e actionperformed e   
+            object state   getobjecttoremove state object t   gettarget model getfacade   isaobjectflowstate t     
+                    object type   model getfacade   gettype t model getfacade   isaclassifierinstate type     
+                        collection states arraylist  
+                                model getfacade   getinstates type    
+                        states remove state   
+                        model getactivitygraphshelper   
+                                 setinstates type  states umlobjectflowstateparameterlistmodel umlmodelelementlistmodel2 umlobjectflowstateparameterlistmodel parameter buildmodellist gettarget setallelements model getfacade   getparameters gettarget isvalidelement object element model getfacade   getparameters gettarget    contains  
+                    element actionaddofsparameter abstractactionaddmodelelement2 actionaddofsparameter setmultiselect doit collection selected    
+            object t   gettarget model getfacade   isaobjectflowstate t     
+                model getactivitygraphshelper   setparameters t  selected list getchoices     
+            list ret arraylist    
+            object t   gettarget model getfacade   isaobjectflowstate t     
+                object classifier   gettype t model getfacade   isaclassifier classifier     
+                    ret addall model getmodelmanagementhelper   
+                             getallmodelelementsofkindwithmodel classifier  
+                                    choiceclass ret getdialogtitle translator localize  dialog title add-state list getselected     
+            object t   gettarget model getfacade   isaobjectflowstate t arraylist model getfacade   getparameters t arraylist actionnewofsparameter abstractactionnewmodelelement   
+        actionnewofsparameter override actionperformed actionevent e    
+            object target   gettarget model getfacade   isaobjectflowstate target     
+                object type   gettype target   
+                object parameter   model getcorefactory   createparameter    
+                model getcorehelper   settype parameter  type   
+                model getactivitygraphshelper   addparameter target  parameter actionremoveofsparameter abstractactionremoveelement actionremoveofsparameter translator localize  menu popup remove     
+          
+ 
+          
+         override actionperformed actionevent e actionperformed e   
+            object param   getobjecttoremove param object t   gettarget model getfacade   isaobjectflowstate t     
+                    model getactivitygraphshelper   removeparameter t  param   
+                  
+              
+          
+      
+ 
+     
+ org argouml uml ui behavior activity_graphs PropPanelObjectFlowState

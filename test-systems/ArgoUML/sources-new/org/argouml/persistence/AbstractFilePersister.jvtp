@@ -1,0 +1,165 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications persist zargo  zipped file  storage  
+   
+    author bob tarling 
+    
+    
+       create temporary copy existing file  
+       
+        param file file copy  
+        return temp file null none copied  
+        throws filenotfoundexception file not found 
+        throws ioexception error reading writing 
+        
+    
+       copies one file src another  raising file exceptions some problems  
+       
+        param dest destination file  
+        param src source file  
+        return destination file successful copying  
+        throws ioexception some problems files  
+        throws filenotfoundexception any files cannot found  
+        
+                                                                 
+   filefilter api 
+   
+        see javax swing filechooser filefilter#accept java io file check files without extension extension valid type file chars  not dot  e g   zargo    
+       
+        return extension valid type file description  not extension between       
+       
+        return description valid type file 
+        
+    
+       given full filename returns true filename contains expected extension persister  
+       
+        param filename filename test  
+        return true filename valid persister 
+        
+   
+        see javax swing filechooser filefilter#getdescription   
+        
+    
+       save project file  p first archives existing file calls 
+       dosave actual saving  p dosave      throw exception caught here any rollback handled before rethrowing exception  
+       
+        param project project being saved  
+        param file file save taking place  
+        throws saveexception anything goes wrong 
+        throws interruptedexception thread interrupted 
+       
+        see org argouml persistence projectfilepersister#save  
+       org argouml kernel project  java io file  
+        
+    
+       handle archiving previous file any common 
+       requirements before saving model file  
+       
+        param project project being saved  
+        param file file save taking place  
+        throws saveexception anything goes wrong 
+        
+    
+       handle archiving completion save renaming temporary save file real filename  
+       
+        param project project being saved  
+        param file file save taking place  
+        throws saveexception anything goes wrong 
+        
+    
+       implement concrete class save project file  p need worry archiving restoring 
+       archive failure handled rest framework  p  
+       
+        param project project save 
+        param file file write  
+        throws saveexception anything goes wrong 
+        throws interruptedexception thread interrupted 
+       
+        see org argouml persistence abstractfilepersister#save  
+       org argouml kernel project  java io file  
+        
+    
+       some persisters only provide load functionality discontinued formats save method returns true default  those peristers not provide 
+       save must override return true persister save 
+        
+    
+       some persisters only provide save functionality deprecated formats persisters same extension manage loading method returns true default  those peristers not provide 
+       load must override return true persister load 
+        
+   
+        see org argouml persistence projectfilepersister#doload java io file  
+        
+    
+       add any object interested listening persistence progress  
+       
+        param listener interested listener  
+        
+    
+       remove any object longer interested listening persistence 
+       progress  
+       
+        param listener listener remove  
+        
+    
+       returns true filechooser visualize icon persister  
+        
+        return true persister associated icon  
+        
+   todo  document percentage completeness phases complete not include part-completed phases sections complete load save number equals phases progress measure assumed each phase equal time one phase each upgrade previous 
+           version one pahse final load  
+            
+    
+           called progressevent fired  
+             
+            see org argouml taskmgmt progresslistener#progress org argouml taskmgmt progressevent  
+            throws interruptedexception thread interrupted 
+            
+    
+           inform listeners any progress notifications  
+            param percent current percentage progress  
+            throws interruptedexception thread interrupted 
+            
+   guaranteed return non-null array 
+   process listeners last first  notifying 
+   those interested event 
+   lazily create event org argouml persistence AbstractFilePersister org argouml persistence abstractfilepersister filefilter projectfilepersister file createtempfile file file filenotfoundexception  ioexception   
+        file tempfile file file getabsolutepath tempfile exists      
+            tempfile delete file exists      
+            copyfile file  tempfile tempfile file copyfile file src  file dest filenotfoundexception  ioexception   
+ 
+        fileinputstream fis fileinputstream src   
+        fileoutputstream fos fileoutputstream dest buf 1024 i   0 i   fis read buf      -1    
+            fos write buf  0  i   
+          
+        fis close    
+        fos close    
+ 
+        dest setlastmodified src lastmodified dest accept file f f f isdirectory s   getextension f s s equalsignorecase getextension getextension getdesc getextension file f f null getextension f getname getextension filename i   filename lastindexof i   0    i   filename length   - 1 filename substring i   1  tolowercase isfileextensionapplicable filename filename tolowercase   endswith       getextension getdescription getdesc              getextension save project project  file file saveexception   
+    interruptedexception   
+        presave project  file   
+        dosave project  file   
+        postsave project  file presave project project  file file saveexception project file saveexception  no project nor file given postsave project project  file file saveexception project file saveexception  no project nor file given dosave project project  file file saveexception  interruptedexception issaveenabled isloadenabled project doload file file openexception  interruptedexception addprogresslistener progresslistener listener    
+        listenerlist add progresslistener listener removeprogresslistener progresslistener listener    
+        listenerlist remove progresslistener listener hasanicon progressmgr progresslistener setpercentphasescomplete apercentphasescomplete percentphasescomplete   apercentphasescomplete setphasescompleted aphasescompleted phasescompleted   aphasescompleted setnumberofphases anumberofphases numberofphases   anumberofphases getnumberofphases numberofphases nextphase interruptedexception   
+            threadutils checkifinterrupted    
+              phasescompleted  
+            percentphasescomplete   
+                 phasescompleted   100    numberofphases  
+            fireprogressevent percentphasescomplete progress progressevent event interruptedexception   
+            threadutils checkifinterrupted percentphasesleft   100 - percentphasescomplete position   event getposition length   event getlength proportion    position   percentphasesleft    length  
+            fireprogressevent percentphasescomplete   proportion fireprogressevent percent interruptedexception   
+            progressevent event object   listeners   listenerlist getlistenerlist i   listeners length - 2  i    0  i -  2 listeners i     progresslistener event event progressevent percent  100   
+                      
+                      progresslistener  listeners i   1   progress event   
+                  
+              
+                  
+      
+ org argouml persistence AbstractFilePersister

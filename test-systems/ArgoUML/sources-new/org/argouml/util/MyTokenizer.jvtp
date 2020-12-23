@@ -1,0 +1,321 @@
+ 
+   $id$ 
+   copyright  c  1996-2006 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications  
+    
+   internal class managing delimiters mytokenizer s similar customseparator faster short constant strings  
+    
+    
+       constructs tokensep match string given str  
+       
+        param str delimiter string  
+        
+    
+       called mytokenizer new character processed sequence  returns true found delimiter  
+        
+    
+       called mytokenizer before starting scanning new token  
+        
+    
+       gets length token  
+        
+    
+       gets token  
+        
+    
+        param n next set  
+        
+    
+        return returns next descendent customseparator recognizes tokens one two forms  
+    ul  
+    li  pre 'chr'     'esc' 'chr'     'chr'  pre  
+    li  pre 'lchr'   'lchr'   'rchr'   'esc' 'rchr'    'rchr'  pre   ul  
+   
+    p first form suited quoted strings pre     \        pre pre '   \'   '  pre   
+   
+    p second form suited expressions pre b c -15 eq b    pre   
+   
+    p fact class currently used public separators mytokenizer  except paren_expr_string_separator line_separator  
+    
+    
+       creates separator first form  see above chr'   q esc'   esc  
+       
+        param q delimiter character  
+        param esc escape character  
+        
+    
+       creates separator second form  see above lchr'   sq  'rchr'   eq esc'   esc  
+       
+        param sq left delimiter character  
+        param eq right delimiter character  
+        param esc escape character  
+        
+    
+         inheritdoc  
+       
+       overridden return entire length token  
+        
+    
+         inheritdoc  
+       
+       overridden return true  
+       
+        return true 
+        
+    
+         inheritdoc  
+       
+       overridden find end token descendent customseparator recognizes tokens form  
+   
+    br     \      ' \'   '   
+   
+    p expression inside parentheses proper consideration quoted strings inside the expression constructor choices available  
+        
+    
+         inheritdoc  
+       
+       overridden return entire length token  
+        
+    
+         inheritdoc  
+       
+       overridden return true  
+       
+        return true 
+        
+    
+         inheritdoc  
+       
+       overridden find end token descendent customseparator recognizes tree line ends   
+    ul  
+    li unix   lt lf gt   li  
+    li dos   lt cr gt   lt lf gt   li  
+    li mac   lt cr gt   li  
+     ul  
+   
+    p fact class currently used line_separator mytokenizer  
+    
+    
+       creates lineseparator  
+        
+    
+         inheritdoc  
+        
+    
+         inheritdoc  
+        
+    
+         inheritdoc  
+        
+    
+         inheritdoc  
+       
+       overridden find start line-end  
+        
+    
+         inheritdoc  
+       
+       overridden find end line-end  
+        
+    
+   class dividing string any number parts  each part substring original string first part least contain first character string following parts least contain first character string not covered any previous part  
+   
+    p delim parameter constructors comma separated list tokens recognized tokenizer tokens returned tokenizer tokens any arbitrary text between returned tokens comma special meaning string escaped only mean itself technical reasons not possible any token list 32 characters long  
+   
+    p addition delim parameter possible use custom 
+   separators allow any string generated limited 
+   version turing machine computer used delimiter  
+   
+    p some custom separators provided use things strings one token cannot used simultaneously several tokenizers  ie not thread safe  
+   
+    p tokenizer works kind greedy way first separator 
+   token delim matched any customseparator returns true addchar satisfied found token not check found longer token  eg delim string never found  
+   
+    p  b example  b  br  pre  
+   mytokenizer tzer   new mytokenizer  hello tzer hasmoretokens    
+     _cat info  \     tzer nexttoken      \     
+     pre  
+   
+    p whould yield following output  pre  
+      hello pre  
+   
+    author michael stockman 0 11 2 
+    see customseparator custom separator quoted strings enclosed single quotes using escape character may not end quote tokenizer reaches end string custom separator quoted strings enclosed double quotes using escape character may not end quote tokenizer reaches end string custom separator expressions enclosed parentheses matching lparams rparams may not proper matching tokenizer reaches end string not use together paren_expr_string_separator custom separator expressions enclosed parentheses matching lparams rparams may not proper matching tokenizer reaches end string takes 
+        quoted strings  either single double quotes expression consideration  unlike paren_expr_separator not use together paren_expr_separator custom separator texts  singles out line ends consequently lines either dos  mac unix format     
+    
+       constructs new instance  see above description delimiter string  
+       
+        param string string tokenized  
+        param delim string delimiters  
+        
+    
+       constructs new instance  see above description delimiter string custom separators  
+       
+        param string string tokenized  
+        param delim string delimiters  
+        param sep custom separator use  
+        
+    
+       constructs new instance  see above description delimiter string custom separators  
+       
+        param string string tokenized  
+        param delim string delimiters  
+        param seps	some container custom separators use  
+        
+    
+       returns true tokens left  
+       
+        return true another token fetched nexttoken  
+        
+    
+       retrives next token  
+       
+        return next token class implements enumeration interface call maps nexttoken  
+       
+        return nexttoken    
+        see	#nexttoken   nexttoken class implements enumeration interface call maps hasmoretokens  
+       
+        return hasmoretokens    
+        see	#hasmoretokens   hasmoretokens 
+        
+    
+       returns index string last token returned nexttoken zero token retrived  
+       
+        return index last token  
+        
+    
+       put token input stream next token read tokenizer function called again before last token read lost  
+       
+        p index returned gettokenindex same token put last token wasn't put  
+       
+        param s token put  
+        throws nullpointerexception s null  
+        
+    
+       creates linked list tokenseps comma separated string 
+       str  
+       
+        param str string specifying delimiter strings  
+        return list tokenseps  
+       org argouml util MyTokenizer org argouml util tokensep tokensep str    
+	thestring   str  
+	length   str length length   32 illegalargumentexception  tokensep     str 
+	                    is     length        32  chars pattern   0 addchar c i  
+ 
+	pattern     1  
+	pattern    1 i   0  i   length  i thestring charat i     c    
+		pattern    ~ 1    i pattern    1     length - 1       0 reset     
+	pattern   0 length length getstring thestring setnext tokensep n next   n tokensep getnext next quotedstringseparator customseparator quotedstringseparator q esc q   
+ 
+	esced escchr   esc  
+	startchr   0  
+	stopchr   q  
+	toklen   0  
+	level   1 quotedstringseparator sq eq esc sq   
+ 
+	esced escchr   esc  
+	startchr   sq  
+	stopchr   eq  
+	toklen   0  
+	level   1 reset reset    
+	toklen   0  
+	level   1 tokenlength tokenlength     toklen hasfreepart endchar c    
+	toklen esced    
+	    esced false escchr    0    c    escchr    
+	    esced startchr    0    c    startchr  
+	    level c    stopchr  
+	    level level    0 exprseparatorwithstrings customseparator exprseparatorwithstrings isesc issquot isdquot toklevel   1  
+	toklen   0 reset reset    
+ 
+	isesc issquot isdquot toklevel   1  
+	toklen   0 tokenlength tokenlength     toklen hasfreepart endchar c    
+	toklen issquot isesc    
+		isesc false c    '\\'  
+		isesc c    '\''  
+		issquot false isdquot isesc    
+		isesc false c    '\\'  
+		isesc c    '\ '  
+		isdquot false c    '\''  
+		issquot c    '\ '  
+		isdquot c    ' '  
+		toklevel c    ' '  
+		toklevel toklevel    0 lineseparator customseparator lineseparator     
+	hascr haslf haspeeked reset reset    
+	hascr haslf haspeeked tokenlength hascr    haslf ? 2   1 getpeekcount haspeeked ? 1   0 hasfreepart haslf addchar c c    '\n'    
+	    haslf true c    '\r'    
+	    hascr true endchar c c    '\n'    
+	    haslf haspeeked true mytokenizer enumeration customseparator single_quoted_separator quotedstringseparator customseparator double_quoted_separator quotedstringseparator customseparator paren_expr_separator quotedstringseparator ' '  ' '  '\0 customseparator paren_expr_string_separator exprseparatorwithstrings customseparator line_separator lineseparator mytokenizer string delim    
+	source delims   parsedelimstring delim   
+	sidx   0  
+	tokidx   0  
+	eidx length    
+	savedtoken customseps puttoken mytokenizer string delim  customseparator sep    
+	source delims   parsedelimstring delim   
+	sidx   0  
+	tokidx   0  
+	eidx length    
+	savedtoken customseps arraylist    
+	customseps add sep mytokenizer string delim  collection seps    
+	source delims   parsedelimstring delim   
+	sidx   0  
+	tokidx   0  
+	eidx length    
+	savedtoken customseps arraylist seps hasmoretokens sidx   eidx    savedtoken puttoken nexttoken     
+	customseparator csep  
+	tokensep sep s i  j puttoken s   puttoken  
+	    puttoken s savedtoken s   savedtoken  
+	    tokidx   savedidx  
+	    savedtoken s sidx    eidx nosuchelementexception  
+					      no more tokens available sep   delims  sep sep   sep getnext    
+	    sep reset customseps i   0  i   customseps size    i    
+		  customseparator  customseps get i   reset i   sidx  i   eidx  i c   source charat i j   0  customseps j   customseps size    j      
+		csep    customseparator  customseps get j csep addchar c customseps j   customseps size      
+		csep    customseparator  customseps get j csep hasfreepart      i   1   eidx csep endchar source charat   i i -  math min csep getpeekcount    i clen   math min i   1  source length i - sidx   1   csep tokenlength      
+		    s   source substring sidx  
+					  i - csep tokenlength     1   
+ 
+		    savedidx   i - csep tokenlength     1  
+		    savedtoken   source substring  
+						    savedidx  clen s   source substring sidx  clen   
+		  
+ 
+		tokidx   sidx  
+		sidx   i   1 sep   delims  sep sep   sep getnext sep addchar c sep i - sidx   1   sep length      
+		    s   source substring sidx  
+					  i - sep length     1   
+		    savedidx   i - sep length     1  
+		    savedtoken   sep getstring s   sep getstring    
+		  
+		tokidx   sidx  
+		sidx   i   1 s s   source substring sidx   
+	    tokidx   sidx  
+	    sidx   eidx s object nextelement nexttoken hasmoreelements hasmoretokens gettokenindex tokidx puttoken s s nullpointerexception  
+					    cannot put a token    
+ 
+	puttoken   s tokensep parsedelimstring str    
+	tokensep first tokensep p idx0  idx1  length  
+	stringbuilder val stringbuilder c  
+ 
+	length   str length idx0   0  idx0   length idx1   idx0  idx1   length  idx1      
+		c   str charat idx1 c    '\\'    
+		    idx1 idx1   length  
+			val append str charat idx1 c val append c   
+		  
+	      
+	    idx1   math min idx1  length idx1   idx0    
+		p tokensep val tostring     
+		val stringbuilder    
+		p setnext first   
+		first   p  
+	      
+ 
+	    idx0   idx1   1 first  
+      
+  
+org argouml util MyTokenizer

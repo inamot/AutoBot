@@ -1,0 +1,51 @@
+teammates ui controller InstructorStudentRecordsPageAction teammates ui controller instructorstudentrecordspageaction action   
+ 
+     override actionresult execute courseid   getrequestparamvalue paramsnames course_id   
+        assumption assertpostparamnotnull paramsnames course_id  courseid   
+ 
+        instructorattributes instructor   logic getinstructorforgoogleid courseid  account googleid   
+        gatekeeper verifyaccessible instructor  logic getcourse courseid studentemail   getrequestparamvalue paramsnames student_email   
+        assumption assertpostparamnotnull paramsnames student_email  studentemail   
+ 
+        studentattributes student   logic getstudentforemail courseid  studentemail student statustouser add statusmessage statusmessages student_not_found_for_records  
+                                               statusmessagecolor danger    
+            iserror createredirectresult actionuris instructor_home_page   
+          
+ 
+        list feedbacksessionattributes  sessions   logic getfeedbacksessionslistforinstructor account googleid filterfeedbacksessions courseid  sessions  instructor  student   
+ 
+        collections sort sessions  feedbacksessionattributes descending_order   
+ 
+        studentprofileattributes studentprofile isinstructorallowedtoviewstudent   instructor isallowedforprivilege student section paramsnames instructor_permission_view_student_in_sections isstudentwithprofile    student googleid isempty isinstructorallowedtoviewstudent    isstudentwithprofile    
+            studentprofile   logic getstudentprofile student googleid   
+            assumption assertnotnull studentprofile student googleid isempty      
+                statustouser add statusmessage statusmessages student_not_joined_yet_for_records  
+                                                   statusmessagecolor warning isinstructorallowedtoviewstudent    
+                statustouser add statusmessage statusmessages student_profile_unaccessible_to_instructor  
+                                                   statusmessagecolor warning sessions isempty      
+            statustouser add statusmessage statusmessages instructor_no_student_records  
+                                               statusmessagecolor warning    
+          
+ 
+        list sessionnames arraylist feedbacksessionattributes fsa   sessions    
+            sessionnames add fsa getfeedbacksessionname     
+          
+ 
+        instructorstudentrecordspagedata data instructorstudentrecordspagedata account  student  sessiontoken  courseid  studentprofile  sessionnames   
+ 
+        statustoadmin    instructorstudentrecords page load br   
+                         viewing  span bold\      studentemail    's  span  records course  span bold\       courseid       span  br   
+                         number of sessions      sessions size       br   
+                         student profile    
+                         studentprofile no profile  
+                                                  sanitizationhelper sanitizeforhtmltag studentprofile tostring createshowpageresult viewuris instructor_student_records  data filterfeedbacksessions courseid  list feedbacksessionattributes  feedbacks  
+                                        instructorattributes instructor  studentattributes student    
+        iterator feedbacksessionattributes  iterfs   feedbacks iterator iterfs hasnext      
+            feedbacksessionattributes tempfs   iterfs next tempfs getcourseid   equals courseid  
+                        instructor isallowedforprivilege student section  tempfs getsessionname paramsnames instructor_permission_view_session_in_sections     
+                iterfs remove    
+              
+          
+      
+ 
+ teammates ui controller InstructorStudentRecordsPageAction

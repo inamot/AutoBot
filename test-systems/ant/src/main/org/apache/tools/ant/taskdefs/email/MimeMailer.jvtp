@@ -1,0 +1,122 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   uses javamail classes send mime format email ant 1 5 
+    
+    default character set work properly national charsets use 
+   implementation interface javax activation datasource 
+    
+       string data source implementation ant 1 6 
+        
+   must text plain  charset windows-1251  
+    
+       send email  
+       
+        throws buildexception email t sent  
+        
+   aside jdk clearly unaware scottish 
+   'session involves excessive quantities alcohol  -  
+   smtp provider 
+  create message 
+  set sender 
+   set reply addresses 
+   choosing character set mail message 
+   first  looking mimetype 
+   assign reassign message charset mimetype 
+   next  looking charset having explicit definition 
+   using default 
+   using javax activation datasource paradigm 
+   assuming mime type form  text xxxx  charset xxxxxx  
+   skip 'charset 'org apache tools ant taskdefs email MimeMailer org apache tools ant taskdefs email mimemailer mailer default_charset 
+          system getproperty  file encoding stringdatasource javax activation datasource inputstream getinputstream ioexception data out ioexception  no data out encodedout   out tostring charset   
+                data    data data concat encodedout    encodedout  
+                out bytearrayinputstream data getbytes charset outputstream getoutputstream ioexception   
+            out    out bytearrayoutputstream     out out setcontenttype type type   type tolowercase getcontenttype type type indexof  charset     0 
+                   type startswith  text type stringbuffer type type    text plain   append  
+                   charset    append charset  tostring getname stringdatasource setcharset charset charset   charset getcharset charset send properties props properties    
+ 
+            props put  mail smtp host   host   
+            props put  mail smtp port valueof port    
+ 
+              
+              
+              
+            session sesh  
+            authenticator auth ssl provider p    provider forname  
+                         com sun net ssl internal ssl provider   newinstance    
+                    security addprovider p exception e buildexception  could not instantiate ssl   
+                           security provider  check that you have jsse in   
+                           your classpath    
+                  
+                  
+                props put  mail smtp socketfactory ssl_factory   
+                props put  mail smtp socketfactory fallback user password sesh   session getdefaultinstance props props put  mail smtp auth auth simpleauthenticator user  password   
+                sesh   session getinstance props  auth   
+              
+              
+            mimemessage msg mimemessage sesh   
+            mimemultipart attachments mimemultipart from getname msg setfrom internetaddress from getaddress msg setfrom internetaddress from getaddress    
+                    from getname      
+              
+              
+            msg setreplyto internetaddresses replytolist    
+            msg setrecipients message recipienttype to  
+                internetaddresses tolist    
+            msg setrecipients message recipienttype cc  
+                internetaddresses cclist    
+            msg setrecipients message recipienttype bcc  
+                internetaddresses bcclist charset   parsecharsetfrommimetype message getmimetype charset message setcharset charset charset   message getcharset charset charset   default_charset  
+                    message setcharset charset   
+                  
+              
+              
+            stringdatasource sds stringdatasource    
+            sds setcontenttype message getmimetype     
+            sds setcharset charset subject msg setsubject subject  charset   
+              
+            msg addheader  date   getdate iterator iter   headers iterator    iter hasnext       
+                header h    header  iter next    
+                msg addheader h getname    h getvalue     
+              
+            printstream out printstream sds getoutputstream     
+            message print out   
+            out close    
+ 
+            mimebodypart textbody mimebodypart    
+            textbody setdatahandler datahandler sds    
+            attachments addbodypart textbody   
+ 
+            enumeration e   files elements e hasmoreelements      
+                file file    file  e nextelement    
+ 
+                mimebodypart body  
+ 
+                body mimebodypart file exists       file canread buildexception  file \     file getabsolutepath   
+                            \  does not exist or is not   
+                            readable     
+                  
+                filedatasource filedata filedatasource file   
+                datahandler filedatahandler datahandler filedata   
+ 
+                body setdatahandler filedatahandler   
+                body setfilename file getname     
+                attachments addbodypart body   
+              
+            msg setcontent attachments   
+            transport send msg messagingexception e buildexception  problem sending mime mail    e ioexception e buildexception  problem sending mime mail    e internetaddress   internetaddresses vector list addressexception  unsupportedencodingexception   
+        internetaddress   addrs internetaddress list size i   0  i   list size      i    
+            emailaddress addr    emailaddress  list elementat i name   addr getname    
+            addrs i     name internetaddress addr getaddress internetaddress addr getaddress    name addrs parsecharsetfrommimetype type pos type pos   type indexof  charset      0 stringtokenizer token stringtokenizer type substring pos           
+        token nexttoken token nexttoken simpleauthenticator authenticator simpleauthenticator user password user   user password   password passwordauthentication getpasswordauthentication passwordauthentication user  password   
+          
+      
+  
+org apache tools ant taskdefs email MimeMailer

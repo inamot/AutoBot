@@ -1,0 +1,226 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications file persister uml model  
+    author bob tarling 
+    
+    
+       logger  
+        
+    
+       loads model  xmi only url advised method side effect sets _uuidrefs model  p problem xmi file error set getlastloadstatus   field needs examined calling function  p  
+       
+        see org argouml persistence memberfilepersister#load org argouml kernel project  
+       java io inputstream  
+        
+    
+       loads model  xmi only input stream advised method side effect sets _uuidrefs model  p problem xmi file error set getlastloadstatus   field needs examined calling function  p  
+       
+        see org argouml persistence memberfilepersister#load org argouml kernel project  
+       java io inputstream  
+        
+   2002-07-18 
+   jaap branderhorst 
+   changed loading projectfiles solve hanging argouml project corrupted  issue 913 
+   created xmireader method geterrors check parsing went well probably inside xmireader parse another place source xmireader used appears nsuml xmireader argo xmireader used 
+   consistently responsible loading listener   until here  
+   
+        see org argouml persistence memberfilepersister#getmaintag never happen - something's really wrong 
+    
+       save project model xmi  
+       
+        see org argouml persistence memberfilepersister#save  
+               org argouml kernel projectmember  java io writer  
+               java lang integer indent adding file superfile most likely inserting xmi uml file 
+   otherwise writing zip writer xmi  
+    
+       save project model xmi  
+        
+        see org argouml persistence memberfilepersister#save projectmember  outputstream memberfilepersister based given projectmember  
+       
+        param pm project member 
+        return persister 
+        
+                                                                 
+   accessors 
+    
+        return current model 
+        
+    
+       return xmi id object map most recently read xmi file  
+        
+        return uuid 
+        
+                                                                 
+   main parsing methods 
+    
+       read xmi file given url  
+       
+        param p project 
+        param url url 
+        param xmiextensionparser xmiextensionparser 
+        throws openexception io error 
+        
+   todo progressmgr used here come read xmi file given inputsource  
+        
+        param p project load inputsource  
+        param source inputsource systemid input source set used resolve external references  
+        throws openexception error occur reading source some type internal error want handle differently?  don't think tfm 
+    
+       create register diagrams activity statemachines model s project diagrams created default 
+       class diagram created  argouml currently requires least one 
+       diagram proper operation   
+        
+       todo  move xmifilepersister  protected  
+        
+        param project project 
+        
+    
+       internal method create diagrams activity graphs state machines exists soley contain common functionality two public 
+       methods merged caller deprecated version public method goes away  
+        
+        param project project 
+        param elements 
+                  collection top level model elements process 
+        param atleastone true  forces least one diagram created  
+        
+   issue 3516   make sure least one diagram argouml requires correct operation 
+    
+        return returns elementsread  
+        
+    
+        param elements elementsread set  
+       org argouml persistence ModelMemberFilePersister org argouml persistence modelmemberfilepersister memberfilepersister xmiextensionparser logger log   
+        logger getlogger modelmemberfilepersister load project project  url url openexception   
+         
+        load project inputsource url toexternalform load project project  inputstream inputstream openexception   
+         
+        load project inputsource inputstream load project project  inputsource source openexception   
+ 
+        object mmodel source setencoding argo getencoding     
+            readmodels source   
+            mmodel   getcurmodel openexception e    
+            persistencemanager getinstance   setlastloadstatus persistencemanager getinstance   setlastloadmessage  
+                     umlexception parsing xmi     
+            log error  umlexception caught   e e  
+          
+          
+          
+          
+          
+          
+          
+        model getumlhelper   addlistenerstomodel mmodel   
+ 
+        project addmember mmodel   
+ 
+        project setuuidrefs hashmap object  getuuidrefs getmaintag model getxmireader   gettagname umlexception e runtimeexception e   
+          
+      
+ 
+      
+     deprecated 
+     override save projectmember member  writer w xmlfragment saveexception w illegalargumentexception  no writer specified projectmembermodel pmm    projectmembermodel  member  
+            object model   pmm getmodel xmlfragment    
+                  
+                  
+                  
+                file tempfile   file createtempfile  xmi tempfile deleteonexit    
+ 
+                outputstream stream fileoutputstream tempfile   
+                xmiwriter xmiwriter    
+                    model getxmiwriter model  stream   
+                            applicationversion getversion          
+                              umlfilepersister persistence_version         
+                 
+                xmiwriter write    
+                addxmlfiletowriter  printwriter  w  tempfile xmiwriter xmiwriter    
+                    model getxmiwriter model  w   
+                            applicationversion getversion          
+                              umlfilepersister persistence_version         
+                xmiwriter write ioexception e saveexception e umlexception e saveexception e save projectmember member  outputstream outstream saveexception   
+ 
+        projectmembermodel pmm    projectmembermodel  member  
+        object model   pmm getmodel xmiwriter xmiwriter    
+                model getxmiwriter model  outstream   
+                        applicationversion getversion          
+                          umlfilepersister persistence_version         
+ 
+            xmiwriter write    
+            outstream flush umlexception e saveexception e ioexception e saveexception e memberfilepersister getmemberfilepersister projectmember pm    
+        memberfilepersister persister pm projectmemberdiagram    
+            persister   
+                persistencemanager getinstance   
+                     getdiagrammemberfilepersister pm profileconfiguration    
+            persister profileconfigurationfilepersister pm projectmembertodolist    
+            persister todolistmemberfilepersister persister parse label xmiextensionstring    
+        log info  parsing an extension label object getcurmodel curmodel hashmap object  getuuidrefs uuidrefs readmodels url url  
+            xmiextensionparser xmiextensionparser openexception   
+        log info                                             
+        log info     reading model     url inputsource source inputsource xmiinputstream  
+                    url openstream    xmiextensionparser  100000 source setsystemid url tostring     
+            readmodels source ioexception ex openexception ex readmodels inputsource source openexception   
+ 
+        xmireader reader reader   model getxmireader configuration getboolean argo key_xmi_strip_diagrams reader setignoredelements uml diagram reader setignoredelements list searchpath   reader getsearchpath pathlist    
+                system getproperty  org argouml model modules_search_path pathlist paths   pathlist split path   paths searchpath contains path     
+                        reader addsearchpath path   
+                      
+                  
+              
+            reader addsearchpath source getsystemid     
+             
+            curmodel elementsread   reader parse source elementsread elementsread isempty      
+                facade facade   model getfacade    
+                object current  
+                iterator elements   elementsread iterator elements hasnext      
+                    current   elements next facade isamodel current     
+                        log info  loaded model '    facade getname current curmodel curmodel   current  
+                          
+                      
+                  
+              
+            uuidrefs hashmap object  reader getxmiuuidtoobjectmap xmiexception ex xmiformatexception ex umlexception ex xmiformatexception ex   
+          
+        log info registerdiagrams project project    
+        registerdiagramsinternal project  elementsread registerdiagramsinternal project project  collection elements atleastone    
+        facade facade   model getfacade    
+        collection diagramselement arraylist    
+        iterator it   elements iterator it hasnext      
+            object element   it next facade isamodel element     
+                diagramselement addall model getmodelmanagementhelper   
+                         getallmodelelementsofkind element  
+                                model getmetatypes   getstatemachine facade isastatemachine element     
+                diagramselement add element   
+              
+          
+        diagramfactory diagramfactory   diagramfactory getinstance    
+        it   diagramselement iterator it hasnext      
+            object statemachine   it next    
+            object namespace   facade getnamespace statemachine namespace namespace   facade getcontext statemachine   
+                model getcorehelper   setnamespace statemachine  namespace   
+              
+             
+            argodiagram diagram facade isaactivitygraph statemachine     
+                log info  creating activity diagram facade getumlclassname statemachine  
+                                 facade getname statemachine           
+                diagram   diagramfactory creatediagram  
+                        diagramtype activity  
+                	namespace  
+                	statemachine log info  creating state diagram facade getumlclassname statemachine  
+                                 facade getname statemachine           
+                diagram   diagramfactory creatediagram  
+                        diagramtype state  
+                	namespace  
+                	statemachine diagram project addmember diagram atleastone    project getdiagramcount     1    
+            argodiagram d   diagramfactory creatediagram  
+                    diagramtype curmodel project addmember d project getdiagramcount      1 
+                   project getactivediagram project setactivediagram  
+                    project getdiagramlist   get 0 collection getelementsread elementsread setelementsread collection elements elementsread   elements  
+      
+ org argouml persistence ModelMemberFilePersister

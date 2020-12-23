@@ -1,0 +1,157 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications class defines renderer object uml class diagrams class diagram following uml objects displayed following figs   p  
+   
+    pre  
+    uml object       ---  fig 
+    --------------------------------------- 
+    class            ---  figclass 
+    interface        ---  figinterface 
+    instance         ---  figinstance 
+    model            ---  figmodel 
+    subsystem        ---  figsubsystem 
+    package          ---  figpackage 
+    comment          ---  figcomment 
+     commentedge     ---  figedgenote 
+    generalization   ---  figgeneralization 
+    realization      ---  figrealization 
+    permission       ---  figpermission 
+    usage            ---  figusage 
+    dependency       ---  figdependency 
+    association      ---  figassociation 
+    associationclass ---  figassociationclass 
+    dependency       ---  figdependency 
+    link             ---  figlink 
+    datatype         ---  figdatatype 
+    stereotype       ---  figstereotypedeclaration 
+     pre  
+   
+    author jrobbins uid  
+        
+    
+       logger  
+        
+   
+        see org tigris gef graph graphnoderenderer#getfignodefor  
+               org tigris gef graph graphmodel  
+               org tigris gef base layer  java lang object  java util map  
+        
+    
+       return fig used represent given edge  
+       throws illegalargumentexception edge not expected type  
+       throws illegalstateexception edge generated source dest port  
+         inheritdoc  
+        
+   end class classdiagramrenderer   org argouml uml diagram static_structure ui ClassDiagramRenderer org argouml uml diagram static_structure ui classdiagramrenderer umldiagramrenderer serialversionuid   675407719309039112l logger log   
+        logger getlogger classdiagramrenderer fignode getfignodefor graphmodel gm  layer lay  
+				 object node  map styleattributes    
+ 
+        fignodemodelelement fignode node illegalargumentexception  a node must be supplied model getfacade   isaclass node     
+            fignode figclass gm  node model getfacade   isainterface node     
+            fignode figinterface gm  node model getfacade   isamodel node     
+            fignode figmodel gm  node model getfacade   isasubsystem node     
+            fignode figsubsystem gm  node model getfacade   isapackage node     
+            fignode figpackage gm  node model getfacade   isacomment node     
+            fignode figcomment gm  node model getfacade   isaassociation node     
+            fignode fignodeassociation gm  node model getfacade   isaenumeration node     
+            fignode figenumeration gm  node model getfacade   isadatatype node     
+            fignode figdatatype gm  node model getfacade   isastereotype node     
+            fignode figstereotypedeclaration gm  node model getfacade   isaexception node     
+            fignode figexception gm  node model getfacade   isasignal node     
+            fignode figsignal gm  node model getfacade   isaactor node     
+            fignode figactor gm  node model getfacade   isausecase node     
+            fignode figusecase gm  node model getfacade   isaobject node     
+            fignode figobject gm  node model getfacade   isanodeinstance node     
+            fignode fignodeinstance gm  node model getfacade   isacomponentinstance node     
+            fignode figcomponentinstance gm  node model getfacade   isanode node     
+            fignode figmnode gm  node model getfacade   isacomponent node     
+            fignode figcomponent gm  node log error  todo  classdiagramrenderer getfignodefor     node illegalargumentexception  
+                     node is not a recognised type  received   
+                      node getclass   getname     
+          
+ 
+        lay add fignode   
+        fignode setdielement  
+                graphchangeadapter getinstance   createelement gm  node fignode figedge getfigedgefor graphmodel gm  layer lay  
+				 object edge  map styleattribute log isdebugenabled      
+            log debug  making figedge edge edge illegalargumentexception  a model edge must be supplied    
+          
+        figedgemodelelement newedge model getfacade   isaassociationclass edge     
+            newedge figassociationclass edge  lay model getfacade   isaassociationend edge     
+            figassociationend asend figassociationend edge  lay   
+            model getfacade   getassociation edge   
+            fignode associationfn   
+                 fignode  lay presentationfor  
+			model getfacade   getassociation edge    
+            fignode classifierfn   
+                 fignode  lay presentationfor model getfacade   gettype edge    
+ 
+            asend setsourceportfig associationfn   
+            asend setsourcefignode associationfn   
+            asend setdestportfig classifierfn   
+            asend setdestfignode classifierfn   
+            newedge   asend model getfacade   isaassociation edge     
+            newedge figassociation edge  lay model getfacade   isalink edge     
+            object lnk   edge  
+            figlink lnkfig figlink lnk   
+            collection linkendscoln   model getfacade   getconnections lnk   
+ 
+            object   linkends   linkendscoln toarray    
+            object frominst   model getfacade   getinstance linkends 0    
+            object toinst   model getfacade   getinstance linkends 1    
+ 
+            fignode fromfn    fignode  lay presentationfor frominst   
+            fignode tofn    fignode  lay presentationfor toinst   
+            lnkfig setsourceportfig fromfn   
+            lnkfig setsourcefignode fromfn   
+            lnkfig setdestportfig tofn   
+            lnkfig setdestfignode tofn   
+            lnkfig getfig   setlayer lay   
+            newedge   lnkfig model getfacade   isageneralization edge     
+            newedge figgeneralization edge  lay model getfacade   isapermission edge     
+            newedge figpermission edge  lay model getfacade   isausage edge     
+            newedge figusage edge  lay model getfacade   isaabstraction edge     
+            newedge figrealization edge model getfacade   isadependency edge     
+ 
+            collection c   model getfacade   getstereotypes edge   
+            iterator i   c iterator name i hasnext      
+                object o   i next    
+                name   model getfacade   getname o corefactory realize_stereotype equals name corefactory realize_stereotype equals name     
+                figrealization realfig figrealization edge   
+ 
+                object supplier   
+                      model getfacade   getsuppliers edge  toarray    0    
+                object client   
+                      model getfacade   getclients edge  toarray    0    
+ 
+                fignode supfn    fignode  lay presentationfor supplier   
+                fignode clifn    fignode  lay presentationfor client   
+ 
+                realfig setsourceportfig clifn   
+                realfig setsourcefignode clifn   
+                realfig setdestportfig supfn   
+                realfig setdestfignode supfn   
+                realfig getfig   setlayer lay   
+                newedge   realfig figdependency depfig figdependency edge  lay   
+                newedge   depfig edge commentedge    
+            newedge figedgenote edge  lay newedge illegalargumentexception  
+                     don't know how to create figedge model type   
+                      edge getclass   getname     
+          
+         
+        setports lay  newedge newedge there has been no figedge created   
+ 
+        newedge setdielement  
+            graphchangeadapter getinstance   createelement gm  edge newedge there has been no figedge created newedge getdestfignode the figedge has no dest node newedge getdestportfig the figedge has no dest port newedge getsourcefignode the figedge has no source node newedge getsourceportfig the figedge has no source port   
+ 
+        lay add newedge newedge  
+      
+ 
+   org argouml uml diagram static_structure ui ClassDiagramRenderer

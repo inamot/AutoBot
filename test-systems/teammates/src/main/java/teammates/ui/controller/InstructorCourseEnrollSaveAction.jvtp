@@ -1,0 +1,67 @@
+ 
+    
+   action  saving list enrolled students course instructor  
+    
+   process enrollment list setup data page result    
+   adjust submissions feedback responses within course 
+   schedule adjustment submissions feedback session course 
+    
+       separate studentdata objects list different categories based updatestatus  each category put separate list  br  
+       
+        return array lists studentdata objects each list contains 
+               student same updatestatus 
+       teammates ui controller InstructorCourseEnrollSaveAction teammates ui controller instructorcourseenrollsaveaction action   
+ 
+  
+ 
+     override actionresult execute entitydoesnotexistexception courseid   getrequestparamvalue paramsnames course_id   
+        assumption assertpostparamnotnull paramsnames course_id  courseid studentsinfo   getrequestparamvalue paramsnames students_enrollment_info sanitizedstudentsinfo   sanitizationhelper sanitizeforhtml studentsinfo   
+        assumption assertpostparamnotnull paramsnames students_enrollment_info  studentsinfo   
+ 
+        instructorattributes instructor   logic getinstructorforgoogleid courseid  account googleid   
+        gatekeeper verifyaccessible instructor  logic getcourse courseid paramsnames instructor_permission_modify_student list studentattributes    students   enrollandprocessresultfordisplay studentsinfo  courseid hassection   hassections students   
+ 
+            instructorcourseenrollresultpagedata pagedata instructorcourseenrollresultpagedata account  sessiontoken  
+                                                                    courseid  students  hassection  studentsinfo   
+ 
+            statustoadmin    students enrolled in course  span bold\     
+                              courseid        span  br     sanitizedstudentsinfo replace  \n     br createshowpageresult viewuris instructor_course_enroll_result  pagedata enrollexception   invalidparametersexception e    
+            setstatusforexception e   
+ 
+            statustoadmin      br enrollment entered by user  br     sanitizedstudentsinfo replace  \n     br     
+ 
+            instructorcourseenrollpagedata pagedata instructorcourseenrollpagedata account  sessiontoken  courseid  studentsinfo createshowpageresult viewuris instructor_course_enroll  pagedata entityalreadyexistsexception e    
+            setstatusforexception e   
+ 
+            statustouser add statusmessage  the enrollment failed  possibly because some students were re-enrolled before   
+                                         the previous enrollment action was still being processed by teammates database   
+                                         servers  please again after about 10 minutes the problem persists    
+                                         please contact teammates support   statusmessagecolor danger    
+ 
+            instructorcourseenrollpagedata pagedata instructorcourseenrollpagedata account  sessiontoken  courseid  studentsinfo   
+ 
+            log severe  entity already exists exception occurred when updating student      e getmessage createshowpageresult viewuris instructor_course_enroll  pagedata hassections list studentattributes    students list studentattributes  studentlist   students studentattributes student   studentlist student section equals default_section list studentattributes    enrollandprocessresultfordisplay studentsinfo courseid enrollexception  entitydoesnotexistexception  invalidparametersexception  entityalreadyexistsexception   
+        courseenrollmentresult enrollresult   logic enrollstudents studentsinfo  courseid   
+        list studentattributes  students   enrollresult studentlist  
+ 
+          
+        list feedbacksessionattributes  feedbacksessions   logic getfeedbacksessionsforcourse courseid feedbacksessionattributes session   feedbacksessions    
+              
+            taskqueuer schedulefeedbackresponseadjustmentforcourse  
+                    courseid  session getfeedbacksessionname    enrollresult enrollmentlist   
+          
+ 
+        collections sort students comparator studentattributes      
+             override compare studentattributes o1  studentattributes o2 o1 updatestatus numericrepresentation - o2 updatestatus numericrepresentation separatestudents students   
+      
+ 
+      
+     suppresswarnings  unchecked list studentattributes    separatestudents list studentattributes  students    
+ 
+        arraylist studentattributes    lists arraylist studentupdatestatus status_count i   0  i   studentupdatestatus status_count  i      
+            lists i arraylist studentattributes student   students    
+            lists student updatestatus numericrepresentation  add student i   0  i   studentupdatestatus status_count  i      
+            studentattributes sortbynameandthenbyemail lists i lists  
+      
+ 
+ teammates ui controller InstructorCourseEnrollSaveAction

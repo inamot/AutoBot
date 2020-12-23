@@ -1,0 +1,86 @@
+ 
+   $id$ 
+   copyright  c  1996-2006 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications non-modal wizard help user change select association make non-aggregate constructor  
+        
+   
+        see org argouml cognitive ui wizard#getnumsteps   
+        
+    
+        return choices step  
+        
+    
+        return choices step  
+        
+   
+        see org argouml cognitive ui wizard#makepanel int  
+        
+   
+        see org argouml cognitive ui wizard#doaction int  
+        
+                 
+                 
+   
+        see org argouml cognitive ui wizard#cangonext   
+        
+   
+        see org argouml cognitive ui wizard#canfinish   
+       org argouml uml cognitive critics WizBreakCircularComp org argouml uml cognitive critics wizbreakcircularcomp umlwizard logger log   
+	logger getlogger wizbreakcircularcomp instructions1    
+        translator localize  critics wizbreakcircularcomp-ins1 instructions2    
+        translator localize  critics wizbreakcircularcomp-ins2 instructions3    
+        translator localize  critics wizbreakcircularcomp-ins3 wizbreakcircularcomp       
+ 
+      
+     override getnumsteps 3 list getoptions1     
+	list result arraylist gettodoitem todoitem item    todoitem  gettodoitem object me   item getoffenders s   model getfacade   getname me   
+		result add s result list getoptions2     
+        list result arraylist selectedcls collection aes   model getfacade   getassociationends selectedcls   
+	    object fromtype   selectedcls fromname   model getfacade   getname fromtype iterator iter   aes iterator    iter hasnext       
+		object fromend   iter next    
+		object asc   model getfacade   getassociation fromend   
+		object toend arraylist model getfacade   getconnections asc   get 0 toend    fromend    
+		    toend arraylist  
+		            model getfacade   getconnections asc   get 1   
+		  
+		object totype   model getfacade   gettype toend ascname   model getfacade   getname asc toname   model getfacade   getname totype s   ascname  
+                           
+                      translator localize  critics wizbreakcircularcomp-from    
+                      fromname 
+                          
+                      translator localize  critics wizbreakcircularcomp-to   
+                          
+                      toname  
+		result add s result jpanel makepanel newstep newstep 1 step1 step1 wizstepchoice instructions1  getoptions1     
+		step1 settarget gettodoitem step1 2 step2 step2 wizstepchoice instructions2  getoptions2     
+		step2 settarget gettodoitem step2 3 step3 step3 wizstepconfirm instructions3 step3 doaction oldstep    
+	log debug  doaction     oldstep choice   -1  
+	todoitem item    todoitem  gettodoitem    
+	listset offs   item getoffenders oldstep 1 step1 choice   step1 getselectedindex choice    -1 error  nothing selected  should not get here    
+	      
+	    selectedcls   offs get choice 2 step2 choice   step2 getselectedindex choice    -1 error  nothing selected  should not get here    
+	      
+	    object ae iterator iter   
+	        model getfacade   getassociationends selectedcls  iterator n   0  n    choice  n      
+	        ae   iter next    
+	      
+	    selectedasc   model getfacade   getassociation ae 3 selectedasc list conns arraylist  
+		        model getfacade   getconnections selectedasc    
+		object ae0   conns get 0   
+		object ae1   conns get 1 model getcorehelper   setaggregation  
+		            ae0  
+		            model getaggregationkind   getnone     
+		    model getcorehelper   setaggregation  
+		            ae1  
+		            model getaggregationkind   getnone exception pve    
+		    log error  could not set aggregation   pve override cangonext canfinish    
+      
+ 
+      
+     override canfinish canfinish getstep      0 getstep      1    step1 step1 getselectedindex      -1 getstep      2    step2 step2 getselectedindex      -1 org argouml uml cognitive critics WizBreakCircularComp

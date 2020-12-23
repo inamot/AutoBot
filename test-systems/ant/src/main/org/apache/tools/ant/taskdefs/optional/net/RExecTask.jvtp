@@ -1,0 +1,182 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   automates rexec protocol ant 1 6 userid login automated login used password login automated login used command execute server connect tcp port connect list read write commands session true  adds cr beginning login script 
+        
+    
+        default time allowed waiting valid response child reads value 0 means limit class parent read write tasks handles common attributes both  
+        
+   checkstyle visibilitymodifier bc 
+   checkstyle visibilitymodifier execute subtask  
+            param rexec client 
+            throws buildexception always not allowed instantiate object message nested text 
+            param s nested text message attribute 
+            param s code string  code  value 
+            
+    
+        sends text connected server 
+        
+    
+           execute write exec task  
+            param rexec task use 
+            throws buildexception error 
+            
+    
+           whether not message echoed log  
+           defaults code true  code   
+            param b code boolean  code  value 
+            
+    
+        reads output connected server 
+        until required string found time out  
+        
+    
+           execute read exec task  
+            param rexec task use 
+            throws buildexception error timeout value overrides any task wide timeout  
+            param code integer  code  value 
+            
+    
+           sets default timeout none set already 
+            param defaulttimeout code integer  code  value 
+            ant attribute ignore  true class handles abstraction rexec protocol  
+        currently wrapper around href  http   jakarta apache org commons net index html  jakarta 
+        commons net read rexec session until string waiting found 
+            param s string wait read rexec session until string waiting found timeout reached 
+            param s string wait param timeout maximum number seconds wait 
+            
+    
+           write string rexec session  
+            param s string write 
+            param echostring true log string sent 
+            
+    
+           read rexec session until eof found timeout reached 
+            param timeout maximum number seconds wait string wait server subtask  lt read gt  tag found   create object  
+        save list return return read sub task 
+        
+    
+        add text send server subtask  lt write gt  tag found   create object  
+        save list return return write sub task 
+        
+    
+        verify parameters included  
+        connect possibly login  
+        iterate through list reads writes  
+        throws buildexception error server name required continue userid password must appear together appear not required  
+            
+     create telnet client object    
+   simple one-shot execution 
+   need nested read write elements 
+    keep reading input stream until end time-out    
+    
+        process typical' login differs  use read write tasks explicitely 
+        
+    
+       set the comand execute server  
+        param c code string  code  value 
+        
+    
+        send carriage return connecting  optional  defaults false  
+        param b code boolean  code  value 
+        
+    
+        set the login password use 
+       required tt userid  tt set  
+        param p code string  code  value 
+        
+    
+        set tcp port connect default 23  
+        param p code int  code  value 
+        
+    
+        set hostname address remote server  
+        param m code string  code  value 
+        
+    
+       set default timeout seconds wait response  
+       zero means forever default  
+        param code integer  code  value 
+        
+    
+       set the login id use server  
+       required tt password  tt set  
+        param u code string  code  value 
+        
+    
+       deals multiple read write calls ant 1 6 3 
+        
+     login userid password specified    
+     process each sub command   org apache tools ant taskdefs optional net RExecTask org apache tools ant taskdefs optional net rexectask task rexecsubtask taskstring execute antrexecclient rexec buildexception buildexception  shouldn't be able instantiate a subtask directly addtext s    
+            setstring getproject   replaceproperties s setstring s    
+           taskstring    s rexecwrite rexecsubtask execute antrexecclient rexec buildexception   
+           rexec sendstring taskstring  echostring setecho b    
+           echostring   b rexecread rexecsubtask execute antrexecclient rexec buildexception   
+            rexec waitforstring taskstring  timeout settimeout integer i timeout   i setdefaulttimeout integer defaulttimeout timeout timeout   defaulttimeout antrexecclient rexecclient waitforstring s    
+            waitforstring s waitforstring s  integer timeout    
+            inputstream is getinputstream stringbuffer sb stringbuffer timeout timeout intvalue      0 sb tostring   indexof s     -1    
+                        sb append is read calendar endtime   calendar getinstance    
+                    endtime add calendar second  timeout intvalue sb tostring   indexof s     -1 calendar getinstance   before endtime  
+                               is available      0    
+                            thread sleep 250 is available      0 buildexception  
+                                 response timed-out waiting s   '\ '  
+                                getlocation     
+                          
+                        sb append is read     
+                      
+                  
+                log sb tostring    project msg_info buildexception be be exception e buildexception e  getlocation sendstring s echostring    
+            outputstream os getoutputstream os write  s    \n   getbytes echostring    
+                    log s  project msg_info   
+                  
+                os flush exception e buildexception e  getlocation waitforeof integer timeout    
+            inputstream is getinputstream stringbuffer sb stringbuffer timeout timeout intvalue      0 read read   is read       -1 c read  
+                        sb append c c    '\n'    
+                        log sb tostring    project msg_info   
+                        sb delete 0  sb length calendar endtime   calendar getinstance    
+                    endtime add calendar second  timeout intvalue read   0 read    -1 calendar getinstance   before endtime     is available      0    
+                            thread sleep 250 is available      0    
+                        log sb tostring    project msg_info buildexception  
+                                                      response timed-out waiting eof   
+                                                     getlocation     
+                          
+                        read    is read read    -1 c read  
+                        sb append c c    '\n'    
+                                log sb tostring    project msg_info   
+                                sb delete 0  sb length sb length     0    
+                log sb tostring    project msg_info buildexception be be exception e buildexception e  getlocation rexecsubtask createread     
+        rexecsubtask task    rexecsubtask rexecread    
+        rexectasks addelement task task rexecsubtask createwrite     
+        rexecsubtask task    rexecsubtask rexecwrite    
+        rexectasks addelement task task execute buildexception server buildexception  no server specified userid password buildexception  no userid specified password userid buildexception  no password specified    
+          
+ 
+          
+        antrexecclient rexec rexec antrexecclient rexec connect server  port ioexception e buildexception  can't connect to     server userid password command rexectasks size      0    
+                  
+                rexec rexec userid  password  command handlemultipletasks rexec   
+              
+ 
+              
+            rexec waitforeof defaulttimeout ioexception e buildexception  error r-executing command   e rexec rexec isconnected rexec disconnect ioexception e buildexception  error disconnecting from   
+                                               server login antrexecclient rexec addcarriagereturn    
+            rexec sendstring  \n rexec waitforstring  ogin     
+        rexec sendstring userid rexec waitforstring  assword     
+        rexec sendstring password setcommand c command   c setinitialcr b addcarriagereturn   b setpassword p password   p setport p port   p setserver m server   m settimeout integer i defaulttimeout   i setuserid u userid   u handlemultipletasks antrexecclient rexec userid password login rexec   
+          
+          
+        enumeration taskstorun   rexectasks elements taskstorun taskstorun hasmoreelements      
+            rexecsubtask task    rexecsubtask  taskstorun nextelement task rexecread    defaulttimeout rexecread  task  setdefaulttimeout defaulttimeout   
+              
+            task execute rexec   
+          
+      
+ org apache tools ant taskdefs optional net RExecTask

@@ -1,0 +1,152 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   unzip file ant 1 1 
+   
+    ant task category  packaging  
+             name  unzip  
+             name  unjar  
+             name  unwar  
+    
+  req 
+   req 
+    error message one mapper defined work  
+       
+        exception buildexception thrown unrecoverable error method overridden extending unarchival tasks  
+       
+        param fileutils fileutils 
+        param srcf source file 
+        param dir destination directory method overridden extending unarchival tasks  
+       
+        param srcr source resource 
+        param dir destination directory mapper file 
+        return filenamemapper file 
+        
+    
+       extract file directory 
+        param fileutils fileutils object 
+        param srcf source file 
+        param dir destination directory 
+        param compressedinputstream input stream 
+        param entryname name entry 
+        param entrydate date entry 
+        param isdirectory true entry directory 
+        param mapper filename mapper use 
+        throws ioexception error include pattern implicitly means includes not process file 
+   create intermediary directories - sometimes zip don't add set destination directory  file unzipped destination directory  
+       
+        param d path directory  
+        
+    
+       set path zip-file  
+       
+        param s path zip-file overwrite files dest  even newer corresponding entries archive? 
+        param b code boolean  code  value 
+        
+    
+       add patternset  
+        param set pattern set 
+        
+    
+       add fileset 
+        param set file set 
+        
+    
+       add resource collection  
+        param rc resource collection ant 1 7 
+        
+    
+       defines mapper map source entries destination files  
+        return mapper configured 
+        exception buildexception one mapper defined ant1 7 nested filenamemapper 
+        param filenamemapper mapper add ant 1 6 3 
+        
+    
+       sets encoding assume file names comments  
+       
+        p set code native-encoding  code want platform's native encoding  defaults utf8   p  
+        param encoding name character encoding ant 1 6 
+       org apache tools ant taskdefs Expand org apache tools ant taskdefs expand task error_multiple_mappers    cannot define more than one mapper execute buildexception expand  equals gettasktype       
+            log     expand is deprecated  use unzip instead source resourcesspecified buildexception  src attribute and or resources must be   
+                                        specified dest buildexception  
+                 dest attribute must be specified dest exists       dest isdirectory buildexception  dest must be a directory    getlocation source source isdirectory buildexception  src must not be a directory   
+                        use nested filesets instead    getlocation expandfile file_utils  source  dest   
+              
+          
+        iterator iter   resources iterator iter hasnext      
+            resource r    resource  iter next r isexists r fileresource    
+                expandfile file_utils    fileresource  r  getfile    dest expandresource r  dest expandfile fileutils fileutils  file srcf  file dir    
+        log  expanding      srcf     into     dir  project msg_info   
+        zipfile zf filenamemapper mapper   getmapper zf zipfile srcf  encoding   
+            enumeration e   zf getentries e hasmoreelements      
+                zipentry ze    zipentry  e nextelement    
+                extractfile fileutils  srcf  dir  zf getinputstream ze   
+                            ze getname date ze gettime     
+                            ze isdirectory    mapper   
+              
+ 
+            log  expand complete   project msg_verbose ioexception ioe buildexception  error expanding     srcf getpath    
+                                     ioe zipfile closequietly zf expandresource resource srcr  file dir buildexception  only filesystem based resources are  
+                                     supported by task filenamemapper getmapper     
+        filenamemapper mapper mapperelement mapper   mapperelement getimplementation mapper identitymapper mapper extractfile fileutils fileutils  file srcf  file dir  
+                               inputstream compressedinputstream entryname  date entrydate isdirectory  filenamemapper mapper ioexception patternsets patternsets size     0 name   entryname replace ' '  file separatorchar  
+                 replace '\\'  file separatorchar included set includepatterns hashset    
+            set excludepatterns hashset v   0  size   patternsets size    v   size  v      
+                patternset p    patternset  patternsets elementat v incls   p getincludepatterns getproject incls incls length    0    
+                      
+                    incls w   0  w   incls length  w pattern   incls w  replace ' '  file separatorchar  
+                         replace '\\'  file separatorchar pattern endswith file separator     
+                        pattern          
+                      
+                    includepatterns add pattern excls   p getexcludepatterns getproject excls w   0  w   excls length  w pattern   excls w  
+                             replace ' '  file separatorchar  
+                             replace '\\'  file separatorchar pattern endswith file separator     
+                            pattern          
+                          
+                        excludepatterns add pattern iterator iter   includepatterns iterator    
+                  included    iter hasnext pattern iter next    
+                included   selectorutils matchpath pattern  name iterator iter   excludepatterns iterator    
+                 included    iter hasnext pattern iter next    
+                included    selectorutils matchpath pattern  name included mappednames   mapper mapfilename entryname mappednames mappednames length    0    
+            mappednames entryname   
+          
+        file f   fileutils resolvefile dir  mappednames 0 overwrite    f exists   
+                   f lastmodified      entrydate gettime      
+                log  skipping     f     as it is up-to-date   
+                    project msg_debug log  expanding     entryname     to     f  
+                project msg_verbose   
+              
+            file dirf   f getparentfile dirf dirf mkdirs isdirectory    
+                f mkdirs buffer 1024 length   0  
+                fileoutputstream fos fos fileoutputstream f length   
+                            compressedinputstream read buffer      0    
+                        fos write buffer  0  length   
+                      
+ 
+                    fos close    
+                    fos fileutils close fos   
+                  
+              
+ 
+            fileutils setfilelastmodified f  entrydate gettime filenotfoundexception ex    
+            log  unable to expand to file     f getpath    project msg_warn setdest file d dest   d setsrc file s source   s setoverwrite b    
+        overwrite   b addpatternset patternset set    
+        patternsets addelement set addfileset fileset set    
+        add set add resourcecollection rc    
+        resourcesspecified resources add rc mapper createmapper buildexception mapperelement buildexception error_multiple_mappers  
+                                     getlocation     
+          
+        mapperelement mapper getproject mapperelement add filenamemapper filenamemapper    
+        createmapper   add filenamemapper setencoding encoding native_encoding equals encoding     
+            encoding encoding   encoding  
+      
+ 
+ org apache tools ant taskdefs Expand

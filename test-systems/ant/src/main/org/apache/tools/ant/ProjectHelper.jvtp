@@ -1,0 +1,268 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   configures project  complete targets tasks  based xml build file ll rely plugin actual processing xml file class provide static wrappers common introspection helper plugins must provide backward compatibility original ant patterns  unless different behavior explicitly 
+   specified example namespace used lt project gt  tag helper expect entire build file namespace-enabled  
+   namespaces helper-specific tags provide meta-information helper  allowing use new different policies namespace used behavior exactly 
+   identical default helper uri ant name space uri antlib current definitions uri defined types tasks format antlib  package     
+    polymorphic attribute     
+    
+       name jvm system property provides name projecthelper class use service identifier jars provide project helper 
+       implementations  
+        
+    
+       name project helper reference add project 
+        
+    
+       configures project contents specified xml file  
+       
+        param project project configure  must not code null  code   
+        param buildfile xml file giving project's configuration  
+                        must not code null  code   
+       
+        exception buildexception configuration invalid cannot read 
+        
+    default constructor    
+   -------------------- common properties following properties required import tasks read build files using projecthelper project helper may process multiple files ll keep track avoid loops allow caching caching probably accelerate things antcall key absolute file value processed tree tree composed ue rc reused   
+   protected hashtable processedfiles new hashtable    
+   temporary - until figure better api 
+    experimental will_change 
+       
+        
+      public hashtable getprocessedfiles     
+          return processedfiles  
+        
+    experimental will_change 
+        import stack  
+        used keep track imported files  error reporting display import path  
+       
+        return stack import source objects  
+        
+   --------------------  parse method  -------------------- 
+    
+       parses project file  configuring project goes  
+       
+        param project project resulting projecthelper configure  
+                      must not code null  code   
+        param source source xml configuration helper must support least file backward compatibility  helpers may 
+                     support url  inputstream  etc specialized types ant1 5 
+        exception buildexception configuration invalid cannot read 
+        
+    
+       discovers project helper instance  uses same patterns jaxp  commons-logging  etc system property jdk1 3 
+       service discovery  default  
+       
+        return projecthelper  either custom implementation one available configured default implementation 
+       otherwise  
+       
+        exception buildexception specified helper class cannot loaded instantiated  
+        
+   identify class loader using  ant may webapp embedded different app 
+   first  try system property jdk1 3 'service jaxp plug helper 
+   automatically classpath right meta-inf services code needed ebcdic strange systems s fix bugs reported xerces 
+    
+       creates new helper instance name class ll first try thread class loader class forname load same loader loaded class  
+       
+        param helperclass name class create instance must not code null  code   
+       
+        return new instance specified class  
+       
+        exception buildexception class cannot found cannot appropriate instantiated  
+        
+   try next method 
+    
+       jdk1 1 compatible access context class loader  
+       cut paste jaxp  
+       
+        deprecated 1 6 x  
+                   use loaderutils getcontextclassloader   
+       
+        return current context class loader code null  code context class loader unavailable  
+        
+   -------------------- static utils  used most helpers ---------------- 
+    
+       configures object using introspection handler  
+       
+        param target target object configured  
+                     must not code null  code   
+        param attrs list attributes configure within target  
+                     must not code null  code   
+        param project project containing target  
+                      must not code null  code   
+       
+        deprecated 1 6 x  
+                   use introspectionhelper each property  
+       
+        exception buildexception any attributes t handled target 
+        
+   reflect target 
+   id attribute must set externally 
+    
+       adds content pcdata sections element  
+       
+        param project project containing target  
+                      must not code null  code   
+        param target target object configured  
+                      must not code null  code   
+        param buf character array text within element not code null  code   
+        param start start element array  
+        param count number characters read array  
+       
+        exception buildexception target object doesn't accept text 
+        
+    
+       adds content pcdata sections element  
+       
+        param project project containing target  
+                      must not code null  code   
+        param target target object configured  
+                      must not code null  code   
+        param text    text add target  
+                      may code null  code case method call op  
+       
+        exception buildexception target object doesn't accept text 
+        
+    
+       stores configured child element within parent object  
+       
+        param project project containing objects  
+                      may code null  code   
+        param parent  parent object add child must not code null  code   
+        param child   child object store parent not code null  code   
+        param tag     name element generated child  
+                      may code null  code case child not stored  
+        
+    
+       replaces  code $ xxx   code  style constructions given value string value corresponding properties  
+       
+        param project project containing properties replace  
+                      must not code null  code   
+       
+        param value string scanned property references  
+                    may code null  code   
+       
+        exception buildexception string contains opening 
+                                  code $   code  without closing 
+                                  code    code  
+        return original string properties replaced code null  code original string code null  code   
+       
+        deprecated 1 6 x  
+                   use project replaceproperties 1 5 
+        
+   needed project properties not accessible 
+    
+       replaces  code $ xxx   code  style constructions given value string value corresponding data types  
+       
+        param project container project used solely logging purposes  must not code null  code   
+        param value string scanned property references  
+                    may code null  code case method returns immediately effect  
+        param keys  mapping  string string property names values  must not code null  code   
+       
+        exception buildexception string contains opening 
+                                  code $   code  without closing 
+                                  code    code  
+        return original string properties replaced code null  code original string code null  code   
+        deprecated 1 6 x  
+                   use propertyhelper  
+        
+    
+       parses string containing  code $ xxx   code  style property 
+       references two lists first list collection text fragments set string property names  
+        code null  code  entries first list indicate property 
+       reference second list  
+       
+        param value     text parse  must not code null  code   
+        param fragments list add text fragments must not code null  code   
+        param propertyrefs list add property names must not code null  code   
+       
+        deprecated 1 6 x  
+                   use propertyhelper  
+        exception buildexception string contains opening 
+                                  code $   code  without closing 
+                                  code    code  
+        
+    
+       map namespaced  uri name internal string format bc purposes names ant core uri mapped name names mapped uri         name  
+        param uri namepace uri 
+        param name localname 
+        return stringified form ns name 
+        
+    
+       extract uri component name 
+       
+        param componentname stringified form uri  name  
+        return uri not present 
+        
+    
+       extract element name component name 
+       
+        param componentname stringified form uri  name  
+        return element name component 
+        
+    
+       add location build exception  
+        param ex build exception build exception not include 
+        param newlocation location calling task  may null  
+        return new build exception based build exception location set newlocation original exception not location return build exception 
+       org apache tools ant ProjectHelper org apache tools ant projecthelper ant_core_uri       antlib org apache tools ant ant_current_uri         ant current antlib_uri        antlib ant_type    ant-type helper_property   
+         org apache tools ant projecthelper service_id   
+         meta-inf services org apache tools ant projecthelper projecthelper_reference    ant projecthelper configureproject project project  file buildfile buildexception   
+        projecthelper helper   projecthelper getprojecthelper    
+        project addreference projecthelper_reference  helper   
+        helper parse project  buildfile projecthelper vector getimportstack importstack parse project project  object source buildexception buildexception  projecthelper parse   must be implemented   
+               in a helper plugin getclass   getname projecthelper getprojecthelper buildexception   
+          
+          
+        projecthelper helper helperclass   system getproperty helper_property helperclass helper   newhelper helperclass securityexception e    
+            system out println  unable to load projecthelper helperclass     specified in system property   
+                  helper_property helper classloader classloader   loaderutils getcontextclassloader    
+                inputstream is classloader is   classloader getresourceasstream service_id is is   classloader getsystemresourceasstream service_id is inputstreamreader isr isr inputstreamreader is   utf-8 java io unsupportedencodingexception e    
+                        isr inputstreamreader is   
+                      
+                    bufferedreader rd bufferedreader isr helperclassname   rd readline    
+                    rd close helperclassname equals helperclassname     
+ 
+                        helper   newhelper helperclassname exception ex    
+                system out println  unable to load projecthelper   
+                       from service \     service_id helper helper projecthelper2 projecthelper newhelper helperclass buildexception   
+        classloader classloader   loaderutils getcontextclassloader clazz classloader clazz   classloader loadclass helperclass classnotfoundexception ex clazz clazz forname helperclass projecthelper  clazz newinstance exception e buildexception e classloader getcontextclassloader loaderutils iscontextloaderavailable loaderutils getcontextclassloader configure object target  attributelist attrs  
+                                 project project buildexception target typeadapter    
+            target     typeadapter  target  getproxy    
+          
+ 
+        introspectionhelper ih   
+            introspectionhelper gethelper project  target getclass i   0  i   attrs getlength    i value   replaceproperties project  attrs getvalue i   
+                                             project getproperties ih setattribute project  target  
+                                attrs getname i  tolowercase locale us   value buildexception be attrs getname i  equals  id be addtext project project  object target buf start count buildexception   
+        addtext project  target buf  start  count addtext project project  object target text buildexception text target typeadapter    
+            target     typeadapter  target  getproxy    
+          
+ 
+        introspectionhelper gethelper project  target getclass    addtext project  
+            target  text storechild project project  object parent  
+         object child tag    
+        introspectionhelper ih 
+              introspectionhelper gethelper project  parent getclass     
+        ih storeelement project  parent  child  tag replaceproperties project project value buildexception project replaceproperties value replaceproperties project project value  
+         hashtable keys buildexception   
+        propertyhelper ph   propertyhelper getpropertyhelper project ph replaceproperties value  keys parsepropertystring value  vector fragments  
+                                           vector propertyrefs buildexception   
+        propertyhelper parsepropertystringdefault value  fragments  
+                propertyrefs gencomponentname uri name uri uri equals        uri equals ant_core_uri name uri         name extracturifromcomponentname componentname componentname index   componentname lastindexof index    -1 return componentname substring 0  index extractnamefromcomponentname componentname index   componentname lastindexof index    -1 componentname componentname substring index   1 buildexception addlocationtobuildexception  
+        buildexception ex  location newlocation ex getlocation ex getmessage ex errormessage 
+               the following error occurred executing line   
+              system getproperty  line separator   
+              ex getlocation   tostring   
+              ex getmessage newlocation buildexception errormessage  ex buildexception  
+                errormessage  ex  newlocation   
+          
+      
+ org apache tools ant ProjectHelper

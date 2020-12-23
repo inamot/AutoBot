@@ -1,0 +1,151 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   generates manifest declares dependencies dependencies determined looking specified path searching extension    optional package  
+   specifications manifests jars  
+   
+    p prior jdk1 3 optional package known extension specification mechanism available jdk1 3 
+   documentation directory 
+   $jdk_home docs guide extensions versioning html  alternatively available online href  http   java sun com j2se 1 3 docs guide extensions versioning html   
+   http   java sun com j2se 1 3 docs guide extensions versioning html p  
+   
+    ant task name  jarlib-manifest  
+    
+    
+       version manifest spec task generates  
+        
+    
+        created string used creating manifest library display information extension supported library any   
+        
+    
+       extensionadapter objects representing 
+       dependencies required library  
+        
+    
+       extensionadapter objects representing optional 
+       dependencies required library  
+        
+    
+       extra attributes user specifies main section manifest location generated manifest placed  
+       
+        param destfile location generated manifest placed  
+        
+    
+       adds extension library implements  
+       
+        param extensionadapter extension library implements  
+       
+        throws buildexception multiple extensions detected library  
+        
+    
+       adds set extensions library requires  
+       
+        param extensionset set extensions library requires  
+        
+    
+       adds set extensions library optionally requires  
+       
+        param extensionset set extensions library optionally requires  
+        
+    
+       adds attribute put main section manifest  
+       
+        param attribute attribute put main section manifest  
+        
+    
+       execute task  
+       
+        throws buildexception task fails  
+        
+  add dependency data manifest dependencies 
+  add dependency data manifest optional  
+  dependencies 
+    
+       validate tasks parameters  
+       
+        throws buildexception invalid parameters found 
+        
+    
+       add any extra attributes manifest  
+       
+        param attributes manifest section write 
+              attributes write out manifest destfile  
+       
+        param manifest manifest 
+        throws ioexception error writing file 
+        
+   ignore 
+    
+       append specified extensions specified attributes  
+       use extensionkey list extensions  usually  extension-list required dependencies optional-extension-list optional 
+       dependencies  note   optional  dependencies not part specification  
+       
+        param attributes attributes add extensions param extensions list extensions 
+        throws buildexception error occurs 
+        
+    
+       append attribute extension-list  lib0 lib1 lib2  
+       using specified prefix counting up specified size use specified extensionkey generate list optional dependencies aswell  
+       
+        param size number librarys list 
+        param listprefix prefix librarys 
+        param attributes attributes add key-value param extensionkey key use 
+        
+  add something extension-list  javahelp java3d  
+    
+       convert list extensionset objects extensions  
+       
+        param extensionsets list extensionsets add list 
+        throws buildexception error occurs 
+       org apache tools ant taskdefs optional extension JarLibManifestTask org apache tools ant taskdefs optional extension jarlibmanifesttask task setdestfile file destfile destfile   destfile addconfiguredextension extensionadapter extensionadapter buildexception extension message   
+                 can not have multiple extensions defined in one library buildexception message   
+          
+        extension   extensionadapter toextension addconfigureddepends extensionset extensionset    
+        dependencies add extensionset addconfiguredoptions extensionset extensionset    
+        optionals add extensionset addconfiguredattribute extraattribute attribute    
+        extraattributes add attribute execute buildexception   
+        validate manifest manifest manifest attributes attributes   manifest getmainattributes    
+ 
+        attributes put attributes name manifest_version  manifest_version createdby    apache ant     getproject   getproperty magicnames ant_version   
+        attributes putvalue created_by  createdby   
+ 
+        appendextraattributes attributes extension    
+            extension addextension extension  attributes arraylist depends   toextensions dependencies   
+        appendextensionlist attributes  
+                             extension extension_list  
+                              lib   
+                             depends size     
+        appendlibrarylist attributes   lib   depends arraylist option   toextensions optionals   
+        appendextensionlist attributes  
+                             extension optional_extension_list  
+                              opt   
+                             option size     
+        appendlibrarylist attributes   opt   option message    generating manifest     destfile getabsolutefile    
+            log message  project msg_info   
+            writemanifest manifest ioexception ioe buildexception ioe getmessage    ioe validate buildexception destfile message    destfile attribute not specified buildexception message destfile exists       destfile isfile message   destfile     is not a file buildexception message appendextraattributes attributes attributes iterator iterator   extraattributes iterator iterator hasnext extraattribute attribute   
+                 extraattribute  iterator next    
+            attributes putvalue attribute getname    
+                                 attribute getvalue writemanifest manifest manifest ioexception   
+        fileoutputstream output output fileoutputstream destfile   
+            manifest write output   
+            output flush output output close ioexception e appendlibrarylist attributes attributes listprefix arraylist extensions buildexception size   extensions size i   0  i   size  i extension ext    extension  extensions get i prefix   listprefix   i    -   
+            extension addextension ext  prefix  attributes appendextensionlist attributes attributes attributes name extensionkey listprefix size stringbuffer sb stringbuffer i   0  i   size  i      
+            sb append listprefix   
+            sb append i   
+            sb append ' '   
+          
+ 
+          
+          
+        attributes put extensionkey  sb tostring arraylist toextensions arraylist extensionsets buildexception arraylist results arraylist size   extensionsets size i   0  i   size  i extensionset set    extensionset  extensionsets get i extension   extensions   set toextensions getproject j   0  j   extensions length  j      
+                results add extensions  j results  
+      
+ org apache tools ant taskdefs optional extension JarLibManifestTask

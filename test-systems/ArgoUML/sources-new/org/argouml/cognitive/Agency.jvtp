@@ -1,0 +1,188 @@
+ 
+   $id$ 
+   copyright  c  1996-2006 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications  
+    
+   agency manages critics classes not really first class 
+   objects java singleton instance agency made passed 
+   around needed agency keeps registry critics applied each type design material design material instance critiqued asks agency apply registered critic's current scheme thread proactively  continuously critiques design hand  even user idle simple works disadvantage _all_ active critics related given design material applied  regardless reason critiquing lot cpu time basically wasted    p  
+   
+   todo moving toward reactionary scheme specific design manipulations editor cause critics 
+   relevant those manipulations applied transition still half done   triggers critiquing requests code triggers currently dormant  latent?   p  
+    
+   todo strong dependency cycle between agency designer either need merged single class partitioned differently   
+   perhaps using interface break cycle designer singleton gets 
+   passed every single part critic subsystem  creating strong 
+   coupling throughout  - tfm 20070620 
+   
+    author jason robbins 
+    
+  implements java io serialization 
+    
+       logger registry critics currently loaded design environment main control mechanism determining critics active  
+        
+    
+       construct new agency instance given controlmech main control mechanism determining critics active  
+       
+        param cm given controlmech 
+        
+    
+       construct new agency instance use standardcm main 
+       control mechanism determining critics active java not really support classes first class 
+       objects one instance agency passed around needed  p  
+       
+       theagency actually stored code designer thedesigner    code   
+       
+        see designer#thedesigner 
+        
+        return agency agency instance 
+        
+    
+        return registry  
+        
+    
+        return critics 
+        deprecated 0 25 4 tfmorris - use   link #getcriticlist     
+        
+    
+        return critics 
+        
+    
+        param cr critic add register 
+        
+    
+        param crclassname critic class name 
+        param dmclassname design material class name 
+        
+    
+       register critic global table critics loaded  critics associated one design material 
+       classes  one way registration static initializer design material class additional market  critics added through menu command some control panel    
+       
+        param cr critic register 
+        param clazz design material class criticized 
+        
+    
+       transitional method migration purposes   don't use  
+        param cr critic register 
+        param clazz uml class criticized 
+        
+    
+       return collection critics applied design material subclass  including inherited critics  
+       
+        param clazz design material criticize 
+        return collection critics 
+        
+    
+       return link vector critics directly 
+       associated given design material subclass  p aren't any empty vector returned  
+       
+        param clazz design material 
+        return critics 
+        deprecated 0 25 4 tfmorris - use  
+         link #criticlistforspecificclass class    
+        
+    
+       return list critics directly 
+       associated given design material subclass  p aren't any empty list returned  
+       
+        param clazz design material 
+        return critics 
+        
+    
+       apply critics applied given 
+       design material instance appropriate given 
+       designer   p call critique causes compilation error conflicts instance method critique  
+       
+        param dm design material 
+        param d designer 
+        param reasoncode reason 
+        
+    
+        param dm design material 
+        param d designer 
+        
+    
+        param dm design material 
+        param d designer 
+        param thecritics critics 
+        param reasoncode reason 
+        
+    
+       compute critics active e applied applyallcritics given designer   p  
+       
+       todo setting global data isenabled bit each critic  based needs one designer don't really support one designer  
+       
+       todo loop over simpler vector critics  not compoundcritics 
+       
+        param d designer some object receive notifications agency changes 
+       state   static observers normal observers singleton 
+       instance class  
+       
+        param obs notified object agency changes  notify observers  
+       
+        param o notified object 
+       org argouml cognitive Agency org argouml cognitive agency observable hashtable list critic   criticregistry hashtable list critic   100 hashtable critic  singletoncritics hashtable critic  40 agency controlmech cm    
+        controlmech   cm agency     
+        controlmech standardcm agency theagency     
+        designer dsgr   designer thedesigner dsgr null dsgr getagency hashtable list critic   getcriticregistry criticregistry  
+      
+ 
+      
+     deprecated vector critic  getcritics vector critic  critics list critic  getcriticlist critics addcritic critic cr critics contains cr cr compoundcritic     
+            critics add cr critic c     compoundcritic  cr  getcriticlist      
+                addcritic c register crclassname dmclassname dmclass dmclass forname dmclassname java lang classnotfoundexception e    
+            log error  error loading dm     dmclassname  e critic cr   singletoncritics get crclassname cr crclass crclass forname crclassname java lang classnotfoundexception e    
+                log error  error loading cr     crclassname  e cr    critic  crclass newinstance java lang illegalaccessexception e    
+                log error  error instancating cr     crclassname  e java lang instantiationexception e    
+                log error  error instancating cr     crclassname  e singletoncritics put crclassname  cr   
+            addcritic cr   
+          
+        register cr  dmclass register critic cr clazz    
+        list critic  thecritics   getcriticregistry   get clazz thecritics thecritics arraylist critic     
+            criticregistry put clazz  thecritics   
+          
+        thecritics add cr   
+        notifystaticobservers cr   
+        log debug  registered      thecritics tostring     
+        cachedcritics remove clazz   
+        addcritic cr register critic cr  object clazz    
+        register cr clazz hashtable collection critic   cachedcritics hashtable collection critic collection critic  criticsforclass clazz    
+        collection critic  col   cachedcritics get clazz col col arraylist critic     
+	    col addall criticlistforspecificclass clazz    
+	    collection classes arraylist clazz getsuperclass classes add clazz getsuperclass clazz getinterfaces classes addall arrays aslist clazz getinterfaces c   classes    
+		col addall criticsforclass c    
+	      
+	    cachedcritics put clazz  col col  
+ 
+      
+ 
+      
+     deprecated vector critic  criticsforspecificclass clazz vector critic  criticlistforspecificclass clazz list critic  criticlistforspecificclass clazz    
+        list critic  thecritics   getcriticregistry   get clazz thecritics thecritics arraylist critic     
+            criticregistry put clazz  thecritics thecritics applyallcritics  
+        object dm  
+        designer d reasoncode dmclazz   dm getclass    
+        collection critic  c   criticsforclass dmclazz   
+        applycritics dm  d  c  reasoncode applyallcritics object dm  designer d dmclazz   dm getclass    
+        collection critic  c   criticsforclass dmclazz   
+        applycritics dm  d  c  -1l applycritics  
+        object dm  
+        designer d  
+        collection critic  thecritics reasoncode critic c   thecritics c isactive      c matchreason reasoncode c critique dm  d exception ex    
+                    log error  disabling critique due to exception\n  
+			        c    \n    dm  
+			      ex   
+                    c setenabled determineactivecritics designer d critic c   critics controlmech isrelevant c  d     
+                c beactive c beinactive addstaticobserver observer obs    
+        agency a   theagency a a addobserver obs notifystaticobservers object o theagency theagency   setchanged    
+            theagency   notifyobservers o   
+          
+      
+ 
+ org argouml cognitive Agency

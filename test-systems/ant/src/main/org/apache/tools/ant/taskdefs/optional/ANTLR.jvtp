@@ -1,0 +1,147 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+    invokes antlr translator generator grammar file file process output result optional super grammar file    
+    optional flag enable html output    
+    optional flag print out diagnostic file    
+    optional flag add trace methods    
+    optional flag add trace methods parser only    
+    optional flag add trace methods lexer only    
+    optional flag add trace methods tree walker only    
+    working directory    
+    captures antlr's output debug attribute    
+    instance utility class use file operations     
+    constructor antlr task grammar file process  
+        param target gramer file directory write generated files param outputdirectory output directory 
+        
+    
+       sets optional super grammar file  
+       use setglib file supergrammar  instead  
+        param supergrammar super grammar filename 
+        deprecated ant 1 6 
+        
+    
+       sets optional super grammar file 
+        param supergrammar super grammar file ant 1 6 
+        
+    
+       sets flag enable parseview debugging 
+        param enable code boolean  code  value true  emit html 
+        param enable code boolean  code  value 
+        
+    
+       sets flag emit diagnostic text 
+        param enable code boolean  code  value true  enables tracing  
+        param enable code boolean  code  value true  enables parser tracing  
+        param enable code boolean  code  value true  enables lexer tracing  
+        param enable code boolean  code  value 
+        
+    
+       sets flag allow user enable tree walker tracing 
+        param enable code boolean  code  value forced fork antlr call system exit nothing right now avoid sba m not removing method keep backward compatibility 
+    
+        ant attribute ignore  true  
+        param s code boolean  code  value fork   s working directory process 
+        param d working directory 
+        
+    
+       adds classpath set directory might given antlr debug  
+        return path configured 
+        
+    
+       adds new jvm argument  
+        return  create new jvm argument any argument passed jvm  
+        see #setfork boolean  
+        
+    
+       adds jars directories containing antlr make forked jvm work without having specify directly  
+        throws buildexception error 
+        
+    
+       search given resource add directory archive contains classpath  
+       
+        p doesn't work archives jdk 1 1 url returned getresource doesn't contain name archive   p  
+        param resource resource name search pre ant 1 6 method used call getclass   getresource ant 1 6 call classloader getresource difference class getresource expects leading 
+           slash absolute  resources strip before 
+           delegating classloader getresource now emulate class's behavior  
+            
+    
+       execute task  
+        throws buildexception error 
+        
+  todo  use antlr parse grammar file refactored method populating command line arguments based user-specified attributes output directory specified  used target's directory 
+    execute forked vm    
+    
+       whether antlr version 2 7 2 higher   
+       
+        return true version antlr present 2 7 2 later ant 1 6 
+       org apache tools ant taskdefs optional ANTLR org apache tools ant taskdefs optional antlr task antlr     
+        commandline setvm javaenvutils getjreexecutable  java     
+        commandline setclassname  antlr tool settarget file target    
+        log  setting target to      target tostring    project msg_verbose targetfile   target setoutputdirectory file outputdirectory    
+        log  setting output directory to      outputdirectory tostring    project msg_verbose outputdirectory   outputdirectory setglib supergrammar sg os isfamily  dos      
+            sg   supergrammar replace sg   supergrammar  
+          
+        setglib file_utils resolvefile getproject   getbasedir    sg setglib file supergrammar supergrammar   supergrammar setdebug enable debug   enable sethtml enable    
+        html   enable setdiagnostic enable    
+        diagnostic   enable settrace enable    
+        trace   enable settraceparser enable    
+        traceparser   enable settracelexer enable    
+        tracelexer   enable settracetreewalker enable    
+        tracetreewalker   enable setfork s setdir file d workingdir   d path createclasspath commandline createclasspath getproject    createpath commandline argument createjvmarg commandline createvmargument init buildexception   
+        addclasspathentry   antlr antlrgrammarparsebehavior addclasspathentry resource resource startswith         
+            resource   resource substring 1 resource    org apache tools ant taskdefs optional   
+                  resource  
+          
+ 
+        file f   loaderutils getresourcesource getclass   getclassloader    
+                                               resource f log  found     f getabsolutepath    project msg_debug   
+            createclasspath   setlocation f log  couldn\'t find     resource  project msg_verbose execute buildexception   
+        validateattributes    
+ 
+          
+        file generatedfile   getgeneratedfile targetisoutofdate   
+            targetfile lastmodified     generatedfile lastmodified supergrammarisoutofdate    supergrammar supergrammar lastmodified     generatedfile lastmodified targetisoutofdate    supergrammarisoutofdate targetisoutofdate    
+                log  compiling     targetfile     as it is newer than   
+                      generatedfile  project msg_verbose supergrammarisoutofdate    
+                log  compiling     targetfile     as     supergrammar 
+                        is newer than     generatedfile  project msg_verbose   
+              
+            populateattributes    
+            commandline createargument   setvalue targetfile tostring     
+ 
+            log commandline describecommand    project msg_verbose err   run commandline getcommandline err    0 buildexception  antlr returned      err  getlocation output   bos tostring output indexof  error      -1 buildexception  antlr signaled an error    
+                                               output  getlocation log  skipped grammar file  generated file     generatedfile 
+                    is newer    project msg_verbose populateattributes     
+        commandline createargument   setvalue  -o    
+        commandline createargument   setvalue outputdirectory tostring supergrammar commandline createargument   setvalue  -glib    
+            commandline createargument   setvalue supergrammar tostring html    
+            commandline createargument   setvalue  -html diagnostic    
+            commandline createargument   setvalue  -diagnostic trace    
+            commandline createargument   setvalue  -trace traceparser    
+            commandline createargument   setvalue  -traceparser tracelexer    
+            commandline createargument   setvalue  -tracelexer tracetreewalker is272      
+                commandline createargument   setvalue  -tracetreeparser commandline createargument   setvalue  -tracetreewalker debug    
+            commandline createargument   setvalue  -debug validateattributes buildexception targetfile targetfile isfile buildexception  invalid target      targetfile outputdirectory setoutputdirectory file targetfile getparent outputdirectory isdirectory buildexception  invalid output directory      outputdirectory file getgeneratedfile buildexception generatedfilename bufferedreader in bufferedreader filereader targetfile line line   in readline extendsindex   line indexof line startswith extendsindex   -1    
+                    generatedfilename   line substring 6  extendsindex  trim in close exception e buildexception  unable to determine generated e generatedfilename buildexception  unable to determine generated file outputdirectory  generatedfilename 
+                           html ?   html      java run command buildexception   
+        pumpstreamhandler psh pumpstreamhandler logoutputstream project msg_info teeoutputstream logoutputstream project msg_warn   
+                                                      bos  
+                                     
+        execute exe execute psh exe setantrun getproject workingdir exe setworkingdirectory workingdir   
+          
+        exe setcommandline command exe execute ioexception e buildexception e  getlocation fileutils close bos is272     
+        antclassloader l l   getproject   createclassloader commandline getclasspath     
+            l loadclass  antlr version classnotfoundexception e l l cleanup    
+              
+          
+      
+ org apache tools ant taskdefs optional ANTLR

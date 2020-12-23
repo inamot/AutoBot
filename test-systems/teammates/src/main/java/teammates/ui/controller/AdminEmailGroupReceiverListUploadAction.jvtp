@@ -1,0 +1,45 @@
+ 
+   log email addresses retrieved txt fileteammates ui controller AdminEmailGroupReceiverListUploadAction teammates ui controller adminemailgroupreceiverlistuploadaction action   
+ 
+  
+ 
+  
+ 
+     override actionresult execute     
+        gatekeeper verifyadminprivileges account   
+ 
+        data adminemailcomposepagedata account  sessiontoken   
+        blobinfo blobinfo   extractgroupreceiverlistfilekey blobinfo data isfileuploaded data filesrcurl log info  group receiver list upload failed    
+            statustoadmin    group receiver list upload failed   
+            data ajaxstatus    group receiver list upload failed  please again createajaxresult data list list groupreceiverlist   
+                    googlecloudstoragehelper getgroupreceiverlist blobinfo getblobkey i   0 list list   groupreceiverlist str   list    
+                    log info str     -     i     \n    
+                    i ioexception e    
+            data isfileuploaded data filesrcurl log info  group receiver list upload failed  uploaded file is corrupted    
+            statustoadmin    group receiver list upload failed  uploaded file is corrupted   
+            data ajaxstatus    group receiver list upload failed  uploaded file is corrupted    
+                                 please make sure the txt file contains only email addresses   
+                                 separated by comma   
+            deletegroupreceiverlistfile blobinfo getblobkey createajaxresult data   
+          
+ 
+        blobkey blobkey   blobinfo getblobkey    
+ 
+        data groupreceiverlistfilekey   blobkey getkeystring    
+ 
+        data isfileuploaded statustoadmin group receiver list uploaded   
+        data ajaxstatus    group receiver list successfully uploaded to google cloud storage createajaxresult data blobinfo extractgroupreceiverlistfilekey map list blobinfo   blobsmap   blobstoreservicefactory getblobstoreservice   getblobinfos request   
+            list blobinfo  blobs   blobsmap get paramsnames admin_email_group_receiver_list_to_upload blobs blobs isempty      
+                data ajaxstatus statusmessages no_group_receiver_list_file_given  
+                iserror blobinfo groupreceiverlistfile   blobs get 0 validategroupreceiverlistfile groupreceiverlistfile illegalstateexception e blobinfo validategroupreceiverlistfile blobinfo groupreceiverlistfile groupreceiverlistfile getcontenttype   contains  text       
+            deletegroupreceiverlistfile groupreceiverlistfile getblobkey     
+            iserror data ajaxstatus statusmessages not_a_receiver_list_file groupreceiverlistfile deletegroupreceiverlistfile blobkey blobkey blobkey equals blobkey logic deleteadminemailuploadedfile blobkey blobstorefailureexception bfe    
+            statustoadmin action_result_failure 
+                          unable to delete group receiver list file  possible unused file with key    
+                      blobkey getkeystring   
+                           error message    
+                      bfe getmessage eol  
+          
+      
+ 
+ teammates ui controller AdminEmailGroupReceiverListUploadAction

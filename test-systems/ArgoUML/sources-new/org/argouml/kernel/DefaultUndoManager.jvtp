@@ -1,0 +1,104 @@
+ 
+   $id$ 
+   copyright  c  1996-2006 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications  
+    
+   manages stacks commands undo redo defaultundomanager only temporarily singleton until changes made gef  
+    
+    author bob tarling 
+    
+    
+       set new user interaction begins description user interaction taking place  
+       often label action undomanager singleton instance  
+        
+        deprecated defaultundomanager only temporarily singleton until 
+                   changes made gef point one undo 
+                   manager per argouml project method disappear  
+        return singleton undo manager 
+        
+   flag command whether first chain interact command contains list sub-commands represents single user interaction contains commands 
+       executed part interaction  
+        
+        author bob 
+        
+   todo  i18n 
+   todo  i18norg argouml kernel DefaultUndoManager org argouml kernel defaultundomanager undomanager logger log   
+        logger getlogger defaultundomanager arraylist propertychangelistener  listeners arraylist propertychangelistener defaultundomanager deprecated undomanager getinstance instance object execute command command    
+        addcommand command command execute addcommand command command    
+ 
+        projectmanager getmanager   setsaveenabled undomax    0 command isundoable      
+            undostack clear    
+            newinteraction interaction macrocommand newinteraction    undostack isempty      
+            redostack clear    
+            newinteraction undostack size     undomax    
+                undostack remove 0   
+              
+            macrocommand interaction newinteractionlabel   
+            undostack push macrocommand macrocommand   undostack peek    
+          
+        macrocommand addcommand command setundomax max    
+        undomax   max undo interaction command   undostack pop    
+        command undo command isredoable      
+            redostack clear    
+          
+        redostack push command redo interaction command   redostack pop    
+        command execute    
+        undostack push command startinteraction label    
+        log info  starting interaction     label newinteractionlabel   label  
+        newinteraction addpropertychangelistener propertychangelistener listener    
+        listeners add listener removepropertychangelistener propertychangelistener listener    
+        listeners remove listener fire property object value propertychangelistener listener   listeners    
+            listener propertychange propertychangeevent property      value interaction abstractcommand   
+         
+  
+         
+  
+         
+        interaction lbl    
+            label   lbl undo listiterator command  it   
+                commands listiterator commands size it hasprevious      
+                it previous   undo object execute iterator command  it   commands iterator it hasnext      
+                it next   execute isundoable iterator command  it   commands iterator it hasnext command command   it next command isundoable isredoable iterator command  it   commands iterator it hasnext command command   it next command isredoable addcommand command command    
+            commands add command getundolabel isundoable undo     label can't undo     label getredolabel isredoable redo     label can't redo     label  
+              
+          
+         
+        list command  getcommands arraylist command   commands interactionstack stack interaction interactionstack labelprop addedprop removedprop sizeprop    
+            labelproperty   labelprop  
+            addedproperty   addedprop  
+            removedproperty   removedprop  
+            sizeproperty   sizeprop interaction push interaction item push item   
+            firelabel    
+            fire addedproperty  item   
+            fire sizeproperty  size item interaction pop     
+            interaction item pop    
+            firelabel    
+            fire removedproperty  item   
+            fire sizeproperty  size item firelabel     
+            fire labelproperty  getlabel getlabel undostack interactionstack undostack undolabel   
+                     undoadded   
+                     undoremoved   
+                     undosize interaction push interaction item push item item isundoable      
+                fire  undoable item interaction pop     
+            interaction item pop size      0     peek   isundoable      
+                fire  undoable item clear clear    
+            fire  undosize   size     
+            fire  undoable getlabel empty translator localize  action undo peek   getundolabel redostack interactionstack redostack redolabel    
+                     redoadded    
+                     redoremoved    
+                     redosize interaction push interaction item push item item isredoable      
+                fire  redoable item interaction pop     
+            interaction item pop size      0     peek   isredoable      
+                fire  redoable item clear clear    
+            fire  redosize   size     
+            fire  redoable getlabel empty translator localize  action redo peek   getredolabel    
+              
+          
+      
+ org argouml kernel DefaultUndoManager

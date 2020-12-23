@@ -1,0 +1,152 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications  
+    
+    provides settings altering appearance argo application  
+   
+     author linus tolke 
+     author jeremy jones 0 9 7 constructor  
+       
+        
+    
+       enables disables metal theme controls depending whether not themes supported selected look feel  
+        
+   
+        see guisettingstabinterface#handlesettingstabrefresh   
+        
+   
+        see guisettingstabinterface#handlesettingstabsave   
+        
+   make result inmediately visible case apply  
+   disabled gives various problems  e g toolbar icons wide default not give new java 5 0 looks  
+        swingutilities updatecomponenttreeui swingutilities getrootpane see guisettingstabinterface#handlesettingstabcancel   
+        
+   
+        see org argouml ui guisettingstabinterface#handleresettodefault nothing buttons not shown  
+   
+        see guisettingstabinterface#gettabkey   
+        
+   
+        see guisettingstabinterface#gettabpanel uid constructor  
+       
+        param locale locale 
+        
+    
+        return returns locale 
+        
+   
+        see java lang object#tostring   
+       org argouml ui SettingsTabAppearance org argouml ui settingstabappearance jpanel guisettingstabinterface   
+ 
+  
+  
+  
+  
+  
+ 
+  
+ 
+      
+    settingstabappearance     
+        setlayout borderlayout labelgap   10 componentgap   10  
+        jpanel top jpanel labelledlayout labelgap  componentgap    
+ 
+        jlabel label jlabel translator localize  label look-and-feel     
+        lookandfeel jcombobox lookandfeelmgr getinstance   
+			   getavailablelookandfeelnames     
+        lookandfeel addactionlistener actionlistener actionperformed actionevent e    
+                setmetalthemestate    
+              
+            
+        label setlabelfor lookandfeel   
+        top add label   
+        top add lookandfeel   
+ 
+        metallabel jlabel translator localize  label metal-theme     
+ 
+        metaltheme jcombobox lookandfeelmgr getinstance   
+                 getavailablethemenames     
+        metallabel setlabelfor metaltheme   
+        top add metallabel   
+        top add metaltheme   
+        jcheckbox j jcheckbox translator localize  label smooth-edges     
+ 
+        smoothedges   j  
+        jlabel emptylabel jlabel    
+        emptylabel setlabelfor smoothedges   
+ 
+        top add emptylabel   
+        top add smoothedges   
+ 
+        jlabel languagelabel jlabel translator localize  label language     
+        collection c   mylocale getlocales    
+        language jcombobox c toarray     
+        object o   mylocale getdefault c o language setselecteditem o   
+          
+        language addactionlistener actionlistener actionperformed actionevent e    
+                jcombobox combo    jcombobox  e getsource    
+                locale     mylocale  combo getselecteditem    getlocale    
+              
+            
+        languagelabel setlabelfor language   
+        top add languagelabel   
+        top add language   
+ 
+        top setborder borderfactory createemptyborder 10  10  10  10    
+        add top  borderlayout center   
+ 
+        jlabel restart jlabel translator localize  label restart-application     
+        restart sethorizontalalignment swingconstants center   
+        restart setverticalalignment swingconstants center   
+        restart setborder borderfactory createemptyborder 10  2  10  2    
+        add restart  borderlayout south   
+ 
+        setmetalthemestate setmetalthemestate lafname lookandfeel getselecteditem enabled   
+	    lookandfeelmgr getinstance   isthemecompatiblelookandfeel  
+		lookandfeelmgr getinstance   getlookandfeelfromname lafname    
+ 
+        metallabel setenabled enabled   
+        metaltheme setenabled enabled handlesettingstabrefresh laf   lookandfeelmgr getinstance   getcurrentlookandfeelname theme   lookandfeelmgr getinstance   getcurrentthemename    
+ 
+        lookandfeel setselecteditem laf   
+        metaltheme setselecteditem theme   
+ 
+        smoothedges setselected configuration getboolean  
+            argo key_smooth_edges handlesettingstabsave     
+        lookandfeelmgr getinstance   setcurrentlafandthemebyname lookandfeel getselecteditem metaltheme getselecteditem     
+          
+          
+ 
+        configuration setboolean argo key_smooth_edges  
+            smoothedges isselected locale configuration setstring argo key_locale  locale tostring handlesettingstabcancel handleresettodefault gettabkey tab appearance jpanel gettabpanel mylocale   
+  
+ 
+      
+    mylocale locale locale    
+        mylocale   locale  
+      
+ 
+      
+    locale getlocale mylocale tostring     
+        stringbuffer displaystring stringbuffer mylocale tostring     
+        displaystring append        
+        displaystring append mylocale getdisplaylanguage mylocale mylocale getdisplaycountry mylocale mylocale getdisplaycountry mylocale  length     0    
+            displaystring append       
+            displaystring append mylocale getdisplaycountry mylocale    
+          
+        displaystring append mylocale equals translator getsystemdefaultlocale       
+            displaystring append displaystring tostring collection getlocales     
+        iterator i   arrays aslist translator getlocales    iterator    
+        collection c arraylist i hasnext      
+            locale locale    locale  i next    
+            c add mylocale locale c mylocale getdefault collection c    
+        locale locale   locale getdefault    
+        iterator i   c iterator i hasnext      
+            mylocale ml    mylocale  i next locale equals ml getlocale ml org argouml ui SettingsTabAppearance

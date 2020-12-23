@@ -1,0 +1,1010 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   basic ftp client  performs following actions  
+    ul  
+      li   strong send  strong  - send files remote server default action   li  
+      li   strong strong  - retrieve files remote server   li  
+      li   strong del  strong  - delete files remote server   li  
+      li   strong list  strong  - create file listing   li  
+      li   strong chmod  strong  - change unix file permissions   li  
+      li   strong rmdir  strong  - remove directories empty remote server   li  
+     ul  
+    strong note   strong  some ftp servers - notably solaris server - seem hold data ports open retr  operation  allowing timeout 
+   instead shutting down cleanly happens active passive 
+   mode ports remain open even ending ftp session  ftp 
+    send  operations seem close ports immediately behavior may cause 
+   problems some systems downloading large sets files ant 1 3 
+    
+    return code ftp - not implemented commons-net version 1 0    
+    adjust uptodate calculations server timestamps hh mm client's hh mm ss    
+    default port ftp    
+    
+       internal class allowing read contents remote file system 
+       using ftp protocol 
+       used particular ftp operations 
+       differences directoryscanner root fileset never included included directories 
+       followsymlinks defaults false 
+        
+   checkstyle visibilitymodifier bc 
+   checkstyle visibilitymodifier ant 1 6 flag set true unix save scanning time 
+            
+    
+           constructor 
+            param ftp  ftpclient object 
+            
+    
+           scans remote directory  
+           storing internally included files  directories includes supplied set matches always start current ftp working dir routine actually checking include patterns order avoid scanning everything under base dir ant1 6 
+            
+   put newroots vector include patterns without 
+   wildcard tokens 
+   construct going scan everything anyway 
+   only scan directories include matched files directories 
+   cool case not need scan subdirs relative path 
+   may case insensitive file system want results show s really disk need double check  
+    
+           scans particular directory 
+            param dir directory scan 
+            param vpath  relative path base directory remote fileset 
+           always ended file separator 
+            param fast seems always true practice 
+            
+   avoid double scanning directories only happen fast mode 
+    
+           process included file 
+            param name  path file relative directory fileset 
+            
+    
+           
+            param name path directory relative directory fileset 
+            param file directory file 
+            param fast 
+            
+    
+           temporary table speed up various scanning methods below ant 1 6 
+            
+    
+           list scanned directories ant 1 6 directory given path relative base 
+           directory already scanned? 
+           
+            p registers given directory scanned side effect   p ant 1 6 
+            
+    
+           clear internal caches ant 1 6 
+            
+    
+           list files present one directory  
+            param directory full path remote side 
+            param changedir true change directory directory before listing 
+            return array ftpfile 
+            
+  getproject   log  listing files directory     directory  project msg_debug   
+    
+           cd one directory list files present one directory  
+            param directory full path remote side 
+            return array ftpfile antftpfile representation remote file ant 1 6 
+            
+    
+               ftp client 
+                
+    
+               parent directory file file itself 
+                
+    
+               
+                
+    
+               constructor 
+                param client ftp client variable 
+                param ftpfile file 
+                param curpwd absolute remote path file found constructor 
+                param parent parent file 
+                param path relative path parent file not happen  except parent deleted another process 
+    
+               find file directory case unsensitive way 
+                param parentpath param soughtpathelement being sought 
+                return first file found null not found already right path second parameter false 
+    
+               find out file exists 
+                return  true file exists file symbolic link  find out pointing 
+                return target symbolic link name file 
+                return name file 
+                
+    
+               find out absolute path file 
+                return absolute path string 
+                
+    
+               find out relative path assuming path used construct antftpfile spelled properly regards case ok case sensitive system unix 
+                return relative path 
+                
+    
+               find out relative path rootpath enclosing scanner relative path spelled exactly disk instance antftpfile instantiated alpha file really called alpha method return alpha symbolic link encountered followed name link name target returned  
+                ie not behave file getcanonicalpath    
+                return                relative path  separated remotefilesep 
+                throws ioexception change directory fails      
+                throws buildexception one components relative path cannot found thge relative path file 
+                param currentpath          base path 
+                param currentrelativepath  relative path base path regards remote dir 
+                return relative path 
+                
+   hit hidden file assume not symlink 
+    
+               find file matching string array ftpfile method find  alpha requested alpha only casesensitive attribute set false casesensitive set true  only exact match returned  
+                param thefiles  array files 
+                param lastpathelement file name being sought 
+                return null file cannot found  otherwise return matching file  
+                
+    
+               tell file directory  
+               note return false symbolic links pointing directories  
+                return  code true  code directories 
+                
+    
+               tell file symbolic link 
+                return  code true  code symbolic links 
+                
+    
+               return attached ftp client object  
+               warning instance really shared enclosing class  
+                return  ftp client 
+                
+    
+               sets current path antftpfile 
+                param curpwd current path one set 
+                
+    
+               returns path directory containing antftpfile full path file itself case antftprootfile 
+                return parent directory antftpfile 
+                
+    
+               find out symbolic link encountered relative path file rootpath  
+                return  code true  code symbolic link encountered relative path  
+                throws ioexception one change directory directory listing operations 
+               fails 
+                throws buildexception path component relative path cannot found  
+                
+   getrelativepath finds symlinks string rep object  
+                return string containing pwd file  
+                
+    
+           special class represent remote directory itself ant 1 6 
+            
+    
+               constructor 
+                param aclient ftp client 
+                param remotedir remote directory 
+                
+    
+               find absolute path 
+                return absolute path 
+                
+    
+               find out relative path root 
+                return empty string 
+                throws buildexception actually never 
+                throws ioexception  actually never 
+                
+    
+       check ftpfiles check whether function directories ftpfile api seem make directory symbolic links incompatible want find out cd symbolic link 
+        param dir parent directory file test 
+        param file file test 
+        return true possible cd directory ant 1 6 
+        
+    
+       check ftpfiles check whether function directories ftpfile api seem make directory symbolic links incompatible want find out cd symbolic link 
+        param dir parent directory file test 
+        param file file test 
+        return true possible cd directory ant 1 6 
+        
+    
+       sets remote directory files placed may relative absolute path must path syntax expected remote server correction path syntax performed  
+       
+        param dir remote directory name  
+        
+    
+       sets ftp server send files param server remote server name  
+        
+    
+       sets ftp port used remote server  
+       
+        param port port remote server listening  
+        
+    
+       sets login user id use specified server  
+       
+        param userid remote system userid  
+        
+    
+       sets login password given user id  
+       
+        param password password remote system  
+        
+    
+       sets login account use specified server  
+       
+        param paccount account name remote system ant 1 7 true  uses binary mode  otherwise text mode  default binary   
+       
+        param binary true use binary mode transfers  
+        
+    
+       specifies whether use passive mode  set true behind firewall cannot connect without passive mode disabled default  
+       
+        param passive true passive mode used  
+        
+    
+       set true receive notification each file transferred  
+       
+        param verbose true verbose notifications required synonym tt depends  tt   set true transmit only new changed files  
+       
+       see related attributes timediffmillis timediffauto  
+       
+        param newer true only transfer newer files  
+        
+    
+       number milliseconds add time remote machine time local machine  
+       
+       use conjunction code newer  code  
+       
+        param timediffmillis number milliseconds ant 1 6 
+        
+    
+        quot true quot find out automatically time difference 
+       between local remote machine requires right create delete temporary file remote directory  
+       
+        param timediffauto true   find automatically time diff ant 1 6 
+        
+    
+       set true preserve modification times gotten  files  
+       
+        param preservelastmodified true preserver modification times  
+        
+    
+       set true transmit only files new changed remote counterparts default transmit files  
+       
+        param depends true only transfer newer files  
+        
+    
+       sets remote file separator character normally defaults unix standard forward slash manually overridden using call remote server requires some separator  only first 
+       character string used  
+       
+        param separator file separator remote system  
+        
+    
+       sets file permission mode  unix only files sent server  
+       
+        param themode unix style file mode files sent remote 
+              system  
+        
+    
+       sets default mask file creation unix server  
+       
+        param theumask unix style umask files created remote server set files upload download 
+       
+        param set set files added list files transferred  
+        
+    
+       sets ftp action taken  currently accepts  put del   
+        mkdir    chmod    list site   
+       
+        deprecated 1 5 x  
+                   setaction string deprecated replaced setaction ftp action make ant's introspection mechanism work encapsulate operations type class  
+        ant attribute ignore  true  
+       
+        param action ftp action performed  
+       
+        throws buildexception action not valid action  
+        
+    
+       sets ftp action taken  currently accepts  put del   
+        mkdir    chmod    list site   
+       
+        param action ftp action performed  
+       
+        throws buildexception action not valid action output file list  action attribute ignored any actions  
+       
+        param listing file store listing true  enables unsuccessful file put  delete operations skipped warning remainder files still transferred  
+       
+        param skipfailedtransfers true failures transfers ignored  
+        
+    
+       set flag skip errors directory creation maybe later server specific errors  
+       
+        param ignorenoncriticalerrors true non-critical errors not 
+              cause failure  
+        
+    
+       sets systemtypekey attribute  
+       method setting  code ftpclientconfig  code  remote system key  
+       
+        param systemkey key set blank default value null signifies  autodetect kept  
+        see org apache commons net ftp ftpclientconfig 
+        
+    
+       sets defaultdateformatconfig attribute  
+        param defaultdateformat configuration set  unless null empty string case ignored  
+        see org apache commons net ftp ftpclientconfig 
+        
+    
+       sets recentdateformatconfig attribute  
+        param recentdateformat configuration set  unless null empty string case ignored  
+        see org apache commons net ftp ftpclientconfig 
+        
+    
+       sets serverlanguagecode attribute  
+        param serverlanguagecode configuration set  unless null empty string case ignored  
+        see org apache commons net ftp ftpclientconfig 
+        
+    
+       sets servertimezoneconfig attribute  
+        param servertimezoneid configuration set  unless null empty string case ignored  
+        see org apache commons net ftp ftpclientconfig 
+        
+    
+       sets shortmonthnamesconfig attribute 
+       
+        param shortmonthnames configuration set  unless null empty string case ignored  
+        see org apache commons net ftp ftpclientconfig 
+        
+    
+       defines many times retry executing ftp command before giving up  
+       default 0 - try once failure give up  
+       
+        param retriesallowed number retries allow   -1 means 
+       keep trying forever   forever  may specified synonym 1  
+        
+    
+        return returns systemtypekey  
+        
+    
+        return returns defaultdateformatconfig  
+        
+    
+        return returns recentdateformatconfig  
+        
+    
+        return returns serverlanguagecodeconfig  
+        
+    
+        return returns servertimezoneconfig  
+        
+    
+        return returns shortmonthnamesconfig  
+        
+    
+        return returns timestampgranularity  
+        
+    
+       sets timestampgranularity attribute 
+        param timestampgranularity timestampgranularity set  
+        
+    
+       sets sitecommand attribute attribute 
+       names command executed action site   
+        param sitecommand sitecommand set  
+        
+    
+       sets initialsitecommand attribute attribute 
+       names site command executed immediately connection  
+        param initialcommand initialsitecommand set  
+        
+    
+       checks see required parameters set  
+       
+        throws buildexception configuration not valid  
+        
+    
+       executable retryable object  
+        param h retry hander  
+        param r object retried until succeeds number retrys reached  
+        param descr description command being run  
+        throws ioexception problem each file fileset appropriate action  send delete list  
+       
+        param ftp ftpclient instance used perform ftp actions 
+        param fs fileset actions performed  
+       
+        return number files transferred  
+       
+        throws ioexception problem reading file 
+        throws buildexception problem configuration  
+        
+   warn selectors not supported doing listing need output stream created now remove directories  start end list trunk not itself removed before leaves 
+    
+       sends files specified configured filesets remote 
+       server  
+       
+        param ftp ftpclient instance used perform ftp actions 
+       
+        throws ioexception problem reading file 
+        throws buildexception problem configuration files filesets 
+    
+       correct file path correspond remote host requirements implementation currently assumes remote end handle 
+       unix-style paths forward-slash separators overridden code separator  code  task parameter attempt made determine syntax appropriate remote host  
+       
+        param file remote file name resolved 
+       
+        return filename appear server  
+        
+    
+       creates parent directories specified complete relative 
+       pathname  attempts create existing directories not cause 
+       errors  
+       
+        param ftp ftp client instance use execute ftp actions remote server  
+        param filename name file whose parents created  
+        throws ioexception under non documented circumstances 
+        throws buildexception impossible cd remote directory 
+       
+        
+   find first non cached dir 
+   check dir exists trying change not change try create auto find time difference between local remote 
+        param ftp handle ftp client 
+        return number millis add remote time make comparable local time ant 1 6 
+        
+   create local temporary file 
+   delegate deletion local temp file delete task race conditions occuring windows 
+    
+        find suitable name local remote temporary file 
+        
+    
+       checks see remote file current compared local 
+       file  returns true target file up date  
+        param ftp ftpclient 
+        param localfile local file 
+        param remotefile remote file 
+        return true target file up date 
+        throws ioexception unknown circumstances 
+        throws buildexception date remote files cannot found action get_files microsoft's ftp-service array length 0 returned configured return listings ms-dos -format sending files assume out date getting files throw error 
+    
+      sends site command ftp server 
+       param ftp ftp client 
+       param thecmd command execute 
+       throws ioexception unknown circumstances 
+       throws buildexception unknown circumstances 
+       
+    
+       sends single file remote host   code filename  code  may 
+       contain relative path specification case   code sendfile  code attempt create any necessary parent directories before sending file file sent using entire relative path 
+       spec attempt made change directories anticipated may eventually cause problems some ftp servers simplifies coding  
+        param ftp ftp client 
+        param dir base directory file sent  local  
+        param filename relative path file send 
+              locally relative dir 
+              remotely relative remotedir attribute 
+        throws ioexception unknown circumstances 
+        throws buildexception unknown circumstances 
+        
+   xxx not simply new file dir  filename ? 
+   see issue chmod command 
+   ignore delete file remote host  
+        param ftp ftp client 
+        param filename file delete 
+        throws ioexception unknown circumstances 
+        throws buildexception skipfailedtransfers set false deletion not done 
+        
+    
+       delete directory empty remote host  
+        param ftp ftp client 
+        param dirname directory delete 
+        throws ioexception unknown circumstances 
+        throws buildexception skipfailedtransfers set false deletion not done 
+        
+    
+       retrieve single file remote host   code filename  code  may 
+       contain relative path specification   p file retreived using entire relative path spec attempt made change directories anticipated may eventually cause problems some ftp servers simplifies coding   p  
+        param ftp ftp client 
+        param dir local base directory file go back 
+        param filename relative path file based upon ftp remote directory local base directory  dir  
+        throws ioexception unknown circumstances 
+        throws buildexception skipfailedtransfers false file cannot retrieved  
+        
+   ignore list information single file remote host   code filename  code  
+       may contain relative path specification   p file listing retrieved using entire relative path 
+       spec attempt made change directories anticipated may eventually cause problems some ftp servers simplifies coding   p  
+        param ftp ftp client 
+        param bw buffered writer 
+        param filename directory one list 
+        throws ioexception unknown circumstances 
+        throws buildexception unknown circumstances 
+        
+    
+       create specified directory remote host  
+       
+        param ftp ftp client connection 
+        param dir directory create  format must correct host 
+            type  
+        throws ioexception unknown circumstances 
+        throws buildexception ignorenoncriticalerrors not set true directory not created instance already existing  precisely codes 521  550 553 trigger buildexception 
+        
+   codes 521  550 553 produced ftp servers indicate attempt create directory failed directory already exists  
+    
+       look response failed mkdir action  decide whether matters not throw exception 
+        param ftp current ftp connection 
+        throws buildexception error signal 
+        
+    
+       runs task  
+       
+        throws buildexception task fails not configured 
+               correctly initial command configured send some ftp servers offer different modes operation  
+   e g  switching between unix file system mode legacy file system unix ftp server set default mask files 
+   created action mk_dir specified remote 
+   directory directory create case want find much time span between local remote 
+   ignore action perform  one send    put    recv del    delete    list    mkdir    chmod   
+        rmdir valid values 
+           
+            return array valid ftp actions symbolic equivalent action value  
+           
+            return symbol representing given action  
+            
+    
+       represents one valid timestamp adjustment values 
+       recognized code timestampgranularity  code  attribute  p timestamp adjustment may used file transfers checking 
+       uptodateness  minute means add one minute server 
+       timestamp done ftp servers typically list 
+       timestamps hh mm client filesystems typically use hh mm ss default use minute put actions none actions gets code preservelastmodified  code  
+       option takes care problem most use cases level granularity issue valid values  
+            return list valid granularity values 
+            
+   todo auto-generated method stub 
+    
+           returns number milliseconds associated attribute vary some cases depending value action parameter  
+            param action send_files get_files 
+            return number milliseconds associated attribute context supplied action 
+            
+    
+           one valid system type keys recognized systemtypekey 
+           attribute valid values  
+                return list valid system types  
+                
+    
+       enumerated class languages  
+        
+    
+                return value values  
+                 return list valid language types  
+                org apache tools ant taskdefs optional net FTP org apache tools ant taskdefs optional net ftp task send_files   0 get_files   1 del_files   2 list_files   3 mk_dir   4 chmod   5 rm_dir   6 site_cmd   7 default_ftp_port   21 action_strs     
+         sending   
+         getting   
+         deleting   
+         listing   
+         making directory   
+         chmod   
+         removing   
+         site completed_action_strs     
+         sent   
+         retrieved   
+         deleted   
+         listed   
+         created directory   
+         mode changed   
+         removed   
+         site command executed action_target_strs     
+         files   
+         files   
+         files   
+         files   
+         directory   
+         files   
+         directories   
+         site command ftpdirectoryscanner directoryscanner ftpclient ftp ftpdirectoryscanner ftpclient ftp ftp   ftp setfollowsymlinks scan includes includes 1   
+                includes 0 excludes excludes 0   
+              
+ 
+            filesincluded vector    
+            filesnotincluded vector    
+            filesexcluded vector    
+            dirsincluded vector    
+            dirsnotincluded vector    
+            dirsexcluded vector cwd   ftp printworkingdirectory    
+                  
+                forceremotesensitivitycheck    
+ 
+                checkincludepatterns    
+                clearcaches    
+                ftp changeworkingdirectory cwd ioexception e buildexception  unable to scan ftp server     e checkincludepatterns     
+ 
+            hashtable newroots hashtable icounter   0  icounter   includes length  icounter newpattern   
+                    selectorutils rtrimwildcardtokens includes icounter    
+                newroots put newpattern  includes icounter remotedir remotedir   ftp printworkingdirectory ioexception e buildexception  could not read current ftp directory   
+                        getlocation     
+                  
+              
+            antftpfile baseftpfile antftprootfile ftp  remotedir   
+            rootpath   baseftpfile getabsolutepath newroots containskey        
+                  
+                scandir rootpath enumeration enum2   newroots keys enum2 hasmoreelements currentelement enum2 nextelement originalpattern newroots get currentelement   
+                    antftpfile myfile antftpfile baseftpfile  currentelement isok traversessymlinks path myfile exists      
+                        forceremotesensitivitycheck remotesensitivitychecked 
+                               remotesystemcasesensitive    isfollowsymlinks      
+                              
+                              
+                            path   myfile getfastrelativepath path   myfile getrelativepath    
+                                traversessymlinks   myfile istraversesymlinks ioexception be buildexception be  getlocation buildexception be    
+                                isok isok isok    
+                        currentelement   path replace remotefilesep charat 0   file separatorchar isfollowsymlinks   
+                               traversessymlinks myfile isdirectory isincluded currentelement  
+                                   currentelement length     0    
+                                accountforincludeddir currentelement  myfile currentelement length     0 currentelement charat currentelement 
+                                                               length   - 1  
+                                           file separatorchar    
+                                        currentelement   
+                                            currentelement   file separatorchar  
+                                      
+                                  
+                                scandir myfile getabsolutepath    currentelement iscasesensitive 
+                                   originalpattern equals currentelement     
+                                accountforincludedfile currentelement iscasesensitive 
+                                          originalpattern 
+                                        equalsignorecase currentelement     
+                                accountforincludedfile currentelement scandir dir vpath fast fast    hasbeenscanned vpath ftp changeworkingdirectory dir completepath vpath equals        
+                    completepath   rootpath   remotefilesep 
+                          vpath replace file separatorchar  remotefilesep charat 0 completepath   rootpath  
+                  
+                ftpfile   newfiles   listfiles completepath newfiles ftp changetoparentdirectory i   0  i   newfiles length  i      
+                    ftpfile file   newfiles i file getname   equals      
+                             file getname   equals isfunctioningasdirectory ftp  dir  file name   vpath   file getname slowscanallowed isfollowsymlinks      file issymboliclink      
+                                dirsexcluded addelement name   
+                                slowscanallowed isincluded name     
+                                accountforincludeddir name antftpfile ftp  file  completepath    fast dirsnotincluded addelement name fast    couldholdincluded name     
+                                    scandir file getname    
+                                            name   file separator  fast fast    slowscanallowed    
+                                scandir file getname    
+                                        name   file separator  fast name   vpath   file getname isfollowsymlinks      file issymboliclink      
+                                filesexcluded addelement name isfunctioningasfile ftp  dir  file     
+                                accountforincludedfile name   
+                              
+                          
+                      
+                  
+                ftp changetoparentdirectory ioexception e buildexception  error communicating with ftp   
+                        server     e accountforincludedfile name filesincluded contains name  
+                    filesexcluded contains name isincluded name isexcluded name     
+                        filesincluded addelement name filesexcluded addelement name filesnotincluded addelement name accountforincludeddir name  antftpfile file fast dirsincluded contains name  
+                    dirsexcluded contains name isexcluded name fast file issymboliclink file getclient   changeworkingdirectory file curpwd ioexception ioe buildexception  could not change directory to curpwd    
+                              
+                            scandir file getlink    
+                                name   file separator  fast file getclient   changeworkingdirectory file curpwd ioexception ioe buildexception  could not change directory to curpwd    
+                              
+                            scandir file getname    
+                                name   file separator  fast   
+                          
+                      
+                    dirsincluded addelement name dirsexcluded addelement name fast    couldholdincluded name file getclient   changeworkingdirectory file curpwd ioexception ioe buildexception  could not change directory to curpwd    
+                          
+                        scandir file getname    
+                                name   file separator  fast hasbeenscanned vpath scanneddirs add vpath clearcaches     
+            filelistmap clear    
+            scanneddirs clear ftpfile   listfiles directory changedir currentpath   directory changedir result   ftp changeworkingdirectory directory result currentpath   ftp printworkingdirectory ioexception ioe buildexception ioe  getlocation filelistmap containskey currentpath     
+                getproject   log  filelist map used in listing files   project msg_debug ftpfile    filelistmap get currentpath    
+              
+            ftpfile   result result   ftp listfiles ioexception ioe buildexception ioe  getlocation     
+              
+            filelistmap put currentpath  result remotesensitivitychecked    
+                checkremotesensitivity result  directory result forceremotesensitivitycheck remotesensitivitychecked checkremotesensitivity ftp listfiles    ftp printworkingdirectory ioexception ioe buildexception ioe  getlocation ftpfile   listfiles directory listfiles directory checkremotesensitivity ftpfile   array directory array candidatefound target icounter   0  icounter   array length  icounter array icounter  isdirectory array icounter  getname   equals      
+                            array icounter  getname   equals          
+                        candidatefound target   fiddlename array icounter  getname     
+                        getproject   log  will to cd to   
+                              target     where a directory called     array icounter  getname   
+                                exists   project msg_debug pcounter   0  pcounter   array length  pcounter array pcounter  getname   equals target     pcounter    icounter    
+                                candidatefound candidatefound candidatefound getproject   log  testing sensitivity  attempting to cd to   
+                          target  project msg_debug   
+                    remotesystemcasesensitive     ftp changeworkingdirectory target ioexception ioe    
+                    remotesystemcasesensitive ftp changeworkingdirectory directory ioexception ioe buildexception ioe  getlocation     
+                      
+                  
+                getproject   log  remote system is sensitive       remotesystemcasesensitive  
+                    project msg_verbose   
+                remotesensitivitychecked fiddlename origin    
+            stringbuffer result stringbuffer icounter   0  icounter   origin length    icounter character islowercase origin charat icounter      
+                    result append character touppercase origin charat icounter character isuppercase origin charat icounter      
+                    result append character tolowercase origin charat icounter result append origin charat icounter result tostring antftpfile antftpfile ftpclient client  ftpfile ftpfile curpwd client   client ftpfile   ftpfile curpwd   curpwd antftpfile antftpfile parent path parent   parent client   parent client  
+                vector pathelements   selectorutils tokenizepath path result client changeworkingdirectory parent getabsolutepath result curpwd   parent getabsolutepath ioexception ioe buildexception  could not change working dir to   
+                      parent curpwd fcount   0  fcount   pathelements size   - 1  fcount currentpathelement pathelements elementat fcount result client changeworkingdirectory currentpathelement result     iscasesensitive   
+                                remotesystemcasesensitive     remotesensitivitychecked     
+                           currentpathelement   findpathelementcaseunsensitive curpwd  
+                               currentpathelement currentpathelement result curpwd curpwd   remotefilesep 
+                              currentpathelement ioexception ioe buildexception  could not change working dir to pathelements elementat fcount  
+                                from curpwd lastpathelement pathelements elementat pathelements size   - 1   
+                ftpfile    thefiles   listfiles curpwd ftpfile   getfile thefiles  lastpathelement findpathelementcaseunsensitive parentpath soughtpathelement    
+                  
+                  
+                ftpfile   thefiles   listfiles parentpath thefiles null icounter   0  icounter   thefiles length  icounter thefiles icounter  getname   equalsignorecase soughtpathelement thefiles icounter  getname exists ftpfile getlink ftpfile getlink getname ftpfile getname getabsolutepath curpwd   remotefilesep   ftpfile getname getfastrelativepath abspath   getabsolutepath abspath indexof rootpath   remotefilesep     0 abspath substring rootpath length     remotefilesep length getrelativepath ioexception  buildexception relativepathcalculated parent traversessymlinks   parent istraversesymlinks    
+                        relativepath   getrelativepath parent getabsolutepath    
+                            parent getrelativepath relativepath   getrelativepath rootpath       
+                        relativepathcalculated relativepath getrelativepath currentpath currentrelativepath    
+                vector pathelements   selectorutils tokenizepath getabsolutepath    remotefilesep   
+                vector pathelements2   selectorutils tokenizepath currentpath  remotefilesep relpath   currentrelativepath pcount   pathelements2 size    pcount   pathelements size    pcount currentelement pathelements elementat pcount   
+                    ftpfile   thefiles   listfiles currentpath   
+                    ftpfile thefile thefiles thefile   getfile thefiles  currentelement relpath equals        
+                        relpath   relpath   remotefilesep thefile relpath   relpath   currentelement  
+                        currentpath   currentpath   remotefilesep   currentelement  
+                        log  hidden file     relpath 
+                                assumed to not be a symlink    
+                            project msg_verbose traversessymlinks   traversessymlinks    thefile issymboliclink    
+                        relpath   relpath   thefile getname    
+                        currentpath   currentpath   remotefilesep   thefile getname relpath ftpfile getfile ftpfile   thefiles lastpathelement thefiles null fcount   0  fcount   thefiles length  fcount thefiles fcount  getname   equals lastpathelement thefiles fcount iscasesensitive   
+                            thefiles fcount  getname   equalsignorecase lastpathelement thefiles fcount isdirectory ftpfile isdirectory issymboliclink ftpfile issymboliclink ftpclient getclient client setcurpwd curpwd curpwd   curpwd getcurpwd curpwd istraversesymlinks ioexception  buildexception relativepathcalculated    
+                      
+                    getrelativepath traversessymlinks tostring antftpfile      curpwd    %    ftpfile antftprootfile antftpfile antftprootfile ftpclient aclient remotedir aclient remotedir remotedir   remotedir getclient   changeworkingdirectory remotedir setcurpwd getclient   printworkingdirectory ioexception ioe buildexception ioe  getlocation getabsolutepath getcurpwd getrelativepath buildexception  ioexception isfunctioningasdirectory ftpclient ftp dir  ftpfile file result currentworkingdir file isdirectory file isfile currentworkingdir   ftp printworkingdirectory ioexception ioe    
+            getproject   log  could not find current working directory     dir checking a symlink   
+                project msg_debug currentworkingdir result   ftp changeworkingdirectory file getlink ioexception ioe    
+                getproject   log  could not cd to     file getlink checking a symlink   
+                    project msg_debug result comeback comeback   ftp changeworkingdirectory currentworkingdir ioexception ioe    
+                    getproject   log  could not cd back to     dir checking a symlink   
+                        project msg_err comeback buildexception  could not cd back to     dir checking a symlink result isfunctioningasfile ftpclient ftp dir  ftpfile file file isdirectory file isfile isfunctioningasdirectory ftp  dir  file setremotedir dir remotedir   dir setserver server server   server setport port port   port setuserid userid userid   userid setpassword password password   password setaccount paccount account   paccount setbinary binary binary   binary setpassive passive passive   passive setverbose verbose verbose   verbose setnewer newer neweronly   newer settimediffmillis timediffmillis timediffmillis   timediffmillis settimediffauto timediffauto timediffauto   timediffauto setpreservelastmodified preservelastmodified preservelastmodified   preservelastmodified setdepends depends neweronly   depends setseparator separator    
+        remotefilesep   separator setchmod themode chmod   themode setumask theumask umask   theumask addfileset fileset set    
+        filesets addelement set setaction action buildexception   
+        log  deprecated - the setaction method has been deprecated   
+                 use setaction ftp action  instead     
+ 
+        action a action    
+ 
+        a setvalue action action   a getaction setaction action action buildexception action   action getaction setlisting file listing listing   listing setskipfailedtransfers skipfailedtransfers skipfailedtransfers   skipfailedtransfers setignorenoncriticalerrors ignorenoncriticalerrors ignorenoncriticalerrors   ignorenoncriticalerrors configurationhasbeenset isconfigurationset setsystemtypekey ftpsystemtype systemkey systemkey systemkey getvalue   equals systemtypekey   systemkey  
+            configurationhasbeenset setdefaultdateformatconfig defaultdateformat defaultdateformat defaultdateformat equals defaultdateformatconfig   defaultdateformat  
+            configurationhasbeenset setrecentdateformatconfig recentdateformat recentdateformat recentdateformat equals recentdateformatconfig   recentdateformat  
+            configurationhasbeenset setserverlanguagecodeconfig languagecode serverlanguagecode serverlanguagecode serverlanguagecode equals serverlanguagecodeconfig   serverlanguagecode  
+            configurationhasbeenset setservertimezoneconfig servertimezoneid servertimezoneid servertimezoneid equals servertimezoneconfig   servertimezoneid  
+            configurationhasbeenset setshortmonthnamesconfig shortmonthnames shortmonthnames shortmonthnames equals shortmonthnamesconfig   shortmonthnames  
+            configurationhasbeenset setretriesallowed retriesallowed forever  equalsignorecase retriesallowed retriesallowed   retryable retry_forever retries   integer parseint retriesallowed retries   retryable retry_forever buildexception  
+                             invalid value retriesallowed attribute    
+                              retriesallowed retriesallowed   retries numberformatexception px buildexception  
+                         invalid value retriesallowed attribute    
+                          retriesallowed getsystemtypekey systemtypekey getvalue getdefaultdateformatconfig defaultdateformatconfig getrecentdateformatconfig recentdateformatconfig getserverlanguagecodeconfig serverlanguagecodeconfig getvalue getservertimezoneconfig servertimezoneconfig getshortmonthnamesconfig shortmonthnamesconfig  
+      
+      
+    granularity gettimestampgranularity timestampgranularity settimestampgranularity granularity timestampgranularity timestampgranularity       equals timestampgranularity timestampgranularity   timestampgranularity setsitecommand sitecommand sitecommand   sitecommand setinitialsitecommand initialcommand initialsitecommand   initialcommand checkattributes buildexception server buildexception  server attribute must be set userid buildexception  userid attribute must be set password buildexception  password attribute must be set action    list_files      listing buildexception  listing attribute must be set list   
+                    action action    mk_dir    remotedir buildexception  remotedir attribute must be set mkdir action action    chmod    chmod buildexception  chmod attribute must be set chmod   
+                    action action    site_cmd    sitecommand buildexception  sitecommand attribute must be set site   
+                    action isconfigurationset forname  org apache commons net ftp ftpclientconfig classnotfoundexception e buildexception  
+                  commons-net jar    1 4 0 is required at least one  
+                     of the attributes specified executeretryable retryhandler h  retryable r descr ioexception   
+        h execute r  descr transferfiles ftpclient ftp  fileset fs ioexception  buildexception   
+        directoryscanner ds action    send_files    
+            ds   fs getdirectoryscanner getproject fs getselectors getproject    length    0    
+                getproject   log  selectors are not supported in remote filesets   
+                    project msg_warn   
+              
+            ds ftpdirectoryscanner ftp   
+            fs setupdirectoryscanner ds  getproject     
+            ds setfollowsymlinks fs isfollowsymlinks     
+            ds scan dsfiles action    rm_dir    
+            dsfiles   ds getincludeddirectories dsfiles   ds getincludedfiles dir ds getbasedir action    send_files      action    get_files buildexception  the dir attribute must be set send   
+                    and get actions action    send_files      action    get_files     
+                dir   ds getbasedir   getabsolutepath    
+              
+          
+ 
+          
+        bufferedwriter bw action    list_files    
+                file pd   listing getparentfile pd exists      
+                    pd mkdirs    
+                  
+                bw bufferedwriter filewriter listing    
+              
+            retryhandler h retryhandler retriesallowed action    rm_dir i   dsfiles length - 1  i    0  i dsfile   dsfiles i   
+                    executeretryable h retryable execute ioexception   
+                            rmdir ftp  dsfile   
+                          
+                       dsfile bufferedwriter fbw   bw fdir   dir neweronly granularitymillis timestampgranularity getmilliseconds action i   0  i   dsfiles length  i dsfile   dsfiles i   
+                    executeretryable h retryable execute ioexception action send_files  
+                                    sendfile ftp  fdir  dsfile get_files  
+                                    getfile ftp  fdir  dsfile del_files  
+                                    delfile ftp  dsfile list_files  
+                                    listfile ftp  fbw  dsfile chmod  
+                                    dositecommand ftp   chmod     chmod 
+                                                          resolvefile dsfile    
+                                    transferred buildexception  unknown ftp action     action   
+                              
+                          
+                       dsfile bw bw close dsfiles length transferfiles ftpclient ftp ioexception  buildexception   
+        transferred   0  
+        skipped   0 filesets size      0 buildexception  at least one fileset must be specified i   0  i   filesets size    i      
+                fileset fs    fileset  filesets elementat i fs transferfiles ftp  fs   
+                  
+              
+          
+ 
+        log transferred         action_target_strs action        
+              completed_action_strs action skipped    0    
+            log skipped         action_target_strs action  
+                    were not successfully     completed_action_strs action resolvefile file file replace system getproperty  file separator   charat 0   
+            remotefilesep charat 0 createparents ftpclient ftp filename ioexception  buildexception   
+ 
+        file dir file filename dircache contains dir vector parents vector dirname dirname   dir getparent file checkdir file dirname dircache contains checkdir dir   checkdir  
+            parents addelement dir i   parents size   - 1 i    0 cwd   ftp printworkingdirectory parent   dir getparent parent ftp changeworkingdirectory resolvefile parent buildexception  could not change to   
+                           directory      ftp getreplystring i    0    
+                dir    file  parents elementat i ftp changeworkingdirectory dir getname       
+                      
+                    log  creating remote directory   
+                          resolvefile dir getpath     project msg_verbose ftp makedirectory dir getname       
+                        handlemkdirfailure ftp ftp changeworkingdirectory dir getname buildexception  could not change to   
+                               directory      ftp getreplystring     
+                      
+                  
+                dircache addelement dir   
+              
+            ftp changeworkingdirectory cwd gettimediff ftpclient ftp returnvalue   0  
+        file tempfile   findfilename ftp file_utils createnewfile tempfile localtimestamp   tempfile lastmodified    
+            bufferedinputstream instream bufferedinputstream fileinputstream tempfile    
+            ftp storefile tempfile getname    instream   
+            instream close success   ftpreply ispositivecompletion ftp getreplycode success    
+                ftpfile    ftpfiles   ftp listfiles tempfile getname ftpfiles length    1 remotetimestamp   ftpfiles 0  gettimestamp   gettime   gettime    
+                    returnvalue   localtimestamp - remotetimestamp  
+                  
+                ftp deletefile ftpfiles 0  getname     
+              
+              
+              
+            delete mydelete delete    
+            mydelete bindtoowner mydelete setfile tempfile getcanonicalfile     
+            mydelete execute exception e buildexception e  getlocation returnvalue file findfilename ftpclient ftp    
+        ftpfile    thefiles maxiterations   1000 counter   1  counter   maxiterations  counter      
+            file localfile   file_utils createtempfile  ant    integer tostring counter     tmp filename   localfile getname found counter    1    
+                    thefiles   ftp listfiles counter2   0  counter2   thefiles length  counter2 thefiles counter2  getname   equals filename     
+                        found ioexception ioe buildexception ioe  getlocation found    
+                localfile deleteonexit localfile simpledateformat timestamp_logging_sdf simpledateformat  yyyy-mm-dd hh mm ss isuptodate ftpclient ftp  file localfile remotefile ioexception  buildexception   
+        log  checking date remotefile  project msg_verbose   
+ 
+        ftpfile   files   ftp listfiles remotefile files files length    0 action    send_files    
+                log  could not date test remote file      remotefile 
+                        assuming out of date    project msg_verbose buildexception  could not date test remote file    
+                      ftp getreplystring remotetimestamp   files 0  gettimestamp   gettime   gettime localtimestamp   localfile lastmodified adjustedremotetimestamp   
+            remotetimestamp timediffmillis granularitymillis  
+ 
+        stringbuffer msg stringbuffer         
+                 append timestamp_logging_sdf format date localtimestamp    
+                 append    local    
+        log msg tostring    project msg_verbose   
+ 
+        msg stringbuffer         
+                   append timestamp_logging_sdf format date adjustedremotetimestamp    
+                 append    remote remotetimestamp    adjustedremotetimestamp    
+            msg append   -  raw     
+                 append timestamp_logging_sdf format date remotetimestamp    
+             append       
+          
+        log msg tostring    project msg_verbose action    send_files adjustedremotetimestamp    localtimestamp localtimestamp    adjustedremotetimestamp dositecommand ftpclient ftp thecmd ioexception  buildexception rc myreply log  doing site command      thecmd  project msg_verbose   
+ 
+        rc   ftp sendsitecommand thecmd rc    
+            log  failed to issue site command      thecmd  project msg_warn myreply   ftp getreplystrings x   0  x   myreply length  x myreply x  indexof  200      -1    
+                    log myreply x   project msg_warn sendfile ftpclient ftp dir filename ioexception  buildexception   
+        inputstream instream file file   getproject   resolvefile file dir  filename  getpath neweronly    isuptodate ftp  file  resolvefile filename verbose    
+                log  transferring     file getabsolutepath     
+              
+ 
+            instream bufferedinputstream fileinputstream file    
+ 
+            createparents ftp  filename   
+ 
+            ftp storefile resolvefile filename   instream success   ftpreply ispositivecompletion ftp getreplycode success s    could not put file      ftp getreplystring skipfailedtransfers    
+                    log s  project msg_warn   
+                    skipped buildexception s chmod dositecommand ftp   chmod     chmod         resolvefile filename    
+                  
+                log  file     file getabsolutepath       copied to     server  
+                    project msg_verbose   
+                transferred instream instream close ioexception ex delfile ftpclient ftp filename ioexception  buildexception verbose    
+            log  deleting     filename ftp deletefile resolvefile filename s    could not delete file      ftp getreplystring skipfailedtransfers    
+                log s  project msg_warn   
+                skipped buildexception s log  file     filename     deleted from     server  
+                project msg_verbose   
+            transferred rmdir ftpclient ftp dirname ioexception  buildexception verbose    
+            log  removing     dirname ftp removedirectory resolvefile dirname s    could not remove directory      ftp getreplystring skipfailedtransfers    
+                log s  project msg_warn   
+                skipped buildexception s log  directory     dirname     removed from     server  
+                project msg_verbose   
+            transferred getfile ftpclient ftp dir filename ioexception  buildexception   
+        outputstream outstream file file   getproject   resolvefile file dir  filename  getpath neweronly    isuptodate ftp  file  resolvefile filename verbose    
+                log  transferring     filename     to   
+                       file getabsolutepath     
+              
+ 
+            file pdir   file getparentfile pdir exists      
+                pdir mkdirs    
+              
+            outstream bufferedoutputstream fileoutputstream file    
+            ftp retrievefile resolvefile filename   outstream ftpreply ispositivecompletion ftp getreplycode s    could not get file      ftp getreplystring skipfailedtransfers    
+                    log s  project msg_warn   
+                    skipped buildexception s log  file     file getabsolutepath       copied from   
+                       server  project msg_verbose   
+                transferred preservelastmodified    
+                    outstream close    
+                    outstream ftpfile   remote   ftp listfiles resolvefile filename remote length   0    
+                        file_utils setfilelastmodified file  
+                                                      remote 0  gettimestamp   
+                                                       gettime   gettime outstream outstream close ioexception ex listfile ftpclient ftp  bufferedwriter bw filename ioexception  buildexception verbose    
+            log  listing     filename   
+          
+        ftpfile   ftpfiles   ftp listfiles resolvefile filename ftpfiles ftpfiles length   0    
+            bw write ftpfiles 0  tostring     
+            bw newline    
+            transferred makeremotedir ftpclient ftp dir ioexception  buildexception workingdirectory   ftp printworkingdirectory verbose    
+            log  creating directory      dir dir indexof         0    
+            ftp changeworkingdirectory subdir stringtokenizer st stringtokenizer dir st hasmoretokens      
+            subdir   st nexttoken    
+            log  checking     subdir  project msg_debug ftp changeworkingdirectory subdir ftp makedirectory subdir rc   ftp getreplycode ignorenoncriticalerrors 
+                            rc    ftpreply code_550    rc    ftpreply code_553 
+                           rc    code_521 buildexception  could not create directory    
+                              ftp getreplystring verbose    
+                        log  directory already exists verbose    
+                        log  directory created ok    
+                      
+                    ftp changeworkingdirectory subdir workingdirectory ftp changeworkingdirectory workingdirectory handlemkdirfailure ftpclient ftp buildexception rc   ftp getreplycode ignorenoncriticalerrors 
+                 rc    ftpreply code_550    rc    ftpreply code_553    rc    code_521 buildexception  could not create directory    
+                  ftp getreplystring execute buildexception   
+        checkattributes    
+ 
+        ftpclient ftp log  opening ftp connection to     server  project msg_verbose   
+ 
+            ftp ftpclient isconfigurationset    
+                ftp   ftpconfigurator configure ftp ftp connect server  port ftpreply ispositivecompletion ftp getreplycode buildexception  ftp connection failed    
+                       ftp getreplystring     
+              
+ 
+            log  connected   project msg_verbose   
+            log  logging in to ftp server   project msg_verbose account ftp login userid  password  account account ftp login userid  password buildexception  could not login to ftp server    
+              
+ 
+            log  login succeeded   project msg_verbose binary    
+                ftp setfiletype org apache commons net ftp ftp image_file_type ftpreply ispositivecompletion ftp getreplycode buildexception  could not set transfer type    
+                          ftp getreplystring ftp setfiletype org apache commons net ftp ftp ascii_file_type ftpreply ispositivecompletion ftp getreplycode buildexception  could not set transfer type    
+                          ftp getreplystring passive    
+                log  entering passive mode   project msg_verbose   
+                ftp enterlocalpassivemode ftpreply ispositivecompletion ftp getreplycode buildexception  could not enter into passive   
+                            mode      ftp getreplystring initialsitecommand retryhandler h retryhandler retriesallowed ftpclient lftp   ftp  
+                executeretryable h retryable execute ioexception   
+                        dositecommand lftp  ftp initialsitecommand   
+                      
+                    initial site command initialsitecommand umask retryhandler h retryhandler retriesallowed ftpclient lftp   ftp  
+                executeretryable h retryable execute ioexception   
+                        dositecommand lftp   umask     umask   
+                      
+                    umask     umask action    mk_dir    
+                retryhandler h retryhandler retriesallowed ftpclient lftp   ftp  
+                executeretryable h retryable execute ioexception   
+                        makeremotedir lftp  remotedir   
+                      
+                   remotedir action    site_cmd    
+                    retryhandler h retryhandler retriesallowed ftpclient lftp   ftp  
+                    executeretryable h retryable execute ioexception   
+                            dositecommand lftp  ftp sitecommand   
+                          
+                        site command sitecommand remotedir log  changing the remote directory   project msg_verbose   
+                    ftp changeworkingdirectory remotedir ftpreply ispositivecompletion ftp getreplycode buildexception  could not change remote   
+                                directory      ftp getreplystring neweronly    timediffauto    
+                  
+                  
+                    timediffmillis   gettimediff ftp   
+                  
+                log action_strs action          action_target_strs action    
+                transferfiles ftp ioexception ex buildexception  error during ftp transfer      ex  ex ftp ftp isconnected log  disconnecting   project msg_verbose   
+                    ftp logout    
+                    ftp disconnect ioexception ex action enumeratedattribute valid_actions     
+             send    put    recv    get    del    delete    list    mkdir   
+             chmod    rmdir    site getvalues valid_actions getaction actionl   getvalue   tolowercase locale us actionl equals  send      actionl equals  put send_files actionl equals  recv      actionl equals  get get_files actionl equals  del      actionl equals  delete del_files actionl equals  list list_files actionl equals  chmod chmod actionl equals  mkdir mk_dir actionl equals  rmdir rm_dir actionl equals  site site_cmd send_files granularity enumeratedattribute valid_granularities     
+                     minute    none getvalues valid_granularities getmilliseconds action granularityu   getvalue   touppercase locale us equals granularityu action    send_files granularity_minute minute  equals granularityu granularity_minute 0l granularity getdefault     
+            granularity g granularity    
+            g setvalue g ftpsystemtype enumeratedattribute valid_system_types     
+                        unix    vms    windows    os 2    os 400   
+                    mvs getvalues valid_system_types ftpsystemtype getdefault     
+                ftpsystemtype ftpst ftpsystemtype    
+                ftpst setvalue ftpst languagecode enumeratedattribute valid_language_codes   
+            getvalidlanguagecodes getvalidlanguagecodes     
+            collection c   ftpclientconfig getsupportedlanguagecodes ret c size     1 i   0  
+            ret i iterator it   c iterator    it hasnext    i      
+                ret i it next ret getvalues valid_language_codes languagecode getdefault     
+                 languagecode lc languagecode    
+                 lc setvalue lc  
+               
+       
+ 
+ org apache tools ant taskdefs optional net FTP

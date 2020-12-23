@@ -1,0 +1,109 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   wait external event occur  
+   
+   wait external process start complete some 
+   task useful code parallel  code  task synchronize execution tests server startup following attributes specified waitfor task  
+    ul  
+    li maxwait - maximum length time wait before giving up  li  
+    li maxwaitunit unit used interpret maxwait attribute  li  
+    li checkevery - amount time sleep between each check  li  
+    li checkeveryunit unit used interpret checkevery attribute  li  
+    li timeoutproperty - name property set maxwait exceeded   li  
+     ul maxwaitunit checkeveryunit allowed following values  
+   millisecond  second  minute  hour  day week default millisecond programmatic use subclassing two methods may overrridden  
+    code processsuccess  code code processtimeout  code ant 1 5 
+   
+    ant task category  control  
+    
+    default max wait time    
+    
+       constructor  names task  waitfor   
+        
+    
+       set maximum length time wait  
+        param time code long  code  value 
+        
+    
+       set max wait time unit 
+        param unit enumerated  code unit  code  value 
+        
+    
+       set time between each check 
+        param time code long  code  value 
+        
+    
+       set check every time unit 
+        param unit enumerated  code unit  code  value 
+        
+    
+       name property set timeout  
+        param p property name 
+        
+    
+       check repeatedly specified conditions until become 
+       true timeout expires  
+        throws buildexception error 
+        
+   ignore 
+    
+       actions taken successful waitfor override point base implementation nothing ant1 7 
+        
+    
+       actions taken unsuccessful wait override point timeout processing takes place base implementation sets timeoutproperty timeout property defined ant1 7 enumeration units  
+       millisecond  second  minute  hour  day  week 
+        todo use timestamps many places not factor out 
+        
+    millisecond string    
+    second string    
+    minute string    
+    hour string    
+    day string    
+    week string    
+    constructor unit enumerated type     
+    
+           convert value multipler  millisecond unit   
+            return multipler long value  
+            
+    
+            see enumeratedattribute#getvalues   
+            
+      inheritdoc    org apache tools ant taskdefs WaitFor org apache tools ant taskdefs waitfor conditionbase waitfor waitfor setmaxwait time    
+        maxwaitmillis   time setmaxwaitunit unit unit    
+        maxwaitmultiplier   unit getmultiplier setcheckevery time    
+        checkeverymillis   time setcheckeveryunit unit unit    
+        checkeverymultiplier   unit getmultiplier settimeoutproperty p    
+        timeoutproperty   p execute buildexception countconditions     1 buildexception  you must not nest more than one   
+                                        condition into   
+                                       gettaskname countconditions     1 buildexception  you must nest a condition into   
+                                       gettaskname     
+          
+        condition c    condition  getconditions   nextelement savedmaxwaitmillis   maxwaitmillis savedcheckeverymillis   checkeverymillis maxwaitmillis    maxwaitmultiplier  
+            checkeverymillis    checkeverymultiplier start   system currenttimemillis end   start   maxwaitmillis system currenttimemillis     end c eval      
+                    processsuccess thread sleep checkeverymillis interruptedexception e    
+                      
+                  
+              
+            processtimeout maxwaitmillis   savedmaxwaitmillis  
+            checkeverymillis   savedcheckeverymillis processsuccess     
+        log gettaskname        condition was met   project msg_verbose processtimeout     
+        log gettaskname        timeout   project msg_verbose timeoutproperty getproject   setnewproperty timeoutproperty unit enumeratedattribute millisecond    millisecond second    second minute    minute hour    hour day    day week    week units     
+            millisecond  second  minute  hour  day  week unit     
+            timetable put millisecond 1l    
+            timetable put second 1000l    
+            timetable put minute 1000l   60l    
+            timetable put hour 1000l   60l   60l    
+            timetable put day 1000l   60l   60l   24l    
+            timetable put week 1000l   60l   60l   24l   7l getmultiplier key   getvalue   tolowercase l timetable get key l longvalue getvalues units  
+          
+      
+ org apache tools ant taskdefs WaitFor

@@ -1,0 +1,46 @@
+teammates ui controller InstructorFeedbackEditPageAction teammates ui controller instructorfeedbackeditpageaction action   
+ 
+     override actionresult execute entitydoesnotexistexception courseid   getrequestparamvalue paramsnames course_id   
+        assumption assertpostparamnotnull paramsnames course_id  courseid feedbacksessionname   getrequestparamvalue paramsnames feedback_session_name   
+        assumption assertpostparamnotnull paramsnames feedback_session_name  feedbacksessionname shouldloadineditmodeparam   getrequestparamvalue paramsnames feedback_session_enable_edit shouldloadineditmode equals shouldloadineditmodeparam   
+ 
+        feedbacksessionattributes feedbacksession   logic getfeedbacksession feedbacksessionname  courseid   
+        gatekeeper verifyaccessible  
+                logic getinstructorforgoogleid courseid  account googleid   
+                feedbacksession paramsnames instructor_permission_modify_session   
+ 
+        list feedbackquestionattributes  questions   logic getfeedbackquestionsforsession feedbacksessionname  courseid   
+ 
+        map questionhasresponses hashmap feedbackquestionattributes question   questions hasresponse   logic arethereresponsesforquestion question getid     
+            questionhasresponses put question getid    hasresponse   
+          
+ 
+        list studentattributes  studentlist   logic getstudentsforcourse courseid   
+        collections sort studentlist comparator studentattributes      
+             override compare studentattributes s1  studentattributes s2 s1 team equals s2 team s1 name comparetoignorecase s2 name s1 team comparetoignorecase s2 team   
+              
+            
+ 
+        list instructorattributes  instructorlist   logic getinstructorsforcourse courseid   
+        list instructorattributes  instructorswhocansubmit arraylist instructorattributes instructor   instructorlist instructor isallowedforprivilege paramsnames instructor_permission_submit_session_in_sections     
+                instructorswhocansubmit add instructor   
+              
+          
+        collections sort instructorlist comparator instructorattributes      
+             override compare instructorattributes i1  instructorattributes i2 i1 name comparetoignorecase i2 name   
+              
+            
+ 
+        instructorattributes instructor   logic getinstructorforgoogleid courseid  account googleid   
+ 
+        statustoadmin    instructorfeedbackedit page load br   
+                           editing information feedback session   
+                            span bold\       feedbacksessionname       span   
+                           in course   span bold\       courseid       span    
+ 
+        instructorfeedbackeditpagedata data instructorfeedbackeditpagedata account  sessiontoken   
+        data init feedbacksession  questions  questionhasresponses  studentlist  
+                instructorswhocansubmit  instructor  shouldloadineditmode createshowpageresult viewuris instructor_feedback_edit  data   
+      
+ 
+ teammates ui controller InstructorFeedbackEditPageAction

@@ -1,0 +1,270 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications  
+    
+   class display graphics uml interface diagram  
+    
+    
+       logger  
+        
+    
+       main constructor link figinterface   
+       
+       parent   link org argouml uml diagram ui fignodemodelelement created main box   link #getbigport name   link #getnamefig stereotype 
+         link #getstereotypefig constructor 
+       creates box operations  p properties graphic elements adjusted 
+       appropriately main boxes filled outlines  p reasons don't understand stereotype created box lines created blanking rectangle overlay bottom line avoid three compartments showing  p  
+       
+        em warning  em   much graphics positioning hard coded overall figure placed location  10 10 name compartment parent   link org argouml uml diagram ui fignodemodelelement 21 pixels high stereotype compartment created 15 pixels high parent change 19 pixels  1 link #stereoheight  here operations box created 19 pixels  
+       2 link #rowheight   p  
+       
+       caution constructor arguments only one enablesizechecking false others must set true this constructor only one called loading project case parsed size must maintained  p  
+        
+   put bits together  suppressing bounds calculations until re done efficiency  
+   set bounds figure total above  hardcoded  
+    
+       constructor use figure created existing interface node metamodel  
+       
+        param gm   not actually used current implementation 
+       
+        param node uml object being placed  
+        
+   
+        see org tigris gef presentation fig#makeselection   
+        
+   
+        see org argouml uml diagram ui figcompartmentbox#setoperationsvisible boolean  
+        
+       todo differs only very slightly version superclass probably merged don't time verify 
+             right now  - tfm - 20070109 
+        
+    
+       gets minimum size permitted interface diagram  p  
+       
+       parts hardcoded  notably fact name 
+       compartment minimum height 21 pixels  p  
+       
+        return size minimum bounding box  
+        
+   use  asize build up minimum size  start size name compartment build up  
+    2 padding before name stereotype displayed allow some space width height want maintain minimum width interfaces 
+   
+        see org tigris gef presentation fig#setlinewidth int  
+        
+   
+        see org tigris gef presentation fig#getlinewidth   
+        
+   
+        see org tigris gef presentation fig#translate int  int  
+        
+   
+        see org tigris gef presentation fig#setenclosingfig org tigris gef presentation fig fig not visible not adapt uml model used deleting  see issue 3042 moved package default namespace not already set next clause important deployment-diagram detects enclosing fig component case container set owning interface 
+                                                                 
+   internal methods 
+   
+        see org argouml uml diagram ui fignodemodelelement#textedited  
+       org tigris gef presentation figtext  
+        
+   
+        see org argouml uml diagram ui fignodemodelelement#texteditstarted  
+       org tigris gef presentation figtext  
+        
+    
+        param ft figtext holding feature 
+        param index  ?  
+        return figtext 
+        
+    
+        param ft figtext holding feature 
+        param index  ?  
+        return figtext 
+        
+    
+       used pgml tee  
+        return class name bounds together compartment 
+       visibility  
+        
+   
+        see org argouml uml diagram ui fignodemodelelement#modelchanged  
+       java beans propertychangeevent superclass sort itself out first 
+   
+        see org argouml uml diagram ui fignodemodelelement#updatelisteners java lang object  java lang object  
+        
+   add listeners newowner stereotypes features stereotypes features parameter operations 
+   
+        see org argouml uml diagram ui fignodemodelelement#renderingchanged   
+        
+    
+       sets bounds size least one returned link #getminimumsize     unless checking size disabled  p required height bigger additional height equally distributed figs e  compartments cumulated height visible figs equals demanded height p   
+       
+       some magic numbers  hardcoded in particular knowledge minimum height name compartment 21 
+       pixels  p  
+       
+        param x  desired x coordinate upper left corner 
+       
+        param y  desired y coordinate upper left corner 
+       
+        param w  desired width figinterface 
+       
+        param h  desired height figinterface 
+        
+   save old boundaries  needed later minimum size 
+   info   asize used maintain running calculation size various points  
+    extra_each extra height per displayed fig requested 
+   height greater minimal   height_correction height 
+   correction due rounded division result added name 
+   compartment 
+   set bounds big box 
+   now force calculation bounds figure  update edges trigger anyone s listening see bounds  property changed uid  
+        
+   end class figinterface   org argouml uml diagram static_structure ui FigInterface org argouml uml diagram static_structure ui figinterface figclassifierbox figinterface     
+ 
+        figstereotypescompartment fsc   
+             figstereotypescompartment  getstereotypefig    
+        fsc setkeyword enablesizechecking setsuppresscalcbounds addfig getbigport     
+        addfig getstereotypefig     
+        addfig getnamefig     
+        addfig getoperationsfig     
+        addfig borderfig   
+ 
+        setsuppresscalcbounds enablesizechecking setbounds 10  10  60  21   rowheight figinterface graphmodel gm  object node setowner node   
+        enablesizechecking selection makeselection selectioninterface setoperationsvisible isvisible    
+        rectangle rect   getbounds h   
+                ischecksize   ?   rowheight 
+                  math max 1  getoperationsfig   getfigs   size   - 1    2  
+                  rect height   getminimumsize   height    0 isoperationsvisible isvisible    
+                damage    
+                iterator it   getoperationsfig   getfigs   iterator it hasnext      
+                      fig   it next     setvisible getoperationsfig   setvisible setbounds rect x  rect y  rect width  rect height - h isvisible    
+                iterator it   getoperationsfig   getfigs   iterator it hasnext      
+                      fig   it next     setvisible getoperationsfig   setvisible setbounds rect x  rect y  rect width  rect height   h   
+                damage dimension getminimumsize     
+          
+          
+ 
+        dimension asize   getnamefig   getminimumsize    
+ 
+          
+ 
+        asize height    4 asize height   21    
+            asize height   21 getstereotypefig   isvisible      
+            dimension stereomin   getstereotypefig   getminimumsize    
+            asize width   math max asize width  stereomin width   
+            asize height    stereomin height isoperationsvisible      
+            dimension opermin   getoperationsfig   getminimumsize    
+            asize width   math max asize width  opermin width   
+            asize height    opermin height  
+          
+ 
+          
+        asize width   math max 60  asize width asize setlinewidth w    
+        borderfig setlinewidth w getlinewidth borderfig getlinewidth translate dx dy translate dx  dy   
+        editor ce   globals cureditor    
+        selection sel   ce getselectionmanager   findselectionfor sel selectionclass    
+              selectionclass  sel  hidebuttons setenclosingfig fig encloser    
+        fig oldencloser   getenclosingfig encloser encloser model getfacade   isainstance encloser getowner setenclosingfig encloser model getfacade   isamodelelement getowner isvisible object me   getowner    
+        object m encloser oldencloser    encloser 
+                       model getfacade   isapackage encloser getowner       
+                model getcorehelper   setnamespace me  encloser getowner model getfacade   getnamespace me targetmanager getinstance   gettarget argodiagram     
+                m   
+                      argodiagram  targetmanager getinstance   gettarget    
+                         getnamespace    
+                model getcorehelper   setnamespace me  m exception e    
+            log error  could not set due to     e 
+                       ' at     encloser  e encloser model getfacade   isacomponent encloser getowner        
+            moveintocomponent encloser setenclosingfig encloser textedited figtext ft propertyvetoexception textedited ft   
+        object cls   getowner cls i   getoperationsfig   getfigs   indexof ft i    -1    
+            highlightedfigtext    compartmentfigtext  ft  
+            highlightedfigtext sethighlighted highlightedfigtext getnotationprovider   
+                 parse highlightedfigtext getowner    ft gettext     
+            ft settext highlightedfigtext getnotationprovider   tostring  
+                highlightedfigtext getowner texteditstarted figtext ft texteditstarted ft getoperationsfig   getfigs   contains ft     
+            showhelp   compartmentfigtext  ft  
+                     getnotationprovider   getparsinghelp figtext getpreviousvisiblefeature figtext ft i    
+        figtext ft2 list figs   getoperationsfig   getfigs i   1    i    figs size   
+                      figtext  figs get i   isvisible i i   1    
+                i   figs size   - 1  
+              
+            ft2    figtext  figs get i ft2 isvisible      
+                ft2 ft2 ft2 figtext getnextvisiblefeature figtext ft i    
+        figtext ft2 list operations   getoperationsfig   getfigs i   1    i    operations size   
+                      figtext  operations get i   isvisible i i    operations size      
+                i   1  
+              
+            ft2    figtext  operations get i ft2 isvisible      
+                ft2 ft2 ft2 classnameandbounds classnameandbounds   
+                   operationsvisible     isoperationsvisible modelchanged propertychangeevent mee modelchanged mee mee associationchangeevent  
+                   mee attributechangeevent    
+            renderingchanged    
+            updatelisteners getowner    getowner updatelisteners object oldowner  object newowner oldowner removeallelementlisteners newowner addelementlistener newowner   
+              
+            collection c arraylist  
+                    model getfacade   getstereotypes newowner    
+              
+            iterator it   model getfacade   getfeatures newowner  iterator it hasnext      
+                object feat   it next    
+                c add feat   
+                  
+                c addall arraylist model getfacade   getstereotypes feat model getfacade   isaoperation feat     
+                    c addall model getfacade   getparameters feat    
+                  
+              
+            iterator it2   c iterator it2 hasnext      
+                addelementlistener it2 next ispathvisible      
+                c   model getmodelmanagementhelper   
+                     getallsurroundingnamespaces newowner   
+                iterator itpv   c iterator itpv hasnext      
+                    addelementlistener itpv next name    namespace    ownedelement renderingchanged     
+        updateoperations renderingchanged setstandardbounds x y w h    
+ 
+        rectangle oldbounds   getbounds    
+          
+          
+          
+ 
+          
+          
+          
+          
+ 
+          
+        getbigport   setbounds x  y  w  h   
+        borderfig setbounds x  y  w  h   
+ 
+        getnamefig   setlinewidth 0   
+        getnamefig   setlinecolor color red currentheight   0 getstereotypefig   isvisible stereotypeheight   getstereotypefig   getminimumsize   height  
+            getstereotypefig   setbounds  
+                    x  
+                    y  
+                    w  
+                    stereotypeheight   
+            currentheight   stereotypeheight nameheight   getnamefig   getminimumsize   height  
+        getnamefig   setbounds x  y   currentheight  w  nameheight   
+        currentheight    nameheight getoperationsfig   isvisible operationsy   y   currentheight operationsheight    h   y  - operationsy - 1  
+            getoperationsfig   setbounds  
+                    x  
+                    operationsy  
+                    w  
+                    operationsheight   
+          
+ 
+          
+          
+          
+ 
+        calcbounds    
+        updateedges    
+        firepropchange  bounds   oldbounds  getbounds     
+      
+ 
+      
+  
+ 
+   org argouml uml diagram static_structure ui FigInterface

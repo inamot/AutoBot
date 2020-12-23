@@ -1,0 +1,61 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license analyzer capable fo traversing class - class relationships  
+   
+    
+    
+       default constructor 
+       
+       causes bcel classes load ensure bcel dependencies satisfied 
+        
+   force bcel classes load now 
+   ignore 
+    
+       determine dependencies configured root classes  
+       
+        param files vector populated files contain dependency classes 
+        param classes vector populated names depencency classes root classes build up set classes upon depend 
+   ignore 
+   now recover dependencies collected add list  
+    
+       indicate analyzer determine dependent files  
+       
+        return true analyzer provides dependency file information  
+       org apache tools ant util depend bcel FullAnalyzer org apache tools ant util depend bcel fullanalyzer abstractanalyzer fullanalyzer classparser  force ioexception e determinedependencies vector files  vector classes    
+          
+          
+        hashtable dependencies hashtable    
+        hashtable containers hashtable    
+        hashtable toanalyze hashtable enumeration e   getrootclasses    e hasmoreelements classname e nextelement    
+            toanalyze put classname  classname count   0 maxcount   isclosurerequired   ? max_loops   2 toanalyze size      0    count     maxcount    
+            dependencyvisitor dependencyvisitor dependencyvisitor enumeration e   toanalyze keys    e hasmoreelements classname e nextelement    
+                dependencies put classname  classname file container   getclasscontainer classname container containers put container  container   
+ 
+                    classparser parser container getname   endswith parser classparser container getpath parser classparser container getpath    
+                            classname replace javaclass javaclass   parser parse    
+                    descendingvisitor traverser descendingvisitor javaclass  dependencyvisitor   
+                    traverser visit ioexception ioe    
+                      
+                  
+              
+ 
+            toanalyze clear    
+ 
+              
+            enumeration depsenum   dependencyvisitor getdependencies depsenum hasmoreelements classname depsenum nextelement dependencies containskey classname     
+                    toanalyze put classname  classname   
+                  
+              
+          
+ 
+        files removeallelements enumeration e   containers keys    e hasmoreelements       
+            files addelement  file  e nextelement     
+          
+ 
+        classes removeallelements enumeration e   dependencies keys    e hasmoreelements       
+            classes addelement e nextelement supportsfiledependencies org apache tools ant util depend bcel FullAnalyzer

@@ -1,0 +1,103 @@
+ 
+   $id$ 
+   copyright  c  1996-2006 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications  
+    
+   mode create link between two figobjects mode extends 
+   modecreate not modecreateedge modecreateedge hides variables bit much    
+   
+    author jaap branderhorst xs4all nl 
+    
+    
+       logger netport arc paintn fig presents starting netport fignode netnode owns start port new message being created constructor constructor  
+       
+        param par editor 
+        
+   
+        see org tigris gef base modecreate#createnewitem  
+            java awt event mouseevent  int  int  
+        
+   
+        see org tigris gef base figmodifyingmode#instructions mousepressed determine port user dragging mousepressed event sent via modeselect  
+         inheritdoc mousereleased  find port destination node s same height source port fig  ask graphmodel connect two ports connection allowed construct new figedge add layer send back  
+       
+         inheritdoc fignode check within fignode see port exists 
+   calling connect add edge graphmodel any layerpersectives graphmodel edgeadded event add appropriate figedge 
+    determined graphedgerenderer   
+   set new edge place 
+   
+        see java awt event mousemotionlistener#mousedragged java awt event mouseevent uid  
+        
+   end class modecreateedge   org argouml uml diagram sequence ui ModeCreateMessage org argouml uml diagram sequence ui modecreatemessage modecreate logger log   
+	logger getlogger modecreatemessage modecreatemessage modecreatemessage editor par par fig createnewitem mouseevent me snapx snapy figline  
+            snapx  
+            snapy  
+            me getx    
+            snapy  
+            globals getprefs   getrubberbandcolor instructions translator localize  action sequence getarg  actionname mousepressed mouseevent me me isconsumed x   me getx    y   me gety    
+        editor ce   globals cureditor    
+        fig undermouse   ce hit x  y undermouse undermouse   ce hit x - 16  y - 16  32  32 undermouse done    
+            me consume undermouse figclassifierrole     
+            done    
+            me consume sourcefigclassifierrole    figclassifierrole  undermouse  
+        startport   sourcefigclassifierrole deephitport x  y startport done    
+            me consume startportfig   sourcefigclassifierrole getportfig startport   
+        start    
+        point snappt point snappt    
+            snappt setlocation  
+                startportfig getx     figclassifierrole width   2  
+                startportfig gety     
+            editor snap snappt   
+            anchorx   snappt x  
+            anchory   snappt y  
+          
+        _newitem   createnewitem me  anchorx  anchory   
+        me consume    
+        setcursor cursor getpredefinedcursor cursor crosshair_cursor mousereleased mouseevent me me isconsumed sourcefigclassifierrole done    
+            me consume x   me getx    y   me gety    
+        editor ce   globals cureditor    
+        fig f   ce hit x  y f f   ce hit x - 16  y - 16  32  32   
+          
+        graphmodel gm   ce getgraphmodel gm mutablegraphmodel     
+            f mutablegraphmodel mgm    mutablegraphmodel  gm f figclassifierrole    
+            figclassifierrole destfigclassifierrole    figclassifierrole  f  
+              
+              
+            object foundport destfigclassifierrole    sourcefigclassifierrole    
+                y   startportfig gety    
+                foundport   destfigclassifierrole deephitport x  y foundport   destfigclassifierrole deephitport x  y foundport foundport    startport    
+                fig destportfig   destfigclassifierrole getportfig foundport   
+                object edgetype   model getmetatypes   getmessage    
+                message   mgm connect startport  foundport  edgetype message    
+                    ce damaged _newitem   
+                    sourcefigclassifierrole damage    
+                    destfigclassifierrole damage    
+                    _newitem figmessage fe   
+                         figmessage  ce getlayermanager   
+                             getactivelayer   presentationfor message   
+                    fe setsourceportfig startportfig   
+                    fe setsourcefignode sourcefigclassifierrole   
+                    fe setdestportfig destportfig   
+                    fe setdestfignode destfigclassifierrole sourcefigclassifierrole sourcefigclassifierrole updateedges destfigclassifierrole destfigclassifierrole updateedges fe ce getselectionmanager   select fe   
+                      
+                    done    
+                    me consume log debug  connection sourcefigclassifierrole damage    
+        ce damaged _newitem   
+        _newitem done    
+        me consume mousedragged mouseevent me me isconsumed _newitem editor damaged _newitem   
+            creationdrag me getx    startportfig gety     
+            editor damaged _newitem   
+            editor scrolltoshow me getx    startportfig gety     
+            me consume mousedragged me   
+          
+      
+ 
+      
+  
+   org argouml uml diagram sequence ui ModeCreateMessage

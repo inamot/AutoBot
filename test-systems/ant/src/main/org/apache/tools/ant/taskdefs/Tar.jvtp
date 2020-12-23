@@ -1,0 +1,430 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   creates tar archive ant 1 1 
+   
+    ant task category  packaging  
+    
+    
+        deprecated 1 5 x  
+                   tar warn deprecated replaced tar tarlongfilemode warn 
+        
+    
+        deprecated 1 5 x  
+                   tar fail deprecated replaced tar tarlongfilemode fail 
+        
+    
+        deprecated 1 5 x  
+                   tar truncate deprecated replaced tar tarlongfilemode truncate 
+        
+    
+        deprecated 1 5 x  
+                   tar gnu deprecated replaced tar tarlongfilemode gnu 
+        
+    
+        deprecated 1 5 x  
+                   tar omit deprecated replaced tar tarlongfilemode omit 
+        
+   checkstyle visibilitymodifier bc 
+   need keep package private version backwards compatibility must keep two lists classes may modify filesets vector package private  without noticing 
+   checkstyle visibilitymodifier indicates whether user warned long files already  
+        
+    
+       add new fileset option specify permissions 
+        return tar fileset used nested element  
+        
+    
+       add collection resources archive  
+        param res resource collection archive ant 1 7 
+        
+    
+       set name location create tar file  
+        param tarfile location tar file  
+        deprecated 1 5 x consistency tasks  please use setdestfile    
+        
+    
+       set name location create tar file ant 1 5 
+        param destfile output tar base directory look things tar  
+        param basedir base directory  
+        
+    
+       set handle long files  those path gt 100 chars  
+       optional  default warn  
+        p  
+       allowable values ul  
+        li   truncate - paths truncated maximum length 
+        li   fail - paths greater maximum cause build exception 
+        li   warn - paths greater maximum cause warning gnu used 
+        li   gnu - gnu extensions used any paths greater maximum  
+        li   omit - paths greater maximum omitted archive 
+         ul  
+        param mode mode string handle long files  
+        deprecated 1 5 x  
+                   setlongfile string deprecated replaced setlongfile tar tarlongfilemode make ant's introspection 
+                   mechanism work encapsulate operations mode class  
+        
+    
+       set handle long files  those path gt 100 chars  
+       optional  default warn  
+        p  
+       allowable values ul  
+        li   truncate - paths truncated maximum length 
+        li   fail - paths greater maximum cause build exception 
+        li   warn - paths greater maximum cause warning gnu used 
+        li   gnu - gnu extensions used any paths greater maximum  
+        li   omit - paths greater maximum omitted archive 
+         ul  
+        param mode mode handle long file names  
+        
+    
+       set compression method  
+       allowable values ul  
+        li   none compression 
+        li   gzip - gzip compression 
+        li   bzip2 - bzip2 compression 
+         ul  
+        param mode compression method business 
+        throws buildexception error 
+        
+   add main fileset list filesets process  
+   check tar out date respect each 
+   fileset 
+   warn gnu 
+    
+       tar file 
+        param file file tar 
+        param tout output stream 
+        param vpath path name file tar 
+        param tarfileset fileset file came throws ioexception error archive built first time matched resource collection hasn't found check hasn't included now some strange reason old code simply skip entry not fail same now backwards 
+   compatibility reasons   without which4j build 
+   fails gump 
+    
+       tar resource 
+        param r resource tar 
+        param tout output stream 
+        param vpath path name file tar 
+        param tarfileset fileset file came may null  
+        throws ioexception error ant 1 7 
+        
+   don't add archive appended compatibility zip task end up adding archive 
+   preserve permissions 
+   override permissions set explicitly 
+   override permissions set explicitly 
+   only override permissions set explicitly archive up date relationship list files  
+        param files files check 
+        return true archive up date  
+        deprecated 1 5 x  
+                   use two-arg version instead archive up date relationship list files  
+        param files files check 
+        param dir base directory files  
+        return true archive up date ant 1 5 2 archive up date relationship list files  
+        param r files check 
+        return true archive up date ant 1 7 
+        
+    
+       whether task deal non-file resources  
+       
+        p implementation returns true only task lt tar gt    any subclass class support non-file resources needs override method need backwards compatibility reasons t expect subclasses support resources   p  
+        return true task ant 1 7 
+        
+    
+       checks whether archive out date respect resources given collection  
+       
+        p checks either collections only contain file 
+       resources class supports non-file collections   p  
+       
+        p case file-collections - ensures archive won't 
+       contain itself   p  
+       
+        param rc resource collection check 
+        return whether archive up date ant 1 7 
+        
+   non-file resources 
+    
+       checks whether archive out date respect given files  ensures archive won't contain itself   p  
+       
+        param basedir base directory file names 
+        param files array relative file names 
+        return whether archive up date ant 1 7 
+        
+    
+       adds resources contained collection archive  
+       
+        p uses file based methods file resources backwards 
+       compatibility   p  
+       
+        param rc collection containing resources add 
+        param tout stream writing archive  
+        throws ioexception error ant 1 7 
+        
+   non-file resources 
+    
+       whether given resource collection subclass fileset only contains file system resources  
+        param rc resource collection check  
+        return true collection fileset ant 1 7 
+        
+    
+       grabs included files directors fileset returns array relative  file names  
+        param fs fileset operate return list filenames ant 1 7 
+        
+    
+       copies fullpath  prefix permission attributes archivefileset new tarfileset returns unchanged already tarfileset   
+       
+        param archivefileset fileset copy attributes may null 
+        return new tarfileset ant 1 7 fileset option specify permissions attributes  
+        
+    
+           creates new  code tarfileset  code  instance  
+           using fileset constructor argument  
+           
+            param fileset code fileset  code  value 
+            
+    
+           creates new  code tarfileset  code  instance list files directories specified fileset  
+            param p current project  
+            return list file directory names  relative basedir project 3 digit octal string  specify user  group modes standard unix fashion  
+           optional  default 0644 
+            param octalstring 3 digit octal string  
+            
+    
+            return current mode  
+            
+    
+           flag indicates whether leading ` 's preserved file names  
+           optional  default code false  code   
+            param b leading slashes flag  
+            
+    
+            return leading slashes flag  
+            
+    
+       set options long file handling task  
+       
+        
+    permissible values longfile attribute    
+    constructor  defaults warn     
+    
+            return possible values enumerated type  
+            
+    
+            return true value truncate   
+            
+    
+            return true value warn   
+            
+    
+            return true value gnu   
+            
+    
+            return true value fail   
+            
+    
+            return true value omit   
+            
+    
+       valid modes compression attribute tar task 
+       
+        
+   permissible values compression attribute compression 
+            
+    
+              gzip compression 
+            
+    
+              bzip2 compression 
+            
+    
+           default constructor valid enumeration values  
+             return valid enumeration values method wraps output stream corresponding compression method 
+           
+             param ostream output stream 
+             return output stream fly compression 
+             exception ioexception thrown file not writable 
+           org apache tools ant taskdefs Tar org apache tools ant taskdefs tar matchingtask warn    warn fail    fail truncate    truncate gnu    gnu omit    omit   
+ 
+      
+    file tarfile  
+    file basedir  
+ 
+  
+ 
+      
+    vector filesets vector    
+      
+      
+  
+ 
+    vector filesetfiles vector tarfileset createtarfileset     
+        tarfileset fs tarfileset    
+        fs setproject getproject     
+        filesets addelement fs fs add resourcecollection res    
+        resourcecollections add res settarfile file tarfile tarfile   tarfile setdestfile file destfile tarfile   destfile setbasedir file basedir basedir   basedir setlongfile mode    
+        log  deprecated - the setlongfile method has been deprecated   
+                use setlongfile tar tarlongfilemode  instead longfilemode tarlongfilemode    
+        longfilemode setvalue mode setlongfile tarlongfilemode mode longfilemode   mode setcompression tarcompressionmethod mode compression   mode execute buildexception tarfile buildexception  tarfile attribute must be set    
+                                     getlocation tarfile exists      tarfile isdirectory buildexception  tarfile is a directory    
+                                     getlocation tarfile exists       tarfile canwrite buildexception  can not write to the specified tarfile    
+                                     getlocation     
+          
+ 
+        vector savedfilesets    vector  filesets clone basedir basedir exists buildexception  basedir does not exist    
+                                             getlocation     
+                  
+ 
+                  
+                tarfileset mainfileset tarfileset fileset   
+                mainfileset setdir basedir   
+                filesets addelement mainfileset filesets size      0    resourcecollections size      0 buildexception  you must supply either a basedir   
+                                            attribute or some nested resource  
+                                             collections    
+                                         getlocation uptodate enumeration e   filesets elements    e hasmoreelements       
+                uptodate    check  tarfileset  e nextelement enumeration e   resourcecollections elements    
+                 e hasmoreelements       
+                uptodate    check  resourcecollection  e nextelement uptodate    
+                log  nothing to tarfile getabsolutepath   
+                        is up to date    project msg_info log  building tar      tarfile getabsolutepath    project msg_info   
+ 
+            taroutputstream tout tout taroutputstream  
+                    compression compress bufferedoutputstream fileoutputstream tarfile      
+                tout setdebug longfilemode istruncatemode      
+                    tout setlongfilemode taroutputstream longfile_truncate longfilemode isfailmode   
+                               longfilemode isomitmode      
+                    tout setlongfilemode taroutputstream longfile_error tout setlongfilemode taroutputstream longfile_gnu   
+                  
+ 
+                longwarninggiven enumeration e   filesets elements    
+                     e hasmoreelements       
+                    tar  tarfileset  e nextelement    tout enumeration e   resourcecollections elements    
+                     e hasmoreelements       
+                    tar  resourcecollection  e nextelement    tout ioexception ioe msg    problem creating tar      ioe getmessage buildexception msg  ioe  getlocation fileutils close tout filesets   savedfilesets tarfile file file  taroutputstream tout vpath  
+                           tarfileset tarfileset ioexception file equals tarfile tarresource fileresource file   tout  vpath  tarfileset tarresource resource r  taroutputstream tout vpath  
+                               tarfileset tarfileset ioexception r isexists tarfileset fullpath   tarfileset getfullpath getproject fullpath length     0    
+                vpath   fullpath vpath length      0 prefix   tarfileset getprefix getproject prefix length     0     prefix endswith         
+                    prefix   prefix        
+                  
+                vpath   prefix   vpath vpath startswith      
+                    tarfileset getpreserveleadingslashes l   vpath length l    1 vpath   vpath substring 1  l r isdirectory       vpath endswith         
+            vpath vpath length      tarconstants namelen longfilemode isomitmode      
+                log  omitting      vpath  project msg_info longfilemode iswarnmode      
+                log  entry      vpath     longer than   
+                      tarconstants namelen     characters    
+                    project msg_warn longwarninggiven    
+                    log  resulting tar file can only be processed   
+                           successfully by gnu compatible tar commands   
+                        project msg_warn   
+                    longwarninggiven longfilemode isfailmode buildexception  entry      vpath 
+                            longer than     tarconstants namelen 
+                           characters    getlocation     
+              
+          
+ 
+        tarentry te tarentry vpath   
+        te setmodtime r getlastmodified r archiveresource    
+            archiveresource ar    archiveresource  r  
+            te setmode ar getmode r tarresource    
+                tarresource tr    tarresource  r  
+                te setusername tr getusername     
+                te setuserid tr getuid     
+                te setgroupname tr getgroup     
+                te setgroupid tr getgid r isdirectory r size     tarconstants maxsize buildexception  
+                     resource      r     larger than   
+                      tarconstants maxsize     bytes     
+              
+            te setsize r getsize tarfileset tarfileset hasfilemodebeenset      
+                te setmode tarfileset getmode tarfileset tarfileset hasdirmodebeenset      
+              
+            te setmode tarfileset getdirmode getproject tarfileset tarfileset hasusernamebeenset      
+                te setusername tarfileset getusername tarfileset hasgroupbeenset      
+                te setgroupname tarfileset getgroup tarfileset hasuseridbeenset      
+                te setuserid tarfileset getuid tarfileset hasgroupidbeenset      
+                te setgroupid tarfileset getgid     
+              
+          
+ 
+        inputstream in tout putnextentry te r isdirectory      
+                in   r getinputstream buffer 8   1024 count   0 tout write buffer  0  count   
+                    count   in read buffer  0  buffer length count    -1   
+              
+ 
+            tout closeentry fileutils close in archiveisuptodate files archiveisuptodate files  basedir archiveisuptodate files  file dir    
+        sourcefilescanner sfs sourcefilescanner mergingmapper mm mergingmapper    
+        mm setto tarfile getabsolutepath sfs restrict files  dir mm  length    0 archiveisuptodate resource r selectorutils isoutofdate fileresource tarfile   r  
+                                         fileutils getfileutils   
+                                          getfiletimestampgranularity supportsnonfileresources getclass   equals tar check resourcecollection rc uptodate isfilefileset rc     
+            fileset fs    fileset  rc  
+            uptodate   check fs getdir getproject     getfilenames fs rc isfilesystemonly       supportsnonfileresources buildexception  only filesystem resources are supported rc isfilesystemonly      
+            hashset basedirs hashset    
+            hashmap basedirtofilesmap hashmap    
+            iterator iter   rc iterator iter hasnext      
+                fileresource r    fileresource  iter next    
+                file base   r getbasedir base base   copy null_file_placeholder  
+                  
+                basedirs add base   
+                vector files    vector  basedirtofilesmap get base files files vector    
+                    basedirtofilesmap put base vector     
+                  
+                files add r getname     
+              
+            iter   basedirs iterator iter hasnext      
+                file base    file  iter next    
+                vector f    vector  basedirtofilesmap get base files f toarray f size      
+                uptodate    
+                    check base    copy null_file_placeholder base  
+                          files iterator iter   rc iterator uptodate    iter hasnext      
+                resource r    resource  iter next    
+                uptodate    archiveisuptodate r uptodate check file basedir files uptodate archiveisuptodate files  basedir     
+            uptodate i   0  i   files length    i tarfile equals file basedir  files i buildexception  a tar file cannot include   
+                                            itself   getlocation uptodate tar resourcecollection rc  taroutputstream tout ioexception   
+        archivefileset afs rc archivefileset    
+            afs    archivefileset  rc afs afs size     1 
+               afs getfullpath getproject    length     0 buildexception  fullpath attribute may only   
+                                        be specified filesets that specify a   
+                                        single file     
+          
+        tarfileset tfs   astarfileset afs isfilefileset rc     
+            fileset fs    fileset  rc files   getfilenames fs i   0  i   files length  i      
+                file f file fs getdir getproject     files i name   files i  replace file separatorchar  ' '   
+                tarfile f  tout  name  tfs rc isfilesystemonly      
+            iterator iter   rc iterator iter hasnext      
+                fileresource r    fileresource  iter next    
+                file f   r getfile f f file r getbasedir    r getname     
+                  
+                tarfile f  tout  f getname    tfs iterator iter   rc iterator iter hasnext      
+                resource r    resource  iter next    
+                tarresource r  tout  r getname    tfs isfilefileset resourcecollection rc rc fileset    rc isfilesystemonly getfilenames fileset fs    
+        directoryscanner ds   fs getdirectoryscanner fs getproject directories   ds getincludeddirectories filesperse   ds getincludedfiles files directories length   filesperse length   
+        system arraycopy directories  0  files  0  directories length   
+        system arraycopy filesperse  0  files  directories length  
+                         filesperse length files tarfileset astarfileset archivefileset archivefileset    
+        tarfileset tfs archivefileset archivefileset tarfileset    
+            tfs    tarfileset  archivefileset tfs tarfileset    
+            tfs setproject getproject archivefileset tfs setprefix archivefileset getprefix getproject      
+                tfs setfullpath archivefileset getfullpath getproject archivefileset hasfilemodebeenset      
+                    tfs integersetfilemode archivefileset 
+                                            getfilemode getproject archivefileset hasdirmodebeenset      
+                    tfs integersetdirmode archivefileset 
+                                           getdirmode getproject archivefileset org apache tools ant types tarfileset    
+                    org apache tools ant types tarfileset t   
+                         org apache tools ant types tarfileset  archivefileset t hasusernamebeenset      
+                        tfs setusername t getusername t hasgroupbeenset      
+                        tfs setgroup t getgroup t hasuseridbeenset      
+                        tfs setuid t getuid t hasgroupidbeenset      
+                        tfs setgid t getgid tfs tarfileset org apache tools ant types tarfileset tarfileset fileset fileset fileset tarfileset getfiles project p files files   getfilenames files setmode octalstring    
+            setfilemode octalstring getmode getfilemode getproject setpreserveleadingslashes b preserveleadingslashes   b getpreserveleadingslashes preserveleadingslashes tarlongfilemode enumeratedattribute warn    warn   
+            fail    fail   
+            truncate    truncate   
+            gnu    gnu   
+            omit    omit tarlongfilemode setvalue warn getvalues validmodes istruncatemode truncate equalsignorecase getvalue iswarnmode warn equalsignorecase getvalue isgnumode gnu equalsignorecase getvalue isfailmode fail equalsignorecase getvalue isomitmode omit equalsignorecase getvalue tarcompressionmethod enumeratedattribute tarcompressionmethod setvalue none getvalues none  gzip  bzip2 outputstream compress outputstream ostream ioexception v   getvalue gzip equals v gzipoutputstream ostream bzip2 equals v     
+                    ostream write 'b'   
+                    ostream write 'z cbzip2outputstream ostream ostream  
+          
+      
+ org apache tools ant taskdefs Tar

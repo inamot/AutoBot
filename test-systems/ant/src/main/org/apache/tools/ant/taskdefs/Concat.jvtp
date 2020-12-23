@@ -1,0 +1,321 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license class contains concat' task  used concatenate series files single stream destination stream may system console file following sample 
+   invocation  
+   
+    pre  
+    lt concat destfile  quot $ build dir  index xml quot  
+     append  quot false quot  gt  
+   
+      lt fileset dir  quot $ xml root dir  quot  
+       includes  quot   xml quot    gt  
+   
+    lt  concat gt  
+     pre size buffers used 
+   attributes destination stream code null  code system 
+       console used  
+        
+    
+       whether not stream appended destination file 
+       exists  
+       defaults code false  code   
+        
+    
+       stores input file encoding  
+        
+    stores output file encoding     
+    stores binary attribute    
+   child elements buffer stores text within concat' element  
+        
+    
+       stores collection file sets file lists  used select multiple files concatenation filtering concatenated    
+    ignore dates input files    
+    string place start concatented stream    
+    string place end concatented stream    
+    add missing line separator files     
+    endofline fixlast line    
+    outputwriter    
+    
+       construct new concat task  
+        
+    
+       reset state default  
+        
+   attribute setters  
+    
+       sets destination file uses console not specified  
+        param destinationfile destination file 
+        
+    
+       sets behavior destination file exists set code true  code stream data appended existing file  otherwise existing file overwritten  defaults code false  code   
+        param append true append file  
+        
+    
+       sets character encoding 
+        param encoding encoding input stream unless 
+              outputencoding set outputstream  
+        
+    
+       sets character encoding outputting 
+        param outputencoding encoding output file ant 1 6 
+        
+    
+       force overwrite existing destination file 
+        param force true always overwrite  otherwise only overwrite output file older any input files ant 1 6 
+        
+   nested element creators  
+    
+       path files concatenate  
+        return path used concatenating ant 1 6 
+        
+    
+       set files concatenate  
+        param set set files 
+        
+    
+       list files concatenate  
+        param list list files 
+        
+    
+       add arbitrary resourcecollection  
+        param c resourcecollection add ant 1 7 
+        
+    
+       adds filterchain  
+        param filterchain filterchain filter concatenated input ant 1 6 method adds text appears concat' element  
+        param text text concated  
+        
+   initialize size first text fragment hopes s only one  
+   append fragment defer property replacement until 
+   later case partial property fragment  
+    
+       add header concatenated output 
+        param headertoadd header ant 1 6 
+        
+    
+       add footer concatenated output 
+        param footertoadd footer ant 1 6 
+        
+    
+       append line separator files not end line separator  default false  
+        param fixlastline true make sure each input file new line concatenated stream ant 1 6 
+        
+    
+       specify end line find add not present end each input file attribute used conjunction fixlastline  
+        param crlf type new line add - 
+                    cr  mac  lf  unix  crlf dos ant 1 6 
+        
+    
+       set output writer allow 
+       concat used nested element  
+        param outputwriter output writer ant 1 6 
+        
+    
+       set binary attribute true  concat concatenate files 
+       byte byte mode not allow any filtering modifications input streams default value false ant 1 6 2 
+        param binary true  enable binary mode  
+        
+    
+       validate configuration options  
+        
+   treat empty nested text text binary check incompatible attributes used 
+   sanity check inputs  
+   nothing concatenate using resources  disallow inline text similar using gnu 'cat file arguments -- stdin simply 
+   ignored need anything 
+    
+       execute concat task nothing resources  including nested text  
+    perform binary concatenation    
+   empty 
+    perform concatenation    
+   log using warn displays quiet' mode  
+   ensure parent dir dest file exists 
+    concatenate single reader writer using buffer    
+    
+       treat empty nested text text  
+       
+        p depending xml parser  addtext may called quot ignorable whitespace quot well   p  
+        
+    
+       sub element points file contains text 
+        
+    
+           whether filter text element not  
+           
+            param filtering true text filtered default value true  
+            
+    return filtering attribute encoding text element 
+           
+            param encoding name charset used encode 
+            
+    
+           set text using file 
+            param file file use 
+            throws buildexception file not exist cannot read 
+            
+   non-existing files not allowed 
+    
+           set text using inline 
+            param value text place inline 
+            
+    
+           s ^\s each line input 
+            param strip true trim 
+            
+    
+           whether call text trim   
+            param trim true trim text 
+            
+    
+            return text possible trimming class reads each source files turn concatentated result filtered single stream  
+        
+    
+           read character current reader object  advance next reader finished  
+            return character read  -1 eof last reader  
+            exception ioexception - possibly thrown read reader 
+                      object  
+            
+    
+           read buffer  code cbuf  code   
+            param cbuf array read param offset  
+            param len length read  
+            exception ioexception - possibly thrown reads reader objects  
+            
+    
+           close current reader checking end line end file 
+           add character lastchars buffer 
+            
+    
+           return true lastchars buffer not contain lineseparator 
+           org apache tools ant taskdefs Concat org apache tools ant taskdefs concat task concat     
+        reset reset     
+        append forceoverwrite destinationfile encoding outputencoding fixlastline filterchains footer header binary outputwriter textbuffer eolstring   system getproperty  line separator    
+        rc setdestfile file destinationfile destinationfile   destinationfile setappend append append   append setencoding encoding encoding   encoding outputencoding outputencoding   encoding setoutputencoding outputencoding outputencoding   outputencoding setforce force forceoverwrite   force path createpath     
+        path path path getproject     
+        add path path addfileset fileset set    
+        add set addfilelist filelist list    
+        add list add resourcecollection c    
+        rc   rc resources     rc  
+        rc add c addfilterchain filterchain filterchain filterchains filterchains vector    
+          
+        filterchains addelement filterchain addtext text textbuffer textbuffer stringbuffer text length     
+          
+ 
+          
+          
+        textbuffer append text addheader textelement headertoadd header   headertoadd addfooter textelement footertoadd footer   footertoadd setfixlastline fixlastline fixlastline   fixlastline seteol fixcrlf crlf crlf s   crlf getvalue s equals  cr      s equals  mac      
+            eolstring    \r s equals  lf      s equals  unix      
+            eolstring    \n s equals  crlf      s equals  dos      
+            eolstring    \r\n setwriter writer outputwriter outputwriter   outputwriter setbinary binary binary   binary resourcecollection validate     
+ 
+          
+        sanitizetext binary destinationfile buildexception  
+                     destfile attribute is required binary concatenation textbuffer buildexception  
+                     nested text is incompatible with binary concatenation encoding outputencoding buildexception  
+                     seting input or output encoding is incompatible with binary  
+                        concatenation filterchains buildexception  
+                     setting filters is incompatible with binary concatenation fixlastline buildexception  
+                     setting fixlastline is incompatible with binary concatenation header footer buildexception  
+                     nested header or footer is incompatible with binary concatenation destinationfile outputwriter buildexception  
+                 cannot specify both a destination file and an output writer rc textbuffer buildexception  
+                 at least one resource must be provided  or some text rc textbuffer buildexception  
+                     cannot include inline text when using resources     
+              
+            restrict noexistrc restrict    
+            noexistrc add not_exists   
+            noexistrc add rc iterator i   noexistrc iterator    i hasnext       
+                log i next       does not exist    project msg_err destinationfile iterator i   rc iterator    i hasnext       
+                    object o   i next o fileresource    
+                        file f     fileresource  o  getfile file_utils filenameequals f  destinationfile buildexception  input file \   
+                                  f    \  is the same as the output file     
+                          
+                      
+                  
+              
+            restrict existrc restrict    
+            existrc add exists   
+            existrc add rc outofdate   destinationfile forceoverwrite outofdate iterator i   existrc iterator     outofdate    i hasnext       
+                    resource r    resource  i next    
+                    outofdate   
+                         r getlastmodified      0l 
+                            r getlastmodified     destinationfile lastmodified outofdate    
+                log destinationfile     is up-to-date    project msg_verbose existrc stringresource s stringresource    
+            s setproject getproject     
+            s setvalue textbuffer tostring s execute     
+        resourcecollection c   validate c c size     1    header footer log  no existing resources and no nested text  doing nothing   
+                project msg_info binary    
+            binarycat c cat c binarycat resourcecollection c    
+        log  binary concatenation of     c size   
+                resources to     destinationfile   
+        fileoutputstream out inputstream in try   
+                out fileoutputstream destinationfile exception t buildexception  unable to open   
+                      destinationfile writing   t   
+              
+            in concatresourceinputstream c   
+              concatresourceinputstream  in  setmanagingcomponent thread t thread streampumper in  out    
+            t start t join interruptedexception e t join interruptedexception ee fileutils close in out out close exception ex buildexception  
+                         unable to close     destinationfile  ex cat resourcecollection c    
+        outputstream os buffer buffer_size printwriter writer outputwriter writer printwriter outputwriter destinationfile os logoutputstream project msg_warn file parent   destinationfile getparentfile parent exists      
+                        parent mkdirs    
+                      
+                    os fileoutputstream destinationfile getabsolutepath    
+                                              append outputencoding writer printwriter bufferedwriter outputstreamwriter os writer printwriter bufferedwriter outputstreamwriter os  outputencoding header header getfiltering      
+                    concatenate  
+                        buffer  writer stringreader header getvalue writer print header getvalue c size     0    
+                concatenate buffer  writer multireader c footer footer getfiltering      
+                    concatenate  
+                        buffer  writer stringreader footer getvalue writer print footer getvalue     
+                  
+              
+            writer flush os os flush ioexception ioex buildexception  error concatenating    
+                                       ioex getmessage    ioex fileutils close os concatenate buffer  writer writer  reader in ioexception filterchains chainreaderhelper helper chainreaderhelper    
+            helper setbuffersize buffer_size   
+            helper setprimaryreader in   
+            helper setfilterchains filterchains   
+            helper setproject getproject     
+            in bufferedreader helper getassembledreader nread   in read buffer  0  buffer length nread    -1 writer write buffer  0  nread   
+          
+        writer flush sanitizetext textbuffer textbuffer substring 0  trim   length      0    
+                textbuffer textelement projectcomponent setfiltering filtering filtering   filtering getfiltering filtering setencoding encoding encoding   encoding setfile file file buildexception file exists buildexception  file     file     does not exist     
+              
+ 
+            bufferedreader reader encoding reader bufferedreader filereader file reader bufferedreader inputstreamreader fileinputstream file encoding    
+                  
+                value   fileutils readfully reader ioexception ex buildexception ex fileutils close reader addtext value value    getproject   replaceproperties value settrimleading strip trimleading   strip settrim trim trim   trim getvalue value value value trim   length      0    
+                value trimleading current   value tochararray    
+                stringbuffer b stringbuffer current length startofline pos   0 pos   current length ch   current pos startofline ch    ' '    ch    '\t startofline b append ch ch    '\n'    ch    '\r'    
+                        startofline value   b tostring trim    
+                value   value trim value multireader reader multireader resourcecollection c    
+            i   c iterator reader getreader ioexception reader i hasnext      
+                resource r    resource  i next    
+                log  concating     r tolongstring    project msg_verbose   
+                inputstream is   r getinputstream    
+                reader bufferedreader encoding inputstreamreader is inputstreamreader is  encoding    
+                arrays fill lastchars 0 reader nextreader ioexception   
+            close    
+            reader read ioexception needaddseparator ret   eolstring charat lastpos lastpos    eolstring length      
+                    lastpos   0  
+                    needaddseparator ret getreader ch   getreader   read ch    -1    
+                    nextreader fixlastline    ismissingendofline      
+                        needaddseparator lastpos   0 addlastchar ch ch 1 read cbuf off len ioexception amountread   0 getreader needaddseparator needaddseparator    
+                    cbuf off    eolstring charat lastpos lastpos    eolstring length      
+                        lastpos   0  
+                        needaddseparator len--  
+                    off    
+                    amountread len    0 amountread nread   getreader   read cbuf  off  len nread    -1    nread    0    
+                    nextreader fixlastline    ismissingendofline      
+                        needaddseparator lastpos   0 fixlastline i   nread  
+                                 i    nread - lastchars length   
+                                 --i i    0 addlastchar cbuf off   i - 1    
+                          
+                      
+                    len -  nread  
+                    off    nread  
+                    amountread    nread len    0 amountread amountread    0 1 amountread close ioexception reader reader close addlastchar ch i   lastchars length - 2  i    0  --i    
+                lastchars i    lastchars i   1   
+              
+            lastchars lastchars length - 1    ch ismissingendofline i   0  i   lastchars length    i lastchars i     eolstring charat i org apache tools ant taskdefs Concat

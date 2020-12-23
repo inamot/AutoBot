@@ -1,0 +1,168 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications class manages projects loaded argouml current project p  
+   
+   classes argouml ask class current 
+   project set current project only one 
+   project argouml moment class not manage list projects one expect nice extension future argouml soon current project changed property changed event fired   p  
+    
+   todo  move everything related creation project projectfactory nov 17  2002 
+    author jaap branderhorst xs4all nl 
+    stereotype singleton name property defines current project name property project  
+        deprecated 0 25 4 bob tarling unused name property defines save state  
+        deprecated 0 25 4 bob tarling unused  
+        
+    
+       logger singleton instance class project visible projectbrowser  
+        
+    
+       flag indicate creating new current project listener list event fire  
+       
+       todo  investigate purpose really next call link #firepropertychanged string  object  object   fire old 
+       event again previous invocation resulted exception please document not  fix singleton accessor method class  
+       
+        return singleton  
+        
+    
+       constructor projectmanager  
+        
+    
+       adds listener listener list  
+       
+        param listener listener add  
+        
+    
+       removes listener listener list  
+       
+        param listener listener remove  
+        
+    
+       fire event members listener list  
+       
+        param propertyname name event  
+        param oldvalue old value  
+        param newvalue new value  
+        
+   guaranteed return non-null array 
+   process listeners last first  notifying 
+   those interested event 
+   lazily create event  
+    
+       sets current project project viewable projectbrowser   
+       sets current diagram project one exists method fires propertychanged event  p argument null current project forgotten param newproject new project  
+        
+    
+       returns current project  p project new one created 
+        unless busy creating one   
+       
+        return project current project 
+        
+    
+       makes empty project  
+        return project empty project 
+        
+    
+       make new empty project optionally including default diagrams  
+        p  
+       historically new projects created two default diagrams 
+        class use case   note  argouml currently requires least one 
+       diagram proper operation  
+        
+        param adddefaultdiagrams true project be created two standard 
+                  default diagrams  class use case  
+        return project newly created project 
+        
+    
+       set save action  
+        
+        param save action used 
+        
+   register save action subsystems any changes those subsystems enable save button menu item etc  
+    
+        return true save action currently enabled 
+        
+    
+       notify gui current project's save state changed 2 receivers saveproject tool icon title bar showing param newvalue new state  
+        
+    
+       remove project  
+       
+        param oldproject project removed  
+        
+    
+       called model subsystem creates command must add undomanager  
+       
+        param command command  
+        see org argouml model modelcommandcreationobserver#modelcommandcreated org argouml model modelcommand  
+       org argouml kernel ProjectManager org argouml kernel projectmanager modelcommandcreationobserver current_project_property_name   
+         currentproject   
+ 
+      
+     deprecated no_project   
+         noproject   
+ 
+      
+     deprecated save_state_property_name    savestate projectmanager getmanager instance projectmanager model setmodelcommandcreationobserver addpropertychangelistener propertychangelistener listener    
+        listenerlist add propertychangelistener listener removepropertychangelistener propertychangelistener listener    
+        listenerlist remove propertychangelistener listener firepropertychanged propertyname  
+                                     object oldvalue  object newvalue    
+          
+        object   listeners   listenerlist getlistenerlist i   listeners length - 2  i    0  i -  2 listeners i     propertychangelistener event event propertychangeevent propertyname  
+                            oldvalue  
+                            newvalue   
+                  
+                  propertychangelistener  listeners i   1   propertychange  
+                    event   
+              
+          
+        event setcurrentproject project newproject    
+        project oldproject   currentproject  
+        currentproject   newproject currentproject currentproject getactivediagram list argodiagram  diagrams   currentproject getdiagramlist diagrams diagrams isempty      
+                argodiagram activediagram   diagrams get 0   
+                currentproject setactivediagram activediagram   
+              
+          
+        firepropertychanged current_project_property_name  
+                oldproject  newproject project getcurrentproject currentproject creatingcurrentproject    
+            makeemptyproject currentproject project makeemptyproject makeemptyproject project makeemptyproject adddefaultdiagrams command cmd nonundoablecommand     
+ 
+             override object execute     
+                model getpump   stoppumpingevents    
+                 
+                creatingcurrentproject log info  making empty project project oldproject   currentproject  
+                currentproject projectimpl adddefaultdiagrams    
+                    createdefaultdiagrams    
+                  
+                firepropertychanged current_project_property_name  
+                                    oldproject  currentproject   
+                creatingcurrentproject model getpump   startpumpingevents saveaction saveaction setenabled cmd execute    
+        currentproject getundomanager   addcommand cmd currentproject createdefaultdiagrams     
+        object model   model getmodelmanagementfactory   createmodel    
+        model getcorehelper   setname model  
+                translator localize  misc untitled-model     
+        collection roots arraylist    
+        roots add model   
+        currentproject setroots roots   
+        currentproject setcurrentnamespace model   
+        currentproject addmember model   
+        diagramfactory df   diagramfactory getinstance    
+        argodiagram d   df creatediagram diagramfactory diagramtype model currentproject addmember d   
+        currentproject addmember df creatediagram  
+                diagramfactory diagramtype usecase  model currentproject addmember projectmembertodolist     
+                currentproject    
+        currentproject setactivediagram d setsaveaction action save saveaction   save  
+          
+          
+          
+        designer setsaveaction save issaveactionenabled saveaction isenabled setsaveenabled newvalue saveaction saveaction setenabled newvalue removeproject project oldproject currentproject    oldproject    
+            currentproject oldproject remove object execute modelcommand command saveaction saveaction setenabled abstractcommand wrappedcommand abstractcommand undo     
+                modelcommand undo isundoable modelcommand isundoable isredoable modelcommand isredoable object execute modelcommand execute tostring modelcommand tostring getcurrentproject   getundomanager   execute wrappedcommand   
+      
+ org argouml kernel ProjectManager

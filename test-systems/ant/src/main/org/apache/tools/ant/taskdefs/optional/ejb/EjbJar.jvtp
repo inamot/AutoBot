@@ -1,0 +1,300 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+   standard java imports 
+    
+   provides automated ejb jar file creation  
+    p  
+   extends matchingtask class provided default ant distribution provide directory scanning ejb jarfile generator  
+     p  
+   
+    p task works taking deployment descriptors one time parsing locate names classes placed jar classnames translated java io files replacing 
+   periods file separatorchar resolving generated filename relative path under srcdir attribute necessary files assembled jarfile  one jarfile constructed each deployment 
+   descriptor found  
+     p  
+   
+      
+    
+       inner class used record information location local dtd class contains configuration state ejbjar task state passed deployment tools configuration 
+        
+   checkstyle visibilitymodifier bc 
+    
+           stores handle directory under search class 
+           files 
+            
+    
+           stores handle directory under search deployment descriptors 
+            
+    instance variable marks end basename'    
+    stores handle destination ejb jar file    
+    
+           instance variable determines whether use package structure flat directory destination jar files classpath use loading classes fileset support classes list configured dtd locations naming scheme used determine generated jar name descriptor information manifest file dependency analyzer use add additional classes jar 
+            
+   checkstyle visibilitymodifier enumeratedattribute class handling different ejb jar naming 
+       schemes 
+        
+    
+           naming scheme generated jar determined ejb-name deployment descripor 
+            
+    
+           naming scheme generated jar name based name directory containing deployment descriptor 
+            
+    
+           naming scheme generated jar name based name deployment descriptor file 
+            
+    
+           naming scheme generated jar named basejarname 
+           attribute 
+            
+    
+           gets values namingscheme 
+           
+            return array values attribute class  
+            
+    
+       cmp versions supported 
+       valid cmp versions 1 0 2 0 ant 1 6 
+        
+    1 0 value    
+    2 0 value    
+      inheritdoc config built task used various deployment 
+       tools access configuration ejbjar task 
+        
+    
+       stores handle directory put jar files only used generic deployment descriptor tool created deployment descriptor tools provided  normally each 
+       deployment tool specify desitination dir itself  
+        
+    instance variable stores suffix generated jarfile     
+    instance variable stores cmp version jboss jarfile list deployment tools going run     
+    
+       add deployment tool list deployment tools processed 
+       
+        param deploymenttool deployment tool instance descriptors passed processing  
+        
+    
+       adds deployment tool weblogic server  
+       
+        return deployment tool instance configured  
+        
+    
+       adds deployment tool websphere 4 0 server  
+       
+        return deployment tool instance configured  
+        
+    
+       adds deployment tool borland server  
+       
+        return deployment tool instance configured  
+        
+    
+       adds deployment tool iplanet application server  
+       
+        return deployment tool instance configured  
+        
+    
+       adds deployment tool jboss server  
+       
+        return deployment tool instance configured  
+        
+    
+       adds deployment tool jonas server  
+       
+        return deployment tool instance configured  
+        
+    
+       adds deployment tool weblogic using toplink 
+       object-relational mapping  
+       
+        return deployment tool instance configured  
+        
+    
+       adds classpath used locate super classes interfaces classes make up ejb jar  
+       
+        return path configured  
+        
+    
+       create dtd location record stores location dtd dtd identified public id location may either file 
+       location resource location  
+       
+        return dtd location object configured ant 
+        
+    
+       adds fileset support elements  
+       
+        return fileset populated support files  
+        
+    
+       set manifest file use jarring ejb 1 1  manifest 
+       files longer used configure ejb still vital importance ejb intended packaged ear file adding  class-path  settings manifest file ejb look classes inside ear file itself  allowing easier 
+       deployment outlined j2ee specification j2ee 
+       components meant support param manifest manifest used ejb jar 
+        
+    
+       sets source directory directory contains classes added ejb jar  typically include home remote interfaces bean class  
+       
+        param indir source directory  
+        
+    
+       set descriptor directory descriptor directory contains ejb deployment descriptors xml files declare properties bean particular deployment scenario properties include example transactional nature bean security access control bean's methods  
+       
+        param indir directory containing deployment descriptors  
+        
+    
+       set analyzer use adding dependencies jar  
+       
+        param analyzer name dependency analyzer class  
+        
+    
+       set base name ejb jar created not determined name deployment descriptor files  
+       
+        param invalue basename used writing jar 
+            file containing ejb 
+        
+    
+       set naming scheme used determine name generated jars deployment descriptor 
+       
+        param namingscheme naming scheme used 
+        
+    
+       gets destination directory  
+       
+        return destination directory ant 1 6 
+        
+    
+       set destination directory ejb jar files written directory jar files exist directory used determining contents jar file changed  
+       note parameter only used deployment tools specified  typically each deployment tool specify destination directory  
+       
+        param indir destination directory generate jars 
+        
+    
+       gets cmp version  
+       
+        return cmp version ant 1 6 
+        
+    
+       sets cmp version  
+       
+        param version cmp version  
+       must either  code 1 0  code code 2 0  code   br   
+       default code 1 0  code   br   
+       initially  only jboss implementation something specific cmp 2 0  br ant 1 6 
+        
+    
+       set classpath use resolving classes inclusion jar  
+       
+        param classpath classpath use  
+        
+    
+       controls whether destination jars written out destination directory same hierarchical structure deployment descriptors read set true generated ejb jars written root destination directory  otherwise written out same relative position deployment 
+       descriptors descriptor directory  
+       
+        param invalue new value flatdestdir flag  
+        
+    
+       set suffix generated jar file generic jars generated suffix appended the bean name create name jar file  note suffix includes extension fo te jar file therefore end appropriate extension jar ear 
+       
+        param instring string use suffix string terminates bean name convention used task bean descriptors named beanname some suffix basenameterminator string separates bean name suffix used determine bean name  
+       
+        param invalue string marks end basename  
+        
+    
+       validate config configured build file 
+       
+        throws buildexception config not valid 
+        
+    
+       invoked ant task prepared ready execute task configure nested deployment tools allow process jar deployment tools configured generic 
+       tool created handle jar parser configured each descriptor found passed deployment tool elements processing  
+       
+        exception buildexception thrown whenever problem encountered cannot recovered signal ant major problem occurred within task  
+        
+   create parser using whatever parser system dictates 
+   loop through files  each file represents one deployment 
+   descriptor hence one bean model  
+   process deployment descriptor each tool 
+   end execute  org apache tools ant taskdefs optional ejb EjbJar org apache tools ant taskdefs optional ejb ejbjar matchingtask dtdlocation org apache tools ant types dtdlocation config file srcdir file descriptordir basenameterminator basejarname flatdestdir path classpath list supportfilesets arraylist arraylist dtdlocations arraylist namingscheme namingscheme file manifest analyzer namingscheme enumeratedattribute ejb_name    ejb-name directory    directory descriptor    descriptor basejarname    basejarname getvalues ejb_name  directory  descriptor  basejarname cmpversion enumeratedattribute cmp1_0    1 0 cmp2_0    2 0 getvalues cmp1_0  
+                cmp2_0 adddeploymenttool ejbdeploymenttool deploymenttool    
+        deploymenttool settask deploymenttools add deploymenttool weblogicdeploymenttool createweblogic     
+        weblogicdeploymenttool tool weblogicdeploymenttool    
+        adddeploymenttool tool tool webspheredeploymenttool createwebsphere     
+        webspheredeploymenttool tool webspheredeploymenttool    
+        adddeploymenttool tool tool borlanddeploymenttool createborland     
+        log  borland deployment tools    project msg_verbose   
+ 
+        borlanddeploymenttool tool borlanddeploymenttool    
+        tool settask deploymenttools add tool tool iplanetdeploymenttool createiplanet     
+        log  iplanet application server deployment tools   project msg_verbose   
+ 
+        iplanetdeploymenttool tool iplanetdeploymenttool    
+        adddeploymenttool tool tool jbossdeploymenttool createjboss     
+        jbossdeploymenttool tool jbossdeploymenttool    
+        adddeploymenttool tool tool jonasdeploymenttool createjonas     
+        log  jonas deployment tools    project msg_verbose   
+ 
+        jonasdeploymenttool tool jonasdeploymenttool    
+        adddeploymenttool tool tool weblogictoplinkdeploymenttool createweblogictoplink     
+        log  the  weblogictoplink  element is no longer required  please use   
+               the  weblogic  element and set newcmp project msg_info   
+        weblogictoplinkdeploymenttool tool weblogictoplinkdeploymenttool    
+        adddeploymenttool tool tool path createclasspath config classpath config classpath path getproject config classpath createpath dtdlocation createdtd     
+        dtdlocation dtdlocation dtdlocation    
+        config dtdlocations add dtdlocation dtdlocation fileset createsupport     
+        fileset supportfileset fileset    
+        config supportfilesets add supportfileset supportfileset setmanifest file manifest    
+         config manifest   manifest setsrcdir file indir    
+        config srcdir   indir setdescriptordir file indir    
+        config descriptordir   indir setdependency analyzer    
+        config analyzer   analyzer setbasejarname invalue    
+        config basejarname   invalue config namingscheme config namingscheme namingscheme    
+            config namingscheme setvalue namingscheme basejarname config namingscheme getvalue   equals namingscheme basejarname buildexception  the basejarname attribute is not   
+                   compatible with the   
+                  config namingscheme getvalue       naming scheme setnaming namingscheme namingscheme    
+        config namingscheme   namingscheme config namingscheme getvalue   equals namingscheme basejarname  
+               config basejarname buildexception  the basejarname attribute is not   
+                   compatible with the   
+                  config namingscheme getvalue       naming scheme file getdestdir destdir setdestdir file indir destdir   indir getcmpversion cmpversion setcmpversion cmpversion version cmpversion   version getvalue setclasspath path classpath    
+        config classpath   classpath setflatdestdir invalue    
+        config flatdestdir   invalue setgenericjarsuffix instring genericjarsuffix   instring setbasenameterminator invalue    
+        config basenameterminator   invalue validateconfig buildexception config srcdir buildexception  the srcdir attribute must be specified config descriptordir config descriptordir   config srcdir config namingscheme config namingscheme namingscheme    
+            config namingscheme setvalue namingscheme descriptor config namingscheme getvalue   equals namingscheme basejarname  
+                       config basejarname buildexception  the basejarname attribute must   
+                   be specified with the basejarname naming scheme execute buildexception   
+        validateconfig deploymenttools size      0    
+            genericdeploymenttool generictool genericdeploymenttool    
+            generictool settask generictool setdestdir destdir   
+            generictool setgenericjarsuffix genericjarsuffix   
+            deploymenttools add generictool iterator i   deploymenttools iterator    i hasnext       
+            ejbdeploymenttool tool    ejbdeploymenttool  i next    
+            tool configure config   
+            tool validateconfigured saxparserfactory saxparserfactory   saxparserfactory newinstance    
+            saxparserfactory setvalidating saxparser saxparser   saxparserfactory newsaxparser    
+ 
+ 
+            directoryscanner ds   getdirectoryscanner config descriptordir   
+            ds scan files   ds getincludedfiles    
+ 
+            log files length     deployment descriptors located    
+                project msg_verbose index   0  index   files length    index iterator i   deploymenttools iterator    i hasnext       
+                    ejbdeploymenttool tool    ejbdeploymenttool  i next    
+                    tool processdescriptor files index   saxparser saxexception se msg    saxexception creating parser   
+                     details    
+                  se getmessage buildexception msg  se parserconfigurationexception pce msg    parserconfigurationexception creating parser    
+                          details      pce getmessage buildexception msg  pce   
+          
+        
+ 
+  
+ 
+ 
+ 
+ 
+ 
+ 
+org apache tools ant taskdefs optional ejb EjbJar

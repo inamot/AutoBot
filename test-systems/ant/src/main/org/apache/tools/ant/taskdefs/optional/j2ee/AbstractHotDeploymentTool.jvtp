@@ -1,0 +1,76 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+    abstract class support vendor-specific hot deployment tools class validate boilerplate attributes  
+   
+    subclassing class vendor specific tool involves following  
+     ol  li implement code isactionvalid   code  method insure action supplied action  attribute serverdeploy valid  
+     li implement code validateattributes    code  method insure required attributes supplied correct format  
+     li add code add lt tool gt   code  method serverdeploy 
+    class method called ant encounters code add lt tool gt   code  task nested code serverdeploy  code  task  
+     li define code deploy  code  method method perform 
+    whatever task takes hot-deploy component   ie  spawn jvm run class  exec native executable  run java code    
+   
+     see org apache tools ant taskdefs optional j2ee hotdeploymenttool 
+     see org apache tools ant taskdefs optional j2ee serverdeploy parent task classpath passed jvm execution username deployment server password deployment server address deployment server     
+    
+        add classpath nested element  
+         return path object representing classpath used  
+        
+    
+        determines action  attribute defines valid action  
+         p subclasses determine action passed supported vendor's deployment tool  
+         p actions may deploy    delete   etc depends tool  
+         return true action  attribute valid  false not  
+        
+    
+        validates passed attributes  
+        subclasses chain super-method insure 
+        validation boilerplate attributes  
+         p only action  attribute required base class   subclasses check attributes accordingly  
+         exception org apache tools ant buildexception attributes invalid incomplete  
+        
+    
+        perform actual deployment s up subclasses implement actual behavior  
+         exception org apache tools ant buildexception attributes invalid incomplete  
+        
+    
+        sets parent task  
+         param task serverdeploy object representing parent task  
+         ant attribute ignore  true  
+        
+    
+        returns task field serverdeploy object  
+         return serverdeploy representing parent task  
+        
+    
+        gets classpath field  
+         return path representing classpath  attribute classpath passed jvm running tool  
+        optional depending upon tool classpath may supplied nested element  
+         param classpath path object representing classpath  attribute  
+        
+    
+        returns username field  
+         return string representing username  attribute user privileges deploy applications server  optional  
+         param username string representing username  attribute  
+        
+    
+        returns password field  
+         return string representing password  attribute password user  optional  
+         param password string representing password  attribute  
+        
+    
+        returns server field  
+         return string representing server  attribute address url server component deployed  
+         param server string representing server  attribute  
+       org apache tools ant taskdefs optional j2ee AbstractHotDeploymentTool org apache tools ant taskdefs optional j2ee abstracthotdeploymenttool hotdeploymenttool path createclasspath classpath classpath path task getproject classpath createpath isactionvalid validateattributes buildexception task getaction buildexception  the \ action\  attribute must be set isactionvalid buildexception  invalid action \     task getaction      \  passed classpath buildexception  the classpath attribute must be set deploy buildexception settask serverdeploy task task   task serverdeploy gettask task path getclasspath classpath setclasspath path classpath classpath   classpath getusername username setusername username username   username getpassword password setpassword password password   password getserver server setserver server server   server  
+      
+ org apache tools ant taskdefs optional j2ee AbstractHotDeploymentTool

@@ -75,8 +75,8 @@ public class PreProcessing
 			    filesList.add( files[ j ] );
 			    filteredFilesList.add( files[ j ] );
 		    }
-	        
-	        // remove packages that are not being considered	        
+	      
+	        // remove files that are not being considered	        
 	        for( File file : filesList )
 	        {
 		    	if( file.isFile() && packageExclusion.length > 0 )
@@ -89,7 +89,7 @@ public class PreProcessing
 	 					
 	 					if( excludedPackage.contains( "*" ) )
 	 					{
-	 						excludedPackage = excludedPackage.substring( 0 , excludedPackage.lastIndexOf( "." ) + 1 );
+	 						excludedPackage = excludedPackage.substring( 0 , excludedPackage.indexOf( "*" ) );
 	 						
 	 						if( fileName.startsWith( excludedPackage ) && !excludedPackage.equals( "" ) )
 	 						{
@@ -98,7 +98,7 @@ public class PreProcessing
 	 					}
 	 					else
 	 					{
-	 						if( fileName.contains( excludedPackage ) && !excludedPackage.equals( "" ) )
+	 						if( fileName.startsWith( excludedPackage ) && !excludedPackage.equals( "" ) )
 	 						{
 	 							filteredFilesList.remove( file );
 	 						}
@@ -110,9 +110,16 @@ public class PreProcessing
 	        // clean files
 	    	for( File file : filteredFilesList ) 
 	        {
-	        	if( file.isFile() && file.getPath().endsWith( ".java" ) )
+	    		  
+	    		if( file.isFile() && file.getPath().endsWith( ".java" ) )
 	            {
-	        		try
+	    			String progSrcs = programSources.toString().replaceAll( "/", "." );
+	    			String className = file.toString().replaceAll( "\\\\", "." );
+	    			className = className.toString().replaceAll( progSrcs, "" );
+	    			className = className.toString().replaceAll( ".java", "" );
+	            	
+	            	
+	            	try
 					{
 	        			// extract code and comments from file separately and clean them
 	        			BufferedReader bufferedReader = new BufferedReader( new InputStreamReader( new FileInputStream( file ), "ISO-8859-1") );
@@ -176,6 +183,7 @@ public class PreProcessing
 					    {
 	                    	comments = comments.replaceAll( chars[ j ].toLowerCase(), " " );
 	                    	codeOnly = codeOnly.replaceAll( chars[ j ].toLowerCase(), " " );
+	                    	className = className.replaceAll( chars[ j ].toLowerCase(), " " );
 					    }
 	                    
 	                    // remove stop words from comments
@@ -187,8 +195,12 @@ public class PreProcessing
 	                    for( int j = 0; j < javaKeyWords.length; j++ )
 					    {
 	                    	codeOnly = codeOnly.replaceAll( "\\W+" + javaKeyWords[ j ].toLowerCase() + "\\W+", " " );
-					    }		
-	                            			
+					    }
+	                    
+	                    // adding full name of class to preserve important keywords in the package name
+	                    comments = comments + className;		
+	                    codeOnly = codeOnly + className;
+	                                               			
 	                    bufferedReader.close();
 	                    
 	                    String cleanedSource = comments + codeOnly;			// comments & code

@@ -1,0 +1,151 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   starts weblogic server number parameters used control operation weblogic 
+   instance  note task hence ant not complete until weblogic instance stopped   p classpath used running java vm must contain weblogic classes  b b implementation classes home remote interfaces weblogic classpath used running weblogic  
+        
+    
+       addional arguments pass jvm used run weblogic security policy use running weblogic server weblogic system home directory weblogic domain name weblogic server - used select server's directory weblogic home directory file containing weblogic properties server  
+        
+    
+       additional args pass spawned jvm location bea home under server run  
+       wl6 only management username management password provate key password - used ssl 
+        
+    
+       add classpath user classes 
+        return path configured classpath weblogic classpaths 
+        return path configured work work actually done creating separate jvm run helper task approach allows classpath helper task set weblogic tools require class files project's home remote 
+       interfaces available classpath avoids having start ant class path project building  
+       
+        exception buildexception someting goes wrong build explicit securitypolicy file specified maybe absolute path   use project resolve still t find complain 
+   ok  properties file may absolute classpath used java virtual machine runs weblogic 
+       server  required  prior weblogic 6 0 typically set weblogic 
+       boot classpath  under weblogic 6 0 include weblogic jars 
+       
+        param classpath classpath use executing weblogic server  
+        
+    
+       set weblogic classpath used weblogic server  
+       optional only applicable wl4 5 1 weblogic classpath used weblogic support dynamic class loading  
+       
+        param weblogicclasspath weblogic classpath name security policy file within weblogic home directory used not specified default policy file  code weblogic policy  code used  
+       
+        param securitypolicy security policy use location weblogic lives  
+       required absolute location  not relative bea home  
+        param weblogichome home directory weblogic location bea home  implicitly 
+       selects weblogic 6 0  optional  
+       
+        param beahome bea home directory name weblogic server within weblogic home run  
+       optiona  defaults quot myserver quot  
+       
+        param servername name server  
+        
+    
+       set domain run required wl6 0 
+       
+        param domain domain name server's properties file within weblogic home directory 
+       used control weblogic instance  
+       required wl4 5 1 
+       
+       
+        param propertiesfilename properties file name 
+        
+    
+       set additional arguments pass weblogic jvm 
+        param args arguments passed jvm 
+        
+    
+       set management username run server  
+       optional only applicable wl6 0  
+       
+        param username management username server  
+        
+    
+       set management password server  
+       optional only applicable wl6 0  
+        param password management pasword server  
+        
+    
+       set private key password server decrypt ssl private key file  
+       optional only applicable wl6 0  
+        param pkpassword private key password  
+        
+    
+       additional argument string passed weblogic instance  
+       optional  
+        param args argument string 
+        
+    
+       name main class weblogic  optional  
+        param c name class 
+       org apache tools ant taskdefs optional ejb WLRun org apache tools ant taskdefs optional ejb wlrun task default_wl51_policy_file    weblogic policy default_wl60_policy_file    lib weblogic policy default_properties_file    weblogic properties path createclasspath classpath classpath path getproject classpath createpath path createwlclasspath weblogicclasspath weblogicclasspath path getproject weblogicclasspath createpath execute buildexception weblogicsystemhome buildexception  weblogic home must be set weblogicsystemhome isdirectory buildexception  weblogic home directory   
+                  weblogicsystemhome getpath       is not valid beahome executewls6 executewls file findsecuritypolicyfile defaultsecuritypolicy securitypolicy securitypolicy securitypolicy securitypolicy   defaultsecuritypolicy  
+          
+        file securitypolicyfile file weblogicsystemhome  securitypolicy securitypolicy securitypolicyfile exists      
+            securitypolicyfile   getproject   resolvefile securitypolicy securitypolicyfile exists buildexception  security policy     securitypolicy 
+                                        was not found securitypolicyfile executewls6     
+        file securitypolicyfile 
+              findsecuritypolicyfile default_wl60_policy_file beahome isdirectory buildexception  bea home     beahome getpath   
+                                         is not valid    
+          
+ 
+        file configfile file weblogicsystemhome   config   
+              weblogicdomainname     config xml configfile exists buildexception  server config file     configfile 
+                    not found managementpassword buildexception  you must supply a management password   
+                                       to start the server    
+          
+ 
+        java weblogicserver java weblogicserver settaskname gettaskname     
+        weblogicserver setfork weblogicserver setdir weblogicsystemhome   
+        weblogicserver setclassname weblogicmainclass jvmargs   additionaljvmargs  
+ 
+        jvmargs      -dweblogic domain     weblogicdomainname  
+        jvmargs      -dweblogic name     weblogicsystemname  
+        jvmargs      -dweblogic system home     weblogicsystemhome  
+ 
+        jvmargs      -dbea home     beahome  
+        jvmargs      -djava security policy      securitypolicyfile  
+ 
+        jvmargs      -dweblogic management username     managementusername  
+        jvmargs      -dweblogic management password     managementpassword pkpassword jvmargs      -dweblogic pkpassword     pkpassword  
+          
+ 
+ 
+        weblogicserver createjvmarg   setline jvmargs   
+        weblogicserver createarg   setline additionalargs classpath weblogicserver setclasspath classpath weblogicserver executejava      0 buildexception  execution of weblogic server failed executewls     
+        file securitypolicyfile 
+              findsecuritypolicyfile default_wl51_policy_file   
+        file propertiesfile weblogicpropertiesfile weblogicpropertiesfile   default_properties_file  
+          
+        propertiesfile file weblogicsystemhome  weblogicpropertiesfile propertiesfile exists      
+              
+            propertiesfile   getproject   resolvefile weblogicpropertiesfile propertiesfile exists buildexception  properties file   
+                      weblogicpropertiesfile 
+                        not found in weblogic home     weblogicsystemhome 
+                        or as absolute file    
+              
+          
+ 
+        java weblogicserver java weblogicserver setfork weblogicserver setclassname weblogicmainclass jvmargs   additionaljvmargs weblogicclasspath jvmargs      -dweblogic path     weblogicclasspath  
+          
+ 
+        jvmargs      -djava security manager -djava security policy      securitypolicyfile  
+        jvmargs      -dweblogic system home     weblogicsystemhome  
+        jvmargs      -dweblogic system name     weblogicsystemname  
+        jvmargs      -dweblogic system propertiesfile     weblogicpropertiesfile  
+ 
+        weblogicserver createjvmarg   setline jvmargs   
+        weblogicserver createarg   setline additionalargs classpath weblogicserver setclasspath classpath weblogicserver executejava      0 buildexception  execution of weblogic server failed setclasspath path classpath classpath   classpath setwlclasspath path weblogicclasspath weblogicclasspath   weblogicclasspath setpolicy securitypolicy securitypolicy   securitypolicy sethome file weblogichome    
+        weblogicsystemhome   weblogichome setbeahome file beahome beahome   beahome setname servername weblogicsystemname   servername setdomain domain weblogicdomainname   domain setproperties propertiesfilename weblogicpropertiesfile   propertiesfilename setjvmargs args additionaljvmargs   args setusername username managementusername   username setpassword password managementpassword   password setpkpassword pkpassword pkpassword   pkpassword setargs args    
+        additionalargs   args setweblogicmainclass c    
+        weblogicmainclass   c  
+      
+ org apache tools ant taskdefs optional ejb WLRun

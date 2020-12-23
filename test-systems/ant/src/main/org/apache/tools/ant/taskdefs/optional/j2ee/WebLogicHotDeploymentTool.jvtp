@@ -1,0 +1,97 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license ant wrapper task weblogic deploy tool used hot-deploy j2ee applications running weblogic server b not  b same creating application archive task assumes archive  ear  jar war  file assembled supplied source  attribute  
+     p end task assembles commadline parameters runs weblogic deploy tool seperate jvm  
+   
+     see org apache tools ant taskdefs optional j2ee hotdeploymenttool 
+     see org apache tools ant taskdefs optional j2ee abstracthotdeploymenttool 
+     see org apache tools ant taskdefs optional j2ee serverdeploy classname tool run valid actions weblogic deploy permits     
+    represents debug  flag weblogic deploy application name being deployed component name target s component  argument weblogic deploy     
+    
+        perform actual deployment implementation jvm spawned weblogic deploy 
+        tools executed  
+         exception org apache tools ant buildexception attributes invalid incomplete  
+        
+    
+        validates passed attributes  
+         p rules ol  li action deploy update application source  
+        attributes must supplied  
+         li action delete undeploy application  attribute must supplied  
+         exception org apache tools ant buildexception attributes invalid incomplete 
+        
+   check password set 
+   check missing application deploy   update 
+   check missing source deploy   update 
+   check missing application delete   undeploy 
+    
+        builds arguments pass weblogic deploy according supplied action  
+         return string containing arguments weblogic deploy tool  
+        throws buildexception error  
+        
+    
+        determines action supplied valid  
+         p valid actions contained static array valid_actions 
+         return true action attribute valid  false not  
+        
+    
+        builds prefix arguments pass weblogic deploy arguments generic across actions  
+         return stringbuffer containing prefix arguments action-specific build methods append stringbuffer  
+        
+   constructs url  url  -debug  action   password   portion commmand line 
+    
+        builds arguments pass weblogic deploy deployment actions 
+          deploy update    
+         return string containing full argument string weblogic deploy  
+        
+    
+        builds arguments pass weblogic deploy undeployment actions 
+          undeploy delete    
+         return string containing full argument string weblogic deploy  
+        
+    
+        builds arguments pass weblogic deploy list action 
+         return string containing full argument string weblogic deploy set true  additional information printed during deployment process  optional  
+         param debug boolean representing weblogic deploy  -debug  flag name application being deployed  required  
+         param application string representing application portion weblogic deploy command line component string deployment targets  optional form  code  lt component gt   lt target1 gt   lt target2 gt      code component archive name  minus jar   ear   war 
+       extension    targets servers components deployed 
+ 
+         param component string representing value component  
+        argument weblogic deploy command line argument  
+       org apache tools ant taskdefs optional j2ee WebLogicHotDeploymentTool org apache tools ant taskdefs optional j2ee weblogichotdeploymenttool abstracthotdeploymenttool hotdeploymenttool valid_actions 
+           action_delete  action_deploy  action_list  action_undeploy  action_update deploy     
+        java java java gettask     
+        java setfork java setfailonerror java setclasspath getclasspath     
+ 
+        java setclassname weblogic_deploy_class_name   
+        java createarg   setline getarguments     
+        java execute validateattributes buildexception validateattributes action   gettask   getaction getpassword buildexception  the password attribute must be set action equals action_deploy     action equals action_update   
+               application buildexception  the application attribute must be set action       action action equals action_deploy     action equals action_update   
+               gettask   getsource buildexception  the source attribute must be set action       action action equals action_delete     action equals action_undeploy   
+               application buildexception  the application attribute must be set action       action getarguments buildexception action   gettask   getaction args action equals action_deploy     action equals action_update     
+            args   builddeployargs action equals action_delete     action equals action_undeploy     
+            args   buildundeployargs action equals action_list     
+            args   buildlistargs args isactionvalid valid action   gettask   getaction i   0  i   valid_actions length  i action equals valid_actions i      
+                valid valid stringbuffer buildargsprefix     
+        serverdeploy task   gettask stringbuffer 1024  
+                 append  getserver url     getserver   
+                          
+                 append      
+                 append debug ?  -debug         
+                 append  getusername username     getusername   
+                          
+                 append      
+                 append task getaction    append      
+                 append getpassword    append builddeployargs args   buildargsprefix   
+                 append application  append      
+                 append gettask   getsource    
+                 tostring component args    -component     component         args args buildundeployargs buildargsprefix   
+                 append application  append      
+                 tostring buildlistargs buildargsprefix   
+                 tostring setdebug debug debug   debug setapplication application application   application setcomponent component component   component  
+      
+ org apache tools ant taskdefs optional j2ee WebLogicHotDeploymentTool

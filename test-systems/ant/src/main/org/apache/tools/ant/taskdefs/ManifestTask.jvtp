@@ -1,0 +1,89 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   creates manifest file inclusion jar  ant task wrapper 
+   around   link manifest manifest task used write manifest file  optionally replacing updating existing file ant 1 5 
+   
+    ant task category  java  
+    
+    
+       holds real data file manifest written used task mode manifest file written encoding manifest file 
+        
+    
+       helper class manifest's mode attribute allowed values mode attribute  
+           
+            return string array allowed values  
+            
+    
+       default constructor 
+        
+    
+       add section manifest 
+       
+        param section manifest section added 
+       
+        exception manifestexception section not valid  
+        
+    
+       add attribute manifest added main section  
+       
+        param attribute attribute added  
+       
+        exception manifestexception attribute not valid name manifest file create update  
+       required used task  
+        param f manifest file written encoding use reading existing manifest file 
+        param encoding manifest file encoding  
+        
+    
+       update policy  either  update replace   default replace   
+        param m mode value - update replace  
+        
+    
+       create update manifest used task  
+       
+        throws buildexception manifest cannot written  
+        
+  look print warningsorg apache tools ant taskdefs ManifestTask org apache tools ant taskdefs manifesttask task mode enumeratedattribute getvalues update    replace manifesttask     
+        mode mode    
+        mode setvalue  replace addconfiguredsection manifest section section manifestexception   
+        nestedmanifest addconfiguredsection section addconfiguredattribute manifest attribute attribute manifestexception   
+        nestedmanifest addconfiguredattribute attribute setfile file f    
+        manifestfile   f setencoding encoding encoding   encoding setmode mode m    
+        mode   m execute buildexception manifestfile buildexception  the file attribute is required    
+          
+ 
+        manifest towrite   manifest getdefaultmanifest    
+        manifest current buildexception error manifestfile exists      
+            fileinputstream fis inputstreamreader isr fis fileinputstream manifestfile encoding isr inputstreamreader fis   utf-8 isr inputstreamreader fis  encoding   
+                  
+                current manifest isr manifestexception m    
+                error buildexception  existing manifest     manifestfile 
+                                               is invalid   m  getlocation ioexception e    
+                error buildexception  failed to read     manifestfile  
+                                           e  getlocation fileutils close isr enumeration e   nestedmanifest getwarnings    
+                e hasmoreelements       
+            log  manifest warning e nextelement    
+                    project msg_warn mode getvalue   equals  update      manifestfile exists current towrite merge current error error  
+                  
+              
+ 
+            towrite merge nestedmanifest manifestexception m buildexception  manifest is invalid   m  getlocation towrite equals current     
+            log  manifest has not changed not recreate   
+                project msg_verbose printwriter w fileoutputstream fos fileoutputstream manifestfile   
+            outputstreamwriter osw outputstreamwriter fos  manifest jar_encoding   
+            w printwriter osw   
+            towrite write w ioexception e buildexception  failed to write     manifestfile  
+                                     e  getlocation w w close    
+              
+          
+      
+ 
+ org apache tools ant taskdefs ManifestTask

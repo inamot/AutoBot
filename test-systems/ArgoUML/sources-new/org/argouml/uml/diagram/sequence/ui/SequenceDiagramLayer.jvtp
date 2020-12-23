@@ -1,0 +1,141 @@
+ 
+   $id$ 
+   copyright  c  2003-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications layer figs sequence diagram placed responsible distributing figs diagram fig added removed  
+   
+    author   jaap branderhorst xs4all nl 
+    
+    
+       logger distance between two objects sequence diagram distance between left side diagram first 
+         link figclassifierrole distance between top side diagram top highest   link figclassifierrole vertical distance between two links  
+        
+    
+       linked list fig objects sorted x coordinate constructor  
+       
+        param name name 
+        param gm graph model 
+        
+   
+        see org tigris gef base layerperspective#putinposition fig  
+        
+    
+       distributes fig objects contained figobjectsx over sequencediagram  
+       
+        param f 
+        
+   
+        see org tigris gef graph graphlistener#nodeadded graphevent  
+        
+   
+        see org tigris gef base layer#add org tigris gef presentation fig  
+        
+    
+       return node index certain y point  
+       
+        param y point  
+        return node index  
+        
+    
+       makes figclassifier roles uniform size  
+       
+        return number nodes figclassifierrole 
+       objects add nodes todo  linus doesn't understand comment  please elaborate  
+       bob doesn't either hope see org tigris gef base layer#deleted org tigris gef presentation fig  
+        
+    
+       update activations  
+       first removes current activation boxes adds new ones figobject depending state nodes  
+        
+   
+        see org tigris gef base layer#remove org tigris gef presentation fig  
+        
+   todo rid first argument  
+    
+       returns list link figmessage s intersect given y coordinate  p  
+       
+        param y given y coordinate  
+        return list link figmessage s uid  
+       org argouml uml diagram sequence ui SequenceDiagramLayer org argouml uml diagram sequence ui sequencediagramlayer layerperspectivemutable logger log   
+        logger getlogger sequencediagramlayer object_distance   30 diagram_left_margin   50 diagram_top_margin   50 link_distance   32 sequencediagramlayer name  mutablegraphmodel gm name  gm putinposition fig f f figclassifierrole    
+            distributefigclassifierroles  figclassifierrole  f putinposition f distributefigclassifierroles figclassifierrole f    
+        reshufflefigclassifierrolesx f listposition   figobjectsx indexof f   
+        iterator it   
+            figobjectsx sublist listposition  figobjectsx size    iterator positionx   
+            listposition    0 
+                ? diagram_left_margin 
+                     fig  figobjectsx get listposition - 1   getx   
+                        fig  figobjectsx get listposition - 1   getwidth   
+                      object_distance it hasnext      
+            figclassifierrole fig    figclassifierrole  it next    
+            rectangle r   fig getbounds r x   positionx    
+                r x   positionx  
+              
+            r y   diagram_top_margin  
+            fig setbounds r   
+            fig updateedges    
+            positionx    fig getx     fig getwidth     object_distance nodeadded graphevent ge nodeadded ge   
+        fig fig   presentationfor ge getarg fig figclassifierrole    
+              figclassifierrole  fig  renderingchanged add fig f add f f figclassifierrole figobjectsx isempty      
+                listiterator it   figobjectsx listiterator 0 it hasnext      
+                    fig fig    fig  it next fig getx      f getx      
+                        it previous    
+                        it add f it hasnext      
+                    it add f figobjectsx add f   
+              
+            distributefigclassifierroles  figclassifierrole  f getnodeindex y    
+        y -  diagram_top_margin   figclassifierrole min_head_height y   0    
+            y   0 y   link_distance makeuniformnodecount maxnodes   -1 iterator it   figobjectsx iterator    it hasnext       
+            object o   it next o figclassifierrole nodecount     figclassifierrole  o  getnodecount nodecount   maxnodes    
+                    maxnodes   nodecount iterator it   figobjectsx iterator    it hasnext       
+            object o   it next o figclassifierrole    
+                  figclassifierrole  o  growtosize maxnodes maxnodes contractdiagram startnodeindex numberofnodes makeuniformnodecount      startnodeindex emptyarray numberofnodes   
+        java util arrays fill emptyarray iterator it   figobjectsx iterator    it hasnext       
+              figclassifierrole  it next    
+		 updateemptynodearray startnodeindex  emptyarray iterator it   figobjectsx iterator    it hasnext       
+              figclassifierrole  it next    
+		 contractnodes startnodeindex  emptyarray   
+          
+        updateactivations expanddiagram startnodeindex numberofnodes makeuniformnodecount      startnodeindex iterator it   figobjectsx iterator    it hasnext       
+              figclassifierrole  it next    
+		 grow startnodeindex  numberofnodes   
+          
+        updateactivations reshufflefigclassifierrolesx fig f    
+        figobjectsx remove f x   f getx i i   0  i   figobjectsx size    i      
+            fig fig    fig  figobjectsx get i fig getx     x figobjectsx add i  f deleted fig f deleted f   
+        figobjectsx remove f figobjectsx isempty      
+            putinposition  fig  figobjectsx get 0 updateactivations     
+        makeuniformnodecount iterator it   figobjectsx iterator    it hasnext       
+            object fig   it next fig figclassifierrole    
+                  figclassifierrole  fig  updateactivations    
+                  figclassifierrole  fig  damage remove fig f f figmessage    
+            log info  removing a figmessage    
+            figmessage fm    figmessage  f  
+            figmessageport source    figmessageport  fm getsourceportfig    
+            figmessageport dest    figmessageport  fm getdestportfig source removefigmessageport source dest removefigmessageport dest source figlifeline sourcelifeline    figlifeline  source getgroup    
+            	updatenodestates source  sourcelifeline dest fm getsourcefignode      fm getdestfignode      
+                figlifeline destlifeline    figlifeline  dest getgroup    
+                updatenodestates dest  destlifeline remove f   
+         
+        log info  a fig has been removed  updating activations    
+        updateactivations removefigmessageport figmessageport fmp    
+        fig parent   fmp getgroup parent figlifeline    
+              figclassifierrole  parent getgroup    removefigmessageport fmp updatenodestates figmessageport fmp  figlifeline lifeline lifeline figclassifierrole  lifeline getgroup    updatenodestates list getfigmessages y getcontents   isempty   
+	       getcontentsedgesonly   isempty collections empty_list  
+          
+        list retlist arraylist    
+        iterator it   getcontentsedgesonly   iterator it hasnext      
+            figedge fig    figedge  it next fig figmessage 
+                   fig hit rectangle fig getx    y  8  8      
+                retlist add fig retlist  
+ 
+      
+ 
+      
+  
+ org argouml uml diagram sequence ui SequenceDiagramLayer

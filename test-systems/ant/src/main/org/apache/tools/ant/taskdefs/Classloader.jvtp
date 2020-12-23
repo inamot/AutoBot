@@ -1,0 +1,102 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   experimental 
+   create modifies classloader required pathref parameter used add classpath elements classpath regular path  currently only file components supported  future extensions may allow urls modify core loader not specifying any name using 
+    ant coreloader core loader used load system ant 
+   tasks taskdefs don't specify explicit path   
+   
+   taskdef typedef use loader create name follows ant loader name  pattern  name used pathref calling taskdef tasks not modify core loader build sysclasspath only typical use pre  
+     lt path id  ant deps   gt  
+        lt fileset dir  mydir   gt  
+           lt include name  junit jar  bsf jar  js jar  etc   gt  
+        lt  fileset gt  
+     lt  path gt  
+   
+     lt classloader pathref  ant deps    gt  
+   
+     pre  
+   
+    
+     see magicnames#system_loader_ref    
+    
+       default constructor 
+        
+    name loader none default loader modified 
+       
+        param name name loader 
+        
+    
+       reset classloader already exists new loader created references old one removed not possible remove paths loader new 
+       path used  
+       
+        param b true loader reset  
+        
+    
+       set reverse attribute  
+        param b true reverse normal classloader lookup  
+        
+    
+       set reverse attribute  
+        param b true reverse normal classloader lookup  
+        
+    
+       set name parent  
+        param name parent name  
+        
+    specify path used loader already exists antclassloader any loader extend path added loader  
+        param pathref reference path  
+        throws buildexception problem  
+        
+    
+       set classpath used searching component being defined 
+       
+        param classpath ant path object containing classpath  
+        
+    
+       create classpath  
+        return path configuration classloader manipulation  
+        
+   gump friendly - don't mess core loader only classpath any references held close loader removes locks jars new one created  
+   xxx maybe use reflection addpathelement patterns ?  
+   construct new class loader 
+   todo  allow user request system parent core loader must reverse 
+  reverse true param parentfirst allows core loader load optional tasks 
+   without delegating 
+   xxx add exceptionsorg apache tools ant taskdefs Classloader org apache tools ant taskdefs classloader task system_loader_ref   magicnames system_loader_ref classloader setname name name   name setreset b reset   b setreverse b parentfirst    b setparentfirst b parentfirst   b setparentname name parentname   name setclasspathref reference pathref buildexception   
+        classpath    path  pathref getreferencedobject getproject setclasspath path classpath classpath classpath   classpath classpath append classpath path createclasspath classpath classpath path classpath createpath execute only  equals getproject   getproperty  build sysclasspath    
+                    name system_loader_ref equals name      
+                log  changing the system loader is disabled   
+                       by build sysclasspath only   project msg_warn loadername    name system_loader_ref   name  
+ 
+            object obj   getproject   getreference loadername reset    
+                  
+                  
+                obj obj obj antclassloader     
+                log  referenced object is not an antclassloader   
+                        project msg_err antclassloader acl    antclassloader  obj acl object parent parentname parent   getproject   getreference parentname parent classloader     
+                        parent parent parent getclass   getclassloader name getproject   log  setting parent loader     name       
+                      parent         parentfirst  project msg_debug   
+ 
+                  
+                acl antclassloader  classloader  parent  
+                         getproject    classpath  parentfirst   
+ 
+                getproject   addreference loadername  acl name acl addloaderpackageroot  org apache tools ant taskdefs optional    
+                    getproject   setcoreloader acl classpath list   classpath list i   0  i   list length  i      
+                    file f file list i f exists      
+                        acl addpathelement f getabsolutepath     
+                        log  adding to loader      acl         f getabsolutepath    
+                                project msg_debug exception ex    
+            ex printstacktrace    
+          
+      
+ org apache tools ant taskdefs Classloader

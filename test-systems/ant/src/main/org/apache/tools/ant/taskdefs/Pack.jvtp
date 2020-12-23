@@ -1,0 +1,80 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   abstract base class pack tasks ant 1 5 
+    
+   checkstyle visibilitymodifier bc 
+   checkstyle visibilitymodifier required destination file  
+        param zipfile destination file required destination file  
+        param zipfile destination file file compress  required  
+        param src source file resource pack  required  
+        param src resource expand 
+        
+    
+       set source resource  
+        param resource pack single element resource collection  
+        
+    
+       validation routine 
+        throws buildexception anything invalid 
+        
+    
+       validate hand subclass 
+        throws buildexception error 
+        
+    
+       zip stream output stream 
+        param stream zip 
+        param zout output stream 
+        throws ioexception 
+        
+    
+       zip file output stream 
+        param file file zip 
+        param zout output stream 
+        throws ioexception error 
+        
+    
+       zip resource output stream 
+        param resource resource zip 
+        param zout output stream 
+        throws ioexception error 
+        
+    
+       subclasses must implement method compression source resource  
+        return source ant 1 7 
+        
+    
+       whether task deal non-file resources  
+       
+        p implementation returns false   p  
+        return false ant 1 7 
+       org apache tools ant taskdefs Pack org apache tools ant taskdefs pack task file zipfile file source setzipfile file zipfile zipfile   zipfile setdestfile file zipfile    
+        setzipfile zipfile setsrc file src    
+        setsrcresource fileresource src setsrcresource resource src src isdirectory buildexception  the source can't be a directory src fileresource    
+            source     fileresource  src  getfile supportsnonfileresources buildexception  only filesystem resources are  
+                                         supported src   src addconfigured resourcecollection a a size      1 buildexception  only single argument resource collections  
+                                         are supported as archives    
+          
+        setsrcresource  resource  a iterator   next validate buildexception zipfile buildexception  zipfile attribute is required   getlocation zipfile isdirectory buildexception  zipfile attribute must not   
+                                       represent a directory    getlocation getsrcresource buildexception  src attribute or nested resource is  
+                                         required   getlocation execute buildexception   
+        validate    
+ 
+        resource s   getsrcresource s isexists      
+            log  nothing to s tostring   
+                    doesn't exist zipfile lastmodified     s getlastmodified      
+            log  building      zipfile getabsolutepath     
+            pack log  nothing to zipfile getabsolutepath   
+                    is up to date zipfile inputstream in  outputstream zout ioexception buffer 8   1024 count   0 zout write buffer  0  count   
+            count   in read buffer  0  buffer length count    -1 zipfile file file  outputstream zout ioexception   
+        zipresource fileresource file   zout zipresource resource resource  outputstream zout ioexception   
+        inputstream rin   resource getinputstream zipfile rin  zout rin close pack resource getsrcresource src supportsnonfileresources org apache tools ant taskdefs Pack

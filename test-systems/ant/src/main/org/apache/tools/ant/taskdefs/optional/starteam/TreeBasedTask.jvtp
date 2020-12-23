@@ -1,0 +1,357 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   treebasedtask java abstract class base any tasks tree-based tasks iterate over tree folders starteam reflected tree folder local machine class provides tree-iteration functionality   derived classes implement specific task functionality visitor pattern  
+   specifically implementing method 
+    code visit folder rootstarteamfolder  java io file rootlocalfolder   code  
+   
+   created  sat dec 15 16 55 19 2001 
+   
+    see href  http   www borland com products starteam index html  
+    borland starteam web site default values attributes constant sets filter include files default same result code setincludes       code   
+       
+        see #getincludes   
+        see #setincludes string includes disables exclude filter default words files excluded setting equivalent code setexcludes null   code   
+       
+        see #getexcludes   
+        see #setexcludes string excludes  
+        
+  attributes settable ant root folder operation starteam local folder corresponding starteamfolder not specified star team default folder used files fit pattern checked out files fitting pattern ignored  
+        
+    
+       starteam label perform task  
+        
+    
+       set recursion false check out files only given folder not subfolders  
+        
+    
+       set preloadfileinformation true load file information server once   increases performance significantly projects many files folders forced set true  files target directory processed regardless status repository  
+       usually true rootlocalfolder set status relative default folder  not one being processed  
+        
+    
+       holder asofdate attribute 
+        
+    
+       holder asofdateformat attribute set methods  
+   setters course ant user passes values  
+                                                                
+    
+       set root subtree starteam repository work  optional   defaults root folder view  ' '   
+        param rootstarteamfolder root folder 
+        
+    
+       returns root folder starteam repository 
+       used operation 
+        return root folder use 
+        
+    
+       set local folder root tree files checked out  optional not supplied starteam  default folder  
+       associated tt rootstarteamfolder  tt used  
+       
+        param rootlocalfolder local folder mirror rootstarteamfolder 
+        
+    
+       returns local folder specified user  
+       corresponding starteam folder operation null not specified  
+       
+        return local folder mirrors rootstarteamfolder 
+        
+    
+       declare files include using standard  tt includes  tt  patterns  optional  
+        param includes string filter patterns include  separate patterns spaces  
+        see #getincludes   
+        see #setexcludes string excludes  
+        see #getexcludes   
+        
+    
+       gets patterns include filter duplicate details antstarteamcheckout's filtering here  refer links  
+       
+        return string filter patterns separated spaces  
+        see #setincludes string includes  
+        see #setexcludes string excludes  
+        see #getexcludes excludes specified  emit list log 
+        
+    
+       declare files exclude using standard  tt excludes  tt  patterns  optional filtering files  antstarteamcheckout 
+       uses unmodified version code directoryscanner  code 's 
+        code match  code  method here patterns straight ant source code  
+        br   
+       matches string against pattern pattern contains two special 
+       characters  
+        br means zero characters  
+        br means one only one character  
+        br example want check out files except  xml html files put following line program  
+        code setexcludes    xml   html     code  
+       finally  note filters effect b directories  b scanned not skip over files directories 
+       whose names begin project instance  
+        br   
+       treatment overlapping inlcudes excludes give simplistic 
+       example suppose set include filter htm   html exclude filter index happens index html? 
+       antstarteamcheckout not check out index html matches exclude filter   index      even though matches include 
+       filter well  
+        br   
+       please read following sections before using filters  
+       
+        param excludes string filter patterns exclude  separate patterns spaces  
+        see #setincludes string includes  
+        see #getincludes   
+        see #getexcludes   
+        
+    
+       gets patterns exclude filter duplicate details antstarteancheckout's filtering here  refer links  
+       
+        return string filter patterns separated spaces  
+        see #setexcludes string excludes  
+        see #setincludes string includes  
+        see #getincludes excludes specified  emit list log 
+        
+   checkstyle methodnamecheck bc 
+    
+       protected function allow subclasses set label not   
+       sets starteam label 
+       
+        param label name starteam label set 
+        
+    
+       non-public method callable only derived classes implement 
+       setasofdate derived tasks not accept parameter fail user attempts use param asofdate asofdate entered user ant 1 6 
+        
+    
+       non-public method callable only derived classes implement 
+       setasofdateformat derived tasks not accept parameter fail user attempts use param asofdateformat asofdate format entered user ant 1 6 
+        
+   checkstyle visibilitymodifier return asofdate entered user internal use derived 
+       classes  
+       
+        return asofdate entered user ant 1 6 asofdate parameter supplied user return starteam view based configuration starteam view 
+       specified user date specified parameter asofdate specified  return null method meant called within implementations code createsnapshotview  code  abstract method  
+       
+        param raw raw view configured supplied date 
+       
+        return view configured  
+        exception buildexception 
+                         thrown date not parsable default supplied format patterns ant 1 6 
+        
+    
+       return label passed task user string 
+       
+        return label passed task user string value recursive  
+        return value recursive  
+        
+    
+       flag set include files subfolders operation  optional  
+       default true  
+        param v  value assign recursive value preloadfileinformation  
+        return value preloadfileinformation  
+        
+    
+       flag set preload file information server  optional  
+       default true  
+       increases performance significantly projects many files folders  
+        param v  value assign preloadfileinformation value forced  
+        return value forced  
+        
+    
+       flag force actions regardless status starteam maintaining file  optional  default false tt rootlocalfolder  tt set set  true otherwise checkout based statuses not relate target folder  
+        param v  value assign forced  
+        
+    
+        returns true label specified view label  
+       
+        return  true label specified view label 
+        
+    
+        returns true label specified revision label  
+       
+        return  true label specified revision label 
+        
+    
+       returns label being used 
+       
+        return label being used 
+        
+    
+       show label log type  
+        
+    
+       show asofdate log ant 1 6 
+        
+                                                                
+   include-exclude processing 
+                                                                
+    
+       look file processed task  
+       don't process it fits include filters fits exclude filter  
+       
+        param pname item name look being included  
+       
+        return whether file processed not  
+        
+    
+       convenience method see string match one pattern given set space-separated patterns  
+        param patterns space-separated list patterns  
+        param pname name look matching  
+        return whether name match least one pattern  
+        
+    
+       finds opens root starteam folder operation specified task one following cases  
+       
+        return starteam's root folder operation  
+        exception buildexception root folder cannot found repository root local mapping specified  
+   find starteam folder specified root operation   throw t found  
+    
+       returns local folder mapped given starteam root folder operation two cases here  depending whether 
+        code rootlocalfolder  code defined code rootlocalfolder  code defined used establish root mapping   otherwise repository's default root 
+       folder used  
+       
+        param starteamrootfolder 
+                     root starteam folder initialized operation 
+       
+        return local folder corresponding root starteam folder  
+        see findrootstarteamfolder 
+        
+   set local folder  
+   either use default path root local mapping now embedded root folder 
+    
+       extenders emit log entry describing parameters used operation  
+       
+        param starteamrootfolder 
+                     root folder starteam operation 
+        param targetrootfolder 
+                     root local folder operation  whether specified user not method work opening supplied  starteam view calling code visit    code  method perform task  
+       derived classes customize called methods 
+        code testpreconditions    code code visit    code   
+       
+        exception buildexception any error occurs processing 
+        see  code testpreconditions    code  
+        see  code visit    code  
+        
+   set local folder  
+   tell user doing 
+   inspect everything root folder recursively 
+    
+       helper method calls starteam api retrieve id number specified view  corresponding label  
+        param v code view  code search code label  code  
+        return id number corresponding code label  code 1 label provided  
+        exception buildexception code label  code not correspond any label supplied view id label use  
+        return id label use labelinuse present  
+               otherwise return null 
+        
+    
+       derived classes must override class define actual processing performed each folder tree defined task 
+       
+        param rootstarteamfolder starteam folderto visited 
+        param rootlocalfolder local mapping rootstarteamfolder 
+       
+        throws buildexception error 
+        
+    
+       derived classes must override method define tests any preconditons required task method called beginning execute   method  
+       
+        exception buildexception throw any fatal error exists parameters supplied non-fatal condition writing log may appropriate  
+        see  code execute    code  
+        
+    
+       return full repository path name file   surprisingly s method com starbase starteam file provide param remotefile star team file whose path returned 
+       
+        return full repository path name file class implements map existing local files possibly 
+       existing repository files map created treebasedtask 
+       upon recursing directory   each local item mapped unattached starteam object proper type  file- file directory- folder treebased work deletes map items processed treebased task processes items repository  
+       whatever items left unmatchedfilemap uncontrolled items processed appropriate task case checkouts optionally deleted local tree case checkins optionally added repository  
+        
+    
+           initializes unmatchedfilemap entries local folder mapped corresponding starteam entry even though not fact  exist repository through it added  listed  etc  
+           
+            param localfolder local folder mappings made  
+            param remotefolder corresponding starteam folder processed  
+            
+    
+           remove item found controlled map  
+           
+            param localfile local item found controlled  
+            
+    
+           override perform action appropriate task perform items local tree not starteam assumed method not called until items corresponding folder processed internal 
+           map contain only uncontrolled items  
+            
+    
+           overrides must define declare method knows active presents extra clock cycles functionality not called return true object perform functionality  
+           org apache tools ant taskdefs optional starteam TreeBasedTask org apache tools ant taskdefs optional starteam treebasedtask starteamtask default_includesetting default_excludesetting setrootstarteamfolder rootstarteamfolder rootstarteamfolder   rootstarteamfolder getrootstarteamfolder rootstarteamfolder setrootlocalfolder rootlocalfolder rootlocalfolder   rootlocalfolder getrootlocalfolder rootlocalfolder setincludes includes includes   includes getincludes includes logincludes default_includesetting includes    
+            log    includes specified includes setexcludes excludes excludes   excludes getexcludes excludes logexcludes default_excludesetting excludes    
+            log    excludes specified excludes _setlabel label label    
+            label   label trim label length     0 label   label _setasofdate asofdate asofdate asofdate length     0 asofdate   asofdate _setasofdateformat asofdateformat asofdateformat asofdateformat length     0 asofdateformat   asofdateformat getasofdate asofdate view getviewconfiguredbydate view raw buildexception asofdate null  
+          
+        date asofdate simpledateformat fmt asofdateformat fmt simpledateformat asofdateformat asofdate   fmt parse asofdate parseexception px buildexception  asofdate asofdate 
+                                             not parsable by supplied format asofdateformat asofdate   dateutils parseiso8601datetimeordate asofdate parseexception px buildexception  asofdate asofdate 
+                                             not parsable by iso8601 formats view raw  viewconfiguration createfromtime oledate asofdate getlabel label isrecursive recursive setrecursive v recursive   v ispreloadfileinformation preloadfileinformation setpreloadfileinformation v preloadfileinformation   v isforced forced setforced v forced   v isusingviewlabel labelinuse labelinuse isviewlabel isusingrevisionlabel labelinuse labelinuse isrevisionlabel label getlabelinuse labelinuse loglabel isusingviewlabel      
+            log    using view label     getlabel isusingrevisionlabel      
+            log    using revision label     getlabel logasofdate asofdate    
+            log    using view as of date     getasofdate shouldprocess pname includeit   matchpatterns getincludes    pname excludeit   matchpatterns getexcludes    pname includeit     excludeit matchpatterns patterns pname patterns stringtokenizer exstr stringtokenizer patterns exstr hasmoretokens directoryscanner match exstr nexttoken    pname folder configurerootstarteamfolder buildexception   
+        folder starteamrootfolder view snapshot   openview    
+ 
+              
+              
+ 
+            starteamrootfolder   
+                    starteamfinder findfolder snapshot getrootfolder rootstarteamfolder ispreloadfileinformation      
+                propertynames pn   getserver   getpropertynames props pn file_name  pn file_path  
+                                               pn file_status  pn modified_time  
+                                               pn file_file_time_at_checkin  
+                                               pn modified_user_id  pn file_size  
+                                               pn file_encoding depth isrecursive   ? -1   0  
+                starteamrootfolder populatenow getserver   gettypenames   file  
+                                                props  depth buildexception e e exception e    
+            stringbuffer msg stringbuffer  unable to find root folder    
+                     append rootstarteamfolder  
+                     append   in repository at    
+                     append geturl label msg append   using specified label    append label asofdate msg append   as of specified date    
+                     append asofdate buildexception msg tostring    e starteamrootfolder buildexception  unable to find root folder rootstarteamfolder     in repository at     geturl starteamrootfolder java io file getlocalrootmapping folder starteamrootfolder localrootfolder rootlocalfolder    
+            localrootfolder   rootlocalfolder localrootfolder   starteamrootfolder getpathfragment java io file localrootfolder logoperationdescription  
+        folder starteamrootfolder  java io file targetrootfolder execute buildexception folder starteamrootfolder   configurerootstarteamfolder    
+ 
+              
+            java io file localrootfolder   
+                getlocalrootmapping starteamrootfolder   
+ 
+            testpreconditions    
+ 
+              
+            logoperationdescription starteamrootfolder  localrootfolder   
+ 
+              
+            visit starteamrootfolder  localrootfolder exception e buildexception e disconnectfromserver findlabel view v buildexception   
+        label   alllabels   v getlabels i   0  i   alllabels length  i      
+            label stlabel   alllabels i   
+            log  checking label     stlabel getname    project msg_debug stlabel stlabel isdeleted      stlabel getname   equals label stlabel isrevisionlabel       stlabel isviewlabel buildexception  unexpected label type     
+                  
+                log  using label     stlabel getname    project msg_verbose labelinuse   stlabel buildexception  error  label label 
+                    does not exist in view   
+                  v getfullname getlabelid view v buildexception label    
+            findlabel v labelinuse getid 1 getidoflabelinuse labelinuse labelinuse getid 1 visit folder rootstarteamfolder  
+                                  java io file rootlocalfolder buildexception testpreconditions buildexception getfullrepositorypath  
+        com starbase starteam file remotefile    
+        stringbuffer sb stringbuffer    
+        sb append remotefile getparentfolderhierarchy    
+           append remotefile getname sb tostring unmatchedfilemap hashtable   
+ 
+          
+        unmatchedfilemap init java io file localfolder  folder remotefolder localfolder exists localfiles   localfolder list i   0  i   localfiles length  i fn   localfiles i   
+                java io file localfile java io file localfolder  localfiles i   getabsolutefile    
+ 
+                log  adding     localfile     to unmatchedfilemap   
+                    project msg_debug localfile isdirectory put localfile folder remotefolder  fn  fn com starbase starteam file remotefile com starbase starteam file remotefolder   
+                    remotefile setname fn put localfile  remotefile removecontrolleditem java io file localfile isactive      
+                log  removing processed     localfile getabsolutefile   
+                        from unmatchedfilemap   project msg_debug remove localfile getabsolutefile processuncontrolleditems buildexception isactive    
+ 
+      
+ 
+ org apache tools ant taskdefs optional starteam TreeBasedTask

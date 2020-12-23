@@ -1,0 +1,322 @@
+ 
+    
+   used handle data validation aspect e g  validate emails  names  etc  
+    
+                  
+   field types    
+                  
+   name-related 
+   one longest official nationality name 
+   email-related 
+   others 
+   
+                                                                               
+       field  course id 
+       unique  system-wide  not course instructor  
+       technically rid courseid field enforce users use 
+       coursename unique id case enforce coursename 
+       must unique across full system users expect names non-unique tolerant enforcing uniqueness id  whenever 
+       possible  must displayed same case user entered case letters mean something  furthermore  
+       converting same case reduce readability  
+       
+       course id necessary course name not unique enough distinguish between courses same course offered 
+       multiple times courses shared between instructors many 
+       students  allowing same course id different instructors problematic allow multiple instructors single course  
+       todo  make case insensitive 
+        
+                     
+   error messages    
+                     
+   possible reasons invalidity 
+   error message components 
+   generic e   not specific any field  error messages 
+   field-specific error messages 
+                                        
+   validation regex internal use    
+                                        
+    
+       must start alphanumeric character  cannot contain vertical bar percent sign %   
+        
+    
+       allows english alphabet  numbers  underscore   dot  dollar sign hyphen normal course id followed word '-demo followed any amount digits  
+        
+    
+       local part  
+        li only start letters  digits  hyphen plus sign  
+        li special characters allowed _ `     ~ 
+        li dot only appear between any 2 characters cannot appear continuously br  
+       domain part  
+        li only allow letters  digits  hyphen dot  must end letters 
+        
+    
+       allows english alphabet  numbers  underscore   dot hyphen  
+        
+   
+                                                                               
+       regex used checking header column name enroll lines 
+        
+                                          
+   validation methods external use    
+                                          
+    
+       checks code emailcontent not null not empty  
+        return explanation code emailcontent not acceptable  
+               returns empty string code emailcontent acceptable  
+        
+    
+       checks code emailsubject non-null non-empty string longer specified length 
+         code email_subject_max_length not contain any invalid characters return explanation code emailsubject not acceptable  
+               returns empty string code emailsubject acceptable  
+        
+    
+       checks code email not null  not empty  not longer code email_max_length valid email address according code regex_email   
+        return explanation code email not acceptable  
+               returns empty string code email acceptable  
+        
+    
+       checks code googleid not null  not empty  not longer code google_id_max_length not contain any invalid characters either google username  without gmail com valid email address not end gmail com   
+        return explanation code googleid not acceptable  
+               returns empty string code googleid acceptable  
+        
+    
+       checks code courseid not null  not empty surrounding whitespaces  not longer code course_id_max_length sanitized html match regex   code regex_course_id   
+        return explanation code courseid not acceptable  
+               returns empty string code courseid acceptable  
+        
+    
+       checks code sectionname non-null non-empty string longer specified length 
+         code section_name_max_length not contain any invalid characters return explanation code sectionname not acceptable  
+               returns empty string code sectionname acceptable  
+        
+    
+       checks code teamname non-null non-empty string longer specified length 
+         code team_name_max_length not contain any invalid characters return explanation code teamname not acceptable  
+               returns empty string code teamname acceptable  
+        
+    
+       checks given studentrolecomments non-null string longer specified length   code student_role_comments_max_length string empty  
+        return explanation code studentrolecomments not acceptable  
+               returns empty string code studentrolecomments acceptable  
+        
+    
+       checks code gender one recognized genders   code gender_accepted_values   
+        return explanation code gender not acceptable  
+               returns empty string code gender acceptable  
+        
+    
+       checks code feedbacksessionname non-null non-empty string longer specified length 
+         code feedback_session_name_max_length not contain any invalid characters unsanitized html characters  
+        return explanation code feedbacksessionname not acceptable  
+               returns empty string code feedbacksessionname acceptable  
+        
+   return early error already exists session name long etc  
+   checks unsanitized html characters 
+    
+       checks code coursename non-null non-empty string longer specified length 
+         code course_name_max_length not contain any invalid characters return explanation code coursename not acceptable  
+               returns empty string code coursename acceptable  
+        
+    
+       checks code nationality non-null non-empty string contained link nationalityhelper 's 
+       list nationalities  
+        return explanation code nationality not acceptable  
+               returns empty string code nationality acceptable  
+        
+    
+       checks code institutename non-null non-empty string longer specified length 
+         code institute_name_max_length not contain any invalid characters return explanation code institutename not acceptable  
+               returns empty string code institutename acceptable  
+        
+    
+       checks code personname non-null non-empty string longer specified length 
+         code person_name_max_length not contain any invalid characters return explanation code personname not acceptable  
+               returns empty string code personname acceptable  
+        
+    
+       checks given string non-null string contained link datetimezone 's 
+       list time zone ids  
+        return explanation code timezonevalue not acceptable  
+               returns empty string code timezonevalue acceptable  
+        
+    
+       checks code role one recognized roles   link #role_accepted_values   
+       
+        return explanation code role not acceptable  
+               returns empty string code role acceptable  
+        
+    
+       checks given name  including person name  institute name  course name  feedback session team name non-null non-empty string longer specified length   code maxlength not contain any invalid characters param fieldname descriptive name field e g    student name used return value make explanation descriptive  
+        param value string checked  
+        return explanation code value not acceptable  
+               returns empty string code value acceptable  
+        
+    
+       checks given string non-null string longer specified length   code maxlength string empty  
+       
+        param fieldname descriptive name field e g    student name used return value make explanation descriptive  
+        param value string checked  
+        return explanation code value not acceptable  
+               returns empty string code value acceptable  
+        
+    
+       checks session start time before session end time  
+        return error string code sessionstart before   code sessionend  
+               empty string code sessionstart code sessionend  
+        
+    
+       checks session visibility start time before session start time  
+        return error string code visibilitystart before   code sessionstart  
+               empty string code visibilitystart code sessionstart  
+        
+    
+       checks visibility start time before results publish time  
+        return error string code visibilitystart before   code resultspublish  
+               empty string code visibilitystart code resultspublish  
+        
+  fails sanitized value not same value 
+    
+       checks whether given text input represents format valid email address  
+        param email text input needs validation 
+        return true valid email address false  
+        
+    
+       checks whether elements collection unique  
+        param elements collection elements checked  
+        return true elements unique false  
+       teammates common util FieldValidator teammates common util fieldvalidator person_name_field_name    person name person_name_max_length   100 nationality_field_name    nationality nationality_max_length   55 course_name_field_name    course name course_name_max_length   64 feedback_session_name_field_name    feedback session name feedback_session_name_max_length   38 team_name_field_name    team name team_name_max_length   60 section_name_field_name    section name section_name_max_length   60 institute_name_field_name    institute name institute_name_max_length   64 email_field_name    email email_max_length   254 email_subject_field_name    email subject email_subject_max_length   200 email_content_field_name    email content email_content_error_message   email_content_field_name     should not be empty student_role_comments_field_name    comments about a student enrolled in a course student_role_comments_max_length   500 course_id_field_name    course id course_id_max_length   40 session_start_time_field_name    start time session_end_time_field_name    end time course_time_zone_field_name    course time zone google_id_field_name    google id google_id_max_length   254 gender_field_name    gender list gender_accepted_values   
+            collections unmodifiablelist  
+                    arrays aslist gendertypes male gendertypes female gendertypes other role_field_name    access-level list role_accepted_values   
+            collections unmodifiablelist  
+                    arrays aslist instructorpermissionrolenames instructor_permission_role_coowner instructorpermissionrolenames instructor_permission_role_manager instructorpermissionrolenames instructor_permission_role_observer instructorpermissionrolenames instructor_permission_role_tutor instructorpermissionrolenames instructor_permission_role_custom giver_type_name    feedback giver recipient_type_name    feedback recipient viewer_type_name    feedback viewer reason_empty    is empty reason_too_long    is too reason_incorrect_format    is not in the correct format reason_contains_invalid_char    contains invalid characters reason_start_with_non_alphanumeric_char    starts with a non-alphanumeric character reason_unavailable_as_choice    not available as a choice empty_string_error_info   
+             the field '$ fieldname ' is empty error_info   
+             \ $ userinput \  is not acceptable to teammates as a an $ fieldname  because it $ reason hint_for_correct_format_for_size_capped_possibly_empty   
+             the value of a an $ fieldname  should be no longer than $ maxlength  characters hint_for_correct_format_for_size_capped_non_empty   
+            hint_for_correct_format_for_size_capped_possibly_empty     it should not be empty hint_for_correct_format_for_size_capped_non_empty_no_spaces   
+             it cannot be longer than $ maxlength  characters  cannot be empty and cannot contain spaces hint_for_correct_format_for_invalid_name   
+             all $ fieldname  must start with an alphanumeric character  and cannot contain any vertical bar   
+                   or percent sign size_capped_non_empty_string_error_message   
+            error_info         hint_for_correct_format_for_size_capped_non_empty size_capped_non_empty_string_error_message_empty_string   
+            empty_string_error_info         hint_for_correct_format_for_size_capped_non_empty size_capped_possibly_empty_string_error_message   
+            error_info         hint_for_correct_format_for_size_capped_possibly_empty invalid_name_error_message   
+            error_info         hint_for_correct_format_for_invalid_name whitespace_only_or_extra_whitespace_error_message   
+             the provided $ fieldname  is not acceptable to teammates as it contains only whitespace   
+               or contains extra spaces at the beginning or at the end of the text non_html_field_error_message   
+            sanitizationhelper sanitizeforhtml  the provided $ fieldname  is not acceptable to teammates   
+                                                   as it cannot contain the following special html characters  
+                                                    in brackets non_null_field_error_message   
+             the provided $ fieldname  is not acceptable to teammates as it cannot be empty hint_for_correct_email   
+             an email address contains some text followed by one ' ' sign followed by some more text    
+              hint_for_correct_format_for_size_capped_non_empty_no_spaces email_error_message   
+            error_info         hint_for_correct_email email_error_message_empty_string   
+            empty_string_error_info         hint_for_correct_email hint_for_correct_course_id   
+             a course id can contain letters  numbers  fullstops  hyphens  underscores  and dollar signs    
+              hint_for_correct_format_for_size_capped_non_empty_no_spaces course_id_error_message   
+            error_info         hint_for_correct_course_id course_id_error_message_empty_string   
+            empty_string_error_info         hint_for_correct_course_id hint_for_correct_format_of_google_id   
+             a google id must be a valid id already registered with google    
+              hint_for_correct_format_for_size_capped_non_empty_no_spaces google_id_error_message   
+            error_info         hint_for_correct_format_of_google_id google_id_error_message_empty_string   
+            empty_string_error_info         hint_for_correct_format_of_google_id hint_for_correct_course_time_zone   
+             the value must be one of the values from the time zone dropdown selector course_time_zone_error_message   
+            error_info         hint_for_correct_course_time_zone hint_for_correct_nationality   
+             the value must be one of the values from the nationality dropdown selector nationality_error_message   
+             \ %s\  is not an accepted     nationality_field_name     to teammates    
+              hint_for_correct_nationality gender_error_message   
+             \ %s\  is not an accepted     gender_field_name     to teammates    
+               values have to be one of gendertypes male gendertypes female gendertypes other role_error_message   
+             \ %s\  is not an accepted     role_field_name     to teammates session_visible_time_field_name    time when the session will be visible results_visible_time_field_name    time when the results will be visible time_frame_error_message   
+                 the %s feedback session cannot be earlier than the %s participant_type_error_message    %s is not a valid %s participant_type_team_error_message   
+             the feedback recipients cannot be \ %s\  when the feedback giver is \ %s\     
+               did you mean to use \ self\  instead regex_name    ^ \\p isl \\p isn regex_course_id     a-za-z0-9_ regex_sample_course_id   regex_course_id    -demo\\d regex_email    ^ \\w -  \\w  #$% '   ?^_`  ~-    \\  \\w  #$% '   ?^_`  ~-       
+                                                  a-za-z0-9-  \\    a-za-z regex_google_id_non_email     a-za-z0-9_ list regex_column_section   collections unmodifiablelist  
+            arrays aslist sections?    sect?    courses?\\s sec tion ?s list regex_column_team   collections unmodifiablelist  
+            arrays aslist teams?    groups?    students?\\s teams?    students?\\s groups?   
+                                   courses?\\s teams list regex_column_name   collections unmodifiablelist  
+            arrays aslist names?    students?\\s names?    full\\s names?    students?\\s full\\s names list regex_column_email   collections unmodifiablelist  
+            arrays aslist emails?    mails?    e-mails?    e\\s mails?    emails?\\s address es ?   
+                                   e-mails?\\s address es ?    contacts list regex_column_comment   collections unmodifiablelist  
+            arrays aslist comments?    notes getinvalidityinfoforemailcontent text emailcontent    
+        assumption asserttrue  non value expected   emailcontent emailcontent getvalue   isempty email_content_error_message getinvalidityinfoforemailsubject emailsubject getvalidityinfoforallowedname  
+                email_subject_field_name  email_subject_max_length  emailsubject getinvalidityinfoforemail email    
+ 
+        assumption asserttrue  non value expected   email sanitizedvalue   sanitizationhelper sanitizeforhtml email email isempty getpopulatedemptystringerrormessage email_error_message_empty_string  email_field_name  
+                                            email_max_length isuntrimmed email whitespace_only_or_extra_whitespace_error_message replace  $ fieldname    email_field_name email length     email_max_length getpopulatederrormessage email_error_message  sanitizedvalue  email_field_name  
+                                            reason_too_long  email_max_length stringhelper ismatching email  regex_email getpopulatederrormessage email_error_message  sanitizedvalue  email_field_name  
+                                            reason_incorrect_format  email_max_length getinvalidityinfoforgoogleid googleid    
+ 
+        assumption asserttrue  non value expected   googleid assumption asserttrue  \     googleid    \      is not expected to be a gmail address    
+                 googleid tolowercase   endswith   gmail com sanitizedvalue   sanitizationhelper sanitizeforhtml googleid isvalidfullemail   stringhelper ismatching googleid  regex_email isvalidemailwithoutdomain   stringhelper ismatching googleid  regex_google_id_non_email googleid isempty getpopulatedemptystringerrormessage google_id_error_message_empty_string  
+                                            google_id_field_name  google_id_max_length isuntrimmed googleid whitespace_only_or_extra_whitespace_error_message replace  $ fieldname    google_id_field_name googleid length     google_id_max_length getpopulatederrormessage google_id_error_message  sanitizedvalue  google_id_field_name  
+                                            reason_too_long  google_id_max_length isvalidfullemail    isvalidemailwithoutdomain getpopulatederrormessage google_id_error_message  sanitizedvalue  google_id_field_name  
+                                            reason_incorrect_format  google_id_max_length getinvalidityinfoforcourseid courseid    
+ 
+        assumption asserttrue  non value expected   courseid courseid isempty getpopulatedemptystringerrormessage course_id_error_message_empty_string  
+                                            course_id_field_name  course_id_max_length isuntrimmed courseid whitespace_only_or_extra_whitespace_error_message replace  $ fieldname    
+                    course_name_field_name sanitizedvalue   sanitizationhelper sanitizeforhtml courseid courseid length     course_id_max_length getpopulatederrormessage course_id_error_message  sanitizedvalue  course_id_field_name  
+                                            reason_too_long  course_id_max_length stringhelper ismatching courseid  regex_course_id getpopulatederrormessage course_id_error_message  sanitizedvalue  course_id_field_name  
+                                            reason_incorrect_format  course_id_max_length getinvalidityinfoforsectionname sectionname getvalidityinfoforallowedname section_name_field_name  section_name_max_length  sectionname getinvalidityinfoforteamname teamname getvalidityinfoforallowedname team_name_field_name  team_name_max_length  teamname getinvalidityinfoforstudentrolecomments studentrolecomments getvalidityinfoforsizecappedpossiblyemptystring student_role_comments_field_name  
+                                                               student_role_comments_max_length  
+                                                               studentrolecomments getinvalidityinfoforgender gender    
+        assumption asserttrue  non value expected   gender sanitizedvalue   sanitizationhelper sanitizeforhtml gender gender_accepted_values contains gender format gender_error_message  sanitizedvalue getinvalidityinfoforfeedbacksessionname feedbacksessionname errorsfromallowednamevalidation   getvalidityinfoforallowedname  
+                feedback_session_name_field_name  feedback_session_name_max_length  feedbacksessionname errorsfromallowednamevalidation isempty errorsfromallowednamevalidation getvalidityinfofornonhtmlfield feedback_session_name_field_name  feedbacksessionname getinvalidityinfoforcoursename coursename getvalidityinfoforallowedname course_name_field_name  course_name_max_length  coursename getinvalidityinfofornationality nationality    
+        assumption assertnotnull  non value expected   nationality nationalityhelper getnationalities   contains nationality format nationality_error_message  sanitizationhelper sanitizeforhtml nationality getinvalidityinfoforinstitutename institutename getvalidityinfoforallowedname institute_name_field_name  institute_name_max_length  
+                                             institutename getinvalidityinfoforpersonname personname getvalidityinfoforallowedname person_name_field_name  person_name_max_length  personname getinvalidityinfoforcoursetimezone timezonevalue    
+        assumption asserttrue  non value expected   timezonevalue datetimezone getavailableids   contains timezonevalue getpopulatederrormessage course_time_zone_error_message  timezonevalue  course_time_zone_field_name  
+                                            reason_unavailable_as_choice getinvalidityinfoforrole role    
+        assumption asserttrue  non value expected   role sanitizedvalue   sanitizationhelper sanitizeforhtml role role_accepted_values contains role format role_error_message  sanitizedvalue getvalidityinfoforallowedname fieldname maxlength value    
+ 
+        assumption asserttrue  non value expected fieldname  value value isempty getpopulatedemptystringerrormessage size_capped_non_empty_string_error_message_empty_string  
+                                            fieldname  maxlength isuntrimmed value whitespace_only_or_extra_whitespace_error_message replace  $ fieldname    fieldname sanitizedvalue   sanitizationhelper sanitizeforhtml value value length     maxlength getpopulatederrormessage size_capped_non_empty_string_error_message  sanitizedvalue  
+                                            fieldname  reason_too_long  maxlength character isletterordigit value codepointat 0 hasstartingbrace   value charat 0     ' '    value contains hasstartingbrace getpopulatederrormessage invalid_name_error_message  sanitizedvalue  
+                                                fieldname  reason_start_with_non_alphanumeric_char stringhelper ismatching value substring 1   regex_name getpopulatederrormessage invalid_name_error_message  sanitizedvalue  fieldname  
+                                                reason_contains_invalid_char stringhelper ismatching value  regex_name getpopulatederrormessage invalid_name_error_message  sanitizedvalue  fieldname  
+                                            reason_contains_invalid_char getvalidityinfoforsizecappedpossiblyemptystring fieldname maxlength value    
+        assumption asserttrue  non value expected fieldname  value isuntrimmed value whitespace_only_or_extra_whitespace_error_message replace  $ fieldname    fieldname value length     maxlength sanitizedvalue   sanitizationhelper sanitizeforhtml value getpopulatederrormessage size_capped_possibly_empty_string_error_message  sanitizedvalue  
+                                            fieldname  reason_too_long  maxlength getinvalidityinfofortimeforsessionstartandend date sessionstart  date sessionend getinvalidityinfoforfirsttimeisbeforesecondtime  
+                sessionstart  sessionend  session_start_time_field_name  session_end_time_field_name getinvalidityinfofortimeforvisibilitystartandsessionstart date visibilitystart  
+                                                                            date sessionstart getinvalidityinfoforfirsttimeisbeforesecondtime  
+                visibilitystart  sessionstart  session_visible_time_field_name  session_start_time_field_name getinvalidityinfofortimeforvisibilitystartandresultspublish date visibilitystart  
+                                                                              date resultspublish getinvalidityinfoforfirsttimeisbeforesecondtime visibilitystart  resultspublish  
+                session_visible_time_field_name  results_visible_time_field_name getinvalidityinfoforfirsttimeisbeforesecondtime  
+            date earliertime  date latertime earliertimefieldname latertimefieldname    
+        assumption asserttrue  non value expected   earliertime assumption asserttrue  non value expected   latertime timehelper isspecialtime earliertime     timehelper isspecialtime latertime latertime before earliertime format time_frame_error_message  latertimefieldname  earliertimefieldname list getvalidityinfoforfeedbackparticipanttype  
+            feedbackparticipanttype givertype  feedbackparticipanttype recipienttype    
+ 
+        assumption assertnotnull  non value expected   givertype   
+        assumption assertnotnull  non value expected   recipienttype   
+ 
+        list errors linkedlist givertype isvalidgiver      
+            errors add format participant_type_error_message  givertype tostring    giver_type_name recipienttype isvalidrecipient      
+            errors add format participant_type_error_message  recipienttype tostring    recipient_type_name givertype    feedbackparticipanttype teams 
+                    recipienttype    feedbackparticipanttype own_team 
+                           recipienttype    feedbackparticipanttype own_team_members     
+            errors add format participant_type_team_error_message  
+                    recipienttype todisplayrecipientname    
+                    givertype todisplaygivername errors list getvalidityinfoforfeedbackresponsevisibility  
+            list feedbackparticipanttype  showresponsesto  
+            list feedbackparticipanttype  showgivernameto  
+            list feedbackparticipanttype  showrecipientnameto    
+ 
+        assumption assertnotnull  non value expected   showresponsesto   
+        assumption assertnotnull  non value expected   showgivernameto   
+        assumption assertnotnull  non value expected   showrecipientnameto   
+        assumption asserttrue  non value expected    showresponsesto contains assumption asserttrue  non value expected    showgivernameto contains assumption asserttrue  non value expected    showrecipientnameto contains list errors linkedlist feedbackparticipanttype type   showgivernameto type isvalidviewer      
+                errors add format participant_type_error_message  
+                        type tostring    viewer_type_name showresponsesto contains type     
+                errors add  trying to show giver name to   
+                          type tostring   
+                            without showing response first feedbackparticipanttype type   showrecipientnameto type isvalidviewer      
+                errors add format participant_type_error_message  
+                        type tostring    viewer_type_name showresponsesto contains type     
+                errors add  trying to show recipient name to   
+                          type tostring   
+                            without showing response first feedbackparticipanttype type   showresponsesto type isvalidviewer      
+                errors add format participant_type_error_message  
+                        type tostring    viewer_type_name errors getvalidityinfofornonhtmlfield fieldname value sanitizedvalue   sanitizationhelper sanitizeforhtml value value equals sanitizedvalue  ?      non_html_field_error_message replace  $ fieldname    fieldname getvalidityinfofornonnullfield fieldname  object value value non_null_field_error_message replace  $ fieldname    fieldname isuntrimmed value value length      value trim   length isvalidemailaddress email stringhelper ismatching email  regex_email t areelementsunique collection t  elements    
+        set t  uniqueelements hashset   elements uniqueelements size      elements size getpopulatederrormessage messagetemplate userinput fieldname errorreason maxlength getpopulatederrormessage messagetemplate  userinput  fieldname  errorreason  
+                    replace  $ maxlength valueof maxlength getpopulatederrormessage messagetemplate userinput fieldname errorreason messagetemplate replace  $ userinput    userinput  
+                               replace  $ fieldname    fieldname  
+                               replace  $ reason    errorreason getpopulatedemptystringerrormessage messagetemplate fieldname maxlength messagetemplate replace  $ fieldname    fieldname  
+                               replace  $ maxlength valueof maxlength    
+      
+ teammates common util FieldValidator

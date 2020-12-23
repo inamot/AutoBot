@@ -12,14 +12,11 @@ public class FileNamePrinter
 		String packageExclusion [] = 
 			{ 
 					"java.*",
-					"javax.*",
-					"org.tigris.*",
-					"tudresden.*",
-					"org.apache.*", 
+					"javax.*"
 			};
 		
-		String programSources = "test-systems/argouml/v_0_25_4/src_new/";
-		String programUrl = "test-systems/argouml/bin/";
+		String programSources = "test-systems/teammates/src/main/java/";
+		String programUrl = "test-systems/teammates/bin/";	
 		
 		File folder = new File( programSources );
 		Stack<File> stack = new Stack<File>();
@@ -73,7 +70,7 @@ public class FileNamePrinter
 					// remove packages that are not being considered
 					if( excludedPackage.contains( "*" ) )
 					{
-						excludedPackage = excludedPackage.substring( 0 , excludedPackage.lastIndexOf( "." ) + 1 );
+						excludedPackage = excludedPackage.substring( 0 , excludedPackage.indexOf( "*" )  );
 						
 						if( file.startsWith( excludedPackage ) && !excludedPackage.equals( "" ) )
 						{
@@ -82,7 +79,7 @@ public class FileNamePrinter
 					}
 					else
 					{
-						if( file.contains( excludedPackage ) && !excludedPackage.equals( "" ) )
+						if( file.startsWith( excludedPackage ) && !excludedPackage.equals( "" ) )
 						{
 							filteredFiles.remove( excludedPackage );
 						}

@@ -1,0 +1,146 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license launcher ant ant 1 6 ant home  installation  directory property  
+         value ant library directory property  
+         value directory name per-user ant directory  
+         value name per-user library directory  
+         value location per-user library directory  
+        p s value concatenation link #ant_privatedir link #ant_privatelib appropriate file separator between example unix s  code  ant lib  code startup class run  
+         value  
+        
+    
+       system property user home directory  
+         value  
+        
+    
+       system property application classpath  
+         value  
+        
+    
+       exit code trouble 
+        
+    
+       entry point starting command line ant  
+       
+        param  args commandline arguments 
+        
+    
+       add classpath lib lib path urls  
+       
+        param path classpath lib path add libpathulrls 
+        param getjars true path directory  add jars directory path urls 
+        param libpathurls list paths add add any jars directory 
+    
+       run launcher launch ant  
+       
+        param args command line arguments 
+        return exit code normal ant main calls exit ends handling failures bind-time 
+        exception malformedurlexception urls required classloader 
+                  cannot created  
+        
+  decide whether copy existing arg set build new one list args excluding special 
+  operations only handle 
+   now update class path property list lib enties cp entry url array  
+        param cpstring classpath string 
+        param libpaths list lib entries  
+        return array urls jar files ant_home lib  
+       determine ant library directory system jars  use property default using location ant-launcher jar jar files user home  ant lib 
+        
+    
+       combine various jar sources single array jars  
+        param libjars jars specified lib command line options 
+        param userjars jars ant lib 
+        param systemjars jars ant_home lib 
+        param toolsjar tools jar file 
+        return combined array 
+        throws malformedurlexception problem  
+       org apache tools ant launch Launcher org apache tools ant launch launcher anthome_property    ant home antlibdir_property    ant library dir ant_privatedir     ant ant_privatelib    lib user_libdir   
+        ant_privatedir   file separatorchar   ant_privatelib main_class    org apache tools ant main user_homedir    user home exit_code_error   2 main args exitcode launcher launcher launcher    
+            exitcode   launcher run args launchexception e    
+            exitcode   exit_code_error  
+            system err println e getmessage throwable t    
+            exitcode   exit_code_error  
+            t printstacktrace system err exitcode    0    
+            system exit exitcode addpath path getjars  list libpathurls malformedurlexception   
+        stringtokenizer tokenizer stringtokenizer path  file pathseparator tokenizer hasmoreelements elementname   tokenizer nexttoken    
+            file element file elementname elementname indexof  %      -1     element exists getjars    element isdirectory      
+                  
+                url   dirurls   locator getlocationurls element j   0  j   dirurls length    j    
+                    libpathurls add dirurls j    
+                  
+              
+ 
+            libpathurls add locator filetourl element run args launchexception  malformedurlexception anthomeproperty   system getproperty anthome_property   
+        file anthome file sourcejar   locator getclasssource getclass     
+        file jardir   sourcejar getparentfile mainclassname   main_class anthomeproperty anthome file anthomeproperty anthome anthome exists      
+            anthome   jardir getparentfile    
+            system setproperty anthome_property  anthome getabsolutepath anthome exists launchexception  ant home is set incorrectly or   
+                   ant could not be located    
+          
+ 
+        list libpaths arraylist cpstring list arglist arraylist newargs nouserlib noclasspath i   0  i   args length    i args i  equals  -lib i    args length - 1 launchexception  the -lib argument must   
+                           be followed by a library location    
+                  
+                libpaths add args   i args i  equals  -cp i    args length - 1 launchexception  the -cp argument must   
+                           be followed by a classpath expression cpstring launchexception  the -cp argument must   
+                           not be repeated    
+                  
+                cpstring   args   i args i  equals  --nouserlib      args i  equals  -nouserlib      
+                nouserlib args i  equals  --noclasspath      args i  equals  -noclasspath      
+                noclasspath args i  equals  -main i    args length - 1 launchexception  the -main argument must   
+                               be followed by a library location    
+                  
+                mainclassname   args   i arglist add args i arglist size      args length    
+            newargs   args newargs arglist toarray arglist size      
+          
+ 
+        url   liburls      getlibpathurls  
+            noclasspath cpstring  libpaths   
+        url   systemurls   getsystemurls jardir   
+        url   userurls     nouserlib url 0    getuserurls    
+ 
+        url   jars   getjararray  
+            liburls  userurls  systemurls  locator gettoolsjar     
+ 
+          
+        stringbuffer baseclasspath stringbuffer system getproperty java_class_path baseclasspath charat baseclasspath length   - 1  
+                   file pathseparatorchar    
+            baseclasspath setlength baseclasspath length   - 1 i   0  i   jars length    i    
+            baseclasspath append file pathseparatorchar   
+            baseclasspath append locator fromuri jars i  tostring      
+          
+ 
+        system setproperty java_class_path  baseclasspath tostring     
+ 
+        urlclassloader loader urlclassloader jars   
+        thread currentthread   setcontextclassloader loader mainclass exitcode   0 mainclass   loader loadclass mainclassname   
+            antmain main    antmain  mainclass newinstance    
+            main startant newargs null instantiationexception ex    
+            system err println  
+                 incompatible version of     mainclassname     detected    
+            file mainjar   locator getclasssource mainclass   
+            system err println  
+                 location of mainjar   
+            exitcode   exit_code_error throwable t    
+            t printstacktrace system err   
+            exitcode   exit_code_error exitcode url   getlibpathurls cpstring  list libpaths malformedurlexception   
+        list libpathurls arraylist cpstring addpath cpstring libpathurls iterator i   libpaths iterator    i hasnext libpath i next    
+            addpath libpath libpathurls url    libpathurls toarray url libpathurls size url   getsystemurls file antlauncherdir malformedurlexception   
+        file antlibdir antlibdirproperty   system getproperty antlibdir_property antlibdirproperty antlibdir file antlibdirproperty antlibdir antlibdir exists      
+            antlibdir   antlauncherdir  
+            system setproperty antlibdir_property  antlibdir getabsolutepath locator getlocationurls antlibdir url   getuserurls malformedurlexception   
+        file userlibdir file system getproperty user_homedir   user_libdir locator getlocationurls userlibdir url   getjararray   
+        url   libjars  url   userjars  url   systemjars  file toolsjar malformedurlexception numjars   libjars length   userjars length   systemjars length toolsjar numjars    
+          
+        url   jars url numjars   
+        system arraycopy libjars  0  jars  0  libjars length   
+        system arraycopy userjars  0  jars  libjars length  userjars length   
+        system arraycopy systemjars  0  jars  userjars length   libjars length  
+            systemjars length toolsjar jars jars length - 1    locator filetourl toolsjar jars  
+      
+ org apache tools ant launch Launcher

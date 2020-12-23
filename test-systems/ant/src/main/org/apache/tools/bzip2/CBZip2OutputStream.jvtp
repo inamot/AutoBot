@@ -1,0 +1,826 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license package based work done keiron liddle  aftex software 
+    keiron aftexsw com ant project very grateful great code output stream compresses bzip2 format  without file 
+   header chars another stream  
+ 
+    p compression requires large amounts memory  thus call link #close   close    method soon possible force  tt cbzip2outputstream  tt release allocated memory   p  
+   
+    p shrink amount allocated memory maybe raise compression speed choosing lower blocksize turn 
+   may cause lower compression ratio avoid unnecessary 
+   memory allocation avoiding using blocksize bigger size input    p  
+   
+    p compute memory usage compressing following formula   p  
+    pre  
+    code 400k    9   blocksize   code   
+     pre  
+    
+    p memory required decompression link 
+   cbzip2inputstream cbzip2inputstream  use  p  
+    pre  
+    code 65k    5   blocksize   code   
+     pre  
+   
+    table width  100%  border  1   
+     colgroup  
+       col width  33%     
+       col width  33%     
+       col width  33%     
+      colgroup  
+     tr  
+       th colspan  3  memory usage blocksize  th  
+      tr  tr  
+       th align  right  blocksize  th  
+       th align  right  compression br memory usage  th  
+       th align  right  decompression br memory usage  th  
+      tr  tr  
+       td align  right  100k  td  
+       td align  right  1300k  td  
+       td align  right   565k  td  
+      tr  tr  
+       td align  right  200k  td  
+       td align  right  2200k  td  
+       td align  right  1065k  td  
+      tr  tr  
+       td align  right  300k  td  
+       td align  right  3100k  td  
+       td align  right  1565k  td  
+      tr  tr  
+       td align  right  400k  td  
+       td align  right  4000k  td  
+       td align  right  2065k  td  
+      tr  tr  
+       td align  right  500k  td  
+       td align  right  4900k  td  
+       td align  right  2565k  td  
+      tr  tr  
+       td align  right  600k  td  
+       td align  right  5800k  td  
+       td align  right  3065k  td  
+      tr  tr  
+       td align  right  700k  td  
+       td align  right  6700k  td  
+       td align  right  3565k  td  
+      tr  tr  
+       td align  right  800k  td  
+       td align  right  7600k  td  
+       td align  right  4065k  td  
+      tr  tr  
+       td align  right  900k  td  
+       td align  right  8500k  td  
+       td align  right  4565k  td  
+      tr  
+     table  
+   
+    p decompression  tt cbzip2inputstream  tt  allocates less 
+   memory bzipped input smaller one block   p  
+   
+    p instances class not threadsafe   p  
+   
+    p  
+   todo     update bzip2 1 0 1 
+     p minimum supported blocksize  tt     1  tt maximum supported blocksize  tt     9  tt constant accessible subclasses historical purposes don't know means don't need constant accessible subclasses historical purposes don't know means don't need constant accessible subclasses historical purposes don't know means don't need constant accessible subclasses historical purposes don't know means don't need constant accessible subclasses historical purposes don't know means don't need constant accessible subclasses historical purposes don't know means don't need constant accessible subclasses historical purposes don't know means don't need constant accessible subclasses historical purposes don't know means don't need p unlucky improbable enough stack overflow whilst sorting  
+      increase following constant try 
+      again practice never seen stack go above 27 elems following 
+      limit seems very generous  
+         p  
+        
+    
+       knuth's increments seem work better incerpi-sedgewick 
+       here   possibly number elems sort usually 
+       small  typically  lt   20 method accessible subclasses historical purposes don't know don't need nodes heap entries run 1   entry 0 both heap nodes sentinel  
+           
+   assert  nheap    max_alpha_size   2     nheap  
+   assert  nnodes    max_alpha_size   2     nnodes  
+   
+          nodes heap entries run 1   entry 0 both heap nodes sentinel  
+           
+    
+      index last char block block size    last   1  
+       
+    
+       index fmap original string sorting  
+        
+    
+       always range 0    9 current block size 100000 number  
+        
+   
+       used sorting many long comparisons 
+       happen stop sorting  randomise block 
+       slightly try again memory intensive stuff  
+        
+    
+       chooses blocksize based given length data compress  
+       
+        return blocksize  between   link #min_blocksize link #max_blocksize  
+        both inclusive negative  tt inputlength  tt method returns 
+         tt max_blocksize  tt  always  
+       
+        param inputlength length data compressed tt cbzip2outputstream  tt   
+        
+    
+       constructs new  tt cbzip2outputstream  tt blocksize 900k  
+        
+        p  b attention    b caller resonsible write two 
+       bzip2 magic bytes  tt  bz   tt specified stream prior calling constructor   p  
+       
+        param out destination stream  
+       
+        throws ioexception o error occurs specified stream  
+        throws nullpointerexception code out    null  code   
+        
+    
+       constructs new  tt cbzip2outputstream  tt specified blocksize  
+        
+        p  b attention    b caller resonsible write two 
+       bzip2 magic bytes  tt  bz   tt specified stream prior calling constructor   p  
+       
+       
+        param out destination stream  
+        param blocksize blocksize 100k units  
+       
+        throws ioexception o error occurs specified stream  
+        throws illegalargumentexception code  blocksize   1      blocksize   9   code   
+        throws nullpointerexception code out    null  code   
+       
+        see #min_blocksize 
+        see #max_blocksize 
+        
+    
+       overriden close stream  
+        
+   write magic  done caller created stream out write 'b out write 'z'   
+   write `magic' bytes h indicating file-format    huffmanised  
+           followed digit indicating blocksize100k  
+           
+          blockno    
+          ch   0  
+   20 paranoia constant    
+   empty block end file 
+   sort block establish posn original string 6-byte block header value chosen arbitrarily 0x314159265359 32 bit value not really 
+          give strong enough guarantee value not 
+          appear chance compressed datastream   worst-case 
+          probability event 900k block 2 0e-3 32 bits  1 0e-5 40 bits 4 0e-8 48 bits compressed file size 100gb 100000 blocks -- 
+          only 48-bit marker nb  normal compression  
+          decompression not  rely statistical properties only important trying recover blocks damaged files  
+           
+   now block's crc known place     
+   now single bit indicating randomisation     
+   finally  block's contents proper     
+   
+          now another magic 48-bit number  0x177245385090 indicate end last block    sqrt pi want know want use e contains much repetition -- 27 18 28 18 28 46 feel statistically comfortable   call paranoid   
+           
+    
+       returns blocksize parameter specified construction time nothing write 8-bit 
+   write 8-bit 
+   decide many coding tables use    
+   assert nmtf   0 nmtf  
+   generate initial set coding tables    
+   
+          iterate up n_iters times improve tables  
+           
+   compute mtf values selectors     
+   assign actual codes tables     
+   transmit mapping table     
+   now selectors     
+   now coding tables finally block data proper    
+   set group start   end marks     
+   
+                  calculate cost group coded each coding tables  
+                   
+   unrolled version block 
+   
+                  find coding table best group record identity selector table  
+                   
+   
+                  increment symbol frequencies selected table  
+                   
+   
+              recompute tables based accumulated frequencies  
+               
+   assert  ngroups   8    ngroups  
+   assert  maxlen    20    maxlen  
+   assert  minlen    1    minlen  
+   inlined  bsw 1  inuse i16   j  ? 1   0   
+   write 8-bit 
+   inlined  bsw 1  1   
+   inlined  bsw 1  0   
+  bsbuffshadow    0     32 - bsliveshadow - 1   
+   inlined  bsw 5  curr   
+   write 8-bit 
+   inlined  bsw 2  2   
+   write 8-bit 
+   10    
+   inlined  bsw 2  3   
+   write 8-bit 
+   11    
+   inlined  bsw 1  0   
+   write 8-bit 
+   bsbuffshadow    0     32 - bsliveshadow - 1   
+   
+   inlined  bsw len_selctr sfmap_i    0xff  
+                code_selctr sfmap_i most hammered method class  
+       
+        p version using unrolled loops  normally never 
+       use ones java code unrolling shown noticable performance improvement jre 1 4 2  linux i586   
+       hotspot client course depends jit compiler vm   p  
+        
+   following block contains unrolled code shortened coding additional loops  
+   copy int j   mj     maingtu fmap j - h     d  vd  
+                             block  quadrant  lastshadow   
+         j -  h    
+        fmap j unrolled version  
+   start inline maingtu 
+   following done loop unrolled performance x   0 
+   hammer 
+   end inline maingtu 
+   assert origptr    -1 origptr  
+    
+       method  mainqsort3   file  blocksort c   bzip2 1 0 2 
+        
+   set up 2-byte frequency table various block-sized structures  live data runs 0 last num_overshoot_bytes inclusive   first  
+          set up overshoot area block  
+           
+   complete initial radix sort  
+   
+              now ftab contains first loc every small bucket  
+              calculate running order smallest largest 
+              big bucket main sorting loop  
+           
+   
+                  process big buckets  starting least full  
+               
+   step 1  
+   
+                  complete big bucket  ss quicksorting 
+                  any unsorted small buckets  ss  j    hopefully 
+                  previous pointer-scanning phases already 
+                  completed many small buckets  ss  j don't sort step 2  
+   now scan big bucket synthesise sorted order small buckets  t  ss t    ss  
+   step 3 ss big bucket now done   record fact update quadrant descriptors   remember update quadrants overshoot area necessary 255   test merely skips updating last bucket processed updating last bucket pointless  
+               
+   handle 16 bit signed numbers 
+   make maps blocksize 900k 
+       256 byte 
+       256 byte 
+      1032 byte 
+     18002 byte 
+     18002 byte 
+       256 byte 
+      1548 byte 
+      6192 byte 
+        24 byte 
+        12 byte 
+      6192 byte 
+         6 byte 
+        16 byte 
+      4000 byte 
+      4000 byte 
+      4000 byte 
+      1024 byte 
+      1024 byte 
+       256 byte 
+      1040 byte 
+      2064 byte 
+      2064 byte 
+    262148 byte 
+   ------------ 
+    333408 byte 
+    900021 byte 
+   3600000 byte 
+   3600000 byte 
+   ------------ 
+   8433529 byte 
+                
+    
+           array instance identical sfmap  both used only temporarily indepently not need allocate additional memory  
+           org apache tools bzip2 CBZip2OutputStream org apache tools bzip2 cbzip2outputstream outputstream bzip2constants min_blocksize   1 max_blocksize   9 setmask    1    21 clearmask    ~setmask greater_icost   15 lesser_icost   0 small_thresh   20 depth_thresh   10 work_factor   30 qsort_stack_size   1000 incs     
+        1  
+        4  
+        13  
+        40  
+        121  
+        364  
+        1093  
+        3280  
+        9841  
+        29524  
+        88573  
+        265720  
+        797161  
+        2391484 hbmakecodelengths len freq alphasize maxlen heap max_alpha_size   2 weight max_alpha_size   2 parent max_alpha_size   2 i   alphasize  --i    0     
+            weight i   1     freq i     0 ? 1   freq i      8 toolong toolong     
+            toolong nnodes   alphasize nheap   0  
+            heap 0    0  
+            weight 0    0  
+            parent 0    -2 i   1  i    alphasize  i      
+                parent i    -1  
+                nheap    
+                heap nheap    i zz   nheap tmp   heap zz weight tmp    weight heap zz    1      
+                    heap zz    heap zz    1   
+                    zz     1  
+                  
+                heap zz    tmp nheap   1 n1   heap 1   
+                heap 1    heap nheap   
+                nheap yy   0 zz   1 tmp   heap 1 yy   zz    1 yy   nheap yy   nheap  
+                            weight heap yy   1     weight heap yy       
+                        yy weight tmp    weight heap yy heap zz    heap yy   
+                    zz   yy  
+                  
+ 
+                heap zz    tmp n2   heap 1   
+                heap 1    heap nheap   
+                nheap--  
+ 
+                yy   0  
+                zz   1  
+                tmp   heap 1 yy   zz    1 yy   nheap yy   nheap  
+                            weight heap yy   1     weight heap yy       
+                        yy weight tmp    weight heap yy heap zz    heap yy   
+                    zz   yy  
+                  
+ 
+                heap zz    tmp  
+                nnodes    
+                parent n1    parent n2    nnodes weight_n1   weight n1 weight_n2   weight n2   
+                weight nnodes       weight_n1   0xffffff00  
+                                      weight_n2   0xffffff00   
+                                     1      weight_n1   0x000000ff  
+                                              weight_n2   0x000000ff   
+                                          ?  weight_n1   0x000000ff  
+                                             weight_n2   0x000000ff      
+                 
+                parent nnodes    -1  
+                nheap    
+                heap nheap    nnodes  
+ 
+                tmp   0  
+                zz   nheap  
+                tmp   heap zz weight_tmp   weight tmp weight_tmp   weight heap zz    1      
+                    heap zz    heap zz    1   
+                    zz     1  
+                  
+                heap zz    tmp i   1  i    alphasize  i j   0 k   i parent_k   parent_k   parent k      0     
+                    k   parent_k  
+                    j    
+                  
+ 
+                len i - 1 j j   maxlen    
+                    toolong toolong i   1  i   alphasize  i j   weight i     8  
+                    j   1    j    1   
+                    weight i    j    8 hbmakecodelengths len freq data dat alphasize maxlen heap      dat heap weight    dat weight parent    dat parent i   alphasize  --i    0     
+            weight i   1     freq i     0 ? 1   freq i      8 toolong toolong     
+            toolong nnodes   alphasize nheap   0  
+            heap 0    0  
+            weight 0    0  
+            parent 0    -2 i   1  i    alphasize  i      
+                parent i    -1  
+                nheap    
+                heap nheap    i zz   nheap tmp   heap zz weight tmp    weight heap zz    1      
+                    heap zz    heap zz    1   
+                    zz     1  
+                  
+                heap zz    tmp nheap   1 n1   heap 1   
+                heap 1    heap nheap   
+                nheap yy   0 zz   1 tmp   heap 1 yy   zz    1 yy   nheap yy   nheap  
+                            weight heap yy   1     weight heap yy       
+                        yy weight tmp    weight heap yy heap zz    heap yy   
+                    zz   yy  
+                  
+ 
+                heap zz    tmp n2   heap 1   
+                heap 1    heap nheap   
+                nheap--  
+ 
+                yy   0  
+                zz   1  
+                tmp   heap 1 yy   zz    1 yy   nheap yy   nheap  
+                            weight heap yy   1     weight heap yy       
+                        yy weight tmp    weight heap yy heap zz    heap yy   
+                    zz   yy  
+                  
+ 
+                heap zz    tmp  
+                nnodes    
+                parent n1    parent n2    nnodes weight_n1   weight n1 weight_n2   weight n2   
+                weight nnodes      weight_n1   0xffffff00  
+                                     weight_n2   0xffffff00   
+                       1      weight_n1   0x000000ff  
+                                weight_n2   0x000000ff   
+                            ?  weight_n1   0x000000ff  
+                               weight_n2   0x000000ff     
+ 
+                parent nnodes    -1  
+                nheap    
+                heap nheap    nnodes  
+ 
+                tmp   0  
+                zz   nheap  
+                tmp   heap zz weight_tmp   weight tmp weight_tmp   weight heap zz    1      
+                    heap zz    heap zz    1   
+                    zz     1  
+                  
+                heap zz    tmp i   1  i    alphasize  i j   0 k   i parent_k   parent_k   parent k      0     
+                    k   parent_k  
+                    j    
+                  
+ 
+                len i - 1 j j   maxlen    
+                    toolong toolong i   1  i   alphasize  i j   weight i     8  
+                    j   1    j    1   
+                    weight i    j    8 chooseblocksize inputlength inputlength   0 math min  inputlength   132000    1  9  
+              max_blocksize cbzip2outputstream outputstream out ioexception out  max_blocksize cbzip2outputstream outputstream out blocksize ioexception blocksize   1 illegalargumentexception  blocksize     blocksize 
+                                                      1 blocksize   9 illegalargumentexception  blocksize     blocksize 
+                                                      9 blocksize100k   blocksize out   out  
+        init write b ioexception out write0 b ioexception  closed writerun ioexception lastshadow last lastshadow allowableblocksize currentcharshadow currentchar data datashadow data  
+            datashadow inuse currentcharshadow ch currentcharshadow runlengthshadow runlength crc updatecrc currentcharshadow  runlengthshadow runlengthshadow 1  
+                datashadow block lastshadow   2    ch last   lastshadow   1 2  
+                datashadow block lastshadow   2    ch  
+                datashadow block lastshadow   3    ch last   lastshadow   2 3 block   datashadow block  
+                    block lastshadow   2    ch  
+                    block lastshadow   3    ch  
+                    block lastshadow   4    ch last   lastshadow   3 runlengthshadow -  4  
+                    datashadow inuse runlengthshadow block   datashadow block  
+                    block lastshadow   2    ch  
+                    block lastshadow   3    ch  
+                    block lastshadow   4    ch  
+                    block lastshadow   5    ch  
+                    block lastshadow   6 runlengthshadow last   lastshadow   5 endblock    
+            initblock    
+            writerun finalize throwable   
+        close finalize close ioexception   
+        outputstream outshadow out outshadow runlength   0    
+                    writerun currentchar   -1  
+                endblock    
+                endcompression    
+                outshadow close out data flush ioexception   
+        outputstream outshadow out outshadow outshadow flush init ioexception data data blocksize100k   
+ 
+          
+        bsputubyte 'h'   
+        bsputubyte '0 blocksize100k combinedcrc   0  
+        initblock initblock crc initialisecrc last   -1 inuse data inuse i   256  --i    0     
+            inuse i allowableblocksize blocksize100k   bzip2constants baseblocksize  - 20 endblock ioexception blockcrc crc getfinalcrc combinedcrc combinedcrc    1 combinedcrc     31 combinedcrc blockcrc last    -1 blocksort    
+ 
+          
+        bsputubyte 0x31   
+        bsputubyte 0x41   
+        bsputubyte 0x59   
+        bsputubyte 0x26   
+        bsputubyte 0x53   
+        bsputubyte 0x59   
+ 
+          
+        bsputint blockcrc blockrandomised    
+            bsw 1  1 bsw 1  0   
+          
+ 
+          
+        movetofrontcodeandsend endcompression ioexception   
+          
+        bsputubyte 0x17   
+        bsputubyte 0x72   
+        bsputubyte 0x45   
+        bsputubyte 0x38   
+        bsputubyte 0x50   
+        bsputubyte 0x90   
+ 
+        bsputint combinedcrc   
+        bsfinishedwithstream getblocksize blocksize100k write buf offs len ioexception offs   0 indexoutofboundsexception  offs     offs        0 len   0 indexoutofboundsexception  len     len        0 offs   len   buf length indexoutofboundsexception  offs     offs        len   
+                                                  len        buf length   
+                                                  buf length out ioexception  stream closed hi   offs   len  offs   hi     
+            write0 buf offs write0 b ioexception currentchar    -1    
+            b    0xff currentchar    b runlength   254    
+                    writerun currentchar   -1 runlength   0 writerun runlength   1 currentchar   b currentchar   b   0xff runlength hbassigncodes code length minlen maxlen alphasize vec   0 n   minlen  n    maxlen  n i   0  i   alphasize  i length i    0xff     n    
+                    code i    vec  
+                    vec    
+                  
+              
+            vec     1 bsfinishedwithstream ioexception bslive   0 ch bsbuff    24 out write ch bsbuff     8 bslive -  8 bsw n v ioexception outputstream outshadow out bsliveshadow bslive bsbuffshadow bsbuff bsliveshadow    8    
+            outshadow write bsbuffshadow    24     
+            bsbuffshadow     8  
+            bsliveshadow -  8 bsbuff   bsbuffshadow    v     32 - bsliveshadow - n bslive   bsliveshadow   n bsputubyte c ioexception   
+        bsw 8  c bsputint u ioexception   
+        bsw 8   u    24    0xff   
+        bsw 8   u    16    0xff   
+        bsw 8   u     8    0xff   
+        bsw 8   u          0xff sendmtfvalues ioexception len data sendmtfvalues_len alphasize ninuse   2 t   n_groups  --t    0 len_t   len t v   alphasize  --v    0     
+                len_t v    greater_icost ngroups nmtf    200  ? 2 nmtf    600  ? 3 nmtf   1200  ? 4 nmtf   2400  ? 5 
+              6  
+ 
+          
+        sendmtfvalues0 ngroups  alphasize nselectors   sendmtfvalues1 ngroups  alphasize   
+ 
+          
+        sendmtfvalues2 ngroups  nselectors   
+ 
+          
+        sendmtfvalues3 ngroups  alphasize   
+ 
+          
+        sendmtfvalues4    
+ 
+          
+        sendmtfvalues5 ngroups  nselectors   
+ 
+          
+        sendmtfvalues6 ngroups  alphasize   
+ 
+          
+        sendmtfvalues7 nselectors sendmtfvalues0 ngroups alphasize len data sendmtfvalues_len mtffreq data mtffreq remf nmtf gs   0 npart   ngroups  npart   0  npart tfreq   remf   npart ge   gs - 1 afreq   0 a   alphasize - 1   afreq   tfreq      ge   a      
+                afreq    mtffreq   ge ge   gs  
+                    npart    ngroups  
+                    npart    1  
+                      ngroups - npart    1     0     
+                afreq -  mtffreq ge len_np   len npart - 1 v   alphasize  --v    0 v    gs      v    ge     
+                    len_np v    lesser_icost len_np v    greater_icost  
+                  
+              
+ 
+            gs   ge   1  
+            remf -  afreq sendmtfvalues1 ngroups alphasize data datashadow data rfreq     datashadow sendmtfvalues_rfreq fave        datashadow sendmtfvalues_fave cost      datashadow sendmtfvalues_cost sfmap      datashadow sfmap selector   datashadow selector len      datashadow sendmtfvalues_len len_0   len 0 len_1   len 1 len_2   len 2 len_3   len 3 len_4   len 4 len_5   len 5 nmtfshadow nmtf nselectors   0 iter   0  iter   n_iters  iter t   ngroups  --t    0     
+                fave t    0 rfreqt   rfreq t i   alphasize  --i    0     
+                    rfreqt i    0  
+                  
+              
+ 
+            nselectors   0 gs   0  gs nmtf ge   math min gs   g_size - 1  nmtfshadow - 1 ngroups    n_groups cost0   0 cost1   0 cost2   0 cost3   0 cost4   0 cost5   0 i   gs  i    ge  i icv   sfmap i   
+                        cost0    len_0 icv    0xff  
+                        cost1    len_1 icv    0xff  
+                        cost2    len_2 icv    0xff  
+                        cost3    len_3 icv    0xff  
+                        cost4    len_4 icv    0xff  
+                        cost5    len_5 icv    0xff  
+                      
+ 
+                    cost 0    cost0  
+                    cost 1    cost1  
+                    cost 2    cost2  
+                    cost 3    cost3  
+                    cost 4    cost4  
+                    cost 5    cost5 t   ngroups  --t    0     
+                        cost t    0 i   gs  i    ge  i icv   sfmap i t   ngroups  --t    0     
+                            cost t     len t  icv    0xff bt   -1 t   ngroups  bc   999999999  --t    0 cost_t   cost t cost_t   bc    
+                        bc   cost_t  
+                        bt   t  
+                      
+                  
+ 
+                fave bt     
+                selector nselectors bt  
+                nselectors rfreq_bt   rfreq bt i   gs  i    ge  i      
+                    rfreq_bt sfmap i      
+                  
+ 
+                gs   ge   1 t   0  t   ngroups  t      
+                hbmakecodelengths len t   rfreq t data  alphasize  20 nselectors sendmtfvalues2 ngroups nselectors data datashadow data pos   datashadow sendmtfvalues2_pos i   ngroups  --i    0     
+            pos i i i   0  i   nselectors  i ll_i   datashadow selector i tmp   pos 0 j   0 ll_i    tmp    
+                j tmp2   tmp  
+                tmp   pos j   
+                pos j    tmp2  
+              
+ 
+            pos 0    tmp  
+            datashadow selectormtf i j sendmtfvalues3 ngroups alphasize code data sendmtfvalues_code len data sendmtfvalues_len t   0  t   ngroups  t minlen   32 maxlen   0 len_t   len t i   alphasize  --i    0 l   len_t i    0xff l   maxlen    
+                    maxlen   l l   minlen    
+                    minlen   l  
+                  
+              
+ 
+              
+              
+ 
+            hbassigncodes code t   len t   minlen  maxlen  alphasize sendmtfvalues4 ioexception inuse data inuse inuse16 data sentmtfvalues4_inuse16 i   16  --i    0     
+            inuse16 i i16   i   16 j   16  --j    0 inuse i16   j     
+                    inuse16 i i   0  i   16  i      
+            bsw 1  inuse16 i  ? 1   0 outputstream outshadow out bsliveshadow bslive bsbuffshadow bsbuff i   0  i   16  i inuse16 i i16   i   16 j   0  j   16  j bsliveshadow    8    
+                        outshadow write bsbuffshadow    24     
+                        bsbuffshadow     8  
+                        bsliveshadow -  8 inuse i16   j     
+                        bsbuffshadow    1     32 - bsliveshadow - 1   
+                      
+                    bsliveshadow bsbuff   bsbuffshadow bslive   bsliveshadow sendmtfvalues5 ngroups nselectors ioexception   
+        bsw 3  ngroups   
+        bsw 15  nselectors outputstream outshadow out selectormtf data selectormtf bsliveshadow bslive bsbuffshadow bsbuff i   0  i   nselectors  i j   0  hj   selectormtf i    0xff  j   hj  j bsliveshadow    8    
+                    outshadow write bsbuffshadow    24   
+                    bsbuffshadow     8  
+                    bsliveshadow -  8  
+                  
+                bsbuffshadow    1     32 - bsliveshadow - 1   
+                bsliveshadow bsliveshadow    8    
+                outshadow write bsbuffshadow    24   
+                bsbuffshadow     8  
+                bsliveshadow -  8  
+              
+              
+            bsliveshadow bsbuff   bsbuffshadow bslive   bsliveshadow sendmtfvalues6 ngroups alphasize ioexception len data sendmtfvalues_len outputstream outshadow out bsliveshadow bslive bsbuffshadow bsbuff t   0  t   ngroups  t len_t   len t curr   len_t 0    0xff bsliveshadow    8    
+                outshadow write bsbuffshadow    24     
+                bsbuffshadow     8  
+                bsliveshadow -  8  
+              
+            bsbuffshadow    curr     32 - bsliveshadow - 5   
+            bsliveshadow    5 i   0  i   alphasize  i lti   len_t i    0xff curr   lti bsliveshadow    8    
+                        outshadow write bsbuffshadow    24     
+                        bsbuffshadow     8  
+                        bsliveshadow -  8  
+                      
+                    bsbuffshadow    2     32 - bsliveshadow - 2   
+                    bsliveshadow    2  
+ 
+                    curr curr   lti bsliveshadow    8    
+                        outshadow write bsbuffshadow    24     
+                        bsbuffshadow     8  
+                        bsliveshadow -  8  
+                      
+                    bsbuffshadow    3     32 - bsliveshadow - 2   
+                    bsliveshadow    2  
+ 
+                    curr bsliveshadow    8    
+                    outshadow write bsbuffshadow    24     
+                    bsbuffshadow     8  
+                    bsliveshadow -  8  
+                  
+                  
+                bsliveshadow bsbuff   bsbuffshadow bslive   bsliveshadow sendmtfvalues7 nselectors ioexception data datashadow data len        datashadow sendmtfvalues_len code        datashadow sendmtfvalues_code outputstream outshadow out selector     datashadow selector sfmap        datashadow sfmap nmtfshadow nmtf selctr   0 bsliveshadow bslive bsbuffshadow bsbuff gs   0  gs   nmtfshadow ge   math min gs   g_size - 1  nmtfshadow - 1 selector_selctr   selector selctr    0xff code_selctr   code selector_selctr len_selctr   len selector_selctr gs    ge sfmap_i   sfmap gs bsliveshadow    8    
+                    outshadow write bsbuffshadow    24   
+                    bsbuffshadow     8  
+                    bsliveshadow -  8 n   len_selctr sfmap_i    0xff  
+                bsbuffshadow    code_selctr sfmap_i      32 - bsliveshadow - n   
+                bsliveshadow    n  
+ 
+                gs    
+              
+ 
+            gs   ge   1  
+            selctr bsbuff   bsbuffshadow bslive   bsliveshadow movetofrontcodeandsend ioexception   
+        bsw 24 origptr   
+        generatemtfvalues    
+        sendmtfvalues mainsimplesort data datashadow lo hi d bign   hi - lo   1 bign   2 firstattempt workdone worklimit hp   0 incs hp    bign    
+            hp fmap              datashadow fmap quadrant         datashadow quadrant block            datashadow block lastshadow last lastplus1           lastshadow   1 firstattemptshadow firstattempt worklimitshadow worklimit workdoneshadow workdone  
+ 
+          
+          
+ 
+        hp hp    0 h   incs hp mj   lo   h - 1 i   lo   h  i    hi k   3   i    hi      --k    0   i v   fmap i vd   v   d j   i oncerunned a   0  
+ 
+                    hammer oncerunned    
+                            fmap j    a j -  h     mj hammer oncerunned a   fmap j - h i1   a   d i2   vd block i1   1     block i2   1 block i1   2     block i2   2 block i1   3     block i2   3 block i1   4     block i2   4 block i1   5     block i2   5 block  i1    6   
+                                                   block  i2    6 x   lastshadow  
+                                                x x   0    
+                                                    x -  4 block i1   1  
+                                                           block i2   1 quadrant i1  
+                                                               quadrant i2 block i1   2     block i2   2 quadrant i1   1     quadrant i2   1 block i1   3     block i2   3 quadrant i1   2     quadrant i2   2 block i1   4     block i2   4 quadrant i1   3     quadrant i2   3 i1    4     lastplus1    
+                                                                                        i1 -  lastplus1 i2    4     lastplus1    
+                                                                                        i2 -  lastplus1  
+                                                                                      
+                                                                                    workdoneshadow x quadrant i1   3    quadrant i2   3 hammer hammer block i1   4    0xff     block i2   4    0xff hammer hammer quadrant i1   2    quadrant i2   2 hammer hammer block i1   3    0xff     block i2   3    0xff hammer hammer quadrant i1   1    quadrant i2   1 hammer hammer block i1   2    0xff     block i2   2    0xff hammer hammer quadrant i1    quadrant i2 hammer hammer block i1   1    0xff     block i2   1    0xff hammer hammer hammer block i1    0xff  
+                                                       block i2    0xff hammer hammer block i1   5    0xff  
+                                                      block i2   5    0xff hammer hammer block i1   4    0xff  
+                                                  block i2   4    0xff hammer hammer block i1   3    0xff  
+                                              block i2   3    0xff hammer hammer block i1   2    0xff  
+                                          block i2   2    0xff hammer hammer block i1   1    0xff  
+                                      block i2   1    0xff hammer hammer  
+                          
+ 
+                        
+                      
+ 
+                    fmap j    v firstattemptshadow     i    hi      workdoneshadow   worklimitshadow hp workdone   workdoneshadow firstattemptshadow     workdoneshadow   worklimitshadow vswap fmap p1 p2 n    
+        n    p1 p1   n t   fmap p1   
+            fmap p1      fmap p2   
+            fmap p2      t med3 a b c a   b  
+            ?  b   c ? b   a   c ? c   a  
+               b   c ? b   a   c ? c   a blocksort worklimit   work_factor last workdone   0 blockrandomised firstattempt mainsort firstattempt workdone worklimit     
+            randomiseblock worklimit workdone   0 firstattempt mainsort fmap data fmap origptr   -1 i   0  lastshadow last  i    lastshadow  i fmap i     0 origptr   i mainqsort3 data datashadow lost hist dst stack_ll   datashadow stack_ll stack_hh   datashadow stack_hh stack_dd   datashadow stack_dd fmap       datashadow fmap block     datashadow block  
+ 
+        stack_ll 0    lost  
+        stack_hh 0    hist  
+        stack_dd 0    dst sp   1  --sp    0 lo   stack_ll sp hi   stack_hh sp d   stack_dd sp hi - lo   small_thresh      d   depth_thresh mainsimplesort datashadow  lo  hi  d d1   d   1 med   med3 block fmap lo                 d1   
+                                     block fmap hi                 d1   
+                                     block fmap  lo   hi     1     d1   
+                      0xff unlo   lo unhi   hi ltlo   lo gthi   hi unlo    unhi n block fmap unlo    d1    0xff  - med n    0 temp   fmap unlo   
+                            fmap unlo      fmap ltlo   
+                            fmap ltlo      temp n   0    
+                            unlo unlo    unhi n block fmap unhi    d1    0xff  - med n    0 temp   fmap unhi   
+                            fmap unhi--    fmap gthi   
+                            fmap gthi--    temp n   0    
+                            unhi unlo    unhi temp   fmap unlo   
+                        fmap unlo      fmap unhi   
+                        fmap unhi--    temp gthi   ltlo    
+                    stack_ll sp    lo  
+                    stack_hh sp    hi  
+                    stack_dd sp    d1  
+                    sp n     ltlo - lo     unlo - ltlo   
+                        ?  ltlo - lo     unlo - ltlo   
+                    vswap fmap  lo  unlo - n  n m     hi - gthi     gthi - unhi   
+                        ?  hi - gthi     gthi - unhi   
+                    vswap fmap  unlo  hi - m   1  m   
+ 
+                    n   lo   unlo - ltlo - 1  
+                    m   hi -  gthi - unhi    1  
+ 
+                    stack_ll sp    lo  
+                    stack_hh sp    n  
+                    stack_dd sp    d  
+                    sp    
+ 
+                    stack_ll sp    n   1  
+                    stack_hh sp    m - 1  
+                    stack_dd sp    d1  
+                    sp    
+ 
+                    stack_ll sp    m  
+                    stack_hh sp    hi  
+                    stack_dd sp    d  
+                    sp mainsort data datashadow data runningorder      datashadow mainsort_runningorder copy              datashadow mainsort_copy bigdone       datashadow mainsort_bigdone ftab              datashadow ftab block            datashadow block fmap              datashadow fmap quadrant         datashadow quadrant lastshadow last worklimitshadow worklimit firstattemptshadow firstattempt i   65537  --i    0     
+            ftab i    0 i   0  i   num_overshoot_bytes  i      
+            block lastshadow   i   2    block  i %  lastshadow   1     1 i   lastshadow   num_overshoot_bytes  --i    0     
+            quadrant i    0  
+          
+        block 0    block lastshadow   1 c1   block 0    0xff i   0  i    lastshadow  i c2   block i   1    0xff  
+            ftab  c1    8    c2     
+            c1   c2 i   1  i    65536  i    
+            ftab i     ftab i - 1   
+ 
+        c1   block 1    0xff i   0  i   lastshadow  i c2   block i   2    0xff  
+            fmap --ftab  c1    8    c2     i  
+            c1   c2  
+          
+ 
+        fmap --ftab   block lastshadow   1    0xff     8     block 1    0xff    
+              lastshadow i   256  --i    0     
+            bigdone i runningorder i    i h   364  h    1     
+            h    3 i   h  i    255  i vv   runningorder i a   ftab  vv   1     8  - ftab vv    8 b   h - 1 j   i ro   runningorder j - h   
+                      ftab  ro   1     8  - ftab ro    8     a  
+                     ro   runningorder j - h     
+                    runningorder j    ro  
+                    j -  h j    b runningorder j    vv i   0  i    255  i ss   runningorder i j   0  j    255  j sb    ss    8    j ftab_sb   ftab sb ftab_sb   setmask     setmask lo   ftab_sb   clearmask hi    ftab sb   1    clearmask  - 1 hi   lo    
+                        mainqsort3 datashadow  lo  hi  2 firstattemptshadow workdone   worklimitshadow ftab sb    ftab_sb   setmask j   0  j    255  j      
+                copy j    ftab  j    8    ss    clearmask j   ftab ss    8    clearmask  
+                     hj    ftab  ss   1     8    clearmask   
+                 j   hj  
+                 j fmap_j   fmap j   
+                c1   block fmap_j    0xff bigdone c1     
+                    fmap copy c1      fmap_j    0  ? lastshadow    fmap_j - 1   
+                    copy c1 j   256  --j    0   
+                ftab  j    8    ss     setmask  
+ 
+              
+              
+            bigdone ss i   255 bbstart   ftab ss    8    clearmask bbsize     
+                     ftab  ss   1     8    clearmask  - bbstart shifts   0 bbsize    shifts    65534    
+                    shifts j   0  j   bbsize  j a2update   fmap bbstart   j qval j    shifts   
+                    quadrant a2update    qval a2update   num_overshoot_bytes    
+                        quadrant a2update   lastshadow   1    qval randomiseblock inuse data inuse block data block lastshadow last i   256  --i    0   
+            inuse i rntogo   0 rtpos    0 i   0  j   1  i    lastshadow  i   j  j rntogo    0    
+                rntogo bzip2constants rnums rtpos rtpos    512    
+                    rtpos   0  
+                  
+              
+ 
+            rntogo--  
+            block j  ^    rntogo    1  ? 1   0   
+ 
+              
+            inuse block j    0xff blockrandomised generatemtfvalues lastshadow last data datashadow data inuse     datashadow inuse block        datashadow block fmap          datashadow fmap sfmap        datashadow sfmap mtffreq       datashadow mtffreq unseqtoseq   datashadow unseqtoseq yy           datashadow generatemtfvalues_yy ninuseshadow   0 i   0  i   256  i inuse i     
+                unseqtoseq i ninuseshadow  
+                ninuseshadow ninuse   ninuseshadow eob   ninuseshadow   1 i   eob  i    0  i--    
+            mtffreq i    0 i   ninuseshadow  --i    0     
+            yy i i wr   0 zpend   0 i   0  i    lastshadow  i ll_i   unseqtoseq block fmap i     0xff tmp   yy 0 j   0 ll_i    tmp    
+                j tmp2   tmp  
+                tmp   yy j   
+                yy j    tmp2  
+              
+            yy 0    tmp j    0    
+                zpend zpend   0    
+                    zpend zpend   1     0    
+                            sfmap wr    runa  
+                            wr    
+                            mtffreq runa sfmap wr    runb  
+                            wr    
+                            mtffreq runb zpend    2    
+                            zpend    zpend - 2     1 zpend   0  
+                  
+                sfmap wr j   1   
+                wr    
+                mtffreq j   1 zpend   0    
+            zpend zpend   1     0    
+                    sfmap wr    runa  
+                    wr    
+                    mtffreq runa sfmap wr    runb  
+                    wr    
+                    mtffreq runb zpend    2    
+                    zpend    zpend - 2     1 sfmap wr eob  
+        mtffreq eob nmtf   wr   1 data object inuse 256 unseqtoseq 256 mtffreq max_alpha_size selector max_selectors selectormtf max_selectors generatemtfvalues_yy 256 sendmtfvalues_len n_groups  max_alpha_size sendmtfvalues_rfreq n_groups  max_alpha_size sendmtfvalues_fave n_groups sendmtfvalues_cost n_groups sendmtfvalues_code n_groups  max_alpha_size sendmtfvalues2_pos n_groups sentmtfvalues4_inuse16 16 stack_ll qsort_stack_size stack_hh qsort_stack_size stack_dd qsort_stack_size mainsort_runningorder 256 mainsort_copy 256 mainsort_bigdone 256 heap max_alpha_size   2 weight max_alpha_size   2 parent max_alpha_size   2 ftab 65537 block fmap sfmap quadrant  
+ 
+        data blocksize100k n   blocksize100k   bzip2constants baseblocksize block n   1   num_overshoot_bytes fmap n sfmap 2   n quadrant sfmap  
+          
+ 
+      
+ 
+ org apache tools bzip2 CBZip2OutputStream

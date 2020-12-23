@@ -1,0 +1,64 @@
+ 
+    
+   action  edit   link feedbackresponsecommentattributes   
+    
+  edit comment text 
+  edit visibility settings 
+  todo  move putdocument task queue 
+   createdat lasteditedat fields updatedcomment well sessiontimezone required generate timestamps editedcommentdetailsteammates ui controller InstructorFeedbackResponseCommentEditAction teammates ui controller instructorfeedbackresponsecommenteditaction instructorfeedbackresponsecommentabstractaction   
+     override actionresult execute entitydoesnotexistexception courseid   getrequestparamvalue paramsnames course_id   
+        assumption assertpostparamnotnull paramsnames course_id  courseid feedbacksessionname   getrequestparamvalue paramsnames feedback_session_name   
+        assumption assertpostparamnotnull paramsnames feedback_session_name  feedbacksessionname feedbackresponseid   getrequestparamvalue paramsnames feedback_response_id   
+        assumption assertpostparamnotnull paramsnames feedback_response_id  feedbackresponseid feedbackresponsecommentid   getrequestparamvalue paramsnames feedback_response_comment_id   
+        assumption assertpostparamnotnull paramsnames feedback_response_comment_id  feedbackresponsecommentid   
+ 
+        instructorattributes instructor   logic getinstructorforgoogleid courseid  account googleid   
+        feedbacksessionattributes session   logic getfeedbacksession feedbacksessionname  courseid   
+        feedbackresponseattributes response   logic getfeedbackresponse feedbackresponseid   
+        assumption assertnotnull response   
+ 
+        feedbackresponsecommentattributes frc   
+                logic getfeedbackresponsecomment parselong feedbackresponsecommentid    
+        assumption assertnotnull  feedbackresponsecomment should not be frc   
+        verifyaccessibleforinstructortofeedbackresponsecomment  
+                feedbackresponsecommentid  instructor  session  response   
+ 
+        instructorfeedbackresponsecommentajaxpagedata data instructorfeedbackresponsecommentajaxpagedata account  sessiontoken commenttext   getrequestparamvalue paramsnames feedback_response_comment_text   
+        assumption assertpostparamnotnull paramsnames feedback_response_comment_text  commenttext commenttext trim   isempty      
+            data errormessage statusmessages feedback_response_comment_empty  
+            data iserror createajaxresult data   
+          
+ 
+        feedbackresponsecommentattributes feedbackresponsecomment feedbackresponsecommentattributes  
+                courseid  feedbacksessionname instructor email date text commenttext   response giversection  response recipientsection   
+        feedbackresponsecomment setid parselong feedbackresponsecommentid showcommentto   getrequestparamvalue paramsnames response_comments_showcommentsto showgivernameto   getrequestparamvalue paramsnames response_comments_showgiverto   
+        feedbackresponsecomment showcommentto arraylist showcommentto showcommentto isempty showcommenttoarray   showcommentto split viewer   showcommenttoarray    
+                feedbackresponsecomment showcommentto add feedbackparticipanttype valueof viewer trim      
+              
+          
+        feedbackresponsecomment showgivernameto arraylist showgivernameto showgivernameto isempty showgivernametoarray   showgivernameto split viewer   showgivernametoarray    
+                feedbackresponsecomment showgivernameto add feedbackparticipanttype valueof viewer trim      
+              
+          
+ 
+        feedbackresponsecommentattributes updatedcomment updatedcomment   logic updatefeedbackresponsecomment feedbackresponsecomment   
+              
+            logic putdocument updatedcomment invalidparametersexception e    
+            setstatusforexception e   
+            data errormessage   e getmessage    
+            data iserror data iserror    
+            statustoadmin     instructorfeedbackresponsecommenteditaction  br   
+                              editing feedback response comment      feedbackresponsecomment getid       br   
+                              in course feedback session      feedbackresponsecomment courseid       
+                             feedbackresponsecomment feedbacksessionname     br   
+                              by      feedbackresponsecomment giveremail     br   
+                              comment text      feedbackresponsecomment commenttext getvalue commentgivername   logic getinstructorforemail courseid  frc giveremail  name commenteditorname   instructor name  
+ 
+              
+              
+            data comment   updatedcomment  
+            data sessiontimezone   session gettimezone    
+ 
+            data editedcommentdetails   data createeditedcommentdetails commentgivername  commenteditorname createajaxresult data   
+      
+ teammates ui controller InstructorFeedbackResponseCommentEditAction

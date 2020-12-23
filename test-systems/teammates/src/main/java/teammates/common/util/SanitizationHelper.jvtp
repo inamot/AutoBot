@@ -1,0 +1,169 @@
+ 
+    
+   class contains methods sanitize user provided 
+   parameters conform data format possible threats removed first well methods revert sanitized text 
+   back previous unsanitized state  
+    
+   utility class 
+    
+       sanitizes google id removing leading trailing whitespace trailing   gmail com   
+       
+        return sanitized google id null parameter null   
+        
+    
+       sanitizes email address removing leading trailing whitespace  
+       
+        return sanitized email address null parameter null   
+        
+    
+       sanitizes name removing leading  trailing duplicate internal whitespace  
+       
+        return sanitized name null parameter null   
+        
+    
+       sanitizes title removing leading  trailing duplicate internal whitespace  
+       
+        return sanitized title null parameter null   
+        
+    
+       sanitizes user input text field removing leading trailing whitespace e  comments  instructions  etc  
+       
+        return sanitized text null parameter null   
+        
+    
+       escape string inserting javascript code automatically calls   link #sanitizeforhtml make safe html return sanitized string null parameter null   
+        
+    
+       sanitizes string rich-text  
+       removes disallowed elements based defined policy  
+        
+    
+       sanitizes link text rich-text  
+       removes disallowed elements based defined policy  
+        return new sanitized   link text null input null  
+        
+    
+       sanitizes string inserting html  converts special characters html-safe equivalents ensure apply sanitizeforhtml multiple times string's still fine 
+  regex meaning  replace safe encoding not one safe already 
+    
+       sanitizes list strings inserting html  
+        
+    
+       sanitizes set strings inserting html  
+        
+    
+       recovers html-sanitized string using   link #sanitizeforhtml original encoding appropriate display files csv file  br restores encoding br method only used once sanitized html 
+       
+        return recovered string recovers set html-sanitized string using   link #sanitizeforhtml original encoding appropriate display files csv file  br restores encoding br method only used once sanitized html 
+       
+        return recovered string set 
+        
+    
+       escapes html tag safely function applied multiple times  
+        
+    
+       converts string put url  replaces some characters   
+        
+    
+       sanitizes given url parameter   link const paramsnames#next_url following characters sanitized  
+        ul  
+        li prevent parameters next url being considered part original url  li  
+        li %2b  encoded prevent google decoding back used encode whitespace some cases  li  
+        li %23  encoded prevent google decoding back used traverse html document certain id  li  
+         ul  
+       
+        return sanitized url null parameter null   
+        
+    
+       recovers url sanitization due link sanitizationhelper#sanitizefornexturl addition  any un-encoded whitespace may due google's 
+       behind screen decoding process encoded again return unsanitized url null parameter null   
+        
+    
+       sanitize string searching  
+        
+  general case punctuation prevent injection 
+    
+       sanitizes string comma-separated values  csv  file output  br follow definition described rfc 4180  
+       
+        see href  http   tools ietf org html rfc4180  http   tools ietf org html rfc4180 sanitizes list strings comma-separated values  csv  file output  br follow definition described rfc 4180  
+       
+        see href  http   tools ietf org html rfc4180  http   tools ietf org html rfc4180 convert string safer version xpath example o wisp    concat o wisp result same string read xpath  
+       
+        p used writing test case some special characters return safer version text xpath 
+        
+   currentpos iterates one position beyond text length include last chain 
+   format text substring startofchain  currentpos append result 
+   flip issinglequotationchain chain broken 
+    
+       returns true code string evidence having sanitized string considered sanitized not contain any chars contains least one sanitized equivalents sanitized equivalent p eg special characters      code  p  quot quotes quot   p considered not sanitized  br  
+              code  lt p gt p tag  lt  #x2f p gt considered sanitized  
+         p  
+        
+    
+       returns desanitized   code string sanitized  otherwise returns unchanged string  
+       teammates common util SanitizationHelper teammates common util sanitizationhelper policyfactory richtextpolicy htmlpolicybuilder   
+                 allowstandardurlprotocols   
+                 allowattributes  title   globally   
+                 allowattributes  href   onelements  a   
+                 allowattributes  src   onelements  img   
+                 allowattributes  align   
+                     matching center    left    right    justify onelements  p   
+                 allowattributes  colspan    rowspan   onelements  td    th   
+                 allowattributes  cellspacing   onelements  table   
+                 allowelements  
+                     a    p    div    i    b    em    blockquote    tt    strong    hr   
+                     br    ul    ol    li    h1    h2    h3    h4    h5    h6    img    span   
+                     table    tr    td    th    tbody    tfoot    thead    caption    colgroup   
+                     sup    sub    code   
+                 allowelements  quote    ecode   
+                 allowstyling   
+                 tofactory sanitizationhelper sanitizegoogleid rawgoogleid rawgoogleid null sanitized   rawgoogleid trim sanitized tolowercase   endswith   gmail com      
+            sanitized   sanitized split      0 sanitized trim sanitizeemail rawemail stringhelper trimifnotnull rawemail sanitizename rawname stringhelper removeextraspace rawname sanitizetitle rawtitle stringhelper removeextraspace rawtitle sanitizetextfield rawtext stringhelper trimifnotnull rawtext sanitizeforjs str str null sanitizationhelper sanitizeforhtml  
+                str replace  \\    \\\\   
+                 replace  \     \\\    
+                 replace  '    \\'   
+                 replace sanitizeforrichtext content content null richtextpolicy sanitize sanitizetextfield content text sanitizeforrichtext text text text text getvalue null text sanitizeforrichtext text getvalue sanitizeforhtml unsanitizedstring unsanitizedstring null unsanitizedstring replace        lt    
+                 replace        gt    
+                 replace  \      quot    
+                 replace        #x2f    
+                 replace  '     #39    
+                  
+                  
+                 replaceall    ?  amp    lt    gt    quot    #x2f    #39        amp list sanitizeforhtml list list    
+        list sanitizedlist arraylist str   list    
+            sanitizedlist add sanitizeforhtml str sanitizedlist set sanitizeforhtml set set    
+        set sanitizedset treeset str   set    
+            sanitizedset add sanitizeforhtml str sanitizedset desanitizefromhtml sanitizedstring sanitizedstring null sanitizedstring replace   lt         
+                               replace   gt         
+                               replace   quot     \    
+                               replace   #x2f         
+                               replace   #39     '   
+                               replace   amp set desanitizefromhtml set sanitizedstringset    
+        set textsettemp hashset text   sanitizedstringset    
+            textsettemp add desanitizefromhtml text textsettemp sanitizeforhtmltag string null replace        lt    replace        gt sanitizeforuri uri urlencoder encode uri systemparams encoding unsupportedencodingexception wonthappen    
+            log warning  unexpected unsupportedencodingexception in   
+                           sanitizationhelper sanitizeforuri     uri systemparams encoding uri sanitizefornexturl url url null url replace       $ amp    replace  %2b    $ plus    replace  %23    $ hash desanitizefromnexturl sanitizedurl sanitizedurl null sanitizedurl replace  $ amp         
+                            replace  $ plus     %2b   
+                            replace  $ hash     %23   
+                            replace sanitizeforsearch str str null str 
+                  
+                 replace  `        replace           replace  #        replace  $        replace  %        replace  ^        
+                 replace           replace           replace           replace           replace           replace           
+                 replace           replace           replace           replace  ?        replace  '        replace           
+                  
+                 replace           
+                 replace           
+                 replace        lt    
+                 replace        gt sanitizeforcsv str str replace list sanitizelistforcsv list strlist    
+        list sanitizedstrlist arraylist      
+ 
+        iterator itr   strlist iterator itr hasnext      
+            sanitizedstrlist add sanitizeforcsv itr next sanitizedstrlist sanitizestringforxpath text    
+        stringbuilder result stringbuilder startofchain   0 textlength   text length issinglequotationchain currentpos   0  currentpos    textlength  currentpos ischainbroken   currentpos    textlength 
+                                       issinglequotationchain    text charat currentpos     '\'' 
+                                        issinglequotationchain    text charat currentpos ischainbroken    startofchain   currentpos wrapper   issinglequotationchain ? '\ '   '\''  
+                result append wrapper  append text substring startofchain  currentpos   append wrapper  append ' '   
+                startofchain   currentpos ischainbroken    
+                issinglequotationchain    issinglequotationchain result length      0 return  concat     result tostring issanitizedhtml string stringhelper istextcontainingany stringhelper istextcontainingany lt      gt      quot      #x2f      #39      amp desanitizeifhtmlsanitized string issanitizedhtml desanitizefromhtml string  
+      
+ teammates common util SanitizationHelper

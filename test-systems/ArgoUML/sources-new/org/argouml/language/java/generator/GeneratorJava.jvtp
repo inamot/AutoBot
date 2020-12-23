@@ -1,0 +1,880 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications  
+    
+   filegenerator implementing class generate java display diagrams text fields argouml user interface  
+   
+    stereotype singleton 
+    
+    
+       logger  
+        
+   todo  make configurable 
+   next two flags shows mode working 
+    
+        code true  code generatefile  
+        
+    
+        code true  code generatefile update mode instance  
+        
+    
+       two spaces used indenting code classes generator  
+       
+        return singleton  
+        
+    
+       constructor  
+        
+    
+       generates file classifier method static not need call through generatorinterface  
+       returns full path name the generated file null file generated  
+       
+        param modelelement element generated 
+        param path path element generated 
+        return string full path name the generated file 
+        
+  cat info  -----    pathname    -----    
+  now decide whether file exist need update newly generated 
+   used produce method javadoc 
+  cat info  ----- end generating -----    
+  string pathname   path   filename  
+   todo  package  project basepath  tagged values configure 
+  cat info  ----- end updating -----    
+  todo  add user-defined copyright 
+   file     append pathname replace '\\'  ' '    
+    
+       generates code some modelelement  subclasses implement generate code different notations  
+        param o element generated 
+        return string generated code 
+        
+   todo  check generalizations 
+   now check packages feature types 
+   check parameter types 
+   check return parameter types 
+   check raised signals 
+   now check packages interfaces 
+   check association end types 
+   association end found 
+   finally generate import statements 
+   
+       generate code extension point  p  
+       
+        param ep extension point generate return generated code string  always empty implementation  
+        
+    
+       generate source code operation  
+        p  
+       note needs package visibility used operationcodepiece  
+        
+        param op 
+                  uml operation generate code param documented 
+                  flag indicating documentation comments included  
+        return string containing generated code  
+        
+   fix issue 1506 
+   constructor 
+   each pattern here must similar corresponding code piece 
+   operation code piece doesn't start n next line commented  see issue 1505 
+  sb append line_separator      begin blank line starts code piece 
+   pick out return type 
+   name params 
+   always  documented generate file  
+   handle multiplicity here need type 
+   actually api generator buggy generate 
+   multiplicity correctly need attribute todo  qualifiers  e g   const  
+  todo  stereotypes    
+  todo  initial value only remaining references generate made specific remove method - tfm support anything classifiers package?  
+    
+       generate start sequence classifier start sequence everything preceding javadoc comment opening curly brace  
+       start sequences non-empty classes interfaces only method intended package internal usage only  
+       
+        param cls classifier generate start sequence 
+       
+        return generated start sequence 
+        
+   actors  use cases etc  
+   add comments classifier first  
+   each pattern here must similar corresponding code piece 
+   classfier code piece doesn't start line_separator next line commented  see issue 1505 
+  sb append  line_separator   
+   now add visibility not non public top level classifiers 
+   add modifiers jls order 
+   add additional modifiers 
+   todo backward compatibility old models reverse  
+   engineered earlier versions argouml 0 24 probably earlier  argouml capture necessary 
+   information model itself  - tfm - 20070217 
+   add classifier keyword classifier name 
+   add base class interface 
+   add implemented interfaces needed 
+   uml  realizations  
+   add opening brace 
+   list tagged values documentation 
+  end append classifierkeyword   
+    
+       append classifier end sequence prefix text specified classifier end sequence closing curly brace together any 
+       comments marking end classifier method intented package internal usage  
+       
+        param sbprefix prefix text amended ok call append parameter  
+        param cls classifier generate classifier end 
+                       sequence  only classes interfaces classifier 
+                       end sequence  
+        return complete classifier code e   sbprefix plus classifier 
+               end sequence 
+        
+   
+       generates code classifier case java code generated classes interfaces only moment  
+        
+   
+       generates body class interface  
+        
+   helper tagged values 
+   add attributes 
+   attributes only type structuralfeature attribute 
+   add attributes implementing associations 
+   associations    
+   inner classes 
+   add operations 
+   todo  constructors 
+   operations returntype behavioral feature  uml  
+   
+       generate body method associated given 
+       operation assumes s most one method 
+       associated method associated operation default 
+       method body generated  
+        
+  cat info  generatemethodbody    
+   note not preserve empty lines body 
+   generateclassifierbody relies string 
+   ending new-line 
+   pick out return type tagged values generated update mode  
+   
+               2002-11-07 jaap branderhorst s   generatetaggedvalue  mtaggedvalue  iter next caused problems test tags e  tags name  notationname getname    test_suffix still 
+               generated  
+	       
+               new code  
+                
+   end new code 
+        
+ 
+                    first   false buf append        
+                  
+                buf append s   
+              
+          
+           
+           corrected 2001-09-26 steffen zschaler first  buf append   \n caused problems new-lines tagged values  
+            
+            
+   
+       enhance create doccomment given model element  
+       including tags any ocl constraints connected model 
+       element tags generated suitable use ocl 
+       injector part dresden ocl toolkit detail  
+       
+        nbsp  invariant each invariant specified 
+        nbsp  precondition each precondition specified 
+        nbsp  postcondition each postcondition specified 
+        nbsp  key-type specifying class keys mapped association 
+        nbsp  currently mapped associations not supported nbsp  element-type specifying class referenced association 2001-09-26 argouml 0 9 3 
+        author steffen zschaler 
+       
+        param model element documentation comment needed 
+        param ae association end represented model element 
+        return documentation comment specified model element  either 
+       enhanced completely generated 
+        
+   multiplicity greater 1 means generate some sort collection need specify element type tag 
+   prepare doccomment remove closing      
+      append line_separator   
+		sdoccomment append indent  append        append line_separator   
+		sdoccomment append indent  append        
+              
+ 
+               build doccomment 
+            object type   model getfacade   gettype ae type    null    
+                sdoccomment append    element-type     
+		sdoccomment append model getfacade   getname type    
+              
+ 
+	       removed  2002-03-11 steffen zschaler  element type 
+	       unknown not recognized ocl injector sdoccomment       element-type unknown   
+	         
+            sdoccomment append line_separator  append indent  append         
+    
+       enhance create doccomment given model element  
+       including tags any ocl constraints connected model 
+       element tags generated suitable use ocl 
+       injector part dresden ocl toolkit detail  
+       
+        nbsp  invariant each invariant specified 
+        nbsp  precondition each precondition specified 
+        nbsp  postcondition each postcondition specified 2001-09-26 argouml 0 9 3 
+        author steffen zschaler 
+       
+        param model element documentation comment needed 
+        param documented existing tagged values generated addition javadoc 
+        param indent indent string  usually blanks indentation generated comments 
+        return documentation comment specified model 
+       element  either enhanced completely generated 
+        
+   always  documented generate file 
+   retrieve any existing doccomment 
+   extract constraints 
+   prepare doccomment remove closing    
+      append line_separator   
+	    sdoccomment append indent  append        append line_separator   
+	    sdoccomment append indent  append        
+          
+ 
+           add each constraint 
+ 
+        class tagextractor extends depthfirstadapter   
+  
+  
+  
+ 
+                
+               constructor  
+               
+                param sconstraintname constraint name  
+                
+   
+                see tudresden ocl parser analysis analysis#caseaconstraintbody tudresden ocl parser node aconstraintbody don't care anything below node not use apply anymore  
+   nothing done not happen anyway  -  
+   todo not handle n-ary associations 
+      string s       
+       string generatedname   generatename getname     
+       s     massociation     generatedname      \n   
+       iterator endenum getconnection   iterator endenum hasnext      
+         massociationend ae    massociationend endenum next    
+         s    generateassociationend ae   
+         s      \n   
+         
+       s      \n   
+      return s  
+  string s   indent    protected    
+   must public generate public navigation method  
+  string s   indent    public    
+       string n   ae getname n    null     string unspec equals n   
+           s    generatename n ae isnavigable    s     navigable ae getisordered    s     ordered    
+  generatemultiplicity m         
+                                                                 
+   internal methods? 
+   assert ge    null 
+    private string generatespecification collection realizations    
+   
+       returns visibility string either visibilitykind  according definition notationprovider2 model element feature tag 'src_visibility taken account generating language dependent visibilities  
+        
+   todo src_visibility tag doesn't appear created 
+   anywhere argouml currently 
+    
+       generate  abstract  keyword abstract operation  
+        
+    
+       generate  final  keyword final operations  
+        
+    
+       generates  synchronized  keyword guarded operations  
+        param op operation 
+        return string synchronized keyword operation guarded generates string representation multiplicity  
+       
+        param m multiplicity  
+        return human readable string  
+        
+   
+    private string generatestatebody object m    
+        log info  generatorjava  generating state body    
+        stringbuffer sb   new stringbuffer 80   
+        object entryaction   model getfacade   getentry m   
+        object exitaction   model getfacade   getexit m   
+        object doaction   model getfacade   getdoactivity m entryaction    null    
+            string entrystr   generate entryaction entrystr length     0    
+                sb append  entry      append entrystr doaction    null    
+            string dostr   generate doaction dostr length     0 sb length     0    
+                    sb append line_separator   
+                  
+                sb append append dostr exitaction    null    
+            string exitstr   generate exitaction sb length     0    
+                sb append line_separator exitstr length     0    
+                sb append  exit      append exitstr   
+              
+          
+        collection trans   model getfacade   getinternaltransitions m trans    null    
+            iterator iter   trans iterator iter hasnext sb length     0    
+                    sb append line_separator   
+                  
+                sb append generatetransition iter next trans    null    
+	     int size   trans size    
+	     mtransition   transarray    mtransition   trans toarray int 0 size s length     0  s     \n   
+	     s    generate transarray return sb tostring    
+         
+    string s   m getname    
+	    string t   generate model getfacade   gettrigger m    
+	    string g   generate model getfacade   getguard m    
+	    string e   generate model getfacade   geteffect m s    null  s t    null  t s length     0    
+             t length     0    
+             g    null    g length     0     
+             e    null    e length     0    
+            s          
+	    s    t g    null    g length     0  s           g e    null    e length     0  s            e  
+	    return s    
+   return m getname    
+  return generateexpression model getfacade   getexpression m    
+   
+       generates text trigger  event  
+       
+        author mvw 
+        param m object any mevent kind 
+        return generated event string   
+        
+    
+       gets java package name given namespace  
+       ignoring root namespace model   
+ 
+        param namespace namespace 
+        return java package name 
+       
+   ommit root package name s model's root 
+    
+       update source code file  
+       
+        param mclassifier classifier update param file file update  
+        
+  cat info  generating     newfile getpath     
+  cat info  backing up     file getpath     
+   
+        see org argouml moduleloader moduleinterface#getname   
+        
+   
+        see org argouml moduleloader moduleinterface#getinfo int op enabled static initialization time  
+        
+        see org argouml moduleloader moduleinterface#enable   
+        
+          generatormanager getinstance   
+                   addgenerator mylang  new javagenerator     
+   
+       not supported   always returns false  
+        
+        see org argouml moduleloader moduleinterface#disable   
+        
+          generatormanager getinstance   removegenerator mylang   
+    
+       returns _lfbeforecurly  
+        
+        return boolean 
+        
+    
+       returns _verbosedocs  
+        return boolean 
+        
+    
+       sets lfbeforecurly  
+        param beforecurl new value  
+        
+    
+       sets verbosedocs  
+        param verbose new value  
+        
+    
+       make string non-null  p purpose function? shouldn't private static? 
+       
+        param un string  
+        return non-null string  
+        
+   
+           todo code not used here causes unwanted dependency org argouml kernel   project st    null  
+              return     
+          project project    
+              projectmanager getmanager   getcurrentproject    
+          projectsettings ps   project getprojectsettings model getfacade   isamodelelement st model getfacade   getname st     null  
+                  return        patch jeremy bennett model getfacade   getname st  length      0  
+                  return     
+              return ps getleftguillemot   
+                    generatename model getfacade   getname st   
+                    ps getrightguillemot st instanceof collection    
+              object o  
+              stringbuffer sb   new stringbuffer 10   
+              boolean first   true  
+              iterator iter     collection  st  iterator iter hasnext first  
+                      sb append ' '   
+                  o   iter next o    null    
+                      sb append generatename model getfacade   getname o     
+                      first   false first    
+                  return ps getleftguillemot   
+                        sb tostring   
+                        ps getrightguillemot    
+                
+            
+   
+        see org argouml uml generator codegenerator#generate java util collection  boolean  
+        
+   
+        see org argouml uml generator codegenerator#generatefiles java util collection  java lang string  boolean  
+        
+   todo  'deps ignored here 
+   
+        see org argouml uml generator codegenerator#generatefilelist java util collection  boolean  
+        
+   todo  'deps ignored hereorg argouml language generator GeneratorJava org argouml language java generator generatorjava codegenerator  moduleinterface line_separator   
+	system getproperty  line separator set types hashset types add types add types add types add types add types add types add types add types add java_types   collections unmodifiableset types generatorjava getinstance singleton generatorjava     
+        language java   generatorhelper makelanguage  
+                 java    java    
+                resourceloaderwrapper lookupiconresource  javanotation     
+        generatormanager getinstance   addgenerator java generatefile object modelelement path name   model getfacade   getname modelelement name name length      0 object classifier   modelelement filename   name     java   
+        stringbuilder sbpath stringbuilder path path endswith file_separator     
+            sbpath append file_separator packagepath   
+	    getpackagename model getfacade   getnamespace classifier lastindex   -1 file f file sbpath tostring f isdirectory f mkdir      
+                    log error   could not make directory     path lastindex    packagepath length index   packagepath indexof      lastindex   1 index    -1    
+                index   packagepath length    
+              
+ 
+            sbpath append packagepath substring lastindex   1  index  
+                  file_separator   
+            lastindex   index pathname   sbpath tostring     filename  
+          
+ 
+          
+          
+        file f file pathname   
+        isfilegeneration f exists update classifier  f exception exp    
+                isinupdatemode isfilegeneration log error  failed      f getpath    exp   
+              
+ 
+              
+            isfilegeneration pathname  
+          
+ 
+          
+          
+        log info  generating f getpath     
+        isfilegeneration header   
+	    singleton generateheader classifier  pathname  packagepath src   singleton generateclassifier classifier   
+        bufferedwriter fos configuration getstring argo key_input_source_encoding configuration getstring argo key_input_source_encoding  
+		     trim   equals        
+            	fos bufferedwriter outputstreamwriter fileoutputstream f   
+		                    system getproperty  file encoding fos bufferedwriter outputstreamwriter fileoutputstream f   
+		                    configuration getstring  
+		                            argo key_input_source_encoding     
+	      
+            fos write header   
+            fos write src ioexception exp    
+            log error  io exception      exp file      f getpath isfilegeneration fos fos close ioexception exp    
+                log error  failed      f getpath pathname generateheader object cls pathname packagepath    
+        stringbuffer sb stringbuffer 80 verbose_docs    
+            sb append    
+	    sb append line_separator  append line_separator packagepath length     0    
+            sb append append packagepath  append       
+	    sb append line_separator  append line_separator   
+	  
+        sb append generateimports cls  packagepath sb tostring generate object o o model getfacade   isaactionstate o generateactionstate o model getfacade   isaextensionpoint o generateextensionpoint o model getfacade   isaoperation o generateoperation o model getfacade   isaattribute o generateattribute o model getfacade   isaparameter o generateparameter o model getfacade   isapackage o generatepackage o model getfacade   isaclassifier o generateclassifier o model getfacade   isaexpression o generateexpression o o generatename o o generateuninterpreted o model getfacade   isastereotype o generatestereotype o model getfacade   isataggedvalue o generatetaggedvalue o model getfacade   isaassociation o generateassociation o model getfacade   isaassociationend o generateassociationend o model getfacade   isamultiplicity o generatemultiplicity o model getfacade   isastate o generatestate o model getfacade   isatransition o generatetransition o model getfacade   isaaction o generateaction o model getfacade   isacallaction o generateaction o model getfacade   isaguard o generateguard o model getfacade   isamessage o generatemessage o model getfacade   isaevent o generateevent o model getfacade   isavisibilitykind o generatevisibility o model getfacade   isamodelelement o generatename model getfacade   getname o o return o tostring generateimports object cls packagepath    
+          
+        stringbuffer sb stringbuffer 80   
+        hashset importset java util hashset object mfeature   model getfacade   getfeatures cls model getfacade   isaattribute mfeature ftype   generateimporttype model getfacade   gettype  
+                        mfeature   packagepath ftype model getfacade   isaoperation mfeature object parameter   model getfacade   getparameters  
+                        mfeature ftype   generateimporttype model getfacade   
+                             gettype parameter   packagepath ftype object parameter  
+                          model getcorehelper   getreturnparameters mfeature ftype   generateimporttype model getfacade   
+                             gettype parameter   packagepath ftype object signal  
+                          model getfacade   getraisedsignals mfeature model getfacade   isaexception signal ftype   generateimporttype model getfacade   
+                             gettype signal   packagepath ftype object gen   model getfacade   getgeneralizations cls     
+            object parent   model getfacade   getgeneral gen parent    cls ftype   generateimporttype parent  packagepath ftype object iface   model getfacade   getspecifications cls ftype   generateimporttype iface  packagepath ftype object associationend   model getfacade   getassociationends cls     
+            object association   
+                model getfacade   getassociation associationend object associationend2  
+                      model getfacade   getconnections association associationend2    associationend 
+                           model getfacade   isnavigable associationend2  
+                            model getfacade   isabstract  
+                                model getfacade   getassociation  
+                                        associationend2 model getfacade   getupper associationend2     1 ftype   
+                            generateimporttype model getfacade   gettype  
+                                    associationend2   
+                                    packagepath ftype importtype   importset    
+            sb append append importtype  append       
+	    sb append line_separator importset isempty      
+            sb append line_separator sb tostring generateimporttype object type exclude ret model getfacade   isadatatype type  
+                   java_types contains model getfacade   getname type type model getfacade   getnamespace type p   getpackagename model getfacade   getnamespace type p equals exclude      p equals lang_package p length     0    
+		    ret   p   ' '   model getfacade   getname type ret   model getfacade   getname type ret generateextensionpoint object ep generateoperation object op documented isfilegeneration    
+            documented stringbuffer sb stringbuffer 80 namestr constructor name object o   model getfacade   getstereotypes op     
+            name   model getfacade   getname o create  equals name create  equals name     
+              
+            namestr   
+                generatename model getfacade   getname  
+                    model getfacade   getowner op     
+            constructor namestr   generatename model getfacade   getname op documented s   
+                generateconstraintenricheddoccomment op  documented  indent s s trim   length     0    
+		  
+                sb append s  append indent   
+	      
+          
+ 
+        sb append generatevisibility op    
+        sb append generateabstractness op    
+        sb append generatescope op    
+        sb append generatechangeability op    
+        sb append generateconcurrency op    
+ 
+          
+        collection returnparams   model getcorehelper   getreturnparameters op   
+        object rp returnparams size      0    
+            rp rp   returnparams iterator   next returnparams size     1     
+            log warn  java generator only handles one parameter  
+                        - found     returnparams size model getfacade   getname op rp constructor    
+            object returntype   model getfacade   gettype rp returntype sb append sb append generateclassifierref returntype   append ' '   
+              
+          
+ 
+          
+        list params arraylist model getfacade   getparameters op    
+        params remove rp   
+ 
+        sb append namestr  append params i   0  i   params size    i i   0    
+                    sb append        
+                  
+                sb append generateparameter params get i     
+              
+          
+ 
+        sb append ' '   
+ 
+	collection c   model getfacade   getraisedsignals op c isempty      
+	    iterator it   c iterator first it hasnext      
+		object signal   it next model getfacade   isaexception signal first    
+		    sb append sb append        
+		  
+ 
+		sb append model getfacade   getname it next      
+		first sb tostring generateattribute object attr documented isfilegeneration    
+            documented stringbuffer sb stringbuffer 80 documented s   
+                generateconstraintenricheddoccomment attr  documented  indent s s trim   length     0    
+                sb append s  append indent   
+	      
+          
+        sb append generatecoreattribute attr    
+        sb append      append line_separator sb tostring generatecoreattribute object attr    
+        stringbuffer sb stringbuffer 80   
+        sb append generatevisibility attr    
+        sb append generatescope attr    
+        sb append generatechangability attr    
+        object type   model getfacade   gettype attr   
+        object multi   model getfacade   getmultiplicity attr type multi model getfacade   getupper multi     1    
+                sb append generateclassifierref type   append model getfacade   isadatatype type     
+                sb append generateclassifierref type   append sb append  java util vector     
+              
+          
+ 
+        sb append generatename model getfacade   getname attr     
+        object init   model getfacade   getinitialvalue attr init initstr   generateexpression init  trim initstr length     0    
+                sb append        append initstr sb tostring generateparameter object parameter    
+        stringbuffer sb stringbuffer 20   
+          
+          
+        sb append generateclassifierref model getfacade   gettype parameter     
+	sb append ' '   
+        sb append generatename model getfacade   getname parameter sb tostring generatepackage object p    
+        stringbuffer sb stringbuffer 80 packname   generatename model getfacade   getname p    
+        sb append append packname  append        
+	sb append line_separator   
+        collection ownedelements   model getfacade   getownedelements p object modelelement   ownedelements    
+              
+              
+              
+            sb append generate modelelement    
+            sb append line_separator  append line_separator   
+          
+        sb append line_separator  append       append line_separator sb tostring    
+      
+ 
+      
+    stringbuffer generateclassifierstart object cls sclassifierkeyword model getfacade   isaclass cls     
+            sclassifierkeyword model getfacade   isainterface cls     
+            sclassifierkeyword stringbuffer sb stringbuffer 80   
+ 
+          
+          
+          
+          
+          
+        sb append documentationmanager getcomments cls    
+        sb append generateconstraintenricheddoccomment cls model getfacade   ispublic cls  
+                   model getfacade   isaclassifier  
+			model getfacade   getnamespace cls      
+            sb append generatevisibility model getfacade   getvisibility cls model getfacade   isabstract cls  
+                     model getfacade   isainterface cls      
+            sb append model getfacade   isleaf cls     
+            sb append object smod   
+                model getfacade   gettaggedvalue  
+                        cls  importinterface source_modifiers_tag smod model getfacade   getvalue smod sb append       
+	    sb append model getfacade   getvalue smod    
+	    sb append       
+	  
+ 
+          
+        sb append sclassifierkeyword  append       
+	sb append generatename model getfacade   getname cls baseclass   
+	    generategeneralization model getfacade   getgeneralizations cls baseclass equals        
+            sb append      append append baseclass model getfacade   isaclass cls interfaces   generatespecification cls   
+	    log debug  specification      interfaces interfaces equals        
+                sb append      append append interfaces   
+              
+          
+ 
+          
+        sb append lfbeforecurly ?  line_separator tv   generatetaggedvalues cls tv tv length     0    
+            sb append line_separator  append indent  append tv sb stringbuffer generateclassifierend object cls    
+        stringbuffer sb stringbuffer model getfacade   isaclass cls  
+                   model getfacade   isainterface cls verbosedocs classifierkeyword model getfacade   isaclass cls     
+                    classifierkeyword classifierkeyword sb append line_separator   
+		sb append    
+		sb append      append model getfacade   getname cls    
+		sb append line_separator   
+              
+            sb append sb  
+      
+     
+      
+    stringbuffer appendclassifierend stringbuffer sbprefix  object cls    
+        sbprefix append generateclassifierend cls sbprefix generateclassifier object cls    
+        stringbuffer returnvalue stringbuffer    
+        stringbuffer start   generateclassifierstart cls start start length     0     
+            stringbuffer body   generateclassifierbody cls   
+            stringbuffer end   generateclassifierend cls   
+            returnvalue append start tostring body body length     0     
+                returnvalue append line_separator   
+                returnvalue append body lfbeforecurly    
+                    returnvalue append line_separator   
+                  
+              
+            returnvalue append  end end tostring returnvalue tostring stringbuffer generateclassifierbody object cls    
+        stringbuffer sb stringbuffer model getfacade   isaclass cls  
+                   model getfacade   isainterface cls tv collection sfeatures    
+                model getfacade   getstructuralfeatures cls sfeatures isempty      
+                sb append line_separator verbosedocs    model getfacade   isaclass cls     
+                    sb append indent  append    
+		    sb append line_separator first object structuralfeature   sfeatures first    
+			sb append line_separator   
+		      
+		    sb append indent   
+                      
+                    sb append generateattribute structuralfeature tv   generatetaggedvalues structuralfeature tv tv length     0    
+                        sb append indent  append tv   
+                      
+		    first collection ends   model getfacade   getassociationends cls ends isempty      
+                sb append line_separator verbosedocs    model getfacade   isaclass cls     
+                    sb append indent  append    
+		    sb append line_separator object associationend   ends    
+                    object association   
+			model getfacade   getassociation associationend   
+ 
+                    sb append generateassociationfrom association  
+						      associationend    
+ 
+                    tv   generatetaggedvalues association tv tv length     0    
+                        sb append indent  append tv   
+                      
+                  
+              
+ 
+              
+            collection elements   model getfacade   getownedelements cls iterator i   elements iterator    i hasnext       
+                object element   i next model getfacade   isaclass element  
+		       model getfacade   isainterface element     
+ 
+                    sb append generateclassifier element    
+                  
+              
+ 
+              
+              
+            collection bfeatures   model getfacade   getoperations cls bfeatures isempty      
+                sb append line_separator verbosedocs    
+                    sb append indent  append    
+		    sb append line_separator first object behavioralfeature   bfeatures first    
+                        sb append line_separator   
+                      
+		    sb append indent   
+                    sb append generateoperation behavioralfeature tv   generatetaggedvalues behavioralfeature model getfacade   isaclass cls   
+                                model getfacade   
+                                     isaoperation behavioralfeature   
+                                 model getfacade   
+                                     isabstract behavioralfeature lfbeforecurly    
+                            sb append line_separator  append indent sb append ' '   
+                          
+                        sb append tv length     0    
+                            sb append line_separator  append indent  append tv   
+                          
+ 
+                          
+                        sb append line_separator   
+			sb append generatemethodbody behavioralfeature    
+			sb append indent   
+			sb append      append line_separator sb append      append line_separator tv length     0    
+                            sb append indent  append tv  append line_separator   
+                          
+                      
+ 
+		    first sb generatemethodbody object op op object m   model getfacade   getmethods op m model getfacade   getbody m body model getfacade   getbody  
+			            model getfacade   getbody m    
+			  
+			  
+                        stringtokenizer tokenizer stringtokenizer body   \r\n    
+                        stringbuffer bsb stringbuffer tokenizer hasmoretokens token   tokenizer nexttoken token length     0    
+				bsb append token   
+				bsb append line_separator bsb length      0    
+			      
+			      
+			    bsb append line_separator bsb tostring collection returnparams   
+		model getcorehelper   getreturnparameters op   
+            object rp returnparams size      0    
+                rp rp   returnparams iterator   next returnparams size     1     
+                log warn  java generator only handles one parameter  
+                            - found     returnparams size model getfacade   getname op rp object returntype   model getfacade   gettype rp generatedefaultreturnstatement returntype generatedefaultreturnstatement generatedefaultreturnstatement object cls cls clsname   model getfacade   getname cls clsname equals clsname equals indent x'     line_separator clsname equals indent 0     line_separator clsname equals indent line_separator clsname equals indent 0     line_separator clsname equals indent 0     line_separator clsname equals indent 0 0     line_separator clsname equals indent 0 0     line_separator indent line_separator generatetaggedvalues object e isinupdatemode iterator iter   model getfacade   gettaggedvalues e iter first stringbuffer buf stringbuffer s iter hasnext      
+              
+            s   generatetaggedvalue iter next s s length     0 first    
+                    buf append first    
+            buf append        append line_separator buf tostring generatetaggedvalue object tv tv s   generateuninterpreted model getfacade   getvalueoftag tv s s length      0    s equals t   model getfacade   gettagoftag tv argo documentation_tag equals t return generatename t          s generateconstraintenricheddoccomment object me  object ae s   generateconstraintenricheddoccomment me indent   
+ 
+        object m   model getfacade   getmultiplicity ae model getfacade   getupper m     1    
+              
+              
+            stringbuffer sdoccomment stringbuffer 80 s equals s      
+                  
+                sdoccomment append s substring 0  s indexof         1 sdoccomment append indent  append    
+	    sdoccomment append line_separator sdoccomment tostring s s generateconstraintenricheddoccomment  
+            object me documented indent isfilegeneration    
+            documented s   
+             verbose_docs    documentationmanager hasdocs me   
+	    ? documentationmanager getdocs me  indent stringbuffer sdoccomment stringbuffer 80 s s trim   length     0    
+            sdoccomment append s  append line_separator   
+          
+        log debug  documented     documented documented sdoccomment tostring    
+          
+ 
+          
+        collection cconstraints   model getfacade   getconstraints me cconstraints size      0 sdoccomment tostring s s   sdoccomment tostring    
+            sdoccomment stringbuffer s substring 0  s indexof         1 sdoccomment append indent  append tagextractor sconstraintname constraintname   sconstraintname iterator gettags llstags iterator    
+              
+             
+              
+             override caseaconstraintbody aconstraintbody node skind   
+                     node getstereotype node getstereotype   tostring sexpression   
+                     node getexpression node getexpression   tostring sname   
+                     node getname node getname   gettext    
+		       constraintname    _     constraintid skind sexpression stag skind equals  inv       
+                    stag     invariant skind equals  post       
+                    stag     postcondition skind equals  pre       
+                    stag     precondition stag    sname          sexpression  
+                llstags addlast stag   
+              
+          
+ 
+        tudresden ocl check types modelfacade mf argofacade me object constraint   cconstraints body model getfacade   getbody  
+		            model getfacade   getbody constraint    
+                ocltree otparsed   ocltree createtree body  mf   
+ 
+                tagextractor te tagextractor model getfacade   getname constraint    
+                otparsed apply te iterator j   te gettags    j hasnext       
+                    sdoccomment append ' '  append j next     
+		    sdoccomment append line_separator   
+		    sdoccomment append indent  append ioexception ioe    
+                  
+              
+          
+ 
+        sdoccomment append      append line_separator sdoccomment tostring generateassociationfrom object a  object associationend    
+          
+        stringbuffer sb stringbuffer 80   
+ 
+        collection connections   model getfacade   getconnections a object associationend2   connections associationend2    associationend    
+                sb append indent   
+		sb append  
+		        generateconstraintenricheddoccomment a  
+		                			     associationend2    
+                sb append generateassociationend associationend2 sb tostring generateassociation object a generateassociationend object ae model getfacade   isnavigable ae model getfacade   
+                 isabstract model getfacade   getassociation ae stringbuffer sb stringbuffer 80   
+        sb append indent  append generatecoreassociationend ae sb append      append line_separator   tostring generatecoreassociationend object ae    
+        stringbuffer sb stringbuffer 80   
+        sb append generatevisibility model getfacade   getvisibility ae model getscopekind   getclassifier   equals  
+                model getfacade   gettargetscope ae      
+            sb append model getfacade   getupper ae     1    
+            sb append generateclassifierref model getfacade   gettype ae sb append  vector       
+          
+ 
+        sb append ' '  append generateascendname ae sb tostring generategeneralization collection generalizations generalizations collection classes arraylist object generalization   generalizations    
+            object generalizableelement   
+                model getfacade   getgeneral generalization generalizableelement classes add generalizableelement generateclasslist classes generatespecification object cls    
+        collection realizations   
+            model getfacade   getspecifications cls realizations log debug  realizations      realizations size     
+        stringbuffer sb stringbuffer 80   
+        iterator clsenum   realizations iterator clsenum hasnext      
+            object inter   clsenum next    
+            sb append generateclassifierref inter clsenum hasnext      
+                sb append sb tostring generateclasslist collection classifiers classifiers stringbuffer sb stringbuffer 80   
+        iterator clsenum   classifiers iterator clsenum hasnext      
+            sb append generateclassifierref clsenum next clsenum hasnext      
+                sb append sb tostring generatevisibility object o model getfacade   isafeature o     
+              
+              
+	    object tv   model getfacade   gettaggedvalue o   src_visibility tv tagged model getfacade   getvalue tv tagged tagged trim   equals     
+			   tagged trim   tolowercase   equals tagged trim   tolowercase   equals return tagged model getfacade   isamodelelement o model getfacade   ispublic o model getfacade   isprivate o model getfacade   isprotected o model getfacade   ispackage o model getfacade   isavisibilitykind o model getvisibilitykind   getpublic   equals o model getvisibilitykind   getprivate   equals o model getvisibilitykind   getprotected   equals o model getvisibilitykind   getpackage   equals o return generatescope object f model getfacade   isstatic f generateabstractness object op model getfacade   isabstract op return generatechangeability object op model getfacade   isleaf op return generatechangability object sf model getfacade   isreadonly sf return generateconcurrency object op model getfacade   getconcurrency op model getconcurrencykind   getguarded   equals  
+                    model getfacade   getconcurrency op generatemultiplicity object m m 1  equals model getfacade   tostring m return model getfacade   tostring m generatestate object m model getfacade   getname m generatesubmachine object m    
+        object c   model getfacade   getsubmachine m c include model getfacade   getname c include model getfacade   getname c  length      0 include include       generatename model getfacade   getname c generateobjectflowstate object m    
+        object c   model getfacade   gettype m c return model getfacade   getname c generatetransition object m    
+        stringbuffer sb stringbuffer generatename model getfacade   getname m t   generateevent model getfacade   gettrigger m g   generateguard model getfacade   getguard m e   generateaction model getfacade   geteffect m sb length     0    
+            sb append        
+          
+        sb append t g length     0    
+            sb append       append g  append e length     0    
+            sb append        append e sb tostring generateaction object m m object script   model getfacade   getscript m script model getfacade   getbody script model getfacade   getbody script  tostring generateguard object m m model getfacade   getexpression m generateexpression model getfacade   getexpression m generatemessage object m m return generatename model getfacade   getname m          
+	      generateaction model getfacade   getaction m generateevent object m model getfacade   isachangeevent m when   
+                  generateexpression model getfacade   getexpression m model getfacade   isatimeevent m after   
+                  generateexpression model getfacade   getexpression m model getfacade   isasignalevent m generatename model getfacade   getname m model getfacade   isacallevent m generatename model getfacade   getname m generateascendname object ae n   model getfacade   getname ae   
+        object asc   model getfacade   getassociation ae ascname   model getfacade   getname asc n n n length     0    
+            n   generatename n ascname ascname ascname length     0    
+            n   generatename ascname n    my    generateclassifierref model getfacade   gettype ae n getpackagename object namespace namespace model getfacade   isanamespace namespace  
+	       model getfacade   getnamespace namespace packagepath   model getfacade   getname namespace packagepath namespace   model getfacade   getnamespace namespace model getfacade   getnamespace namespace packagepath   
+		    model getfacade   getname namespace    ' '   packagepath packagepath update object mclassifier  file file ioexception  antlrexception   
+ 
+        log info  parsing     file getpath encoding configuration getstring argo key_input_source_encoding configuration getstring argo key_input_source_encoding  
+	         trim   equals        
+	    encoding   system getproperty  file encoding encoding   configuration getstring argo key_input_source_encoding   
+	  
+        fileinputstream in fileinputstream file   
+	javalexer lexer javalexer bufferedreader inputstreamreader in  encoding     
+        javarecognizer parser javarecognizer lexer   
+        codepiececollector cpc codepiececollector    
+        parser compilationunit cpc   
+        in close    
+ 
+        file origfile file file getabsolutepath     
+        file newfile file file getabsolutepath       updated    
+        file backupfile file file getabsolutepath       backup backupfile exists      
+            backupfile delete    
+          
+          
+        isinupdatemode cpc filter file  newfile  model getfacade   getnamespace mclassifier    
+        isinupdatemode file renameto backupfile   
+        log info  updating     file getpath     
+        newfile renameto origfile getname generatorjava getinfo type type description java notation and code generator author argouml team version applicationversion getversion enable disable islfbeforecurly lfbeforecurly isverbosedocs verbosedocs setlfbeforecurly beforecurl    
+        lfbeforecurly   beforecurl setverbosedocs verbose    
+        verbosedocs   verbose generateactionstate object actionstate ret       
+        object action   model getfacade   getentry actionstate action object expression   model getfacade   getscript action expression ret   generateexpression expression ret generateexpression object expr model getfacade   isaexpression expr generateuninterpreted model getfacade   getbody expr model getfacade   isaconstraint expr generateexpression model getfacade   getbody expr generatename n n generateuninterpreted un un return un generateclassifierref object cls cls return model getfacade   getname cls generatestereotype object st collection generate collection elements deps    
+        log debug  generate   called    
+        file tmpdir tmpdir   tempfileutils createtempdir tmpdir generatefiles elements  tmpdir getpath    deps tempfileutils readallfiles tmpdir collections empty_list tmpdir tempfileutils deletedir tmpdir   
+              
+            log debug  generate   terminated collection generatefiles collection elements path deps    
+        log debug  generatefiles   called object element   elements    
+            generatefile element  path tempfileutils readfilenames file path collection generatefilelist collection elements deps    
+        log debug  generatefilelist   called    
+          
+        file tmpdir tmpdir   tempfileutils createtempdir object element   elements    
+                generatefile element  tmpdir getname tempfileutils readfilenames tmpdir tmpdir tempfileutils deletedir tmpdir   
+              
+          
+      
+ org argouml language generator GeneratorJava

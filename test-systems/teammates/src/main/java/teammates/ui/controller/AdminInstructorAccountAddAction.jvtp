@@ -1,0 +1,143 @@
+ 
+    
+       imports demo course new instructor  
+        param pagedata data adminhomepagedata 
+        return id demo course 
+        
+   replace email 
+   replace name 
+   replace course 
+   update feedback session time 
+   strategy generate new demo course id keep part email before     
+      replace replace email host first 3 chars  eg  gmail com -  gma 
+      append  -demo sum up  lebron gmail com -  lebron gma-demo 
+   
+   b generated courseid already exists  create another one appending integer previous courseid newly generate id still exists  increment id  until find feasible one 
+      eg  
+      lebron gmail com -  lebron gma-demo     already exists  
+      lebron gmail com -  lebron gma-demo0    already exists  
+      lebron gmail com -  lebron gma-demo1    already exists  
+          
+      lebron gmail com -  lebron gma-demo99    already exists  
+      lebron gmail com -  lebron gma-demo100    found feasible id 
+   
+   c any cases b generated id longer fieldvalidator course_id_max_length  shorten part 
+      before intial input email continuously remove last character 
+    
+       generate course id demo course generated id already exists  try another one  
+       
+        param instructoremail instructor email  
+        return generated course id 
+        
+    
+       generate course id demo course given email  
+       
+        param instructoremail instructor email  
+        return first proposed course id  eg lebron gmail com -  lebron gma-demo 
+        
+    
+       generate course id demo course given email generated course id  
+       
+        p here check input string email course id handle accordingly  
+       check resulting course id bigger maximumidlength  cut equals maximumidlength  
+       
+        param instructoremailorproposedcourseid instructor email proposed course id already exists  
+        param maximumidlength maximum resulting id length allowed  above cut part before     
+        return proposed course id  e g   
+                ul  
+                li lebron gmail com -  lebron gma-demo  li  
+                li lebron gma-demo -  lebron gma-demo0  li  
+                li lebron gma-demo0 -  lebron gma-demo1  li  
+                li 012345678901234567890123456789 gma-demo9 -  01234567890123456789012345678 gma-demo10  being cut   li  
+                 ul  
+       teammates ui controller AdminInstructorAccountAddAction teammates ui controller admininstructoraccountaddaction action   
+ 
+  
+ 
+     override actionresult execute     
+ 
+        gatekeeper verifyadminprivileges account   
+ 
+        adminhomepagedata data adminhomepagedata account  sessiontoken   
+ 
+        data instructorshortname   getnonnullrequestparamvalue paramsnames instructor_short_name  trim    
+        data instructorname   getnonnullrequestparamvalue paramsnames instructor_name  trim    
+        data instructoremail   getnonnullrequestparamvalue paramsnames instructor_email  trim    
+        data instructorinstitution   getnonnullrequestparamvalue paramsnames instructor_institution  trim    
+        data isinstructoraddingresultforajax data statusforajax       
+ 
+        data instructorshortname   data instructorshortname trim    
+        data instructorname   data instructorname trim    
+        data instructoremail   data instructoremail trim    
+        data instructorinstitution   data instructorinstitution trim logic verifyinputforadminhomepage data instructorshortname  data instructorname  
+                                              data instructorinstitution  data instructoremail invalidparametersexception e    
+            data statusforajax   e getmessage   replace eol html_br_tag   
+            data isinstructoraddingresultforajax statustouser add statusmessage data statusforajax  statusmessagecolor danger createajaxresult data courseid courseid   importdemodata data exception e retryurl actionuris admin_instructoraccount_add  
+            retryurl   url addparamtourl retryurl paramsnames instructor_short_name  data instructorshortname   
+            retryurl   url addparamtourl retryurl paramsnames instructor_name  data instructorname   
+            retryurl   url addparamtourl retryurl paramsnames instructor_email  data instructoremail   
+            retryurl   url addparamtourl retryurl paramsnames instructor_institution  data instructorinstitution   
+            retryurl   url addparamtourl retryurl paramsnames session_token  data getsessiontoken     
+ 
+            stringbuilder errormessage stringbuilder 100 retrylink     a href     retryurl     exception in importing data  retry  a    
+            errormessage append retrylink   
+ 
+            statustouser add statusmessage errormessage tostring    statusmessagecolor danger message     span text-danger\  servlet action failure in admininstructoraccountaddaction      br   
+                               e getclass            teammatesexception tostringwithstacktrace e      br   span    
+ 
+            errormessage append   br    append message   
+            statustouser add statusmessage   br     message  statusmessagecolor danger    
+            statustoadmin   message  
+ 
+            data isinstructoraddingresultforajax data statusforajax   errormessage tostring createajaxresult data   
+          
+ 
+        list instructorattributes  instructorlist   logic getinstructorsforcourse courseid joinlink   config getappurl actionuris instructor_course_join  
+                                 withregistrationkey stringhelper encrypt instructorlist get 0  key   
+                                 withinstructorinstitution data instructorinstitution  
+                                 toabsolutestring    
+        emailwrapper email emailgenerator   generatenewinstructoraccountjoinemail  
+                instructorlist get 0  email  data instructorshortname  joinlink emailsender sendemail email emailsendingexception e    
+            log severe  instructor welcome email failed to send      teammatesexception tostringwithstacktrace e    
+          
+        data statusforajax    instructor     sanitizationhelper sanitizeforhtml data instructorname  
+                                 has been successfully created with join link  br     joinlink  
+        statustouser add statusmessage data statusforajax  statusmessagecolor success    
+        statustoadmin    a instructor  span bold\    
+                  sanitizationhelper sanitizeforhtmltag data instructorname       span  has been created  br   
+                    span bold\  id    span   
+                   id will be assigned when the verification link was clicked and confirmed  
+                    br   
+                    span bold\  email    span     sanitizationhelper sanitizeforhtmltag data instructoremail  
+                    span bold\  institution    span   
+                  sanitizationhelper sanitizeforhtmltag data instructorinstitution createajaxresult data importdemodata adminhomepagedata pagedata invalidparametersexception  entitydoesnotexistexception courseid   generatedemocourseid pagedata instructoremail   
+        calendar c   calendar getinstance timezone gettimezone  utc     
+        c set calendar am_pm  calendar pm   
+        c set calendar hour  11   
+        c set calendar minute  59   
+        c set calendar year  c get calendar year    1   
+        dateformat formatter simpledateformat  yyyy-mm-dd hh mm a z jsonstring   templates populatetemplate templates instructor_sample_data  
+                  
+                 teammates demo instructor demo course   pagedata instructoremail  
+                  
+                 demo_instructor   pagedata instructorname  
+                  
+                 demo course   courseid  
+                  
+                 2013-04-01 11 59 pm utc   formatter format c gettime      
+ 
+        databundle data   jsonutils fromjson jsonstring  databundle backdoorlogic backdoorlogic backdoorlogic    
+        backdoorlogic persistdatabundle data   
+ 
+        list feedbackresponsecommentattributes  frcomments   
+                logic getfeedbackresponsecommentforgiver courseid  pagedata instructoremail   
+        list studentattributes  students   logic getstudentsforcourse courseid   
+        list instructorattributes  instructors   logic getinstructorsforcourse courseid   
+ 
+        logic putfeedbackresponsecommentdocuments frcomments   
+        logic putstudentdocuments students   
+        logic putinstructordocuments instructors courseid generatedemocourseid instructoremail proposedcourseid   generatenextdemocourseid instructoremail  fieldvalidator course_id_max_length logic getcourse proposedcourseid proposedcourseid   generatenextdemocourseid proposedcourseid  fieldvalidator course_id_max_length proposedcourseid getdemocourseidroot instructoremail emailsplit   instructoremail split username   emailsplit 0 host   emailsplit 1 head   stringhelper replaceillegalchars username  fieldvalidator regex_course_id  '_ hostabbreviation   host substring 0  3 head         hostabbreviation    -demo generatenextdemocourseid instructoremailorproposedcourseid maximumidlength isfirstcourseid   instructoremailorproposedcourseid contains isfirstcourseid stringhelper truncatehead getdemocourseidroot instructoremailorproposedcourseid   
+                                             maximumidlength isfirsttimeduplicate   instructoremailorproposedcourseid endswith  -demo isfirsttimeduplicate stringhelper truncatehead instructoremailorproposedcourseid    0   
+                                             maximumidlength lastindexofdemo   instructoremailorproposedcourseid lastindexof  -demo root   instructoremailorproposedcourseid substring 0  lastindexofdemo previousdedupsuffix   integer parseint instructoremailorproposedcourseid substring lastindexofdemo   5 stringhelper truncatehead root    -demo     previousdedupsuffix   1   maximumidlength   
+      
+ teammates ui controller AdminInstructorAccountAddAction

@@ -1,0 +1,291 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+   checkstyle hideutilityclassconstructorcheck bc 
+    
+   offers some helper methods path structure ant  
+   
+    p basic idea behind utility class use inside different ant objects user defined objects need classloading operation  
+   normally those setclasspathref classpathref createclasspath nested  lt classpath gt   
+   typically one ant task datatype  p  
+   
+    pre  code  
+   classpathutils delegate cpdelegate  
+   
+   public void init cpdelegate   classpathutils getdelegate super init    
+     
+   
+   public void setclasspathref reference r cpdelegate setclasspathref r   
+     
+   
+   public path createclasspath     
+       return cpdelegate createclasspath    
+     
+   
+   public void setclassname string fqcn cpdelegate setclassname fqcn   
+     
+     code   pre  
+   
+    p execution time actually need classloading p  
+   
+    pre  code  
+       object o cpdelegate newinstance    
+     code   pre ant 1 6 
+    
+    
+       name magic property controls classloader reuse ant 1 4  
+        
+    
+       convenience overloaded version link 
+       #getclassloaderforpath project  reference  boolean    
+       
+        p assumes logical 'false reverseloader   p  
+       
+        param p project 
+        param ref reference 
+        return class loader 
+        
+    
+       convenience overloaded version link #getclassloaderforpath project  path  
+       string  boolean    
+       
+        p delegates one extracting referenced 
+       path project checks passed 
+       reference pointing path right   p  
+        param p current ant project 
+        param ref reference path structure 
+        param reverseloader set true new loader take 
+       precedence over parent contra regular 
+       classloader behaviour  
+        return class loader 
+        
+    
+       convenience overloaded version link 
+       #getclassloaderforpath project  path  string  boolean    
+       
+        p assumes logical 'false reverseloader   p  
+       
+        param p current ant project 
+        param path path 
+        param loaderid loader id string 
+        return class loader 
+        
+    
+       convenience overloaded version link 
+       #getclassloaderforpath project  path  string  boolean  boolean    
+       
+        p sets value reuseloader true magic property set   p  
+       
+        param p project 
+        param path path 
+        param loaderid loader id string 
+        param reverseloader set true new loader take 
+       precedence over parent contra regular 
+       classloader behaviour  
+        return class loader 
+        
+    
+       gets classloader loads classes classpath 
+       defined path argument  
+       
+        p based setting magic property 
+       'ant reuse loader try reuse previously 
+       created loader id course store upon 
+       creation   p  
+        param p             ant project handled components living param path          path object used classpath classloader 
+        param loaderid      identification loader  
+        param reverseloader set true new loader take 
+                            precedence over parent contra regular 
+                            classloader behaviour  
+        param reuseloader true reuse loader found 
+        return              classloader uses path classpath  
+        
+   magic property 
+    
+       gets fresh  different  previously unused classloader uses passed path classpath  
+       
+        p method completely ignores ant reuse loader magic 
+       property used caution   p  
+        param p             ant project handled components living param path classpath loader 
+        param reverseloader set true new loader take 
+                            precedence over parent contra regular 
+                            classloader behaviour  
+        return fresh  different  previously unused class loader  
+        
+    
+       creates fresh object instance specified classname  
+       
+        p uses userdefinedloader load specified class makes instance using default argument constructor  
+         p  
+       
+        param classname full qualified class name load  
+        param userdefinedloader classloader use  
+        return fresh object instance 
+        throws buildexception loading instantiation failed  
+        
+    
+       creates fresh object instance specified classname  
+       
+        p uses userdefinedloader load specified class makes instance using default argument constructor  
+         p  
+       
+        param classname full qualified class name load  
+        param userdefinedloader classloader use  
+        param expectedtype class result assignment 
+       compatible classcastexception thrown case result method casted expectedtype  
+        return fresh object instance 
+        throws buildexception loading instantiation failed ant 1 7 
+        
+    
+       obtains delegate helps out classic classpath configuration  
+       
+        param component projectcomponent needs assistence 
+        return helper  delegate  
+        see classpathutils delegate 
+        
+    
+       checks magic property enables class loader reuse taskdef typedef ant 1 5 earlier  
+        
+    
+       delegate helps out any specific projectcomponent needs 
+       dynamic classloading  
+       
+        p ant projectcomponents need to dynamically load 
+       classes instantiate often expose following ant syntax 
+       sugar    p  
+       
+        ul  li  nested  lt classpath gt    li  
+        li  attribute  classpathref   li  
+        li  attribute  classname   li   ul  
+       
+        p class functions delegate handling configuration 
+       issues recurring pattern usage pattern name 
+       suggests delegation inheritance    p ant 1 6 
+        
+    
+           construct delegate 
+            param component projectcomponent delegate method delegate method handling classpath attribute  
+           
+            p attribute set path add classpath   p  
+           
+            param classpath path use classpath  
+            
+    
+           delegate method handling lt classpath gt  tag  
+           
+            p nested path structure set path add classpath   p  
+           
+            return created path  
+            
+    
+           delegate method handling classname attribute  
+           
+            p attribute sets full qualified class name class load instantiate   p  
+           
+            param fcqn name class load  
+            
+    
+           delegate method handling classpathref attribute  
+           
+            p attribute add referenced path structure classpath   p  
+           
+            param r reference classpath  
+            
+    
+           delegate method handling reverseloader attribute  
+           
+            p attribute set boolean indicating used 
+           classloader not follow classical parent-first scheme  
+             p  
+           
+            p default supposed false   p  
+           
+            p caution behaviour contradictory normal way 
+           classloaders work not projectcomponent use not really sure   p  
+           
+            param reverseloader true reverse order looking up class  
+            
+    
+           sets loaderref  
+            param r reference loader  
+            
+    
+           finds creates classloader object  
+            return class loader project projectcomponent working computes loaderid based configuration component  
+            return loader identifier  
+            
+    
+           helper method obtaining fresh instance class specified classname using specified classpath  
+           
+            return fresh instantiated object classpath  
+            return classpath reverseloader setting  
+            return true looking up reverse order  
+            
+  todo methods getclassname 
+  todo method newinstance using reverse-classloaderorg apache tools ant util ClasspathUtils org apache tools ant util classpathutils reuse_loader_ref   magicnames refid_classpath_reuse_loader classloader getclassloaderforpath  
+        project p  reference ref getclassloaderforpath p  ref classloader getclassloaderforpath  
+        project p  reference ref reverseloader pathid   ref getrefid    
+        object path   p getreference pathid path path buildexception  
+                 the specified classpathref   
+                      pathid 
+                        does not reference a path loaderid   magicnames refid_classpath_loader_prefix   pathid getclassloaderforpath p   path  path  loaderid  reverseloader classloader getclassloaderforpath  
+        project p  path path loaderid getclassloaderforpath p  path  loaderid classloader getclassloaderforpath  
+        project p  path path loaderid reverseloader getclassloaderforpath p  path  loaderid  reverseloader  
+                                     ismagicpropertyset p classloader getclassloaderforpath  
+        project p  path path loaderid reverseloader reuseloader    
+ 
+        classloader cl loaderid reuseloader    
+            object reusedloader   p getreference loaderid reusedloader reusedloader classloader buildexception  the specified loader id     loaderid 
+                        does not reference a loader    
+              
+            cl    classloader  reusedloader cl cl   getuniqueclassloaderforpath p  path  reverseloader loaderid reuseloader    
+                p addreference loaderid  cl cl classloader getuniqueclassloaderforpath  
+        project p  
+        path path reverseloader    
+        antclassloader acl   p createclassloader path reverseloader    
+            acl setparentfirst acl addjavalibraries acl object newinstance classname  
+            classloader userdefinedloader newinstance classname  userdefinedloader  object object newinstance classname  
+        classloader userdefinedloader expectedtype clazz forname classname userdefinedloader   
+            object o   clazz newinstance expectedtype isinstance o buildexception of unexpected type    
+                          classname 
+                            expected    
+                          expectedtype o classnotfoundexception e buildexception not found    
+                      classname  
+                e instantiationexception e buildexception  
+                 could not instantiate   
+                      classname 
+                         specified should have a no   
+                       argument constructor    
+                e illegalaccessexception e buildexception  
+                 could not instantiate   
+                      classname 
+                         specified should have a constructor    
+                e linkageerror e buildexception classname 
+                        could not be loaded because of an invalid dependency    
+                e delegate getdelegate projectcomponent component delegate component ismagicpropertyset project p p getproperty reuse_loader_ref delegate   
+  
+  
+  
+  
+  
+  
+ 
+          
+        delegate projectcomponent component component   component setclasspath path classpath classpath classpath   classpath classpath append classpath path createclasspath classpath classpath path component getproject classpath createpath setclassname fcqn classname   fcqn setclasspathref reference r classpathid   r getrefid    
+            createclasspath   setrefid r setreverseloader reverseloader reverseloader   reverseloader setloaderref reference r loaderid   r getrefid classloader getclassloader getclassloaderforpath  
+                    getcontextproject classpath  
+                    getclassloadid reverseloader  
+                    loaderid ismagicpropertyset getcontextproject project getcontextproject component getproject getclassloadid loaderid classpathid magicnames refid_classpath_loader_prefix classpathid loaderid object newinstance classpathutils newinstance classname  getclassloader path getclasspath classpath isreverseloader reverseloader  
+          
+ 
+          
+          
+      
+ org apache tools ant util ClasspathUtils

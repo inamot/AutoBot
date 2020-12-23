@@ -1,0 +1,54 @@
+ 
+    
+   action  saves file information profile picture uploaded class not tested actiontests difficult reproduce upload action done google blobstore api 
+       without server running class covered uitests exceptions entitynotfound  illegalstate  etc occur rarely handled higher up means action called directly not via blobstore api callback   
+               simply redirect profilepage  
+               teammates ui controller StudentProfilePictureUploadAction teammates ui controller studentprofilepictureuploadaction action   
+      
+     override actionresult execute entitydoesnotexistexception   
+        gatekeeper verifyloggedinuserprivileges picturekey       
+        blobkey blobkey blobkey      
+        redirectresult r   createredirectresult actionuris student_profile_page blobinfo blobinfo   extractprofilepicturekey iserror    
+                blobkey   blobinfo getblobkey    
+                picturekey   renamefiletogoogleid blobinfo   
+                logic updatestudentprofilepicture account googleid  picturekey   
+                statustouser add statusmessage statusmessages student_profile_picture_saved  
+                                                   statusmessagecolor success    
+                r addresponseparam paramsnames student_profile_photoedit blobstorefailureexception   ioexception bfe    
+            deletepicture blobkey   
+            updatestatusesforblobstorefailure    
+            iserror exception e    
+              
+            deletepicture blobkey picturekey    
+            statustouser clear e r renamefiletogoogleid blobinfo blobinfo ioexception   
+        assumption assertnotnull blobinfo   
+ 
+        blobkey blobkey   blobinfo getblobkey    
+        inputstream blobstream blobstoreinputstream blobkey imagedata blobinfo getsize     
+        blobstream read imagedata   
+        blobstream close    
+ 
+        deletepicture blobkey googlecloudstoragehelper writeimagedatatogcs account googleid  imagedata blobinfo extractprofilepicturekey map list blobinfo   blobsmap   blobstoreservicefactory getblobstoreservice   
+                                                                           getblobinfos request   
+            list blobinfo  blobs   blobsmap get paramsnames student_profile_photo blobs blobs isempty      
+                statustouser add statusmessage statusmessages student_profile_no_picture_given  
+                                                   statusmessagecolor danger    
+                iserror blobinfo profilepic   blobs get 0 validateprofilepicture profilepic illegalstateexception e blobinfo validateprofilepicture blobinfo profilepic profilepic getsize systemparams max_profile_pic_size    
+            deletepicture profilepic getblobkey     
+            iserror statustouser add statusmessage statusmessages student_profile_pic_too_large  
+                                               statusmessagecolor danger profilepic getcontenttype   contains  image       
+            deletepicture profilepic getblobkey     
+            iserror statustouser add statusmessage statusmessages student_profile_not_a_picture  
+                                               statusmessagecolor danger profilepic deletepicture blobkey blobkey blobkey equals blobkey logic deletepicture blobkey blobstorefailureexception bfe    
+            statustoadmin action_result_failure 
+                                unable to delete profile picture  possible unused picture with key    
+                            blobkey getkeystring          error message    
+                            bfe getmessage eol updatestatusesforblobstorefailure     
+        statustoadmin action_result_failure       could not delete profile picture account    
+                         account googleid eol  
+        statustouser clear    
+        statustouser add statusmessage statusmessages student_profile_pic_service_down  
+                                           statusmessagecolor danger    
+      
+ 
+ teammates ui controller StudentProfilePictureUploadAction

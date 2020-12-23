@@ -1,0 +1,76 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   read  increment write build number file first 
+   attempt read build number file set property 
+    build number value read 0 value increment build number one write back out file ant 1 5 
+    ant task name  buildnumber name property build number stored default filename use file specified file build number stored file build number stored  defaults build number not specified  
+       
+        param file file build number stored  
+        
+    
+       run task  
+       
+        exception buildexception error occurs 
+        
+   may altered validate 
+   write properties file back out 
+  finally set property 
+    
+       utility method retrieve build number properties object  
+       
+        param properties properties retrieve build number return build number number properties object 
+        throws buildexception build number property not integer 
+        
+   try parsing line integer  
+    
+       utility method load properties file  
+       
+        return loaded properties 
+        throws buildexception 
+        
+    
+       validate task parameters valid  
+       
+        throws buildexception parameters invalid 
+       org apache tools ant taskdefs BuildNumber org apache tools ant taskdefs buildnumber task setfile file file    
+        myfile   file execute buildexception   
+        file savedfile   myfile    
+ 
+        validate properties properties   loadproperties buildnumber   getbuildnumber properties   
+ 
+        properties put default_property_name valueof buildnumber   1    
+ 
+          
+        fileoutputstream output output fileoutputstream myfile header    build number ant not edit    
+ 
+            properties store output  header ioexception ioe message    error writing     myfile buildexception message  ioe output output close ioexception ioe    
+                    log  error closing output stream     ioe  project msg_err   
+                  
+              
+            myfile   savedfile  
+          
+ 
+          
+        getproject   setnewproperty default_property_name valueof buildnumber getbuildnumber properties properties buildexception buildnumber   
+            properties getproperty default_property_name   0   trim integer parseint buildnumber numberformatexception nfe message   
+                myfile     contains a non integer build number      buildnumber buildexception message  nfe properties loadproperties buildexception   
+        fileinputstream input properties properties properties    
+ 
+            input fileinputstream myfile   
+            properties load input properties ioexception ioe buildexception ioe input input close ioexception ioe    
+                    log  error closing input stream     ioe  project msg_err validate buildexception myfile    
+            myfile   file_utils resolvefile getproject   getbasedir    default_filename myfile exists file_utils createnewfile myfile ioexception ioe message   
+                    myfile     doesn't exist and file can't be created buildexception message  ioe myfile canread message    unable to read from     myfile buildexception message myfile canwrite message    unable to write to     myfile buildexception message   
+          
+      
+  
+org apache tools ant taskdefs BuildNumber

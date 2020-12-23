@@ -1,0 +1,143 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   helper methods deal date time formatting specific 
+   defined format href  http   www w3 org tr note-datetime  iso8601 plurialization correct elapsed time minutes seconds ant 1 5 
+   
+    
+    
+       iso8601 pattern date-time not support timezone  
+         tt yyyy-mm-ddthh mm ss  tt  
+        
+    
+       iso8601 pattern date   tt yyyy-mm-dd  tt  
+        
+    
+       iso8601 pattern time    tt hh mm ss  tt  
+        
+    
+       format used smtp probably date headers  
+        
+   code magesh moved defaultlogger slightly modified 
+    private constructor    
+    
+       format date time specific pattern  
+        param date date format expressed milliseconds  
+        param pattern pattern use format date  
+        return formatted date  
+        
+    
+       format date time specific pattern  
+        param date date format expressed milliseconds  
+        param pattern pattern use format date  
+        return formatted date  
+        
+    
+       format elapsed time plurialization correct string limited only report elapsed time minutes seconds following behavior  
+        ul  
+        li minutes not displayed 0   ie   45 seconds    li  
+        li seconds always displayed plural form  ie  0 seconds 10 seconds   except 1  ie  1 second    li  
+         ul  
+        param millis elapsed time report milliseconds  
+        return formatted text minutes seconds  
+        
+    
+       return lenient date format set gmt time zone  
+        param pattern pattern used date time formatting  
+        return configured format pattern  
+        
+    
+       calculate phase moon given date  
+       
+        p code heavily influenced hacklib c href  http   www nethack org   nethack p  
+       
+        p algorithm  
+       
+        pre  
+       moon period   29 53058 days ~  30  year   365 2422 days 
+       
+       days moon phase advances first day year compared preceding year 
+          365 2422 - 12 29 53058 ~  11 
+       
+       years metonic cycle  time until same phases fall same days month    18 6 ~  19 
+       
+       moon phase first day year  epact  ~   11  year%19    18  % 30 
+         18 initial condition 1900  
+       
+       current phase days   first day phase   days elapsed year 
+       
+       6 moons ~  177 days 
+       177 ~  8 reported phases   22 
+         11 22 rounding 
+         pre  
+       
+        param cal calander  
+       
+        return phase moon number between 0 7 0 meaning new moon 4 meaning full moon 1 2  ant 1 5 
+        
+    
+       returns current date format suitable smtp date 
+       header  
+        return current date ant 1 5 2 
+        
+    
+       parse string datetime using iso8601_datetime format code yyyy-mm-dd't'hh mm ss  code  
+       
+        param datestr string parsed 
+       
+        return java util date object parsed format  
+        exception parseexception supplied string cannot parsed pattern ant 1 6 
+        
+    
+       parse string date using iso8601_date format code yyyy-mm-dd  code  
+       
+        param datestr string parsed 
+       
+        return java util date object parsed format  
+        exception parseexception supplied string cannot parsed pattern ant 1 6 
+        
+    
+       parse string date using either iso8601_datetime iso8601_date formats  
+       
+        param datestr string parsed 
+       
+        return java util date object parsed formats  
+        exception parseexception supplied string cannot parsed either patterns ant 1 6 
+       org apache tools ant util DateUtils org apache tools ant util dateutils iso8601_datetime_pattern 
+               yyyy-mm-dd't'hh mm ss iso8601_date_pattern 
+               yyyy-mm-dd iso8601_time_pattern 
+               hh mm ss dateformat date_header_format simpledateformat  eee  dd mmm yyyy hh mm ss    locale us messageformat minute_seconds messageformat   0  1 choiceformat minutes_format choiceformat limits  minutes_part choiceformat seconds_format choiceformat limits  seconds_part minute_seconds setformat 0  minutes_format   
+        minute_seconds setformat 1  seconds_format dateutils format date pattern format date date   pattern format date date pattern    
+        dateformat df   createdateformat pattern df format date formatelapsedtime millis seconds   millis   1000 minutes   seconds   60  
+        object   args minutes seconds % 60 minute_seconds format args dateformat createdateformat pattern    
+        simpledateformat sdf simpledateformat pattern   
+        timezone gmt   timezone gettimezone  gmt    
+        sdf settimezone gmt   
+        sdf setlenient sdf getphaseofmoon calendar cal dayoftheyear   cal get calendar day_of_year yearinmetoniccycle     cal get calendar year  - 1900  % 19    1 epact    11   yearinmetoniccycle   18  % 30 epact    25    yearinmetoniccycle   11     epact    24    
+            epact dayoftheyear   epact    6    11  % 177    22    7 getdateforheader     
+        calendar cal   calendar getinstance    
+        timezone tz   cal gettimezone offset   tz getoffset cal get calendar era   
+                                  cal get calendar year   
+                                  cal get calendar month   
+                                  cal get calendar day_of_month   
+                                  cal get calendar day_of_week   
+                                  cal get calendar millisecond    
+        stringbuffer tzmarker stringbuffer offset   0 ?  -          
+        offset   math abs offset hours   offset    60   60   1000 minutes   offset    60   1000  - 60   hours hours   10    
+            tzmarker append  0    
+          
+        tzmarker append hours minutes   10    
+            tzmarker append  0    
+          
+        tzmarker append minutes date_header_format format cal gettime      tzmarker tostring date parseiso8601datetime datestr parseexception simpledateformat iso8601_datetime_pattern  parse datestr date parseiso8601date datestr parseexception simpledateformat iso8601_date_pattern  parse datestr date parseiso8601datetimeordate datestr parseexception parseiso8601datetime datestr parseexception px parseiso8601date datestr   
+          
+      
+ org apache tools ant util DateUtils

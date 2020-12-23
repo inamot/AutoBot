@@ -1,0 +1,136 @@
+ 
+    
+   handles crud operations student profiles  
+   
+    see studentprofile 
+    see studentprofileattributes 
+    
+    
+       gets datatransfer   attributes  version profile 
+       corresponding googleid given  returns null profile not found 
+        
+    
+       updates entire profile based given new profile attributes  
+       assumes googleid remains same updates profile given googleid  
+        
+   todo  update profile whatever given values valid ignore those not valid  
+    
+       updates picturekey profile given googleid  
+       deletes existing picture key different updates 
+       modifieddate 
+        
+    
+       deletes profile picture gcs updates profile entity  
+           empties key updates modifieddate method not scalable  not used unless admin features  
+       
+        return list student profiles database  
+        
+  ------------------------------------------------------------------------------------------------------- 
+  -------------------------------------- helper functions ----------------------------------------------- 
+  ------------------------------------------------------------------------------------------------------- 
+    
+       checks account entity exists given googleid creates profile entity account only used porting 
+       legacy account entities fly  
+        
+   todo  remove function once legacy data ported over 
+    
+       gets profile entity associated given googleid profile not exist tries profile function 
+       'getstudentprofileentityforlegacydata'  
+        
+   todo  update function once legacy data ported over method never used here only future expansion completeness 
+    
+       retrieves student profile entities function not scalable  
+       teammates storage api ProfilesDb teammates storage api profilesdb entitiesdb studentprofile  studentprofileattributes studentprofileattributes getstudentprofile accountgoogleid makeattributesornull getstudentprofileentityfromdb accountgoogleid updatestudentprofile studentprofileattributes newspa invalidparametersexception  entitydoesnotexistexception   
+        validatenewprofile newspa   
+ 
+        studentprofile profiletoupdate   getcurrentprofilefromdb newspa googleid hasnonewchangestoprofile newspa  profiletoupdate updateprofilewithnewvalues newspa  profiletoupdate validatenewprofile studentprofileattributes newspa invalidparametersexception   
+        assumption assertnotnull statuscodes dblevel_null_input  newspa newspa isvalid invalidparametersexception newspa getinvalidityinfo hasnonewchangestoprofile studentprofileattributes newspa  studentprofile profiletoupdate    
+        studentprofileattributes newspacopy   newspa getcopy    
+        studentprofileattributes existingprofile   studentprofileattributes valueof profiletoupdate   
+ 
+        newspacopy modifieddate   existingprofile modifieddate existingprofile tostring   equals newspacopy tostring updateprofilewithnewvalues studentprofileattributes newspa  studentprofile profiletoupdate    
+        newspa sanitizeforsaving    
+ 
+        profiletoupdate setshortname newspa shortname   
+        profiletoupdate setemail newspa email   
+        profiletoupdate setinstitute newspa institute   
+        profiletoupdate setnationality newspa nationality   
+        profiletoupdate setgender newspa gender   
+        profiletoupdate setmoreinfo text newspa moreinfo    
+        profiletoupdate setmodifieddate date hasnewnonemptypicturekey    newspa picturekey isempty   
+                    newspa picturekey equals profiletoupdate getpicturekey   getkeystring hasnewnonemptypicturekey    
+            profiletoupdate setpicturekey blobkey newspa picturekey    
+          
+ 
+        saveentity profiletoupdate updatestudentprofilepicture googleid newpicturekey entitydoesnotexistexception   
+        assumption assertnotnull statuscodes dblevel_null_input  googleid   
+        assumption assertnotnull statuscodes dblevel_null_input  newpicturekey   
+        assumption assertnotempty  googleid is empty   googleid   
+        assumption assertnotempty  picturekey is empty   newpicturekey   
+ 
+        studentprofile profiletoupdate   getcurrentprofilefromdb googleid hasnewnonemptypicturekey    newpicturekey isempty   
+                    newpicturekey equals profiletoupdate getpicturekey   getkeystring hasnewnonemptypicturekey    
+            profiletoupdate setpicturekey blobkey newpicturekey    
+            profiletoupdate setmodifieddate date     
+          
+ 
+        saveentity profiletoupdate   
+      
+ 
+     override deleteentity studentprofileattributes entitytodelete    
+        assumption assertnotnull statuscodes dblevel_null_input  entitytodelete   
+ 
+        key studentprofile  keytodelete   getentityquerykeys entitytodelete  first   now keytodelete ofy   delete   keys getentityquerykeysforlegacydata entitytodelete   now ofy   delete   key keytodelete  now    
+          
+ 
+        log info entitytodelete getbackupidentifier     
+      
+ 
+     override deleteentities collection studentprofileattributes  entitiestodelete    
+        assumption assertnotnull statuscodes dblevel_null_input  entitiestodelete   
+ 
+        arraylist key studentprofile   keystodelete arraylist studentprofileattributes entitytodelete   entitiestodelete    
+            key studentprofile  keytodelete   getentityquerykeys entitytodelete  first   now keytodelete keytodelete   getentityquerykeysforlegacydata entitytodelete  first   now keytodelete keystodelete add keytodelete   
+            log info entitytodelete getbackupidentifier     
+          
+ 
+        ofy   delete   keys keystodelete  now deletestudentprofilepicture googleid entitydoesnotexistexception   
+        studentprofile sp   getcurrentprofilefromdb googleid sp getpicturekey   equals blobkey         
+            deletepicture sp getpicturekey     
+            sp setpicturekey blobkey       
+            sp setmodifieddate date     
+          
+ 
+        saveentity sp   
+      
+ 
+      
+     deprecated list studentprofileattributes  getallstudentprofiles makeattributes getstudentprofileentities studentprofile getcurrentprofilefromdb googleid entitydoesnotexistexception   
+        studentprofile profiletoupdate   getstudentprofileentityfromdb googleid profiletoupdate entitydoesnotexistexception error_update_non_existent_student_profile   googleid 
+                      threadhelper getcurrentthreadstack profiletoupdate studentprofile getstudentprofileentityforlegacydata googleid    
+        account account   ofy   load   type account id googleid  now account null  
+          
+ 
+        studentprofile profile studentprofile account getgoogleid     
+        account setstudentprofile profile profile studentprofile getstudentprofileentityfromdb googleid    
+        key account  parentkey   key create account googleid   
+        key studentprofile  childkey   key create parentkey  studentprofile googleid   
+        studentprofile profile   ofy   load   key childkey  now profile getstudentprofileentityforlegacydata googleid profile  
+      
+ 
+     override loadtype studentprofile  load ofy   load   type studentprofile override studentprofile getentity studentprofileattributes attributes getstudentprofileentityfromdb attributes googleid   
+      
+ 
+     override querykeys studentprofile  getentityquerykeys studentprofileattributes attributes    
+        key account  parentkey   key create account attributes googleid   
+        key studentprofile  childkey   key create parentkey  studentprofile attributes googleid load   filterkey childkey  keys querykeys studentprofile  getentityquerykeysforlegacydata studentprofileattributes attributes    
+        key studentprofile  legacykey   key create studentprofile attributes googleid load   filterkey legacykey  keys    
+      
+ 
+     override hasentity studentprofileattributes attributes getentityquerykeys attributes  first   now getentityquerykeysforlegacydata attributes  first   now deprecated list studentprofile  getstudentprofileentities load   list    
+      
+ 
+     override studentprofileattributes makeattributes studentprofile entity    
+        assumption assertnotnull statuscodes dblevel_null_input  entity studentprofileattributes valueof entity   
+      
+ teammates storage api ProfilesDb

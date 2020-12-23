@@ -1,0 +1,214 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license set properties ant 1 6 nested class containing reference some properties optionally source properties  
+        
+    
+           set name  
+            param name code string  code  value  
+            
+    
+           set regular expression use filter properties  
+            param regex regular expression  
+            
+    
+           set prefix use  
+            param prefix code string  code  value  
+            
+    
+           builtin property names system commandline  
+            param b enumerated  code buildinpropertysetname  code  value debug tostring    
+            return string version object  
+            
+  end nested class 
+    
+       allow properties particular name set  
+        param name property name allow  
+        
+    
+       allow properties whose names match regex set  
+        param regex regular expression use  
+        
+    
+       allow properties whose names start prefix set  
+        param prefix prefix use  
+        
+    
+       allow builtin system commandline  properties set  
+        param b type builtin properties  
+        
+    
+       set mapper change property names  
+        param type mapper type  
+        param source pattern  
+        param output pattern  
+        
+    
+       add property reference  nested element references used  
+        param ref property reference  
+        
+    
+       add another property set set  
+        param ref another property set  
+        
+    
+       create mapper map property names  
+        return mapper configured  
+        
+    
+       add nested filenamemapper  
+        param filenamemapper mapper add ant 1 6 3 
+        
+    
+       set whether reevaluate set everytime set used  
+       default true  
+       
+        param dynamic true  reevaluate property set each time set used false cache property set first time use cached set subsequent 
+                      occasions  
+        
+    
+       set whether negate results true properties not selected nested elements returned  
+        default false   
+        param negate true  negate selection criteria dynamic attribute  
+        return true property set evalulated each time used mapper attribute  
+        return mapper attribute  
+        
+    
+       convert system properties hashtable  
+       use propertynames list properties  including 
+       default ones operation existing recalculated properties  
+        return properties propertyset  
+        
+  quick   dirty make nested mapped p-sets work  
+   add propertyset's nested propertysets' property names  
+  make copy    
+  iterate through names matching values 
+   may null system property added project instance initialized 
+  map names 
+    
+        param  names output set fill property names 
+               matching propertyset selection criteria  
+        param  properties current project properties  passed avoid needless duplication hashtable during recursion  
+        
+   add propertyset's property names  
+    
+       performs check circular references returns referenced propertyset  
+        return referenced propertyset  
+        
+    
+       sets value refid attribute  
+       
+        param  r reference datatype point throws buildexception another attribute set refid attributes mutually exclusive  
+        
+    
+       ensures data type not reference  
+       
+        p calling method first line every bean method data type  setxyz  addxyz  createxyz  ensure proper handling refid attribute   p  
+       
+        throws buildexception refid attribute already set refid attributes mutually exclusive  
+        
+    
+       flag tracks whether any attribute set  used link #assertnotreference link #setrefid reference    
+        
+    
+       used propertyref's builtin attribute  
+        
+      inheritdoc debug tostring gets comma separated list key value pairs properties set output order sorted according keys natural order return string rep object  
+        
+    
+       fulfill resourcecollection interface  
+        return iterator resources ant 1 7 
+        
+    
+       fulfill resourcecollection contract  
+        return size resourcecollection  
+        
+    
+       fulfill resourcecollection contract  
+        return whether filesystem-only resource collection  
+       org apache tools ant types PropertySet org apache tools ant types propertyset datatype resourcecollection propertyref setname name    
+            assertvalid  name   name name   name setregex regex    
+            assertvalid  regex   regex regex   regex setprefix prefix    
+            assertvalid  prefix   prefix prefix   prefix setbuiltin builtinpropertysetname b pbuiltin   b getvalue    
+            assertvalid  builtin   pbuiltin builtin   pbuiltin assertvalid attr value value value length     1 buildexception  invalid attribute      attr count    1 buildexception  attributes name  regex  and   
+                       prefix are mutually exclusive tostring name     name      regex     regex      prefix     prefix 
+                     builtin     builtin appendname name    
+        propertyref r propertyref    
+        r setname name   
+        addpropertyref r appendregex regex    
+        propertyref r propertyref    
+        r setregex regex   
+        addpropertyref r appendprefix prefix    
+        propertyref r propertyref    
+        r setprefix prefix   
+        addpropertyref r appendbuiltin builtinpropertysetname b    
+        propertyref r propertyref    
+        r setbuiltin b   
+        addpropertyref r setmapper type from to    
+        mapper m   createmapper    
+        mapper mappertype mappertype mapper mappertype    
+        mappertype setvalue type   
+        m settype mappertype   
+        m setfrom from   
+        m setto to addpropertyref propertyref ref    
+        assertnotreference    
+        ptyrefs addelement ref addpropertyset propertyset ref    
+        assertnotreference    
+        setrefs addelement ref mapper createmapper     
+        assertnotreference mapper buildexception  too many  mapper s     
+          
+        mapper mapper getproject mapper add filenamemapper filenamemapper    
+        createmapper   add filenamemapper setdynamic dynamic    
+        assertnotreference dynamic   dynamic setnegate negate    
+        assertnotreference negate   negate getdynamic isreference   ? getref   dynamic   dynamic mapper getmapper isreference   ? getref   mapper   mapper hashtable getallsystemproperties     
+        hashtable ret hashtable enumeration e   system getproperties   propertynames    
+             e hasmoreelements name e nextelement    
+            ret put name  system getproperties   getproperty name ret properties getproperties isreference getref   getproperties    
+          
+        set names project prj   getproject    
+        hashtable props   
+            prj getallsystemproperties     prj getproperties enumeration e   setrefs elements    e hasmoreelements       
+            propertyset set    propertyset  e nextelement    
+            props putall set getproperties getdynamic      cachednames names hashset    
+            addpropertynames names  props enumeration e   setrefs elements    e hasmoreelements       
+                propertyset set    propertyset  e nextelement    
+                names addall set getproperties   keyset negate    
+                  
+                hashset complement hashset props keyset     
+                complement removeall names   
+                names   complement getdynamic      
+                cachednames   names names   cachednames  
+          
+        filenamemapper m mapper mymapper   getmapper mymapper m   mymapper getimplementation    
+          
+        properties properties properties iterator iter   names iterator    iter hasnext name iter next value props get name value m newname   m mapfilename name newname name   newname 0   
+                      
+                  
+                properties setproperty name  value properties addpropertynames set names  hashtable properties enumeration e   ptyrefs elements    e hasmoreelements       
+            propertyref r    propertyref  e nextelement r name properties get r name names add r name r prefix enumeration p   properties keys    p hasmoreelements name p nextelement name startswith r prefix     
+                        names add name r regex regexpmatcherfactory matchmaker regexpmatcherfactory    
+                regexpmatcher matcher   matchmaker newregexpmatcher    
+                matcher setpattern r regex enumeration p   properties keys    p hasmoreelements name p nextelement matcher matches name     
+                        names add name r builtin r builtin equals builtinpropertysetname all     
+                    names addall properties keyset r builtin equals builtinpropertysetname system     
+                    names addall system getproperties   keyset r builtin equals builtinpropertysetname 
+                                               commandline     
+                    names addall getproject   getuserproperties   keyset buildexception  impossible  invalid builtin   
+                                                attribute buildexception  impossible  invalid propertyref propertyset getref propertyset  getcheckedref propertyset propertyset setrefid reference r noattributeset toomanyattributes setrefid r assertnotreference isreference toomanyattributes    
+          
+        noattributeset builtinpropertysetname enumeratedattribute all    all system    system commandline    commandline getvalues all  system  commandline tostring     
+        stringbuffer b stringbuffer    
+        treemap sorted treemap getproperties iterator i   sorted entryset   iterator    i hasnext       
+            map entry e    map entry  i next b length      0    
+                b append        
+              
+            b append e getkey   tostring     
+            b append       
+            b append e getvalue   tostring b tostring iterator iterator enumeration e   getproperties   propertynames iterator hasnext e hasmoreelements object next propertyresource getproject e nextelement remove unsupportedoperationexception size isreference   ? getref   size     getproperties   size isfilesystemonly isreference      getref   isfilesystemonly    
+      
+ 
+ org apache tools ant types PropertySet

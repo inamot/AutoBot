@@ -1,0 +1,141 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license matchingtask relies href  http   java sun com products java-media jai  jai  java 
+   advanced imaging perform image manipulation operations existing images operations represented imageoperation 
+   datatype objects operations arranged conform chaining model jai   check out href  http   java sun com products java-media jai fordevelopers jai1_0_1guide-unc    
+   jai programming guide see org apache tools ant types optional image imageoperation 
+    see org apache tools ant types datatype 
+    
+   checkstyle visibilitymodifier bc 
+   checkstyle membernamecheck bc 
+  cannot remove underscores due protected visibility     
+   checkstyle membernamecheck checkstyle visibilitymodifier add set files deleted  
+        param set fileset add  
+        
+    
+       set whether fail error false  note errors output keep going  
+        param failonerror true false  
+        
+    
+       set source dir find image files  
+        param srcdir directory image files reside  
+        
+    
+       set image encoding type href  http   java sun com products java-media jai fordevelopers jai1_0_1guide-unc encode doc html#56610   
+       see table jai programming guide param encoding string image encoding  
+        
+    
+       set whether overwrite file naming conflict  
+        param overwrite whether overwrite  
+        
+    
+       set whether invoke garbage collection each image processed  
+       defaults false  
+        param gc whether invoke garbage collector  
+        
+    
+       set destination directory manipulated images  
+        param destdir destination directory  
+        
+    
+       add imageoperation chain  
+        param instr imageoperation append chain  
+        
+    
+       add rotate imageoperation chain  
+        param instr rotate operation add chain  
+        see org apache tools ant types optional image rotate 
+        
+    
+       add scale imageoperation chain  
+        param instr scale operation add chain  
+        see org apache tools ant types optional image scale 
+        
+    
+       add draw imageoperation chain   drawoperation 
+       datatype objects nested inside draw object  
+        param instr draw operation add chain  
+        see org apache tools ant types optional image draw 
+        see org apache tools ant types optional image drawoperation 
+        
+    
+      add imageoperation chain  
+       param instr imageoperation append chain ant 1 7 
+       
+    
+       executes chained imageoperations file 
+       specified  
+        param file file processed  
+        
+    
+       executes task  
+        throws buildexception error  
+        
+   deal specified srcdir 
+   deal filesets 
+   remove any files shouldn't overwritten  
+   iterator through files process ensure consistent legal set attributes set 
+       any internal flags necessary based different combinations attributes  
+        throws buildexception error  
+       org apache tools ant taskdefs optional image Image org apache tools ant taskdefs optional image image matchingtask vector instructions vector overwrite vector filesets vector file srcdir file destdir str_encoding    jpeg garbage_collect addfileset fileset set    
+        filesets addelement set setfailonerror failonerror failonerror   failonerror setsrcdir file srcdir srcdir   srcdir setencoding encoding    
+        str_encoding   encoding setoverwrite overwrite overwrite   overwrite setgc gc    
+        garbage_collect   gc setdestdir file destdir destdir   destdir addimageoperation imageoperation instr    
+        instructions add instr addrotate rotate instr    
+        instructions add instr addscale scale instr    
+        instructions add instr adddraw draw instr    
+        instructions add instr add imageoperation instr    
+        addimageoperation instr processfile file file log  processing file      file getabsolutepath     
+            fileseekablestream input fileseekablestream file   
+            planarimage image   jai create  stream   input i   0  i   instructions size    i      
+                object instr   instructions elementat i instr transformoperation    
+                    image     transformoperation  instr  
+                         executetransformoperation image log  not a transformoperation      instr   
+                  
+              
+            input close str_encoding tolowercase   equals  jpg      
+                str_encoding    jpeg str_encoding tolowercase   equals  tif      
+                str_encoding    tiff destdir destdir   srcdir  
+              
+            file newfile file destdir  file getname overwrite    newfile exists         newfile equals file      
+                newfile delete    
+              
+            fileoutputstream stream fileoutputstream newfile   
+ 
+            jai create  encode   image  stream  str_encoding touppercase stream flush    
+            stream close ioexception err failonerror    
+                log  error processing file       err buildexception err java lang runtimeexception rerr failonerror    
+                log  error processing file       rerr buildexception rerr execute buildexception   
+ 
+        validateattributes directoryscanner ds files arraylist fileslist arraylist srcdir ds getdirectoryscanner srcdir   
+ 
+                files   ds getincludedfiles i   0  i   files length  i      
+                    fileslist add file srcdir  files i i   0  i   filesets size    i      
+                fileset fs    fileset  filesets elementat i   
+                ds   fs getdirectoryscanner getproject     
+                files   ds getincludedfiles    
+                file fromdir   fs getdir getproject j   0  j   files length  j      
+                    fileslist add file fromdir  files j overwrite    
+                  
+                arraylist filestoremove arraylist iterator i   fileslist iterator    i hasnext       
+                    file f    file  i next    
+                    file newfile file destdir  f getname newfile exists      
+                        filestoremove add f   
+                      
+                  
+                fileslist removeall filestoremove iterator i   fileslist iterator    i hasnext       
+                file file    file  i next    
+ 
+                processfile file garbage_collect    
+                    system gc exception err    
+            err printstacktrace buildexception err getmessage validateattributes buildexception srcdir filesets size      0 buildexception  specify at least one source  
+                                        --a srcdir or a fileset srcdir destdir buildexception  specify the destdir  or the srcdir     
+          
+      
+  
+org apache tools ant taskdefs optional image Image

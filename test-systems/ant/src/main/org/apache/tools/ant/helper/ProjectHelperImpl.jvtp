@@ -1,0 +1,489 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   original helper  
+   
+    
+    
+       helper path -  uri uri -  path conversions  
+        
+    
+       sax 1 style parser used parse given file may fact sax 2 xmlreader wrapped xmlreaderadapter project configure configuration file parse     
+    
+       parent directory build file  used resolving entities setting project's base directory  
+        
+    
+       locator configuration file parser  
+       used giving locations errors etc  
+        
+    
+       target targets depend upon implicitly  
+       
+        p holds tasks data type definitions placed outside targets   p  
+        
+    
+       default constructor 
+        
+    
+       parses project file  configuring project goes  
+       
+        param project project instance configured  
+        param source source project read  
+        exception buildexception configuration invalid cannot read common superclass sax event handlers used parse configuration file  each method throws exception subclasses override handle  
+       
+       each type xml element  task  target  etc ant specific subclass constructor class takes over handling sax 
+       events parent handler returns 
+       control back parent endelement method  
+        
+   checkstyle visibilitymodifier bc 
+    
+           previous handler document next element finished  control returns handler  
+            
+    helper impl non-static internal classes compiler generate automatically fail some compilers   reporting 
+             expecting find object array stack pass explicitly ll work compilers  
+           
+   checkstyle visibilitymodifier creates handler sets parser use current element  
+           
+            param helperimpl projecthelperimpl instance associated handler  
+           
+            param parenthandler handler restored parser end element  
+                                must not code null  code   
+            
+   start handling sax events 
+    
+           handles start element base implementation throws exception  
+           
+            param tag name element being started not code null  code   
+            param attrs attributes element being started not code null  code   
+           
+            exception saxparseexception method not overridden case error overridden version 
+            
+    
+           handles text within element base implementation throws exception  
+           
+            param buf character array text within element not code null  code   
+            param start start element array  
+            param count number characters read array  
+           
+            exception saxparseexception method not overridden case error overridden version 
+            
+    
+           handles end element  any required clean-up performed finished   method original handler restored parser  
+           
+            param name name element ending not code null  code   
+           
+            exception saxexception case error  not thrown implementation parent resume handling sax events 
+    
+       handler root element only child must project  element  
+        
+   checkstyle visibilitymodifier bc 
+   checkstyle visibilitymodifier resolves file  uris relative build file  
+           
+            param publicid public identifier code null  code none available  ignored implementation  
+            param systemid system identifier provided xml 
+                           document not code null  code   
+            
+   use default not file file not found 
+    
+           handles start project element project handler created initialised element name attributes  
+           
+            param tag name element being started not code null  code   
+            param attrs attributes element being started not code null  code   
+           
+            exception saxparseexception tag given not 
+                                         code  project   code  
+            
+    
+           sets locator project helper future reference  
+           
+            param locator locator used parser not code null  code   
+            
+    
+       handler top level  project  element  
+        
+    
+           constructor delegates superconstructor  
+           
+            param parenthandler handler restored parser end element  
+                                must not code null  code   
+            
+    
+           initialisation routine called handler creation element name attributes attributes handler deal code  default   code   
+            code  name   code    code  id   code code  basedir   code   
+           
+            param tag name element caused handler created not code null  code   
+                      ignored implementation  
+            param attrs attributes element caused handler created  must not code null  code   
+           
+            exception saxparseexception unexpected attribute encountered code  default   code  attribute missing  
+            
+   check whether user specified absolute path 
+    
+           handles start top-level element within project appropriate handler created initialised details element  
+           
+            param name name element being started not code null  code   
+            param attrs attributes element being started not code null  code   
+           
+            exception saxparseexception tag given not 
+                       code  taskdef   code    code  typedef   code   
+                       code  property   code    code  target   code data type definition 
+            
+    
+           handles target definition element creating target handler initialising details element  
+           
+            param tag name element handled not code null  code   
+            param attrs attributes element handled not code null  code   
+           
+            exception saxparseexception error occurs initialising handler 
+            
+    
+       handler target  elements  
+        
+    
+           constructor delegates superconstructor  
+           
+            param parenthandler handler restored parser end element  
+                                must not code null  code   
+            
+    
+           initialisation routine called handler creation element name attributes attributes handler deal code  name   code   
+            code  depends   code    code code   
+            code  unless   code    code  id   code code  description   code   
+           
+            param tag name element caused handler created not code null  code   
+                      ignored implementation  
+            param attrs attributes element caused handler created  must not code null  code   
+           
+            exception saxparseexception unexpected attribute encountered code  name   code  attribute missing  
+            
+   implicit target must first dependency list 
+   take care dependencies 
+    
+           handles start element within target  
+           
+            param name name element being started not code null  code   
+            param attrs attributes element being started not code null  code   
+           
+            exception saxparseexception error occurs initialising appropriate child handler 
+            
+    
+       start new datatypehandler element known data-type taskhandler otherwise  
+       
+        p factored out targethandler   p ant 1 6 
+        
+    
+       handler description  elements  
+        
+    
+           constructor delegates superconstructor  
+           
+            param parenthandler handler restored parser end element  
+                                must not code null  code   
+            
+    
+           adds text description project  
+           
+            param buf character array text within element not code null  code   
+            param start start element array  
+            param count number characters read array  
+            
+    
+       handler task elements  
+        
+    containing target any     
+    
+           container task any target non- code null  code must task created handler  
+            
+    
+           wrapper parent element any wrapper element added wrapper child  
+            
+    
+           wrapper element takes care actually configuring element element contained within target  
+           otherwise configuration performed configure method  
+            see projecthelper#configure object attributelist project  
+            
+    
+           constructor  
+           
+            param parenthandler handler restored parser end element  
+                                must not code null  code   
+           
+            param container     container element  
+                                must not code null  code   
+           
+            param parentwrapper wrapper parent element any  
+                                may code null  code   
+           
+            param target        target element part must not code null  code   
+            
+    
+           initialisation routine called handler creation element name attributes configures element attributes sets up parent container any   nested elements added later parser encounters param tag name element caused handler created  must not code null  code   
+           
+            param attrs attributes element caused handler created  must not code null  code   
+           
+            exception saxparseexception case error  not thrown implementation  
+            
+   swallow here thrown again unknownelement maybeconfigure problem persists  
+  xxx task settasktype tag   
+    
+           adds text task  using wrapper  
+           
+            param buf character array text within element not code null  code   
+            param start start element array  
+            param count number characters read array  
+            
+    
+           handles start element within target  task containers always use another task handler tasks always use nested element handler  
+           
+            param name name element being started not code null  code   
+            param attrs attributes element being started not code null  code   
+           
+            exception saxparseexception error occurs initialising appropriate child handler 
+            
+   task contain tasks nested elements possible 
+    
+       handler nested properties  
+        
+    parent object  task data type etc nested element itself     
+    
+           wrapper parent element any wrapper element added wrapper child  
+            
+    
+           wrapper element takes care actually configuring element parent wrapper provided  
+           otherwise configuration performed configure method  
+            see projecthelper#configure object attributelist project  
+            
+    target element part any     
+    
+           constructor  
+           
+            param parenthandler handler restored parser end element  
+                                must not code null  code   
+           
+            param parent        parent element  task data type etc   
+                                must not code null  code   
+           
+            param parentwrapper wrapper parent element any  
+                                must not code null  code   
+           
+            param target        target element part must not code null  code   
+            
+    
+           initialisation routine called handler creation element name attributes configures element attributes sets up parent container any   nested elements added later parser encounters param proptype name element caused handler created  must not code null  code   
+           
+            param attrs attributes element caused handler created  must not code null  code   
+           
+            exception saxparseexception case error buildexception being thrown during configuration  
+            
+    
+           adds text element  using wrapper  
+           
+            param buf character array text within element not code null  code   
+            param start start element array  
+            param count number characters read array  
+            
+    
+           handles start element within one  task containers always use task handler elements always use another nested element handler  
+           
+            param name name element being started not code null  code   
+            param attrs attributes element being started not code null  code   
+           
+            exception saxparseexception error occurs initialising appropriate child handler 
+            
+   taskcontainer nested element contain tasks nested elements possible 
+    
+       handler data types directly subordinate project target  
+        
+    parent target any element being configured     
+    wrapper element s part target     
+    
+           constructor target specified  
+           
+            param parenthandler handler restored parser end element  
+                                must not code null  code   
+           
+            param target parent target element  
+                         must not code null  code   
+            
+    
+           initialisation routine called handler creation element name attributes configures element attributes sets up parent container any   nested elements added later parser encounters param proptype name element caused handler created  must not code null  code   
+           
+            param attrs attributes element caused handler created  must not code null  code   
+           
+            exception saxparseexception case error buildexception being thrown during configuration  
+            
+    
+           adds text using wrapper  
+           
+            param buf character array text within element not code null  code   
+            param start start element array  
+            param count number characters read array  
+           
+            see projecthelper#addtext project object char   int int  
+            
+    
+           handles start element within one always use nested element handler  
+           
+            param name name element being started not code null  code   
+            param attrs attributes element being started not code null  code   
+           
+            exception saxparseexception error occurs initialising child handler 
+            
+    
+       scans attribute list code id  code  attribute stores reference target object project id found  
+        p method moved out configure method allow executed parse time  
+       
+        see #configure object attributelist project  
+       org apache tools ant helper ProjectHelperImpl org apache tools ant helper projecthelperimpl projecthelper projecthelperimpl     
+        implicittarget setname parse project project  object source buildexception source file buildexception  only file source supported by plugin    
+          
+        file bfile    file  source  
+        fileinputstream inputstream inputsource inputsource project   project buildfile file bfile getabsolutepath     
+        buildfileparent file buildfile getparent try   
+                parser   jaxputils getparser buildexception e    
+                parser xmlreaderadapter jaxputils getxmlreader uri   file_utils touri bfile getabsolutepath     
+            inputstream fileinputstream bfile   
+            inputsource inputsource inputstream   
+            inputsource setsystemid uri   
+            project log  parsing buildfile     bfile     with uri     
+                  uri  project msg_verbose   
+            handlerbase hb roothandler parser setdocumenthandler hb   
+            parser setentityresolver hb   
+            parser seterrorhandler hb   
+            parser setdtdhandler hb   
+            parser parse inputsource saxparseexception exc    
+            location location location exc getsystemid    exc getlinenumber    
+                    exc getcolumnnumber     
+ 
+            throwable t   exc getexception t buildexception    
+                buildexception be    buildexception  t be getlocation      location unknown_location    
+                    be setlocation location be buildexception exc getmessage    t  location saxexception exc    
+            throwable t   exc getexception t buildexception buildexception  t buildexception exc getmessage    t filenotfoundexception exc buildexception exc unsupportedencodingexception exc buildexception  encoding of project file is invalid    
+                                     exc ioexception exc buildexception  error reading project file    
+                                       exc getmessage    exc fileutils close inputstream abstracthandler handlerbase documenthandler parenthandler  
+ 
+          
+        projecthelperimpl helperimpl abstracthandler projecthelperimpl helperimpl  documenthandler parenthandler parenthandler   parenthandler helperimpl   helperimpl  
+ 
+              
+            helperimpl parser setdocumenthandler startelement tag  attributelist attrs saxparseexception saxparseexception  unexpected element \     tag    \    helperimpl locator characters buf start count saxparseexception s buf  start  count  trim s length     0 saxparseexception  unexpected text \     s    \    helperimpl locator endelement name saxexception   
+              
+            helperimpl parser setdocumenthandler parenthandler roothandler handlerbase   
+          
+        projecthelperimpl helperimpl roothandler projecthelperimpl helperimpl helperimpl   helperimpl inputsource resolveentity publicid systemid    
+ 
+            helperimpl project log  resolving systemid      systemid  project msg_verbose systemid startswith  file path   file_utils fromuri systemid   
+ 
+                file file file path file isabsolute      
+                    file   file_utils resolvefile helperimpl buildfileparent  path   
+                    helperimpl project log  
+                             warning  '    systemid    ' in     helperimpl buildfile 
+                                should be expressed simply as '    path replace compliance with other xml tools   
+                            project msg_warn inputsource inputsource inputsource fileinputstream file    
+                    inputsource setsystemid file_utils touri file getabsolutepath inputsource filenotfoundexception fne    
+                    helperimpl project log file getabsolutepath       could not be found   
+                                project msg_warn startelement tag  attributelist attrs saxparseexception tag equals  project projecthandler helperimpl init tag  attrs saxparseexception  config file is not of expected   
+                       xml type   helperimpl locator setdocumentlocator locator locator    
+            helperimpl locator   locator projecthandler abstracthandler projecthandler projecthelperimpl helperimpl  documenthandler parenthandler helperimpl  parenthandler init tag  attributelist attrs saxparseexception def name id basedir i   0  i   attrs getlength    i key   attrs getname i value   attrs getvalue i key equals def   value key equals  name      
+                    name   value key equals  id      
+                    id   value key equals  basedir      
+                    basedir   value saxparseexception  unexpected attribute \     attrs getname i     \    
+                                                helperimpl locator def def equals        
+                helperimpl project setdefaulttarget def buildexception  the attribute is required name helperimpl project setname name   
+                helperimpl project addreference name  helperimpl project id helperimpl project addreference id  helperimpl project helperimpl project getproperty  basedir helperimpl project setbasedir helperimpl project getproperty  basedir basedir helperimpl project setbasedir helperimpl buildfileparent getabsolutepath file basedir   isabsolute      
+                        helperimpl project setbasedir basedir file resolvedbasedir   file_utils resolvefile  
+                                helperimpl buildfileparent  basedir   
+                        helperimpl project setbasedir resolvedbasedir   
+                      
+                  
+              
+ 
+            helperimpl project addtarget     helperimpl implicittarget startelement name  attributelist attrs saxparseexception name equals  target      
+                handletarget name  attrs handleelement helperimpl helperimpl implicittarget  
+                              name  attrs handletarget tag  attributelist attrs saxparseexception targethandler helperimpl init tag  attrs targethandler abstracthandler targethandler projecthelperimpl helperimpl  documenthandler parenthandler helperimpl  parenthandler init tag  attributelist attrs saxparseexception name depends ifcond unlesscond id description i   0  i   attrs getlength    i key   attrs getname i value   attrs getvalue i key equals  name      
+                    name   value name equals buildexception  name attribute must not  
+                                                     be empty location helperimpl locator key equals  depends      
+                    depends   value key equals ifcond   value key equals  unless      
+                    unlesscond   value key equals  id      
+                    id   value key equals  description      
+                    description   value saxparseexception  unexpected attribute \   
+                          key    \    helperimpl locator name saxparseexception  target element appears without a name attribute   
+                                            helperimpl locator   
+              
+ 
+            target target    
+ 
+              
+            target adddependency      
+ 
+            target setname name   
+            target setif ifcond   
+            target setunless unlesscond   
+            target setdescription description   
+            helperimpl project addtarget name  target id id equals        
+                helperimpl project addreference id  target depends length     0    
+                target setdepends depends startelement name  attributelist attrs saxparseexception   
+            handleelement helperimpl target  name  attrs handleelement projecthelperimpl helperimpl  
+                                      documenthandler parent  
+                                      target target elementname  
+                                      attributelist attrs saxparseexception elementname equals  description descriptionhandler helperimpl  parent helperimpl project getdatatypedefinitions   
+                    get elementname datatypehandler helperimpl  parent  target  
+                 init elementname  attrs taskhandler helperimpl  parent  target target  
+                 init elementname  attrs descriptionhandler abstracthandler descriptionhandler projecthelperimpl helperimpl  
+                                  documenthandler parenthandler helperimpl  parenthandler characters buf start count text buf  start  count currentdescription   helperimpl project getdescription currentdescription helperimpl project setdescription text helperimpl project setdescription currentdescription   text taskhandler abstracthandler taskhandler projecthelperimpl helperimpl  documenthandler parenthandler  
+                           taskcontainer container  
+                           runtimeconfigurable parentwrapper  target target helperimpl  parenthandler container   container parentwrapper   parentwrapper target   target init tag  attributelist attrs saxparseexception task   helperimpl project createtask tag buildexception e task task unknownelement tag   
+                task setproject helperimpl project   
+                  
+                task settaskname tag   
+              
+ 
+            task setlocation location helperimpl locator    
+            helperimpl configureid task  attrs   
+ 
+            task setowningtarget target   
+            container addtask task   
+            task init    
+            wrapper   task getruntimeconfigurablewrapper    
+            wrapper setattributes attrs parentwrapper parentwrapper addchild wrapper characters buf start count    
+            wrapper addtext buf  start  count startelement name  attributelist attrs saxparseexception task taskcontainer taskhandler helperimpl taskcontainer  task  
+                    wrapper  target  init name  attrs nestedelementhandler helperimpl task  
+                    wrapper  target  init name  attrs nestedelementhandler abstracthandler nestedelementhandler projecthelperimpl helperimpl  
+                                    documenthandler parenthandler  
+                                    object parent  
+                                    runtimeconfigurable parentwrapper  
+                                    target target helperimpl  parenthandler parent typeadapter parent     typeadapter  parent  getproxy parent   parent parentwrapper   parentwrapper target   target init proptype  attributelist attrs saxparseexception parentclass   parent getclass    
+            introspectionhelper ih   
+                introspectionhelper gethelper helperimpl project  parentclass elementname   proptype tolowercase locale us parent unknownelement    
+                    unknownelement uc unknownelement elementname   
+                    uc setproject helperimpl project   
+                      unknownelement  parent  addchild uc   
+                    child   uc child   ih createelement helperimpl project  parent  elementname   
+                  
+ 
+                helperimpl configureid child  attrs   
+ 
+                childwrapper runtimeconfigurable child  proptype   
+                childwrapper setattributes attrs   
+                parentwrapper addchild childwrapper buildexception exc saxparseexception exc getmessage    helperimpl locator  exc characters buf start count    
+            childwrapper addtext buf  start  count startelement name  attributelist attrs saxparseexception child taskcontainer taskhandler helperimpl taskcontainer  child  
+                    childwrapper  target  init name  attrs nestedelementhandler helperimpl child  
+                    childwrapper  target  init name  attrs datatypehandler abstracthandler datatypehandler projecthelperimpl helperimpl  
+                               documenthandler parenthandler  target target helperimpl  parenthandler target   target init proptype  attributelist attrs saxparseexception element   helperimpl project createdatatype proptype element buildexception  unknown data type     proptype   
+                  
+ 
+                wrapper runtimeconfigurable element  proptype   
+                wrapper setattributes attrs   
+                target adddatatype wrapper buildexception exc saxparseexception exc getmessage    helperimpl locator  exc characters buf start count    
+            wrapper addtext buf  start  count startelement name  attributelist attrs saxparseexception nestedelementhandler helperimpl element  wrapper  target  init name  attrs configureid object target  attributelist attr id   attr getvalue  id id project addreference id  target   
+          
+      
+ org apache tools ant helper ProjectHelperImpl

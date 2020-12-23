@@ -1,0 +1,738 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   create zip file ant 1 1 
+   
+    ant task category  packaging  
+    
+   checkstyle visibilitymodifier bc 
+   use scan archive 
+   shadow above value altered execute directories  
+   checkstyle visibilitymodifier true adding new files zip file opposed adding back unchanged files 
+        
+    
+       encoding use filenames  defaults platform's 
+       default encoding  
+        
+    
+       whether original compression entries coming zip 
+       archive kept example updating archive ant 1 6 
+        
+    
+       whether file modification times rounded up next even number seconds ant 1 6 2 
+        
+    
+       comment archive ant 1 6 3 name location create zip file  
+        param zipfile path zipfile 
+        deprecated 1 5 x  
+                   use setdestfile file  instead  
+        ant attribute ignore  true name location create file  
+        param file path zipfile ant 1 5 
+        deprecated 1 5 x  
+                   use setdestfile file  instead  
+        ant attribute ignore  true file create  required ant 1 5 
+        param destfile new destination file file create  
+        return destination file ant 1 5 2 
+        
+    
+       directory archive files  optional  
+        param basedir base directory 
+        
+    
+       whether want compress files only store optional  default true  
+        param c true  compress files 
+        
+    
+       whether want compress files only store return true files compressed ant 1 5 2 true  emulate sun's jar utility not adding parent directories  
+       optional  defaults false  
+        param f true  emulate sun's jar not adding parent directories true  updates existing file  otherwise overwrite 
+       any existing one  optional defaults false  
+        param c true  updates existing zip file updating existing archive? 
+        return true updating existing archive 
+        
+    
+       adds set files  
+        param set fileset add 
+        
+    
+       adds set files read archive given prefix fullpath  
+        param set zipfileset add 
+        
+    
+       add collection resources archived  
+        param resources archive ant 1 7 
+        
+    
+       adds group zip files  
+        param set group fileset add 
+        
+    
+       sets behavior duplicate file added - 
+       one code add  code    code preserve  code code fail  code   
+       possible values code add  code   keep both files    code preserve  code   keep first version file found    code fail  code  halt problem 
+       default zip tasks code add  code  
+        param df code duplicate  code  enumerated value 
+        
+    
+       possible behaviors matching files task  
+        fail    skip create string values enumerated value 
+            return values 
+            
+    
+       sets behavior task files match  
+       possible values code fail  code   throw exception halt build    code skip  code not create 
+       any archive issue warning    code create  code  
+        make archive entries   
+       default zip tasks code skip  code jar tasks   code create  code   
+        param code whenempty  code  enumerated value 
+        
+    
+       encoding use filenames  defaults platform's 
+       default encoding  
+       
+        p list possible values see href  http   java sun com j2se 1 5 0 docs guide intl encoding doc html  http   java sun com j2se 1 5 0 docs guide intl encoding doc html p  
+        param encoding encoding name 
+        
+    
+       encoding use filenames  
+        return name encoding use ant 1 5 2 
+        
+    
+       whether original compression entries coming zip 
+       archive kept example updating archive   
+       default false  
+        param keep true  keep original compression ant 1 6 
+        
+    
+       comment use archive  
+       
+        param comment content comment ant 1 6 3 
+        
+    
+       comment archive 
+       
+        return comment archive ant 1 6 3 
+        
+    
+       set compression level use   default zipoutputstream default_compression  
+        param level compression level ant 1 7 compression level  
+        return compression level ant 1 7 
+        
+    
+       whether file modification times rounded up next even number seconds  
+       
+        p zip archives store file modification times granularity two seconds times either rounded 
+       up down round down archive always seem 
+       out date rerun task default round 
+       up   rounding up may lead different type problems jsps inside web archive seem slightly recent precompiled pages  rendering precompilation useless   p  
+        param r code boolean  code  value ant 1 6 2 
+        
+    
+       validate build 
+        throws buildexception error 
+        
+    
+       build zip file called twice doublefilepass true  
+        throws buildexception error 
+        
+   renamed version original file exists 
+   whether not actual update required don't need update original file doesn't exist 
+   add files found groupfileset fileset 
+   collect filesets pass getresourcestoadd handle empty archives 
+   quick exit target up date 
+   add explicit resource collections archive ve successful update  delete temporary file 
+   close output stream re finally clause exception don't really care s exception closing stream  e g throws  zip file must least one entry exception happened before added 
+   any files must swallow exception  otherwise error s reported close   error not real cause problem  
+   delete bogus zip file only s not original one  
+    
+       indicates task adding new files archive opposed copying back unchanged files backup copy 
+        return true adding new files 
+        
+    
+       add given resources  
+       
+        param fileset may give additional information fullpath permissions  
+        param resources resources add 
+        param zout stream write throws ioexception error ant 1 5 2 
+        
+    
+       add given resources  
+       
+        param rc may give additional information fullpath permissions  
+        param resources resources add 
+        param zout stream write throws ioexception error ant 1 7 
+        
+    
+       method subclasses override 
+        param zout zip output stream 
+        throws ioexception output error 
+        throws buildexception errors 
+        
+    
+       method subclasses override 
+        param zout zip output stream 
+        throws ioexception output error 
+        throws buildexception errors 
+        
+    
+       create empty zip file 
+        param zipfile zip file 
+        return true historic reasons 
+        throws buildexception error case using java util zip not work not permit zero-entry archive  
+   must create manually  
+   cf  pkzip specification  
+   p 
+   k 
+   remainder zeros 
+  ignore ant 1 5 2 
+        
+    
+       collect resources newer corresponding 
+       entries missing original archive  
+       
+        p going recreate archive instead updating resources considered new single one subclasses overriding method must 
+       call  code super getresourcestoadd  code indicate third arg already know archive out date   p  
+       
+        p method first delegates getnonfilesetresourcetoadd invokes fileset-arg version keep 
+       backwards compatibility subclasses don't know deal non-fileset resourcecollections   p  
+       
+        param rcs resource collections grab resources param zipfile intended archive file  may may not exist  
+        param needsupdate whether already know archive out date   subclasses overriding method supposed set value correctly call code super getresourcestoadd  code   
+        return array resources add each fileset passed well flag indicates whether archive uptodate  
+       
+        exception buildexception likes ant 1 7 
+        
+   
+               bad luck resources filesets make archive out date not non-fileset 
+               resources need rescan non-filesets grab now  
+                
+    
+       collect resources newer corresponding 
+       entries missing original archive  
+       
+        p going recreate archive instead updating resources considered new single one subclasses overriding method must 
+       call  code super getresourcestoadd  code indicate third arg already know archive out date   p  
+       
+        param filesets filesets grab resources param zipfile intended archive file  may may not exist  
+        param needsupdate whether already know archive out date   subclasses overriding method supposed set value correctly call code super getresourcestoadd  code   
+        return array resources add each fileset passed well flag indicates whether archive uptodate  
+       
+        exception buildexception likes hairy case  
+                   
+                   one subclasses knows need update archive same time resources 
+                   known need added   only subclass seems know s going happens jar  detects manifest changed example manifest not part any resources support inline  manifest s invoke createemptyzip ant 1 5 2 ll loose stuff original 
+                   archive  bugzilla report 17780   
+                    
+   create  
+   initialresources not empty recreating archive  need resources case files origin map fullpath attribute zipfileset destination return initialresources anyway reason scan further recreating archive  need resources 
+    
+       collect resources newer corresponding 
+       entries missing original archive  
+       
+        p going recreate archive instead updating resources considered new single one subclasses overriding method must 
+       call  code super getresourcestoadd  code indicate third arg already know archive out date   p  
+       
+        param rcs filesets grab resources param zipfile intended archive file  may may not exist  
+        param needsupdate whether already know archive out date   subclasses overriding method supposed set value correctly call code super getresourcestoadd  code   
+        return array resources add each fileset passed well flag indicates whether archive uptodate  
+       
+        exception buildexception likes 
+        
+   
+           backwards compatibility forces repeat logic getresourcestoadd fileset         here once again emptybehavior handling fileset version take care initialresources not empty recreating archive  need resources return initialresources anyway reason scan further recreating archive  need resources 
+    
+       fetch included not excluded resources sets  
+       
+        p included directories precede included files   p  
+        param filesets array filesets 
+        return resources included ant 1 5 2 
+        
+    
+       fetch included not excluded resources collections  
+       
+        p included directories precede included files   p  
+        param rcs array resource collections 
+        return resources included ant 1 7 
+        
+    
+       add directory zip stream  
+        param dir directort add archive 
+        param zout stream write param vpath name entry shall archive 
+        param mode unix permissions set  
+        throws ioexception error ant 1 5 2 
+        
+    
+       add directory zip stream  
+        param dir directort add archive 
+        param zout stream write param vpath name entry shall archive 
+        param mode unix permissions set  
+        param extra zipextrafields add 
+        throws ioexception error ant 1 6 3 
+        
+   don't add directories ve already added warning try harmless itself 
+   zips store time granularity 2 seconds  round up 
+   zips store time granularity 2 seconds  round up faintly ridiculous  
+    
+       adds new entry archive  takes care duplicates well  
+       
+        param stream read data entry param zout stream write param vpath name entry shall archive  
+        param lastmodified last modification time entry  
+        param fromarchive original archive copying entry null not copying archive  
+        param mode unix permissions set ant 1 5 2 
+        throws ioexception error 
+        
+   duplicate equal add continue 
+   
+               zipoutputstream putnextentry expects zipentry know size crc sum before start writing data using stored mode - unless seekable forces process data twice  
+                
+   store data byte   
+    
+       method gets called adding code java io file  code  instances  
+       
+        p implementation delegates six-arg version   p  
+       
+        param file file add archive 
+        param zout stream write param vpath name entry shall archive 
+        param mode unix permissions set  
+        throws ioexception error ant 1 5 2 
+        
+   zips store time granularity 2 seconds  round up 
+    
+       ensure parent dirs given entry added  
+        param basedir base directory use  may null  
+        param entry entry name create directories param zout stream write param prefix prefix place created entries 
+        param dirmode directory mode 
+        throws ioexception error ant 1 5 2 any clean up necessary allow instance used again  
+       
+        p here zip file closed need to reset some globals   p  
+       
+        p method only reset globals changed 
+       during execute not alter attributes nested 
+       child elements want reset instance later zip completely different set files must use reset method   p  
+       
+        see #reset 
+        
+    
+       makes instance reset attributes default 
+       values forget children ant 1 5 
+       
+        see #cleanup 
+        
+    
+       check resource arrays empty  
+        param r arrays check 
+        return true individual arrays empty ant 1 5 2 
+        
+    
+       drops non-file resources given array  
+        param orig resources filter 
+        return filters resources ant 1 6 
+        
+    
+       possible behaviors duplicate file added  
+        add    preserve fail  
+        
+    
+            see enumeratedattribute#getvalues   
+            
+      inheritdoc     
+    
+       holds up date status out date resources original archive ant 1 5 3 
+        
+    
+           return outofdate status  
+            return outofdate status resources add  
+            return resources add 
+            
+    
+           find out absolutely resources add ant 1 6 3 
+            return true resources add 
+           org apache tools ant taskdefs Zip org apache tools ant taskdefs zip matchingtask file zipfile hashtable entries hashtable duplicate    add archivetype    zip emptybehavior    skip hashtable addeddirs hashtable doublefilepass skipwriting setzipfile file zipfile    
+        setdestfile zipfile setfile file file    
+        setdestfile file setdestfile file destfile zipfile   destfile file getdestfile zipfile setbasedir file basedir basedir   basedir setcompress c    
+        docompress   c iscompress docompress setfilesonly f    
+        dofilesonly   f setupdate c    
+        doupdate   c  
+        saveddoupdate   c isinupdatemode doupdate addfileset fileset set    
+        add set addzipfileset zipfileset set    
+        add set add resourcecollection a    
+        resources add a addzipgroupfileset fileset set    
+        groupfilesets addelement set setduplicate duplicate df    
+        duplicate   df getvalue whenempty enumeratedattribute getvalues fail    skip    create setwhenempty whenempty we    
+        emptybehavior   we getvalue setencoding encoding encoding   encoding getencoding encoding setkeepcompression keep    
+        keepcompression   keep setcomment comment comment   comment getcomment comment setlevel level level   level getlevel level setroundup r    
+        roundup   r execute buildexception doublefilepass    
+            skipwriting executemain    
+            skipwriting executemain executemain executemain buildexception basedir resources size      0 
+               groupfilesets size      0     zip  equals archivetype buildexception  basedir attribute must be set    
+                                        or at least one   
+                                        resource collection must be given zipfile buildexception  you must specify the   
+                                       archivetype     file to create zipfile exists       zipfile isfile buildexception zipfile     is not a file zipfile exists       zipfile canwrite buildexception zipfile     is read-only     
+          
+ 
+          
+        file renamedfile addingnewfiles doupdate     zipfile exists      
+            doupdate log  ignoring update attribute as     archivetype 
+                    doesn't exist    project msg_debug i   0  i   groupfilesets size    i      
+ 
+            log  processing groupfileset    project msg_verbose   
+            fileset fs    fileset  groupfilesets elementat i   
+            filescanner scanner   fs getdirectoryscanner getproject files   scanner getincludedfiles    
+            file basedir   scanner getbasedir j   0  j   files length  j      
+ 
+                log  adding file     files j      to fileset   
+                    project msg_verbose   
+                zipfileset zf zipfileset    
+                zf setproject getproject     
+                zf setsrc file basedir  files j     
+                add zf   
+                filesetsfromgroupfilesets addelement zf   
+              
+          
+ 
+          
+        vector vfss vector basedir fileset fs    fileset  getimplicitfileset   clone    
+            fs setdir basedir   
+            vfss addelement fs i   0  i   resources size    i      
+            resourcecollection rc    resourcecollection  resources elementat i   
+            vfss addelement rc   
+          
+ 
+        resourcecollection   fss resourcecollection vfss size     
+        vfss copyinto fss success archivestate state   getresourcestoadd fss  zipfile state isoutofdate zipfile exists      state iswithoutanyresources      
+                createemptyzip zipfile resource     addthem   state getresourcestoadd doupdate    
+                renamedfile   
+                    file_utils createtempfile  zip     tmp   
+                                              zipfile getparentfile     
+                renamedfile deleteonexit file_utils rename zipfile  renamedfile securityexception e buildexception  
+                         not allowed to rename old file    
+                          zipfile getabsolutepath   
+                             to temporary file ioexception e buildexception  
+                         unable to rename old file    
+                          zipfile getabsolutepath   
+                             to temporary file action   doupdate ?  updating      building    
+ 
+            log action   archivetype          zipfile getabsolutepath     
+ 
+            zipoutputstream zout skipwriting    
+                    zout zipoutputstream zipfile   
+ 
+                    zout setencoding encoding   
+                    zout setmethod docompress 
+                        ? zipoutputstream deflated   zipoutputstream stored   
+                    zout setlevel level   
+                  
+                initzipoutputstream zout i   0  i   fss length  i addthem i  length    0    
+                        addresources fss i   addthem i   zout doupdate    
+                    addingnewfiles zipfileset oldfiles zipfileset    
+                    oldfiles setproject getproject     
+                    oldfiles setsrc renamedfile   
+                    oldfiles setdefaultexcludes i   0  i   addedfiles size    i      
+                        patternset nameentry ne   oldfiles createexclude    
+                        ne setname addedfiles elementat i    
+                      
+                    directoryscanner ds   
+                        oldfiles getdirectoryscanner getproject     
+                      zipscanner  ds  setencoding encoding f   ds getincludedfiles    
+                    resource   r resource f length i   0  i   f length  i      
+                        r i    ds getresource f i dofilesonly d   ds getincludeddirectories    
+                        resource   dr resource d length i   0  i   d length  i      
+                            dr i    ds getresource d i    
+                          
+                        resource   tmp   r  
+                        r resource tmp length   dr length   
+                        system arraycopy dr  0  r  0  dr length   
+                        system arraycopy tmp  0  r  dr length  tmp length   
+                      
+                    addresources oldfiles  r  zout zout zout setcomment comment   
+                  
+                finalizezipoutputstream zout doupdate renamedfile delete      
+                        log   warning  unable to delete temporary file   
+                              renamedfile getname    project msg_warn   
+                      
+                  
+                success zout zout close ioexception ex success ex ioexception ioe msg    problem creating     archivetype        
+                  ioe getmessage doupdate    renamedfile zipfile delete      
+                msg       and the archive is probably corrupt but i could not   
+                       delete it doupdate    renamedfile file_utils rename renamedfile  zipfile ioexception e    
+                    msg       and i couldn't rename the temporary file   
+                              renamedfile getname       back buildexception msg  ioe  getlocation cleanup isaddingnewfiles addingnewfiles addresources fileset fileset  resource   resources  
+                                      zipoutputstream zout ioexception prefix fullpath dirmode   archivefileset default_dir_mode filemode   archivefileset default_file_mode  
+ 
+        archivefileset zfs fileset archivefileset    
+            zfs    archivefileset  fileset  
+            prefix   zfs getprefix getproject     
+            fullpath   zfs getfullpath getproject     
+            dirmode   zfs getdirmode getproject     
+            filemode   zfs getfilemode getproject prefix length     0    fullpath length     0 buildexception  both prefix and fullpath attributes must  
+                                         not be set on the same fileset resources length    1    fullpath length     0 buildexception  fullpath attribute may only be specified filesets that specify a single  
+                                         file prefix length     0 prefix endswith          prefix endswith  \\      
+                prefix         
+              
+            addparentdirs prefix  zout      dirmode   
+          
+ 
+        zipfile zf dealingwithfiles file base zfs zfs getsrc getproject dealingwithfiles base   fileset getdir getproject zfs zipfileset    
+                zf zipfile zfs getsrc getproject     encoding i   0  i   resources length  i name fullpath length     0    
+                    name   fullpath name   resources i  getname    
+                  
+                name   name replace file separatorchar equals name resources i  isdirectory       name endswith         
+                    name   name dofilesonly     dealingwithfiles 
+                       resources i  isdirectory   
+                        zfs hasdirmodebeenset nexttolastslash   name lastindexof      
+                                                           name length   - 2 nexttolastslash    -1    
+                        addparentdirs base  name substring 0  
+                                                           nexttolastslash   1   
+                                      zout  prefix  dirmode zf zipentry ze   zf getentry resources i  getname     
+                        addparentdirs base  name  zout  prefix  
+                                      ze getunixmode archiveresource tr    archiveresource  resources i   
+                        addparentdirs base  name  zout  prefix  
+                                      tr getmode addparentdirs base  name  zout  prefix  dirmode resources i  isdirectory      dealingwithfiles    
+                    file f   file_utils resolvefile base  
+                                                   resources i  getname     
+                    zipfile f  zout  prefix   name  filemode resources i  isdirectory zf zipentry ze   zf getentry resources i  getname ze oldcompress   docompress keepcompression    
+                            docompress    ze getmethod      zipentry deflated zipfile zf getinputstream ze   zout  prefix   name  
+                                    ze gettime    zfs getsrc getproject     
+                                    zfs hasfilemodebeenset   ? filemode 
+                                      ze getunixmode docompress   oldcompress archiveresource tr    archiveresource  resources i   
+                        inputstream is is   tr getinputstream    
+                            zipfile is  zout  prefix   name  
+                                    resources i  getlastmodified    
+                                    zfs getsrc getproject     
+                                    zfs hasfilemodebeenset   ? filemode 
+                                      tr getmode fileutils close is zf zf close addresources resourcecollection rc  
+                                      resource   resources  
+                                      zipoutputstream zout ioexception rc fileset    
+            addresources  fileset  rc  resources  zout i   0  i   resources length  i name   resources i  getname   replace file separatorchar equals name resources i  isdirectory      dofilesonly file base resources i fileresource    
+                base     fileresource  resources i   getbasedir resources i  isdirectory name endswith         
+                    name   name        
+                  
+              
+ 
+            addparentdirs base  name  zout      
+                          archivefileset default_dir_mode resources i  isdirectory resources i fileresource    
+                    file f     fileresource  resources i   getfile    
+                    zipfile f  zout  name  archivefileset default_file_mode inputstream is is   resources i  getinputstream    
+                        zipfile is  zout  name  
+                                resources i  getlastmodified archivefileset default_file_mode fileutils close is initzipoutputstream zipoutputstream zout ioexception  buildexception finalizezipoutputstream zipoutputstream zout ioexception  buildexception createemptyzip file zipfile buildexception   
+          
+          
+          
+        log  note  creating empty     archivetype     archive     zipfile  
+            project msg_info   
+        outputstream os os fileoutputstream zipfile empty 22   
+            empty 0    80    
+            empty 1    75    
+            empty 2    5  
+            empty 3    6  
+              
+            os write empty ioexception ioe buildexception  could not create empty zip archive   
+                                             ioe getmessage          ioe  
+                                     getlocation os os close ioexception e zipscanner getzipscanner zs zs zipscanner    
+            zs setencoding encoding   
+            zs setsrc zipfile zs archivestate getresourcestoadd resourcecollection   rcs  
+                                             file zipfile needsupdate buildexception   
+        arraylist filesets arraylist    
+        arraylist rest arraylist i   0  i   rcs length  i rcs i fileset    
+                filesets add rcs i rest add rcs i    
+              
+          
+        resourcecollection   rc    resourcecollection    
+            rest toarray resourcecollection rest size      
+        archivestate as   getnonfilesetresourcestoadd rc  zipfile  
+                                                      needsupdate   
+ 
+        fileset   fs    fileset    filesets toarray fileset filesets 
+                                                                 size      
+        archivestate as2   getresourcestoadd fs  zipfile  as isoutofdate as isoutofdate      as2 isoutofdate      
+              
+            as   getnonfilesetresourcestoadd rc  zipfile resource     toadd resource rcs length fsindex   0 restindex   0 i   0  i   rcs length  i rcs i fileset    
+                toadd i    as2 getresourcestoadd   fsindex toadd i    as getresourcestoadd   restindex archivestate as2 isoutofdate    toadd archivestate getresourcestoadd fileset   filesets  
+                                             file zipfile needsupdate buildexception   
+ 
+        resource     initialresources   grabresources filesets isempty initialresources needsupdate    doupdate archivestate initialresources emptybehavior equals  skip doupdate    
+                    log archivetype     archive     zipfile 
+                            not updated because no files were included    
+                        project msg_verbose log  warning  skipping     archivetype     archive   
+                          zipfile     because no files were included    
+                        project msg_warn emptybehavior equals  fail buildexception  cannot create     archivetype 
+                                             archive     zipfile 
+                                              no files were included    
+                                         getlocation zipfile exists       
+                    needsupdate archivestate needsupdate  initialresources zipfile exists archivestate initialresources needsupdate     doupdate archivestate initialresources   
+          
+ 
+        resource     newerresources resource filesets length i   0  i   filesets length  i fileset zipfileset  
+                     zipfileset  fileset  getsrc getproject file base   filesets i  getdir getproject j   0  j   initialresources i  length  j      
+                    file resourceasfile   
+                        file_utils resolvefile base  
+                                              initialresources i  j  getname resourceasfile equals zipfile buildexception  a zip file cannot include   
+                                                    itself   getlocation i   0  i   filesets length  i initialresources i  length    0    
+                newerresources i resource filenamemapper mymapper identitymapper filesets i zipfileset    
+                zipfileset zfs    zipfileset  filesets i zfs getfullpath getproject zfs getfullpath getproject    equals        
+                      
+                      
+                      
+                    mergingmapper fm mergingmapper    
+                    fm setto zfs getfullpath getproject      
+                    mymapper   fm zfs getprefix getproject zfs getprefix getproject    equals        
+                    globpatternmapper gm globpatternmapper    
+                    gm setfrom prefix   zfs getprefix getproject prefix endswith          prefix endswith  \\      
+                        prefix         
+                      
+                    gm setto prefix         
+                    mymapper   gm  
+                  
+              
+ 
+            resource   resources   initialresources i dofilesonly    
+                resources   selectfileresources resources   
+              
+ 
+            newerresources i    
+                resourceutils selectoutofdatesources resources  
+                                                     mymapper  
+                                                     getzipscanner     
+            needsupdate   needsupdate     newerresources i  length   0 needsupdate     doupdate needsupdate     doupdate archivestate initialresources archivestate needsupdate  newerresources archivestate getnonfilesetresourcestoadd resourcecollection   rcs  
+                                                       file zipfile needsupdate buildexception   
+          
+ 
+        resource     initialresources   grabnonfilesetresources rcs isempty initialresources archivestate needsupdate  initialresources zipfile exists archivestate initialresources needsupdate     doupdate archivestate initialresources   
+          
+ 
+        resource     newerresources resource rcs length i   0  i   rcs length  i initialresources i  length    0    
+                newerresources i resource j   0  j   initialresources i  length  j initialresources i  j fileresource 
+                       zipfile equals   fileresource  
+                                       initialresources i  j   getfile buildexception  a zip file cannot include   
+                                                itself   getlocation     
+                  
+              
+ 
+            resource   rs   initialresources i dofilesonly    
+                rs   selectfileresources rs   
+              
+ 
+            newerresources i    
+                resourceutils selectoutofdatesources rs identitymapper    
+                                                     getzipscanner     
+            needsupdate   needsupdate     newerresources i  length   0 needsupdate     doupdate needsupdate     doupdate archivestate initialresources archivestate needsupdate  newerresources resource     grabresources fileset   filesets    
+        resource     result resource filesets length i   0  i   filesets length  i skipemptynames filesets i zipfileset    
+                zipfileset zfs    zipfileset  filesets i   
+                skipemptynames   zfs getprefix getproject    equals     
+                       zfs getfullpath getproject    equals      
+              
+            directoryscanner rs   
+                filesets i  getdirectoryscanner getproject rs zipscanner    
+                  zipscanner  rs  setencoding encoding   
+              
+            vector resources vector dofilesonly directories   rs getincludeddirectories j   0  j   directories length  j equals directories j       skipemptynames    
+                        resources addelement rs getresource directories j files   rs getincludedfiles j   0  j   files length  j equals files j       skipemptynames    
+                    resources addelement rs getresource files j     
+                  
+              
+ 
+            result i resource resources size     
+            resources copyinto result i result resource     grabnonfilesetresources resourcecollection   rcs    
+        resource     result resource rcs length i   0  i   rcs length  i      
+            iterator iter   rcs i  iterator    
+            arraylist rs arraylist lastdir   0 iter hasnext      
+                resource r    resource  iter next r isexists r isdirectory      
+                        rs add lastdir    r rs add r   
+                      
+                  
+              
+            result i     resource    rs toarray resource rs size result zipdir file dir  zipoutputstream zout vpath mode ioexception   
+        zipdir dir  zout  vpath  mode zipdir file dir  zipoutputstream zout vpath mode  zipextrafield   extra ioexception dofilesonly    
+            log  skipping directory     vpath file-only archive   
+                    project msg_verbose addeddirs get vpath log  adding directory     vpath  project msg_verbose   
+        addeddirs put vpath  vpath skipwriting    
+            zipentry ze zipentry  vpath dir dir exists      
+                  
+                ze settime dir lastmodified      roundup ? 1999   0 ze settime system currenttimemillis      roundup ? 1999   0    
+              
+            ze setsize  0   
+            ze setmethod  zipentry stored   
+              
+            ze setcrc  empty_crc   
+            ze setunixmode mode extra ze setextrafields extra   
+              
+ 
+            zout putnextentry ze zipfile inputstream in  zipoutputstream zout vpath lastmodified  file fromarchive mode ioexception entries contains vpath duplicate equals  preserve      
+                log vpath     already added  skipping   project msg_info duplicate equals  fail buildexception  duplicate file     vpath 
+                                             was found and the duplicate   
+                                            attribute is 'fail log  duplicate file     vpath 
+                        found  adding    project msg_verbose log  adding entry     vpath  project msg_verbose   
+          
+ 
+        entries put vpath  vpath skipwriting    
+            zipentry ze zipentry vpath   
+            ze settime lastmodified   
+            ze setmethod docompress ? zipentry deflated   zipentry stored zout isseekable       docompress size   0  
+                crc32 cal crc32 in marksupported      
+                      
+                    bytearrayoutputstream bos bytearrayoutputstream buffer 8   1024 count   0 size    count  
+                        cal update buffer  0  count   
+                        bos write buffer  0  count   
+                        count   in read buffer  0  buffer length count    -1   
+                    in bytearrayinputstream bos tobytearray in mark integer max_value buffer 8   1024 count   0 size    count  
+                        cal update buffer  0  count   
+                        count   in read buffer  0  buffer length count    -1   
+                    in reset    
+                  
+                ze setsize size   
+                ze setcrc cal getvalue     
+              
+ 
+            ze setunixmode mode   
+            zout putnextentry ze buffer 8   1024 count   0 count    0    
+                    zout write buffer  0  count   
+                  
+                count   in read buffer  0  buffer length count    -1   
+          
+        addedfiles addelement vpath zipfile file file  zipoutputstream zout vpath mode ioexception file equals zipfile buildexception  a zip file cannot include itself   
+                                     getlocation     
+          
+ 
+        fileinputstream fin fileinputstream file zipfile fin  zout  vpath  
+                    file lastmodified      roundup ? 1999   0 mode fin close addparentdirs file basedir entry  
+                                       zipoutputstream zout prefix dirmode ioexception dofilesonly    
+            stack directories stack slashpos   entry length slashpos   entry lastindexof ' '  slashpos - 1      -1 dir   entry substring 0  slashpos   1 addeddirs get prefix   dir directories push dir directories isempty dir directories pop    
+                file f basedir f file basedir  dir f file dir   
+                  
+                zipdir f  zout  prefix   dir  dirmode cleanup     
+        addeddirs clear    
+        addedfiles removeallelements    
+        entries clear    
+        addingnewfiles doupdate   saveddoupdate  
+        enumeration e   filesetsfromgroupfilesets elements e hasmoreelements      
+            zipfileset zf    zipfileset  e nextelement    
+            resources removeelement zf   
+          
+        filesetsfromgroupfilesets removeallelements reset     
+        resources removeallelements    
+        zipfile basedir groupfilesets removeallelements    
+        duplicate    add   
+        archivetype    zip   
+        docompress emptybehavior    skip   
+        doupdate dofilesonly encoding isempty resource     r i   0  i   r length  i r i  length   0 resource   selectfileresources resource   orig orig length    0 orig  
+          
+ 
+        vector v vector orig length i   0  i   orig length  i orig i  isdirectory      
+                v addelement orig i log  ignoring directory     orig i  getname   
+                        as only files will be added    project msg_verbose v size      orig length    
+            resource   r resource v size     
+            v copyinto r r orig duplicate enumeratedattribute getvalues add    preserve    fail archivestate   
+  
+  
+ 
+        archivestate state  resource     r    
+            outofdate   state  
+            resourcestoadd   r isoutofdate outofdate resource     getresourcestoadd resourcestoadd iswithoutanyresources resourcestoadd counter   0  counter   resourcestoadd length  counter resourcestoadd counter resourcestoadd counter  length   0 org apache tools ant taskdefs Zip

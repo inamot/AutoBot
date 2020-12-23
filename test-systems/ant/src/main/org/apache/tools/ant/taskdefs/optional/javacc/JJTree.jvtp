@@ -1,0 +1,161 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   runs jjtree compiler compiler  
+   
+    
+   keys optional attributes 
+   required attributes 
+    
+       sets build_node_files grammar option  
+        param buildnodefiles code boolean  code  value  
+        
+    
+       sets multi grammar option  
+        param multi code boolean  code  value  
+        
+    
+       sets node_default_void grammar option  
+        param nodedefaultvoid code boolean  code  value  
+        
+    
+       sets node_factory grammar option  
+        param nodefactory code boolean  code  value  
+        
+    
+       sets node_scope_hook grammar option  
+        param nodescopehook code boolean  code  value  
+        
+    
+       sets node_uses_parser grammar option  
+        param nodeusesparser code boolean  code  value  
+        
+    
+       sets static grammar option  
+        param staticparser code boolean  code  value  
+        
+    
+       sets visitor grammar option  
+        param visitor code boolean  code  value  
+        
+    
+       sets node_package grammar option  
+        param nodepackage option use  
+        
+    
+       sets visitor_exception grammar option  
+        param visitorexception option use  
+        
+    
+       sets node_prefix grammar option  
+        param nodeprefix option use directory write generated javacc grammar node files not set files written directory 
+       containing grammar file  
+        param outputdirectory output directory outputfile write generated javacc grammar file not set file written same name jjtree grammar file suffix  jj  
+        param outputfile output file name jjtree grammar file process  
+        param targetfile grammar file directory containing javacc distribution  
+        param javacchome directory containing javacc  
+        
+    
+       constructor 
+        
+    
+       run task  
+        throws buildexception error  
+        
+   load command line optional attributes 
+   use directory containing target output directory 
+   convert backslashes slashes  otherwise jjtree put comments seems confuse javacc 
+   convert backslashes slashes  otherwise jjtree put comments seems confuse javacc running jjtree ant taskdesk output_directory must 
+       always set output_directory set  -output_file handled relative output_directory  thus output_file absolute contains drive letter problem  
+       
+        param destfile 
+        param outputdir 
+        return 
+        throws buildexception 
+        
+    
+       determine root directory given file  
+       
+        param file 
+        return file's root directory 
+       org apache tools ant taskdefs optionalcc JJTree org apache tools ant taskdefs optional javacc jjtree task setbuildnodefiles buildnodefiles    
+        optionalattrs put build_node_files  buildnodefiles setmulti multi    
+        optionalattrs put multi  multi setnodedefaultvoid nodedefaultvoid    
+        optionalattrs put node_default_void  nodedefaultvoid setnodefactory nodefactory    
+        optionalattrs put node_factory  nodefactory setnodescopehook nodescopehook    
+        optionalattrs put node_scope_hook  nodescopehook setnodeusesparser nodeusesparser    
+        optionalattrs put node_uses_parser  nodeusesparser setstatic staticparser    
+        optionalattrs put staticparser setvisitor visitor    
+        optionalattrs put visitor  visitor setnodepackage nodepackage    
+        optionalattrs put node_package  nodepackage setvisitorexception visitorexception    
+        optionalattrs put visitor_exception  visitorexception setnodeprefix nodeprefix    
+        optionalattrs put node_prefix  nodeprefix setoutputdirectory file outputdirectory outputdirectory   outputdirectory setoutputfile outputfile outputfile   outputfile settarget file targetfile targetfile   targetfile setjavacchome file javacchome javacchome   javacchome jjtree     
+        cmdl setvm javaenvutils getjreexecutable  java execute buildexception   
+ 
+          
+        enumeration iter   optionalattrs keys iter hasmoreelements name iter nextelement    
+            object value   optionalattrs get name   
+            cmdl createargument   setvalue  -    name         value tostring targetfile targetfile isfile buildexception  invalid target      targetfile   
+          
+ 
+        file javafile outputdirectory cmdl createargument   setvalue  -output_directory   
+                                             getdefaultoutputdirectory     
+ 
+            javafile file createoutputfilename targetfile  outputfile outputdirectory isdirectory buildexception  'outputdirectory'     outputdirectory 
+                                             is not a directory     
+              
+ 
+              
+              
+            cmdl createargument   setvalue  -output_directory   
+                                             outputdirectory getabsolutepath   
+                                              replace '\\'  ' '    
+ 
+            javafile file createoutputfilename targetfile  outputfile  
+                                                     outputdirectory 
+                                                      getpath javafile exists   
+               targetfile lastmodified     javafile lastmodified      
+            log  target is already built - skipping      targetfile        
+                project msg_verbose outputfile cmdl createargument   setvalue  -    output_file       
+                                             outputfile replace '\\'  ' '    
+          
+ 
+        cmdl createargument   setvalue targetfile getabsolutepath path classpath   cmdl createclasspath getproject file javaccjar   javacc getarchivefile javacchome   
+        classpath createpathelement   setpath javaccjar getabsolutepath     
+        classpath addjavaruntime    
+ 
+        cmdl setclassname javacc getmainclass classpath  
+                                              javacc taskdef_type_jjtree commandline argument arg   cmdl createvmargument    
+        arg setvalue  -mx140m    
+        arg setvalue  -dinstall root     javacchome getabsolutepath execute process execute logstreamhandler project msg_info  
+                                             project msg_info log cmdl describecommand    project msg_verbose   
+        process setcommandline cmdl getcommandline process execute      0 buildexception  jjtree failed ioexception e buildexception  failed to launch jjtree   e createoutputfilename file destfile optionaloutputfile outputdir    
+        optionaloutputfile   validateoutputfile optionaloutputfile  
+                                                outputdir jjtreefile   destfile getabsolutepath   replace optionaloutputfile optionaloutputfile equals filepos   jjtreefile lastindexof filepos    0    
+                jjtreefile   jjtreefile substring filepos   1 suffixpos   jjtreefile lastindexof suffixpos    -1    
+                optionaloutputfile   jjtreefile   default_suffix currentsuffix   jjtreefile substring suffixpos currentsuffix equals default_suffix     
+                    optionaloutputfile   jjtreefile   default_suffix optionaloutputfile   jjtreefile substring 0  suffixpos  
+                          default_suffix outputdir outputdir equals        
+            outputdir   getdefaultoutputdirectory outputdir         optionaloutputfile  replace validateoutputfile destfile outputdir buildexception destfile null outputdir destfile startswith         destfile startswith relativeoutputfile   makeoutputfilerelative destfile   
+            setoutputfile relativeoutputfile relativeoutputfile root   getroot file destfile   getabsolutepath root length     1  
+               destfile startswith root substring 0  root length   - 1 buildexception  drive letter in 'outputfile' not   
+                                        supported      destfile destfile makeoutputfilerelative destfile    
+        stringbuffer relativepath stringbuffer defaultoutputdirectory   getdefaultoutputdirectory nextpos   defaultoutputdirectory indexof startpos   nextpos   1 startpos   -1    startpos   defaultoutputdirectory length      
+            relativepath append         
+            nextpos   defaultoutputdirectory indexof ' '  startpos nextpos    -1    
+                startpos   nextpos startpos   nextpos   1  
+              
+          
+ 
+        relativepath append destfile relativepath tostring getdefaultoutputdirectory getproject   getbasedir   getabsolutepath   replace file getroot file file    
+        file root   file getabsolutefile root getparent root   root getparentfile root  
+      
+ org apache tools ant taskdefs optionalcc JJTree

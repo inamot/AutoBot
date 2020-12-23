@@ -1,0 +1,235 @@
+ 
+   $id$ 
+   copyright  c  2005-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications notation attribute uml  
+    
+    author mvw tigris org standard error etc  logger constructor  
+        
+   
+        see org argouml notation providers notationprovider#parse java lang object  java lang string  
+        
+    
+       parse string representing one ore separated attributes case string char contains e g initializer handled not occurences param classifier  classifier classifier attribute s  belong param attribute   attribute attribute editing happened 
+        param text string parse 
+        throws parseexception invalid input text? remove attr non-whitechars text? remove attr  
+   check attributes  ' ' separated   
+   yes force type element given namespace not already todo  dangerous changing model side effect? - tfm 20070307 
+    
+       parse line form  pre  
+            visibility name    type-expression     initial-value  
+         pre  
+       
+        ul  
+        li only one visibility name given assumed name visibility left unchanged  
+        li type initial value given any order  
+        li properties given between any element form pre  
+              name      value            
+         pre  
+        li multiplicity given between any element except initial-value before type end allow java-style array 
+       indexing initial value must given form  multiplicity square brackets included  
+        li stereotypes given between any element except initial-value before type end allow java-style bit-shifts initial value must given form 
+        lt  lt stereotype1 stereotype2 stereotype3 gt  gt   
+         ul following properties recognized special meaning  
+       frozen  p syntax compatible uml 1 3 spec  
+       
+        formerly  visibility name  multiplicity    type-expression   
+       initial-value  property-string     2nd formerly   visibility   keywords  
+       type name    init        
+       
+        param text string parse  
+        param attribute attribute modify comply instructions s  
+        throws parseexception detects error attribute string  see parseerror geterroroffset    
+        
+   todo method way long   split up null until first stereotype declaration seen non-null  
+   catch   rethrow not necessary don't nothing  penyaskito  
+   catch  parseexception pre    
+        throw pre  
+     
+   
+        see org argouml notation providers notationprovider#getparsinghelp   
+        
+    
+       generates string representation provided 
+       attribute string representation form  
+                visibility name  multiplicity    type-expression   
+                                initial-value  property-string  
+       depending settings notation  visibility  multiplicity  
+       type-expression  initial value properties shown not shown  
+        
+         inheritdoc  
+        
+   generatestereotype accepts collection  despite name 
+   fix loading bad projects show types  defaults true stay compatible older argouml versions not setting element deleted processing itorg argouml notation providers uml AttributeNotationUml org argouml notation providers uml attributenotationuml attributenotation logger log    
+        logger getlogger attributenotationuml attributenotationuml instance attributenotationuml attributenotationuml getinstance instance attributenotationuml log info  creating attributenotationuml parse object modelelement text parseattributefig model getfacade   getowner modelelement    
+                    modelelement  text parseexception pe msg    statusmsg bar error parsing attribute   
+            object   args     
+                pe getlocalizedmessage    
+                integer valueof pe geterroroffset     
+               
+            argoeventpump fireevent argohelpevent  
+                    argoeventtypes help_changed translator messageformat msg  args parseattributefig  
+            object classifier  
+            object attribute text parseexception classifier attribute project project   projectmanager getmanager   getcurrentproject    
+ 
+        parseexception pex start   0 end   notationutilityuml indexofnextcheckedsemicolon text  start end    -1    
+              
+            project movetotrash attribute s   text substring start  end  trim s length      0    
+              
+            project movetotrash attribute parseattribute s  attribute i   model getfacade   getfeatures classifier  indexof attribute   
+          
+        start   end   1  
+        end   notationutilityuml indexofnextcheckedsemicolon text  start end   start    end    text length      
+            s   text substring start  end  trim s length     0    
+                  
+                object model   project getmodel    
+                object attrtype   project getdefaultattributetype model    model getfacade   getnamespace attrtype  
+                             model getmodelmanagementhelper   getallnamespaces  
+                                model  contains model getfacade   getnamespace  
+                                attrtype       
+                    model getcorehelper   setnamespace attrtype  model   
+                  
+                 
+                object newattribute   model getumlfactory   buildnode  
+                        model getmetatypes   getattribute     
+                 
+                model getcorehelper   settype newattribute  attrtype newattribute parseattribute s  newattribute   
+                        model getcorehelper   setstatic  
+                                newattribute  
+                                model getfacade   isstatic attribute i    -1    
+                            model getcorehelper   addfeature  
+                                    classifier    i  newattribute model getcorehelper   addfeature  
+                                    classifier  newattribute parseexception ex pex pex   ex  
+                          
+                      
+                  
+              
+            start   end   1  
+            end   notationutilityuml indexofnextcheckedsemicolon text  start pex pex parseattribute text  
+            object attribute parseexception   
+        stringbuilder multiplicity name list properties stringbuilder stereotype token type stringbuilder value visibility hascolon haseq multindex   -1  
+        mytokenizer st  
+ 
+        text   text trim text length     0  
+                   notationutilityuml visibilitychars indexof text charat 0    
+                       0    
+            visibility   text substring 0  1   
+            text   text substring 1 st mytokenizer text   
+                       \t    \u00ab \u00bb                \\    
+                    notationutilityuml attributecustomsep st hasmoretokens      
+                token   st nexttoken equals token      \t  equals token  
+                               equals token haseq    
+                        value append token equals token      \u00ab  equals token haseq    
+                        value append token stereotype msg    
+                                 parsing error attribute two-sets-stereotypes parseexception translator localize msg   
+                                    st gettokenindex     
+                          
+                        stereotype stringbuilder token   st nexttoken equals token      \u00bb  equals token stereotype append token equals token haseq    
+                        value append token multiplicity msg    
+                                 parsing error attribute two-multiplicities parseexception translator localize msg   
+                                    st gettokenindex     
+                          
+                        multiplicity stringbuilder    
+                        multindex   st gettokenindex     1 token   st nexttoken equals token multiplicity append token equals token     
+                    stringbuilder propname stringbuilder propvalue properties properties arraylist token   st nexttoken equals token         equals token propname length     0    
+                                properties add propname tostring     
+                                properties add propvalue   
+                              
+                            propname stringbuilder    
+                            propvalue equals token equals token propvalue msg    
+                                     parsing error attribute prop-two-values   
+                                object   args    propvalue parseexception translator localize  
+                                        msg  args   st gettokenindex     
+                              
+                            propvalue propvalue propname append token propvalue    token propname length     0    
+                        properties add propname tostring     
+                        properties add propvalue equals token     
+                    hascolon haseq equals token value msg    
+                             parsing error attribute two values parseexception translator localize msg   st 
+                                 gettokenindex     
+                      
+                    value stringbuilder    
+                    hascolon haseq hascolon type msg    parsing error attribute two-types parseexception translator localize msg   
+                                    st gettokenindex token length     0 
+                                    token charat 0     '\ ' 
+                                       token charat 0 msg    parsing error attribute quoted parseexception translator localize msg   
+                                    st gettokenindex token length     0    token charat 0 msg    parsing error attribute is-expr parseexception translator localize msg   
+                                    st gettokenindex     
+                          
+                        type   token haseq    
+                        value append token name visibility msg    parsing error attribute extra-text parseexception translator localize msg   
+                                    st gettokenindex token length     0 
+                                    token charat 0     '\ ' 
+                                       token charat 0 msg    parsing error attribute name-quoted parseexception translator localize msg   
+                                    st gettokenindex token length     0    token charat 0 msg    parsing error attribute name-expr parseexception translator localize msg   
+                                    st gettokenindex name visibility token length     1 
+                                   notationutilityuml visibilitychars 
+                                         indexof token charat 0      0    
+                            visibility   token substring 0  1   
+                            token   token substring 1 name visibility   name  
+                            name   token name   token nosuchelementexception nsee msg    parsing error attribute unexpected-end-attribute parseexception translator localize msg   text length log isdebugenabled      
+            log debug  parseattribute  name      name  
+                        visibility      visibility  
+                        type      type     value      value  
+                        stereo      stereotype 
+                        mult      multiplicity properties log isdebugenabled i   0  i   1   properties size    i    2    
+                log debug  \tproperty  name      properties get i          
+                          properties get i   1 visibility model getcorehelper   setvisibility attribute  
+                    notationutilityuml getvisibility visibility trim name model getcorehelper   setname attribute  name trim model getfacade   getname attribute equals model getfacade   getname attribute      
+            model getcorehelper   setname attribute   anonymous type object ow   model getfacade   getowner attribute   
+            object ns ow model getfacade   getnamespace ow ns   model getfacade   getnamespace ow ns   model getfacade   getmodel attribute   
+              
+            model getcorehelper   settype attribute   
+                    notationutilityuml gettype type trim    ns value project project    
+                projectmanager getmanager   getcurrentproject    
+            projectsettings ps   project getprojectsettings    
+            object initexpr   model getdatatypesfactory   createexpression  
+                    ps getnotationlanguage    value tostring   trim     
+            model getcorehelper   setinitialvalue attribute  initexpr multiplicity model getcorehelper   setmultiplicity attribute  
+                        model getdatatypesfactory   createmultiplicity  
+                                multiplicity tostring   trim illegalargumentexception iae msg    parsing error attribute bad-multiplicity   
+                object   args    iae parseexception translator localize msg  args   
+                        multindex properties notationutilityuml setproperties attribute  properties  
+                    notationutilityuml attributespecialstrings   
+          
+ 
+        stereotypeutility dealwithstereotypes attribute  stereotype getparsinghelp parsing help attribute tostring object modelelement  map args    
+        project p   projectmanager getmanager   getcurrentproject    
+        projectsettings ps   p getprojectsettings visibility   
+                    notationutilityuml generatevisibility modelelement stereo   notationutilityuml generatestereotype  
+                    model getfacade   getstereotypes modelelement name   model getfacade   getname modelelement multiplicity   generatemultiplicity  
+                    model getfacade   getmultiplicity modelelement type model getfacade   gettype modelelement type   model getfacade   getname  
+                        model getfacade   gettype modelelement initialvalue model getfacade   getinitialvalue modelelement initialvalue model getfacade   getbody  
+                            model getfacade   getinitialvalue modelelement changeablekind model getfacade   getchangeability modelelement model getchangeablekind   getfrozen   equals  
+                        model getfacade   getchangeability modelelement      
+                    changeablekind    frozen model getchangeablekind   getaddonly   equals  
+                        model getfacade   getchangeability modelelement      
+                    changeablekind    addonly   
+                  
+              
+            stringbuilder properties stringbuilder changeablekind length     0    
+                properties append       append changeablekind  append        
+              
+ 
+            stringbuilder sb stringbuilder 20 stereo stereo length     0     
+                sb append stereo  append visibility visibility length     0  
+                       ps getshowvisibilityvalue      
+                sb append visibility name name length     0     
+                sb append name  append multiplicity multiplicity length     0  
+                       ps getshowmultiplicityvalue      
+                sb append      append multiplicity  append      append type type length     0  
+                      
+                       ps getshowtypesvalue      
+                sb append       append type  append initialvalue initialvalue length     0  
+                       ps getshowinitialvaluevalue      
+                sb append        append initialvalue  append properties length     0  
+                       ps getshowpropertiesvalue      
+                sb append properties sb tostring   trim invalidelementexception e generatemultiplicity object m m 1  equals model getfacade   tostring m return model getfacade   tostring m   
+      
+ 
+ org argouml notation providers uml AttributeNotationUml

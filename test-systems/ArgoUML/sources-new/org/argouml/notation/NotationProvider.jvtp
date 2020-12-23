@@ -1,0 +1,130 @@
+ 
+   $id$ 
+   copyright  c  2005-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications class implements abstract class manages text 
+   shown diagram means generate 
+   text represents one uml objects user edited text model may adapted parsing text  
+   additionally help text parsing provided user knows syntax  
+    
+    author mvw tigris org 
+    
+    
+       logger collection properties listeners registered notation  
+       each entry 2 element array containing element property 
+       name s listener registered facilitates easy removal complex set listeners  
+        
+    
+        return i18 key represents help string 
+               giving explanation user syntax 
+        
+    
+       utility function determine presence key default false  
+        
+        param key string key 
+        param map map check presence value key 
+        return true value key true  otherwise false 
+        
+    
+       parses given text adapts modelelement maybe related elements accordingly  
+        
+        param modelelement modelelement adapt 
+        param text string given user parsed adapt model 
+        
+    
+       generates string representation given model element  
+        
+        param modelelement base uml modelelement 
+        param args arguments may determine notation 
+        return string written correct notation 
+        
+    
+       initialise appropriate model change listeners given modelelement given listener  
+       overrule need listening events base modelelement  
+        
+        param listener given listener 
+        param modelelement modelelement provide  
+       notation clean out listeners registered before default implementation remove listeners remembered utility functions below  
+        
+        param listener given listener 
+        param modelelement modelelement provide  
+       notation update set listeners based given event   p default implementation removes listeners re-initialises completely method 1 efficient way dissect propertychangeevent only adapt listeners need adapted method 2   p  
+        
+       method 2 explained code below commented out  
+       method 1 easiest implement every arrival event remove old listeners inspect current model add listeners need e advantage only need traverse model structure one location e initialiselistener   method  
+        
+        param listener given listener 
+        param modelelement modelelement provide  
+       notation param pce received event base changes e g operation pce getsource      modelelement 
+      event propertyname    parameter event instanceof addassociationevent parameter instance event newvalue 
+           call model add listener parameter change name    type event instanceof removeassociationevent parameter instance event oldvalue 
+           call model remove listener parameter change name    type  
+       end end add element listener remember registration  
+        
+        param element 
+                  element listen changes see org argouml model modeleventpump#addmodeleventlistener propertychangelistener  object  string  
+        
+   
+       utility function add listener given property name remember registration  
+        
+        param element 
+                  element listen changes param property 
+                  name property listen changes see org argouml model modeleventpump#addmodeleventlistener propertychangelistener  
+            object  string  
+        
+   
+       utility function add listener array property names remember registration  
+        
+        param element 
+                  element listen changes param property 
+                  array property names  strings listen changes see org argouml model modeleventpump#addmodeleventlistener propertychangelistener  
+            object  string  
+        
+   
+       utility function remove element listener adapt remembered list registration  
+        
+        param element 
+                  element listen changes see org argouml model modeleventpump#addmodeleventlistener propertychangelistener  object  string  
+        
+   
+       utility function unregister listeners  
+       registered through addelementlistener  
+        
+        see #addelementlistener object  string  
+       org argouml notation NotationProvider org argouml notation notationprovider logger log   
+        logger getlogger notationprovider getparsinghelp isvalue key map map map object o   map get key o o  booleanvalue parse object modelelement text tostring object modelelement  map args initialiselistener propertychangelistener listener   
+            object modelelement    
+        addelementlistener listener  modelelement cleanlistener propertychangelistener listener object modelelement    
+        removeallelementlisteners listener updatelistener propertychangelistener listener   
+            object modelelement  
+            propertychangeevent pce model getumlfactory   isremoved modelelement     
+            log warn  encountered deleted object during delete of    
+                      modelelement cleanlistener listener  modelelement   
+        initialiselistener listener  modelelement addelementlistener propertychangelistener listener   
+            object element model getumlfactory   isremoved element     
+            log warn  encountered deleted object during delete of     element object   entry object    element listeners contains entry     
+            listeners add entry   
+            model getpump   addmodeleventlistener listener  element log warn  attempted duplicate registration of event listener  
+                        - element      element     listener      listener addelementlistener propertychangelistener listener   
+            object element property model getumlfactory   isremoved element     
+            log warn  encountered deleted object during delete of     element listeners add object    element  property    
+        model getpump   addmodeleventlistener listener  element  property addelementlistener propertychangelistener listener   
+            object element property model getumlfactory   isremoved element     
+            log warn  encountered deleted object during delete of     element listeners add object    element  property    
+        model getpump   addmodeleventlistener listener  element  property removeelementlistener propertychangelistener listener   
+            object element    
+        listeners remove object    element model getpump   removemodeleventlistener listener  element removeallelementlisteners  
+            propertychangelistener listener object   lis   listeners    
+            object property   lis 1 property model getpump   removemodeleventlistener listener  lis 0 property model getpump   removemodeleventlistener listener  lis 0 property property model getpump   removemodeleventlistener listener  lis 0 property runtimeexception  
+                         internal error in removeallelementlisteners    
+              
+          
+        listeners clear    
+      
+ 
+ org argouml notation NotationProvider

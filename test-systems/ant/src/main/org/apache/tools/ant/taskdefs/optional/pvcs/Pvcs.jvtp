@@ -1,0 +1,241 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   
+   extracts latest edition source code pvcs repository  
+   pvcs version control system 
+   developed href  http   www merant com products pvcs  merant br  
+   before using tag user running ant must access commands pvcs pcli must access repository  note way specify repository platform dependent use property specify location repository  
+    br version tested agains pvcs version 6 5 6 6 under windows solaris  
+ 
+   
+    b 19-04-2001  b   p task now robust 
+   parser allows platform independant file paths supports file names i   thanks erik husby bringing bug attention  
+   
+    b 27-04-2001  b   p unc paths now handled properly  
+   fix provided don jeffery added updateonly flag true  conditions pvcs using u option only 
+   update those files modification time pvcs newer existing workfile  
+   
+    b 25-10-2002  b   p added revision attribute currently synonym label future release behavior label 
+   attribute change use v option see bug #13847 discussion  
+   
+    
+   checkstyle - magic numbers 
+   checking x \ 0 dquote 1 letter 2   3 \ 
+    
+       constant thing execute 
+        
+   
+       constant pcli listversionedfiles recursive format understands 
+        
+   private static final string pcli_lvf_args    lvf -z -aw   
+    
+       constant thing execute 
+        
+    
+       run command  
+        param cmd command line use  
+        param out output stream handler use  
+        return exit code command  
+        
+    
+        exception org apache tools ant buildexception something stopping build    
+        
+   check workspace exists 
+   launch pcli listversionedfiles -z -aw 
+   capture output 
+   build command line format default pvcs project create folders workspace 
+   massage pcli lvf output transforming command works appropriately 
+   launch output captured pcli lvf 
+    
+       parses file creates folders specified output section 
+        
+   checking or            x \    
+   extract name directory filename 
+    
+       simple hack handle pvcs command-line tools botch handling unc notation  
+        throws ioexception error network name pvcs repository 
+        return string filenameformat attribute defines messageformat string used parse output pcli command defaults code  0 -arc  1    code    repositories archive 
+         extension not  -arc set return filename format attribute format folder names  optional must format suitable code java text messageformat  code   
+        index 1 format used file name  
+        defaults code  0 -arc  1    code  
+        param f format use linestart attribute used parse output pcli 
+       command defaults code  quot p   code parser already 
+       knows property useful cases repository accessed windows platform via drive letter 
+       mapping  
+        return linestart attribute valid return value pvcs looks describes file   defaults code  quot p   code not using unc name repository drive letter  code p  code incorrect setup may 
+       need change value  unc names always accepted  
+        param l value use network name pvcs repository  required  
+        param repo string name project pvcs repository 
+        return string project within pvcs repository extract files optional  default  quot   quot  
+        param prj string name project pvcs repository 
+        return vector name workspace store retrieved files 
+        return string 
+        
+    
+       workspace use  optional specifying workspace files extracted location pvcs workspace name location workfiles isn't location itself define location workspace using pvcs gui clients isn't specified default workspace current user used  
+        param ws string name pvcs bin directory 
+        return string 
+        
+    
+       specifies location pvcs bin directory  optional path some systems pvcs executables pcli i not found path cases attribute set bin directory pvcs installation containing executables mentioned before attribute isn't specified tag expects executables found using path environment variable  
+        param bin pvcs bin directory 
+        todo use file setter resolve paths value force 
+        return string 
+        
+    
+       specifies value force argument  optional set yes files exists writable overwritten  default causes files writable ignored stops pvcs command i stop asking questions  
+        todo make boolean setter 
+        param f string  yes value promotiongroup 
+        return string 
+        
+    
+       specifies name promotiongroup argument 
+        param w string value label 
+        return string 
+        
+    
+       only files marked label extracted  optional  
+        param l string value revision 
+        return string 
+        
+    
+       only files revision extract  optional  
+        param r string value ignorereturncode 
+        return string set true return value executing pvcs 
+       commands ignored  optional  default false  
+        param b code boolean  code  value  
+        
+    
+       specify project within pvcs repository extract files param p pvcs project use updateonly attribute  
+        return updateonly attribute set true files fetched only newer existing local files  optional  default false  
+        param l code boolean  code  value  
+        
+    
+       returns path configuration file used 
+        return path config file 
+        
+    
+       sets configuration file default used files cfg extension often found archive pvcsprop folders  
+        param f config file given absolute relative ant basedir userid  
+        return userid  
+        
+    
+       user id 
+        param u value use  
+        
+    
+       creates pvcs object 
+       org apache tools ant taskdefs optional pvcs Pvcs org apache tools ant taskdefs optional pvcs pvcs org apache tools ant task runcmd commandline cmd  executestreamhandler out project aproj   getproject    
+            execute exe execute out   
+            exe setantrun aproj   
+            exe setworkingdirectory aproj getbasedir     
+            exe setcommandline cmd getcommandline exe execute java io ioexception e msg    failed executing      cmd tostring   
+                     exception      e getmessage buildexception msg  getlocation getexecutable exe    
+        stringbuffer correctedexe stringbuffer getpvcsbin pvcsbin endswith file separator     
+                correctedexe append pvcsbin correctedexe append pvcsbin  append file separator correctedexe append exe  tostring execute org apache tools ant buildexception result   0 repository repository trim   equals buildexception  required argument repository not specified    
+          
+ 
+          
+          
+          
+          
+        commandline commandline commandline    
+        commandline setexecutable getexecutable pcli_exe    
+ 
+        commandline createargument   setvalue  lvf    
+        commandline createargument   setvalue  -z    
+        commandline createargument   setvalue  -aw getworkspace commandline createargument   setvalue  -sp    getworkspace     
+          
+        commandline createargument   setvalue  -pr    getrepository uid   getuserid uid commandline createargument   setvalue  -id    uid getpvcsproject getpvcsprojects   isempty      
+            pvcsproject getpvcsproject commandline createargument   setvalue getpvcsproject getpvcsprojects   isempty      
+            enumeration e   getpvcsprojects   elements e hasmoreelements projectname     pvcsproject  e nextelement    getname projectname projectname trim    equals buildexception  name is a required attribute   
+                           of pvcsproject    
+                  
+                commandline createargument   setvalue projectname   
+              
+          
+ 
+        file tmp file tmp2 random rand random system currenttimemillis     
+            tmp file  pvcs_ant_    rand nextlong       log    
+            fileoutputstream fos fileoutputstream tmp   
+            tmp2 file  pvcs_ant_    rand nextlong       log    
+            log commandline describecommand    project msg_verbose result   runcmd commandline pumpstreamhandler fos logoutputstream project msg_warn fos close execute isfailure result      ignorerc msg    failed executing      commandline tostring buildexception msg  getlocation tmp exists buildexception  communication between ant and pvcs   
+                       failed  no output generated from executing pvcs   
+                       commandline pcli\  and \ get\     
+              
+ 
+              
+            log  creating folders   project msg_info   
+            createfolders tmp   
+ 
+              
+            massagepcli tmp  tmp2   
+ 
+              
+            commandline clearargs    
+            commandline setexecutable getexecutable get_exe getconfig getconfig   length     0    
+                commandline createargument   setvalue  -c    getconfig getforce getforce   equals  yes      
+                commandline createargument   setvalue  -y commandline createargument   setvalue  -n getpromotiongroup commandline createargument   setvalue  -g  
+                      getpromotiongroup getlabel commandline createargument   setvalue  -v    getlabel getrevision commandline createargument   setvalue  -r  
+                              getrevision updateonly    
+                commandline createargument   setvalue  -u    
+              
+ 
+            commandline createargument   setvalue       tmp2 getabsolutepath     
+            log  getting files   project msg_info   
+            log  executing     commandline tostring    project msg_verbose   
+            result   runcmd commandline logstreamhandler project msg_info  project msg_warn result    0     ignorerc msg    failed executing      commandline tostring code was     result buildexception msg  getlocation filenotfoundexception e msg    failed executing      commandline tostring   
+                     exception      e getmessage buildexception msg  getlocation ioexception e msg    failed executing      commandline tostring   
+                     exception      e getmessage buildexception msg  getlocation parseexception e msg    failed executing      commandline tostring   
+                     exception      e getmessage buildexception msg  getlocation tmp tmp delete tmp2 tmp2 delete createfolders file file ioexception  parseexception   
+        bufferedreader in in bufferedreader filereader file    
+            messageformat mf messageformat getfilenameformat line   in readline line log  considering \     line    \    project msg_verbose line startswith  \ \\        
+                       line startswith  \        
+                                                 
+                       line length     pos_3    line startswith  \    
+                           character isletter line charat pos_1 valueof line charat pos_2   equals valueof line charat pos_3   equals  \\       
+                    object   objs   mf parse line f objs 1 index   f lastindexof file separator index   -1    
+                        file dir file f substring 0  index dir exists      
+                            log  creating     dir getabsolutepath    
+                                project msg_verbose dir mkdirs      
+                                log  created     dir getabsolutepath    
+                                    project msg_info log  failed to create   
+                                      dir getabsolutepath    
+                                    project msg_info log dir getabsolutepath       exists  skipping   
+                                project msg_verbose log  file separator problem with     line  
+                            project msg_warn log  skipped \     line    \    project msg_verbose   
+                  
+                line   in readline in in close massagepcli file in  file out ioexception   
+        bufferedreader inreader bufferedwriter outwriter inreader bufferedreader filereader in    
+            outwriter bufferedwriter filewriter out s s   inreader readline snormal   s replace '\\'  ' '   
+                outwriter write snormal   
+                outwriter newline inreader inreader close outwriter outwriter close getrepository repository getfilenameformat filenameformat setfilenameformat f    
+        filenameformat   f getlinestart linestart setlinestart l    
+        linestart   l setrepository repo    
+        repository   repo getpvcsproject pvcsproject setpvcsproject prj    
+        pvcsproject   prj vector getpvcsprojects pvcsprojects getworkspace workspace setworkspace ws    
+        workspace   ws getpvcsbin pvcsbin setpvcsbin bin    
+        pvcsbin   bin getforce force setforce f f f equalsignorecase  yes      
+            force    yes force    no getpromotiongroup promotiongroup setpromotiongroup w    
+        promotiongroup   w getlabel label setlabel l    
+        label   l getrevision revision setrevision r    
+        revision   r getignorereturncode ignorerc setignorereturncode b    
+        ignorerc   b addpvcsproject pvcsproject p    
+        pvcsprojects addelement p getupdateonly updateonly setupdateonly l    
+        updateonly   l getconfig config setconfig file f    
+        config   f tostring getuserid userid setuserid u    
+        userid   u pvcs pvcsproject pvcsprojects vector    
+        workspace repository pvcsbin force promotiongroup label ignorerc updateonly linestart    \ p    
+        filenameformat     0 -arc  1     
+      
+  
+org apache tools ant taskdefs optional pvcs Pvcs

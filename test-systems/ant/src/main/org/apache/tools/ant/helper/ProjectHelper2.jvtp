@@ -1,0 +1,580 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   sax2 based project reader 
+   
+    
+   stateless    
+   singletons state context 
+    
+       helper path -  uri uri -  path conversions  
+        
+    
+       parse unknown element url 
+       
+        param project current project 
+        param source url containing task 
+        return configured task 
+        exception buildexception error occurs 
+        
+    
+       parse source xml input  
+       
+        param project current project 
+        param source xml source 
+        exception buildexception error occurs 
+        
+  system out println  adding     source   
+          system out println  parsing     getimportstack   size           
+                  context        getimportstack imported file  
+   top level file 
+   execute top-level target 
+    
+       parses project file  configuring project goes  
+       
+        param project current project 
+        param source xml source 
+        param handler root handler use  contains current context  
+        exception buildexception configuration invalid cannot read source instanceof inputstream source instanceof inputsource     
+    
+               sax 2 style parser used parse given file  
+                
+   ?? ok ?? 
+    
+       returns main handler 
+        return main handler 
+        
+    
+       sets main handler 
+        param handler  new main handler 
+        
+    
+       returns project handler 
+        return project handler 
+        
+    
+       sets project handler 
+        param handler  new project handler 
+        
+    
+       returns target handler 
+        return target handler 
+        
+    
+       sets target handler 
+        param handler  new target handler 
+        
+    
+       returns element handler 
+        return element handler 
+        
+    
+       sets element handler 
+        param handler  new element handler common superclass sax event handlers used parse configuration file context hold state information each time one active handler current element use onstartchild set alternate handler child  
+        
+    
+           handles start element base implementation nothing  
+           
+            param uri namespace uri tag 
+            param tag name element being started not code null  code   
+            param qname qualified name element  
+            param attrs attributes element being started not code null  code   
+            param context context element exception saxparseexception method not overridden case error overridden version 
+            
+    
+           handles start element base implementation throws exception must override method expect 
+           child elements  
+           
+            param uri namespace uri element  
+            param tag name element being started not code null  code   
+            param qname qualified name element  
+            param attrs attributes element being started not code null  code   
+            param context current context  
+            return handler derived classes  
+           
+            exception saxparseexception method not overridden case error overridden version 
+            
+    
+           handle end element  
+           
+            param uri namespace uri element 
+            param tag tag element 
+            param qname qualified name element 
+            param context current context 
+            exception saxparseexception error occurs method called element elements nested handled e happens lt  end_tag_of_the_element gt   
+            param uri namespace uri element 
+            param tag element name 
+            param context current context 
+            
+    
+           handles text within element base implementation throws exception must override expect content  
+           
+            param buf character array text within element not code null  code   
+            param start start element array  
+            param count number characters read array  
+            param context current context  
+           
+            exception saxparseexception method not overridden case error overridden version called every time namespace reached ll verify ns processed not load task 
+           definitions  
+            param uri namespace uri  
+            
+    
+       handler ant processing  uses stack anthandlers implement each element original parser used recursive behavior implicit execution stack   
+        
+    
+           creates new roothandler instance  
+           
+            param context context handler  
+            param roothandler handler root element  
+            
+    
+           returns current ant handler object  
+            return current ant handler  
+            
+    
+           resolves file  uris relative build file  
+           
+            param publicid public identifier code null  code none available  ignored implementation  
+            param systemid system identifier provided xml 
+                           document not code null  code   
+            return inputsource identifier 
+            
+   use default not file file not found 
+    
+           handles start project element project handler created initialised element name attributes  
+           
+            param uri namespace uri element  
+            param tag name element being started not code null  code   
+            param qname qualified name element  
+            param attrs attributes element being started not code null  code   
+           
+            exception org xml sax saxparseexception tag given not 
+                                         code  project   code  
+            
+    
+           sets locator project helper future reference  
+           
+            param locator locator used parser not code null  code   
+            
+    
+           handles end element  any required clean-up performed onendelement   method original handler restored parser  
+           
+            param uri namespace uri element  
+            param name name element ending not code null  code   
+            param qname qualified name element  
+           
+            exception saxexception case error  not thrown implementation  
+           
+            
+    
+           handle text within element  calls currenthandler characters  
+           
+            param buf character array test  
+            param start start offset array  
+            param count number characters read  
+            exception saxparseexception error occurs 
+            
+    
+           start namespace prefix uri mapping 
+           
+            param prefix namespace prefix 
+            param uri namespace uri 
+            
+    
+           end namepace prefix uri mapping 
+           
+            param prefix prefix not mapped anymore main handler handles lt project gt  tag  
+       
+        see org apache tools ant helper projecthelper2 anthandler 
+        
+    
+           handle project tag 
+           
+            param uri namespace uri  
+            param name element tag  
+            param qname element qualified name  
+            param attrs attributes element  
+            param context current context  
+            return project handler handles subelements project 
+            exception saxparseexception qualified name not  project context importlevel   0 imported file  allow top-level  target qname equals   target      
+                           return projecthelper2 targethandler  
+                     
+    
+       handler top level  project  element  
+        
+    
+           initialisation routine called handler creation element name attributes attributes handler deal code  default   code   
+            code  name   code    code  id   code code  basedir   code   
+           
+            param uri namespace uri element  
+            param tag name element caused handler created not code null  code   
+                      ignored implementation  
+            param qname qualified name element  
+            param attrs attributes element caused handler created  must not code null  code   
+            param context current context  
+           
+            exception saxparseexception unexpected attribute encountered code  default   code  attribute missing  
+            
+   set location implicit target associated project tag 
+    xxx really don't xml processor still involved processing better solution  imo create ue project target process tree project target deal attributes   similar description eventually switch add support dom  
+               things work smoothly - ue avoided completely still created demand backward compatibility   
+                
+   ignore attributes unknown uris s difference between id name ? 
+   xxx ignore attributes different ns   maybe store xxx move project shared helpers further processing 
+   set explicitly before starting ? 
+   default basedir location build file  
+   check whether user specified absolute path 
+    
+           handles start top-level element within project appropriate handler created initialised details element  
+           
+            param uri namespace uri element  
+            param name name element being started not code null  code   
+            param qname qualified name element  
+            param attrs attributes element being started not code null  code   
+            param context context element  
+            return target element handler  
+           
+            exception org xml sax saxparseexception tag given not 
+                       code  taskdef   code    code  typedef   code   
+                       code  property   code    code  target   code data type definition 
+            
+    
+       handler target  elements  
+        
+    
+           initialisation routine called handler creation element name attributes attributes handler deal code  name   code   
+            code  depends   code    code code   
+            code  unless   code    code  id   code code  description   code   
+           
+            param uri namespace uri element  
+            param tag name element caused handler created not code null  code   
+                      ignored implementation  
+            param qname qualified name element  
+            param attrs attributes element caused handler created  must not code null  code   
+            param context current context  
+           
+            exception saxparseexception unexpected attribute encountered code  name   code  attribute missing  
+            
+   ignore attributes unknown uris 
+   check target current build file name not already defined define impored file not completely 
+   ignoring project tag  
+    
+           handles start element within target  
+           
+            param uri namespace uri element  
+            param name name element being started not code null  code   
+            param qname qualified name element  
+            param attrs attributes element being started not code null  code   
+            param context current context  
+            return element handler  
+           
+            exception saxparseexception error occurs initialising appropriate child handler 
+            
+    
+           handle end project  sets current target context implicit target  
+           
+            param uri namespace uri element  
+            param tag name element  
+            param context current context  
+            
+    
+       handler project elements   tasks  data types   
+        
+    
+           constructor  
+            
+    
+           initialisation routine called handler creation element name attributes configures element attributes sets up parent container any   nested elements added later parser encounters param uri namespace uri element  
+            param tag name element caused handler created  must not code null  code   
+            param qname qualified name element  
+            param attrs attributes element caused handler created  must not code null  code   
+            param context current context  
+           
+            exception saxparseexception case error  not thrown implementation  
+            
+   unknownelement used tasks data types delayed eval    
+   nested element 
+   task included target   including default one    
+   container addtask task nop ue  task init    
+   pr  hack ant-type value ant-type component name namespaced  need extract name convert qualified name uri name 
+    
+           adds text task  using wrapper 
+           
+            param buf character array text within element not code null  code   
+            param start start element array  
+            param count number characters read array  
+            param context current context  
+           
+            exception saxparseexception element doesn't support text 
+           
+            see projecthelper#addtext project java lang object char   int int  
+            
+    
+           handles start element within target  task containers always use another task handler tasks always use nested element handler  
+           
+            param uri namespace uri element  
+            param tag name element being started not code null  code   
+            param qname qualified name element  
+            param attrs attributes element being started not code null  code   
+            param context current context  
+            return handler elements  
+           
+            exception saxparseexception error occurs initialising appropriate child handler 
+            
+    
+           handles end element pops wrapper context  
+           
+            param uri namespace uri element  
+            param tag name element  
+            param context current context  
+           org apache tools ant helper ProjectHelper2 org apache tools ant helper projecthelper2 projecthelper unknownelement parseunknownelement project project  url source buildexception   
+        target dummytarget target    
+        dummytarget setproject project   
+ 
+        antxmlcontext context antxmlcontext project   
+        context addtarget dummytarget   
+        context setimplicittarget dummytarget   
+ 
+        parse context getproject    source roothandler context  elementhandler    
+        task   tasks   dummytarget gettasks tasks length    1 buildexception  no tasks defined unknownelement  tasks 0 parse project project  object source buildexception   
+        getimportstack   addelement source   
+          
+        antxmlcontext context context    antxmlcontext  project getreference  ant parsing context context context antxmlcontext project   
+            project addreference  ant parsing context   context   
+            project addreference  ant targets   context gettargets getimportstack   size     1    
+              
+            context setignoreprojecttag target currenttarget   context getcurrenttarget    
+            target currentimplicit   context getimplicittarget    
+            map    currenttargets   context getcurrenttargets target newcurrent target    
+                newcurrent setproject project   
+                newcurrent setname      
+                context setcurrenttarget newcurrent   
+                context setcurrenttargets hashmap     
+                context setimplicittarget newcurrent   
+                parse project  source roothandler context  mainhandler    
+                newcurrent execute context setcurrenttarget currenttarget   
+                context setimplicittarget currentimplicit   
+                context setcurrenttargets currenttargets context setcurrenttargets hashmap     
+            parse project  source roothandler context  mainhandler    
+              
+            context getimplicittarget   execute parse project project  object source  roothandler handler buildexception   
+ 
+        antxmlcontext context   handler context  
+ 
+        file buildfile url  url buildfilename source file    
+            buildfile    file  source  
+            buildfile   file_utils normalize buildfile getabsolutepath     
+            context setbuildfile buildfile   
+            buildfilename   buildfile tostring source url    
+            url    url  source  
+            buildfilename   url tostring buildexception  source     source getclass   getname   
+                                         not supported by plugin    
+          
+ 
+        inputstream inputstream inputsource inputsource xmlreader parser   jaxputils getnamespacexmlreader uri buildfile uri   file_utils touri buildfile getabsolutepath     
+                inputstream fileinputstream buildfile inputstream   url openstream    
+                uri   url tostring      
+              
+ 
+            inputsource inputsource inputstream uri inputsource setsystemid uri   
+              
+            project log  parsing buildfile     buildfilename 
+                            with uri       uri  project msg_verbose   
+ 
+            defaulthandler hb   handler  
+ 
+            parser setcontenthandler hb   
+            parser setentityresolver hb   
+            parser seterrorhandler hb   
+            parser setdtdhandler hb   
+            parser parse inputsource saxparseexception exc    
+            location location location exc getsystemid    
+                exc getlinenumber    exc getcolumnnumber     
+ 
+            throwable t   exc getexception t buildexception    
+                buildexception be    buildexception  t be getlocation      location unknown_location    
+                    be setlocation location be t t   exc buildexception exc getmessage    t  location saxexception exc    
+            throwable t   exc getexception t buildexception buildexception  t t t   exc buildexception exc getmessage    t filenotfoundexception exc buildexception exc unsupportedencodingexception exc buildexception  encoding of project file   
+                                         buildfilename     is invalid    
+                                       exc ioexception exc buildexception  error reading project file   
+                                       buildfilename          exc getmessage    
+                                     exc fileutils close inputstream anthandler getmainhandler mainhandler setmainhandler anthandler handler    
+        mainhandler   handler anthandler getprojecthandler projecthandler setprojecthandler anthandler handler    
+        projecthandler   handler anthandler gettargethandler targethandler settargethandler anthandler handler    
+        targethandler   handler anthandler getelementhandler elementhandler setelementhandler anthandler handler    
+        elementhandler   handler anthandler onstartelement uri tag qname  
+                                   attributes attrs  
+                                   antxmlcontext context saxparseexception anthandler onstartchild uri tag qname  
+                                       attributes attrs  
+                                       antxmlcontext context saxparseexception saxparseexception  unexpected element \     qname 
+                    \    context getlocator onendchild uri tag qname  
+                                     antxmlcontext context saxparseexception onendelement uri tag  
+                                 antxmlcontext context characters buf start count  antxmlcontext context saxparseexception s buf  start  count  trim s length     0 saxparseexception  unexpected text \     s 
+                       \    context getlocator checknamespace uri roothandler defaulthandler roothandler antxmlcontext context  anthandler roothandler    
+            currenthandler   roothandler  
+            anthandlers push currenthandler context   context anthandler getcurrentanthandler currenthandler inputsource resolveentity publicid systemid    
+ 
+            context getproject   log  resolving systemid    
+                  systemid  project msg_verbose systemid startswith  file path   file_utils fromuri systemid   
+ 
+                file file file path file isabsolute      
+                    file   file_utils resolvefile context getbuildfileparent    path   
+                    context getproject   log  
+                             warning  '    systemid    ' in     context getbuildfile   
+                                should be expressed simply as '    path replace compliance with other xml tools   
+                            project msg_warn   
+                  
+                context getproject   log  file     file  project msg_debug inputsource inputsource inputsource fileinputstream file    
+                    inputsource setsystemid file_utils touri file getabsolutepath inputsource filenotfoundexception fne    
+                    context getproject   log file getabsolutepath   
+                            could not be found   project msg_warn   
+                  
+ 
+              
+              
+            context getproject   log  
+                 could not resolve systemid   project msg_debug startelement uri tag qname  attributes attrs saxparseexception   
+            anthandler next 
+                  currenthandler onstartchild uri  tag  qname  attrs  context   
+            anthandlers push currenthandler   
+            currenthandler   next  
+            currenthandler onstartelement uri  tag  qname  attrs  context setdocumentlocator locator locator    
+            context setlocator locator endelement uri name qname saxexception   
+            currenthandler onendelement uri  name  context   
+            anthandler prev    anthandler  anthandlers pop    
+            currenthandler   prev currenthandler currenthandler onendchild uri  name  qname  context characters buf start count saxparseexception   
+            currenthandler characters buf  start  count  context startprefixmapping prefix uri    
+            context startprefixmapping prefix  uri endprefixmapping prefix    
+            context endprefixmapping prefix mainhandler anthandler anthandler onstartchild uri name qname  
+                                       attributes attrs  
+                                       antxmlcontext context saxparseexception name equals  project   
+                    uri equals        uri equals ant_core_uri projecthelper2 projecthandler name equals qname saxparseexception  unexpected element \      uri 
+                            name    \       ant_core_uri         name  
+                    context getlocator saxparseexception  unexpected element \     qname 
+                       \      name  context getlocator projecthandler anthandler onstartelement uri tag qname  
+                                   attributes attrs  
+                                   antxmlcontext context saxparseexception basedir nameattributeset project project   context getproject    
+              
+            context getimplicittarget   setlocation location context getlocator i   0  i   attrs getlength    i attruri   attrs geturi i attruri attruri equals     
+                        attruri equals uri key   attrs getlocalname i value   attrs getvalue i key equals value value equals context isignoringprojecttag      
+                            project setdefault value key equals  name value context setcurrentprojectname value   
+                        nameattributeset context isignoringprojecttag      
+                            project setname value   
+                            project addreference value  project key equals  id value context isignoringprojecttag      
+                            project addreference value  project key equals  basedir context isignoringprojecttag      
+                        basedir   value saxparseexception  unexpected attribute \   
+                          attrs getqname i     \    context getlocator antfileprop    ant file     context getcurrentprojectname dup   project getproperty antfileprop dup nameattributeset    
+                file dupfile file dup context isignoringprojecttag   
+                        dupfile equals context getbuildfile       
+                    project log  duplicated project name in project   
+                          context getcurrentprojectname       defined first in   
+                          dup     and again in     context getbuildfile    
+                        project msg_warn context getbuildfile nameattributeset    
+                project setuserproperty  ant file   
+                      context getcurrentprojectname    
+                    context getbuildfile   tostring context isignoringprojecttag project getproperty  basedir project setbasedir project getproperty  basedir basedir project setbasedir context getbuildfileparent   getabsolutepath file basedir   isabsolute      
+                        project setbasedir basedir project setbasedir file_utils resolvefile  
+                                               context getbuildfileparent    basedir    
+                      
+                  
+              
+ 
+            project addtarget     context getimplicittarget     
+            context setcurrenttarget context getimplicittarget anthandler onstartchild uri name qname  
+                                       attributes attrs  
+                                       antxmlcontext context saxparseexception name equals  target   
+                    uri equals        uri equals ant_core_uri projecthelper2 targethandler projecthelper2 elementhandler targethandler anthandler onstartelement uri tag qname  
+                                   attributes attrs  
+                                   antxmlcontext context saxparseexception name depends       
+ 
+            project project   context getproject    
+            target target target    
+            target setproject project   
+            target setlocation location context getlocator      
+            context addtarget target i   0  i   attrs getlength    i attruri   attrs geturi i attruri attruri equals     
+                        attruri equals uri key   attrs getlocalname i value   attrs getvalue i key equals  name      
+                    name   value equals name buildexception  name attribute must   
+                               not be empty key equals  depends      
+                    depends   value key equals target setif value key equals  unless      
+                    target setunless value key equals  id value value equals        
+                        context getproject   addreference value  target key equals  description      
+                    target setdescription value saxparseexception  unexpected attribute \   
+                          key    \    context getlocator name saxparseexception  target element appears without   
+                       a name attribute   context getlocator context getcurrenttargets   get name buildexception  
+                     duplicate target '    name    '   target getlocation     
+              
+ 
+            hashtable projecttargets   project gettargets usedtarget projecttargets containskey name     
+                project log  already defined in main or a previous ignore     name  project msg_verbose target setname name   
+                context getcurrenttargets   put name  target   
+                project addorreplacetarget name  target   
+                usedtarget depends length     0    
+                target setdepends depends context isignoringprojecttag      context getcurrentprojectname context getcurrentprojectname   length      0 newname   context getcurrentprojectname   
+                            name  
+                target newtarget   usedtarget target target    target  
+                newtarget setname newname   
+                context getcurrenttargets   put newname  newtarget   
+                project addorreplacetarget newname  newtarget anthandler onstartchild uri name qname  
+                                       attributes attrs  
+                                       antxmlcontext context saxparseexception projecthelper2 elementhandler onendelement uri tag  antxmlcontext context    
+            context setcurrenttarget context getimplicittarget elementhandler anthandler elementhandler onstartelement uri tag qname  
+                                   attributes attrs  
+                                   antxmlcontext context saxparseexception   
+            runtimeconfigurable parentwrapper   context currentwrapper    
+            object parent parentwrapper parent   parentwrapper getproxy    
+              
+ 
+              
+            unknownelement task unknownelement tag   
+            task setproject context getproject     
+            task setnamespace uri   
+            task setqname qname   
+            task settasktype  
+                projecthelper gencomponentname task getnamespace    tag    
+            task settaskname qname   
+ 
+            location location location context getlocator   getsystemid    
+                    context getlocator   getlinenumber    
+                    context getlocator   getcolumnnumber     
+            task setlocation location   
+            task setowningtarget context getcurrenttarget parent unknownelement  parent  addchild task context getcurrenttarget   addtask task   
+              
+ 
+            context configureid task  attrs   
+ 
+              
+              
+ 
+            runtimeconfigurable wrapper runtimeconfigurable task  task gettaskname i   0  i   attrs getlength    i name   attrs getlocalname i attruri   attrs geturi i attruri attruri equals     
+                        attruri equals uri     
+                    name   attruri         attrs getqname i value   attrs getvalue i ant_type equals name  
+                        ant_core_uri equals attruri  
+                           ant_type equals attrs getlocalname i       
+                    name   ant_type index   value indexof index    -1 prefix   value substring 0  index mappeduri   context getprefixmapping prefix mappeduri buildexception  
+                                 unable to find xml ns prefix     prefix   
+                          
+                        value   projecthelper gencomponentname  
+                            mappeduri  value substring index   1    
+                      
+                  
+                wrapper setattribute name  value parentwrapper parentwrapper addchild wrapper   
+              
+ 
+            context pushwrapper wrapper characters buf start count  
+                               antxmlcontext context saxparseexception   
+            runtimeconfigurable wrapper   context currentwrapper    
+            wrapper addtext buf  start  count anthandler onstartchild uri tag qname  
+                                       attributes attrs  
+                                       antxmlcontext context saxparseexception projecthelper2 elementhandler onendelement uri tag  antxmlcontext context    
+            context popwrapper    
+          
+      
+ org apache tools ant helper ProjectHelper2

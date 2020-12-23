@@ -1,0 +1,67 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   copies data input stream output stream ant 1 2 
+    
+    
+       create new stream pumper  
+       
+        param input stream read data param os output stream write data param closewhenexhausted true output stream closed input exhausted  
+        
+    
+       create new stream pumper  
+       
+        param input stream read data param os output stream write data set whether data flushed through output stream  
+        param autoflush true  push through data false buffered ant 1 6 3 
+        
+  package   void setautoflush boolean autoflush    
+    
+       copies data input stream output stream  
+       
+       terminates soon input stream closed error occurs  
+        
+   ignore 
+    
+       tells whether end stream reached  
+        return true stream exhausted method blocks until stream pumper finishes  
+        throws interruptedexception interrupted  
+        see #isfinished   
+        
+    
+       set size bytes read buffer  
+        param buffersize buffer size use  
+        throws illegalstateexception streampumper already running size bytes read buffer  
+        return int size read buffer exception encountered any  
+        return exception encountered  
+        
+    
+       stop pumper soon possible  
+       note may continue block input stream really stop thread soon gets eof any byte marked finished ant 1 6 3 
+        
+  package   synchronized void stop    org apache tools ant taskdefs StreamPumper org apache tools ant taskdefs streampumper runnable streampumper inputstream is  outputstream os closewhenexhausted is   is os   os closewhenexhausted   closewhenexhausted streampumper inputstream is  outputstream os is  os autoflush   autoflush run started finished finish buf buffersize length length   is read buf     0     finish    
+                os write buf  0  length autoflush    
+                    os flush    
+                  
+              
+            os flush exception e exception   e closewhenexhausted os close ioexception e    
+                      
+                  
+              
+            finished notifyall isfinished finished waitfor interruptedexception isfinished      
+            wait setbuffersize buffersize started illegalstateexception  
+                 cannot set buffer size on a running streampumper buffersize   buffersize getbuffersize buffersize exception getexception exception  
+      
+ 
+      
+      
+        finish notifyall    
+      
+ org apache tools ant taskdefs StreamPumper

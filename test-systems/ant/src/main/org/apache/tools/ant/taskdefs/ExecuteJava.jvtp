@@ -1,0 +1,129 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   execute java class ant 1 2 
+    
+    
+       set java  command executejava  
+        param javacommand classname arguments commandline  
+        
+    
+       set classpath used running java class  
+       
+        param p ant path object containing classpath  
+        
+    
+       set system properties use running java class  
+        param s commandlinejava system properties  
+        
+    
+       set permissions application run  
+        param permissions permissions use ant 1 6 
+        
+    
+       set stream output  system out well system err written  
+        param out printstream output sent  
+        deprecated 1 4 x  
+                   manage output task level  
+        
+    
+       set timeout executejava  
+        param timeout timeout long ant 1 5 
+        
+    
+       execute java class against specified ant project  
+        param project project use  
+        throws buildexception error  
+        
+   xxx following really necessary same thread group run timeout run-away thread shall not 
+   make vm run forever timeout occurs  ant's 
+   main thread still new thread 
+   finish 
+   ignore 
+   xxx perhaps call thread stop    not sure anyone cares 
+    
+       run executejava thread ant 1 5 swallow  probably due timeout      
+    
+       mark timeout having occurred  
+        param w responsible watchdog ant 1 5 whether process killed  
+        return  code true  code process killed  false otherwise 1 19  ant 1 5 
+        
+    
+       run java command separate vm not give full flexibility java task may enough simple needs  
+        param pc projectcomponent use logging  etc  
+        return exit status subprocess  
+        throws buildexception error ant 1 6 3 vms platform need create special java options file 
+       containing arguments classpath java command special file supported v  switch vms jvm  
+       
+        param exe execute instance alter  
+        param command command-line  
+        
+  use vm launcher instead shell launcher vms mark file deleted exit alternative cache filename delete execution finished much better long-lived runtimes 
+  though spawning complicates things   org apache tools ant taskdefs ExecuteJava org apache tools ant taskdefs executejava runnable  timeoutobserver setjavacommand commandline javacommand javacommand   javacommand setclasspath path p    
+        classpath   p setsystemproperties commandlinejava sysproperties s    
+        sysproperties   s setpermissions permissions permissions    
+        perm   permissions setoutput printstream out settimeout timeout timeout   timeout execute project project buildexception classname   javacommand getexecutable    
+ 
+        antclassloader loader sysproperties sysproperties setsystem target classpath target forname classname loader   project createclassloader classpath   
+                    loader setparent project getcoreloader     
+                    loader setparentfirst loader addjavalibraries    
+                    loader setisolated loader setthreadcontextloader    
+                    loader forceloadclass classname   
+                    target forname classname loader classnotfoundexception e buildexception  could not find     classname       
+                                             make sure you have it in your  
+                                             classpath    
+              
+            main   target getmethod  main main buildexception  could not find main   method in   
+                                           classname main getmodifiers     modifier 0 buildexception  main   method in     classname 
+                        is not declared timeout run thread thread executejava    
+                task currentthreadtask 
+                      project getthreadtask thread currentthread     
+                  
+                project registerthreadtask thread  currentthreadtask   
+                  
+                  
+                  
+                  
+                thread setdaemon watchdog w watchdog timeout longvalue     
+                w addtimeoutobserver this    
+                    thread start    
+                    w start wait interruptedexception e timedout    
+                        project log  timeout  sub-process interrupted   
+                                    project msg_warn thread w stop caught caught buildexception e e securityexception e e threaddeath e e throwable e buildexception e loader loader resetthreadcontextloader    
+                loader cleanup    
+                loader sysproperties sysproperties restoresystem run object   argument    javacommand getarguments perm perm setsecuritymanager    
+              
+            main invoke argument invocationtargetexception e    
+            throwable t   e gettargetexception t interruptedexception     
+                caught   t throwable t    
+            caught   t perm perm restoresecuritymanager notifyall timeoutoccured watchdog w thread timedout thread interrupt    
+          
+        notifyall killedprocess timedout fork projectcomponent pc buildexception   
+        commandlinejava cmdl commandlinejava    
+        cmdl setclassname javacommand getexecutable args   javacommand getarguments i   0  i   args length  i      
+            cmdl createargument   setvalue args i classpath cmdl createclasspath pc getproject    append classpath sysproperties cmdl addsysproperties sysproperties   
+          
+        redirector redirector redirector pc   
+        execute exe execute redirector createhandler    
+                          timeout null executewatchdog timeout longvalue      
+        exe setantrun pc getproject os isfamily  openvms      
+            setupcommandlineforvms exe  cmdl getcommandline exe setcommandline cmdl getcommandline rc   exe execute    
+            redirector complete rc ioexception e buildexception e timedout   exe killedprocess setupcommandlineforvms execute exe command    
+          
+        exe setvmlauncher file vmsjavaoptionfile args command length - 1   
+            system arraycopy command  1  args  0  command length - 1   
+            vmsjavaoptionfile   javaenvutils createvmsjavaoptionfile args   
+              
+              
+              
+              
+            vmsjavaoptionfile deleteonexit vmscmd    command 0    -v   vmsjavaoptionfile getpath     
+            exe setcommandline vmscmd ioexception e buildexception  failed to create a temporary file v org apache tools ant taskdefs ExecuteJava

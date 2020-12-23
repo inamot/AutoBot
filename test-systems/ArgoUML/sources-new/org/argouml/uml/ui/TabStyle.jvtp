@@ -1,0 +1,218 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications  
+    
+   provides support changing appearance diagram element each 
+   class diagram element tabstyle class attempts find according 
+   class stylepanel contains attributes modified terms style  
+    p constructor tabstyle takes array argument contains possible 
+   base names style panels default stylepanel sp  
+   alternating between two prefixes namespace fig class code org argouml ui  code configuration stylepanel e g   code org argouml uml diagram static structure ui figclass  code looked following places  
+    ul  
+    li org argouml uml diagram static_structure ui stylepanelfigclass 
+    li org argouml uml diagram static_structure ui spfigclass 
+    li org argouml ui stylepanelfigclass 
+    li org argouml ui spfigclass 
+     ul continues traverse superclass structure until matching class found  e g  
+    ul  
+    li org argouml uml diagram ui stylepanelfignodemodelelement 
+    li org argouml uml diagram ui spfignodemodelelement 
+    li org argouml ui stylepanelfignodemodelelement 
+    li org argouml ui spfignodemodelelement 
+     ul stylepanel found stored cache  p  
+   
+   according decision taken issue 502 tab renamed  presentation user presentation tab shall contain presentation options semantic uml properties belong properties  panel contrast diagram pop-up menu model element 
+   may access both presentation options well semantic uml properties   p  
+   
+   note semantic properties uml model element exist one 
+   copy only presentation options exist one copy per diagram model element showing e g class attributes hidden one diagram showing another user very logical seperate 2 kinds settings different tabs stylepanel shown tab style constructor  
+       
+        param tabname name tab 
+        param spn style panel names 
+        
+    
+       construct default stylepanel basenames  code stylepanel  code code sp  code   resulting lookup order described above  
+        
+    
+       adds style panel internal list allows plugin add register new style panel run-time property style displayed details pane whenever element given metaclass selected  
+       
+        param c metaclass whose details show displayed property 
+                  panel p 
+        param s instance style panel metaclass m 
+        
+    
+       sets target style tab  
+        
+        param t new target case bounds determined figedge case bounds box determined figclassassociationclass newly created associationclass may not parts 
+   created time called 
+   todo  defer most work panel isn't visible - tfm responsibility determining given target correct one tab moved detailspane member tabs details pane  reason details pane configurable cannot 
+   know s correct target some tab  
+   todo shouldn't know specific type fig being displayed couples strongly things shouldn't need know tfm - 20070924 case bounds determined figedge case bounds box determined figclassassociationclass newly created associationclass may not parts 
+   created time called 
+   
+        see org argouml ui tabtarget#refresh   
+        
+    
+       find stylepanel given target class  
+       
+        param targetclass target class 
+        return stylepanel object code null  code error class required stylepanel  
+       
+        param targetclass class current selected target  
+        return panel class class given null none available  
+        
+    
+        return style panel names 
+        
+   
+        see org argouml ui tabtarget#gettarget   
+        
+   
+        see org argouml ui tabtarget#shouldbeenabled java lang object  
+        
+   todo better defer initialization until panel 
+   actually needs displayed  perhaps optimistically always return 
+   true figure out later ve something display - tfm - 
+   20070110 
+   
+        see org argouml ui targetmanager targetlistener#targetadded org argouml ui targetmanager targetevent  
+        
+   
+        see org argouml kernel delayedvchangelistener#delayedvetoablechange java beans propertychangeevent  
+        
+   
+        see targetlistener#targetadded targetevent  
+        
+   
+        see targetlistener#targetremoved targetevent handle empty target lists? 
+   probably tabprops only show empty pane case 
+   
+        see targetlistener#targetset targetevent  
+        
+    
+       adds listener  
+       
+        param listener listener add 
+        
+    
+       removes target listener  
+       
+        param listener listener remove 
+        
+    
+        param targetevent 
+        
+            guaranteed return non-null array 
+   lazily create event  
+    
+        param targetevent 
+        
+   guaranteed return non-null array 
+   lazily create event  
+    
+        param targetevent 
+        
+   guaranteed return non-null array 
+   lazily create event  
+   end class tabstyle   org argouml uml ui TabStyle org argouml uml ui tabstyle abstractargojpanel tabfigtarget  
+        propertychangelistener  delayedvchangelistener hashtable tabfigtarget  panels hashtable tabfigtarget tabstyle tabname spn tabname stylepanelnames   spn  
+        setlayout borderlayout tabstyle tab style stylepanel    sp addpanel c  stylepanel s    
+        panels put c  s settarget object t target target removepropertychangelistener target figedge    
+                  
+                  figedge  target  getfig   removepropertychangelistener target figassociationclass    
+                  
+                  
+                figclassassociationclass ac    
+                      figassociationclass  target  getassociationclass ac ac removepropertychangelistener t fig model getfacade   isamodelelement t     
+                project p   projectmanager getmanager   getcurrentproject    
+                collection col   p findfigsformember t col col isempty t   col iterator   next t fig return  
+              
+ 
+          
+ 
+        target    fig  t target target addpropertychangelistener target figedge    
+                  
+                  figedge  target  getfig   addpropertychangelistener target figassociationclass    
+                  
+                  
+                figclassassociationclass ac    
+                      figassociationclass  target  getassociationclass ac ac addpropertychangelistener lastpanel remove lastpanel lastpanel targetlistener    
+                removetargetlistener  targetlistener  lastpanel t add blankpanel  borderlayout north   
+            shouldbeenabled lastpanel   blankpanel shouldbeenabled stylepanel targetclass   t getclass    
+ 
+        stylepanel   findpanelfor targetclass stylepanel removetargetlistener stylepanel   
+            addtargetlistener stylepanel   
+            stylepanel settarget target   
+            add stylepanel  borderlayout north   
+            shouldbeenabled lastpanel   stylepanel add blankpanel  borderlayout north   
+            shouldbeenabled lastpanel   blankpanel  
+          
+        validate    
+        repaint refresh     
+        settarget target stylepanel findpanelfor targetclass panelclass tabfigtarget p   panels get targetclass p newclass   targetclass newclass panelclass panelclass   panelclassfor newclass   
+                newclass   newclass getsuperclass panelclass null p    tabfigtarget  panelclass newinstance illegalaccessexception ignore    
+                log error ignore instantiationexception ignore    
+                log error ignore panels put targetclass  p   
+          
+        log debug  found style targetclass getname         
+                  p getclass stylepanel  p panelclassfor targetclass targetclass null  
+          
+ 
+        stringnamespace classns    stringnamespace  stringnamespace 
+                 parse targetclass   
+ 
+        stringnamespace basens    stringnamespace  stringnamespace parse  
+                 org argouml ui    namespace java_ns_token   
+ 
+        stringnamespaceelement targetclasselement   
+        	 stringnamespaceelement  classns peeknamespaceelement    
+ 
+        log debug  attempt to find style panel classns   
+ 
+        classns popnamespaceelement bases classns tostring    basens tostring stylepanelname   stylepanelnames basename   bases name   basename         stylepanelname 
+                          targetclasselement cls   loadclass name cls cls loadclass name cls forname name cls classnotfoundexception ignore    
+            log debug  classnotfoundexception  could not find name getstylepanelnames stylepanelnames object gettarget target shouldbeenabled object targetitem targetitem fig model getfacade   isamodelelement targetitem     
+                project p   projectmanager getmanager   getcurrentproject    
+                argodiagram diagram   p getactivediagram diagram shouldbeenabled false  
+                  
+ 
+                fig f   diagram presentationfor targetitem f shouldbeenabled false  
+                  
+                targetitem   f shouldbeenabled false  
+              
+          
+ 
+        shouldbeenabled targetclass   targetitem getclass    
+        stylepanel   findpanelfor targetclass   
+        targetclass   targetclass getsuperclass stylepanel shouldbeenabled shouldbeenabled propertychange propertychangeevent pce    
+        delayedchangenotify delayednotify delayedchangenotify pce   
+        swingutilities invokelater delayednotify delayedvetoablechange propertychangeevent pce stylepanel stylepanel refresh pce targetadded targetevent e    
+        settarget e getnewtarget     
+        firetargetadded e targetremoved targetevent e    
+          
+          
+          
+        settarget e getnewtarget     
+        firetargetremoved e targetset targetevent e    
+        settarget e getnewtarget     
+        firetargetset e addtargetlistener targetlistener listener    
+        listenerlist add targetlistener listener removetargetlistener targetlistener listener    
+        listenerlist remove targetlistener listener firetargetset targetevent targetevent    
+          
+        object   listeners   listenerlist getlistenerlist i   listeners length - 2  i    0  i -  2 listeners i     targetlistener targetlistener  listeners i   1   targetset targetevent firetargetadded targetevent targetevent    
+          
+        object   listeners   listenerlist getlistenerlist i   listeners length - 2  i    0  i -  2 listeners i     targetlistener targetlistener  listeners i   1   targetadded targetevent firetargetremoved targetevent targetevent    
+          
+        object   listeners   listenerlist getlistenerlist i   listeners length - 2  i    0  i -  2 listeners i     targetlistener targetlistener  listeners i   1   targetremoved targetevent   
+              
+          
+      
+ 
+   org argouml uml ui TabStyle

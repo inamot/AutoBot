@@ -1,0 +1,126 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   compiles ejb stubs skeletons iplanet application server ejbs processed specified ejb 1 1 standard xml 
+   descriptor additional attributes obtained iplanet application 
+   server-specific xml descriptor xml descriptors include 
+   multiple ejbs convenient way specifying many ejbs single 
+   ant task following attributes allowed  
+      ul  
+        li ejbdescriptor standard ejb 1 1 xml descriptor  typically 
+                                   titled  ejb-jar xml attribute required  
+        li iasdescriptor ejb xml descriptor iplanet application 
+                                   server  typically titled  ias-ejb-jar xml attribute required  
+        li dest the base directory rmi stubs skeletons written addition class files each bean  home interface  remote interface ejb implementation  must found directory attribute required  
+        li classpath classpath used generating ejb stubs skeletons optional attribute omitted classpath specified ant started used    nested  classpath  
+                               elements may used  
+        li keepgenerated indicates whether not java source 
+                                   files generated ejbc saved automatically deleted yes source files retained optional attribute omitted defaults li debug indicates whether not ejbc utility log additional debugging statements standard 
+                           output yes additional debugging statements generated omitted defaults li iashome may used specify home  directory iplanet application server installation used find ejbc utility isn't 
+                             included user's system path optional attribute specified refer code  install-location  iplanet ias6 ias 
+                               code  directory omitted ejbc utility 
+                             must user's system path  
+       ul  
+    p each ejb specified task locate three classes comprise ejb class files cannot located code dest  code  
+   directory task fail task attempt locate ejb 
+   stubs skeletons directory found timestamps stubs skeletons checked ensure up date   only files cannot found out date ejbc called generate new stubs skeletons  
+   
+    see    iplanetejbc 
+   
+    ant task name  iplanet-ejbc  category  ejb  
+    
+   attributes set ant build file    
+    
+       sets location standard xml ejb descriptor   typically file named  ejb-jar xml   
+       
+        param ejbdescriptor name location ejb descriptor  
+        
+    
+       sets location ias-specific xml ejb descriptor   typically file named  ias-ejb-jar xml   
+       
+        param iasdescriptor name location ias-specific ejb 
+                            descriptor  
+        
+    
+       sets destination directory ejb source classes must exist stubs skeletons written destination 
+       directory must exist before task executed  
+       
+        param dest directory compiled classes written  
+        
+    
+       sets classpath used compiling ejb stubs skeletons  
+       
+        param classpath classpath used  
+        
+    
+       adds classpath used compiling ejb stubs skeletons  
+        return class path true java source files generated ejbc saved   
+       
+        param keepgenerated boolean indicating java source files stubs skeletons retained true  debugging output generated ejbc executed  
+       
+        param debug boolean indicating debugging output generated 
+        
+    
+       may used specify home  directory ias installation directory specified typically code  install-location  iplanet ias6 ias  code   
+       
+        param iashome home directory user's ias installation work  
+        throws buildexception problem  
+        
+    
+       verifies user selections valid  
+       
+        throws buildexception user selections invalid  
+        
+    
+       returns saxparser may used process xml descriptors  
+       
+        return parser may used process ejb descriptors  
+        throws buildexception parser cannot created configured  
+        
+    
+       executes ejbc utility using saxparser provided  
+       
+        param saxparser saxparser may used process ejb 
+                        descriptors 
+        throws buildexception error reading parsing xml 
+                              descriptors 
+        
+    
+       returns classpath used calling ejbc user classpath specified system classpath returned instead  
+       
+        return path classpath used ejbc  
+       org apache tools ant taskdefs optional ejb IPlanetEjbcTask org apache tools ant taskdefs optional ejb iplanetejbctask task setejbdescriptor file ejbdescriptor ejbdescriptor   ejbdescriptor setiasdescriptor  file iasdescriptor iasdescriptor   iasdescriptor setdest file dest dest   dest setclasspath path classpath classpath classpath   classpath classpath append classpath path createclasspath classpath classpath path getproject classpath createpath setkeepgenerated keepgenerated keepgenerated   keepgenerated setdebug debug debug   debug setiashome file iashome iashome   iashome execute buildexception   
+        checkconfiguration    
+ 
+        executeejbc getparser checkconfiguration buildexception ejbdescriptor msg    the standard ejb descriptor must be specified using   
+                               the \ ejbdescriptor\  attribute buildexception msg  getlocation ejbdescriptor exists         ejbdescriptor isfile msg    the standard ejb descriptor      ejbdescriptor 
+                                 was not found or isn't a file buildexception msg  getlocation iasdescriptor msg    the ias-speific xml descriptor must be specified using  
+                                the \ iasdescriptor\  attribute buildexception msg  getlocation iasdescriptor exists         iasdescriptor isfile msg    the ias-specific xml descriptor      iasdescriptor 
+                                 was not found or isn't a file buildexception msg  getlocation dest msg    the destination directory must be specified using   
+                               the \ dest\  attribute buildexception msg  getlocation dest exists         dest isdirectory msg    the destination directory      dest      was not   
+                               found or isn't a directory buildexception msg  getlocation iashome iashome isdirectory msg iashome\  is specified  it must be a valid   
+                               directory  it was set to     iashome buildexception msg  getlocation saxparser getparser buildexception   
+ 
+        saxparser saxparser saxparserfactory saxparserfactory   saxparserfactory newinstance    
+            saxparserfactory setvalidating saxparser   saxparserfactory newsaxparser saxexception e msg    unable to create a saxparser      e getmessage buildexception msg  e  getlocation parserconfigurationexception e msg    unable to create a saxparser      e getmessage buildexception msg  e  getlocation saxparser executeejbc saxparser saxparser buildexception   
+        iplanetejbc ejbc iplanetejbc ejbdescriptor  
+                                            iasdescriptor  
+                                            dest  
+                                            getclasspath   tostring    
+                                            saxparser   
+        ejbc setretainsource keepgenerated   
+        ejbc setdebugoutput debug iashome ejbc setiashomedir iashome ejbc execute ioexception e msg    an ioexception occurred trying to read the xml   
+                               descriptor file      e getmessage buildexception msg  e  getlocation saxexception e msg    a saxexception occurred trying to read the xml   
+                               descriptor file      e getmessage buildexception msg  e  getlocation iplanetejbc ejbcexception e msg    an exception occurred trying to run the ejbc   
+                               utility      e getmessage buildexception msg  e  getlocation path getclasspath     
+        path cp classpath cp path getproject     concatsystemclasspath  last cp   classpath concatsystemclasspath  ignore cp  
+      
+ org apache tools ant taskdefs optional ejb IPlanetEjbcTask

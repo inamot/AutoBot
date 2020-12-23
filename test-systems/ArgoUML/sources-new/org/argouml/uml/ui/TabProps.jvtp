@@ -1,0 +1,271 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications tab details panel  detailspane holds property 
+   panel change target property panel tabprops changed  
+    p introduction targetmanager class holds original 
+   power controlling target property panels  subclasses proppanel class container being registered targetlisteners settarget method class not 
+   registered targetmanager class prevent race-conditions firing targetevents targetmanager  
+    
+    
+       logger list targetlisteners property panels 
+       managed tabprops only contain one listener time constructor constructor  
+       
+        param tabname name tab 
+        param panelclassbase panel class base 
+        
+    
+       set orientation property panel  
+       
+        param orientation new orientation property panel 
+       
+        see org tigris swidgets orientable#setorientation org tigris swidgets orientation  
+        
+    
+       adds property panel internal list allows plugin add   register new property panel run-time property panel displayed detatils pane whenever element given metaclass selected  
+       
+        param c metaclass whose details show displayed property panel p 
+        param p instance property panel metaclass m 
+       
+        
+                                                                 
+   accessors 
+    
+       sets target property panel given target t 
+       may either diagram modelelement target 
+       given fig check made fig owning 
+       modelelement occurs current diagram modelelement target  
+       
+        deprecated argouml version 0 13 5 visibility method change future  
+               replaced link org argouml ui targetmanager targetmanager   
+       
+        param t new target 
+        see org argouml ui tabtarget#settarget java lang object  
+        
+   targets ought uml objects diagrams 
+   
+        see org argouml ui tabtarget#refresh   
+        
+    
+       find correct properties panel target  
+       
+        param trgt target class 
+        return tab panel 
+        
+   todo test coverage createproppanel? - tfm 
+   1st attempt panel created before     
+   2nd attempt didn't find panel use factory create new one factory method create proppanel particular model 
+       element  
+       
+        param modelelement model element 
+        return new prop panel display any model element given type 
+        
+   create prop panels diagrams 
+   todo needs type hierarchy order work properly create most specific property panel properly 
+    
+        return name 
+        
+    
+       returns current target  
+        deprecated argouml version 0 13 5 visibility method change future  replaced link org argouml ui targetmanager targetmanager#gettarget   
+       targetmanager getinstance   gettarget     
+       
+        return target 
+        see org argouml ui tabtarget#gettarget   
+        
+    
+       determines property panel enabled property panel always enabled target instance modelelement argodiagram target given fig check made fig owning modelelement occurs current diagram modelelement target  
+        param t target 
+        return true property panel enabled 
+        see org argouml ui tabtarget#shouldbeenabled object  
+        
+   
+        see org argouml ui targetmanager targetlistener#targetadded org argouml ui targetmanager targetevent  
+        
+   
+        see org argouml ui targetmanager targetlistener#targetremoved org argouml ui targetmanager targetevent  
+        
+   
+        see org argouml ui targetmanager targetlistener#targetset org argouml ui targetmanager targetevent  
+        
+    
+       adds listener  
+        param listener listener add 
+        
+    
+       removes target listener  
+        param listener listener remove 
+        
+        guaranteed return non-null array 
+   lazily create event  
+   guaranteed return non-null array 
+   lazily create event  
+   guaranteed return non-null array 
+   lazily create event  
+   end class tabprops   org argouml uml ui TabProps org argouml uml ui tabprops abstractargojpanel tabmodeltarget tabprops tab properties    ui proppanel tabprops tabname panelclassbase tabname   
+        targetmanager getinstance   addtargetlistener setorientation horizontal getinstance     
+        panelclassbasename   panelclassbase  
+        setlayout borderlayout     
+      
+ 
+      
+     override setorientation orientation orientation setorientation orientation   
+        enumeration pps   panels elements pps hasmoreelements      
+            object o   pps nextelement o orientable    
+                orientable orientable    orientable  o  
+                orientable setorientation orientation addpanel c  proppanel p    
+        panels put c  p settarget object t    
+          
+        t    t fig  ?   fig  t  getowner     t t model getfacade   isaumlelement t  
+                   t argodiagram lastpanel remove lastpanel lastpanel targetlistener    
+                removetargetlistener  targetlistener  lastpanel   
+              
+          
+        target   t t add blankpanel  borderlayout center   
+            shouldbeenabled lastpanel   blankpanel shouldbeenabled tabmodeltarget newpanel newpanel   findpanelfor t newpanel addtargetlistener newpanel newpanel jpanel    
+                add  jpanel  newpanel  borderlayout center   
+                shouldbeenabled lastpanel    jpanel  newpanel add blankpanel  borderlayout center   
+                shouldbeenabled lastpanel   blankpanel refresh     
+        settarget targetmanager getinstance   gettarget tabmodeltarget findpanelfor object trgt    
+          
+         
+          
+        tabmodeltarget p   panels get trgt getclass p log isdebugenabled      
+                log debug  getting prop panel trgt getclass   getname   
+                                  found  in cache?      p p  
+          
+ 
+          
+        p   createproppanel trgt p log debug  factory created     p getclass   getname trgt getclass   getname     
+            panels put trgt getclass    p p proppanel    
+        	  proppanel  p  buildtoolbar p  
+          
+ 
+        log error  failed to create a prop panel trgt tabmodeltarget createproppanel object modelelement    
+ 
+	tabmodeltarget proppanel modelelement umlactivitydiagram    
+            proppanel proppanelumlactivitydiagram modelelement umlclassdiagram    
+            proppanel proppanelumlclassdiagram modelelement umlcollaborationdiagram    
+            proppanel proppanelumlcollaborationdiagram modelelement umldeploymentdiagram    
+            proppanel proppanelumldeploymentdiagram modelelement umlsequencediagram    
+            proppanel proppanelumlsequencediagram modelelement umlstatediagram    
+            proppanel proppanelumlstatediagram modelelement umlusecasediagram    
+            proppanel proppanelumlusecasediagram model getfacade   isasubmachinestate modelelement     
+            proppanel proppanelsubmachinestate model getfacade   isasubactivitystate modelelement     
+            proppanel proppanelsubactivitystate model getfacade   isaabstraction modelelement     
+            proppanel proppanelabstraction model getfacade   isacallstate modelelement     
+            proppanel proppanelcallstate model getfacade   isaactionsequence modelelement     
+            proppanel proppanelactionsequence model getfacade   isaactionstate modelelement     
+            proppanel proppanelactionstate model getfacade   isaactivitygraph modelelement     
+            proppanel proppanelactivitygraph model getfacade   isaactor modelelement     
+            proppanel proppanelactor model getfacade   isaargument modelelement     
+            proppanel proppanelargument model getfacade   isaassociationclass modelelement     
+            proppanel proppanelassociationclass model getfacade   isaassociationrole modelelement     
+            proppanel proppanelassociationrole model getfacade   isaassociation modelelement     
+            proppanel proppanelassociation model getfacade   isaassociationendrole modelelement     
+            proppanel proppanelassociationendrole model getfacade   isaassociationend modelelement     
+            proppanel proppanelassociationend model getfacade   isaattribute modelelement     
+            proppanel proppanelattribute model getfacade   isacallaction modelelement     
+            proppanel proppanelcallaction model getfacade   isaclassifierinstate modelelement     
+            proppanel proppanelclassifierinstate model getfacade   isaclass modelelement     
+            proppanel proppanelclass model getfacade   isaclassifierrole modelelement     
+            proppanel proppanelclassifierrole model getfacade   isacollaboration modelelement     
+            proppanel proppanelcollaboration model getfacade   isacomment modelelement     
+            proppanel proppanelcomment model getfacade   isacomponent modelelement     
+            proppanel proppanelcomponent model getfacade   isacomponentinstance modelelement     
+            proppanel proppanelcomponentinstance model getfacade   isacompositestate modelelement     
+            proppanel proppanelcompositestate model getfacade   isaconstraint modelelement     
+            proppanel proppanelconstraint model getfacade   isacreateaction modelelement     
+            proppanel proppanelcreateaction model getfacade   isaenumeration modelelement     
+            proppanel proppanelenumeration model getfacade   isadatatype modelelement     
+            proppanel proppaneldatatype model getfacade   isadestroyaction modelelement     
+            proppanel proppaneldestroyaction model getfacade   isaenumerationliteral modelelement     
+            proppanel proppanelenumerationliteral model getfacade   isaelementimport modelelement     
+            proppanel proppanelelementimport model getfacade   isaelementresidence modelelement     
+            proppanel proppanelelementresidence model getfacade   isaextend modelelement     
+            proppanel proppanelextend model getfacade   isaexception modelelement     
+            proppanel proppanelexception model getfacade   isaextensionpoint modelelement     
+            proppanel proppanelextensionpoint model getfacade   isafinalstate modelelement     
+            proppanel proppanelfinalstate model getfacade   isaflow modelelement     
+            proppanel proppanelflow model getfacade   isageneralization modelelement     
+            proppanel proppanelgeneralization model getfacade   isaguard modelelement     
+            proppanel proppanelguard model getfacade   isainclude modelelement     
+            proppanel proppanelinclude model getfacade   isainteraction modelelement     
+            proppanel proppanelinteraction model getfacade   isainterface modelelement     
+            proppanel proppanelinterface model getfacade   isalink modelelement     
+            proppanel proppanellink model getfacade   isalinkend modelelement     
+            proppanel proppanellinkend model getfacade   isamessage modelelement     
+            proppanel proppanelmessage model getfacade   isamethod modelelement     
+            proppanel proppanelmethod model getfacade   isamodel modelelement     
+            proppanel proppanelmodel model getfacade   isanode modelelement     
+            proppanel proppanelnode model getfacade   isanodeinstance modelelement     
+            proppanel proppanelnodeinstance model getfacade   isaobject modelelement     
+            proppanel proppanelobject model getfacade   isaobjectflowstate modelelement     
+            proppanel proppanelobjectflowstate model getfacade   isaoperation modelelement     
+            proppanel proppaneloperation model getfacade   isapackage modelelement     
+            proppanel proppanelpackage model getfacade   isaparameter modelelement     
+            proppanel proppanelparameter model getfacade   isapartition modelelement     
+            proppanel proppanelpartition model getfacade   isapackageimport modelelement     
+            proppanel proppanelpermission model getfacade   isapseudostate modelelement     
+            proppanel proppanelpseudostate model getfacade   isareception modelelement     
+            proppanel proppanelreception model getfacade   isareturnaction modelelement     
+            proppanel proppanelreturnaction model getfacade   isasendaction modelelement     
+            proppanel proppanelsendaction model getfacade   isasignal modelelement     
+            proppanel proppanelsignal model getfacade   isasimplestate modelelement     
+            proppanel proppanelsimplestate model getfacade   isastatemachine modelelement     
+            proppanel proppanelstatemachine model getfacade   isastereotype modelelement     
+            proppanel proppanelstereotype model getfacade   isastimulus modelelement     
+            proppanel proppanelstimulus model getfacade   isastubstate modelelement     
+            proppanel proppanelstubstate model getfacade   isasubsystem modelelement     
+            proppanel proppanelsubsystem model getfacade   isasynchstate modelelement     
+            proppanel proppanelsynchstate model getfacade   isataggedvalue modelelement     
+            proppanel proppaneltaggedvalue model getfacade   isatagdefinition modelelement     
+            proppanel proppaneltagdefinition model getfacade   isaterminateaction modelelement     
+            proppanel proppanelterminateaction model getfacade   isatransition modelelement     
+            proppanel proppaneltransition model getfacade   isauninterpretedaction modelelement     
+            proppanel proppaneluninterpretedaction model getfacade   isausage modelelement     
+            proppanel proppanelusage model getfacade   isausecase modelelement     
+            proppanel proppanelusecase model getfacade   isacallevent modelelement     
+            proppanel proppanelcallevent model getfacade   isachangeevent modelelement     
+            proppanel proppanelchangeevent model getfacade   isasignalevent modelelement     
+            proppanel proppanelsignalevent model getfacade   isatimeevent modelelement     
+            proppanel proppaneltimeevent model getfacade   isadependency modelelement     
+            proppanel proppaneldependency modelelement figtext    
+            proppanel proppanelstring proppanel orientable    
+              orientable  proppanel  setorientation getorientation proppanel proppanel    
+              proppanel  proppanel  setorientation getorientation     
+              proppanel  proppanel  buildtoolbar proppanel getclassbasename panelclassbasename object gettarget target shouldbeenabled object t    
+        t    t fig  ?   fig  t  getowner     t t diagram    model getfacade   isaumlelement t   
+                   findpanelfor t shouldbeenabled shouldbeenabled shouldbeenabled targetadded targetevent e    
+        settarget targetmanager getinstance   getsingletarget     
+        firetargetadded e listenerlist getlistenercount     0    
+            validate    
+            repaint targetremoved targetevent e    
+        settarget targetmanager getinstance   getsingletarget     
+        firetargetremoved e   
+        validate    
+        repaint targetset targetevent e    
+        settarget targetmanager getinstance   getsingletarget     
+        firetargetset e   
+        validate    
+        repaint addtargetlistener targetlistener listener    
+        listenerlist add targetlistener listener removetargetlistener targetlistener listener    
+        listenerlist remove targetlistener listener firetargetset targetevent targetevent    
+          
+        object   listeners   listenerlist getlistenerlist i   listeners length - 2  i    0  i -  2 listeners i     targetlistener targetlistener  listeners i   1   targetset targetevent firetargetadded targetevent targetevent    
+          
+        object   listeners   listenerlist getlistenerlist i   listeners length - 2  i    0  i -  2 listeners i     targetlistener targetlistener  listeners i   1   targetadded targetevent firetargetremoved targetevent targetevent    
+          
+        object   listeners   listenerlist getlistenerlist i   listeners length - 2  i    0  i -  2 listeners i     targetlistener targetlistener  listeners i   1   targetremoved targetevent   
+              
+          
+      
+ 
+    
+org argouml uml ui TabProps

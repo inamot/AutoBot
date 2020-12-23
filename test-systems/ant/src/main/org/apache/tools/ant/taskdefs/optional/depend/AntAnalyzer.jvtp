@@ -1,0 +1,71 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license analyzer uses depend task's bytecode classes analyze 
+   dependencies 
+   
+    
+    
+       default constructor 
+        
+    
+       determine dependencies configured root classes  
+       
+        param files vector populated files contain dependency classes 
+        param classes vector populated names dependency classes root classes build up set classes upon depend 
+   ignore 
+   now recover dependencies collected add list  
+   pick up last round dependencies determined 
+    
+       indicate analyzer determine dependent files  
+       
+        return true analyzer provides dependency file information  
+       org apache tools ant taskdefs optional depend AntAnalyzer org apache tools ant taskdefs optional depend antanalyzer abstractanalyzer antanalyzer determinedependencies vector files  vector classes    
+          
+          
+        hashtable dependencies hashtable    
+        hashtable containers hashtable    
+        hashtable toanalyze hashtable enumeration e   getrootclasses    e hasmoreelements classname e nextelement    
+            toanalyze put classname  classname count   0 maxcount   isclosurerequired   ? max_loops   1  
+        hashtable analyzeddeps toanalyze size      0    count     maxcount    
+            analyzeddeps hashtable enumeration e   toanalyze keys    e hasmoreelements classname e nextelement    
+                dependencies put classname  classname file container   getclasscontainer classname container containers put container  container   
+ 
+                    zipfile zipfile inputstream instream container getname   endswith instream fileinputstream container getpath zipfile zipfile container getpath entryname 
+                                  classname replace zipentry entry zipentry entryname   
+                            instream 
+                                  zipfile getinputstream entry   
+                          
+                        classfile classfile classfile    
+                        classfile read instream   
+                        vector dependencylist   classfile getclassrefs    
+                        enumeration depenum   dependencylist elements depenum hasmoreelements dependency depenum nextelement    
+                            analyzeddeps put dependency  dependency instream instream close zipfile zipfile close ioexception ioe    
+                      
+                  
+              
+ 
+            toanalyze clear    
+ 
+              
+            enumeration depsenum   analyzeddeps elements depsenum hasmoreelements classname depsenum nextelement dependencies containskey classname     
+                    toanalyze put classname  classname   
+                  
+              
+          
+ 
+          
+        enumeration depsenum   analyzeddeps elements depsenum hasmoreelements classname depsenum nextelement    
+            dependencies put classname  classname   
+          
+ 
+        files removeallelements enumeration e   containers keys    e hasmoreelements       
+            files addelement  file  e nextelement     
+          
+ 
+        classes removeallelements enumeration e   dependencies keys    e hasmoreelements       
+            classes addelement e nextelement supportsfiledependencies org apache tools ant taskdefs optional depend AntAnalyzer

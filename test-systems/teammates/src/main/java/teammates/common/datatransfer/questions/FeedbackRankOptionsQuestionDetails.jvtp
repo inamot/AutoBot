@@ -1,0 +1,216 @@
+ 
+   add two empty options default feedback responses  generate mapping option list ranks received option key map returned option name values map list ranks received key  
+        param responses list responses 
+        
+   remove last commateammates common datatransfer questions FeedbackRankOptionsQuestionDetails teammates common datatransfer questions feedbackrankoptionsquestiondetails feedbackrankquestiondetails min_num_of_options   2 error_not_enough_options   
+             too little options feedbackquestiontypenames rank_option 
+                 minimum number of options is     
+ 
+    list options feedbackrankoptionsquestiondetails feedbackquestiontype rank_options options arraylist      
+      
+ 
+     override extractquestiondetails map string    requestparameters  
+                                          feedbackquestiontype questiontype extractquestiondetails requestparameters  questiontype   
+        list options arraylist numoptionscreatedstring   
+                httprequesthelper getvaluefromparammap  
+                        requestparameters paramsnames feedback_question_numberofchoicecreated   
+        assumption assertnotnull number of choice rank   numoptionscreatedstring numoptionscreated   integer parseint numoptionscreatedstring i   0  i   numoptionscreated  i rankoption   httprequesthelper getvaluefromparammap  
+                    requestparameters paramsnames feedback_question_rankoption    -    i rankoption rankoption trim   isempty      
+                options add rankoption initialisequestiondetails options initialisequestiondetails list options options   options  
+      
+ 
+     override getquestiontypedisplayname feedbackquestiontypenames rank_option  
+      
+ 
+     override getquestionwithexistingresponsesubmissionformhtml sessionisopen qnidx responseidx courseid totalnumrecipients  
+                        feedbackresponsedetails existingresponsedetails    
+ 
+        feedbackrankoptionsresponsedetails existingresponse    feedbackrankoptionsresponsedetails  existingresponsedetails  
+        stringbuilder optionlisthtml stringbuilder optionfragmenttemplate   formtemplates rank_submission_form_optionfragment i   0  i   options size    i optionfragment   
+                    templates populatetemplate optionfragmenttemplate  
+                            slots question_index  integer tostring qnidx   
+                            slots response_index  integer tostring responseidx   
+                            slots option_index  integer tostring i   
+                            slots disabled  sessionisopen ?       disabled   
+                            slots rank_option_visibility      
+                            slots options  
+                                    getsubmissionoptionshtmlforrankingoptions existingresponse getanswerlist   get i    
+                            slots feedback_response_text paramsnames feedback_response_text  
+                            slots rank_option_value  sanitizationhelper sanitizeforhtml options get i     
+            optionlisthtml append optionfragment  append eol templates populatetemplate  
+                formtemplates rank_submission_form  
+                slots rank_submission_form_option_fragments  optionlisthtml tostring    
+                slots question_index  integer tostring qnidx   
+                slots response_index  integer tostring responseidx   
+                slots rank_option_visibility      
+                slots rank_param_to_recipient paramsnames feedback_question_ranktorecipients  
+                slots rank_to_recipients_value slots rank_param_num_option paramsnames feedback_question_ranknumoptions  
+                slots rank_num_option_value  integer tostring options size     
+                slots rank_param_is_duplicates_allowed paramsnames feedback_question_rankisduplicatesallowed  
+                slots rank_are_duplicates_allowed_value tostring isareduplicatesallowed    
+                   
+      
+ 
+     override getquestionwithoutexistingresponsesubmissionformhtml sessionisopen qnidx responseidx courseid totalnumrecipients    
+ 
+        stringbuilder optionlisthtml stringbuilder optionfragmenttemplate   formtemplates rank_submission_form_optionfragment i   0  i   options size    i optionfragment   
+                    templates populatetemplate optionfragmenttemplate  
+                            slots question_index  integer tostring qnidx   
+                            slots response_index  integer tostring responseidx   
+                            slots option_index  integer tostring i   
+                            slots disabled  sessionisopen ?       disabled   
+                            slots rank_option_visibility      
+                            slots options  getsubmissionoptionshtmlforrankingoptions int_uninitialized   
+                            slots feedback_response_text paramsnames feedback_response_text  
+                            slots rank_option_value  sanitizationhelper sanitizeforhtml options get i     
+            optionlisthtml append optionfragment  append eol templates populatetemplate  
+                formtemplates rank_submission_form  
+                slots rank_submission_form_option_fragments  optionlisthtml tostring    
+                slots question_index  integer tostring qnidx   
+                slots response_index  integer tostring responseidx   
+                slots rank_option_visibility      
+                slots rank_to_recipients_value slots rank_param_to_recipient paramsnames feedback_question_ranktorecipients  
+                slots rank_param_num_option paramsnames feedback_question_ranknumoptions  
+                slots rank_num_option_value  integer tostring options size     
+                slots rank_param_is_duplicates_allowed paramsnames feedback_question_rankisduplicatesallowed  
+                slots rank_are_duplicates_allowed_value tostring isareduplicatesallowed getsubmissionoptionshtmlforrankingoptions rankgiven    
+        stringbuilder result stringbuilder 100   
+ 
+        elementtag option   pagedata createoption         rankgiven int_uninitialized   
+        result append   option  
+                       option getattributestostring         
+                       option getcontent   
+                          option i   1  i    options size    i      
+            option   pagedata createoption valueof i valueof i   rankgiven    i   
+            result append   option  
+                          option getattributestostring         
+                          option getcontent   
+                             option result tostring    
+      
+ 
+     override getquestionspecificeditformhtml questionnumber    
+        stringbuilder optionlisthtml stringbuilder optionfragmenttemplate   formtemplates rank_edit_form_optionfragment i   0  i   options size    i optionfragment   
+                    templates populatetemplate optionfragmenttemplate  
+                            slots iterator  integer tostring i   
+                            slots rank_option_value  sanitizationhelper sanitizeforhtml options get i    
+                            slots rank_param_option paramsnames feedback_question_rankoption   
+ 
+            optionlisthtml append optionfragment  append eol templates populatetemplate  
+                formtemplates rank_edit_options_form  
+                slots rank_edit_form_option_fragments  optionlisthtml tostring    
+                slots question_number  integer tostring questionnumber   
+                slots rank_param_number_of_choice_created paramsnames feedback_question_numberofchoicecreated  
+                slots rank_num_options valueof options size     
+                slots rank_option_recipient_display_name   option   
+                slots rank_param_is_duplicates_allowed paramsnames feedback_question_rankisduplicatesallowed  
+                slots rank_are_duplicates_allowed_checked  isareduplicatesallowed   ?  checked         
+ 
+      
+ 
+     override getnewquestionspecificeditformhtml options add options add div id \ rankoptionsform getquestionspecificeditformhtml -1  
+                   div    
+      
+ 
+     override getquestionadditionalinfohtml questionnumber additionalinfoid    
+        stringbuilder optionlisthtml stringbuilder 100 optionfragmenttemplate   formtemplates msq_additional_info_fragment additionalinfo       
+ 
+        optionlisthtml append   ul style \ list-style-type  disc margin-left  20px option   options optionfragment   
+                    templates populatetemplate optionfragmenttemplate  
+                            slots msq_choice_value  option   
+ 
+            optionlisthtml append optionfragment   
+          
+ 
+        optionlisthtml append    ul     
+        additionalinfo   templates populatetemplate  
+            formtemplates msq_additional_info  
+            slots question_type_name getquestiontypedisplayname    
+            slots msq_additional_info_fragments  optionlisthtml tostring templates populatetemplate  
+                formtemplates feedback_question_additional_info  
+                slots more    more    
+                slots less    less    
+                slots question_number  integer tostring questionnumber   
+                slots additional_info_id  additionalinfoid  
+                slots question_additional_info  additionalinfo   
+      
+ 
+     override getquestionresultstatisticshtml  
+                        list feedbackresponseattributes  responses  
+                        feedbackquestionattributes question studentemail  
+                        feedbacksessionresultsbundle bundle view student  equals view     responses isempty stringbuilder fragments stringbuilder 100   
+ 
+        map list integer   optionranks   generateoptionranksmapping responses   
+ 
+        decimalformat df decimalformat entry list integer   entry   optionranks entryset      
+ 
+            list integer  ranks   entry getvalue average   computeaverage ranks ranksreceived   getlistofranksreceivedasstring ranks option   entry getkey    
+ 
+            fragments append templates populatetemplate formtemplates rank_result_stats_optionfragment  
+                    slots rank_option_value  sanitizationhelper sanitizeforhtml option   
+                    slots rank_recieved  ranksreceived  
+                    slots rank_average  df format average templates populatetemplate formtemplates rank_result_option_stats  
+                slots option_recipient_display_name   option   
+                slots fragments  fragments tostring     
+      
+ 
+     override getquestionresultstatisticscsv  
+                        list feedbackresponseattributes  responses  
+                        feedbackquestionattributes question  
+                        feedbacksessionresultsbundle bundle responses isempty stringbuilder fragments stringbuilder    
+        map list integer   optionranks   generateoptionranksmapping responses   
+ 
+        decimalformat df decimalformat entry list integer   entry   optionranks entryset option   sanitizationhelper sanitizeforcsv entry getkey     
+ 
+            list integer  ranksassigned   entry getvalue average   computeaverage ranksassigned fragment   option         df format average        
+                      stringhelper join      ranksassigned eol  
+            fragments append fragment option  average rank  ranks received eol   fragments tostring eol map list integer   generateoptionranksmapping  
+                                            list feedbackresponseattributes  responses    
+        map list integer   optionranks hashmap feedbackresponseattributes response   responses    
+            feedbackrankoptionsresponsedetails frd    feedbackrankoptionsresponsedetails  response getresponsedetails    
+ 
+            list integer  answers   frd getanswerlist    
+            map integer  mapofoptiontorank hashmap      
+ 
+            assumption assertequals answers size    options size i   0  i   options size    i rankreceived   answers get i   
+                mapofoptiontorank put options get i   rankreceived   
+              
+ 
+            map integer  normalisedrankforoption   
+                    obtainmappingtonormalisedranksforranking mapofoptiontorank  options i   0  i   options size    i optionreceivingranks   options get i rankreceived   normalisedrankforoption get optionreceivingranks rankreceived points_not_submitted    
+                    updateoptionranksmapping optionranks  optionreceivingranks  rankreceived optionranks  
+      
+ 
+     override ischangesrequiresresponsedeletion feedbackquestiondetails newdetails    
+        feedbackrankoptionsquestiondetails newrankquestiondetails    feedbackrankoptionsquestiondetails  newdetails options size      newrankquestiondetails options size options containsall newrankquestiondetails options  
+                newrankquestiondetails options containsall options   
+      
+ 
+     override getcsvheader     
+        stringbuilder result stringbuilder i   0  i options size    i      
+            result append format  rank %d    i   1    
+          
+        result deletecharat result length   - 1 result tostring    
+      
+ 
+     override getquestiontypechoiceoption li data-questiontype   \     feedbackquestiontype rank_options name      \    
+                     a href \ javascript feedbackquestiontypenames rank_option      a   
+                  li    
+      
+ 
+     override list validatequestiondetails     
+        list errors arraylist options size     min_num_of_options    
+            errors add error_not_enough_options   min_num_of_options errors  
+      
+ 
+     override list validateresponseattributes  
+            list feedbackresponseattributes  responses numrecipients responses isempty arraylist isareduplicatesallowed arraylist      
+          
+        list errors arraylist feedbackresponseattributes response   responses    
+            feedbackrankoptionsresponsedetails frd    feedbackrankoptionsresponsedetails  response getresponsedetails    
+            set integer  responserank hashset answer   frd getfilteredsortedanswerlist responserank contains answer     
+                    errors add  duplicate rank     answer   
+                  
+                responserank add answer errors  
+      
+ 
+     override comparator instructorfeedbackresultsresponserow  getresponserowssortorder override validategiverrecipientvisibility feedbackquestionattributes feedbackquestionattributes teammates common datatransfer questions FeedbackRankOptionsQuestionDetails

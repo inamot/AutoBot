@@ -1,0 +1,210 @@
+ 
+   $id$ 
+   copyright  c  1996-2006 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications  
+   todo  reuse offender list  
+    
+   class reads todo list todo xml file  
+   
+    author	michael stockman 
+    
+    
+       logger headline todoitem currently being read priority todoitem currently being read moreinfourl todoitem currently being read description todoitem currently being read critic string resolvedcritic currently being read offenders list resolvedcritic currently being 
+       read  
+        
+    
+       creates new todoparser  
+        
+   empty constructor 
+    
+       reads xml todo list inputstream enters 
+       any todo items current designer  
+       
+        param stream containing todolist xml data  
+        throws saxexception any error 
+        
+    
+       called xml implementation signal start xml entity  
+       
+        param	e entity being started  
+        
+  cat debug  note  todoparser handlestarttag     e getname     
+   nop 
+    
+       called xml implementation signal end xml 
+       entity  
+       
+        param	e xml entity ends  
+        throws saxexception any error 
+        
+   nop 
+    
+       internal method  
+       
+        param e element nothing    
+    
+       internal method  
+       
+        param e element nothing    
+    
+       internal method  
+       
+        param e element nothing    
+    
+       internal method  
+       
+        param e element 
+        
+    
+       internal method  
+       
+        param e element expected safe  don't add try block here    
+  cat debug  added todoitem      _headline   
+    
+       internal method  
+       
+        param e element 
+        
+    
+       internal method  
+       
+        param e element 
+        
+    
+       internal method  
+       
+        param e element 
+        
+    
+       internal method  
+       
+        param e element 
+        
+    
+       internal method  
+       
+        param e element 
+        
+    
+       internal method  
+       
+        param e element 
+        
+    
+       internal method  
+       
+        param e element 
+        
+    
+       internal method  
+       
+        param e element 
+        
+    
+       utility method decode string filtering out any noise xml framework might seen fit add thus regaining original unmodified string  
+       
+        param	str string decode  
+        return copy original string  
+        
+   todo  handle parse error 
+    
+       utility method encode string way allows saved properly xml file regained filtering out any noice xml framework might seen fit add  
+       
+       todo doing ourselves?  surely encoding information xml serialization well known task - tfm never understood being done think remove 
+       any usage - bob 
+        
+        param	str string encode  
+        return encoded string  
+        
+  cat debug  encode \n    str    \n -      sb tostring    org argouml persistence TodoParser org argouml persistence todoparser saxparserbase todoparser readtodolist  
+            reader is saxexception   
+ 
+        log info                                             
+        log info     reading to list    
+        parse is handlestartelement xmlelement e tokens totoken e getname todotokentable token_headline todotokentable token_description todotokentable token_priority todotokentable token_moreinfourl todotokentable token_poster todotokentable token_offender todotokentable token_to_do  
+		handletodo e todotokentable token_to_do_list  
+		handletodolist e todotokentable token_to_do_item  
+		handletodoitemstart e todotokentable token_resolvedcritics  
+		handleresolvedcritics e todotokentable token_issue  
+		handleissuestart e log warn  warning  unknown tag     e getname exception ex    
+	    log error  exception in startelement   ex handleendelement xmlelement e saxexception tokens totoken e getname todotokentable token_to_do todotokentable token_resolvedcritics todotokentable token_to_do_list todotokentable token_to_do_item  
+        	handletodoitemend e todotokentable token_headline  
+        	handleheadline e todotokentable token_description  
+        	handledescription e todotokentable token_priority  
+        	handlepriority e todotokentable token_moreinfourl  
+        	handlemoreinfourl e todotokentable token_issue  
+        	handleissueend e todotokentable token_poster  
+        	handleposter e todotokentable token_offender  
+        	handleoffender e log warn  warning  unknown end tag   
+        		   e getname exception ex saxexception ex handletodo xmlelement e handletodolist xmlelement e handleresolvedcritics xmlelement e handletodoitemstart xmlelement e    
+        headline       
+        priority   todoitem high_priority  
+        moreinfourl       
+        description handletodoitemend xmlelement e    
+        todoitem item  
+        designer dsgr  
+ 
+          
+ 
+        dsgr   designer thedesigner    
+        item todoitem dsgr  headline  priority  description  moreinfourl listset     
+        dsgr gettodolist   addelement item handleheadline xmlelement e    
+	headline   decode e gettext    trim handlepriority xmlelement e prio   decode e gettext    trim np np   integer parseint prio numberformatexception nfe    
+            np   todoitem high_priority todotokentable string_prio_high equalsignorecase prio     
+                np   todoitem high_priority todotokentable string_prio_med equalsignorecase prio     
+                np   todoitem med_priority todotokentable string_prio_low equalsignorecase prio     
+                np   todoitem low_priority  
+              
+          
+ 
+        priority   np handlemoreinfourl xmlelement e    
+	moreinfourl   decode e gettext    trim handledescription xmlelement e    
+	description   decode e gettext    trim handleissuestart xmlelement e    
+	critic offenders handleissueend xmlelement e    
+        designer dsgr  
+        resolvedcritic item critic item resolvedcritic critic  offenders   
+        dsgr   designer thedesigner    
+        dsgr gettodolist   addresolvedcritic item handleposter xmlelement e    
+        critic   decode e gettext    trim handleoffender xmlelement e offenders offenders arraylist    
+          
+        offenders add decode e gettext    trim decode str str null  
+          
+ 
+        stringbuffer sb i1  i2 c  
+ 
+        sb stringbuffer i1   0  i2   0  i2   str length    i2      
+            c   str charat i2 c i2   i1    
+                    sb append str substring i1  i2 i1     i2  i2   str length    i2 str charat i2 i2    str length      
+                    i1   i2 i2   i1 ent   str substring i1  i2 proc  equals ent     
+                        sb append sb append integer parseint ent numberformatexception nfe    
+                              
+                          
+                      
+                  
+                i1   i2   1 i2   i1    
+            sb append str substring i1  i2 sb tostring encode str    
+	stringbuffer sb i1  i2 c str null  
+          
+	sb stringbuffer i1   0  i2   0  i2   str length    i2      
+	    c   str charat i2 c i2   i1    
+                    sb append str substring i1  i2    
+                  
+		sb append  %proc     
+		i1   i2   1 c   0x28 
+                     c    0x3c    c    0x40    c    0x3d    c    0x3f  
+                     c    0x5e    c    0x60    c    0x5f  
+                     c    0x7b i2   i1    
+                    sb append str substring i1  i2    
+                  
+		sb append  %    integer tostring c          
+		i1   i2   1 i2   i1    
+            sb append str substring i1  i2 sb tostring    
+      
+  
+org argouml persistence TodoParser

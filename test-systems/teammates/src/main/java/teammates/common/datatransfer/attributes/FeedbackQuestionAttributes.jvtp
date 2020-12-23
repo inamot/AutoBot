@@ -1,0 +1,175 @@
+ 
+    
+       contains json formatted string holds information question details  
+       
+        p don't use directly unless storing loading data store  br question text use   code getquestiondetails   questiontext  
+        
+   attributes set construction 
+    note  only use match search id known existing question entity     
+   special case additional text added error text 
+   todo  move following methods pagedata? 
+   answer  ok move respective pagedata class  unit test thoroughly  
+   exceptional case  self feedback 
+   front fragment  e g students course receiving    etc  
+   recipient fragment  e g  student  instructor  etc  
+   visibility fragment  e g see name not    
+    
+       checks updating question code newattributes require responses deleted consistency not check any responses exist  
+        
+    
+           although question numbers ought unique feedback session  
+           eventual consistency result duplicate questions numbers  
+           therefore ensure question order always consistent user  
+           compare feedbackquestionid guaranteed unique questionnumbers same t changed anyway  copy values defensively avoid invalid parameters  
+    
+       converts given feedback questiondetails object json storing  
+        
+    
+       retrieves feedback questiondetails object question  
+       
+        return feedback questiondetails object representing question's details old text questions questiontext simply contains question  not json method gets appropriate class type feedback questiondetails object question  
+       
+        return feedback questiondetails class type appropriate question  
+       teammates common datatransfer attributes FeedbackQuestionAttributes teammates common datatransfer attributes feedbackquestionattributes entityattributes feedbackquestion comparable feedbackquestionattributes feedbacksessionname courseid creatoremail text questionmetadata text questiondescription questionnumber feedbackquestiontype questiontype feedbackparticipanttype givertype feedbackparticipanttype recipienttype numberofentitiestogivefeedbackto list feedbackparticipanttype  showresponsesto list feedbackparticipanttype  showgivernameto list feedbackparticipanttype  showrecipientnameto date createdat date updatedat feedbackquestionattributes feedbackquestionattributes feedbackquestion fq feedbackquestionid   fq getid feedbacksessionname   fq getfeedbacksessionname courseid   fq getcourseid creatoremail   fq getcreatoremail questionmetadata   fq getquestionmetadata questiondescription   sanitizationhelper sanitizeforrichtext fq getquestiondescription questionnumber   fq getquestionnumber questiontype   fq getquestiontype givertype   fq getgivertype recipienttype   fq getrecipienttype numberofentitiestogivefeedbackto   fq getnumberofentitiestogivefeedbackto showresponsesto arraylist   fq getshowresponsesto showgivernameto arraylist   fq getshowgivernameto showrecipientnameto arraylist   fq getshowrecipientnameto createdat   fq getcreatedat updatedat   fq getupdatedat    
+ 
+        removeirrelevantvisibilityoptions feedbackquestionattributes feedbackquestionattributes other feedbackquestionid   other getid feedbacksessionname   other getfeedbacksessionname courseid   other getcourseid creatoremail   other getcreatoremail questionmetadata   other getquestionmetadata questionnumber   other getquestionnumber questiontype   other getquestiontype givertype   other getgivertype recipienttype   other getrecipienttype numberofentitiestogivefeedbackto   other getnumberofentitiestogivefeedbackto showresponsesto arraylist   other getshowresponsesto showgivernameto arraylist   other getshowgivernameto showrecipientnameto arraylist   other getshowrecipientnameto createdat   other getcreatedat updatedat   other getupdatedat    
+ 
+        removeirrelevantvisibilityoptions feedbackquestionattributes getcopy feedbackquestionattributes date getcreatedat createdat time_represents_default_timestamp   createdat date getupdatedat updatedat time_represents_default_timestamp   updatedat getid feedbackquestionid setid id feedbackquestionid   id  
+      
+ 
+     override feedbackquestion toentity feedbackquestion feedbacksessionname  courseid  creatoremail  
+                                    questionmetadata  questiondescription  questionnumber  questiontype  givertype  
+                                    recipienttype  numberofentitiestogivefeedbackto  
+                                    showresponsesto  showgivernameto  showrecipientnameto   
+      
+ 
+     override tostring feedbackquestionattributes  feedbacksessionname   
+                 feedbacksessionname      courseid     courseid 
+                    creatoremail     creatoremail      questiontext   
+                 questionmetadata      questiondescription     questiondescription 
+                    questionnumber     questionnumber 
+                    questiontype     questiontype      givertype     givertype 
+                    recipienttype     recipienttype 
+                    numberofentitiestogivefeedbackto   
+                 numberofentitiestogivefeedbackto      showresponsesto   
+                 showresponsesto      showgivernameto     showgivernameto 
+                    showrecipientnameto     showrecipientnameto        
+      
+ 
+     override getidentificationstring questionnumber questionmetadata tostring feedbacksessionname courseid  
+      
+ 
+     override getentitytypeasstring feedback question   
+      
+ 
+     override getbackupidentifier systemparams course_backup_log_msg   courseid  
+      
+ 
+     override getjsonstring jsonutils tojson feedbackquestionattributes override list getinvalidityinfo     
+        fieldvalidator validator fieldvalidator    
+        list errors arraylist      
+ 
+        addnonemptyerror validator getinvalidityinfoforfeedbacksessionname feedbacksessionname   errors   
+ 
+        addnonemptyerror validator getinvalidityinfoforcourseid courseid   errors error   validator getinvalidityinfoforemail creatoremail error isempty      
+            error stringbuffer   
+                     append  invalid creator's email     
+                     append error  
+                     tostring    
+          
+        addnonemptyerror error  errors   
+ 
+        errors addall validator getvalidityinfoforfeedbackparticipanttype givertype  recipienttype    
+ 
+        errors addall validator getvalidityinfoforfeedbackresponsevisibility showresponsesto  
+                                                                             showgivernameto  
+                                                                             showrecipientnameto errors list getvisibilitymessage     
+        list message arraylist feedbackparticipanttype participant   showresponsesto    
+            stringbuilder line stringbuilder 100 participant    feedbackparticipanttype receiver 
+                       recipienttype    feedbackparticipanttype self    
+                message add  you can see your own feedback in the results page later on line append participant tovisibilitystring    append participant    feedbackparticipanttype receiver    
+                line append recipienttype tosingularformstring numberofentitiestogivefeedbackto   1    
+                    line append 's'   
+                  
+ 
+                line append ' '   
+              
+ 
+            line append  can see your response showrecipientnameto contains participant participant    feedbackparticipanttype receiver 
+                           recipienttype    feedbackparticipanttype none    
+                    line append    the name of the recipient showgivernameto contains participant     
+                    line append    and your name line append    but not your name showgivernameto contains participant     
+                    line append    and your name recipienttype    feedbackparticipanttype none showgivernameto contains participant     
+                        line append    but not your name line append    but not the name of the recipient showgivernameto contains participant     
+                        line append    or your name    
+                      
+                  
+ 
+              
+ 
+            line append ' '   
+            message add line tostring message isempty      
+            message add  no-one can see your responses message  
+      
+ 
+     override isvalid getinvalidityinfo   isempty isgiverastudent givertype    feedbackparticipanttype self 
+                  givertype    feedbackparticipanttype students isrecipientnamehidden recipienttype    feedbackparticipanttype none 
+                  recipienttype    feedbackparticipanttype self isrecipientastudent recipienttype    feedbackparticipanttype self 
+                  recipienttype    feedbackparticipanttype students 
+                  recipienttype    feedbackparticipanttype own_team_members 
+                  recipienttype    feedbackparticipanttype own_team_members_including_self isresponsevisibleto feedbackparticipanttype usertype showresponsesto contains usertype areresponsedeletionsrequiredforchanges feedbackquestionattributes newattributes newattributes givertype equals givertype  
+                    newattributes recipienttype equals recipienttype getquestiondetails   ischangesrequiresresponsedeletion newattributes getquestiondetails     
+      
+ 
+     override compareto feedbackquestionattributes o o 1 questionnumber    o questionnumber integer compare questionnumber  o questionnumber feedbackquestionid compareto o feedbackquestionid   
+      
+ 
+     override hashcode prime   31 result   1  
+ 
+        result   prime   result    courseid 0   courseid hashcode     
+ 
+        result   prime   result    creatoremail 0   creatoremail hashcode     
+ 
+        result   prime   result    feedbacksessionname 0   feedbacksessionname hashcode     
+ 
+        result   prime   result    givertype 0   givertype hashcode     
+ 
+        result   prime   result   numberofentitiestogivefeedbackto  
+ 
+        result   prime   result   questionnumber  
+ 
+        result   prime   result    questionmetadata 0   questionmetadata hashcode     
+ 
+        result   prime   result    questiondescription 0   questiondescription hashcode     
+ 
+        result   prime   result    questiontype 0   questiontype hashcode     
+ 
+        result   prime   result    recipienttype 0   recipienttype hashcode     
+ 
+        result   prime   result    showgivernameto 0   showgivernameto hashcode     
+ 
+        result   prime   result    showrecipientnameto 0   showrecipientnameto hashcode     
+ 
+        result   prime   result    showresponsesto 0   showresponsesto hashcode result  
+      
+ 
+     override equals object obj obj obj getclass      obj getclass feedbackquestionattributes other    feedbackquestionattributes  obj courseid other courseid courseid equals other courseid creatoremail other creatoremail creatoremail equals other creatoremail feedbacksessionname other feedbacksessionname feedbacksessionname equals other feedbacksessionname givertype    other givertype numberofentitiestogivefeedbackto    other numberofentitiestogivefeedbackto questionnumber    other questionnumber questionmetadata other questionmetadata questionmetadata equals other questionmetadata questiondescription other questiondescription questiondescription equals other questiondescription questiontype    other questiontype recipienttype    other recipienttype showgivernameto other showgivernameto showgivernameto equals other showgivernameto showrecipientnameto other showrecipientnameto showrecipientnameto equals other showrecipientnameto showresponsesto other showresponsesto showresponsesto equals other showresponsesto updatevalues feedbackquestionattributes newattributes    
+          
+        newattributes feedbacksessionname feedbacksessionname  
+        newattributes courseid courseid  
+        newattributes creatoremail creatoremail newattributes questionmetadata newattributes questionmetadata questionmetadata newattributes questiondescription newattributes questiondescription questiondescription newattributes questiontype newattributes questiontype questiontype newattributes givertype newattributes givertype givertype newattributes recipienttype newattributes recipienttype recipienttype newattributes showresponsesto newattributes showresponsesto showresponsesto newattributes showgivernameto newattributes showgivernameto showgivernameto newattributes showrecipientnameto newattributes showrecipientnameto showrecipientnameto removeirrelevantvisibilityoptions     
+        list feedbackparticipanttype  optionstoremove arraylist recipienttype none  
+            optionstoremove add feedbackparticipanttype receiver   
+            optionstoremove add feedbackparticipanttype receiver_team_members teams instructors own_team own_team_members  
+            optionstoremove add feedbackparticipanttype receiver_team_members givertype teams instructors  
+            optionstoremove add feedbackparticipanttype own_team_members removevisibilities optionstoremove removevisibilities list feedbackparticipanttype  optionstoremove    
+        showresponsesto removeall optionstoremove   
+        showgivernameto removeall optionstoremove   
+        showrecipientnameto removeall optionstoremove   
+      
+ 
+     override sanitizeforsaving questiondescription   sanitizationhelper sanitizeforrichtext questiondescription isvalidjsonstring jsonstring jsonobject jsonstring jsonexception e setquestiondetails feedbackquestiondetails questiondetails    
+        questionmetadata text jsonutils tojson questiondetails  getfeedbackquestiondetailsclass feedbackquestiondetails getquestiondetails questionmetadatavalue   questionmetadata getvalue questiontype    feedbackquestiontype text     isvalidjsonstring questionmetadatavalue feedbacktextquestiondetails questionmetadatavalue jsonutils fromjson questionmetadatavalue  getfeedbackquestiondetailsclass feedbackquestiondetails  getfeedbackquestiondetailsclass questiontype getquestiondetailsclass getfeedbackquestionid feedbackquestionid getfeedbacksessionname feedbacksessionname getcourseid courseid getcreatoremail creatoremail text getquestionmetadata questionmetadata text getquestiondescription questiondescription setquestiondescription text questiondescription questiondescription   questiondescription getquestionnumber questionnumber feedbackquestiontype getquestiontype questiontype feedbackparticipanttype getgivertype givertype feedbackparticipanttype getrecipienttype recipienttype getnumberofentitiestogivefeedbackto numberofentitiestogivefeedbackto list feedbackparticipanttype  getshowresponsesto showresponsesto list feedbackparticipanttype  getshowgivernameto showgivernameto list feedbackparticipanttype  getshowrecipientnameto showrecipientnameto getquestionadditionalinfohtml getquestiondetails   getquestionadditionalinfohtml questionnumber       
+      
+ 
+ teammates common datatransfer attributes FeedbackQuestionAttributes

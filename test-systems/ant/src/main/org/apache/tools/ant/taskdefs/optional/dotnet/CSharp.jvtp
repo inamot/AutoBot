@@ -1,0 +1,182 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+   
+    build notes reference cd listen editing file nap  underworld  - everything  everything 
+    
+                                                                        
+   place optional ant tasks package dotnet group 
+                                                                        
+                                                                        
+   imports 
+                                                                        
+                                                                        
+    
+    compiles c# source executables modules  
+   
+   csc exe windows mcs platforms must execute 
+   path  unless another executable full path executable specified tt executable  tt  parameter 
+    p parameters optional   lt csc  gt suffice produce debug 
+   build cs files naming tt destfile  tt stops csc compiler choosing output name random allows dependency checker determine file out date  
+    p task directory based task attributes b includes    cs  
+      b b excludes  broken cs   b used control files pulled default cs files project folder down included command happens output file not specified taken first file list may somewhat hard control  
+    specifying output file tt destfile  tt  seems prudent   p  
+   
+    p complex source trees  nested  tt src  tt  elemements supplied element present implicit fileset ignored makes sense think p historical reasons pattern 
+    code     code  code    cs  code preset includes list not override explicit includes attribute   use 
+   nested  code  lt src gt   code  elements instead basedir 
+   attribute need control   p  
+   
+    p  
+   references external files made through references attribute ant1 6   via nested  lt reference gt  filesets latter timestamps references used dependency 
+   checking algorithm  
+    p  
+   
+   example 
+   
+    pre  lt csc 
+         optimize  quot true quot  
+         debug  quot false quot  
+         docfile  quot documentation xml quot  
+         warnlevel  quot 4 quot  
+         unsafe  quot false quot  
+         targettype  quot exe quot  
+         incremental  quot false quot  
+         mainclass    quot mainapp quot  
+         destfile  quot netapp exe quot  
+          gt  
+              lt src dir  src  includes    cs    gt  
+          lt reference file  $ testcsc dll     gt  
+          lt define name  release    gt  
+          lt define name  debug debug property   gt  
+          lt define name  def3  unless  def3 property   gt  
+       lt  csc gt  
+     pre  
+   
+   
+    ant task    name  csc  category  dotnet ant 1 3 
+    
+   checkstyle visibilitymodifier bc 
+    
+        defines list  release win32 no_sanity_checks  something_else' 
+        
+    
+        output xml documentation flag 
+        
+    
+        file alignment  0 means compiler decide 
+        
+    
+        use full paths things 
+        
+    
+        incremental build flag 
+        
+    
+        enable unsafe code flag  clearly set false default flag tells compiler not read compiler 
+       settings files 'csc rsp bin directory local directory 
+        
+   checkstyle visibilitymodifier constructor inits everything set up search pattern 
+        
+    
+       full cleanup 
+        
+    
+        file generated xml documentation 
+       
+       param  f  output file argument null argument needed 
+       
+       return docfile parameter csc 
+        
+    
+       set file alignment  
+       valid values 0 512  1024  2048  4096  8192 16384  0 means 'leave compiler' 
+        param filealign value use argument null argument needed 
+       
+       return outputfile parameter csc true  print full path files errors  
+       
+       param  enabled new fullpaths value 
+        
+    
+        gets fullpathsparameter attribute csharp object 
+       
+       return fullpathsparameter value null unset 
+        
+    
+        set incremental compilation flag param  incremental flag 
+        
+    
+        query incrementalflag 
+       
+       return    true incremental compilation turned incremental build argument 
+       
+       return incremental parameter csc output file identical destfile attribute  
+       
+       param  params new outputfile value true  enables unsafe keyword  
+       
+       param  unsafe new unsafe value 
+        
+    
+        query unsafe attribute 
+       
+       return unsafe value argument null argument needed 
+       
+       return unsafe parameter csc flag tells compiler not read compiler 
+       settings files 'csc rsp bin directory local directory 
+       
+       param  enabled new noconfig value 
+        
+    
+        gets noconfigparameter attribute csharp object 
+       
+       return noconfigparameter value 
+        
+    
+        semicolon separated list defined constants  
+       
+       param  params new definitions value 
+        
+    
+       override superclasses version method call check definitions attribute contents appended list  
+       return definitions parameter csc 
+        
+    
+       add commands unique c#  
+        param command ongoing command 
+        
+   end execute 
+    
+       returns delimiter c# uses separate references e semi colon  
+        return delimiter method indicates filename extension c# files  
+        return file extension c e    cs   without dot   
+        
+    
+       build c# style parameter  
+        param command command  
+        param resource resource  
+       org apache tools ant taskdefs optional dotnet CSharp org apache tools ant taskdefs optional dotnet csharp dotnetcompile definitions unsafe csharp     
+        clear clear clear    
+        docfile filealign   0  
+        fullpaths incremental unsafe noconfig definitions setexecutable iswindows ?  csc     mcs setdocfile file f    
+        docfile   f getdocfileparameter docfile doc     docfile tostring setfilealign filealign filealign   filealign getfilealignparameter filealign    0      mcs  equals getexecutable filealign     filealign setfullpaths enabled    
+        fullpaths   enabled getfullpathsparameter fullpaths ?   fullpaths setincremental incremental incremental   incremental getincremental incremental getincrementalparameter incremental     incremental setoutputfile file params    
+        setdestfile params setunsafe unsafe unsafe   unsafe getunsafe unsafe getunsafeparameter unsafe ?   unsafe setnoconfig enabled    
+        noconfig   enabled getnoconfigparameter noconfig ?   noconfig setdefinitions params    
+        definitions   params getdefinitionsparameter predecessors getdefinitionsparameter notempty definitions predecessors predecessors     define predecessors   definitions predecessors addcompilerspecificoptions netcommand command    
+        command addargument getincludedefaultreferencesparameter     
+        command addargument getwarnlevelparameter     
+        command addargument getdocfileparameter     
+        command addargument getfullpathsparameter     
+        command addargument getfilealignparameter     
+        command addargument getincrementalparameter     
+        command addargument getnoconfigparameter     
+        command addargument getunsafeparameter getreferencedelimiter getfileextension cs createresourceparameter  
+        netcommand command  dotnetresource resource    
+        resource getparameters getproject    command org apache tools ant taskdefs optional dotnet CSharp

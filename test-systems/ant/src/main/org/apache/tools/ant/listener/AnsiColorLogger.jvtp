@@ -1,0 +1,112 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   uses ansi color code sequences colorize messages 
+   sent console used logfile option output file contain necessary escape codes display text colorized mode displayed console using applications cat etc designed work terminals support ansi 
+   color codes works xterm  eterm  mindterm  etc works win9x ansi sys loaded   
+   
+   note doesn't work winnt's command com even ansi sys loaded default colors used differentiating message levels changed editing org apache tools ant listener defaults properties 
+   file file contains 5 key value pairs  
+   ansicolorlogger error_color 2 31 
+   ansicolorlogger warning_color 2 35 
+   ansicolorlogger info_color 2 36 
+   ansicolorlogger verbose_color 2 32 
+   ansicolorlogger debug_color 2 34 
+   
+   another option pass system variable named 
+   ant logger defaults value set path file contains user defined ansi color 
+   codes b java  b  command using -d option change colors use following chart  
+   
+         b ansi color logger configuration  b  
+   
+   format ansicolorlogger    
+    attribute foreground background 
+   
+    attribute one following  
+    0 -  reset attributes  return normal mode  
+    1 -  bright  usually turns bold  
+    2 -  dim 
+    3 -  underline 
+    5 -  link 
+    7 -  reverse 
+    8 -  hidden 
+   
+    foreground one following  
+    30 -  black 
+    31 -  red 
+    32 -  green 
+    33 -  yellow 
+    34 -  blue 
+    35 -  magenta 
+    36 -  cyan 
+    37 -  white 
+   
+    background one following  
+    40 -  black 
+    41 -  red 
+    42 -  green 
+    43 -  yellow 
+    44 -  blue 
+    45 -  magenta 
+    46 -  cyan 
+    47 -  white 
+   
+    
+   private static final int attr_normal   0  
+   private static final int attr_bright   1  
+   private static final int attr_underline   3  
+   private static final int attr_blink   5  
+   private static final int attr_reverse   7  
+   private static final int attr_hidden   8  
+   private static final int fg_black   30  
+   private static final int fg_yellow   33  
+   private static final int fg_white   37  
+   private static final int bg_black   40  
+   private static final int bg_red   41  
+   private static final int bg_green   42  
+   private static final int bg_yellow   44  
+   private static final int bg_blue   44  
+   private static final int bg_magenta   45  
+   private static final int bg_cyan   46  
+   private static final int bg_white   47  
+    
+       set colors use property file specified special ant property ant logger defaults 
+        
+  ignore use defaults  
+  ignore not want stop build  
+    
+        see defaultlogger#printmessage 
+        
+      inheritdoc      
+   fall throughorg apache tools ant listener AnsiColorLogger org apache tools ant listener ansicolorlogger defaultlogger errcolor 
+          prefix   attr_dim   separator   fg_red   suffix warncolor 
+          prefix   attr_dim   separator   fg_magenta   suffix infocolor 
+          prefix   attr_dim   separator   fg_cyan   suffix verbosecolor 
+          prefix   attr_dim   separator   fg_green   suffix debugcolor 
+          prefix   attr_dim   separator   fg_blue   suffix setcolors usercolorfile   system getproperty  ant logger defaults systemcolorfile   
+              org apache tools ant listener defaults properties   
+ 
+        inputstream in properties prop properties usercolorfile in fileinputstream usercolorfile in   getclass   getresourceasstream systemcolorfile in prop load in errc   prop getproperty  ansicolorlogger error_color warn   prop getproperty  ansicolorlogger warning_color info   prop getproperty  ansicolorlogger info_color verbose   prop getproperty  ansicolorlogger verbose_color debug   prop getproperty  ansicolorlogger debug_color errc errcolor   prefix   errc   suffix warn warncolor   prefix   warn   suffix info infocolor   prefix   info   suffix verbose verbosecolor   prefix   verbose   suffix debug debugcolor   prefix   debug   suffix ioexception ioe in in close ioexception e printmessage message printstream stream priority message stream colorsset    
+                setcolors    
+                colorsset stringbuffer msg stringbuffer message priority project msg_err  
+                    msg insert 0  errcolor   
+                    msg append end_color project msg_warn  
+                    msg insert 0  warncolor   
+                    msg append end_color project msg_info  
+                    msg insert 0  infocolor   
+                    msg append end_color project msg_verbose  
+                    msg insert 0  verbosecolor   
+                    msg append end_color project msg_debug msg insert 0  debugcolor   
+                    msg append end_color strmessage   msg tostring    
+            stream println strmessage   
+          
+      
+ org apache tools ant listener AnsiColorLogger

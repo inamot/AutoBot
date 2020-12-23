@@ -1,0 +1,313 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications  
+    
+   class display graphics uml classifier role collaboration 
+   diagram  p  
+   
+   stereotype one name displayed centre box  
+   
+    author 10 apr 2002  jeremy bennett  mail jeremybennett com   modifications ensure stereotypes handled correctly  
+   
+    author agauthie minimum padding top bottom fig used complete classifier role  
+       identical size link fignodemodelelement#bigport   p  
+        
+    
+       constructor new classifier role  p invisible   link figrect point contact connections    link fignodemodelelement#bigport matching rectangle providing graphic rendering    link 
+       #cover    stereotype name rendered centrally rectangle  p  
+        
+   todo linus tolke  don't understand warning cover' link javadoc  jdk1 4 2 think everything correct hope eventually solve big port cover  color big port irrelevant stereotype  width same cover  height whatever minimum permitted text centred  
+  getstereotypefig   setfilled false name  width same cover  height whatever minimum permitted text name centred default same place stereotype stage stereotype not displayed  being classifier role underlined 
+   add figs fignode back front order 
+   set bounds those given  
+    
+       variant constructor associates classifier role particular model element  p  
+       
+       classifier role constructed link #figclassifierrole     p  
+       
+        param gm graph model use  ignored implementation  
+        param lay layer 
+        param node model element object associate fig  
+        
+   
+        see org argouml uml diagram ui fignodemodelelement#initnotationproviders java lang object  
+        
+    
+       version clone ensure sub-figs copied  p  
+       
+       uses generic superclass clone gives list figs initialize instance variables list  p  
+       
+        return new copy the current fig  
+        
+    
+       update stereotype text  p stereotype text non-existant must make sure marked not displayed update display accordingly  p  
+       
+       similarly text must make sure marked 
+       displayed  p  
+        
+   
+        see org tigris gef presentation fig#setlinecolor java awt color  
+        
+   
+        see org tigris gef presentation fig#getlinecolor   
+        
+   
+        see org tigris gef presentation fig#setfillcolor java awt color  
+        
+   
+        see org tigris gef presentation fig#getfillcolor   
+        
+   
+        see org tigris gef presentation fig#setfilled boolean  
+        
+   
+        see org tigris gef presentation fig#getfilled   
+        
+   
+        see org tigris gef presentation fig#setlinewidth int  
+        
+   
+        see org tigris gef presentation fig#getlinewidth   
+        
+    
+       work out minimum size fig p size stereotype   name   padding allow possible case cover big port bigger still  p  
+       
+        return minimum size fig  
+        
+    
+       override setbounds keep shapes looking right  p  
+       
+       set bounds components fig stereotype any name centred fig  p allow requested bounds being small impose minimum size necessary  p  
+       
+        param x  x coordinate upper left corner 
+       
+        param y  y coordinate upper left corner 
+       
+        param w  width bounding box 
+       
+        param h  height bounding box 
+       
+        author 10 apr 2002  jeremy bennett  mail jeremybennett com   patch allow stereotype well unlikely case name give up  
+   remember present tell gef later check big minimum size 
+   work out padding each side  depending whether stereotype displayed set bounds accordingly 
+   set bounds bigport cover 
+   record changes instance variables parent  tell gef trigger edges reconsider themselves  
+    
+       called text edited directly screen  p  
+       
+        param ft text edited  
+        throws propertyvetoexception parser 
+        see org argouml uml diagram ui fignodemodelelement#textedited org tigris gef presentation figtext  
+        
+   
+        see org argouml uml diagram ui fignodemodelelement#texteditstarted org tigris gef presentation figtext  
+        
+    
+       adjust fig light some change model  p  
+       
+        see org argouml uml diagram ui fignodemodelelement#updatenametext   
+        
+   
+        see org argouml uml diagram ui fignodemodelelement#modelchanged java beans propertychangeevent  
+        
+   
+        see org tigris gef presentation fig#makeselection   
+       org argouml uml diagram collaboration ui FigClassifierRole org argouml uml diagram collaboration ui figclassifierrole fignodemodelelement figclassifierrole     
+	  
+	  
+	  
+ 
+          
+ 
+        setbigport figrect 10  10  90  50  color cyan  color cyan    
+        cover figrect 10  10  90  50  color black  color white   
+ 
+          
+          
+ 
+        dimension stereomin   getstereotypefig   getminimumsize    
+ 
+        getstereotypefig   setlinewidth 0   
+        getstereotypefig   setvisible getstereotypefig   setfillcolor color red   
+        getstereotypefig   setbounds 10  10  90  stereomin height   
+ 
+          
+          
+          
+          
+          
+ 
+        dimension namemin   getnamefig   getminimumsize    
+ 
+        getnamefig   setlinewidth 0   
+        getnamefig   setreturnaction figtext end_editing   
+        getnamefig   setfilled getnamefig   setunderline getnamefig   setbounds 10  10  90  namemin height   
+ 
+          
+ 
+        addfig getbigport     
+        addfig cover   
+        addfig getstereotypefig     
+        addfig getnamefig     
+ 
+          
+ 
+        rectangle r   getbounds    
+        setbounds r x  r y  r width  r height figclassifierrole graphmodel gm  layer lay  object node setlayer lay   
+        setowner node   
+      
+ 
+      
+     override initnotationproviders object own initnotationproviders own model getfacade   isaclassifierrole own     
+            notationprovider   
+                notationproviderfactory2 getinstance   getnotationprovider  
+                    notationproviderfactory2 type_classifierrole  own   
+          
+      
+ 
+ 
+      
+     override object clone     
+        figclassifierrole figclone    figclassifierrole clone    
+        iterator it   figclone getfigs   iterator    
+ 
+        figclone setbigport  figrect  it next     
+        figclone cover      figrect  it next    
+        it next    
+        figclone setnamefig  figtext  it next figclone  
+      
+ 
+      
+     override updatestereotypetext     
+        rectangle rect   getbounds stereotypeheight   0 getstereotypefig   isvisible      
+            stereotypeheight   getstereotypefig   getheight heightwithoutstereo   getheight   - stereotypeheight  
+ 
+        getstereotypefig   setowner getowner     
+          figstereotypescompartment  getstereotypefig    populate    
+ 
+        stereotypeheight   0 getstereotypefig   isvisible      
+            stereotypeheight   getstereotypefig   getheight minwidth getminimumsize   width minwidth   rect width    
+            rect width   minwidth  
+          
+ 
+        setbounds  
+                rect x  
+                rect y  
+                rect width  
+                heightwithoutstereo   stereotypeheight   
+        calcbounds    
+      
+ 
+      
+     override setlinecolor color col    
+        cover setlinecolor col   
+      
+ 
+      
+     override color getlinecolor cover getlinecolor    
+      
+ 
+      
+     override setfillcolor color col    
+        cover setfillcolor col   
+      
+ 
+      
+     override color getfillcolor cover getfillcolor    
+      
+ 
+      
+     override setfilled f    
+        cover setfilled f   
+      
+ 
+      
+     override getfilled cover isfilled    
+      
+ 
+     override isfilled cover isfilled    
+      
+ 
+      
+     override setlinewidth w    
+        cover setlinewidth w   
+      
+ 
+      
+     override getlinewidth cover getlinewidth    
+      
+ 
+ 
+      
+     override dimension getminimumsize     
+ 
+        dimension stereomin    getstereotypefig   getminimumsize    
+        dimension namemin      getnamefig   getminimumsize    
+ 
+        dimension newmin dimension namemin width  namemin height getstereotypefig   isvisible      
+            newmin width     math max newmin width  stereomin width   
+            newmin height    stereomin height  
+          
+         
+        newmin height    padding newmin  
+      
+ 
+ 
+      
+     override setstandardbounds x y w h getnamefig rectangle oldbounds   getbounds    
+        dimension minsize     getminimumsize neww    minsize width    w  ? minsize width    w newh    minsize height   h  ? minsize height   h  
+ 
+        dimension stereomin   getstereotypefig   getminimumsize    
+        dimension namemin     getnamefig   getminimumsize getstereotypefig   isvisible extraeach    h - namemin height - stereomin height    2  
+ 
+            getstereotypefig   setbounds x  y   extraeach  w  stereomin height   
+            getnamefig   setbounds x  y   stereomin height   extraeach  w  
+				   namemin height extraeach    h - namemin height    2  
+ 
+            getnamefig   setbounds x  y   extraeach  w  namemin height   
+          
+ 
+          
+ 
+        getbigport   setbounds x  y  neww  newh   
+        cover setbounds x  y  neww  newh   
+ 
+          
+          
+ 
+        _x   x  
+        _y   y  
+        _w   neww  
+        _h   newh  
+ 
+        firepropchange  bounds   oldbounds  getbounds     
+        updateedges    
+      
+ 
+      
+     override textedited figtext ft propertyvetoexception ft    getnamefig      
+            notationprovider parse getowner    ft gettext     
+            ft settext notationprovider tostring getowner override texteditstarted figtext ft ft    getnamefig      
+            showhelp notationprovider getparsinghelp     
+          
+      
+ 
+      
+     override updatenametext notationprovider getnamefig   settext notationprovider tostring getowner override modelchanged propertychangeevent mee modelchanged mee mee addassociationevent 
+                   mee attributechangeevent    
+            renderingchanged    
+            updatelisteners getowner    getowner     
+            notationprovider updatelistener getowner    mee   
+            damage    
+          
+      
+ 
+      
+     override selection makeselection selectionclassifierrole org argouml uml diagram collaboration ui FigClassifierRole

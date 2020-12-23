@@ -1,0 +1,106 @@
+ 
+   branch not tested s not edit delete  assumption fail cause test failure 
+   assumption fails not tested part not tested gatekeeper handles happens extremely difficult replicate situation whereby gets past gatekeeper 
+    
+       validates giver recipient given feedbackquestionattributes valid question type  
+       validates visibility given feedbackquestionattributes valid question type  
+       
+        return error message detailing error empty string valid  
+        
+   assumption fails not tested 
+   todo thoroughly investigate parameters null check possibilities tests only null deleting  might good separate delete action class editing  usually following fields not null null somehow edit browser field not update take old value deleting following fields null  
+   numofrecipients 
+   questiontext 
+   numofrecipientstype 
+   recipienttype 
+   receiverleadercheckbox 
+   givertype null null null nullteammates ui controller InstructorFeedbackQuestionEditAction teammates ui controller instructorfeedbackquestioneditaction action   
+ 
+  
+ 
+     override actionresult execute entitydoesnotexistexception courseid   getrequestparamvalue paramsnames course_id feedbacksessionname   getrequestparamvalue paramsnames feedback_session_name   
+ 
+        assumption assertpostparamnotnull paramsnames course_id  courseid   
+        assumption assertpostparamnotnull paramsnames feedback_session_name  feedbacksessionname   
+ 
+        gatekeeper verifyaccessible logic getinstructorforgoogleid courseid  account googleid   
+                                    logic getfeedbacksession feedbacksessionname  courseid paramsnames instructor_permission_modify_session edittype   getrequestparamvalue paramsnames feedback_question_edittype   
+        assumption assertpostparamnotnull paramsnames feedback_question_edittype  edittype   
+ 
+        feedbackquestionattributes updatedquestion   extractfeedbackquestiondata edit  equals edittype questiontext   getrequestparamvalue paramsnames feedback_question_text   
+                assumption assertpostparamnotnull paramsnames feedback_question_text  questiontext   
+                assumption assertnotempty  empty question text   questiontext   
+ 
+                editquestion updatedquestion delete  equals edittype     
+                  
+                deletequestion updatedquestion assumption fail  invalid edittype invalidparametersexception e    
+              
+              
+            setstatusforexception e createredirectresult pagedata account  sessiontoken  
+                                             getinstructorfeedbackeditlink courseid  feedbacksessionname deletequestion feedbackquestionattributes updatedquestion    
+        logic deletefeedbackquestion updatedquestion getid     
+        statustouser add statusmessage statusmessages feedback_question_deleted  statusmessagecolor success    
+        statustoadmin    feedback question     updatedquestion questionnumber session  span bold\     
+                          updatedquestion feedbacksessionname       span course  span bold\     
+                          updatedquestion courseid       span  deleted  br editquestion feedbackquestionattributes updatedquestion invalidparametersexception  
+                                                                                 entitydoesnotexistexception err   validatequestiongiverrecipientvisibility updatedquestion err isempty      
+            statustouser add statusmessage err  statusmessagecolor danger    
+            iserror feedbackquestiondetails updatedquestiondetails   updatedquestion getquestiondetails    
+        list questiondetailserrors   updatedquestiondetails validatequestiondetails    
+        list statusmessage  questiondetailserrorsmessages arraylist error   questiondetailserrors    
+            questiondetailserrorsmessages add statusmessage error  statusmessagecolor danger questiondetailserrors isempty      
+            logic updatefeedbackquestionnumber updatedquestion   
+ 
+            statustouser add statusmessage statusmessages feedback_question_edited  statusmessagecolor success    
+            statustoadmin    feedback question     updatedquestion questionnumber session  span bold\     
+                            updatedquestion feedbacksessionname       span course  span bold\     
+                            updatedquestion courseid       span  edited  br   
+                              span bold\    
+                            updatedquestiondetails getquestiontypedisplayname         span    
+                            sanitizationhelper sanitizeforhtml updatedquestiondetails getquestiontext statustouser addall questiondetailserrorsmessages   
+            iserror validatequestiongiverrecipientvisibility feedbackquestionattributes feedbackquestionattributes errormsg       
+ 
+        feedbackquestiondetails questiondetails feedbackquestiondetails  questiondetailsclass   feedbackquestionattributes 
+                                                                             questiontype getquestiondetailsclass    
+        constructor feedbackquestiondetails  questiondetailsclassconstructor questiondetailsclassconstructor   questiondetailsclass getconstructor    
+            questiondetails   questiondetailsclassconstructor newinstance    
+            method m   questiondetailsclass getmethod  validategiverrecipientvisibility   
+                                                      feedbackquestionattributes errormsg m invoke questiondetails  feedbackquestionattributes nosuchmethodexception   securityexception   illegalaccessexception   illegalargumentexception 
+                   invocationtargetexception   instantiationexception e    
+            log severe teammatesexception tostringwithstacktrace e    
+              
+            assumption fail  failed to instantiate feedback questiondetails instance feedbackquestionattributes questiontype tostring       question type errormsg feedbackquestionattributes extractfeedbackquestiondata     
+        feedbackquestionattributes newquestion feedbackquestionattributes    
+ 
+        newquestion setid getrequestparamvalue paramsnames feedback_question_id    
+        assumption assertpostparamnotnull paramsnames feedback_question_id  newquestion getid     
+ 
+        newquestion courseid   getrequestparamvalue paramsnames course_id   
+        assumption assertpostparamnotnull paramsnames course_id  newquestion courseid   
+ 
+        newquestion feedbacksessionname   getrequestparamvalue paramsnames feedback_session_name   
+        assumption assertpostparamnotnull paramsnames feedback_session_name  newquestion feedbacksessionname givertype   getrequestparamvalue paramsnames feedback_question_givertype givertype newquestion givertype   feedbackparticipanttype valueof givertype recipienttype   getrequestparamvalue paramsnames feedback_question_recipienttype recipienttype newquestion recipienttype   feedbackparticipanttype valueof recipienttype questionnumber   getrequestparamvalue paramsnames feedback_question_number   
+        assumption assertpostparamnotnull paramsnames feedback_question_number  questionnumber   
+        newquestion questionnumber   integer parseint questionnumber   
+        assumption asserttrue  invalid question number   newquestion questionnumber    1 nentitytypes   getrequestparamvalue paramsnames feedback_question_numberofentitiestype numberofentitiesisuserdefined newquestion recipienttype  nentitytypes nentities   getrequestparamvalue paramsnames feedback_question_numberofentities   
+            assumption assertpostparamnotnull paramsnames feedback_question_numberofentities  nentities   
+            newquestion numberofentitiestogivefeedbackto   integer parseint nentities newquestion numberofentitiestogivefeedbackto max_possible_recipients  
+          
+ 
+        newquestion showresponsesto   feedbackparticipanttype getparticipantlistfromcommaseparatedvalues  
+                getrequestparamvalue paramsnames feedback_question_showresponsesto    
+        newquestion showgivernameto   feedbackparticipanttype getparticipantlistfromcommaseparatedvalues  
+                getrequestparamvalue paramsnames feedback_question_showgiverto    
+        newquestion showrecipientnameto   feedbackparticipanttype getparticipantlistfromcommaseparatedvalues  
+                getrequestparamvalue paramsnames feedback_question_showrecipientto questiontype   getrequestparamvalue paramsnames feedback_question_type   
+        assumption assertpostparamnotnull paramsnames feedback_question_type  questiontype   
+        newquestion questiontype   feedbackquestiontype valueof questiontype questiontext   getrequestparamvalue paramsnames feedback_question_text questiontext questiontext isempty      
+            feedbackquestiondetails questiondetails   feedbackquestiondetails createquestiondetails  
+                    requestparameters  newquestion questiontype   
+            newquestion setquestiondetails questiondetails questiondescription   getrequestparamvalue paramsnames feedback_question_description   
+ 
+        newquestion setquestiondescription text questiondescription newquestion numberofentitiesisuserdefined feedbackparticipanttype recipienttype nentitytypes recipienttype    feedbackparticipanttype students 
+                   recipienttype    feedbackparticipanttype teams custom  equals nentitytypes   
+      
+ 
+ teammates ui controller InstructorFeedbackQuestionEditAction

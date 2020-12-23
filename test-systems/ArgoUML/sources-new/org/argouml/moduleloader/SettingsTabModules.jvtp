@@ -1,0 +1,103 @@
+ 
+   $id$ 
+   copyright  c  2004-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications  
+    
+   tab settings dialog makes possible select modules enabled  
+   
+   todo  header table  
+   
+    author linus tolke table modules names columns table objects representing modules new module loader constructor creation actual gui elements deferred until actually needed  otherwize problems initialization  
+    
+       table model table modules  
+        
+    
+	   constructor  
+	    
+   
+	    see javax swing table tablemodel#getcolumncount   
+	    
+   
+	    see javax swing table tablemodel#getcolumnname int  
+	    
+   
+	    see javax swing table tablemodel#getrowcount   
+	    
+   
+	    see javax swing table tablemodel#getvalueat int  int  
+	    
+   
+	    see javax swing table tablemodel#setvalueat  
+	           java lang object  int  int  
+	    
+   
+	    see javax swing table tablemodel#getcolumnclass int  
+	    
+   
+	    see javax swing table tablemodel#iscelleditable int  int uid  
+            
+   
+        see guisettingstabinterface#handlesettingstabrefresh   
+        
+   
+        see guisettingstabinterface#handlesettingstabsave   
+        
+   
+        see guisettingstabinterface#handlesettingstabcancel nothing next time refresh fetch values again  
+   
+        see guisettingstabinterface#gettabkey   
+        
+   
+        see guisettingstabinterface#gettabpanel uid  
+        
+   
+        see org argouml ui guisettingstabinterface#handleresettodefault nothing buttons not shown org argouml moduleloader SettingsTabModules org argouml moduleloader settingstabmodules jpanel guisettingstabinterface columnnames     
+	translator localize  misc column-name module     
+        translator localize  misc column-name enabled    
+       
+ 
+      
+  
+ 
+      
+    settingstabmodules moduletablemodel abstracttablemodel moduletablemodel     
+	    object   arr   moduleloader2 allmodules   toarray    
+ 
+	    elements object arr length  2 i   0  i   elements length  i      
+		elements i  0    arr i   
+		elements i  1 valueof moduleloader2 isselected arr i getcolumncount columnnames length getcolumnname col columnnames col getrowcount elements length object getvalueat row col row   elements length elements row  col setvalueat object ob row col    
+	    elements row  col    ob getcolumnclass col col 0 1 return iscelleditable row col col    1    row   elements length handlesettingstabrefresh     
+        table setmodel moduletablemodel     
+         
+        stringbuffer sb stringbuffer    
+        list locations   moduleloader2 getinstance   getextensionlocations iterator it   locations iterator    it hasnext       
+            sb append it next     
+            sb append  \n    
+          
+        fieldallextdirs settext sb substring 0  sb length   - 1  tostring handlesettingstabsave elements i   0  i   elements length  i      
+                moduleloader2 setselected elements i  0 elements i  1   booleanvalue     
+              
+            moduleloader2 doload handlesettingstabcancel gettabkey tab modules jpanel gettabpanel table setlayout borderlayout     
+ 
+            table jtable moduletablemodel     
+            table setautoresizemode jtable auto_resize_last_column   
+            table setshowverticallines add jscrollpane table   borderlayout center labelgap   10 componentgap   5  
+            jpanel top jpanel labelledlayout labelgap  componentgap    
+            jlabel label jlabel  
+                    translator localize  label extension-directories     
+            jtextfield j jtextfield    
+            fieldallextdirs   j  
+            fieldallextdirs setenabled label setlabelfor fieldallextdirs   
+            top add label   
+            top add fieldallextdirs   
+            add top  borderlayout north handleresettodefault     
+          
+      
+ 
+ org argouml moduleloader SettingsTabModules

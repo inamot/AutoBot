@@ -1,0 +1,150 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   archivescanner accesses pattern matching algorithm directoryscanner protected methods only accessed subclassing implementation filescanner defines getincludedfiles return matching archive entries ant 1 7 
+    
+   checkstyle visibilitymodifier bc archive file scanned  
+        
+   checkstyle visibilitymodifier archive resource scanned record last scanned zip file modification date 
+        
+    
+       record list file zip entries 
+        
+    
+       record list directory zip entries 
+        
+    
+       record list matching file zip entries 
+        
+    
+       record list matching directory zip entries 
+        
+    
+       encoding file names ant 1 6 
+        
+    
+       don't scan zipfile ant 1 7 
+        
+    
+       sets srcfile scanning jar zip file scanned matching entries  
+       
+        param srcfile non-null  archive file name scanning 
+        
+    
+       sets src scanning jar zip file scanned matching entries  
+       
+        param src non-null  archive resource 
+        
+    
+       sets encoding file names  
+        param encoding encoding format ant 1 6 
+        
+    
+       returns names files matched least one include patterns none exclude patterns names relative base directory  
+       
+        return names files matched least one include patterns none exclude patterns  
+        
+    
+       override parent implementation  
+        return count included files ant 1 7 
+        
+    
+       returns names directories matched least one include patterns none exclude patterns names relative base directory  
+       
+        return names directories matched least one include patterns none exclude patterns  
+        
+    
+       override parent implementation  
+        return count included directories ant 1 7 set resources represent files  
+        return iterator resources ant 1 7 
+        
+   package-private now    iterator getresourcefiles set resources represent directories  
+        return iterator resources ant 1 7 
+        
+   package-private now     iterator getresourcedirectories     
+    
+       initialize directoryscanner data structures includes supplied set matches matches jar entry against includes excludes list  
+       normalizing path separator  
+       
+        param path non-null  path name test inclusion 
+       
+        return  code true  code path included 
+                code false  code  otherwise named resource  
+        param name path name file sought archive 
+        return resource ant 1 5 2 
+        
+   special case zips not want thing included 
+   first check archive needs scanned again 
+    
+       fills file directory maps resources read archive  
+       
+        param archive archive scan  
+        param encoding encoding used encode file names inside archive  
+        param fileentries map  name resource non-directory 
+       resources found inside archive  
+        param matchfileentries map  name resource non-directory 
+       resources found inside archive matched include 
+       patterns didn't match any exclude patterns  
+        param direntries map  name resource directory 
+       resources found inside archive  
+        param matchdirentries map  name resource directory 
+       resources found inside archive matched include 
+       patterns didn't match any exclude patterns datetime archive not change lastscannedresource initialized returns immediately archive not scanned zip entries put appropriate tables not use fileresource b c pulls file info filesystem  
+   spare scanning again again 
+   record data last scanned resource 
+    
+       remove trailing slash present  
+        param s file name trim  
+        return trimed file name  
+       org apache tools ant types ArchiveScanner org apache tools ant types archivescanner directoryscanner file srcfile scan src scan setsrc file srcfile    
+        setsrc fileresource srcfile setsrc resource src src   src src fileresource    
+            srcfile     fileresource  src  getfile setencoding encoding encoding   encoding getincludedfiles src getincludedfiles    
+          
+        scanme    
+        set s   matchfileentries keyset s toarray s size getincludedfilescount src getincludedfilescount    
+          
+        scanme matchfileentries size getincludeddirectories src getincludeddirectories    
+          
+        scanme    
+        set s   matchdirentries keyset s toarray s size getincludeddirscount src getincludeddirscount    
+          
+        scanme matchdirentries size src fileresourceiterator getbasedir    getincludedfiles     
+          
+        scanme matchfileentries values   iterator src fileresourceiterator getbasedir    getincludeddirectories     
+          
+        scanme matchdirentries values   iterator init includes includes 1   
+            includes 0 excludes excludes 0 match path vpath   path replace ' '  file separatorchar   
+            replace '\\'  file separatorchar isincluded vpath      isexcluded vpath resource getresource name src getresource name name equals resource max_value scanme fileentries containskey name resource  fileentries get name   
+          
+        name   trimseparator name direntries containskey name resource  direntries get name resource name fillmapsfromarchive resource archive encoding  
+                                                map fileentries  
+                                                map matchfileentries  
+                                                map direntries  
+                                                map matchdirentries scanme     
+          
+        resource thisresource resource src getname    
+                                             src isexists    
+                                             src getlastmodified lastscannedresource lastscannedresource getname   equals thisresource getname    
+               lastscannedresource getlastmodified   
+               thisresource getlastmodified init    
+ 
+        fileentries clear    
+        direntries clear    
+        matchfileentries clear    
+        matchdirentries clear    
+        fillmapsfromarchive src  encoding  fileentries  matchfileentries  
+                            direntries  matchdirentries   
+ 
+          
+        lastscannedresource   thisresource trimseparator s s endswith      ? s substring 0  s length   - 1    s  
+      
+ 
+ org apache tools ant types ArchiveScanner

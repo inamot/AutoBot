@@ -1,0 +1,173 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications jtree gui component view uml model 
+   navigation explorer todo list  
+    
+    
+       logger map helping tree maintain consistent expanded paths state  
+       
+        pre  
+        keys current treemodel tree 
+        values lists currently expanded paths  
+         pre determines stereotypes shown explorer  
+        
+    
+       sets label renderer  line style angled  enable tooltips  
+       sets row height 18 pixels  
+        
+   mvw use default font sizes much possible  
+           btw impacts only width reduces readibility  
+            
+          setfont lookandfeelmgr getinstance   getsmallfont enables tooltips tree one won't shown default  16  puts icons close together     
+   ------------ methods override jtree methods --------- 
+    
+       override default jtree implementation display appropriate text any object displayed todo list   p used todo list well explorer list  
+       
+        param value given object 
+        param selected 
+                  ignored 
+        param expanded 
+                  ignored 
+        param leaf 
+                  ignored 
+        param row 
+                  ignored 
+        param hasfocus 
+                  ignored 
+       
+        return value converted text  
+       
+        see javax swing jtree#convertvaluetotext java lang object  boolean  
+            boolean  boolean  int  boolean  
+        
+   todo  localize name long multi-line  e g comments reduce first line 80 chars  
+                    
+   todo  localize 
+   look stereotype 
+   todo  localize 
+   todo  add container resident names 
+    
+        param st collection stereotypes 
+        return string representing given stereotype s  
+        
+    
+       tree model expansion notification  p  
+       
+        param path tree node insertion event 
+        
+   
+        see javax swing jtree#firetreecollapsed javax swing tree treepath  
+        
+   
+        see javax swing jtree#setmodel javax swing tree treemodel methods ------------------ 
+    
+       called reexpand    
+       
+        return list containing expanded paths re-expand ones open before maintain same viewable 
+       tree  
+       
+       called doforceupdate    setmodel   
+        
+    
+        param show true stereotypes shown uid  
+       org argouml ui DisplayTextTree org argouml ui displaytexttree jtree displaytexttree setcellrenderer umltreecellrenderer     
+        setrootvisible setshowsroothandles settooltiptext  tree    
+ 
+          
+        setrowheight 18   
+ 
+        expandedpathsinmodel hashtable treemodel  list treepath      
+        reexpanding project p   projectmanager getmanager   getcurrentproject    
+        projectsettings ps   p getprojectsettings    
+        showstereotype   ps getshowstereotypesvalue convertvaluetotext object value selected expanded leaf row hasfocus value todoitem todoitem  value  getheadline value todolist todolist model getfacade   isamodelelement value name model getfacade   isatransition value     
+                    name   formattransitionlabel value model getfacade   isaextensionpoint value     
+                    notationprovider notationprovider   
+                        notationproviderfactory2 getinstance   
+                             getnotationprovider  
+                                notationproviderfactory2 type_extension_point  
+                                value   
+                    name   notationprovider tostring value model getfacade   isacomment value     
+                    name model getfacade   getbody value model getfacade   isataggedvalue value     
+                    name   formattaggedvaluelabel value name   getmodelelementdisplayname value name name indexof  \n     80 
+                           name indexof  \n     -1    
+                    name   name substring 0  name indexof  \n name name length     80    
+                    name   name substring 0  80 showstereotype    
+                    collection object  stereos   
+                        model getfacade   getstereotypes value   
+                    name          generatestereotype stereos name name length     80    
+                        name   name substring 0  80 invalidelementexception e    
+                name   translator localize  misc name deleted name model getfacade   isaexpression value name   model getfacade   getumlclassname value language   model getdatatypeshelper   getlanguage value body   model getdatatypeshelper   getbody value language language length     0    
+                    name           language body body length     0    
+                    name           body name invalidelementexception e translator localize  misc name deleted model getfacade   isaelementimport value object me   model getfacade   getimportedelement value typename   model getfacade   getumlclassname me elemname   convertvaluetotext me  selected   
+                        expanded  leaf  row  
+                        hasfocus alias   model getfacade   getalias value alias alias length     0    
+                    object   args    typename  elemname  alias translator localize  
+                             misc name element alias   args object   args    typename  elemname translator localize  
+                             misc name element args invalidelementexception e translator localize  misc name deleted model getfacade   isamultiplicity value multiplicity    
+                      model getdatatypeshelper   multiplicitytostring value invalidelementexception e translator localize  misc name deleted model getfacade   isaelementresidence value elementresidence invalidelementexception e translator localize  misc name deleted value diagram diagram  value  getname value value tostring formattaggedvaluelabel object value name tagname   model getfacade   gettag value tagname tagname equals        
+            name   messageformat format  
+                    translator localize  misc unnamed object     
+                        model getfacade   getumlclassname value  
+                        
+          
+        collection referencevalues    
+            model getfacade   getreferencevalue value   
+        collection datavalues    
+            model getfacade   getdatavalue value   
+        iterator i referencevalues size     0    
+            i   referencevalues iterator i   datavalues iterator thevalue i hasnext      
+            thevalue   i next   tostring i hasnext      
+            thevalue              
+          
+        name    tagname           thevalue name formattransitionlabel object value name  
+        name   model getfacade   getname value   
+        notationprovider notationprovider   
+            notationproviderfactory2 getinstance   
+                 getnotationprovider  
+                        notationproviderfactory2 type_transition  
+                        value signature   notationprovider tostring value name name length     0    
+            name           signature name   signature name generatestereotype collection object  st st stringbuilder sb stringbuilder 10 first object o   st first    
+                sb append o sb append model getfacade   getname o    
+                first first    
+            project project   
+                projectmanager getmanager   getcurrentproject    
+            projectsettings ps   project getprojectsettings ps getleftguillemot   
+                  sb tostring   
+                  ps getrightguillemot getmodelelementdisplayname object modelelement name   model getfacade   getname modelelement name name equals        
+            name   messageformat format  
+        	    translator localize  misc unnamed object     
+        		model getfacade   getumlclassname modelelement name firetreeexpanded treepath path firetreeexpanded path   
+ 
+        log debug  firetreeexpanded reexpanding    path list treepath  expanded   getexpandedpaths    
+        expanded remove path   
+        expanded add path firetreecollapsed treepath path firetreecollapsed path   
+ 
+        log debug  firetreecollapsed path expandedpathsinmodel list treepath  expanded   getexpandedpaths    
+        expanded remove path setmodel treemodel newmodel    
+ 
+        log debug  setmodel    
+        object r   newmodel getroot r setmodel newmodel   
+          
+        reexpand list treepath  getexpandedpaths     
+ 
+        log debug  getexpandedpaths    
+        treemodel tm   getmodel    
+        list treepath  res   expandedpathsinmodel get tm res res arraylist treepath     
+            expandedpathsinmodel put tm  res res reexpand     
+ 
+        log debug  reexpand expandedpathsinmodel reexpanding treepath path   getexpandedpaths      
+            expandpath path   
+          
+        reexpanding setshowstereotype show showstereotype   show  
+      
+ 
+      
+  
+ org argouml ui DisplayTextTree

@@ -1,0 +1,138 @@
+ code instructoreditinstructorfeedbacksaveaction  class handles incoming requests save data moderating instructor  
+    
+    
+       verifies user allowed carry out action  
+        
+    
+       retrieves any additional parameters request set accordingly instructor doesn't exist 
+    
+       checks instructor only submitted responses submitting moderating  
+        
+   check instructor not submit responses questions not moderating not throw error question not present page instructors edit 
+    
+       checks instructor's access particular question feedback session  
+        param instructor instructor checked 
+        param questionattributes question checked against 
+        
+    
+       retrieves email user course  
+        return email user 
+        
+    
+       retrieves user's team  
+        return name user's team 
+        
+    
+       retrieves user's section course  
+        return name user's section 
+        
+    
+       gets data bundle course specified  
+        param useremailforcourse email user 
+        return feedbacksessionquestionsbundle object 
+        
+    
+       sets message log  
+        
+    
+       checks session still open instructor moderating session moderate anytime  therefore true forever  
+        return true 
+        
+   feedback session closing date not matter  instructors moderate any time 
+    
+       creates page redirect  
+        return redirectresult object 
+       teammates ui controller InstructorEditInstructorFeedbackSaveAction teammates ui controller instructoreditinstructorfeedbacksaveaction feedbacksubmissioneditsaveaction   
+ 
+  
+ 
+  
+ 
+      
+     override verifyaccessibleforspecificuser     
+        instructorattributes instructor   logic getinstructorforgoogleid courseid  account googleid   
+        feedbacksessionattributes session   logic getfeedbacksession feedbacksessionname  courseid   
+ 
+        gatekeeper verifyaccessible  
+                instructor  session paramsnames instructor_permission_modify_session   
+      
+ 
+      
+     override setadditionalparameters entitydoesnotexistexception moderatedinstructoremail   getrequestparamvalue paramsnames feedback_session_moderated_person   
+        assumption assertpostparamnotnull paramsnames feedback_session_moderated_person  moderatedinstructoremail   
+ 
+        moderatedinstructor   logic getinstructorforemail courseid  moderatedinstructoremail   
+        issendsubmissionemail moderatedinstructor entitydoesnotexistexception  instructor email   
+                      moderatedinstructoremail     does not exist in     courseid 
+                            
+          
+      
+ 
+      
+     override checkadditionalconstraints     
+          
+ 
+        instructorattributes instructor   logic getinstructorforgoogleid courseid  account googleid numofquestionstoget   data bundle questionresponsebundle size questionindx   1  questionindx    numofquestionstoget  questionindx parammapkey paramsnames feedback_question_id    -    questionindx questionid   getrequestparamvalue parammapkey questionid feedbackquestionattributes questionattributes   data bundle getquestionattributes questionid questionattributes statustouser add statusmessage  the feedback session or questions may have changed you were submitting  please check your responses   
+                                                          to make sure they are saved correctly    
+                                                   statusmessagecolor warning    
+                iserror log warning  question not found in feedback session      feedbacksessionname        
+                               of course id      courseid        
+                                deleted or invalid id passed?  id      questionid     index      questionindx checksessionquestionaccesspermission instructor  questionattributes checksessionquestionaccesspermission instructorattributes instructor  
+                                                      feedbackquestionattributes questionattributes isgivervisibletoinstructors   
+                questionattributes showgivernameto contains feedbackparticipanttype instructors isrecipientvisibletoinstructors   
+                questionattributes showrecipientnameto contains feedbackparticipanttype instructors isresponsevisibletoinstructors   
+                questionattributes showresponsesto contains feedbackparticipanttype instructors isresponsevisibletoinstructors     isgivervisibletoinstructors     isrecipientvisibletoinstructors    
+            iserror unauthorizedaccessexception  
+                     feedback session      feedbacksessionname 
+                         question      questionattributes getid        is not accessible   
+                       to instructor      instructor email         
+          
+      
+ 
+     override appendrespondent logic addinstructorrespondent getuseremailforcourse    feedbacksessionname  courseid invalidparametersexception   entitydoesnotexistexception e    
+            log severe  failed to append instructor respondent    
+                          feedback session      feedbacksessionname      of course id      courseid         
+          
+      
+ 
+     override removerespondent logic deleteinstructorrespondent getuseremailforcourse    feedbacksessionname  courseid invalidparametersexception   entitydoesnotexistexception e    
+            log severe  failed to append instructor respondent    
+                          feedback session      feedbacksessionname      of course id      courseid         
+          
+      
+ 
+      
+     override getuseremailforcourse moderatedinstructor email  
+      
+ 
+      
+     override getuserteamforcourse user_team_for_instructor  
+      
+ 
+      
+     override getusersectionforcourse default_section  
+      
+ 
+      
+     override feedbacksessionquestionsbundle getdatabundle useremailforcourse entitydoesnotexistexception logic getfeedbacksessionquestionsbundleforinstructor  
+                feedbacksessionname  courseid  useremailforcourse   
+      
+ 
+      
+     override setstatustoadmin     
+        statustoadmin    instructor moderated instructor session br   
+                         instructor      account email     br   
+                         moderated instructor      moderatedinstructor     br   
+                         session name      feedbacksessionname     br   
+                         course id      courseid  
+      
+ 
+      
+     override issessionopenforspecificuser feedbacksessionattributes session override redirectresult createspecificredirectresult     
+        redirectresult result   createredirectresult actionuris instructor_edit_instructor_feedback_page   
+ 
+        result responseparams put paramsnames course_id  moderatedinstructor courseid   
+        result responseparams put paramsnames feedback_session_name  feedbacksessionname   
+        result responseparams put paramsnames feedback_session_moderated_person  moderatedinstructor email result  
+      
+ teammates ui controller InstructorEditInstructorFeedbackSaveAction

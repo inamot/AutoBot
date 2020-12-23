@@ -155,10 +155,7 @@ public class IRAnalysis
 		filteredClasses.clear();
 		filteredClasses.addAll( classes );
 		
-		// TODO: this code removes some classes that should not be removed from ArgoUml so if it will be used the fix first
-		// Not used by IR anymore because exclusion is done during pre-processing
-		
-		/*if( packageExclusion.length > 0 )
+		if( packageExclusion.length > 0 )
 		{
 			for( String className : classes )
 			{	
@@ -166,10 +163,10 @@ public class IRAnalysis
 				{
 					String excludedPackage = packageExclusion[ j ];
 					
-					// remove packages that are not being considered
+					// remove classes & packages that are not being considered
 					if( excludedPackage.contains( "*" ) )
 					{
-						excludedPackage = excludedPackage.substring( 0 , excludedPackage.lastIndexOf( "." ) + 1 );
+						excludedPackage = excludedPackage.substring( 0 , excludedPackage.indexOf( "*" ) );
 						
 						if( className.startsWith( excludedPackage ) && !excludedPackage.equals( "" ) )
 						{
@@ -178,14 +175,14 @@ public class IRAnalysis
 					}
 					else
 					{
-						if( className.contains( excludedPackage ) && !excludedPackage.equals( "" ) )
+						if( className.startsWith( excludedPackage ) && !excludedPackage.equals( "" ) )
 						{
 							filteredClasses.remove( className );
 						}
 					}
 				}
 			}
-		}*/
+		}
 		
 		System.out.println( "# of documents: " + filteredClasses.size() );
 	}
@@ -361,11 +358,11 @@ public class IRAnalysis
 			    	}
 			    }
 
-			    moduleSearchKeywords = moduleSearchKeywords + " (";
+			   moduleSearchKeywords = moduleSearchKeywords + " (";
 			    
 			    for( String moduleDescriptionWord : filteredModuleDescriptionList )
 		    	{
-			    	//moduleSearchKeywords = moduleSearchKeywords + "/\\w*" + moduleDescriptionWord + "\\w*/";		// using regex for further research
+			    	//moduleSearchKeywords = moduleSearchKeywords + "/\\w*" + moduleDescriptionWord + "\\w* /";		// using regex for further research
 			    	moduleSearchKeywords = moduleSearchKeywords + " " + moduleDescriptionWord + "*~";			// add module description words (with * wildcards) to search keywords
 		    	}
 			    
@@ -419,7 +416,7 @@ public class IRAnalysis
 				    	{
 			    			moduleSearchKeywords = moduleSearchKeywords + " (";				// begin class name search keywords: '+' indicates must contain class names
 				    	}
-			    		
+			    					    		
 			    		int classNameIndex = classNameKeyword.lastIndexOf( "." ) + 1;
 				    	classNameKeyword = classNameKeyword.substring( classNameIndex );
 				    	
@@ -489,7 +486,7 @@ public class IRAnalysis
 				    		
 				    		methodNum++; 
 					    } //System.out.println( "" );
-				    } 
+				    }
 			    }
 			    
 			    //System.out.println( moduleSearchKeywords  );
@@ -514,7 +511,26 @@ public class IRAnalysis
 					document = document.replaceAll( "/", "." );
 	        		document = document.replaceAll( sourceFileExt, "" );		// rewrite source filenames to match class packages names
 	        		double documentModuleAffinityScore = hits[ j ].score;
-			        Map<String, String> documentModuleSimilarity = new HashMap<>();			        
+	        		boolean containsPackageName = false;
+	        		
+	        		for( String moduleNameWord : moduleNameList )
+			    	{
+				        if( document.contains( moduleNameWord ) )			// explore adding fuzzy check https://code-high.blogspot.com/2015/10/fuzzy-string-matching-in-java.html
+				        {
+				        	containsPackageName = true;
+				        }
+			    	}
+	        		
+	        		if( containsPackageName )	
+			        {
+			        	documentModuleAffinityScore = documentModuleAffinityScore * mnBoostFactor;	// increase score of low scoring documents that have module name in package name
+			        }
+			        else
+			        {
+			        	documentModuleAffinityScore = documentModuleAffinityScore / mnBoostFactor;	// reduce score of high scoring documents that do not have module name in package name
+			        }
+	        		
+			        Map<String, String> documentModuleSimilarity = new HashMap<>();
 			        documentModuleSimilarity.put( document, module );
 		    		documentModuleSimilarity_AffinityScores.put( documentModuleSimilarity, documentModuleAffinityScore );
 		    	}

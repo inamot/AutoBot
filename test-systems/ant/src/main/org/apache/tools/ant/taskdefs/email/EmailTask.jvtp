@@ -1,0 +1,274 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license task send smtp email refactoring sendmail mimemail tasks both within single task ant 1 5 
+    ant task name  mail  category  network  
+    
+    constant show best available mailer used      
+    constant allow mime mailer requested     
+    constant allow uu mailer requested     
+    constant allow plaintext mailer requested     
+    
+       enumerates encoding constants  
+        
+    
+           finds valid encoding values 
+           
+            return list valid entries 
+            
+    host running smtp     
+    subject field     
+    any text     
+    failure flag    
+   special headers    
+    sender     
+    replyto recipients     
+    cc  carbon copy  recipients     
+    bcc  blind carbon copy  recipients     
+    generic headers    
+    file list     
+    character set mimemailer   
+    user smtp auth    
+    password smtp auth    
+    indicate user wishes ssl-tls    
+    
+       set user smtp auth requires javamail  
+        param user string username ant 1 6 
+        
+    
+       set password smtp auth requires javamail  
+        param password string password ant 1 6 
+        
+    
+       set whether send data over ssl  
+        param ssl boolean true ssl used ant 1 6 
+        
+    
+       set preferred encoding method  
+       
+        param encoding encoding  one auto  mime  uu  plain   
+        
+    
+       set mail server port  
+       
+        param port port use  
+        
+    
+       set host  
+       
+        param host host connect set subject line email  
+       
+        param subject subject email  
+        
+    
+       shorthand method set message  
+       
+        param message message body email  
+        
+    
+       shorthand method set message file  
+       
+        param file file take message  
+        
+    
+       shorthand method set type text message  text plain default text html text xml quite feasible  
+       
+        param type new messagemimetype value  
+        
+    
+       add message element  
+       
+        param message message object  
+        throws buildexception message already added  
+        
+    
+       add address element  
+       
+        param address address send shorthand set address element  
+       
+        param address address send mail add replyto address element  
+       
+        param address address reply ant 1 6 
+        
+    
+       shorthand set replyto address element  
+       
+        param address address replies directed ant 1 6 
+        
+    
+       add address element  
+       
+        param address email address  
+        
+    
+       shorthand set address element  
+       
+        param list comma-separated list addresses  
+        
+    
+       add cc  address element  
+       
+        param address email address  
+        
+    
+       shorthand set cc  address element  
+       
+        param list comma separated list addresses  
+        
+    
+       add bcc  address element  
+       
+        param address email address  
+        
+    
+       shorthand set bcc  address element  
+       
+        param list comma separated list addresses  
+        
+    
+       set whether buildexceptions passed back core  
+       
+        param failonerror new failonerror value  
+        
+    
+       set list files attached  
+       
+        param filenames comma-separated list files  
+        
+    
+       add set files  nested fileset attribute   
+       
+        param fs fileset  
+        
+    
+       creates path container attachments   supports any 
+       filesystem resource-collections way  
+        return path configured ant 1 7 
+        
+    
+       create nested header element  
+        return header instance  
+        
+    
+       set whether include filenames  
+       
+        param includefilenames whether include filenames text message whether file names included  
+       
+        return identifies whether file names included  
+        
+    
+       send email  
+        
+   prepare auto select mechanism 
+   try mime format 
+   smtp auth only allowed mime mail 
+   ssl only allowed mime mail 
+   try uu format 
+   try plain format valid mailer must present now valid message required address send required least one address send cc bcc required 
+   set mimetype not done already required  
+   set character set not done already required  
+   identify files attached user know s going happen 
+   pass params mailer 
+   send email user know happened 
+    
+       sets character set mail message ignored mimetype contains       charset     substring encoding not code mime  code   
+        param charset character encoding use ant 1 6 
+        
+    
+       returns character set mail message  
+       
+        return charset mail message ant 1 6 
+       org apache tools ant taskdefs email EmailTask org apache tools ant taskdefs email emailtask task auto    auto mime    mime uu    uu plain    plain encoding enumeratedattribute getvalues auto  mime  uu  plain setuser user user   user setpassword password password   password setssl ssl ssl   ssl setencoding encoding encoding encoding   encoding getvalue setmailport port port   port setmailhost host host   host setsubject subject subject   subject setmessage message message buildexception  only one message can be sent in an   
+                    email message message message message setproject getproject setmessagefile file file message buildexception  only one message can be sent in an   
+                    email message message file message setproject getproject setmessagemimetype type messagemimetype   type addmessage message message buildexception message buildexception  
+                 only one message can be sent in an email message   message addfrom emailaddress address from buildexception  emails can only be from one address from   address setfrom address from buildexception  emails can only be from one address from emailaddress address addreplyto emailaddress address replytolist add address setreplyto address replytolist add emailaddress address addto emailaddress address    
+        tolist addelement address settolist list    
+        stringtokenizer tokens stringtokenizer list tokens hasmoretokens      
+            tolist addelement emailaddress tokens nexttoken addcc emailaddress address    
+        cclist addelement address setcclist list    
+        stringtokenizer tokens stringtokenizer list tokens hasmoretokens      
+            cclist addelement emailaddress tokens nexttoken addbcc emailaddress address    
+        bcclist addelement address setbcclist list    
+        stringtokenizer tokens stringtokenizer list tokens hasmoretokens      
+            bcclist addelement emailaddress tokens nexttoken setfailonerror failonerror failonerror   failonerror setfiles filenames    
+        stringtokenizer t stringtokenizer filenames t hasmoretokens      
+            createattachments   
+                 add fileresource getproject   resolvefile t nexttoken addfileset fileset fs    
+        createattachments   add fs path createattachments attachments attachments path getproject attachments createpath header createheader     
+        header h header    
+        headers add h h setincludefilenames includefilenames includefilenames   includefilenames getincludefilenames includefilenames execute     
+        message savedmessage   message mailer mailer autofound encoding equals mime  
+                     encoding equals auto      autofound mailer    mailer  classpathutils newinstance  
+                             org apache tools ant taskdefs email mimemailer   
+                            emailtask getclassloader    mailer autofound log  using mime mail   project msg_verbose buildexception e    
+                    throwable t   e getcause e   e getcause    
+                    log  failed to initialise mime mail      t getmessage    
+                            project msg_warn autofound      user password encoding equals uu     encoding equals plain buildexception  smtp auth only possible with mime mail autofound      ssl  
+                    encoding equals uu     encoding equals plain buildexception  ssl only possible with mime mail encoding equals uu  
+                     encoding equals auto      autofound mailer    mailer  classpathutils newinstance  
+                             org apache tools ant taskdefs email uumailer   
+                            emailtask getclassloader    mailer autofound log  using uu mail   project msg_verbose buildexception e    
+                    throwable t   e getcause e   e getcause    
+                    log  failed to initialise uu mail      t getmessage    
+                            project msg_warn encoding equals plain  
+                     encoding equals auto      autofound     
+                mailer plainmailer    
+                autofound log  using plain mail   project msg_verbose mailer buildexception  failed to initialise encoding    
+                       encoding message message message    
+                message setproject getproject from from getaddress buildexception  a from element is required tolist isempty      cclist isempty      bcclist isempty buildexception  at least one of to  cc or bcc must   
+                        be supplied messagemimetype message ismimetypespecified buildexception  the mime type can only be   
+                            specified in one location    
+                  
+                message setmimetype messagemimetype charset message getcharset buildexception  the charset can only be   
+                            specified in one location    
+                  
+                message setcharset charset   
+              
+ 
+              
+            vector files vector attachments iterator iter   attachments iterator iter hasnext      
+                    fileresource fr    fileresource  iter next    
+                    files addelement fr getfile     
+                  
+              
+              
+            log  sending email      subject  project msg_info   
+            log  from     from  project msg_verbose   
+            log  replyto     replytolist  project msg_verbose   
+            log  to     tolist  project msg_verbose   
+            log  cc     cclist  project msg_verbose   
+            log  bcc     bcclist  project msg_verbose   
+ 
+              
+            mailer sethost host   
+            mailer setport port   
+            mailer setuser user   
+            mailer setpassword password   
+            mailer setssl ssl   
+            mailer setmessage message   
+            mailer setfrom from   
+            mailer setreplytolist replytolist   
+            mailer settolist tolist   
+            mailer setcclist cclist   
+            mailer setbcclist bcclist   
+            mailer setfiles files   
+            mailer setsubject subject   
+            mailer settask mailer setincludefilenames includefilenames   
+            mailer setheaders headers   
+ 
+              
+            mailer send count   files size    
+ 
+            log  sent email with     count     attachment  
+                    count    1 ?       s    project msg_info buildexception e    
+            throwable t   e getcause e   e getcause    
+            log  failed to send email      t getmessage    project msg_warn failonerror e exception e    
+          log  failed to send email      e getmessage    project msg_warn failonerror buildexception e message   savedmessage setcharset charset charset   charset getcharset charset  
+      
+ 
+  
+org apache tools ant taskdefs email EmailTask

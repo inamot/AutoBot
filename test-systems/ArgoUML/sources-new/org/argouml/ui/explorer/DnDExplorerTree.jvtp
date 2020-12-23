@@ -1,0 +1,421 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications class extends default argo jtree drag drop capabilities  p  
+   see href  http   java sun com j2se 1 4 2 docs guide dragndrop spec dnd1 html   
+   dnd1 href  http   java sun com products jfc tsc articles dragndrop index html   
+   dnd2 p adds copy clipboard' capability diagrams  see href  http   java sun com j2se 1 3 docs guide swing keybindchanges html   
+   keybindchanges p ghosted images code originates p href  http   www javaworld com javaworld javatips jw-javatip114 html   
+   javatip114 p  
+   
+   interesting may following   p href  http   forum java sun com thread jspa?threadid 296255 start 30   
+   thread author  alexb created 16 april 2003 
+    
+    
+       logger drag image mouse clicked path being dragged drag image selected node  
+        
+    
+       dnd source  
+        
+    
+       creates new instance dndargojtree drag gesture recognizer fires events response drag gestures component  
+            
+  specifies valid actions 
+   eliminates right mouse clicks valid actions 
+   first argument   component associate target second argument  droptargetlistener drag gesture listener notified drag gestures recognizer typical response initiate drag invoking 
+       dragsource startdrag    
+        p  
+        
+       todo  find way show different image multiple elements dragged  
+        
+        param draggestureevent draggestureevent describing gesture occurred 
+        see java awt dnd draggesturelistener#draggesturerecognized java awt dnd draggestureevent selected targets  uml modelelements targetmanager cell renderer jlabel path being dragged  
+            
+   tree 
+   value 
+   isselected	 dont want colored background  
+   isexpanded 
+   isleaf 
+   row	 not important rendering  
+   hasfocus  dont want focus rectangle layout manager normally buffered image selection dragging ghost image 
+   
+           ask cell renderer paint itself bufferedimage  
+           make image ghostlike  
+            
+   
+           now paint gradient under ghosted jlabel text not under icon any   
+            
+   make gradient ghostlike     
+   
+           remember path being dragged being moved delete later pass drag image case supported platform  
+            
+   todo  support types drag  
+           here set owner dragging namespace alternative drag states composite states destination not namespace abort destination datatype abort s check dragged elements one may dropped drag valid others ignored dropping  
+            
+   
+        see java awt dnd dragsourcelistener#dragdropend java awt dnd dragsourcedropevent  
+        
+   
+        see java awt dnd dragsourcelistener#dragenter java awt dnd dragsourcedragevent  
+        
+   empty implementation - not used  
+   
+        see java awt dnd dragsourcelistener#dragexit java awt dnd dragsourceevent  
+        
+   empty implementation - not used not correct location set cursor commented out code illustrates calculation coordinates  
+       
+        see java awt dnd dragsourcelistener#dragover java awt dnd dragsourcedragevent  
+        
+          transferable tf   
+              dragsourcedragevent getdragsourcecontext   gettransferable mouse location screen     
+          point dragloc   dragsourcedragevent getlocation jtree location screen     
+          point treeloc   getlocationonscreen    
+             now substract find location within jtree     
+          dragloc translate - treeloc x  - treeloc y   
+          treepath destinationpath   
+          	getpathforlocation dragloc x  dragloc y isvaliddrag destinationpath  tf     
+               dragsourcedragevent getdragsourcecontext   
+                setcursor dragsource defaultmovedrop dragsourcedragevent getdragsourcecontext   
+               setcursor dragsource defaultcopynodrop   
+            
+   
+        see java awt dnd dragsourcelistener#dropactionchanged java awt dnd dragsourcedragevent  
+        
+   empty implementation - not used  
+    
+       records selected path later use during dnd  
+        
+    autoscroll interface following code borrowed book  
+   		java swing robert eckstein  marc loy   dave wood 
+   		paperback - 1221 pages 1 ed edition  september 1998  
+   		o'reilly   associates  isbn  156592455x relevant chapter found http   www oreilly com catalog jswing chapter dnd beta pdf 
+   
+       ok ve told scroll mouse cursor scroll zone  
+        see java awt dnd autoscroll#autoscroll java awt point  
+        
+   figure out row re not row ignore autoscroll request 
+   now decide row top screen bottom make previous row next 
+   row  visible appropriate absolute top bottom return first last row respectively row top screen? 
+   yes  scroll up one row scroll down one row 
+   
+       calculate insets jtree   not viewport tree makes bit messy  
+       
+        see java awt dnd autoscroll#getautoscrollinsets droptargetlistener  
+       handles drop target events including drop itself constructor  
+            
+   set up hover timer node automatically expanded collapsed user lingers short time  
+                
+   
+                        see java awt event actionlistener#actionperformed java awt event actionevent  
+                        
+  isrootpath   lastpath     
+   set timer one-shot mode 
+   
+            see java awt dnd droptargetlistener#dragenter java awt dnd droptargetdragevent  
+            
+   
+            see java awt dnd droptargetlistener#dragexit java awt dnd droptargetevent  
+            
+    
+           called drag operation ongoing mouse pointer still over operable part drop site code droptarget  code  registered listener  
+           
+            see java awt dnd droptargetlistener#dragover java awt dnd droptargetdragevent  
+            
+   log debug  dragover      many many next condition becomes false dragging something another application drag image not supported platform draw drag image  
+                    
+   rub out last ghost image cue line remember draw new ghost image rub out last cue line any case draw  over ghost image necessary cue line indicating drop occur include cue line area rubbed out next time 
+   testcase  drag something another 
+               application argouml explorer shows drop icon  instead nodrop prohibit dropping onto drag source destination not namespace reject destination datatype reject     
+               todo next only works java 1 5 onwards  -     
+            transferable tf   droptargetdragevent gettransferable tf isdataflavorsupported  
+            transferablemodelelements uml_collection_flavor     
+               check tf contents isvaliddrag       
+            droptargetdragevent acceptdrag  
+            droptargetdragevent getdropaction droptargetdragevent rejectdrag drop done mousebutton released  
+           
+            see java awt dnd droptargetlistener#drop java awt dnd droptargetdropevent  
+            
+   prevent hover timer doing unwanted 
+               expandpath collapsepath  
+                
+   clear ghost image new parent node model elements being transfered user-dropactions ctrl   shift -  action_link 
+                   ctrl         -  action_copy 
+                   shift        -  action_move 
+                    none        -  action_move 
+                    
+   todo copy function not completely implemented some exceptions here todo  make tree refresh expand 
+                                       really work cases  
+                                        
+   
+            see java awt dnd droptargetlistener#dropactionchanged java awt dnd droptargetdragevent  
+            
+    
+            param droptargetevent droptargetevent 
+            return true drag acceptable 
+            
+   only accept copy move gestures  ie link not supported want prohibit dropping onto drag source    
+    
+            param droptargetdropevent droptargetdropevent 
+            return true drop acceptable 
+            
+   only accept copy move gestures  ie link not supported want prohibit dropping onto drag source    
+   end class uid  
+       org argouml ui explorer DnDExplorerTree org argouml ui explorer dndexplorertree explorertree draggesturelistener  
+        dragsourcelistener  
+        autoscroll logger log   
+    	logger getlogger dndexplorertree diagram_to_clipboard_action   
+         export diagram as gif dndexplorertree addtreeselectionlistener dndtreeselectionlistener     
+ 
+        dragsource   dragsource getdefaultdragsource    
+ 
+          
+        draggesturerecognizer dgr   
+	    dragsource 
+	         createdefaultdraggesturerecognizer dndconstants action_copy_or_move dgr setsourceactions  
+        		dgr getsourceactions     ~inputevent button3_mask droptarget argodroptargetlistener     
+ 
+        keystroke ctrlc   keystroke getkeystroke  control c getinputmap   put ctrlc  diagram_to_clipboard_action getactionmap   put diagram_to_clipboard_action actionsavediagramtoclipboard draggesturerecognized  
+            draggestureevent draggestureevent    
+ 
+          
+        collection targets   targetmanager getinstance   getmodeltargets targets size     1 log debug  drag  start transferring     targets size       targets     
+        transferablemodelelements tf transferablemodelelements targets   
+ 
+        point ptdragorigin   draggestureevent getdragorigin    
+        treepath path   
+            getpathforlocation ptdragorigin x  ptdragorigin y path rectangle rapath   getpathbounds path   
+        clickoffset setlocation ptdragorigin x - rapath x  
+                ptdragorigin y - rapath y   
+ 
+          
+        jlabel lbl   
+             jlabel  getcellrenderer   gettreecellrenderercomponent path getlastpathcomponent isexpanded path   		   
+                    getmodel   isleaf path getlastpathcomponent       
+                    0 lbl setsize rapath getwidth rapath getheight     
+ 
+          
+        ghostimage bufferedimage rapath getwidth rapath getheight    
+                bufferedimage type_int_argb_pre   
+        graphics2d g2   ghostimage creategraphics    
+ 
+          
+        g2 setcomposite alphacomposite getinstance  
+                alphacomposite src  0 5f    
+        lbl paint g2   
+ 
+          
+        icon icon   lbl geticon nstartoftext   
+             icon 0 
+                  icon geticonwidth     lbl geticontextgap    
+          
+        g2 setcomposite alphacomposite getinstance  
+                alphacomposite dst_over  0 5f    
+        g2 setpaint gradientpaint nstartoftext 	0  
+                systemcolor controlshadow  
+                getwidth    0 color 255  255  255  0     
+        g2 fillrect nstartoftext  0  getwidth    ghostimage getheight     
+ 
+        g2 dispose    
+ 
+          
+        sourcepath   path  
+ 
+          
+        draggestureevent startdrag ghostimage point 5  5   tf isvaliddrag treepath destinationpath  
+    		transferable tf destinationpath log debug  no valid drag  no destination found selectedtreepath isdescendant destinationpath     
+            log debug  no valid drag  move to descendent tf isdataflavorsupported  
+                transferablemodelelements uml_collection_flavor     
+            log debug  no valid drag  flavor not supported object dest   
+              defaultmutabletreenode  destinationpath 
+                 getlastpathcomponent    getuserobject model getfacade   isanamespace dest     
+            log debug  no valid drag  not a namespace model getfacade   isadatatype dest     
+            log debug  no valid drag  destination is a datatype collection c c   
+                 collection  tf gettransferdata  
+                    transferablemodelelements uml_collection_flavor   
+            iterator i   c iterator i hasnext      
+                object me   i next model getcorehelper   isvalidnamespace me  dest     
+                    log debug  valid drag  namespace     dest me relocatable    
+                    relocatable d    relocatable  me d isrelocationallowed dest     
+                        log debug  valid drag  diagram     dest model getfacade   isafeature me   
+                           model getfacade   isaclassifier dest unsupportedflavorexception e    
+            log debug e ioexception e    
+            log debug e   
+          
+        log debug  no valid drag  not a valid namespace dragdropend  
+    		dragsourcedropevent dragsourcedropevent    
+        sourcepath ghostimage dragenter dragsourcedragevent dragsourcedragevent dragexit dragsourceevent dragsourceevent dragover dragsourcedragevent dragsourcedragevent dropactionchanged  
+    		dragsourcedragevent dragsourcedragevent dndtreeselectionlistener treeselectionlistener valuechanged  
+        		treeselectionevent treeselectionevent    
+            selectedtreepath   treeselectionevent getnewleadselectionpath autoscroll point pt nrow   getrowforlocation pt x  pt y nrow   0 rectangle raouter   getbounds    
+          
+          
+          
+          
+ 
+          
+        nrow   
+             pt y   raouter y    autoscroll_margin  
+                ? 
+                  
+                 nrow    0 ? 0   nrow - 1  
+                  
+                      
+                     nrow   getrowcount   - 1 ? nrow   1   nrow   
+ 
+        scrollrowtovisible nrow insets getautoscrollinsets     
+        rectangle raouter   getbounds    
+        rectangle rainner   getparent   getbounds insets  
+                rainner y - raouter y   autoscroll_margin  
+                rainner x - raouter x   autoscroll_margin  
+                raouter height - rainner height 
+                - rainner y   raouter y   autoscroll_margin  
+                raouter width - rainner width 
+                - rainner x   raouter x   autoscroll_margin argodroptargetlistener droptargetlistener argodroptargetlistener     
+            cuelinecolor color  
+                    systemcolor controlshadow getred    
+                    systemcolor controlshadow getgreen    
+                    systemcolor controlshadow getblue    
+                    64 
+                   
+ 
+              
+            hovertimer timer 1000 actionlistener actionperformed actionevent e getpathforrow 0  equals isexpanded lastpath     
+                            collapsepath lastpath expandpath lastpath   
+                          
+                      
+                    
+            hovertimer setrepeats dragenter  
+                droptargetdragevent droptargetdragevent    
+            log debug  dragenter isdragacceptable droptargetdragevent     
+                droptargetdragevent rejectdrag droptargetdragevent acceptdrag  
+                        droptargetdragevent getdropaction dragexit droptargetevent droptargetevent    
+            log debug  dragexit dragsource isdragimagesupported      
+                repaint ghostrectangle getbounds dragover droptargetdragevent droptargetdragevent    
+              
+            point pt   droptargetdragevent getlocation pt equals lastmouselocation log debug  dragover    
+ 
+            lastmouselocation   pt  
+ 
+            graphics2d g2    graphics2d  getgraphics ghostimage dragsource isdragimagesupported      
+                      
+                    paintimmediately ghostrectangle getbounds     
+                      
+                    ghostrectangle setrect pt x - clickoffset x  
+                            pt y - clickoffset y  
+                            ghostimage getwidth    
+                            ghostimage getheight     
+                    g2 drawimage ghostimage  
+                            affinetransform gettranslateinstance  
+                                    ghostrectangle getx    
+                                    ghostrectangle gety paintimmediately cueline getbounds     
+                  
+              
+ 
+            treepath path   getpathforlocation pt x  pt y path    lastpath     
+                lastpath   path  
+                hovertimer restart    
+              
+ 
+              
+            rectangle rapath   getpathbounds path rapath cueline setrect 0  
+                        rapath y rapath getheight    
+                        getwidth    
+                        2   
+              
+ 
+            g2 setcolor cuelinecolor   
+            g2 fill cueline   
+ 
+              
+            ghostrectangle   ghostrectangle createunion cueline droptargetdragevent isdataflavorsupported  
+                        transferablemodelelements uml_collection_flavor     
+                    droptargetdragevent rejectdrag nullpointerexception e    
+                droptargetdragevent rejectdrag path droptargetdragevent rejectdrag path equals sourcepath     
+                droptargetdragevent rejectdrag selectedtreepath isdescendant path     
+                droptargetdragevent rejectdrag object dest   
+                  defaultmutabletreenode  path 
+                     getlastpathcomponent    getuserobject model getfacade   isanamespace dest     
+                log debug  no valid drag  not a namespace     
+                droptargetdragevent rejectdrag model getfacade   isadatatype dest     
+                log debug  no valid drag  destination is a datatype     
+                droptargetdragevent rejectdrag droptargetdragevent acceptdrag  
+                    droptargetdragevent getdropaction drop droptargetdropevent droptargetdropevent    
+            log debug  dropping         
+              
+            hovertimer stop    
+ 
+              
+            repaint ghostrectangle getbounds isdropacceptable droptargetdropevent     
+                droptargetdropevent rejectdrop transferable tr   droptargetdropevent gettransferable    
+                  
+                point loc   droptargetdropevent getlocation    
+                treepath destinationpath   getpathforlocation loc x  loc y   
+                log debug  drop location  x     loc x     y     loc y isvaliddrag destinationpath  tr     
+                    droptargetdropevent rejectdrop collection modelelements   
+                     collection  tr gettransferdata  
+                        transferablemodelelements uml_collection_flavor   
+                log debug  transfer data       modelelements   
+ 
+                object dest   
+                      defaultmutabletreenode  destinationpath 
+                         getlastpathcomponent    getuserobject    
+                object src   
+                      defaultmutabletreenode  sourcepath 
+                         getlastpathcomponent    getuserobject action   droptargetdropevent getdropaction copyaction   
+                     action    dndconstants action_copy moveaction   
+                     action    dndconstants action_move moveaction    copyaction     
+                    droptargetdropevent rejectdrop collection newtargets arraylist droptargetdropevent acceptdrop action   
+                    iterator i   modelelements iterator i hasnext      
+                        object me   i next    
+                        log debug  moveaction ?  move      copy      me model getcorehelper   isvalidnamespace me  dest moveaction    
+                                model getcorehelper   setnamespace me  dest   
+                                newtargets add me copyaction newtargets add model getcopyhelper   
+                                             copy me  dest runtimeexception e    
+                                      
+                                    log error  exception   e me relocatable    
+                            relocatable d    relocatable  me d isrelocationallowed dest d relocate dest     
+                                    explorereventadaptor getinstance   
+                                         modelelementchanged src   
+                                    explorereventadaptor getinstance   
+                                         modelelementchanged dest   
+                                      
+                                    makevisible destinationpath   
+                                    expandpath destinationpath   
+                                    newtargets add me model getfacade   isafeature me   
+                                   model getfacade   isaclassifier dest moveaction    
+                                model getcorehelper   removefeature  
+                                        model getfacade   getowner me   me   
+                                model getcorehelper   addfeature dest  me   
+                                newtargets add me copyaction    
+                                newtargets add  
+                                        model getcopyhelper   copy me  dest    
+                              
+                          
+                      
+                    droptargetdropevent getdroptargetcontext   
+                         dropcomplete targetmanager getinstance   settargets newtargets java lang illegalstateexception ils    
+                    log debug  drop illegalstateexception    
+                    droptargetdropevent rejectdrop    
+                  
+ 
+                droptargetdropevent getdroptargetcontext   
+                     dropcomplete ioexception io    
+                log debug  drop ioexception    
+                droptargetdropevent rejectdrop unsupportedflavorexception ufe    
+                log debug  drop unsupportedflavorexception    
+                droptargetdropevent rejectdrop dropactionchanged  
+                droptargetdragevent droptargetdragevent isdragacceptable droptargetdragevent     
+                droptargetdragevent rejectdrag droptargetdragevent acceptdrag  
+                        droptargetdragevent getdropaction isdragacceptable  
+                droptargetdragevent droptargetevent droptargetevent getdropaction   
+                      dndconstants action_copy_or_move     0 point pt   droptargetevent getlocation    
+            treepath path   getpathforlocation pt x  pt y path path equals sourcepath isdropacceptable  
+                droptargetdropevent droptargetdropevent droptargetdropevent getdropaction   
+                      dndconstants action_copy_or_move     0 point pt   droptargetdropevent getlocation    
+            treepath path   getpathforlocation pt x  pt y path path equals sourcepath org argouml ui explorer DnDExplorerTree

@@ -1,0 +1,365 @@
+ 
+   $id$ 
+   copyright  c  2003-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications class represents partition swimlane activity diagrams  
+   
+    author mkl 
+    
+    
+       constructor  
+        
+    
+       constructor hooks fig existing uml element  
+       
+        param gm ignored 
+        param node uml element 
+        
+   
+        see java lang object#clone   
+        
+          figclone seperator    figline next    
+   
+        see org tigris gef presentation fig#setlinecolor java awt color  
+        
+   
+        see org tigris gef presentation fig#getlinecolor   
+        
+   
+        see org tigris gef presentation fig#setfillcolor java awt color  
+        
+   
+        see org tigris gef presentation fig#getfillcolor   
+        
+   
+        see org tigris gef presentation fig#setfilled boolean  
+        
+   
+        see org tigris gef presentation fig#getfilled   
+        
+   
+        see org tigris gef presentation fig#setlinewidth int  
+        
+   
+        see org tigris gef presentation fig#getlinewidth   
+        
+   
+        see org argouml uml diagram ui fignodemodelelement#placestring   
+        
+   todo  i18n 
+   
+        see org tigris gef presentation fig#getminimumsize want maintain minimum size partition 
+   
+        see org tigris gef presentation fig#setboundsimpl int  int  int  int  
+        
+  _x   x  _y   y  _w   w  _h   h post placement look see any figpartitions place right resize height  
+        
+  needed project deletion 
+   todo  needs work  must determine figs enclosed pool within bounds fig translate those partitions same layer figpartition 
+        return th partitions partitions same layer figpartition 
+        return th partitions test needed project deletion 
+    
+        param nextpartition nextpartition set  
+        
+    
+        param previouspartition previouspartition set dragging partition drag partitions return partitions drag togther specialist selection class figpartitions ensures swimlanes same length  ie height   
+       todo  make sure swimlanes appear side side  uml spec 
+       states  separated neighboring swimlanes vertical solid 
+       lines both sides   
+       todo  allow drag west east edge resize both selected 
+       fig fig connected side  
+       todo  show northwest southwest handle only leftmost swimlane  
+       todo  show northeast southeast handle only rightmost swimlane  
+        author bob 
+        
+    
+           construct new selectionpartition given partition 
+            
+    return handle id handle under mouse 1 none  needs work future  return handle instance null   p  
+             pre  
+             0-------1-------2 
+                               
+             3               4 
+                               
+             5-------6-------7 
+             pre  
+            
+   todo  midpoints side handles 
+   todo  side handles 
+    update private variables cx etc represent rectangle whose corners handles drawn    
+    paint handles four corners midway along each edge bounding box      
+    
+           change some attribute selected fig user drags one handles  
+           org argouml uml diagram activity ui FigPartition org argouml uml diagram activity ui figpartition fignodemodelelement figpartition     
+        setbigport figrect 10  10  160  200  color cyan  color cyan    
+        getbigport   setfilled getbigport   setlinewidth 0   
+        leftline figline 10  10  10  300   
+        rightline figline 150  10  160  300   
+        bottomline figline 10  300  150  300   
+        topline figline 10  10  150  10   
+ 
+        getnamefig   setlinewidth 0   
+        getnamefig   setbounds 10  10  50  25   
+        getnamefig   setfilled seperator figline 10  25  150  25   
+ 
+        addfig getbigport     
+        addfig rightline   
+        addfig leftline   
+        addfig topline   
+        addfig bottomline   
+        addfig getnamefig     
+        addfig seperator   
+         
+        setfilled rectangle r   getbounds    
+        setbounds r x  r y  r width  r height figpartition graphmodel gm  object node setowner node object clone     
+        figpartition figclone    figpartition clone    
+        iterator it   figclone getfigs   iterator    
+        figclone setbigport  figrect  it next     
+        figclone rightline    figline  it next    
+        figclone leftline    figline  it next    
+        figclone bottomline    figline  it next    
+        figclone topline    figline  it next    
+        figclone setnamefig  figtext  it next figclone setlinecolor color col    
+        rightline setlinecolor col   
+        leftline setlinecolor col   
+        bottomline setlinecolor col   
+        topline setlinecolor col   
+        seperator setlinecolor col color getlinecolor rightline getlinecolor setfillcolor color col    
+        getbigport   setfillcolor col   
+        getnamefig   setfillcolor col color getfillcolor getbigport   getfillcolor    
+      
+ 
+      
+     override setfilled f    
+        getbigport   setfilled f   
+        getnamefig   setfilled f setfilled f   
+      
+ 
+      
+     override getfilled getbigport   isfilled    
+      
+     
+     override isfilled getbigport   isfilled    
+      
+     
+      
+     override setlinewidth w    
+        rightline setlinewidth w   
+        leftline setlinewidth w getlinewidth rightline getlinewidth placestring swimlane dimension getminimumsize     
+        dimension namedim   getnamefig   getminimumsize w   namedim width h   namedim height  
+ 
+          
+        w   math max 64  w   
+        h   math max 256  h dimension w  h setstandardbounds x y w h getnamefig rectangle oldbounds   getbounds    
+ 
+        rectangle namebounds   getnamefig   getbounds    
+        getnamefig   setbounds x  y  w  namebounds height   
+ 
+        getbigport   setbounds x  y  w  h   
+        leftline setbounds x  y  0  h   
+        rightline setbounds x    w - 1    y  0  h   
+        topline setbounds x  y  w - 1  0   
+        bottomline setbounds x  y   h  w - 1  0   
+        seperator setbounds x  y   namebounds height  w - 1  0   
+ 
+        firepropchange  bounds   oldbounds  getbounds     
+        calcbounds      
+        updateedges selection makeselection selectionpartition appendtopool     
+	list partitions   getpartitions getlayer     
+	 
+        umlactivitydiagram diagram    
+             umlactivitydiagram  getproject   getactivediagram    
+        object machine   diagram getstatemachine    
+        model getcorehelper   setmodelelementcontainer  
+                getowner    machine partitions size      1    
+	    figpool fp figpool getbounds     
+	    getlayer   add fp   
+	    getlayer   bringtofront partitions size     1    
+	    figpool fp   getfigpool    
+	    fp setwidth fp getwidth     getwidth x   0  
+	    iterator it   partitions iterator    
+	    figpartition f figpartition previousfig it hasnext      
+		f    figpartition  it next f f getx     f getwidth     x    
+		    previousfig   f  
+		    x   f getx    
+		  
+	      
+	    setpreviouspartition previousfig   
+	    previouspartition setnextpartition setbounds  
+		    x   previousfig getwidth    
+		    previousfig gety    
+		    getwidth    
+		    previousfig getheight removefromdiagramimpl width   getwidth    
+	figpool figpool   getfigpool figpool newfigpoolwidth   figpool getwidth   - width removefromdiagramimpl    
+	 
+	figpartition next   nextpartition next next translatewithcontents -width   
+            next   next nextpartition nextpartition nextpartition setpreviouspartition previouspartition previouspartition previouspartition setnextpartition nextpartition   
+	  
+	 
+	setpreviouspartition setnextpartition figpool setwidth newfigpoolwidth translatewithcontents dx    
+	iterator it   getfigpool   getenclosedfigs   iterator it hasnext      
+	    fig f    fig  it next    
+            f setx f getx     dx   
+	  
+	setx getx     dx   
+	damage list getpartitions layer layer list partitions arraylist    
+         
+        iterator it   layer getcontents   iterator it hasnext      
+            object o   it next o figpartition    
+                partitions add o partitions figpool getfigpool getlayer object o   getlayer   getcontents o figpool figpool  o setnextpartition figpartition next nextpartition   next setpreviouspartition figpartition previous previouspartition   previous  
+        leftline setvisible previouspartition list getdragdependencies     
+	list dependents   getpartitions getlayer     
+	dependents add getfigpool     
+	dependents addall getfigpool   getenclosedfigs dependents selectionpartition selection selectionpartition figpartition f f hithandle rectangle r  handle h getcontent   isresizable      
+         
+                updatehandlebox    
+                rectangle testrect rectangle 0  0  0  0   
+                testrect setbounds  
+                    cx - hand_size   2  
+                    cy - hand_size   2  
+                    hand_size  
+                    ch   hand_size   2 leftedge   r intersects testrect   
+                testrect setbounds  
+                    cx   cw - hand_size   2  
+                    cy - hand_size   2  
+                    hand_size  
+                    ch   hand_size   2 rightedge   r intersects testrect   
+                testrect setbounds  
+                    cx - hand_size   2  
+                    cy - hand_size   2  
+                    cw   hand_size   2  
+                    hand_size topedge   r intersects testrect   
+                testrect setbounds  
+                    cx - hand_size   2  
+                    cy   ch - hand_size   2  
+                    cw   hand_size   2  
+                    hand_size bottomedge   r intersects testrect leftedge    topedge    
+                    h index   handle northwest  
+                    h instructions    resize top left rightedge    topedge    
+                    h index   handle northeast  
+                    h instructions    resize top right leftedge    bottomedge    
+                    h index   handle southwest  
+                    h instructions    resize bottom left rightedge    bottomedge    
+                    h index   handle southeast  
+                    h instructions    resize bottom right h index   -1  
+                    h instructions    move object s h index   -1  
+                h instructions    move object s updatehandlebox rectangle crect   getcontent   gethandlebox    
+            cx   crect x  
+            cy   crect y  
+            cw   crect width  
+            ch   crect height paint graphics g fig fig   getcontent getcontent   isresizable      
+         
+                updatehandlebox    
+                g setcolor globals getprefs   handlecolorfor fig    
+                g fillrect  
+                    cx - hand_size   2  
+                    cy - hand_size   2  
+                    hand_size  
+                    hand_size   
+                g fillrect  
+                    cx   cw - hand_size   2  
+                    cy - hand_size   2  
+                    hand_size  
+                    hand_size   
+                g fillrect  
+                    cx - hand_size   2  
+                    cy   ch - hand_size   2  
+                    hand_size  
+                    hand_size   
+                g fillrect  
+                    cx   cw - hand_size   2  
+                    cy   ch - hand_size   2  
+                    hand_size  
+                    hand_size x   fig getx y   fig gety w   fig getwidth h   fig getheight    
+                g setcolor globals getprefs   handlecolorfor fig    
+                g drawrect  
+                    x - border_width  
+                    y - border_width  
+                    w   border_width   2 - 1  
+                    h   border_width   2 - 1   
+                g drawrect  
+                    x - border_width - 1  
+                    y - border_width - 1  
+                    w   border_width   2   2 - 1  
+                    h   border_width   2   2 - 1   
+                g fillrect x - hand_size  y - hand_size  hand_size  hand_size   
+                g fillrect x   w  y - hand_size  hand_size  hand_size   
+                g fillrect x - hand_size  y   h  hand_size  hand_size   
+                g fillrect x   w  y   h  hand_size  hand_size draghandle mx my anx any  handle hand fig fig   getcontent    
+ 
+            updatehandlebox x   cx y   cy w   cw h   ch newx   x  newy   y  newwidth   w  newheight   h  
+            dimension minsize   fig getminimumsize minwidth   minsize width  minheight   minsize height hand index 1   
+                fig translate anx - mx  any - my handle northwest   
+                newwidth   x   w - mx  
+                newwidth    newwidth   minwidth  ? minwidth   newwidth  
+                newheight   y   h - my  
+                newheight    newheight   minheight  ? minheight   newheight  
+                newx   x   w - newwidth  
+                newy   y   h - newheight newx   newwidth      x   w     
+                    newx     newx   newwidth  -  x   w newy   newheight      y   h     
+                    newy     newy   newheight  -  y   h   
+                  
+                sethandlebox  
+                	previouspartition   
+                	newx   
+                	newy   
+                	newwidth   
+                	newheight handle north handle northeast   
+                newwidth   mx - x  
+                newwidth    newwidth   minwidth  ? minwidth   newwidth  
+                newheight   y   h - my  
+                newheight    newheight   minheight  ? minheight   newheight  
+                newy   y   h - newheight newy   newheight      y   h     
+                    newy     newy   newheight  -  y   h   
+                  
+                sethandlebox  
+                	nextpartition   
+                	newx   
+                	newy   
+                	newwidth   
+                	newheight handle west handle east handle southwest   
+                newwidth   x   w - mx  
+                newwidth    newwidth   minwidth  ? minwidth   newwidth  
+                newheight   my - y  
+                newheight    newheight   minheight  ? minheight   newheight  
+                newx   x   w - newwidth newx   newwidth      x   w     
+                    newx     newx   newwidth  -  x   w   
+                  
+                sethandlebox  
+                	previouspartition   
+                	newx   
+                	newy   
+                	newwidth   
+                	newheight handle south handle southeast   
+                newwidth   mx - x  
+                newwidth    newwidth   minwidth  ? minwidth   newwidth  
+                newheight   my - y  
+                newheight    newheight   minheight  ? minheight   newheight  
+                sethandlebox  
+                	nextpartition   
+                	newx   
+                	newy   
+                	newwidth   
+                	newheight sethandlebox  
+        	figpartition neighbour x y width height list partitions   getpartitions getlayer newneighbourwidth   0 neighbour newneighbourwidth    
+                     neighbour getwidth     getcontent   getwidth    - width neighbour getminimumsize   width   newneighbourwidth lowx   0 totalwidth   0  
+            iterator it   partitions iterator it hasnext      
+        	fig f    fig  it next f    getcontent      
+                    f sethandlebox x  y  width  height f    neighbour    f    previouspartition    
+                    f sethandlebox f getx    y  newneighbourwidth  height f    neighbour    f    nextpartition    
+                    f sethandlebox x   width  y  newneighbourwidth  height f sethandlebox f getx    y  f getwidth    height f gethandlebox   getx     lowx    totalwidth    0    
+        	    lowx   f gethandlebox   x  
+        	  
+        	totalwidth    f gethandlebox   width  
+              
+            figpool pool   getfigpool    
+            pool setbounds lowx  y  totalwidth  height   
+          
+      
+  
+org argouml uml diagram activity ui FigPartition

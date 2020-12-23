@@ -1,0 +1,35 @@
+teammates ui controller InstructorStudentListAjaxPageAction teammates ui controller instructorstudentlistajaxpageaction action   
+ 
+     override actionresult execute entitydoesnotexistexception courseid   getrequestparamvalue paramsnames course_id   
+        assumption assertpostparamnotnull paramsnames course_id  courseid courseindexstring   getrequestparamvalue paramsnames course_index   
+        assumption assertpostparamnotnull paramsnames course_index  courseindexstring   
+ 
+        gatekeeper verifyinstructorprivileges account   
+ 
+        instructorattributes instructor   logic getinstructorforgoogleid courseid  account googleid   
+        courseattributes course   logic getcourse courseid   
+ 
+        gatekeeper verifyaccessible instructor  course   
+ 
+        list sectiondetailsbundle  coursesectiondetails   logic getsectionsforcourse courseid courseindex   integer parseint courseindexstring hassection   logic hasindicatedsections courseid   
+ 
+        map string  emailphotourlmapping hashmap      
+        map map sectionprivileges hashmap sectiondetailsbundle sectiondetails   coursesectiondetails teamdetailsbundle teamdetails   sectiondetails teams studentattributes student   teamdetails students studentphotourl   student getpublicprofilepictureurl    
+                    studentphotourl   url addparamtourl studentphotourl paramsnames user_id  account googleid   
+                    emailphotourlmapping put student email  studentphotourl   
+                  
+              
+            map sectionprivilege hashmap      
+            sectionprivilege put paramsnames instructor_permission_view_student_in_sections  
+                                 instructor isallowedforprivilege  
+                                         sectiondetails name paramsnames instructor_permission_view_student_in_sections    
+            sectionprivilege put paramsnames instructor_permission_modify_student  
+                                 instructor isallowedforprivilege sectiondetails name paramsnames instructor_permission_modify_student    
+            sectionprivileges put sectiondetails name  sectionprivilege   
+          
+ 
+        instructorstudentlistajaxpagedata data instructorstudentlistajaxpagedata account  sessiontoken  courseid  
+                courseindex  hassection  coursesectiondetails  sectionprivileges  emailphotourlmapping createshowpageresult viewuris instructor_student_list_ajax  data   
+      
+ 
+ teammates ui controller InstructorStudentListAjaxPageAction

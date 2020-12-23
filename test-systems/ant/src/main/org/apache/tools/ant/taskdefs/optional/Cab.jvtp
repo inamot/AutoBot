@@ -1,0 +1,149 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   create cab archive  
+   
+    
+   checkstyle visibilitymodifier bc 
+   checkstyle visibilitymodifier name location create cab file  
+        param cabfile location cab file  
+        
+    
+       base directory look files cab  
+        param basedir base directory files cab true  compress files otherwise only store param compress code boolean  code  value true  display cabarc output  
+        param verbose code boolean  code  value  
+        
+    
+       sets additional cabarc options not supported directly  
+        param options cabarc command line options  
+        
+    
+       adds set files archive  
+        param set set files archive m not fond pattern   sub-method expected throw 
+       task-cancelling exceptions feels much programming side-effects check attributes nested elements correct  
+        throws buildexception error  
+        
+    
+       create new exec delegate delegate task populated appears logs same task one  
+        return delegate  
+        throws buildexception error  
+        
+    
+       check see target up date respect input files  
+        param files list files check  
+        return true cab file newer dependents  
+        
+    
+       creates list file temporary file contains list files included cab  one file per line  
+       
+        p method expects only called windows thus 
+       quotes file names   p  
+        param files list files use  
+        return list file created  
+        throws ioexception error  
+        
+    
+       append files found directory scanner vector  
+        param files vector append files param ds scanner files complete list files included cab   filenames gathered fileset added  otherwise traditional include parameters  
+        return list files  
+        throws buildexception error files old methods - includes nested include 
+    
+       execute task  
+        throws buildexception error  
+        
+   quick exit target up date 
+   create stream pumpers forward listcab's stdout stderr log 
+   note  listcab interactive program issues prompts every new line  
+         therefore  make show only verbose logging turned pump streams asynchronously wild default thread interrupted 
+   wait process finish 
+   wait end output error streams 
+   informative summary message case errors 
+   die cabarc failsorg apache tools ant taskdefs optional Cab org apache tools ant taskdefs optional cab matchingtask archivetype    cab setcabfile file cabfile cabfile   cabfile setbasedir file basedir basedir   basedir setcompress compress    
+        docompress   compress setverbose verbose    
+        doverbose   verbose setoptions options    
+        cmdoptions   options addfileset fileset set filesets size     0 buildexception  only one nested fileset allowed    
+          
+        filesets addelement set checkconfiguration buildexception basedir filesets size      0 buildexception  basedir attribute or one   
+                                        nested fileset is required    
+                                     getlocation basedir basedir exists buildexception  basedir does not exist    getlocation basedir filesets size     0 buildexception  
+                 both basedir attribute and a nested fileset is not allowed cabfile buildexception  cabfile attribute must be set    
+                                     getlocation exectask createexec buildexception   
+        exectask exec exectask exec isuptodate vector files uptodate i   0  i   files size      uptodate  i file   files elementat i  tostring file_utils resolvefile basedir  file  lastmodified   
+                      cabfile lastmodified      
+                uptodate uptodate file createlistfile vector files ioexception   
+        file listfile   file_utils createtempfile  ant listfile deleteonexit    
+ 
+        printwriter writer printwriter fileoutputstream listfile size   files size i   0  i   size  i      
+            writer println '\ '   files elementat i  tostring     '\ '   
+          
+        writer close listfile appendfiles vector files  directoryscanner ds dsfiles   ds getincludedfiles i   0  i   dsfiles length  i      
+            files addelement dsfiles i vector getfilelist buildexception   
+        vector files vector basedir appendfiles files getdirectoryscanner basedir fileset fs    fileset  filesets elementat 0   
+            basedir   fs getdir    
+            appendfiles files  fs getdirectoryscanner getproject files execute buildexception   
+ 
+        checkconfiguration    
+ 
+        vector files   getfilelist isuptodate files log  building     archivetype          cabfile getabsolutepath os isfamily  windows      
+            log  using listcab libcabinet   project msg_verbose   
+ 
+            stringbuffer sb stringbuffer    
+ 
+            enumeration fileenum   files elements fileenum hasmoreelements      
+                sb append fileenum nextelement    append  \n    
+              
+            sb append  \n   append cabfile getabsolutepath    append  \n process p   execute launch getproject listcab basedir basedir 
+                                                     getproject   getbasedir outputstream out   p getoutputstream    
+ 
+                  
+                  
+                  
+                logoutputstream outlog logoutputstream project msg_verbose   
+                logoutputstream errlog logoutputstream project msg_err   
+                streampumper    outpump streampumper p getinputstream    outlog   
+                streampumper    errpump streampumper p geterrorstream    errlog thread outpump   start thread errpump   start    
+ 
+                out write sb tostring   getbytes     
+                out flush    
+                out close result   -99 result   p waitfor    
+ 
+                      
+                    outpump waitfor    
+                    outlog close    
+                    errpump waitfor    
+                    errlog close interruptedexception ie    
+                    log  thread interrupted      ie execute isfailure result     
+                    log  error executing listcab  error code      result ioexception ex msg    problem creating     cabfile         ex getmessage buildexception msg  getlocation file listfile   createlistfile files   
+                exectask exec   createexec    
+                file outfile exec setfailonerror exec setdir basedir doverbose    
+                    outfile   file_utils createtempfile  ant outfile deleteonexit    
+                    exec setoutput outfile   
+                  
+ 
+                exec setexecutable  cabarc    
+                exec createarg   setvalue  -r    
+                exec createarg   setvalue  -p docompress    
+                    exec createarg   setvalue  -m    
+                    exec createarg   setvalue  none cmdoptions exec createarg   setline cmdoptions   
+                  
+ 
+                exec createarg   setvalue  n    
+                exec createarg   setfile cabfile   
+                exec createarg   setvalue       listfile getabsolutepath     
+ 
+                exec execute outfile outfile delete    
+                  
+ 
+                listfile delete ioexception ioe msg    problem creating     cabfile         ioe getmessage buildexception msg  getlocation     
+              
+          
+      
+ org apache tools ant taskdefs optional Cab

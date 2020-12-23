@@ -1,0 +1,37 @@
+ 
+  todo  add condition include status due inconsistency problem database 
+         similar one below teammates ui controller InstructorFeedbackCopyAction teammates ui controller instructorfeedbackcopyaction action   
+ 
+     override actionresult execute entitydoesnotexistexception copiedfeedbacksessionname   getrequestparamvalue paramsnames copied_feedback_session_name copiedcourseid   getrequestparamvalue paramsnames copied_course_id feedbacksessionname   getrequestparamvalue paramsnames feedback_session_name courseid   getrequestparamvalue paramsnames course_id   
+ 
+        assumption assertpostparamnotnull paramsnames copied_feedback_session_name  copiedfeedbacksessionname   
+        assumption assertpostparamnotnull paramsnames copied_course_id  copiedcourseid   
+        assumption assertpostparamnotnull paramsnames course_id  courseid   
+        assumption assertpostparamnotnull paramsnames feedback_session_name  feedbacksessionname   
+ 
+        instructorattributes instructor   logic getinstructorforgoogleid courseid  account googleid   
+ 
+        gatekeeper verifyaccessible  
+                instructor  logic getcourse courseid paramsnames instructor_permission_modify_session feedbacksessionattributes fs   logic copyfeedbacksession copiedfeedbacksessionname trim    
+                                                                     copiedcourseid  
+                                                                     feedbacksessionname  
+                                                                     courseid  
+                                                                     instructor email   
+ 
+            statustouser add statusmessage statusmessages feedback_session_copied  statusmessagecolor success    
+            statustoadmin feedback session  span bold\       fs getfeedbacksessionname         span course  span bold\       fs getcourseid         span  created  br   
+                        span bold\  from   span      fs getstarttime   
+                        span bold\   to  span      fs getendtime       br   
+                        span bold\  session visible from   span      fs getsessionvisiblefromtime       br   
+                        span bold\  results visible from   span      fs getresultsvisiblefromtime       br  br   
+                        span bold\  instructions   span      fs getinstructions createredirectresult pagedata account  sessiontoken  getinstructorfeedbackeditlink  
+                            fs getcourseid    fs getfeedbacksessionname entityalreadyexistsexception e    
+            setstatusforexception e statusmessages feedback_session_exists invalidparametersexception e    
+            setstatusforexception e   
+          
+ 
+        redirectresult redirectresult   createredirectresult actionuris instructor_feedback_sessions_page   
+        redirectresult responseparams put paramsnames user_id  account googleid redirectresult  
+      
+ 
+ teammates ui controller InstructorFeedbackCopyAction

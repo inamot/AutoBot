@@ -1,0 +1,146 @@
+ 
+   question skipped  not displayed   
+   test editing existing response edited response's id 
+   came original set existing responses loaded submission page answer not empty recipient empty 
+   deletes response answer empty code response existing response  check questionid responseid code data bundle questionresponsebundle   
+        param response response non-null id 
+        
+   question id invalid 
+   checks response id valid 
+   delete away response any empty fields field null response new field null question skipped used set any extra parameters attributes class inheriting feedbacksubmissioneditsaveaction requires used test any constraints class inheriting feedbacksubmissioneditsaveaction 
+       needs example used moderations check instructors not 
+       respond any question not access during moderation  
+       
+        p called feedbacksubmissioneditpagedata data set setadditionalparameters 
+        
+    
+       note overriding method not use   code respondingstudentlist code respondinginstructorlist code feedbacksessionattributes method used update   code respondingstudentlist code respondinginstructorlist   
+       
+        return true user responses feedback session valid response form submission need use logic check database handle cases not questions displayed 
+   e g feedbackquestionsubmissioneditsaveaction submitter submit both student instructorteammates ui controller FeedbackSubmissionEditSaveAction teammates ui controller feedbacksubmissioneditsaveaction action courseid feedbacksessionname feedbacksubmissioneditpagedata data hasvalidresponse issendsubmissionemail list feedbackresponseattributes  responsestosave arraylist list feedbackresponseattributes  responsestodelete arraylist list feedbackresponseattributes  responsestoupdate arraylist      
+ 
+     override actionresult execute entitydoesnotexistexception   
+        courseid   getrequestparamvalue paramsnames course_id   
+        feedbacksessionname   getrequestparamvalue paramsnames feedback_session_name   
+        assumption assertpostparamnotnull paramsnames course_id  courseid   
+        assumption assertpostparamnotnull paramsnames feedback_session_name  feedbacksessionname   
+ 
+        setadditionalparameters    
+        verifyaccessibleforspecificuser useremailforcourse   getuseremailforcourse    
+ 
+        data feedbacksubmissioneditpagedata account  student  sessiontoken   
+        data bundle   getdatabundle useremailforcourse   
+        assumption assertnotnull  feedback session     feedbacksessionname 
+                                     does not exist in     courseid        data bundle   
+ 
+        checkadditionalconstraints    
+ 
+        setstatustoadmin issessionopenforspecificuser data bundle feedbacksession     
+            iserror statustouser add statusmessage statusmessages feedback_submissions_not_open  
+                                               statusmessagecolor warning createspecificredirectresult userteamforcourse   getuserteamforcourse usersectionforcourse   getusersectionforcourse numofquestionstoget   data bundle questionresponsebundle size questionindx   1  questionindx    numofquestionstoget  questionindx totalresponsesforquestion   getrequestparamvalue paramsnames feedback_question_responsetotal    -    questionindx totalresponsesforquestion list feedbackresponseattributes  responsesforquestion arraylist questionid   getrequestparamvalue paramsnames feedback_question_id    -    questionindx   
+            feedbackquestionattributes questionattributes   data bundle getquestionattributes questionid questionattributes statustouser add statusmessage  the feedback session or questions may have changed you were submitting  please check your responses   
+                                                          to make sure they are saved correctly    
+                                                   statusmessagecolor warning    
+                iserror log warning  question not found   deleted or invalid id passed?  id    
+                              questionid     index      questionindx feedbackquestiondetails questiondetails   questionattributes getquestiondetails numofresponsestoget   integer parseint totalresponsesforquestion   
+ 
+            set emailset   data bundle getrecipientemails questionattributes getid     
+            emailset add      
+            emailset   sanitizationhelper desanitizefromhtml emailset   
+ 
+            arraylist responsesrecipients arraylist      
+            list errors arraylist responseindx   0  responseindx   numofresponsestoget  responseindx      
+                feedbackresponseattributes response   
+                        extractfeedbackresponsedata requestparameters  questionindx  responseindx  questionattributes response feedbackquestiontype    questionattributes questiontype    
+                    errors add format statusmessages feedback_responses_wrong_question_type  questionindx isexistingresponse   response getid isexistingresponse     isexistingresponsevalid response     
+                    errors add format statusmessages feedback_responses_invalid_id  questionindx responsesrecipients add response recipient response recipient isempty       response responsemetadata getvalue   isempty      
+                    errors add format statusmessages feedback_responses_missing_recipient  questionindx response responsemetadata getvalue   isempty      
+                      
+                    addtopendingresponses response response giver   questionattributes givertype isteam   ? userteamforcourse 
+                                                                                  useremailforcourse  
+                    response giversection   usersectionforcourse  
+                    responsesforquestion add response   
+                  
+              
+ 
+            list questionspecificerrors   
+                    questiondetails validateresponseattributes responsesforquestion  
+                                                               data bundle recipientlist get questionid  size     
+            errors addall questionspecificerrors emailset containsall responsesrecipients     
+                errors add format statusmessages feedback_response_invalid_recipient  questionindx errors isempty feedbackresponseattributes response   responsesforquestion    
+                    addtopendingresponses response list statusmessage  errormessages arraylist error   errors    
+                    errormessages add statusmessage error  statusmessagecolor danger    
+                  
+ 
+                statustouser addall errormessages   
+                iserror savenewreponses responsestosave   
+        deleteresponses responsestodelete   
+        updateresponses responsestoupdate iserror    
+            statustouser add statusmessage statusmessages feedback_responses_saved  statusmessagecolor success isuserrespondentofsession      
+            appendrespondent removerespondent issubmissionemailrequested    on  equals getrequestparamvalue paramsnames send_submission_email iserror    issendsubmissionemail    issubmissionemailrequested    
+            feedbacksessionattributes session   logic getfeedbacksession feedbacksessionname  courseid   
+            assumption assertnotnull session user   account null   account googleid unregisteredstudentemail   student null   student email unregisteredstudentregisterationkey   student null   student key  
+            studentattributes student instructorattributes instructor user student   logic getstudentforgoogleid courseid  user   
+                instructor   logic getinstructorforgoogleid courseid  user student unregisteredstudentemail student studentattributes    
+                student email   unregisteredstudentemail  
+                student name   unregisteredstudentemail  
+                student key   unregisteredstudentregisterationkey  
+              
+            assumption assertfalse student instructor calendar timestamp   calendar getinstance timezone gettimezone  utc     
+                emailwrapper email   instructor emailgenerator   generatefeedbacksubmissionconfirmationemailforstudent session  
+                                student  timestamp emailgenerator   generatefeedbacksubmissionconfirmationemailforinstructor session  
+                                instructor  timestamp   
+                emailsender sendemail email emailsendingexception e    
+                log severe  submission confirmation email failed to send    
+                             teammatesexception tostringwithstacktrace e createspecificredirectresult isexistingresponsevalid feedbackresponseattributes response questionid   response feedbackquestionid  
+        feedbackquestionattributes question   data bundle getquestionattributes questionid data bundle questionresponsebundle containskey question list feedbackresponseattributes  existingresponses   data bundle questionresponsebundle get question   
+        list existingresponsesid arraylist feedbackresponseattributes existingresponse   existingresponses    
+            existingresponsesid add existingresponse getid existingresponsesid contains response getid addtopendingresponses feedbackresponseattributes response isexistingresponse   response getid isexistingresponse response responsemetadata getvalue   isempty      response recipient isempty      
+                responsestodelete add response responsestoupdate add response response responsemetadata getvalue   isempty   
+                       response recipient isempty      
+            responsestosave add response savenewreponses list feedbackresponseattributes  responsestosave entitydoesnotexistexception logic createfeedbackresponses responsestosave   
+            hasvalidresponse invalidparametersexception e    
+            setstatusforexception e deleteresponses list feedbackresponseattributes  responsestodelete feedbackresponseattributes response   responsestodelete    
+            logic deletefeedbackresponse response updateresponses list feedbackresponseattributes  responsestoupdate entitydoesnotexistexception feedbackresponseattributes response   responsestoupdate logic updatefeedbackresponse response   
+                hasvalidresponse entityalreadyexistsexception   invalidparametersexception e    
+                setstatusforexception e feedbackresponseattributes extractfeedbackresponsedata  
+            map string    requestparameters questionindx responseindx  
+            feedbackquestionattributes feedbackquestionattributes    
+ 
+        feedbackquestiondetails questiondetails   feedbackquestionattributes getquestiondetails    
+        feedbackresponseattributes response feedbackresponseattributes    
+ 
+          
+        response setid getrequestparamvalue paramsnames feedback_response_id    -    questionindx    -    responseindx    
+ 
+        response feedbacksessionname   getrequestparamvalue paramsnames feedback_session_name   
+        assumption assertpostparamnotnull paramsnames feedback_session_name  response feedbacksessionname   
+ 
+        response courseid   getrequestparamvalue paramsnames course_id   
+        assumption assertpostparamnotnull paramsnames course_id  response courseid   
+ 
+        response feedbackquestionid   getrequestparamvalue paramsnames feedback_question_id    -    questionindx   
+        assumption assertpostparamnotnull paramsnames feedback_question_id    -    questionindx  
+                response feedbackquestionid   
+        assumption assertequals  feedbackquestionid mismatch   feedbackquestionattributes getid    
+                                response feedbackquestionid   
+ 
+        response recipient   getrequestparamvalue paramsnames feedback_response_recipient    -    questionindx    -    responseindx   
+        assumption assertpostparamnotnull paramsnames feedback_response_recipient    -    questionindx    -  
+                  responseindx  response recipient feedbackquestiontype   getrequestparamvalue paramsnames feedback_question_type    -    questionindx   
+        assumption assertpostparamnotnull paramsnames feedback_question_type    -    questionindx  
+                feedbackquestiontype   
+        response feedbackquestiontype   feedbackquestiontype valueof feedbackquestiontype   
+ 
+        feedbackparticipanttype recipienttype   feedbackquestionattributes recipienttype recipienttype    feedbackparticipanttype instructors    recipienttype    feedbackparticipanttype none    
+            response recipientsection default_section recipienttype    feedbackparticipanttype teams    
+            response recipientsection   logic getsectionforteam courseid  response recipient recipienttype    feedbackparticipanttype students    
+            studentattributes student   logic getstudentforemail courseid  response recipient   
+            response recipientsection   student default_section   student section response recipientsection   getusersectionforcourse paramname paramsnames feedback_response_text    -    questionindx    -    responseindx answer   getrequestparamvalues paramname questiondetails isquestionskipped answer     
+            response responsemetadata text feedbackresponsedetails responsedetails   
+                    feedbackresponsedetails createresponsedetails answer  questiondetails getquestiontype    
+                                                                  questiondetails  requestparameters  
+                                                                  questionindx  responseindx   
+            response setresponsedetails responsedetails response setadditionalparameters entitydoesnotexistexception checkadditionalconstraints isuserrespondentofsession hasvalidresponse 
+               logic hasgiverrespondedforsession getuseremailforcourse    feedbacksessionname  courseid appendrespondent removerespondent verifyaccessibleforspecificuser getuseremailforcourse getuserteamforcourse getusersectionforcourse feedbacksessionquestionsbundle getdatabundle useremailforcourse entitydoesnotexistexception setstatustoadmin issessionopenforspecificuser feedbacksessionattributes session redirectresult createspecificredirectresult    
+ teammates ui controller FeedbackSubmissionEditSaveAction

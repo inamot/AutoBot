@@ -1,0 +1,160 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   inner class used ejbjar facilitate parsing deployment 
+   descriptors capture appropriate information  extends 
+   handlerbase only implements methods needed  during parsing 
+   creates hashtable consisting entries mapping name inserted ejb jar file representing file disk list accessed through getfiles   method  
+    
+    
+       bunch constants used storing entries hashtable constructing filenames various parts ejb jar state parsing 
+        
+   checkstyle visibilitymodifier bc 
+    
+       instance variable used store name current element being 
+       processed sax parser   accessed sax parser call-back methods 
+       startelement endelement text current element 
+        
+    
+       instance variable stores names files put jar file  mapped file objects  accessed sax 
+       parser call-back method characters    
+        
+    
+       instance variable stores value found lt ejb-name gt  element 
+        
+   checkstyle visibilitymodifier bc directory containing bean classes interfaces used performing dependency file lookups  
+        
+    
+       constructor descriptorhandler  
+        param task task owns desciptor 
+        param srcdir source directory 
+        
+    
+       register dtd location location one filename resource name classpath url  
+        param publicid public identity dtd 
+        param location location dtd 
+        
+   resolve relative project basedir 
+  ignored 
+    
+       resolve entity  
+        see org xml sax entityresolver#resolveentity string  string   
+        param publicid public identifier code null  code none available  
+        param systemid system identifier provided xml 
+                       document not code null  code   
+        return inputsource identifier 
+        throws saxexception problem  
+        
+   ignore 
+  ignore 
+    
+       getter method returns set files include ejb jar  
+        return map files publicid dtd 
+        return public id 
+        
+    
+       getter method returns value lt ejb-name gt  element  
+        return ejb name 
+        
+    
+       sax parser call-back method used initialize values some 
+       instance variables ensure safe operation  
+        throws saxexception error 
+        
+    
+       sax parser call-back method invoked new element entered used store context  attribute name currentattribute 
+       instance variable  
+        param name name element being entered  
+        param attrs attributes associated element  
+        throws saxexception error 
+        
+    
+       sax parser call-back method invoked element exited  
+       used blank out  set empty string  not nullify name currentattribute better method use stack instance variable only interested leaf-node 
+       data simpler workable solution  
+        param name name attribute being exited  ignored implementation  
+        throws saxexception error 
+        
+    
+       sax parser call-back method invoked whenever characters located within element   currentattribute  modified startelement endelement  
+       tells whether interesting element  one up four 
+       classes ejb converts classname format 
+       org apache tools ant parser convention storing class  
+       org apache tools ant parser class resolved file 
+       object under srcdir stored hashtable  
+        param ch character array containing characters element maybe others ignored  
+        param start integer marking position char 
+              array start reading param length integer representing offset char array current data terminates  
+        throws saxexception error 
+        
+    
+       called endelement seen may overridden derived classes updates ejbfiles element interface bean class updates ejbname element ejb name filename string object s primitive wrapper shouldn't try put jar ignore translate periods path separators  add  class name  create file object add hashtable value ejb-name  tag   only first occurrence org apache tools ant taskdefs optional ejb DescriptorHandler org apache tools ant taskdefs optional ejb descriptorhandler org xml sax handlerbase currentelement currenttext hashtable ejbfiles ejbname descriptorhandler task task  file srcdir owningtask   task srcdir   srcdir registerdtd publicid location location file filedtd file location filedtd exists      
+              
+            filedtd   owningtask getproject   resolvefile location filedtd exists publicid filedtds put publicid  filedtd   
+                owningtask log  mapped publicid     publicid     to file   
+                      filedtd  project msg_verbose getclass   getresource location publicid resourcedtds put publicid  location   
+                owningtask log  mapped publicid     publicid     to resource   
+                      location  project msg_verbose publicid url urldtd url location   
+                urldtds put publicid  urldtd java net malformedurlexception e inputsource resolveentity publicid systemid saxexception publicid   publicid  
+ 
+        file dtdfile    file  filedtds get publicid dtdfile owningtask log  resolved     publicid     to local file   
+                      dtdfile  project msg_verbose inputsource fileinputstream dtdfile filenotfoundexception ex dtdresourcename resourcedtds get publicid dtdresourcename inputstream is getclass   getresourceasstream dtdresourcename is owningtask log  resolved     publicid     to local resource   
+                      dtdresourcename  project msg_verbose inputsource is   
+              
+          
+ 
+        url dtdurl    url  urldtds get publicid dtdurl inputstream is   dtdurl openstream    
+                owningtask log  resolved     publicid     to url   
+                      dtdurl  project msg_verbose inputsource is ioexception ioe    
+                  
+              
+          
+ 
+        owningtask log  could not resolve   publicid      publicid 
+                 systemid      systemid      to a local entity   project msg_info hashtable getfiles ejbfiles hashtable     ejbfiles getpublicid publicid getejbname ejbname startdocument saxexception ejbfiles hashtable default_hash_table_size  1 currentelement inejbref startelement name  attributelist attrs saxexception currentelement   name  
+        currenttext name equals ejb_ref     name equals ejb_local_ref     
+            inejbref parsestate    state_looking_ejbjar    name equals ejb_jar     
+            parsestate   state_in_ejbjar parsestate    state_in_ejbjar    name equals enterprise_beans     
+            parsestate   state_in_beans parsestate    state_in_beans    name equals session_bean     
+            parsestate   state_in_session parsestate    state_in_beans    name equals entity_bean     
+            parsestate   state_in_entity parsestate    state_in_beans    name equals message_bean     
+            parsestate   state_in_message endelement name saxexception   
+        processelement    
+        currenttext currentelement name equals ejb_ref     name equals ejb_local_ref     
+            inejbref parsestate    state_in_entity    name equals entity_bean     
+            parsestate   state_in_beans parsestate    state_in_session    name equals session_bean     
+            parsestate   state_in_beans parsestate    state_in_message    name equals message_bean     
+            parsestate   state_in_beans parsestate    state_in_beans    name equals enterprise_beans     
+            parsestate   state_in_ejbjar parsestate    state_in_ejbjar    name equals ejb_jar     
+            parsestate   state_looking_ejbjar characters ch start length saxexception   
+ 
+        currenttext ch  start  length processelement inejbref 
+                parsestate    state_in_entity 
+                   parsestate    state_in_session 
+                   parsestate    state_in_message currentelement equals home_interface  
+               currentelement equals remote_interface  
+               currentelement equals local_interface  
+               currentelement equals local_home_interface  
+               currentelement equals bean_class  
+               currentelement equals pk_class     
+ 
+              
+            file classfile classname   currenttext trim classname startswith  java    
+                    classname startswith  javax       
+                  
+                  
+                classname   classname replace ' '  file separatorchar   
+                classname classfile file srcdir  classname   
+                ejbfiles put classname  classfile currentelement equals ejb_name ejbname ejbname   currenttext trim    
+              
+          
+      
+ org apache tools ant taskdefs optional ejb DescriptorHandler

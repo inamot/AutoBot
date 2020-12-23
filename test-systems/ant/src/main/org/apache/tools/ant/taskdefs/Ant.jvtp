@@ -1,0 +1,325 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   build sub-project  
+   
+     pre  
+     lt target name  quot foo quot  depends  quot init quot  gt  
+       lt ant antfile  quot build xml quot  target  quot bar quot   gt  
+         lt property name  quot property1 quot  value  quot aaaaa quot    gt  
+         lt property name  quot foo quot  value  quot baz quot    gt  
+       lt  ant gt   span  
+     lt  target gt   span  
+   
+     lt target name  quot bar quot  depends  quot init quot  gt  
+       lt echo message  quot prop property1  $ foo  quot    gt  
+     lt  target gt  
+     pre ant 1 1 
+   
+    ant task category  control basedir executed build file build xml file absolute case dir ignored output inherit properties parent inherit references parent properties pass new project references pass new project temporary project created run build file stream output written sets properties pass new project targets call new project    
+    whether target attribute specified     
+    
+       simple constructor 
+        
+  default 
+    
+       create task bound creator 
+        param owner owning task true  pass properties new ant project  
+       defaults true  
+        param value true pass properties new ant project true  pass references new ant project  
+       defaults false  
+        param value true  pass references new ant project 
+        
+    
+       creates project instance project call  
+        
+    
+       called execute createproperty  via getnewproject newproject null  
+       
+        p happen same instance task run 
+       twice newproject set null end execute save memory help gc    p  
+        p calls init   again  p  
+       
+        
+    
+       attaches build listeners current project new 
+       project  configures possible logfile  transfers task data-type definitions  transfers properties  either ones specified user properties current project  
+       depending inheritall   transfers input handler  
+        
+   set user-defined properties 
+   set java built properties separately  
+   b c won't inherit set properties calling project 
+    
+       handles output  
+       send the new project present  otherwise 
+       call super class  
+        param outputtohandle string output output  
+        see task#handleoutput string ant 1 5 
+        
+    
+       handles input  
+       deleate created project present  otherwise 
+       call super class  
+        param buffer buffer data read  
+        param offset offset buffer data stored  
+        param length amount data read  
+       
+        return number bytes read  
+       
+        exception ioexception data cannot read  
+        see task#handleinput byte    int  int ant 1 6 
+        
+    
+       handles output  
+       send the new project present  otherwise 
+       call super class  
+        param toflush string output  
+        see task#handleflush string ant 1 5 2 
+        
+    
+       handle error output  
+       send the new project present  otherwise 
+       call super class  
+        param erroroutputtohandle string output  
+       
+        see task#handleerroroutput string ant 1 5 
+        
+    
+       handle error output  
+       send the new project present  otherwise 
+       call super class  
+        param erroroutputtoflush string output  
+        see task#handleerrorflush string ant 1 5 2 execution  
+        throws buildexception target tries call itself  
+       probably buildexception thrown new project set explicitly trying call target defined build file top level task ? 
+   help gc 
+  ignore 
+    
+       override properties new project one 
+       explicitly defined nested elements here  
+        throws buildexception under unknown circumstances  
+        
+   remove duplicate properties - last property wins 
+   needed backward compatibility 
+    
+       add references explicitly defined nested elements new project copy over references don't override 
+       existing references new project inheritrefs requested  
+        throws buildexception reference not refid  
+        
+   now add references not defined subproject inheritrefs true 
+    
+       try clone reconfigure object referenced oldkey parent project add new project key newkey  
+       
+        p cannot clone copy referenced object itself keep fingers crossed   p  
+        param oldkey reference id current project  
+        param newkey reference id new project  
+        
+   not clonable 
+   ignore class being referenced not set project method  
+    
+       copies properties given table new project - 
+       omitting those already set new project well properties named basedir ant file  
+        param props properties  code hashtable  code copy new project ant 1 6 
+        
+   basedir ant file special treatment execute   
+   don't re-set user properties  avoid warning message user property directory use base directory new ant project  
+       defaults current project's basedir  unless inheritall set false case doesn't default 
+       value override basedir setting called project  
+        param dir new directory code file  code build file use  defaults build xml file expected filename relative dir attribute given  
+        param antfile code string  code  build file name  
+        
+    note string not file handle relative absolute 
+   otherwise relative file resolved based current 
+   basedir target new ant project execute  
+       defaults new project's default target  
+        param targettoadd name target invoke  
+        
+    
+       set filename write output relative value dir attribute set base directory current project otherwise  
+        param outputfile name file output go  
+        
+    
+       property pass new project property passed user property'  
+        return created  code property  code  object  
+        
+    
+       add reference element identifying data type carry 
+       over new project  
+        param ref  code reference  code add  
+        
+    
+       add target ant invocation  
+        param t code targetelement  code add ant 1 6 3 
+        
+    
+       add set properties pass new project  
+       
+        param ps  code propertyset  code add ant 1 6 sub -project instance currently use  
+        return project ant 1 7 ant 1 6 2 
+        
+    
+       helper class implements nested  lt reference gt  
+       element lt ant gt lt antcall gt   
+        
+    creates reference configured ant     
+    
+           set id reference stored under new project  
+           
+            param targetid id under reference passed new project id under reference stored new 
+           project  
+           
+            return id reference new project  
+            
+    
+       helper class implements nested  lt target gt  
+       element lt ant gt lt antcall gt ant 1 6 3 
+        
+    
+           default constructor  
+            
+  default 
+    
+           set name targetelement  
+            param name code string  code  target name name targetelement  
+            return  code string  code   
+           org apache tools ant taskdefs Ant org apache tools ant taskdefs ant task ant ant task owner    
+        bindtoowner owner setinheritall value    
+        inheritall   value setinheritrefs value    
+        inheritrefs   value init     
+        newproject   getproject   createsubproject    
+        newproject setjavaversionproperty reinit     
+        init initializeproject     
+        newproject setinputhandler getproject   getinputhandler     
+ 
+        iterator iter   getbuildlisteners iter hasnext      
+            newproject addbuildlistener  buildlistener  iter next output file outfile dir outfile   file_utils resolvefile dir  output outfile   getproject   resolvefile output out printstream fileoutputstream outfile    
+                defaultlogger logger defaultlogger    
+                logger setmessageoutputlevel project msg_info   
+                logger setoutputprintstream out   
+                logger seterrorprintstream out   
+                newproject addbuildlistener logger ioexception ex    
+                log  ant  can't set output to     output   
+              
+          
+          
+        getproject   copyuserproperties newproject inheritall    
+             
+             
+           newproject setsystemproperties addalmostall getproject   getproperties     
+          
+ 
+        enumeration e   propertysets elements e hasmoreelements      
+            propertyset ps    propertyset  e nextelement    
+            addalmostall ps getproperties handleoutput outputtohandle newproject newproject demuxoutput outputtohandle handleoutput outputtohandle handleinput buffer offset length ioexception newproject newproject demuxinput buffer  offset  length handleinput buffer  offset  length handleflush toflush newproject newproject demuxflush toflush handleflush toflush handleerroroutput erroroutputtohandle newproject newproject demuxoutput erroroutputtohandle handleerroroutput erroroutputtohandle handleerrorflush erroroutputtoflush newproject newproject demuxflush erroroutputtoflush handleerrorflush erroroutputtoflush execute buildexception   
+        file saveddir   dir savedantfile   antfile  
+        vector locals vector targets getnewproject dir inheritall    
+                dir   getproject   getbasedir    
+              
+ 
+            initializeproject dir newproject setbasedir dir saveddir newproject setinheritedproperty magicnames project_basedir  
+                                                    dir getabsolutepath dir   getproject   getbasedir    
+              
+ 
+            overrideproperties antfile antfile   main default_build_filename  
+              
+ 
+            file file   file_utils resolvefile dir  antfile   
+            antfile   file getabsolutepath    
+ 
+            log  calling target s    
+                    locals size     0  ? locals tostring in build file     antfile  project msg_verbose   
+            newproject setuserproperty magicnames ant_file   antfile thisantfile   getproject   getproperty magicnames ant_file thisantfile file equals getproject   resolvefile thisantfile   
+                   getowningtarget getowningtarget   getname   equals gettaskname   equals  antcall buildexception  antcall must not be used at  
+                                                     the top level buildexception gettaskname       task at the  
+                                    top level must not invoke  
+                                    its own build file projecthelper configureproject newproject  file buildexception ex projecthelper addlocationtobuildexception  
+                    ex  getlocation locals size      0 defaulttarget   newproject getdefaulttarget defaulttarget locals add defaulttarget newproject getproperty magicnames ant_file  
+                 equals getproject   getproperty magicnames ant_file   
+                   getowningtarget owningtargetname   getowningtarget   getname locals contains owningtargetname buildexception gettaskname       task calling   
+                                                its own parent target circular iterator it   locals iterator    
+                      circular    it hasnext       
+                    target other   
+                         target   getproject   gettargets   get it next      
+                    circular     other other dependson owningtargetname circular buildexception gettaskname   
+                                                 task calling a target  
+                                                 that depends on  
+                                                 its parent target \'  
+                                               owningtargetname 
+                                                \'     
+                  
+              
+ 
+            addreferences locals size     0      locals size      1 
+                                             equals locals get 0       
+                buildexception be log  entering     antfile          project msg_verbose   
+                    newproject firesubbuildstarted    
+                    newproject executetargets locals buildexception ex    
+                    be   projecthelper 
+                         addlocationtobuildexception ex  getlocation be log  exiting     antfile        project msg_verbose   
+                    newproject firesubbuildfinished be newproject enumeration e   properties elements e hasmoreelements      
+                property p    property  e nextelement    
+                p setproject output out out close exception ex    
+                      
+                  
+              
+            dir   saveddir  
+            antfile   savedantfile overrideproperties buildexception   
+          
+          
+        set set hashset i   properties size   - 1  i    0  --i    
+            property p    property  properties get i p getname p getname   equals set contains p getname       
+                    properties remove i set add p getname     
+                  
+              
+          
+        enumeration e   properties elements e hasmoreelements      
+            property p    property  e nextelement    
+            p setproject newproject   
+            p execute    
+          
+        getproject   copyinheritedproperties newproject addreferences buildexception   
+        hashtable thisreferences 
+               hashtable  getproject   getreferences   clone    
+        hashtable newreferences   newproject getreferences    
+        enumeration e references size     0 e   references elements    e hasmoreelements       
+                reference ref    reference  e nextelement refid   ref getrefid refid buildexception  the refid attribute is required reference elements thisreferences containskey refid     
+                    log  parent project doesn't contain any reference '  
+                          refid    '   
+                        project msg_warn thisreferences remove refid torefid   ref gettorefid torefid torefid   refid  
+                  
+                copyreference refid  torefid inheritrefs e   thisreferences keys    e hasmoreelements key e nextelement newreferences containskey key copyreference key  key   
+                newproject inheritidreferences getproject copyreference oldkey newkey    
+        object orig   getproject   getreference oldkey orig log  no object referenced by     oldkey      can't copy to   
+                  newkey  
+                project msg_warn c   orig getclass    
+        object copy   orig method clonem   c getmethod  clone 0 clonem copy   clonem invoke orig object 0    
+                log  adding clone of reference     oldkey  project msg_debug exception e copy projectcomponent    
+              projectcomponent  copy  setproject newproject method setprojectm   
+                    c getmethod  setproject project setprojectm setprojectm invoke copy object    newproject nosuchmethodexception e exception e2 msg    error setting project instance reference with id     oldkey buildexception msg  e2  getlocation     
+              
+          
+        newproject addreference newkey  copy addalmostall hashtable props    
+        enumeration e   props keys e hasmoreelements key   e nextelement   tostring magicnames project_basedir equals key     magicnames ant_file equals key value   props get key  tostring newproject getproperty key newproject setnewproperty key  value setdir file dir dir   dir setantfile antfile antfile   antfile settarget targettoadd targettoadd equals buildexception  target attribute must not be empty    
+          
+        targets add targettoadd   
+        targetattributeset setoutput outputfile output   outputfile property createproperty     
+        property p property getproject     
+        p setproject getnewproject     
+        p settaskname  property    
+        properties addelement p p addreference reference ref    
+        references addelement ref addconfiguredtarget targetelement t targetattributeset buildexception  
+                 nested target is incompatible with the target attribute name   t getname name equals buildexception  target name must not be empty    
+          
+        targets add name addpropertyset propertyset ps    
+        propertysets addelement ps project getnewproject newproject reinit newproject iterator getbuildlisteners getproject   getbuildlisteners   iterator reference org apache tools ant types reference reference settorefid targetid targetid   targetid gettorefid targetid targetelement targetelement setname name name   name getname name  
+          
+      
+ org apache tools ant taskdefs Ant

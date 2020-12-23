@@ -1,0 +1,278 @@
+ 
+   $id$ 
+   copyright  c  1996-2006 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications class defines bridge between uml meta-model 
+   representation design graphmodel interface used gef  p class handles only uml use case diagrams  p  
+    
+    
+       logger  
+        
+                                                                            
+   
+   methods implement graphmodel itself 
+   
+                                                                            
+    
+       return ports node edge supplied argument  p only objects diagram any ports use 
+       cases actors each one - themself  p  
+       
+        param nodeoredge model element list ports wanted  
+       
+        return list ports found  
+        
+    
+       return node edge owns given port  p implementation only objects ports  use 
+       themselves port owner  p  
+       
+        param port port  whose owner wanted  
+       
+        return owner port  
+        
+    
+       return edges going given port  p only objects ports use case diagram actors use cases each case find attached association 
+       ends build list incoming ports  p  
+       
+        param port port want know incoming edges  
+       
+        return list objects incoming edges  
+        
+    
+       return edges going given port  p  
+       
+        em needs work  em seem superficially identical link #getinedges implementation return empty list  p  
+       
+        param port port want know outgoing edges  
+       
+        return list objects outgoing edges  currently 
+                    return empty list  
+        
+                                                                            
+   
+   methods implement mutablegraphmodel interface 
+   
+                                                                            
+    
+       determine given node validly placed graph  p simply matter determining node actor use case  p  
+       
+        em note  em inconsistent link #addnode not allow node added graph already p  
+       
+        param node node considered 
+       
+        return       code true  code given object valid node graph   code false  code  otherwise binary association not node reject  
+    
+       determine given edge validly placed graph  p cannot edge already graph  unlike 
+       nodes may not appear once   p  
+       
+       otherwise valid types edge  binary association  
+       generalization  extend  include  dependency two 
+       ends both nodes already graph ok  
+       otherwise cannot place edge graph  p  
+       
+        param edge edge considered 
+       
+        return       code true  code given object valid edge graph   code false  code  otherwise two ends any valid edge 
+   only allow binary associations 
+   give up assocation ends don't type defined dependency potentially many clients suppliers only 
+   consider first each  not clear really 
+   accept case one either  
+   both ends must defined nodes graph already  
+    
+       add given node graph valid  p add node not already graph assuming actor use case  add owned 
+       elements model  p  
+       
+        em needs work  em adding node owned 
+       elements model namespace implicitly making public visibility private namespace   p  
+       
+        em note  em method inconsistent link #canaddnode allow node added graph already p  
+       
+        param node node added graph  
+        
+   give up already graph bit inconistent canaddnode above  
+   add node  check actor use case add model namespace  
+   tell gef changed 
+    
+       add given edge graph valid  p add edge not already graph assuming association  generalization  extend  
+       include dependency  add owned elements model  p  
+       
+        em needs work  em adding edge owned 
+       elements model namespace implicitly making public visibility private namespace   p  
+       
+        param edge edge added graph  
+        
+   add element place namespace model 
+   todo  assumes public 
+   tell gef 
+    
+       add various types edge may connected given node  p use cases may find extend include relationships classifiers  effectively actors use cases may find 
+       associations generalizable elements  effectively actors use cases again may find generalizations specializations modelelements  effectively actors use 
+       cases again may find dependencies  p  
+       
+        param node node whose edges added  
+        
+    
+       determine two given ports connected kind edge determined ports  p  
+       
+        em note  em appears problem implementation suggests actors cannot connect fact generalization permitted works  suggesting method not actually invoked current 
+       implementation argouml  p  
+       
+        param fromp source port connection 
+       
+        param top destination port connection  
+       
+        return        code true  code two given ports connected kind edge determined ports   code false  code  otherwise  
+        
+   suggest actors may not connect  see javadoc comment everything ok 
+                                                                            
+   
+   methods implement vetoablechangelistener interface 
+   
+                                                                            
+    
+       called property interest changed case owned elements model  provided implement link vetoablechangelistener  interface  p throw propertyvetoexception wished allow change rolled back don't  p  
+       
+        param pce event triggered extract name property triggered only interested ownedelement  property  either something added namespace model removed latter case something old value property collection owned elements new value element import describing model element model removed 
+   melementimport    pce getnewvalue element import old owned means must removed  make sure associated model element removed  
+   remove node 
+   remove edge 
+   something added - nothing worry uid  
+       org argouml uml diagram use_case UseCaseDiagramGraphModel org argouml uml diagram use_case usecasediagramgraphmodel umlmutablegraphsupport vetoablechangelistener logger log   
+        logger getlogger usecasediagramgraphmodel list getports object nodeoredge model getfacade   isaactor nodeoredge     
+            list result arraylist    
+            result add nodeoredge result model getfacade   isausecase nodeoredge     
+            list result arraylist    
+            result add nodeoredge result collections empty_list object getowner object port port list getinedges object port model getfacade   isaactor port   
+                   model getfacade   isausecase port     
+            list result arraylist    
+            collection ends   model getfacade   getassociationends port ends collections empty_list object ae   ends    
+                result add model getfacade   getassociation ae result collections empty_list list getoutedges object port collections empty_list  
+      
+ 
+      
+      
+      
+      
+      
+ 
+      
+     override canaddnode object node model getfacade   isaassociation node  
+                    model getfacade   isanaryassociation node canaddnode node containsnode node model getfacade   isaactor node  
+               model getfacade   isausecase node  
+               model getfacade   isapackage node   
+      
+ 
+ 
+      
+     override canaddedge object edge edge containsedge edge object sourcemodelelement object destmodelelement model getfacade   isaassociation edge     
+ 
+              
+ 
+            collection conns   model getfacade   getconnections edge   
+            iterator iter   conns iterator conns size     2 object associationend0   iter next    
+            object associationend1   iter next associationend0 associationend1 sourcemodelelement   model getfacade   gettype associationend0   
+            destmodelelement   model getfacade   gettype associationend1 model getfacade   isageneralization edge     
+            sourcemodelelement   model getfacade   getspecific edge   
+            destmodelelement   model getfacade   getgeneral edge model getfacade   isaextend edge     
+            sourcemodelelement   model getfacade   getbase edge   
+            destmodelelement   model getfacade   getextension edge model getfacade   isainclude edge     
+ 
+            sourcemodelelement   model getfacade   getbase edge   
+            destmodelelement   model getfacade   getaddition edge model getfacade   isadependency edge     
+ 
+              
+              
+              
+ 
+            collection clients     model getfacade   getclients edge   
+            collection suppliers   model getfacade   getsuppliers edge clients clients isempty    
+                       suppliers suppliers isempty sourcemodelelement   clients iterator   next    
+            destmodelelement   suppliers iterator   next edge commentedge    
+            sourcemodelelement     commentedge  edge  getsource    
+            destmodelelement     commentedge  edge  getdestination sourcemodelelement destmodelelement log error  edge rejected  its ends are not attached to anything containsnode sourcemodelelement  
+                    containsedge sourcemodelelement     
+            log error  edge rejected  its source end is attached to   
+                      sourcemodelelement 
+                        but is not in the graph model containsnode destmodelelement  
+                    containsedge destmodelelement     
+            log error  edge rejected  its destination end is attached to   
+                      destmodelelement 
+                        but is not in the graph model override addnode object node    
+ 
+        log debug  adding usecase node canaddnode node getnodes   add node model getfacade   isaumlelement node  
+                   model getfacade   getnamespace node model getcorehelper   addownedelement gethomemodel    node   
+          
+ 
+          
+ 
+        firenodeadded node   
+      
+ 
+ 
+      
+     override addedge object edge edge illegalargumentexception  cannot add a edge getdestport edge getsourceport edge illegalargumentexception  
+                     the source and dest port should be provided on an edge log isinfoenabled      
+            log info  adding an edge of type   
+                     edge getclass   getname   
+                       to use diagram canaddedge edge     
+            log info  attempt to add edge rejected getedges   add edge model getfacade   isaumlelement edge  
+                   model getfacade   getnamespace edge model getcorehelper   addownedelement gethomemodel    edge   
+          
+ 
+          
+ 
+        fireedgeadded edge   
+      
+ 
+      
+     override addnoderelatededges object node addnoderelatededges node model getfacade   isausecase node     
+            list relations arraylist    
+ 
+            relations addall model getfacade   getincludes node    
+            relations addall model getfacade   getincluders node    
+            relations addall model getfacade   getextends node    
+            relations addall model getfacade   getextenders node object relation   relations canaddedge relation     
+                    addedge relation model getfacade   isaclassifier node     
+            collection ends   model getfacade   getassociationends node object ae   ends canaddedge model getfacade   getassociation ae      
+                    addedge model getfacade   getassociation ae model getfacade   isageneralizableelement node     
+            collection gn   model getfacade   getgeneralizations node object g   gn canaddedge g     
+                    addedge g   
+                  
+              
+            collection sp   model getfacade   getspecializations node object s   sp canaddedge s     
+                    addedge s model getfacade   isaumlelement node     
+            collection dependencies arraylist model getfacade   getclientdependencies node    
+ 
+            dependencies addall model getfacade   getsupplierdependencies node object dependency   dependencies canaddedge dependency     
+                    addedge dependency   
+                  
+              
+          
+      
+ 
+ 
+ 
+      
+     override canconnect object fromp  object top model getfacade   isaactor fromp  
+                   model getfacade   isaactor top vetoablechange propertychangeevent pce ownedelement  equals pce getpropertyname       
+            list oldowned    list  pce getoldvalue    
+ 
+            object eo     
+            object  me   model getfacade   getmodelelement eo oldowned contains eo     
+ 
+                log debug  model removed     me model getfacade   isaactor me   
+		        model getfacade   isausecase me      
+ 
+                    removenode me model getfacade   isaassociation me   
+			     model getfacade   isageneralization me   
+			     model getfacade   isaextend me   
+			     model getfacade   isainclude me   
+			     model getfacade   isadependency me      
+                      
+                    removeedge me log debug  model added     me serialversionuid   -8516841965639203796l  
+ 
+ org argouml uml diagram use_case UseCaseDiagramGraphModel

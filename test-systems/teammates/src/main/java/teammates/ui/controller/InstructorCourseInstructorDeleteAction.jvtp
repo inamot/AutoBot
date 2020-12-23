@@ -1,0 +1,40 @@
+ 
+    
+   action  deleting instructor course another instructor  
+    
+   process deleting instructor setup status shown user admin    
+   create redirection redirect back courses' page instructor deletes himself    
+    
+       returns true joined instructor instructor delete privilege modifying instructors  
+       
+        param courseid                id course 
+        param instructortodeleteemail email instructor being deleted 
+       teammates ui controller InstructorCourseInstructorDeleteAction teammates ui controller instructorcourseinstructordeleteaction action   
+ 
+     override actionresult execute courseid   getrequestparamvalue paramsnames course_id   
+        assumption assertpostparamnotnull paramsnames course_id  courseid instructoremail   getrequestparamvalue paramsnames instructor_email   
+        assumption assertpostparamnotnull paramsnames instructor_email  instructoremail   
+ 
+        instructorattributes instructor   logic getinstructorforgoogleid courseid  account googleid   
+        gatekeeper verifyaccessible  
+                instructor  logic getcourse courseid paramsnames instructor_permission_modify_instructor hasalternativeinstructor courseid  instructoremail     
+            logic deleteinstructor courseid  instructoremail   
+ 
+            statustouser add statusmessage statusmessages course_instructor_deleted  statusmessagecolor success    
+            statustoadmin    instructor  span bold\       instructoremail      span   
+                    in course  span bold\       courseid       span  deleted  br iserror statustouser add statusmessage statusmessages course_instructor_delete_not_allowed  
+                                               statusmessagecolor danger    
+            statustoadmin    instructor  span bold\       instructoremail      span   
+                        in course  span bold\       courseid       span  could not be deleted   
+                       as there is only one instructor left to be able to modify instructors  br    
+          
+ 
+          
+        redirectresult result logic isinstructorofcourse account googleid  courseid     
+            result   createredirectresult actionuris instructor_course_edit_page   
+            result addresponseparam paramsnames course_id  courseid result   createredirectresult actionuris instructor_courses_page result hasalternativeinstructor courseid instructortodeleteemail    
+ 
+        list instructorattributes  instructors   logic getinstructorsforcourse courseid instructorattributes instr   instructors isalternativeinstructor   
+                        instr isregistered   
+                            instr getemail   equals instructortodeleteemail  
+                           instr isallowedforprivilege paramsnames instructor_permission_modify_instructor isalternativeinstructor teammates ui controller InstructorCourseInstructorDeleteAction

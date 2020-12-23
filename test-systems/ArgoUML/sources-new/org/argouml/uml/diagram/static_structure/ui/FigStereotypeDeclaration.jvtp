@@ -1,0 +1,196 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications  
+    
+   class display stereotype declaration figure using 
+   classifier box notation  p  
+   
+   todo placeholder right now  - tfm uid  
+        
+    
+       create new fig stereotype declaration  
+        
+   put bits together  suppressing bounds calculations until re done efficiency  
+   todo  need named tags constraints compartments here 
+          addfig tagsfig   
+          addfig constraintsfig   
+   set bounds figure total above  hardcoded  
+    
+       constructor use figure created existing class 
+       node metamodel  
+       
+        param gm   not actually used current implementation 
+       
+        param node uml object being placed  
+        
+   
+        see org tigris gef presentation fig#makeselection   
+        
+    
+       build collection menu items relevant right-click 
+       popup menu stereotype  
+         inheritdoc  
+        
+   add    
+   todo  add tags   constraints 
+          addmenu add targetmanager getinstance   getaddattributeaction     
+          addmenu add targetmanager getinstance   getaddoperationaction     
+   show     
+   modifiers     
+   visibility     
+    
+       gets minimum size permitted class diagram  p  
+       
+        return size minimum bounding box  
+        
+   todo  allow space each tags   constraints we want maintain minimum width class 
+    
+       sets bounds size least one returned link #getminimumsize     unless checking size disabled  p required height bigger additional height equally distributed figs e  compartments cumulated height visible figs equals demanded height p   
+       
+       some magic numbers  hardcoded in particular knowledge minimum height name compartment 21 
+       pixels  p  
+       
+        param x  desired x coordinate upper left corner 
+       
+        param y  desired y coordinate upper left corner 
+       
+        param w  desired width figclass 
+       
+        param h  desired height figclass 
+       
+        see org tigris gef presentation fig#setboundsimpl int  int  int  int  
+        
+   set bounds big box 
+   save old boundaries  needed later minimum size 
+   info   whitespace used maintain running calculation size various points  
+   final int whitespace   h - getminimumsize   height  
+   todo  compute size tags constraints 
+   now force calculation bounds figure  update edges trigger anyone s listening see bounds  property changed  
+   
+        see org argouml uml diagram static_structure ui figcompartmentbox#unhighlight   
+        
+   todo  try unhighlighting child compartments 
+              fc   unhighlight getattributesfig     
+    
+       handles changes model  takes account event occurred need update whole fig  consider using 
+       renderingchanged  
+       
+        see org argouml uml diagram ui fignodemodelelement#modelchanged java beans propertychangeevent  
+        
+   
+        see org argouml uml diagram ui fignodemodelelement#updatelisteners java lang object  
+        
+   register tagdefinitions  
+   todo  constraints         
+   end class figclass   org argouml uml diagram static_structure ui FigStereotypeDeclaration org argouml uml diagram static_structure ui figstereotypedeclaration figcompartmentbox figstereotypedeclaration     
+        figstereotypescompartment fsc   
+             figstereotypescompartment  getstereotypefig    
+        fsc setkeyword  stereotype    
+ 
+          
+          
+        enablesizechecking setsuppresscalcbounds addfig getbigport     
+        addfig getstereotypefig     
+        addfig getnamefig     
+ 
+          
+  
+  
+ 
+        addfig getborderfig     
+ 
+        setsuppresscalcbounds setbounds 10  10  60  22   2   rowheight figstereotypedeclaration graphmodel gm  object node setowner node   
+        enablesizechecking selection makeselection selectionstereotype vector getpopupactions mouseevent me    
+        vector popupactions getpopupactions me   
+ 
+          
+        argojmenu addmenu argojmenu  menu popup add    
+          
+  
+  
+        addmenu add actionaddnote     
+        addmenu add actionnewtagdefinition     
+        addmenu add actionedgesdisplay getshowedges     
+        addmenu add actionedgesdisplay gethideedges     
+        popupactions add popupactions size   - getpopupaddoffset    addmenu   
+ 
+          
+        argojmenu showmenu argojmenu  menu popup show    
+        iterator i   actioncompartmentdisplay getactions   iterator i hasnext      
+            showmenu add  action  i next showmenu getcomponentcount     0    
+            popupactions add popupactions size   - getpopupaddoffset    
+                    showmenu   
+          
+ 
+          
+        popupactions add popupactions size   - getpopupaddoffset    
+                buildmodifierpopup leaf   root    
+ 
+          
+        popupactions add popupactions size   - getpopupaddoffset    
+                buildvisibilitypopup popupactions dimension getminimumsize     
+        dimension asize   getnamefig   getminimumsize getstereotypefig   isvisible      
+            dimension stereomin   getstereotypefig   getminimumsize    
+            asize width   math max asize width  stereomin width   
+            asize height    stereomin height  
+          
+ 
+          
+ 
+          
+        asize width   math max 60  asize width asize setstandardbounds x y w h    
+        rectangle oldbounds   getbounds    
+ 
+          
+        getbigport   setbounds x  y  w  h   
+        getborderfig   setbounds x  y  w  h   
+ 
+          
+          
+          
+ 
+          
+ 
+        getnamefig   setlinewidth 0   
+        getnamefig   setlinecolor color red currentheight   0 getstereotypefig   isvisible stereotypeheight   getstereotypefig   getminimumsize   height  
+            getstereotypefig   setbounds  
+                    x  
+                    y  
+                    w  
+                    stereotypeheight   
+            currentheight   stereotypeheight nameheight   getnamefig   getminimumsize   height  
+        getnamefig   setbounds x  y   currentheight  w  nameheight   
+        currentheight    nameheight  
+ 
+          
+ 
+ 
+          
+          
+          
+ 
+        calcbounds    
+        updateedges    
+        firepropchange  bounds   oldbounds  getbounds compartmentfigtext unhighlight     
+        compartmentfigtext fc unhighlight fc fc modelchanged propertychangeevent mee modelchanged mee mee associationchangeevent  
+                   mee attributechangeevent    
+            renderingchanged    
+            updatelisteners getowner    getowner     
+            damage updatelisteners object oldowner  object newowner oldowner removeallelementlisteners newowner addelementlistener newowner   
+              
+            iterator it   
+                model getfacade   gettagdefinitions newowner  iterator it hasnext      
+                object td   it next    
+                addelementlistener td name    tagtype    multiplicity     
+              
+              
+          
+      
+   org argouml uml diagram static_structure ui FigStereotypeDeclaration

@@ -1,0 +1,292 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   replacement code java util zipfile  code   
+   
+    p class adds support file name encodings utf-8 required work zip files created native zip tools skip preamble one found self 
+   extracting archives   furthermore returns instances code org apache tools zip zipentry  code  instead code java util zip zipentry  code    p  
+   
+    p doesn't extend  code java util zip zipfile  code reimplement methods anyway code java util zipfile  code uses randomaccessfile under covers supports compressed uncompressed entries   p  
+   
+    p method signatures mimic ones code java util zip zipfile  code couple exceptions  
+   
+    ul  
+      li getname method   li  
+      li entries renamed getentries   li  
+      li getentries getentry return 
+      code org apache tools zip zipentry  code  instances   li  
+      li close allowed throw ioexception   li  
+     ul  
+   
+    
+    
+       maps zipentrys longs  recording offsets local 
+       file headers  
+        
+    
+       maps string zipentrys  name -  actual entry encoding use filenames file comment  
+       
+        p list possible values see href  http   java sun com j2se 1 5 0 docs guide intl encoding doc html  http   java sun com j2se 1 5 0 docs guide intl encoding doc html defaults platform's default character encoding   p actual data source  
+        
+    
+       opens given file reading  assuming platform's 
+       native encoding file names  
+       
+        param f archive  
+       
+        throws ioexception error occurs reading file  
+        
+    
+       opens given file reading  assuming platform's 
+       native encoding file names  
+       
+        param name name archive  
+       
+        throws ioexception error occurs reading file  
+        
+    
+       opens given file reading  assuming specified 
+       encoding file names  
+       
+        param name name archive  
+        param encoding encoding use file names 
+       
+        throws ioexception error occurs reading file  
+        
+    
+       opens given file reading  assuming specified 
+       encoding file names  
+       
+        param f archive  
+        param encoding encoding use file names 
+       
+        throws ioexception error occurs reading file  
+        
+   swallow  throw original exception instead encoding use filenames file comment  
+       
+        return null using platform's default character encoding  
+        
+    
+       closes archive  
+        throws ioexception error occurs closing archive  
+        
+    
+       close zipfile quietly  throw io fault nothing null parameter 
+        param zipfile file close null 
+        
+  ignore 
+    
+       returns entries  
+        return entries link zipentry  instances 
+        
+    
+       returns named entry code null  code entry name exists  
+        param name name entry  
+        return zipentry corresponding given name code null  code not present  
+        
+    
+       returns inputstream reading contents given entry  
+        param ze entry stream return stream read entry throws ioexception unable create input stream zipenty 
+        throws zipexception zipentry unsupported compression method 
+        
+   version made 2 
+   version needed extract            2 
+   general purpose bit flag             2 
+   compression method                   2 
+   last mod file time                   2 
+   last mod file date                   2 
+   crc-32                               4 
+   compressed size                      4 
+   uncompressed size                    4 
+   filename length                      2 
+   extra field length                   2 
+   file comment length                  2 
+   disk number start                    2 
+   internal file attributes             2 
+   external file attributes             4 
+   relative offset local header      4  
+    
+       reads central directory given archive populates internal tables zipentry instances  
+       
+        p zipentrys know data obtained central directory alone not data requires local file header additional data read   p  
+        
+   skip version info general purpose byte 
+   fixme actually not very cpu cycles friendly converting dos java underlying sun implementation convert java dos time internal storage    
+   disk number 
+   lfh offset  
+   data offset filled later 
+   end central dir signature       4 
+   number disk                  2 
+   number disk start central directory       2 
+   total number entries central dir disk         2 
+   total number entries central dir                      2 
+   size central directory        4 
+   offset start central         
+   directory respect starting disk number             4 
+   zipfile comment length               2  
+   end central dir signature       4 
+   number disk                  2 
+   number disk start central directory       2 
+   total number entries central dir disk         2 
+   total number entries central dir                      2 
+   size central directory        4  
+    
+       searches quot end central dir record quot   parses positions stream first central directory 
+       record  
+        
+    
+       number bytes local file header up quot length filename quot  entry  
+        
+   local file header signature        4 
+   version needed extract            2 
+   general purpose bit flag             2 
+   compression method                   2 
+   last mod file time                   2 
+   last mod file date                   2 
+   crc-32                               4 
+   compressed size                      4 
+   uncompressed size                    4  
+    
+       walks through recorded entries adds data available local file header  
+       
+        p records offsets data read entries   p  
+        
+  dataoffsets put ze  
+                            new long offset   lfh_offset_for_filename_length 
+                                       2   2   filenamelen   extrafieldlen    
+               
+    
+       convert dos date time field date object  
+       
+        param zipdostime contains stored dos time  
+        return date instance corresponding given time  
+        
+   
+       converts dos time java time  number milliseconds epoch   
+        
+    
+       retrieve string given bytes using encoding set zipfile  
+       
+        param bytes byte array transform 
+        return string obtained using given encoding 
+        throws zipexception encoding cannot recognized  
+        
+    
+       inputstream delegates requests underlying 
+       randomaccessfile  making sure only bytes certain 
+       range read  
+        
+    
+           inflater needs extra dummy byte nowrap - see 
+           inflater's javadocs  
+           org apache tools zip ZipFile org apache tools zip zipfile offsetentry zipfile file f ioexception f zipfile name ioexception file name zipfile name encoding ioexception file name   encoding zipfile file f encoding ioexception encoding   encoding  
+        archive randomaccessfile f   r populatefromcentraldirectory    
+            resolvelocalfileheaderdata ioexception e archive close ioexception e2 e getencoding encoding close ioexception   
+        archive close closequietly zipfile zipfile zipfile zipfile close ioexception e enumeration getentries entries keys zipentry getentry name zipentry  namemap get name inputstream getinputstream zipentry ze ioexception  zipexception   
+        offsetentry offsetentry    offsetentry  entries get ze offsetentry null start   offsetentry dataoffset  
+        boundedinputstream bis boundedinputstream start  ze getcompressedsize ze getmethod zipentry stored bis zipentry deflated  
+                bis adddummy inflaterinputstream bis inflater zipexception  found unsupported compression method   
+                                         ze getmethod cfh_len populatefromcentraldirectory ioexception   
+        positionatcentraldirectory cfh cfh_len signaturebytes 4   
+        archive readfully signaturebytes sig   ziplong getvalue signaturebytes cfhsig   ziplong getvalue zipoutputstream cfh_sig sig    cfhsig    
+            archive readfully cfh off   0  
+            zipentry ze zipentry versionmadeby   zipshort getvalue cfh  off   
+            off    2  
+            ze setplatform  versionmadeby    8    0x0f   
+ 
+            off    4    
+ 
+            ze setmethod zipshort getvalue cfh  off    
+            off    2 time   dostojavatime ziplong getvalue cfh  off    
+            ze settime time   
+            off    4  
+ 
+            ze setcrc ziplong getvalue cfh  off    
+            off    4  
+ 
+            ze setcompressedsize ziplong getvalue cfh  off    
+            off    4  
+ 
+            ze setsize ziplong getvalue cfh  off    
+            off    4 filenamelen   zipshort getvalue cfh  off   
+            off    2 extralen   zipshort getvalue cfh  off   
+            off    2 commentlen   zipshort getvalue cfh  off   
+            off    2  
+ 
+            off    2    
+ 
+            ze setinternalattributes zipshort getvalue cfh  off    
+            off    2  
+ 
+            ze setexternalattributes ziplong getvalue cfh  off    
+            off    4 filename filenamelen   
+            archive readfully filename   
+            ze setname getstring filename    
+ 
+ 
+              
+            offsetentry offset offsetentry    
+            offset headeroffset   ziplong getvalue cfh  off   
+              
+            entries put ze  offset   
+ 
+            namemap put ze getname    ze   
+ 
+            archive skipbytes extralen comment commentlen   
+            archive readfully comment   
+            ze setcomment getstring comment    
+ 
+            archive readfully signaturebytes   
+            sig   ziplong getvalue signaturebytes min_eocd_size cfd_locator_offset positionatcentraldirectory ioexception found off   archive length   - min_eocd_size off    0    
+            archive seek off sig   zipoutputstream eocd_sig curr   archive read curr    -1 curr    sig 0     
+                    curr   archive read curr    sig 1     
+                        curr   archive read curr    sig 2     
+                            curr   archive read curr    sig 3     
+                                found archive seek --off   
+                curr   archive read found zipexception  archive is not a zip archive    
+          
+        archive seek off   cfd_locator_offset cfdoffset 4   
+        archive readfully cfdoffset   
+        archive seek ziplong getvalue cfdoffset lfh_offset_for_filename_length resolvelocalfileheaderdata ioexception   
+        enumeration e   getentries e hasmoreelements      
+            zipentry ze    zipentry  e nextelement    
+            offsetentry offsetentry    offsetentry  entries get ze offset   offsetentry headeroffset  
+            archive seek offset   lfh_offset_for_filename_length b 2   
+            archive readfully b filenamelen   zipshort getvalue b   
+            archive readfully b extrafieldlen   zipshort getvalue b   
+            archive skipbytes filenamelen localextradata extrafieldlen   
+            archive readfully localextradata   
+            ze setextra localextradata   
+              
+            offsetentry dataoffset   offset   lfh_offset_for_filename_length 
+                                       2   2   filenamelen   extrafieldlen date fromdostime ziplong zipdostime dostime   zipdostime getvalue date dostojavatime dostime dostojavatime dostime    
+        calendar cal   calendar getinstance    
+        cal set calendar year dostime    25    0x7f    1980   
+        cal set calendar month dostime    21    0x0f  - 1   
+        cal set calendar date dostime    16    0x1f   
+        cal set calendar hour_of_day dostime    11    0x1f   
+        cal set calendar minute dostime    5    0x3f   
+        cal set calendar second dostime    1    0x3e cal gettime   gettime getstring bytes zipexception encoding bytes bytes  encoding unsupportedencodingexception uee zipexception uee getmessage boundedinputstream inputstream   
+  
+  
+  
+ 
+        boundedinputstream start remaining remaining   remaining  
+            loc   start read ioexception remaining--    0 adddummybyte    
+                    adddummybyte 0 1 archive    
+                archive seek loc archive read read b off len ioexception remaining    0 adddummybyte    
+                    adddummybyte b off    0 1 1 len    0 0 len   remaining    
+                len remaining ret   -1 archive    
+                archive seek loc   
+                ret   archive read b  off  len ret   0    
+                loc    ret  
+                remaining -  ret ret adddummy     
+            adddummybyte org apache tools zip ZipFile

@@ -1,0 +1,168 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license factored out link signjar base class used both signing verifying jar files using jarsigner 
+    
+   checkstyle visibilitymodifier bc name jar file alias signer url path keystore file  
+        
+    
+       password store 
+        
+    
+       type store -storetype param 
+        
+    
+       password key store 
+        
+    
+       verbose output maximum amount memory use jar signer filesets jars sign 
+        
+    
+       name jdk program looking checkstyle visibilitymodifier redirector used talk jarsigner program 
+        
+    
+       java declarations -j-dname value 
+        
+    
+       error string unit test verification    value  
+        
+    
+       path holding non-filesets filesystem resources want sign ant 1 7 
+        
+    
+       set maximum memory used jarsigner process 
+       
+        param max string indicating maximum memory according jvm 
+                  conventions  e g  128m 128 megabytes jar file sign  required 
+       
+        param jar jar file sign alias sign under  required 
+       
+        param alias alias sign under 
+        
+    
+       keystore location  required 
+       
+        param keystore keystore location 
+        
+    
+       password keystore integrity  required 
+       
+        param storepass password keystore 
+        
+    
+       keystore type  optional 
+       
+        param storetype keystore type 
+        
+    
+       password private key different   optional 
+       
+        param keypass password key different  
+        
+    
+       enable verbose output signing   optional  default false 
+       
+        param verbose true enable verbose output 
+        
+    
+       adds set files sign 
+       
+        param set set files sign ant 1 4 
+        
+    
+       add system property  
+       
+        param sysp system property  
+        
+    
+       adds path files sign  
+       
+        return path files sign ant 1 7 
+        
+    
+       init processing logic retained through execution s  
+        
+    
+       any cleanup logic 
+        
+    
+       create redirector use any  
+       
+        return configured redirectorelement redirector  non-null between invocations link #beginexecution link #endexecution    
+        return redirector null options common signing verifying 
+        param cmd  command configure 
+        
+  now patch system properties 
+    
+       
+        param cmd command configure 
+        param property property set 
+        throws buildexception property not correctly defined  
+        
+    
+       bind keystore attributes param cmd command configure keystore file 
+   must url pass create jarsigner executable task 
+        return task set up executable jarsigner  failonerror true bound redirector 
+        
+    
+       clone filesets vector patch jar attribute new 
+       fileset defined 
+        return vector fileset instances create fileset source file lets combine logic handling output directories  
+  mapping etc  
+    
+       clone path add explicitly specified filesets well  patch jar attribute new fileset defined  
+        return path contains files sign ant 1 7 either path fileset specified? 
+        return true path fileset specified ant 1 7 
+        
+    
+       add value argument command 
+        param cmd command manipulate 
+        param value value add 
+       org apache tools ant taskdefs AbstractJarSignerTask org apache tools ant taskdefs abstractjarsignertask task file jar alias keystore storepass storetype keypass verbose maxmemory vector filesets vector jarsigner_command    jarsigner error_no_source    jar must be set through jar attribute   
+               or nested filesets setmaxmemory max    
+        maxmemory   max setjar file jar jar   jar setalias alias alias   alias setkeystore keystore keystore   keystore setstorepass storepass storepass   storepass setstoretype storetype storetype   storetype setkeypass keypass keypass   keypass setverbose verbose verbose   verbose addfileset fileset set    
+        filesets addelement set addsysproperty environment variable sysp    
+        sysproperties addvariable sysp path createpath path path path getproject path createpath beginexecution     
+ 
+        redirector   createredirector endexecution     
+        redirector redirectorelement createredirector     
+        redirectorelement result redirectorelement storepass stringbuffer input stringbuffer storepass  append '\n keypass input append keypass  append '\n'   
+              
+            result setinputstring input tostring     
+            result setloginputstring result redirectorelement getredirector redirector setcommonoptions exectask cmd maxmemory addvalue cmd   -j-xmx    maxmemory verbose    
+            addvalue cmd   -verbose    
+          
+ 
+          
+        vector props   sysproperties getvariablesvector    
+        enumeration e   props elements e hasmoreelements      
+            environment variable variable    environment variable  e nextelement    
+            declaresysproperty cmd  variable declaresysproperty  
+        exectask cmd  environment variable property buildexception   
+        addvalue cmd   -j-d    property getcontent bindtokeystore exectask cmd keystore    
+              
+            addvalue cmd   -keystore loc  
+            file keystorefile   getproject   resolvefile keystore keystorefile exists      
+                loc   keystorefile getpath loc   keystore  
+              
+            addvalue cmd  loc storetype    
+            addvalue cmd   -storetype    
+            addvalue cmd  storetype exectask createjarsigner exectask cmd exectask cmd setexecutable javaenvutils getjdkexecutable jarsigner_command    
+        cmd settasktype jarsigner_command   
+        cmd setfailonerror cmd addconfiguredredirector redirector cmd vector createunifiedsources     
+        vector sources    vector  filesets clone jar fileset sourcejar fileset    
+            sourcejar setproject getproject     
+            sourcejar setfile jar   
+            sourcejar setdir jar getparentfile     
+            sources add sourcejar sources path createunifiedsourcepath     
+        path p   path path getproject       path  path clone    
+        vector s   createunifiedsources    
+        enumeration e   s elements e hasmoreelements      
+            p add  fileset  e nextelement p hasresources path filesets size     0 addvalue exectask cmd value    
+        cmd createarg   setvalue value   
+      
+ org apache tools ant taskdefs AbstractJarSignerTask

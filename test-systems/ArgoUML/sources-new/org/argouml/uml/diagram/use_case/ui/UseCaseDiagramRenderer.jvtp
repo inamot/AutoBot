@@ -1,0 +1,188 @@
+ 
+   $id$ 
+   copyright  c  1996-2007 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications singleton class defines renderer object uml use case diagrams class diagram following uml objects displayed following figs  p  
+   
+    pre  
+     uml object       ---  fig 
+     --------------------------------------- 
+     mactor           ---  figactor 
+     musecase         ---  figusecase 
+     pre  
+   
+   provides   link #getfignodefor implement link org tigris gef graph graphnoderenderer  interface link #getfigedgefor implement link org tigris gef graph graphedgerenderer  interface  p  
+   
+    em note  em implemented singleton don't really 
+   need separate instance each use case diagram  p  
+   
+    author abonner 
+    
+    
+       logger  
+        
+    
+       return fig used represent given node  p  
+       
+        param gm graph model rendering  
+       
+        param lay layer graph want figure  
+       
+        param node node rendered model element object  
+       
+        param styleattributes optional map attributes style fig 
+       
+        return fig used code null  code t create 
+                    one  
+        
+   create new version relevant fig 
+   todo  shouldn't throw excdeption here? ?  
+    
+       return fig used represent given edge  p  
+       
+       generally same code classdiagram s very 
+       related deal each edge types turn  p  
+       
+        param gm graph model rendering  
+       
+        param lay layer graph want figure  
+       
+        param edge edge rendered model element object  
+       
+        param styleattributes optional map attributes style fig 
+       
+        return fig used code null  code t create 
+                    one  
+       
+        see org tigris gef graph graphedgerenderer#getfigedgefor  
+               org tigris gef graph graphmodel  org tigris gef base layer  
+               java lang object  java util map edge association ll need figassociation 
+   massociation    edge  
+   generalization needs figgeneralization 
+   mgeneralization    edge  
+   extend relationship 
+   mextend    edge nodes two ends figs two end nodes 
+   link new extend relationship ends  remember draw extension use case base use case  
+   include relationship very extend  
+   minclude    edge figs two end nodes 
+   link new include relationship ends 
+   dependency needs figdependency 
+   mdependency    edge one supplier client  take first 
+   element each case really ought check some here safety figs two end nodes 
+   link new dependency ends 
+   end class usecasediagramrenderer   org argouml uml diagram use_case ui UseCaseDiagramRenderer org argouml uml diagram use_case ui usecasediagramrenderer umldiagramrenderer serialversionuid   2217410137377934879l logger log   
+        logger getlogger usecasediagramrenderer fignode getfignodefor graphmodel gm  layer lay  object node  
+            map styleattributes    
+ 
+        fignodemodelelement fignode model getfacade   isaactor node     
+            fignode figactor gm  node model getfacade   isausecase node     
+            fignode figusecase gm  node model getfacade   isacomment node     
+            fignode figcomment gm  node model getfacade   isapackage node     
+            fignode figpackage gm  node log debug getclass   tostring   
+                       getfignodefor     gm tostring          
+                    lay tostring            node tostring   
+                       - cannot create sort of node lay add fignode   
+        fignode setdielement  
+                graphchangeadapter getinstance   createelement gm  node fignode figedge getfigedgefor graphmodel gm  layer lay  object edge  
+            map styleattributes log isdebugenabled      
+            log debug  making figedge edge edge illegalargumentexception  a model edge must be supplied    
+          
+ 
+        figedgemodelelement newedge model getfacade   isaassociation edge     
+              
+            object   asc             
+            figassociation ascfig figassociation asc  lay   
+ 
+            newedge   ascfig model getfacade   isageneralization edge     
+              
+            object   gen        
+            figgeneralization genfig figgeneralization gen  lay   
+            newedge   genfig model getfacade   isaextend edge     
+              
+            object   ext        
+            figextend extfig figextend ext   
+ 
+              
+ 
+            object base        model getfacade   getbase ext   
+            object extension   model getfacade   getextension ext   
+ 
+              
+ 
+            fignode basefn         fignode  lay presentationfor base   
+            fignode extensionfn    fignode  lay presentationfor extension   
+ 
+              
+              
+ 
+            extfig setsourceportfig extensionfn   
+            extfig setsourcefignode extensionfn   
+ 
+            extfig setdestportfig basefn   
+            extfig setdestfignode basefn   
+ 
+            newedge   extfig model getfacade   isainclude edge     
+              
+            object   inc        
+            figinclude incfig figinclude inc   
+ 
+            object base       model getfacade   getbase inc   
+            object addition   model getfacade   getaddition inc   
+ 
+              
+ 
+            fignode basefn        fignode  lay presentationfor base   
+            fignode additionfn    fignode  lay presentationfor addition   
+ 
+              
+ 
+            incfig setsourceportfig basefn   
+            incfig setsourcefignode basefn   
+ 
+            incfig setdestportfig additionfn   
+            incfig setdestfignode additionfn   
+ 
+            newedge   incfig model getfacade   isadependency edge     
+              
+            object   dep        
+            figdependency depfig figdependency dep   
+ 
+              
+              
+              
+ 
+            object supplier   
+                   model getfacade   getsuppliers dep  toarray    0    
+            object client   
+                   model getfacade   getclients dep  toarray    0    
+ 
+              
+ 
+            fignode supplierfn    fignode  lay presentationfor supplier   
+            fignode clientfn      fignode  lay presentationfor client   
+ 
+              
+ 
+            depfig setsourceportfig clientfn   
+            depfig setsourcefignode clientfn   
+ 
+            depfig setdestportfig supplierfn   
+            depfig setdestfignode supplierfn   
+ 
+            newedge   depfig edge commentedge    
+            newedge figedgenote edge  lay newedge illegalargumentexception  
+                     don't know how to create figedge model type   
+                      edge getclass   getname setports lay  newedge   
+          
+ 
+        lay add newedge   
+        newedge setdielement  
+                graphchangeadapter getinstance   createelement gm  edge newedge  
+      
+ 
+   org argouml uml diagram use_case ui UseCaseDiagramRenderer

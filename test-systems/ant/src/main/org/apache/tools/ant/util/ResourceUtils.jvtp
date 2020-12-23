@@ -1,0 +1,254 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+   checkstyle hideutilityclassconstructorcheck bc class provides utility methods process resources ant 1 5 2 
+    
+    utilities used file operations    
+    
+       tells source files reprocessed based last modification date target files  
+        param logto send less  interesting output  
+        param source array resources bearing relative path last 
+       modification date  
+        param mapper filename mapper indicating find target 
+       files  
+        param targets object map resource relative path b destination  b   
+        return array containing source files need copied processed targets out date not exist  
+        
+    
+       tells source files reprocessed based last modification date target files  
+        param logto send less  interesting output  
+        param source array resources bearing relative path last 
+       modification date  
+        param mapper filename mapper indicating find target 
+       files  
+        param targets object map resource relative path b destination  b   
+        param granularity number milliseconds leeway give 
+       before deciding target out date  
+        return array containing source files need copied processed targets out date not exist ant 1 6 2 
+        
+    
+       tells sources reprocessed based last modification date targets  
+        param logto send less  interesting output  
+        param source resourcecollection  
+        param mapper filename mapper indicating find target resources  
+        param targets object map relative path resource  
+        param granularity number milliseconds leeway give 
+       before deciding target out date  
+        return resourcecollection ant 1 7 
+        
+  find out date targets  
+  log uptodateness targets  
+    
+       convenience method copy content one resource another filtering performed  
+       
+        param source resource copy must not code null  code   
+        param dest resource copy must not code null  code   
+       
+        throws ioexception copying fails ant 1 7 
+        
+    
+       convenience method copy content one resource another filtering performed  
+       
+        param source resource copy must not code null  code   
+        param dest resource copy must not code null  code   
+        param project project instance  
+       
+        throws ioexception copying fails ant 1 7 
+        
+   checkstyle parameternumbercheck bc 
+    
+       convenience method copy content one resource another 
+       specifying whether token filtering must used  whether filter chains 
+       must used  whether newer destination files may overwritten whether last modified time code dest  code  file made 
+       equal last modified time code source  code   
+       
+        param source resource copy must not code null  code   
+        param dest resource copy must not code null  code   
+        param filters collection filters apply copy  
+        param filterchains filterchains apply during copy  
+        param overwrite whether not destination resource overwritten already exists  
+        param preservelastmodified whether not last modified time destination resource set source  
+        param inputencoding encoding used read files  
+        param outputencoding encoding used write files  
+        param project project instance  
+       
+        throws ioexception copying fails ant 1 7 not happen lines returned end line delimiter 
+   checkstyle parameternumbercheck set last modified time object implementing 
+       org apache tools ant types resources touchable   
+       
+        param t touchable whose modified time set  
+        param time time last modified time set 1 current time used ant 1 7 
+        
+    
+       compares contents two resources  
+       
+        param r1 resource whose content compared  
+        param r2 resource whose content compared  
+        param text true content treated text differences kind line break ignored  
+       
+        return true content resources same  
+       
+        throws ioexception resources cannot read ant 1 7 
+        
+   two not existing files equal following two switched r1 r2 refer same file  
+   isn't content equal regardless whether file directory? 
+   don't want compare directory contents now 
+    
+       compare content two resources nonexistent resource's 
+       content less existing resource directory-type 
+       resource's content less file-type resource  
+        param r1 resource whose content compared  
+        param r2 resource whose content compared  
+        param text true content treated text differences kind line break ignored  
+        return negative integer  zero positive integer first 
+               argument less equal greater second  
+        throws ioexception resources cannot read ant 1 7 
+        
+    
+       binary compares contents two resources  
+        p  
+       simple sub-optimal comparision algorithm  written working fast  better block read buffers followed long comparisions apart final 1-7 bytes  
+         p  
+       
+        param r1 resource whose content compared  
+        param r2 resource whose content compared  
+        return negative integer  zero positive integer first 
+               argument less equal greater second  
+        throws ioexception resources cannot read ant 1 7 
+        
+    
+       text compares contents two resources  
+       ignores different kinds line endings  
+        param r1 resource whose content compared  
+        param r2 resource whose content compared  
+        return negative integer  zero positive integer first 
+               argument less equal greater second  
+        throws ioexception resources cannot read ant 1 7 
+        
+    
+       log resources any modified future  
+        param logto projectcomponent logging  
+        param rc collection resources check  
+        param granularity timestamp granularity use ant 1 7 
+       org apache tools ant util ResourceUtils org apache tools ant util resourceutils outdated resourceselector outdated resource control granularity control   control granularity   granularity isselected resource r selectorutils isoutofdate control  r  granularity resource   selectoutofdatesources projectcomponent logto  
+                                                    resource   source  
+                                                    filenamemapper mapper  
+                                                    resourcefactory targets selectoutofdatesources logto  source  mapper  targets  
+                                      file_utils getfiletimestampgranularity resource   selectoutofdatesources projectcomponent logto  
+                                                    resource   source  
+                                                    filenamemapper mapper  
+                                                    resourcefactory targets granularity    
+        union u union    
+        u addall arrays aslist source    
+        resourcecollection rc 
+              selectoutofdatesources logto  u  mapper  targets  granularity rc size      0 resource 0      union  rc  listresources resourcecollection selectoutofdatesources projectcomponent logto  
+                                                            resourcecollection source  
+                                                            filenamemapper mapper  
+                                                            resourcefactory targets granularity source size      0    
+            logto log  no sources found    project msg_verbose resources none  
+          
+        source   union getinstance source   
+        logfuture logto  source  granularity   
+ 
+        union result union iterator iter   source iterator    iter hasnext       
+            resource sr    resource  iter next srname   sr getname    
+            srname   srname srname   srname replace ' '  file separatorchar targetnames targetnames   mapper mapfilename srname exception e    
+		logto log  caught     e     mapping resource     sr  
+                    project msg_verbose targetnames targetnames length    0    
+                logto log sr     skipped - don\'t know how to handle it   
+                      project msg_verbose union targetcoll union i   0  i   targetnames length  i      
+                targetcoll add targets getresource  
+                    targetnames i  replace file separatorchar  ' '     
+              
+              
+            restrict r restrict    
+            r add and resourceselector    type file or resourceselector    not_exists outdated sr  granularity        
+            r add targetcoll r size     0    
+                result add sr   
+                resource t    resource   r iterator   next     
+                logto log sr getname       added as     t getname   
+                       t isexists   ?   is outdated       doesn\'t exist     
+                    project msg_verbose logto log sr getname   
+                      omitted as     targetcoll tostring   
+                     targetcoll size      1 ?   is      are    
+                      up to date    project msg_verbose result copyresource resource source  resource dest ioexception   
+        copyresource source  dest copyresource resource source  resource dest  project project ioexception   
+        copyresource source  dest null false null  project copyresource resource source  resource dest  
+                             filtersetcollection filters  vector filterchains overwrite preservelastmodified inputencoding outputencoding  
+                             project project ioexception overwrite slm   source getlastmodified dest isexists      slm    0 
+                   dest getlastmodified     slm filtersetsavailable    filters filters hasfilters filterchainsavailable    filterchains filterchains size     0 filtersetsavailable    
+            bufferedreader in bufferedwriter out inputstreamreader isr inputencoding isr inputstreamreader source getinputstream isr inputstreamreader source getinputstream    
+                                                inputencoding   
+                  
+                in bufferedreader isr   
+                outputstreamwriter osw outputencoding osw outputstreamwriter dest getoutputstream osw outputstreamwriter dest getoutputstream    
+                                                 outputencoding   
+                  
+                out bufferedwriter osw filterchainsavailable    
+                    chainreaderhelper crh chainreaderhelper    
+                    crh setbuffersize fileutils buf_size   
+                    crh setprimaryreader in   
+                    crh setfilterchains filterchains   
+                    crh setproject project   
+                    reader rdr   crh getassembledreader    
+                    in bufferedreader rdr   
+                  
+                linetokenizer linetokenizer linetokenizer    
+                linetokenizer setincludedelims newline line   linetokenizer gettoken in line line length      0    
+                          
+                          
+                        out newline newline   filters replacetokens line   
+                        out write newline   
+                      
+                    line   linetokenizer gettoken in fileutils close out   
+                fileutils close in filterchainsavailable 
+                       inputencoding inputencoding equals outputencoding   
+                       inputencoding outputencoding bufferedreader in bufferedwriter out inputstreamreader isr inputencoding isr inputstreamreader source getinputstream isr inputstreamreader source getinputstream    
+                                                inputencoding   
+                  
+                in bufferedreader isr   
+                outputstreamwriter osw outputencoding osw outputstreamwriter dest getoutputstream osw outputstreamwriter dest getoutputstream    
+                                                 outputencoding   
+                  
+                out bufferedwriter osw filterchainsavailable    
+                    chainreaderhelper crh chainreaderhelper    
+                    crh setbuffersize fileutils buf_size   
+                    crh setprimaryreader in   
+                    crh setfilterchains filterchains   
+                    crh setproject project   
+                    reader rdr   crh getassembledreader    
+                    in bufferedreader rdr buffer fileutils buf_size nread   in read buffer  0  buffer length nread    -1 out write buffer  0  nread fileutils close out   
+                fileutils close in inputstream in outputstream out in   source getinputstream    
+                out   dest getoutputstream buffer fileutils buf_size count   0 out write buffer  0  count   
+                    count   in read buffer  0  buffer length count    -1 fileutils close out   
+                fileutils close in preservelastmodified    dest touchable    
+            setlastmodified  touchable  dest  source getlastmodified setlastmodified touchable t time    
+        t touch  time   0  ? system currenttimemillis     time contentequals resource r1  resource r2 text ioexception r1 isexists      r2 isexists r1 isexists r1 isdirectory      r2 isdirectory r1 equals r2 text    r1 getsize      r2 getsize comparecontent r1  r2  text     0 comparecontent resource r1  resource r2 text ioexception r1 equals r2 0 e1   r1 isexists e2   r2 isexists e1    e2 0 e1    e2 e1 ? 1   -1 d1   r1 isdirectory d2   r2 isdirectory d1    d2 0 d1    d2 d1 ? -1   1 text ? textcompare r1  r2    binarycompare r1  r2 binarycompare resource r1  resource r2 ioexception   
+        inputstream in1 inputstream in2 in1 bufferedinputstream r1 getinputstream     
+            in2 bufferedinputstream r2 getinputstream b1   in1 read    b1    -1  b1   in1 read b2   in2 read b1    b2 b1   b2 ? 1   -1 in2 read      -1 ? 0   -1 fileutils close in1   
+            fileutils close in2 textcompare resource r1  resource r2 ioexception   
+        bufferedreader in1 bufferedreader in2 in1 bufferedreader inputstreamreader r1 getinputstream      
+            in2 bufferedreader inputstreamreader r2 getinputstream expected   in1 readline expected actual   in2 readline expected equals actual expected compareto actual   
+                  
+                expected   in1 readline in2 readline 0   -1 fileutils close in1   
+            fileutils close in2 logfuture projectcomponent logto  
+                                  resourcecollection rc granularity now   system currenttimemillis     granularity  
+        date sel date    
+        sel setmillis now   
+        sel setwhen timecomparison after   
+        restrict future restrict    
+        future add sel   
+        future add rc iterator iter   future iterator    iter hasnext       
+            logto log  warning        resource  iter next    getname   
+                         modified in the future    project msg_warn   
+          
+      
+ 
+ org apache tools ant util ResourceUtils

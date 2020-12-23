@@ -1,0 +1,165 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license locator utility class used find certain items environment ant 1 6 
+    
+    
+       encoding used represent uris 
+        
+   stolen org apache xerces impl xmlentitymanager#getuserdir xerces-j team ascii characters need escaped first hex character character needs escaped second hex character character needs escaped 
+   initialize above 3 arrays 
+    
+       not instantiable 
+        
+    
+       find directory jar file class loaded param c class whose location required  
+        return file jar class null cannot 
+               determine location ant 1 6 
+        
+    
+       find directory jar given resource loaded param c classloader consulted source  
+        param resource resource whose location required  
+       
+        return file resource source null cannot determine location ant 1 6 
+        
+    
+       constructs file path code file   code  uri  
+       
+        p absolute path given uri absolute   p  
+       
+        p prior java 1 4  
+       swallows not followed two characters   p  
+       
+       see href  http   www w3 org tr xml11 #dt-sysid  dt-sysid makes some mention characters not supported uri reference syntax escaped  
+       
+        param uri uri designating file local filesystem  
+        return local file system path file  
+        throws illegalargumentexception uri malformed not legal file  url ant 1 6 
+        
+   #8031  first try java 1 4  
+   fine  java 1 3 earlier hand check properly formed uris  ant formerly recommended using 
+   nonsense uris file   foo xml xml includes shouldn't foo xml correct compatibility special-case 
+   things path not absolute fall back old parsing behavior  
+   bad uri  pass unexpected target exception not happen  
+   reflection problems not happen  debug  
+   fallback method java 1 3 earlier  
+   ignore malformed exception 
+   not sure whether clean method declared not throw exceptions  
+    
+       decodes uri characters uri escaped 
+        param uri string uri possibly containing % characters  
+        return decoded uri 
+        throws unsupportedencodingexception utf-8 not available ant 1 7 
+        
+    
+       encodes uri characters uri escaped 
+        param path string encode  
+        return encoded string  according uri norms 
+        throws unsupportedencodingexception utf-8 not available ant 1 7 s not ascii character  break here use utf-8 encoding 
+   record fact s escaped saw some non-ascii character utf-8 bytes remaining sub-string each byte non-ascii character  make positive escape 
+    
+       convert file url  
+       file tourl not encode characters file touri introduced java 1 4 ant cannot use except reflection  
+       fileutils touri   cannot used locator java 
+       implemented way  
+       file tourl   adds file changes dos oses 
+       encodeuri converts characters dd 
+        param file file convert 
+        return url converted file 
+        throws malformedurlexception error file necessary load sun compiler tools classes available class additional url required null returned may classes explicitly class path provided jvm directly  
+       
+        return tools jar file required  null otherwise  
+        
+   firstly check tools jar already classpath check whether throws exception 
+   ignore 
+   couldn't find compiler - try find tools jar 
+   based java home setting 
+   found java home given array urls representing jar files given location location file returned only 
+       element array location directory scanned jar files  
+       
+        param location location scan jars  
+       
+        return array urls jars given location  
+       
+        exception malformedurlexception urls jars cannot formed array urls representing files given set extensions given location location file returned only element array location directory scanned matching files  
+       
+        param location location scan files  
+        param extensions array extension match directory search  
+       
+        return array urls matching files  
+        exception malformedurlexception urls files cannot formed  
+       org apache tools ant launch Locator org apache tools ant launch locator uri_encoding    utf-8 ghexchs    '0'  '1'  '2'  '3'  '4'  '5'  '6'  '7'  
+                                     '8'  '9'  'a'  'b'  'c'  'd'  'e'  'f i   0  i    0x1f  i      
+            gneedescaping i gafterescaping1 i    ghexchs i    4   
+            gafterescaping2 i    ghexchs i   0xf   
+          
+        gneedescaping 0x7f gafterescaping1 0x7f    '7'  
+        gafterescaping2 0x7f    'f escchs len   escchs length ch i   0  i   len  i      
+            ch   escchs i   
+            gneedescaping ch gafterescaping1 ch    ghexchs ch    4   
+            gafterescaping2 ch    ghexchs ch   0xf locator file getclasssource c classresource   c getname   replace getresourcesource c getclassloader    classresource file getresourcesource classloader c resource c c   locator getclassloader    
+          
+        url url c url   classloader getsystemresource resource url   c getresource resource url u   url tostring u startswith  jar file pling   u indexof jarname   u substring 4  pling file fromuri jarname u startswith  file tail   u indexof resource dirname   u substring 0  tail file fromuri dirname fromuri uri uriclazz uriclazz forname  java net uri classnotfoundexception cnfe uriclazz uri startswith  file java lang reflect method createmethod 
+                      uriclazz getmethod  create object uriobj   createmethod invoke object    uri    
+                java lang reflect constructor fileconst 
+                      file getconstructor uriclazz    
+                file f    file  fileconst newinstance object    uriobj f getabsolutepath java lang reflect invocationtargetexception e    
+                throwable e2   e gettargetexception e2 illegalargumentexception illegalargumentexception  e2 e2 printstacktrace exception e    
+                  
+                e printstacktrace    
+              
+          
+ 
+          
+ 
+        url url url url uri malformedurlexception emyouearlex url file  equals url getprotocol illegalargumentexception  can only handle valid file  uris    
+          
+        stringbuffer buf stringbuffer url gethost buf length     0    
+            buf insert 0  file separatorchar  insert 0  file separatorchar file   url getfile querypos   file indexof '?'   
+        buf append  querypos   0  ? file   file substring 0  querypos    
+ 
+        uri   buf tostring   replace ' '  file separatorchar file pathseparatorchar    ' '    uri startswith  \\      uri length     2 
+               character isletter uri charat 1      uri lastindexof ' '    -1    
+            uri   uri substring 1 path path   decodeuri uri cwd   system getproperty  user dir posi   cwd indexof posi   0     path startswith file separator     
+               path   cwd substring 0  posi   1    path unsupportedencodingexception exc illegalstateexception  could not convert uri to path    
+                                              exc getmessage path decodeuri uri unsupportedencodingexception uri indexof '%'     -1 uri  
+          
+        bytearrayoutputstream sb bytearrayoutputstream uri length     
+        characteriterator iter stringcharacteriterator uri c   iter first    c    characteriterator done  
+             c   iter next c c1   iter next c1    characteriterator done i1   character digit c1  16 c2   iter next c2    characteriterator done i2   character digit c2  16   
+                        sb write i1    4    i2 sb write c sb tostring uri_encoding encodeuri path unsupportedencodingexception i   0 len   path length ch   0  
+        stringbuffer sb i   len  i      
+            ch   path charat i ch    128 gneedescaping ch sb sb stringbuffer path substring 0  i    
+                  
+                sb append '%'   
+                sb append gafterescaping1 ch    
+                sb append gafterescaping2 ch sb sb append ch i   len sb sb stringbuffer path substring 0  i bytes b  
+            bytes   path substring i  getbytes uri_encoding   
+            len   bytes length i   0  i   len  i      
+                b   bytes i b   0    
+                    ch   b   256  
+                    sb append '%'   
+                    sb append ghexchs ch    4    
+                    sb append ghexchs ch   0xf gneedescaping b     
+                    sb append '%'   
+                    sb append gafterescaping1 b    
+                    sb append gafterescaping2 b sb append b sb path   sb tostring url filetourl file file malformedurlexception url encodeuri file tourl   tostring unsupportedencodingexception ex malformedurlexception ex tostring file gettoolsjar toolsjaravailable forname  com sun tools javac main    
+            toolsjaravailable exception e forname  sun tools javac main    
+                toolsjaravailable exception e2 toolsjaravailable javahome   system getproperty  java home    
+        file toolsjar file javahome     lib tools jar toolsjar exists toolsjar javahome tolowercase locale us  endswith file separator    jre      
+            javahome   javahome substring 0  javahome length   - 4   
+            toolsjar file javahome     lib tools jar toolsjar exists      
+            system out println  unable to locate tools jar    
+                    expected to find it in     toolsjar getpath toolsjar url   getlocationurls file location malformedurlexception getlocationurls location jar url   getlocationurls file location extensions malformedurlexception   
+        url   urls url 0 location exists urls location isdirectory      
+            urls url 1 path   location getpath i   0  i   extensions length    i path tolowercase   endswith extensions i      
+                    urls 0    filetourl location urls  
+          
+        file   matches   location listfiles filenamefilter accept file dir name i   0  i   extensions length    i name tolowercase   endswith extensions i urls url matches length i   0  i   matches length    i    
+            urls i    filetourl matches i urls  
+      
+ org apache tools ant launch Locator

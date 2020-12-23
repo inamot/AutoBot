@@ -1,0 +1,228 @@
+ 
+   $id$ 
+   copyright  c  1996-2006 regents university california rights reserved  permission use  copy  modify distribute software documentation without fee without written 
+   agreement hereby granted  provided above copyright notice paragraph appear copies software program documentation copyrighted regents university california software program documentation supplied without any accompanying services regents regents not warrant operation program uninterrupted error-free end-user understands program developed research purposes advised not rely 
+   exclusively program any reason event shall university california liable any party direct  indirect  
+   special  incidental consequential damages  including lost profits  
+   arising out use software documentation  even university california advised possibility damage university california specifically disclaims any 
+   warranties  including not limited implied warranties merchantability fitness particular purpose software 
+   provided hereunder basis university california obligations provide maintenance  support  
+   updates  enhancements modifications class represents node classdiagram class  interface package   
+    p  
+    
+   things node know  
+    ul  
+    li up downlinks positioning hierarchy 
+    li weight node weight strongly influenced parent-nodes otherwise order nodes current row not compatible order nodes row above  
+     ul  
+    
+    
+       constant used initializer node not placed column  
+        
+    
+       constant used initializer node rank assigned constant used initializer node weight  
+        
+   attributes 
+    
+       attribute column represents current column node  
+        
+    
+       attribute downlinks represents nodes contain figures sources edges figure node destination  
+        
+    
+       offset used edges node upper  node  
+        
+    
+       attribute figure represents figure classdiagramnode 
+       represents during layout process  
+        
+    
+       attribute placementhint keeps information preferred positioning  
+        
+    
+       attribute rank represents current rank e  row node  
+        
+    
+       attribute uplinks represents nodes contain figures destinations edges figure node source attribute stores weight node computed 
+       attribute used during horizontal placement process s 
+       based position uplinked' objects actual purpose minimize number link crossings diagram don't 
+       compute actual number link crossings look uplinked 
+       objects try place object way expect minimal number crossings  
+        
+    
+       operation classdiagramnode creates new classdiagramnode  
+        
+        param f 
+                  represents figure diagram peers layout 
+                  node  
+        
+    
+       operation setdownlinks changes value attribute _downlinks  
+        
+        param newdownlink 
+                  represents new value _downlinks  
+        
+    
+       add constant rank node  
+        
+        param n value add  
+        
+    
+       add uplink node  
+        
+        param newuplink 
+                  represents new uplinks  
+        
+    
+       calculate weight node function distinguishes between 
+       note-nodes standard-nodes note positioned right first related node exists  therefor weight function weight related node standard-nodes weight function up- downlinks  column uplink factor  
+        
+        return weight node natural order classdiagramnodes defined following 
+       order  
+        ul  
+        li first standalone linked nodes 
+        li first packages interfaces classes notes 
+        li increasing rank  rownumber  
+        li decreasing weight 
+        li name model object 
+        li increasing hashcode uniqueness  
+         ul  
+        
+        see java lang comparable#compareto java lang object  
+        
+  system out println result     node1 node2     node   
+    
+       operation getcolumn returns value attribute _column  
+        
+        return value attribute _column downlinks node  
+        
+        return downlinks node  
+        deprecated 0 25 4 tfmorris - use   link #getdownnodes downlinks node  
+        
+        return downlinks node offset shall used edges node parent  
+        
+        return offset underlying figure node  
+        
+        return figure level inheritance hierarchy node  
+        
+        return level location underlying figure diagram  
+        
+        return location current placement hint  
+        
+        return placementhint node rank node  
+        
+        return rank node  
+        
+    
+       operation getsize returns size figure associated layout node  
+        
+        return size associated figure weight subtree defined node  impact weight decreasing increasing hierarchical distance 
+        
+        return weight subtree type order number node number may used influence sort order classdiagramnodes  
+        
+        return type order number uplinks node  
+        
+        return uplinks node  
+        deprecated 0 25 4 tfmorris - use   link #getupnodes uplinks node  
+        
+        return uplinks node  
+        
+    
+       return weight node used positioning row  
+        
+        return weight node  
+        
+    
+       check node associated note  
+        
+        return result test  
+        
+    
+       check node associated package  
+        
+        return result test  
+        
+    
+       test whether node connection nodes  return 
+        code true  code node connections   code false  code  
+       otherwise  
+        
+        return result test  
+        
+    
+       set column node re-calculation weight performed column input parameter weight  
+        
+        param newcolumn new column  
+        
+    
+       set offset edges node  
+        
+        param newoffset 
+                  offset edges node one endpoint  
+        
+    
+       operation setfigure changes value attribute _figure  
+        
+        param newfigure 
+                  represents new value _figure  
+        
+    
+       operation setlocation set new location associated figure diagram  
+        
+        param newlocation 
+                  represents new location figure placementhint gives indication might feasible place node used layouter guarantee used  
+        
+        param hint 
+                  x coordinate desired placement 
+        
+    
+       operation setrank changes value attribute _rank  
+        
+        param newrank 
+                  represents new value _rank  
+        
+    
+       set weight node  
+        
+        param w new weight node  
+       org argouml uml diagram static_structure layout ClassdiagramNode org argouml uml diagram static_structure layout classdiagramnode layoutednode  comparable nocolumn   -1 norank   -1 noweight   -1 list classdiagramnode  downlinks arraylist classdiagramnode classdiagramnode fignode f    
+        setfigure f adddownlink classdiagramnode newdownlink    
+        downlinks add newdownlink addrank n    
+        setrank n   getrank adduplink classdiagramnode newuplink    
+        uplinks add newuplink calculateweight     
+        weight   0 classdiagramnode node   uplinks    
+            weight   math max weight  node getweight   
+                      uplink_factor 
+                       1   1   math 
+                             max 1  node getcolumn     uplink_factor     
+          
+        weight    getsubtreeweight   
+                   1   math max 1  getcolumn     uplink_factor weight compareto object arg0    
+        classdiagramnode node    classdiagramnode  arg0 result   0  
+        result valueof node isstandalone    compareto valueof isstandalone result    0    
+            result gettypeordernumer   - node gettypeordernumer result    0    
+            result getrank   - node getrank result    0    
+            result math signum node getweight getweight result    0    
+            result valueof getfigure   getowner    compareto valueof node getfigure   getowner result    0    
+            result   node hashcode hashcode result getcolumn column vector classdiagramnode  getdownlinks vector classdiagramnode  downlinks list classdiagramnode  getdownnodes downlinks getedgeoffset edgeoffset fignode getfigure figure getlevel result   0 classdiagramnode node   uplinks    
+            result   
+                     node result   math max  
+                            node getlevel     1  result result point getlocation getfigure   getlocation getplacementhint placementhint getrank rank    norank ? getlevel     rank dimension getsize getfigure   getsize getsubtreeweight w   1 classdiagramnode node   downlinks    
+            w    node getsubtreeweight     uplink_factor w gettypeordernumer result   99 getfigure figpackage    
+            result   0 getfigure figinterface    
+            result   1 result vector classdiagramnode  getuplinks vector classdiagramnode  uplinks list classdiagramnode  getupnodes uplinks getweight weight iscomment getfigure figcomment ispackage getfigure figpackage isstandalone uplinks isempty      downlinks isempty setcolumn newcolumn    
+        column   newcolumn  
+        calculateweight setedgeoffset newoffset    
+        edgeoffset   newoffset setfigure fignode newfigure    
+        figure   newfigure setlocation point newlocation    
+        point oldlocation   getfigure   getlocation    
+ 
+        getfigure   setlocation newlocation xtrans   newlocation x - oldlocation x ytrans   newlocation y - oldlocation y iterator fig  iter   getfigure   getenclosedfigs   iterator     
+                iter hasnext       
+            iter next   translate xtrans  ytrans setplacementhint hint    
+        placementhint   hint setrank newrank    
+        rank   newrank setweight w    
+        weight   w  
+      
+ 
+ org argouml uml diagram static_structure layout ClassdiagramNode

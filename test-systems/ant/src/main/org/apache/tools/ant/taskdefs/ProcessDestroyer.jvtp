@@ -1,0 +1,94 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   destroys registered  code process  code es vm exits ant 1 5 
+    
+   methods register unregister shutdown hooks 
+   whether not processdestroyer registered shutdown hook 
+   whether not processdestroyer currently running shutdown hook 
+    
+       constructs code processdestroyer  code obtains 
+        code runtime addshutdownhook    code code runtime removeshutdownhook    code  through reflection processdestroyer manages list processes destroyed vm exits process added list empty code processdestroyer  code registered shutdown hook removing process results empty list code processdestroyer  code removed shutdown hook  
+        
+   check see shutdown hook methods exists 
+    support pre-jdk 1 3 vms  
+   wait add shutdown hook needed won't added shutdown hook       
+    
+       registers code processdestroyer  code shutdown hook  
+       uses reflection ensure pre-jdk 1 3 compatibility  
+        
+   shutdown already progress 
+    
+       removes code processdestroyer  code shutdown hook  
+       uses reflection ensure pre-jdk 1 3 compatibility 
+        
+   shutdown already progress 
+   start hook thread unstarted thread may not eligible garbage collection 
+   cf   http   developer java sun com developer bugparade bugs 4533087 html 
+   start throw illegalthreadstateexception threadgroup add destroyed return quickly basically op thread didn't die time not kill any processes unexpectedly 
+    
+       returns whether not processdestroyer registered as shutdown hook 
+        return true currently added shutdown hook 
+        
+    
+       returns  code true  code specified  code process  code successfully added list processes destroy upon vm exit  
+       
+        param   process process add 
+        return   code true  code specified  code process  code successfully added list empty  register shutdown hook 
+    
+       returns  code true  code specified  code process  code successfully removed list processes destroy upon vm exit  
+       
+        param   process process remove 
+        return   code true  code specified  code process  code successfully removed 
+        
+    
+       invoked vm exiting  
+       org apache tools ant taskdefs ProcessDestroyer org apache tools ant taskdefs processdestroyer runnable processdestroyerimpl thread processdestroyerimpl processdestroyer shutdown hook run shoulddestroy    
+                processdestroyer run setshoulddestroy shoulddestroy shoulddestroy   shoulddestroy processdestroyer paramtypes    thread addshutdownhookmethod   
+                runtime getmethod  addshutdownhook   paramtypes   
+ 
+            removeshutdownhookmethod   
+                runtime getmethod  removeshutdownhook   paramtypes nosuchmethodexception e exception e    
+            e printstacktrace addshutdownhook addshutdownhookmethod running    
+            destroyprocessthread processdestroyerimpl    
+            object   args    destroyprocessthread addshutdownhookmethod invoke runtime getruntime    args   
+                added illegalaccessexception e    
+                e printstacktrace invocationtargetexception e    
+                throwable t   e gettargetexception t t getclass      illegalstateexception running e printstacktrace removeshutdownhook removeshutdownhookmethod added     running    
+            object   args    destroyprocessthread removed removeshutdownhookmethod invoke  
+                        runtime getruntime    
+                        args removed booleanvalue      
+                    system err println  could not remove shutdown hook illegalaccessexception e    
+                e printstacktrace invocationtargetexception e    
+                throwable t   e gettargetexception t t getclass      illegalstateexception running e printstacktrace    
+                  
+              
+              
+              
+              
+            destroyprocessthread setshoulddestroy destroyprocessthread getthreadgroup   isdestroyed      
+                  
+                  
+                destroyprocessthread start destroyprocessthread join 20000 interruptedexception ie    
+                  
+                  
+              
+            destroyprocessthread added isaddedasshutdownhook added add process process processes processes size      0    
+                addshutdownhook    
+              
+            processes addelement process processes contains process remove process process processes processremoved   processes removeelement process processremoved    processes size      0    
+                removeshutdownhook processremoved run processes    
+            running enumeration e   processes elements e hasmoreelements      
+                  process  e nextelement    destroy    
+              
+          
+      
+ org apache tools ant taskdefs ProcessDestroyer

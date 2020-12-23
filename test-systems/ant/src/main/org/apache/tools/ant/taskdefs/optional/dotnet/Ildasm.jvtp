@@ -1,0 +1,225 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   task take net mono -generated managed executable turn ilasm assembly code  useful converting imported typelibs assembler before patching recompiling one doing 
+   advanced typelib work  
+    p well generating named output file ildasm program generate resource files  code icons resources  code  
+    code message resources  code res file whose filename stub derived source ways obscure determine way control whether not files created created created current directory names come inside executable may those used original developer task 
+   creates resources directory specified code resourcedir  code set same directory code destfile  code   
+   
+    p task requires net sdk installed ildasm path disassemble using alternate clr systems  set executable attribute name path alternate implementation -one must 
+   support classic ildasm commands  
+   
+    p  
+   dependency logic task executes command output file missing older source file not take account changes options task timestamp differences resource files underlying ildasm executable fails some reason leaves il file place some error message prevent confusing dependency logic file specified code dest  code  
+   attribute always deleted unsuccessful build  
+    ant task category  dotnet  
+    
+    
+       source file  mandatory  
+        
+    
+       dest file  mandatory  
+        
+    
+       progress bar switch encoding 
+        
+    
+        bytes flag byte markup 
+        
+    
+       line numbers?  linenum 
+        
+    
+        raweh flag raw exception handling 
+        
+    
+       show source   source 
+        
+    
+        quoteallnames quote names 
+        
+    
+        header header information false  sets noil attribute suppress assembly info 
+        
+    
+       include metadata 
+        tokens visibility want  
+       
+        
+    
+       specific item disassemble 
+        
+    
+       override executable 
+        
+    
+        name directory resources created cannot control names created not set directory dest file used 
+        
+    
+       set name directory resources created cannot control names created not set directory dest file used 
+        param resourcedir directory create resources  
+        
+    
+       override name executable  normally ildasm set full path not set relative path ugly hacks 
+       needed create resource files dest directory 
+       force change directory before running application e use  lt property location gt create absolute path relative one before setting value  
+        param executable name executable use  
+        
+    
+       select output encoding  ascii  utf8 unicode 
+        param encoding enumerated value  
+        
+    
+       enable  default disable assembly language output 
+        param assembler code boolean  code  value  
+        
+    
+       enable disable  default original bytes comments 
+        param bytes code boolean  code  value output file  required  
+        param destfile destination file  
+        
+    
+       include header information  default false  
+        param header code boolean  code  value  
+        
+    
+       name single item decode class method 
+       e g item  myclass  method item  namespace1  namespace2  myclass method void int32   
+        param item item decode  
+        
+    
+       include line number information  default false 
+        param linenumbers code boolean  code  value  
+        
+    
+       include metadata information 
+        param metadata code boolean  code  value  
+        
+    
+       show graphical progress bar window during process default 
+        param progressbar code boolean  code  value  
+        
+    
+       quote names  
+        param quoteallnames code boolean  code  value  
+        
+    
+       enable raw exception handling  default   false  
+        param rawexceptionhandling code boolean  code  value  
+        
+    
+       include source comments  default false  
+        param showsource code boolean  code  value file disassemble -required 
+        param sourcefile file disassemble  
+        
+    
+       alternate name sourcefile 
+        param sourcefile source file method sets visibility options chooses one following signs concatenate pre  
+       pub   public 
+       pri   private 
+       fam   family 
+       asm   assembly 
+       faa   family assembly 
+       foa   family assembly 
+       psc   private scope 
+        pre  
+       e g  visibility  pub pri   
+       family means  code protected  code c#  
+        param visibility options use  
+        
+    
+        verify source dest ok 
+        
+    
+       test disassembly being needed  use existence granularity 
+       correct date stamps 
+        return true iff rebuild required work 
+        throws buildexception error  
+        
+  ant apache org antlibs dotnet index html   
+  fill args 
+  add source file 
+  determine directory  resourcedir set dir destfile not 
+  now run 
+  forcibly delete output file case trouble rethrow exception 
+    
+       encoding options default ascii 
+        
+    unicode    
+    utf8    
+    ascii    
+      inheritdoc method maps encoding enum encoding option  
+            param enumvalue value use  
+            return encoding option indicated enum value  
+            
+    
+       visibility options decoding 
+        
+      inheritdoc      
+  public 
+  private 
+  family 
+  assembly 
+  family assembly 
+  family assembly 
+  private scopeorg apache tools ant taskdefs optional dotnet Ildasm org apache tools ant taskdefs optional dotnet ildasm task setresourcedir file resourcedir resourcedir   resourcedir setexecutable executable executable   executable setencoding encodingtypes encoding encoding   encoding getvalue setassembler assembler assembler   assembler setbytes bytes bytes   bytes setdestfile file destfile destfile   destfile setheader header header   header setitem item item   item setlinenumbers linenumbers linenumbers   linenumbers setmetadata metadata metadata   metadata setprogressbar progressbar progressbar   progressbar setquoteallnames quoteallnames quoteallnames   quoteallnames setrawexceptionhandling rawexceptionhandling rawexceptionhandling   rawexceptionhandling setshowsource showsource showsource   showsource setsourcefile file sourcefile sourcefile   sourcefile setsrcfile file sourcefile    
+        setsourcefile sourcefile setvisibility visibility visibility   visibility validate sourcefile sourcefile exists       sourcefile isfile buildexception  invalid source destfile destfile isdirectory buildexception  invalid dest resourcedir resourcedir exists       resourcedir isdirectory buildexception  invalid resource directory isdisassemblyneeded destfile exists      
+            log  destination file does not exist  a build is required   
+                    project msg_verbose sourcetime   sourcefile lastmodified desttime   destfile lastmodified sourcetime    desttime   file_utils getfiletimestampgranularity       
+            log  source file is newer than the dest file  a rebuild is required   
+                    project msg_verbose log  the  il file is up to date   project msg_verbose execute buildexception   
+        log task is deprecated and will be removed in a future version\n  
+               of ant   it is now part of the  net antlib \n  
+               http   
+            project msg_warn   
+        validate isdisassemblyneeded netcommand command netcommand ildasm   executable   
+        command setfailonerror command addargument   text    
+        command addargument   out     destfile tostring progressbar    
+            command addargument   nobar linenumbers    
+            command addargument   linenum showsource    
+            command addargument   source quoteallnames    
+            command addargument   quoteallnames header    
+            command addargument   header assembler    
+            command addargument   noil metadata    
+            command addargument   tokens    
+          
+        command addargument   item    item rawexceptionhandling    
+            command addargument   raweh    
+          
+        command addargument encodingtypes getencodingoption encoding bytes    
+            command addargument   bytes    
+          
+        command addargument   vis    visibility   
+ 
+          
+        command addargument sourcefile getabsolutepath     
+ 
+          
+          
+        file execdir   resourcedir execdir execdir   destfile getparentfile    
+          
+        command setdirectory execdir command runcommand buildexception e destfile exists      
+                log  deleting destination file as it may be corrupt    
+                destfile delete e encodingtypes enumeratedattribute unicode    unicode utf8    utf8 ascii    ascii getvalues ascii  
+                utf8  
+                unicode getencodingoption enumvalue unicode equals enumvalue unicode utf8 equals enumvalue utf8 visibilityoptions enumeratedattribute getvalues pub     
+                 pri     
+                 fam     
+                 asm     
+                 faa     
+                 foa     
+                 psc     
+               
+          
+ 
+      
+ org apache tools ant taskdefs optional dotnet Ildasm

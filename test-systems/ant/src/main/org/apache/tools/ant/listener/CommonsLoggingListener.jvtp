@@ -1,0 +1,137 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license  
+   
+    
+    
+   jakarta commons logging listener  
+   note not use simplelog logger implementation causes infinite loop writes system err ant traps reroutes logger listener layer following names used log  
+    org apache tools ant project project_name project events 
+    org apache tools ant target target_name target events 
+    task_class_name target_name events individual targets target project names replace todo use advanced context logging features expose c-l first  -  
+   todo _very_ inefficient  switching out tracking logs optimized lot may require few changes core ant 1 5 
+    
+    indicates listener initialized     
+    
+       name category under target events logged 
+        
+    
+       name category under project events logged 
+        
+    
+       construct listener make sure logfactory obtained  
+        
+      inheritdoc      
+      inheritdoc      
+    
+        see buildlistener#targetstarted 
+        
+      inheritdoc task log category includes target don't really 
+   need message 
+    
+        see buildlistener#targetfinished 
+        
+      inheritdoc      
+    
+        see buildlistener#taskstarted 
+        
+      inheritdoc      
+    
+        see buildlistener#taskfinished 
+        
+      inheritdoc      
+    
+        see buildlistener#messagelogged 
+        
+      inheritdoc s task - append target 
+   checkstyle visibilitymodifier bc 
+   checkstyle visibilitymodifier set the output level not used logger config used instead  
+        param level ignored 
+        
+   use logger config 
+    
+       set output print stream  
+        param output output stream 
+        
+    
+       set emacs mode ignored  
+        param emacsmode ignored 
+        
+   doesn't make sense c-l  use logger config 
+    
+       set error print stream  
+        param err error stream 
+       org apache tools ant listener CommonsLoggingListener org apache tools ant listener commonslogginglistener buildlistener  buildlogger target_log    org apache tools ant target project_log    org apache tools ant project commonslogginglistener log getlog cat suffix suffix suffix   suffix replace ' '  '-'   
+            suffix   suffix replace ' '  '-'   
+            cat   cat         suffix  
+          
+        printstream tmpout   system out  
+        printstream tmperr   system err  
+        system setout out   
+        system seterr err initialized logfactory   logfactory getfactory logconfigurationexception e    
+                e printstacktrace system err initialized log log   logfactory getinstance cat   
+        system setout tmpout   
+        system seterr tmperr log buildstarted buildevent event categorystring   project_log  
+        log log   getlog categorystring initialized    
+            reallog log   build started    project msg_info buildfinished buildevent event initialized categorystring   project_log  
+            log log   getlog categorystring  event getproject   getname event getexception reallog log   build finished    project msg_info reallog log   build finished with error    project msg_err  
+                        event getexception targetstarted buildevent event initialized    
+            log log   getlog target_log  
+                    event gettarget   getname     
+              
+              
+            reallog log   start      event gettarget   getname    
+                    project msg_verbose targetfinished buildevent event initialized targetname   event gettarget   getname    
+            log log   getlog target_log  
+                    event gettarget   getname event getexception reallog log   target end      targetname  project msg_debug reallog log   target \     targetname 
+                           \  finished with error    project msg_err  
+                        event getexception taskstarted buildevent event initialized    
+            task task   event gettask    
+            object real   task task unknownelement    
+                object realobj     unknownelement  task  gettask realobj real   realobj  
+                  
+              
+            log log   getlog real getclass   getname log istraceenabled      
+                reallog log   task \     task gettaskname      \  started    
+                        project msg_verbose taskfinished buildevent event initialized    
+            task task   event gettask    
+            object real   task task unknownelement    
+                object realobj     unknownelement  task  gettask realobj real   realobj  
+                  
+              
+            log log   getlog real getclass   getname event getexception log istraceenabled      
+                    reallog log   task \     task gettaskname      \  finished    
+                            project msg_verbose reallog log   task \     task gettaskname   
+                           \  finished with error    project msg_err  
+                        event getexception messagelogged buildevent event initialized    
+            object categoryobject   event gettask categorystring categorydetail categoryobject categoryobject   event gettarget categoryobject categoryobject   event getproject    
+                    categorystring   project_log  
+                    categorydetail   event getproject   getname categorystring   target_log  
+                    categorydetail   event gettarget   getname event gettarget categorystring   categoryobject getclass   getname    
+                    categorydetail   event gettarget   getname categorystring   categoryobject getclass   getname    
+                  
+ 
+              
+ 
+            log log   getlog categorystring  categorydetail priority   event getpriority message   event getmessage    
+            reallog log  message  priority reallog log log message priority  throwable t    
+        printstream tmpout   system out  
+        printstream tmperr   system err  
+        system setout out   
+        system seterr err priority project msg_err t log error message log error message  t project msg_warn t log warn message log warn message  t project msg_info t log info message log info message  t project msg_verbose  
+                log debug message project msg_debug  
+                log debug message log error message system setout tmpout   
+        system seterr tmperr   
+      
+ 
+      
+    printstream out   system out  
+    printstream err   system err setmessageoutputlevel level setoutputprintstream printstream output out   output setemacsmode emacsmode seterrorprintstream printstream err err   err  
+      
+ 
+ org apache tools ant listener CommonsLoggingListener

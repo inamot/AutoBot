@@ -1,0 +1,139 @@
+ 
+   
+    licensed apache software foundation  asf  under one contributor license agreements   see notice file distributed work additional information regarding copyright ownership asf licenses file under apache license  version 2 0 license may not use file except compliance license may obtain copy license http   www apache org licenses license-2 0 
+   
+    unless required applicable law agreed writing  software 
+    distributed under license distributed basis  
+    without warranties conditions any kind  either express implied  
+    see license specific language governing permissions limitations under license package based work done timothy gerard endres 
+    time ice com ant project very grateful great code taroutputstream writes unix tar archive outputstream  
+   methods provided put entries write contents writing stream using write    
+   
+    
+    fail long file name required archive     
+    long paths truncated archive     
+    gnu tar extensions used store long file names archive     
+   checkstyle visibilitymodifier bc 
+   checkstyle visibilitymodifier constructor tarinputstream  
+        param os output stream use 
+        
+    
+       constructor tarinputstream  
+        param os output stream use 
+        param blocksize block size use 
+        
+    
+       constructor tarinputstream  
+        param os output stream use 
+        param blocksize block size use 
+        param recordsize record size use 
+        
+    
+       set long file mode longfile_error 0   longfile_truncate 1 longfile_gnu 2 specifies treatment long file names  names    tarconstants namelen   
+       default longfile_error  
+        param longfilemode mode use 
+        
+    
+       sets debugging flag  
+       
+        param debugf true turn debugging  
+        
+    
+       sets debugging flag stream's tarbuffer  
+       
+        param debug true turn debugging  
+        
+    
+       ends tar archive without closing underlying outputstream result two eof records nulls written  
+        throws ioexception error 
+        
+   see bugzilla 28776 discussion http   issues apache org bugzilla show_bug cgi?id 28776 
+    
+       ends tar archive closes underlying outputstream means finish called followed calling tarbuffer's close    
+        throws ioexception error record size being used stream's tarbuffer  
+       
+        return tarbuffer record size  
+        
+    
+       put entry output stream writes entry's 
+       header record positions output stream writing contents entry  once method called stream ready calls write write entry's 
+       contents  once contents written  closeentry   
+        b must  b called ensure buffered data completely written output stream  
+       
+        param entry tarentry written archive  
+        throws ioexception error 
+        
+   create tarentry longlink contents entry's name 
+    
+       close entry method must called file 
+       entries contain data reason must 
+       buffer data written stream order satisfy buffer's record based writes  thus may data fragments still being assembled must written output stream before entry closed next entry written  
+        throws ioexception error 
+        
+    
+       writes byte current tar archive entry method simply calls read  byte    int  int    
+       
+        param b byte written  
+        throws ioexception error 
+        
+    
+       writes bytes current tar archive entry method simply calls write  byte    int  int    
+       
+        param wbuf buffer write archive  
+        throws ioexception error 
+        
+    
+       writes bytes current tar archive entry method aware current entry throw exception attempt write bytes past length specified current entry method painfully  aware record buffering required tarbuffer manages buffers not multiple recordsize length  including 
+       assembling records small buffers  
+       
+        param wbuf buffer write archive  
+        param woffset offset buffer bytes  
+        param numtowrite number bytes write  
+        throws ioexception error deal assembly programmer writing little 32 byte chunks know must assemble complete records writing  
+   review maybe tarbuffer help eliminate some buffer copying here either  
+   o empty  assemble  buffer  
+   o bytes write  numtowrite    0  
+   
+    
+       write eof  end archive  record tar archive eof record consists record zeros  
+       org apache tools tar TarOutputStream org apache tools tar taroutputstream filteroutputstream longfile_error   0 longfile_truncate   1 longfile_gnu   2 debug currsize currname currbytes onebuf recordbuf assemlen assembuf tarbuffer buffer longfilemode   longfile_error taroutputstream outputstream os os  tarbuffer default_blksize  tarbuffer default_rcdsize taroutputstream outputstream os blocksize os  blocksize  tarbuffer default_rcdsize taroutputstream outputstream os blocksize recordsize os buffer tarbuffer os  blocksize  recordsize debug assemlen   0 assembuf recordsize recordbuf recordsize onebuf 1 setlongfilemode longfilemode longfilemode   longfilemode setdebug debugf debug   debugf setbufferdebug debug buffer setdebug debug finish ioexception writeeofrecord writeeofrecord close ioexception closed finish buffer close    
+            out close    
+            closed getrecordsize buffer getrecordsize putnextentry tarentry entry ioexception entry getname   length      tarconstants namelen longfilemode    longfile_gnu    
+                  
+                  
+                tarentry longlinkentry tarentry tarconstants gnu_longlink  
+                                                      tarconstants lf_gnutype_longname   
+ 
+                longlinkentry setsize entry getname   length     1   
+                putnextentry longlinkentry   
+                write entry getname   getbytes     
+                write 0   
+                closeentry longfilemode    longfile_truncate runtimeexception  file name '    entry getname   
+                                                ' is too tarconstants namelen     bytes     
+              
+          
+ 
+        entry writeentryheader recordbuf buffer writerecord recordbuf currbytes   0 entry isdirectory currsize   0 currsize   entry getsize    
+          
+        currname   entry getname closeentry ioexception assemlen   0 i assemlen  i assembuf length    i assembuf i    0 buffer writerecord assembuf currbytes assemlen assemlen   0 currbytes currsize ioexception  entry '    currname    ' closed at currbytes 
+                                     ' before the currsize 
+                                     ' bytes specified in the header were written write b ioexception onebuf 0 b write onebuf  0  1 write wbuf ioexception write wbuf  0  wbuf length write wbuf woffset numtowrite ioexception currbytes   numtowrite currsize ioexception  request to write '    numtowrite 
+                                     ' bytes exceeds size in header of currsize    ' bytes entry '  
+                                    currname assemlen   0 assemlen   numtowrite recordbuf length alen recordbuf length assemlen  
+ 
+                system arraycopy assembuf  0 recordbuf  0 assemlen   
+                system arraycopy wbuf  woffset recordbuf assemlen  alen buffer writerecord recordbuf currbytes recordbuf length  
+                woffset    alen  
+                numtowrite -  alen assemlen   0 system arraycopy wbuf  woffset assembuf assemlen  
+                                 numtowrite   
+ 
+                woffset    numtowrite assemlen    numtowrite  
+                numtowrite -  numtowrite numtowrite   0 numtowrite recordbuf length    
+                system arraycopy wbuf  woffset assembuf assemlen  
+                                 numtowrite assemlen    numtowrite buffer writerecord wbuf  woffset num recordbuf length currbytes    num  
+            numtowrite -  num  
+            woffset    num writeeofrecord ioexception i   0  i recordbuf length    i recordbuf i    0 buffer writerecord recordbuf   
+      
+  
+ 
+org apache tools tar TarOutputStream
